@@ -1,1 +1,1 @@
-select 1 * from nota_fiscal_detalhe
+select 1 * from nota_fiscal (nolock)
