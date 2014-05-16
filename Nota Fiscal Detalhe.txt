@@ -1,1 +1,1 @@
-select 1 * from nota_fiscal
+select 1 * from nota_fiscalasdasd
