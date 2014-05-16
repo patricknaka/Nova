@@ -1,5 +1,5 @@
 SELECT  DISTINCT
-        tdsls400.t$rcd_utc DT_ATUALIZACAO,
+        tdsls400.t$rcd_utc DT_ATUALIZACAO, --AlteraÃ§Ã£o teste
         201 COMPANHIA,
         tdsls400.t$orno ORDEM,
         tdsls400.t$ofbp COD_CLIENTE,
@@ -12,8 +12,8 @@ SELECT  DISTINCT
         znsls400.t$cven$c VENDEDOR,
         tcemm030.t$euca COD_FILIAL,
 		tcemm112.t$grid UNID_EMPRESARIAL,
-        sls401q.t$opfc$l NATUREZA_OPERAÇÃO,
-        ' ' SEQ_NATUREZA_OPERAÇÃO,        -- *** NAO EXISTE NA PREVISAO DE IMPOSTOS
+        sls401q.t$opfc$l NATUREZA_OPERAï¿½ï¿½O,
+        ' ' SEQ_NATUREZA_OPERAï¿½ï¿½O,        -- *** NAO EXISTE NA PREVISAO DE IMPOSTOS
         tdsls400.t$ccur MOEDA,
         tdsls400.t$hdst SITUACAO_PEDIDO,
         (SELECT 
