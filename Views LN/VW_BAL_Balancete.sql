@@ -1,6 +1,7 @@
--- #FAF.005, 14-mai-2014, Fabio Ferreira,	Retirado conversão de timezone do campo data de atualização
+-- #FAF.005, 14-mai-2014, Fabio Ferreira,	Retirado conversï¿½o de timezone do campo data de atualizaï¿½ï¿½o
 --							
 --**********************************************************************************************************************************************************
+--
 SELECT
 	tfgld205.t$cono || 
 	tfgld205.t$leac || 
