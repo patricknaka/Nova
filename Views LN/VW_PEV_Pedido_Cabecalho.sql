@@ -1,26 +1,19 @@
--- 05-mai-2014, Fabio Ferreira, Correções de timezone de todos os campos Data/hora
--- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	Inclusão do campo Nota e Serie consolidada
--- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
---***************************************************************************************************************************************************************
-SELECT  DISTINCT
-        CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+ï»¿SELECT  DISTINCT
+        tdsls400.t$rcd_utc DT_ATUALIZACAO, --AlteraÃ§Ã£o test
         201 COMPANHIA,
         tdsls400.t$orno ORDEM,
         tdsls400.t$ofbp COD_CLIENTE,
-        CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DATA_COMPRA,
-        CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) HORA_COMPRA, -- * CAMPO DATA-HORA
+        znsls400.t$dtin$c DATA_COMPRA
+        znsls400.t$dtin$c HORA_COMPRA, -- * CAMPO DATA-HORA
         znsls400.t$uneg$c COD_UNIDADE_NEGOCIO,
         sls401q.t$pecl$c NUM_PEDIDO,
 		sls401q.t$entr$c NUM_ENTREGA,
---		CONCAT(TRIM(sls401q.t$pecl$c), TRIM(to_char(sls401q.t$entr$c))) PEDIDO_ENTREGA, 								--#FAF.007.o
+		CONCAT(TRIM(sls401q.t$pecl$c), TRIM(to_char(sls401q.t$entr$c))) PEDIDO_ENTREGA, 
         znsls400.t$cven$c VENDEDOR,
         tcemm030.t$euca COD_FILIAL,
 		tcemm112.t$grid UNID_EMPRESARIAL,
-        sls401q.t$opfc$l NATUREZA_OPERAÇÃO,
-        ' ' SEQ_NATUREZA_OPERAÇÃO,        -- *** NAO EXISTE NA PREVISAO DE IMPOSTOS
+        sls401q.t$opfc$l NATUREZA_OPERAï¿½ï¿½O,
+        ' ' SEQ_NATUREZA_OPERAï¿½ï¿½O,        -- *** NAO EXISTE NA PREVISAO DE IMPOSTOS
         tdsls400.t$ccur MOEDA,
         tdsls400.t$hdst SITUACAO_PEDIDO,
         (SELECT 
@@ -52,8 +45,8 @@ SELECT  DISTINCT
         znsls400.t$idcp$c NUM_CAMPANHA_B2B,
         sls401q.t$pztr$c PRAZO_TRANSIT_TIME,
         sls401q.t$pzcd$c PRAZO_CD,
-        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 END NUM_NOTA_CONSOLIDADA,						--#FAF.006.n      
-        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END SERIE_NOTA_CONSOLIDADA,					--#FAF.006.n
+        ' ' NUM_NOTA_CONSOLIDADA,      -- *** AGUARDANDO DEFINICAO FUNCIONAL ****
+        ' ' SERIE_NOTA_CONSOLIDADA,    -- *** AGUARDANDO DEFINICAO FUNCIONAL ****
         sls401q.t$pcga$c NUM_PEDIDO_GARANTIA,
         sls401q.t$dtep$c DATA_LIMITE_EXPED,
         znsls400.t$tped$c COD_TIPO_PEDIDO,
@@ -77,14 +70,10 @@ SELECT  DISTINCT
         --tdsls400.t$cfrw COD_TRANSPORTADORA,
         sls401q.t$mgrt$c COD_MEGA_ROTA,
         ulttrc.poco STATUS_PEDIDO,
-        CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DATA_STATUS_PEDIDO
+		CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+			AT time zone sessiontimezone) AS DATE) DATA_STATUS_PEDIDO
 FROM    ttdsls400201 tdsls400
-        LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls400.t$orno
-		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						--#FAF.006.sn
-					from tcisli245201 c245, tcisli941201 c941, tcisli940201 c940
-					where c941.t$fire$l=c245.T$FIRE$L
-					and c940.t$fire$l=c941.T$REFR$L) consold ON consold.T$SLSO=tdsls400.t$orno,					--#FAF.006.en
+        LEFT JOIN tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls400.t$orno,
         tznsls400201 znsls400,
          (SELECT
           znsls401.t$ncia$c		    t$ncia$c,
@@ -127,7 +116,6 @@ FROM    ttdsls400201 tdsls400
 		ttcemm030201 tcemm030,
         ttccom130201 endfat,
         ttccom130201 endent,
-		ttdsls094201 tdsls094,																				--#FAF.006.n
 		( SELECT Max(tznsls410201.t$poco$c) poco,
                  tznsls410201.t$ncia$c ncia,
                  tznsls410201.t$uneg$c uneg,
@@ -161,5 +149,4 @@ AND     ulttrc.ncia=sls401q.t$ncia$c
 AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
 AND     ulttrc.sqpd=sls401q.t$sqpd$c
-AND		tdsls094.t$sotp=tdsls400.t$sotp																--#FAF.006.n
 ORDER BY tdsls400.t$orno

@@ -1,1 +1,0 @@
-select  a.t$cdec COD, a.t$dsca DESCR from ttcmcs041201 a
