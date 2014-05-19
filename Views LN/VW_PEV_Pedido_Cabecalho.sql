@@ -1,5 +1,5 @@
-SELECT  DISTINCT
-        tdsls400.t$rcd_utc DT_ATUALIZACAO, --Alteração teste
+﻿SELECT  DISTINCT
+        tdsls400.t$rcd_utc DT_ATUALIZACAO, --Alteração test
         201 COMPANHIA,
         tdsls400.t$orno ORDEM,
         tdsls400.t$ofbp COD_CLIENTE,
