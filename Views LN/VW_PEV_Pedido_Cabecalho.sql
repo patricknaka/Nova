@@ -3,7 +3,7 @@
         201 COMPANHIA,
         tdsls400.t$orno ORDEM,
         tdsls400.t$ofbp COD_CLIENTE,
-        znsls400.t$dtin$c DATA_COMPRA,
+        znsls400.t$dtin$c DATA_COMPRA
         znsls400.t$dtin$c HORA_COMPRA, -- * CAMPO DATA-HORA
         znsls400.t$uneg$c COD_UNIDADE_NEGOCIO,
         sls401q.t$pecl$c NUM_PEDIDO,
