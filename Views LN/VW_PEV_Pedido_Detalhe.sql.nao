@@ -1,0 +1,81 @@
+SELECT
+        (SELECT Max(ttdsls451201.t$trdt)
+        FROM ttdsls451201
+        WHERE ttdsls451201.t$orno=tdsls401.t$orno
+        AND   ttdsls451201.t$pono=tdsls401.t$pono) DT_ATUALIZACAO,
+		  201 COMPANHIA,
+          znsls401.t$uneg$c COD_UNID_NEG,
+          tdsls401.t$orno ORDEM,
+          znsls400.t$dtin$c DT_COMPRA,
+          znsls401.t$dtep$c DT_ENTREGA,
+          ulttrc.poco SITUACAO_PEDIDO,
+          znsls400.t$idca$c COD_CANAL_VENDAS,
+          ltrim(rtrim(tdsls401.t$item)) COD_ITEM,
+          tdsls401.t$qoor QTD_ITENS,
+          tdsls401.t$pric VALOR_ITEM,
+          0 VALOR_DESCONTO_CONDICIONAL,      -- **** DESCONSIDERAR - NÃO SERÁ USADO
+          znsls401.t$vldi$c VALOR_DESCONTO_INCONDICIONAL,
+          znsls401.t$vlfr$c VALOR_FRETE_CLIENTE,
+          nvl((select sum(f.t$vlft$c) from tznfmd630201 f
+          where f.t$pecl$c=znsls400.t$pecl$c),0) VALOR_FRETE_CIA,
+          znsls400.t$cven$c COD_VENDEDOR,
+          znsls400.t$idli$c ID_LISTA_CASAMENTO,
+          ' ' ESTADO_PAGAMENTO,              -- **** DESCONSIDERAR - SOMENTE PGTO APROVADOS ESTÃO NO LN
+          ' ' DATA_PAGAMENTO,                -- **** DESCONSIDERAR - SOMENTE PGTO APROVADOS ESTÃO NO LN
+          ' ' UTM_PARCEIRO,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
+          ' ' UTM_MIDIA,                     -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
+          ' ' UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
+          znsls401.t$vlde$c VALOR_DESPESA_ACESSORIO,
+          znsls400.t$vldf$c VALOR_JUROS,
+          znsls401.t$vlun$c - znsls401.t$qtve$c VALOR_TOTAL_ITEM,
+          (SELECT Count(lc.t$pono)
+           FROM ttdsls401201 lc
+           WHERE lc.t$orno=tdsls401.t$orno
+           AND   lc.t$pono=tdsls401.t$pono
+           AND   lc.t$clyn=1) QTD_ITENS_CANCELADOS,
+          tcemm030.t$euca COD_FILIAL,
+		  tcemm124.t$grid UNID_EMPRESARIAL,
+		  znsls401.t$tpcb$c TP_COMBO,
+      znsls401.t$pecl$c NUM_PEDIDO,
+      znsls401.T$ENTR$C NUM_ENTREGA
+FROM
+        ttdsls401201 tdsls401,
+        tznsls401201 znsls401,
+        ttdsls400201 tdsls400,
+        ttcemm124201 tcemm124,
+		ttcemm030201 tcemm030,
+        tznsls400201 znsls400,
+        ( SELECT tznsls410201.t$poco$c poco,
+                 tznsls410201.t$ncia$c ncia,
+                 tznsls410201.t$uneg$c uneg,
+                 tznsls410201.t$pecl$c pecl,
+                 tznsls410201.t$sqpd$c sqpd,
+                 Max(tznsls410201.t$dtoc$c) dtoc
+          FROM tznsls410201
+          WHERE
+          tznsls410201.t$dtoc$c = (SELECT Max(b.t$dtoc$c)
+                                    FROM tznsls410201 b
+                                    WHERE   b.t$ncia$c=tznsls410201.t$ncia$c
+                                    AND     b.t$uneg$c=tznsls410201.t$uneg$c
+                                    AND     b.t$pecl$c=tznsls410201.t$pecl$c
+                                    AND     b.t$sqpd$c=tznsls410201.t$sqpd$c)
+          GROUP BY tznsls410201.t$poco$c,
+                   tznsls410201.t$ncia$c,
+                   tznsls410201.t$uneg$c,
+                   tznsls410201.t$pecl$c,
+                   tznsls410201.t$sqpd$c) ulttrc
+WHERE   znsls401.t$orno$c=tdsls401.t$orno
+AND     znsls401.t$pono$c=tdsls401.t$pono
+AND     tdsls400.t$orno=tdsls401.t$orno
+AND     tcemm124.t$cwoc=tdsls400.t$cofc
+AND 	tcemm030.t$eunt=tcemm124.t$grid
+AND     znsls400.t$ncia$c=znsls401.t$ncia$c
+AND     znsls400.t$uneg$c=znsls401.t$uneg$c
+AND     znsls400.t$pecl$c=znsls401.t$pecl$c
+AND     znsls400.t$sqpd$c=znsls401.t$sqpd$c
+AND     ulttrc.ncia=znsls401.t$ncia$c
+AND     ulttrc.uneg=znsls401.t$uneg$c
+AND     ulttrc.pecl=znsls401.t$pecl$c
+AND     ulttrc.sqpd=znsls401.t$sqpd$c
+
+

@@ -1,0 +1,5 @@
+SELECT
+  tcmcs005.t$cdis COD_MOTIVO_DEVOLUCAO,
+  tcmcs005.t$dsca DESCR_MOTIVO_DEVOLUCAO
+FROM ttcmcs005201 tcmcs005
+WHERE tcmcs005.T$rstp=11
