@@ -60,7 +60,7 @@ SELECT DISTINCT
     tdpur400.t$sbim FLAG_LIQUIDACAO_AUTOMATICA,
     tdpur400.T$COTP TIPO_ORD_COMPRA,
 	tdpur400.t$cvpc$c VPC,
-	tdpur400.t$rfdt$l TIPO_DOC_FICAL,
+	tdpur400.t$rfdt$l COD_TIPO_NOTA,
 	tdpur400.t$fdtc$l COD_TIPO_DOC_FISCAL,
 	tdpur400.t$oamt VALOR_TOTAL_MERCADOR
 FROM
