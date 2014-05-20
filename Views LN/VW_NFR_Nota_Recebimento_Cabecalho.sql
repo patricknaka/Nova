@@ -20,8 +20,8 @@ SELECT
 	tdrec940.t$doty$l COD_TIPO_NOTA,
 	CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NF_RECEB,
 	CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE) DT_SAIDA_NF_RECEB,	 
-	tdrec940.t$opor$l COD_NATUREZA_OPERACAO,
-	tdrec940.t$opfc$l SEQ_NATUREZA_OPERACAO,
+	tdrec940.t$opor$l SEQ_NATUREZA_OPERACAO,
+	tdrec940.t$opfc$l COD_NATUREZA_OPERACAO,
 	CASE WHEN tdrec940.t$opor$l='1556' THEN 1
 	ELSE 2
 	END FLAG_MERC_USO_CONSUMO,
