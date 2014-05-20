@@ -17,7 +17,7 @@ SELECT
 	tdrec940.t$bpid$l COD_FORNECEDOR,
 	tdrec940.t$docn$l NUM_NOTA_FISCAL_RECEBIDA,
 	tdrec940.t$seri$l SER_NOTA_FISCAL_RECEBIDA,
-	tdrec940.t$doty$l ESPECIE_NOTA_FISCAL_RECEBIDA,
+	tdrec940.t$doty$l COD_TIPO_NOTA,
 	CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NF_RECEB,
 	CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE) DT_SAIDA_NF_RECEB,	 
 	tdrec940.t$opor$l COD_NATUREZA_OPERACAO,
@@ -93,7 +93,6 @@ SELECT
 	0 VALOR_PIS_IMPORTACAO,													-- *** PEDENTE DE DEFINI플O FUNCIONAL ***
 	0 VALOR_COFINS_IMPORT,													-- *** PEDENTE DE DEFINI플O FUNCIONAL ***
 	0 VALOR_CIF,															-- *** PEDENTE DE DEFINI플O FUNCIONAL ***
-	tdrec940.t$doty$l MODELO_FISCAL,
 	0 COD_MOTIVO_DEVOLUCAO_ATO,												-- *** PEDENTE DE DEFINI플O FUNCIONAL ***
 	0 DT_HR_MOTIVO_DEVOLUCAO_ATO,											-- *** PEDENTE DE DEFINI플O FUNCIONAL ***
 	nvl((Select max(d.t$crpd$l) from ttdrec941201 d
