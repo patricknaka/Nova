@@ -1,4 +1,5 @@
 -- FAF.008 - Fabio Ferreira, 21-mai-2014, Fabio Ferreira, 	Incluido campos OBSERVACAO, FLAG_UTILIZ_ATAC, PPB
+-- FAF.009 - Fabio Ferreira, 21-mai-2014, Fabio Ferreira, 	Incluido campo Armazem
 --*********************************************************************************************************************************************************
 SELECT  ltrim(rtrim(tcibd001.t$item)) COD_ITEM,
         201 COMPANHIA,
@@ -51,9 +52,10 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) COD_ITEM,
         tcibd001.T$NPCL$C CLASSE_NPRODUTO,
         tdipu001.t$prip PRECO_COMPRA,
         tdipu001.T$IXDN$C CATEGORIA_XD,
-		tcibd001.t$obse$c OBSERVACAO,														--#FAF.007.sn
+		tcibd001.t$obse$c OBSERVACAO,														--#FAF.008.sn
 		tcibd001.t$uatc$c FLAG_UTILIZ_ATAC,
-		tcibd001.t$ppbe$c PPB																--#FAF.007.en
+		tcibd001.t$ppbe$c PPB,																--#FAF.008.en
+		tdisa001.t$cwar ARMAZEM																--#FAF.009.n
 FROM  ttcibd001201 tcibd001
 LEFT JOIN ttdipu001201 tdipu001 ON tdipu001.t$item=tcibd001.t$item
 LEFT JOIN ttccom100201 tccom100 ON tccom100.t$bpid=tdipu001.t$otbp
