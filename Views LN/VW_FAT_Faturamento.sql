@@ -6,6 +6,7 @@
 -- 07-mai-2014, Fabio Ferreira, Incluído campo COD_CIDADE_ENTREGA (Excluido indevidamente)
 --								Corrigido campo VALOR_CMV
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo PEDIDO_ENTREGA;
+-- #FAF.008 - 17-mai-2014, Fabio Ferreira, 	Incluida condição para evitar divisão por zero
 --****************************************************************************************************************************************************************
 SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) ULTIMA_ATUALIZACAO,
@@ -83,6 +84,7 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
 														 where cisli941b.t$fire$l=cisli941.t$fire$l
 														 and   cisli941b.t$line$l=cisli941.t$line$l
                              and   tcibd001b.T$ITEM=cisli941b.t$item$l
+                             and   cisli941b.t$gamt$l!=0                                                --#FAF.008.n                              
 														 and   tcibd001b.t$kitm<3),1)) VALOR_FRETE_CIA,            
         cisli941.t$gexp$l VALOR_DESPESA,
         cisli941.t$ldam$l VALOR_DESCONTO,
