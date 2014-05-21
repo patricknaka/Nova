@@ -1,7 +1,8 @@
 -- 06-mai-2014, Fabio Ferreira, Inclusão do numero do pedido
 -- #FAF.001 - 06-mai-2014, Fabio Ferreira, 	Tratamento da data de vencimento	
 -- #FAF.002 - 09-mai-2014, Fabio Ferreira, 	Correção dos campos referente a situação do título				
--- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Adicionado campo método de pagamento/recebimento			
+-- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Adicionado campo método de pagamento/recebimento
+-- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Alterado alias campo método de pagamento/recebimento				
 --****************************************************************************************************************************************************************
 SELECT	
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NUM_TITULO,
@@ -67,7 +68,8 @@ SELECT
 	 and znsls401.t$orno$c=ro.t$slso
 	 and znsls401.t$pono$c=ro.t$pono
 	 and rownum=1) NUM_PEDIDO,
-	 tfacr200.t$paym METODO_REC
+--	 tfacr200.t$paym METODO_REC																				--#FAF.007.n	--#FAF.008.o
+	 tfacr200.t$paym COD_METODO_RECEBIMENTO																					--#FAF.008.n
 FROM
 	ttfacr200201 tfacr200
 	LEFT JOIN ttfcmg001201 tfcmg001
