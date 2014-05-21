@@ -166,6 +166,10 @@ ALTER COLUMN ID_ITEM NUMERIC(32)
 
 --------------------------------------------------------------------
 
+--DE nvarchar (100) para varchar(100)
+ALTER TABLE MIS_DW_MIGRACAO.dbo.ods_vendedor
+ALTER COLUMN ds_vendedor_afiliado varchar(100)
+
 
 --Inclusão Atributos
 ------------------------------------------------------------------------------------------------------------------------------------------------
