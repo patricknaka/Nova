@@ -1,5 +1,6 @@
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega, adicionado o campo NUM_ENTREGA
 -- #FAF.047 - 22-mai-2014, Fabio Ferreira, 	Retirado campo ENTREGA
+-- #FAF.049 - 22-mai-2014, Fabio Ferreira, 	Alterado o campo FLAG_VALE_LISTA_CASAMENTO para trazer sim(1) quando existe lista de casmento ou não (2)
 --***************************************************************************************************************************************************************
 select
     tdsls400.t$rcd_utc  DT_ULTIMA_ATUALIZ_PEDIDO,
@@ -16,7 +17,8 @@ select
     znsls402.t$nupa$c  NUM_PARCELAS,
     znsls402.t$vlmr$c  VALOR_PAGAMENTO,
     znsls402.t$stat$c  STATUS_PAGAMENTO,
-    znsls400.t$idli$c  FLAG_VALE_LISTA_CASAMENTO,
+--    znsls400.t$idli$c  FLAG_VALE_LISTA_CASAMENTO,														--#FAF.049.o
+	CASE WHEN znsls400.t$idli$c!=0 THEN 1 ELSE 2 END FLAG_VALE_LISTA_CASAMENTO,							--#FAF.049.n
 	CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,
     znsls402.t$uneg$c  COD_UNIDADE_NEGOCIO,	
