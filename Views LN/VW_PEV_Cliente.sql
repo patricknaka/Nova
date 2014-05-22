@@ -3,11 +3,12 @@
 -- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Correção alias
 -- FAF.005 - Fabio Ferreira, 14-mai-2014, Fabio Ferreira, 	Iclusão do camo ID_LISTA_CASAMENTO
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
+-- #FAF.048 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 --***************************************************************************************************************************************************************
 SELECT znsls401.t$pecl$c NUM_PEDIDO,
        znsls401.t$entr$c NUM_ENTREGA,
 --	   CONCAT(TRIM(znsls401.t$pecl$c), TRIM(to_char(znsls401.t$entr$c))) PEDIDO_ENTREGA, 						-- #FAF.007.o
-	   znsls401.t$entr$c PEDIDO_ENTREGA, 																		-- #FAF.007.n
+--	   znsls401.t$entr$c PEDIDO_ENTREGA, 																		-- #FAF.048.n	#FAF.048.n
 	   tdsls400.t$orno ORDEM,
        tdsls400.t$ofbp CLIENTE_FATURA,
        tccom130.t$ftyp$l TIPO_CLIENTE,
