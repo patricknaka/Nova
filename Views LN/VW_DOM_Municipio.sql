@@ -6,6 +6,6 @@ select  a.t$ccty PAIS,
         p.t$dsca DESCRICAO_PAIS
 from  ttccom139201 a,
       ttcmcs143201 e,
-      ttcmcs020101 p
+      ttcmcs010201 p
 where e.t$cste=a.t$cste
 and   p.t$ccty=a.t$ccty
