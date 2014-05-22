@@ -1,4 +1,5 @@
 -- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Diversas correções e inclusão de campos
+-- #FAF.043 - 22-mai-2014, Fabio Ferreira, 	Rtrim Ltrim no codigo da garantia
 --********************************************************************************************************************************************************
 SELECT DISTINCT
 	znsls400.T$PECL$C PEDIDO,																					--#FAF.008.sn									 
@@ -9,7 +10,8 @@ SELECT DISTINCT
 	znsls400.t$dtem$c DATA_EMISSÃO_GARANTIA,							-- Data da emssão pedido / integração item garantido
 	tdsls400.t$odat DATA_PEDIDO_PRODUTO,								-- Data incluão produto / integração
 	ltrim(rtrim(tdsls401p.t$item)) COD_PRODUTO,							
-	tdsls401.t$item COD_GARANTIA,
+--	tdsls401.t$item COD_GARANTIA,																				--#FAF.043.o
+	ltrim(rtrim(tdsls401.t$item)) COD_GARANTIA,																	--#FAF.043.o
 	zncom005.t$igva$c VALOR_CUSTO,
 	tdsls401.t$pric VALOR_GARANTIA,
 	zncom005.t$piof$c VALOR_IOF,										
