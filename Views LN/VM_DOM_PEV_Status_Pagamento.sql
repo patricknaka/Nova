@@ -11,3 +11,4 @@ AND l.t$clab=d.t$za_clab
 AND l.t$clan='p'
 AND l.t$cpac='zn'
 AND l.t$vers=(select max(l1.t$vers) from tttadv140000 l1 where l1.t$clab=l.t$clab AND l1.t$clan=l.t$clan AND l1.t$cpac=l.t$cpac)
+ORDER BY d.t$cnst
