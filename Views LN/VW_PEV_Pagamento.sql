@@ -1,13 +1,14 @@
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega, adicionado o campo NUM_ENTREGA
+-- #FAF.047 - 22-mai-2014, Fabio Ferreira, 	Retirado campo ENTREGA
 --***************************************************************************************************************************************************************
 select
     tdsls400.t$rcd_utc  DT_ULTIMA_ATUALIZ_PEDIDO,
     201 COMPANHIA,
     tdsls400.t$orno ORDEM,
 --    CONCAT(TRIM(sls401q.t$pecl$c), TRIM(to_char(sls401q.t$entr$c))) PEDIDO_ENTREGA, 					--#FAF.007.o
-    sls401q.t$entr$c NUM_ENTREGA, 																	--#FAF.007.o
+    sls401q.t$entr$c NUM_ENTREGA, 																		--#FAF.007.o
 	TRIM(sls401q.t$pecl$c) PEDIDO,
-	sls401q.t$entr$c ENTREGA,
+--	sls401q.t$entr$c ENTREGA,																			--#FAF.047.o
     znsls402.t$sequ$c  SEQ_PAGAMENTO,
     znsls402.t$idmp$c  COD_MEIO_PAGAMENTO,
     znsls402.t$cccd$c  COD_BANDEIRA,
