@@ -1,6 +1,7 @@
 -- 05-mai-2014, Fabio Ferreira, Correções de timezone de todos os campos Data/hora
 -- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	Inclusão do campo Nota e Serie consolidada
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
+-- #FAF.028 - 17-mai-2014, Fabio Ferreira, 	Correção registros duplicados
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
         CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -111,6 +112,7 @@ FROM    ttdsls400201 tdsls400
          WHERE  tcibd001.t$item=tdsls401.t$item
          AND    znsls401.t$orno$c=tdsls401.t$orno
          AND    znsls401.t$pono$c=tdsls401.t$pono
+		 AND    tcibd001.T$KITM<3																			--#FAF.028
          GROUP BY
           znsls401.t$ncia$c,
           znsls401.t$uneg$c,
