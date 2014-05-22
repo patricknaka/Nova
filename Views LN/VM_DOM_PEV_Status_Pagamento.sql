@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD,
-       l.t$desc DESCR
+SELECT d.t$cnst COD_STATUS_PAGAMENTO,
+       l.t$desc DESC_STATUS
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='zn'
