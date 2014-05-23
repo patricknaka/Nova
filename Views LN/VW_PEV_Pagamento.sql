@@ -2,13 +2,15 @@
 -- #FAF.047 - 22-mai-2014, Fabio Ferreira, 	Retirado campo ENTREGA
 -- #FAF.049 - 22-mai-2014, Fabio Ferreira, 	Alterado o campo FLAG_VALE_LISTA_CASAMENTO para trazer sim(1) quando existe lista de casmento ou não (2)
 -- #FAF.076 - 23-mai-2014, Fabio Ferreira, 	Incluida a descrição do COD_MOTIVO_REPROVACAO
+-- #FAF.047.1 - 23-mai-2014, Fabio Ferreira, 	Campo ENTREGA convertido para String
 --***************************************************************************************************************************************************************
 select
     tdsls400.t$rcd_utc  DT_ULTIMA_ATUALIZ_PEDIDO,
     201 COMPANHIA,
     tdsls400.t$orno ORDEM,
 --    CONCAT(TRIM(sls401q.t$pecl$c), TRIM(to_char(sls401q.t$entr$c))) PEDIDO_ENTREGA, 					--#FAF.007.o
-    sls401q.t$entr$c NUM_ENTREGA, 																		--#FAF.007.o
+    TO_CHAR(sls401q.t$entr$c) NUM_ENTREGA, 																--#FAF.047.1.n
+--    sls401q.t$entr$c NUM_ENTREGA, 																	--#FAF.007.o	#FAF.047.1.o
 	TRIM(sls401q.t$pecl$c) PEDIDO,
 --	sls401q.t$entr$c ENTREGA,																			--#FAF.047.o
     znsls402.t$sequ$c  SEQ_PAGAMENTO,
