@@ -9,7 +9,7 @@ SELECT
 	tfcmg011.t$agcd$l NUM_DA_AGENCIA,
 	tfcmg001.t$bano NUM_DA_CONTA,
 	tfcmg103.T$MOPA$D COD_MODALIDADE_DE_PGTO, -- tfcmg103.mopa.d
-	tfacp200.t$docn NUM_DOCUMENTO,
+	tfacp200.t$docn SEQ_DOCUMENTO,
   CAST((FROM_TZ(CAST(TO_CHAR(tfacp600.t$sdat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
     AT time zone sessiontimezone) AS DATE) DATA_PAGAMENTO,
 	ABS(tfacp200.t$amti + tfacp200.t$ramn$l) VALOR_PAGAMENTO,
@@ -17,8 +17,8 @@ SELECT
 	CASE WHEN tflcb230.t$revs$d=1 then TO_CHAR(tflcb230.t$lach$d)
 	ELSE ' '
 	END DATA_ESTORNO,
-	tflcb230.t$send$d SITUACAO_PAGAMENTO_ELETR,
-	nvl(tfcmg109.t$stpp,0) SITUACAO_PAGAMENTO,
+	tflcb230.t$send$d COD_SITUACAO_PAGAMENTO_ELETR,
+	nvl(tfcmg109.t$stpp,0) COD_SITUACAO_PAGAMENTO,
 --  CAST((FROM_TZ(CAST(TO_CHAR(tfacp600.t$ddat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 					--#FAF.005.o
 --        AT time zone sessiontimezone) AS DATE) DT_HR_DE_ATUALIZACAO,												--#FAF.005.o
 	tfacp600.t$ddat DT_HR_DE_ATUALIZACAO,																			--#FAF.005.n
