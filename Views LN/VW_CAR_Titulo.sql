@@ -23,7 +23,7 @@ SELECT
    else TO_NUMBER(tfacr200.t$dim2) END
    and rownum = 1
    ) UNID_EMPRESARIAL,
-	'CR' COD_MODULO,
+	'CAR' COD_MODULO,
 	tfacr200.t$doct$l COD_DOCUMENTO,
 	tfacr200.t$itbp COD_PARCEIRO,
 	tfacr200.t$docn$l NUM_NOTA_FISCAL,
