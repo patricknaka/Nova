@@ -22,7 +22,7 @@ SELECT DISTINCT
    else TO_NUMBER(tfacp200.t$dim2) END
    and rownum = 1
    ) UNID_EMPRESARIAL,
-  tfacp200.t$tpay CODIGO_DOCUMENTO,
+  tfacp200.t$tpay COD_TIPO_DOCUMENTO,
   tfacp200.t$ifbp CODIGO_FORNECEDOR_CLIENTE,
   tdrec947.t$rcno$l NUMERO_NOTA_RECEBIMENTO,
   tfacp200.t$docn$l NUMERO_NOTA_FISCAL,
