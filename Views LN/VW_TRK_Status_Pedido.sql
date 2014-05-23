@@ -1,8 +1,11 @@
+-- #FAF.050, 23-mai-2014, Fabio Ferreira,	NUM_ENTREGA_PEDIDO convertido para string
+--************************************************************************************************************************************************
 SELECT
     201 COMPANHIA,
     tcemm030.t$euca COD_FILIAL,
     tcemm112.t$grid UNID_EMPRESARIAL,
-    znsls410.t$entr$c NUM_ENTREGA_PEDIDO,
+--  znsls410.t$entr$c NUM_ENTREGA_PEDIDO,							--#FAF.050.o
+	TO_CHAR(znsls410.t$entr$c) NUM_ENTREGA_PEDIDO,					--#FAF.050.n
     znsls410.t$pecl$c NUM_PEDIDO,
     znsls410.t$poco$c COD_STATUS,
     znsls410.t$stor$c COD_SISTEMA_FONTE,	
