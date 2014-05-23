@@ -1,6 +1,7 @@
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega, adicionado o campo NUM_ENTREGA
 -- #FAF.047 - 22-mai-2014, Fabio Ferreira, 	Retirado campo ENTREGA
 -- #FAF.049 - 22-mai-2014, Fabio Ferreira, 	Alterado o campo FLAG_VALE_LISTA_CASAMENTO para trazer sim(1) quando existe lista de casmento ou não (2)
+-- #FAF.076 - 23-mai-2014, Fabio Ferreira, 	Incluida a descrição do COD_MOTIVO_REPROVACAO
 --***************************************************************************************************************************************************************
 select
     tdsls400.t$rcd_utc  DT_ULTIMA_ATUALIZ_PEDIDO,
@@ -41,6 +42,7 @@ select
     znsls402.t$maqu$c  NUM_MAQUINETA,
     znsls402.t$nute$c  NUM_TERMINAL,
     znsls402.t$mrep$c  COD_MOTIVO_REPROVACAO,
+	znsls402.t$txrp$c  DESC_MOTIVO_REPROVACAO,															--#FAF.076.n
     znsls402.t$idag$c  NUM_AGENCIA_DEBITO,
     znsls402.t$idct$c  NUM_CONTA_DEBITO
 FROM  tznsls400201 znsls400,
