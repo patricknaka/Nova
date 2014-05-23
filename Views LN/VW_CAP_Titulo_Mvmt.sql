@@ -9,7 +9,7 @@ SELECT
   tfacp200.t$ttyp TIPO_TRANSAC,
 	tfacP200.t$lino NUM_MOVIMENTO,
 	tfacp200.t$ninv NUM_TITULO,
-	'CP' COD_MODULO,																		
+	'CAP' COD_MODULO,																		
 	tfacp200.t$docn SEQ_DOCUMENTO,
 --	tfacp200.t$ttyp COD_TRANSACAO,																		--#FAF.002.o
 	tfacp200.t$tdoc COD_TRANSACAO,																		--#FAF.002.n
@@ -18,7 +18,7 @@ SELECT
 	CASE WHEN tfacp200.t$amth$1<0 THEN '-'
   ELSE '+'
   END SINAL,
-	'CP' COD_MODULO_TITULO_REFER, 
+	'CAP' COD_MODULO_TITULO_REFER, 
 --	r.t$ttyp || r.t$ninv TITULO_REFER,																	--#FAF.002.o
 	nvl((select znacp004.t$ttyp$c || znacp004.t$ninv$c from BAANDB.tznacp004201 znacp004				--#FAF.002.sn
 		 where znacp004.t$tty1$c=tfacp200.t$ttyp and znacp004.t$nin1$c=tfacp200.t$ninv
