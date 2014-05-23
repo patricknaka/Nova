@@ -78,7 +78,7 @@ SELECT DISTINCT
    and ROWNUM=1),0) TAXA_MULTA,																		--#FAF.003.en
   CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
         AT time zone sessiontimezone) AS DATE) DATA_HORA_ATUALIZACAO,
-  'CP' COD_MODULO,
+  'CAP' COD_MODULO,
   tdrec940.t$fire$l REFERENCIA_FICAL
 FROM
   ttfacp200201 tfacp200
