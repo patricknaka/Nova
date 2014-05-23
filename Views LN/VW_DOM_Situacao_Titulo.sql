@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD_SITUACAO,
-       l.t$desc DESCR
+SELECT d.t$cnst COD_SITUACAO_TITULO,
+       l.t$desc DESC_SITUACAO_TITULO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'
