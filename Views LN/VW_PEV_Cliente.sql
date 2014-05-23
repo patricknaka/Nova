@@ -4,11 +4,13 @@
 -- FAF.005 - Fabio Ferreira, 14-mai-2014, Fabio Ferreira, 	Iclusão do camo ID_LISTA_CASAMENTO
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.048 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
+-- #FAF.048.1 - 23-mai-2014, Fabio Ferreira, 	NUM_ENTREGA convertido para string
 --***************************************************************************************************************************************************************
 SELECT znsls401.t$pecl$c NUM_PEDIDO,
-       znsls401.t$entr$c NUM_ENTREGA,
+       TO_CHAR(znsls401.t$entr$c) NUM_ENTREGA,																	-- #FAF.048.1.n
+--       znsls401.t$entr$c NUM_ENTREGA,																			-- #FAF.048.1.o
 --	   CONCAT(TRIM(znsls401.t$pecl$c), TRIM(to_char(znsls401.t$entr$c))) PEDIDO_ENTREGA, 						-- #FAF.007.o
---	   znsls401.t$entr$c PEDIDO_ENTREGA, 																		-- #FAF.048.n	#FAF.048.n
+--	   znsls401.t$entr$c PEDIDO_ENTREGA, 																		-- #FAF.047.n	#FAF.048.o
 	   tdsls400.t$orno ORDEM,
        tdsls400.t$ofbp CLIENTE_FATURA,
        tccom130.t$ftyp$l TIPO_CLIENTE,
@@ -28,7 +30,7 @@ SELECT znsls401.t$pecl$c NUM_PEDIDO,
        tccom130c.t$pstc CEP_ENTREGA,
        tccom130c.t$namc LOGRAD_ENTREGA,
        tccom130c.t$dist$l BAIRRO_ENTREGA,
---       tccom130c.t$hono NUM_ENTREGA ,																		--#FAF.002.o
+--       tccom130c.t$hono NUM_ENTREGA ,																			--#FAF.002.o
        tccom130c.t$hono NUM_ENTREGA_END ,																		--#FAF.002.n
        znsls401.t$come$c COMPLEMENTO_ENTREGA,
        znsls401.t$refe$c REFERENCIA_ENTREGA,
@@ -37,7 +39,7 @@ SELECT znsls401.t$pecl$c NUM_PEDIDO,
 	   CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DATA_CHEGADA_PED,
        Q1.trdt DATA_HR_ULTIMA_ATUALIZACAO,
-	   znsls400.t$idli$c ID_LISTA_CASAMENTO																	--#FAF.005.n
+	   znsls400.t$idli$c ID_LISTA_CASAMENTO																		--#FAF.005.n
 FROM tznsls401201 znsls401,
      tznsls400201 znsls400,
      ttdsls400201 tdsls400,
