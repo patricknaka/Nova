@@ -2,6 +2,7 @@
 -- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	Inclusão do campo Nota e Serie consolidada
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.028 - 17-mai-2014, Fabio Ferreira, 	Correção registros duplicados
+-- #FAF.046 - 23-mai-2014, Fabio Ferreira, 	Conversão do campo NUM_ENTREGA para String
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
         CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -15,7 +16,8 @@ SELECT  DISTINCT
           AT time zone sessiontimezone) AS DATE) HORA_COMPRA, -- * CAMPO DATA-HORA
         znsls400.t$uneg$c COD_UNIDADE_NEGOCIO,
         sls401q.t$pecl$c NUM_PEDIDO,
-		sls401q.t$entr$c NUM_ENTREGA,
+		TO_CHAR(sls401q.t$entr$c) NUM_ENTREGA,																			--#FAF.046.n
+--		sls401q.t$entr$c NUM_ENTREGA,																					--#FAF.046.o
 --		CONCAT(TRIM(sls401q.t$pecl$c), TRIM(to_char(sls401q.t$entr$c))) PEDIDO_ENTREGA, 								--#FAF.007.o
         znsls400.t$cven$c VENDEDOR,
         tcemm030.t$euca COD_FILIAL,
