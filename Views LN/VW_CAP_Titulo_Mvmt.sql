@@ -10,10 +10,10 @@ SELECT
 	tfacP200.t$lino NUM_MOVIMENTO,
 	tfacp200.t$ninv NUM_TITULO,
 	'CP' COD_MODULO,																		
-	tfacp200.t$docn COD_DOCUMENTO,
+	tfacp200.t$docn SEQ_DOCUMENTO,
 --	tfacp200.t$ttyp COD_TRANSACAO,																		--#FAF.002.o
 	tfacp200.t$tdoc COD_TRANSACAO,																		--#FAF.002.n
-	tfacp200.t$tpay COD_TIPO_VALOR,
+	tfacp200.t$tpay COD_TIPO_DOCUMENTO,
 	tfacp200.t$docd DATA_TRANSACAO,
 	CASE WHEN tfacp200.t$amth$1<0 THEN '-'
   ELSE '+'
