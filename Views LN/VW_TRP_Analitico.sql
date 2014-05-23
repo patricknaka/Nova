@@ -1,4 +1,4 @@
-select
+select distinct
       znfmd630.T$FILI$C dofi_filial,
       znsls400.t$uneg$c unin_nome,
       (select min(o.T$DATE$C) 
@@ -42,7 +42,7 @@ select
       znfmd060.t$ttra$c pedc_id_tipo_transporte,
       znsls401.t$dtep$c pedc_dt_limite_exp,
       znfmd630.t$docn$c nfca_ped_cliente,
-      (select o.T$stat$C 
+      (select o.T$COCT$C 
       from BAANDB.TZNFMD640201 o
       where o.T$date$c=(select max(o1.T$date$c) from BAANDB.TZNFMD640201 o1 where o1.T$ETIQ$C=o.T$ETIQ$C)
       and o.T$ETIQ$C=znfmd630.T$ETIQ$C
