@@ -1,11 +1,13 @@
 -- FAF.008 - Fabio Ferreira, 21-mai-2014, Fabio Ferreira, 	Incluido campos OBSERVACAO, FLAG_UTILIZ_ATAC, PPB
 -- FAF.009 - Fabio Ferreira, 21-mai-2014, Fabio Ferreira, 	Incluido campo Armazem
+-- #FAF.084 - Fabio Ferreira, 26-mai-2014, Fabio Ferreira, 	Inclusão do campo MODELO_FABRICANTE
 --*********************************************************************************************************************************************************
 SELECT  ltrim(rtrim(tcibd001.t$item)) COD_ITEM,
         201 COMPANHIA,
 		tccom100.t$bpid CODE_FORNECEDOR,
         tccom130.t$fovn$l CNPJ_FORNCEDOR,
         tcibd004.t$aitc COD_ITEM_FORNECEDOR,
+		tcibd001.t$mdfb$c DESC_MODELO_FABRICANTE,											--#FAF.084.n
         tcibd001.t$dsca DESCR_ITEM,
         tcibd936.t$frat$l NUM_NBM,
         tcibd001.t$ceat$l COD_EAN,
