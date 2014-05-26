@@ -145,7 +145,7 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
              WHERE  cisli943.t$fire$l=cisli941.t$fire$l
              AND    cisli943.t$line$l=cisli941.t$line$l
              AND    cisli943.t$brty$l=3),0) VALOR_BASE_IPI,
-        --cisli940.t$cfrw$l COD_TRANSPORTADOR,																	--#FAF.063.o
+        --cisli940.t$cfrw$l COD_TRANSPORTADOR,																		--#FAF.063.o
 		nvl((select t.t$suno from ttcmcs080201 t where t.t$cfrw=cisli940.t$cfrw$l),' ') COD_TRANSPORTADOR,			--#FAF.063.n
 		CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ENTREGA,
