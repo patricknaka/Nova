@@ -12,3 +12,4 @@ UNION select TO_CHAR(c.t$idbc$c) Cod_Banco,											--#FAF.064.sn
 		 and rownum=1) Ds_Banco
 from BAANDB.tzncmg020201 c)
 UNION Select '0' Cod_Banco,  'Não Associado' Ds_Banco from dual						--#FAF.064.en
+order by 1

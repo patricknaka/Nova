@@ -19,3 +19,4 @@ FROM
 	ttccom125201 tccom125,
 	ttfcmg011201 tfcmg011
 WHERE tfcmg011.t$bank=tccom125.t$brch
+order by 1
