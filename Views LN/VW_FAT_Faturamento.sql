@@ -8,6 +8,7 @@
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo PEDIDO_ENTREGA;
 -- #FAF.008 - 17-mai-2014, Fabio Ferreira, 	Incluida condição para evitar divisão por zero
 -- #FAF.063 - 22-mai-2014, Fabio Ferreira, 	Alterado o código da transportadora para o código do parceiro
+-- #FAF.083 - 26-mai-2014, Fabio Ferreira, 	Campo NUM_ENTREGA convertido para string
 --****************************************************************************************************************************************************************
 SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) ULTIMA_ATUALIZACAO,
@@ -31,7 +32,8 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
         cisli940.t$stbp$l COD_CLIENTE_ENTREGA ,
         znsls401.t$sequ$c NUM_SEQ_ENTREGA,
         znsls401.t$pecl$c NUM_PEDIDO,
-        znsls401.t$entr$c NUM_ENTREGA,
+        TO_CHAR(znsls401.t$entr$c) NUM_ENTREGA,																	--#FAF.083.n
+--        znsls401.t$entr$c NUM_ENTREGA,																		--#FAF.083.o
 --        CONCAT(TRIM(znsls401.t$pecl$c), TRIM(to_char(znsls401.t$entr$c))) PEDIDO_ENTREGA,						#FAF.007.o
 		znsls401.t$orno$c ORDEM,
         CASE WHEN cisli940.t$fdty$l=15 then
