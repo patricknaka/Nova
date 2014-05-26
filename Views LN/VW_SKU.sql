@@ -55,7 +55,7 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) COD_ITEM,
 		tcibd001.t$obse$c OBSERVACAO,														--#FAF.008.sn
 		tcibd001.t$uatc$c FLAG_UTILIZ_ATAC,
 		tcibd001.t$ppbe$c PPB,																--#FAF.008.en
-		tdisa001.t$cwar ARMAZEM																--#FAF.009.n
+		tdisa001.t$cwar COD_ARMAZEM																--#FAF.009.n
 FROM  ttcibd001201 tcibd001
 LEFT JOIN ttdipu001201 tdipu001 ON tdipu001.t$item=tcibd001.t$item
 LEFT JOIN ttccom100201 tccom100 ON tccom100.t$bpid=tdipu001.t$otbp
