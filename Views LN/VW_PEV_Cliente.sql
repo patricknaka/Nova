@@ -5,8 +5,10 @@
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.048 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.048.1 - 23-mai-2014, Fabio Ferreira, 	NUM_ENTREGA convertido para string
+-- #FAF.048.1 - 26-mai-2014, Fabio Ferreira, 	Agrupado registros duplicados
 --***************************************************************************************************************************************************************
-SELECT znsls401.t$pecl$c NUM_PEDIDO,
+SELECT DISTINCT
+	   znsls401.t$pecl$c NUM_PEDIDO,
        TO_CHAR(znsls401.t$entr$c) NUM_ENTREGA,																	-- #FAF.048.1.n
 --       znsls401.t$entr$c NUM_ENTREGA,																			-- #FAF.048.1.o
 --	   CONCAT(TRIM(znsls401.t$pecl$c), TRIM(to_char(znsls401.t$entr$c))) PEDIDO_ENTREGA, 						-- #FAF.007.o
