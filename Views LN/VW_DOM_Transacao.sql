@@ -1,14 +1,12 @@
-SELECT d.t$cnst COD_TRANSACAO,
-       l.t$desc DESCR
-FROM tttadv401000 d,
-     tttadv140000 l
-WHERE d.t$cpac='tf'
-AND d.t$cdom='cmg.tpmo.d'
-AND d.t$vers='B61U'
-AND d.t$rele='a7'
-AND d.t$cust='glo1'
-AND l.t$clab=d.t$za_clab
-AND l.t$clan='p'
-AND l.t$cpac='tf'
-AND l.t$vers=(select max(l1.t$vers) from tttadv140000 l1 where l1.t$clab=l.t$clab AND l1.t$clan=l.t$clan AND l1.t$cpac=l.t$cpac)
-order by 1
+-- FAF.005 - 14-mai-2014, Fabio Ferreira, 	Incluida informação do módulo com base na tabela zngld001 (zngldc101m000)
+--************************************************************************************************************************************************************
+SELECT
+--	tfgld011.t$catg COD_MODULO,																--#FAF.005.o
+	CASE WHEN zngld001.t$tror$c=1 THEN 'CAP' 
+	WHEN zngld001.t$tror$c=2 THEN 'CAR' ELSE ' ' END COD_MODULO, 							--#FAF.005.n
+	tfgld011.t$catg COD_TIPO_TRANSACAO				--#FAF.005.n
+	tfgld011.t$ttyp COD_TRANSACAO,	
+	tfgld011.t$desc DESCR_TRANSACAO	
+FROM ttfgld011201 tfgld011
+LEFT JOIN ( select distinct a.t$ttyp$c, a.t$tror$c from tzngld001201 a) zngld001			--#FAF.005.n
+ON zngld001.t$ttyp$c=tfgld011.t$ttyp														--#FAF.005.n
