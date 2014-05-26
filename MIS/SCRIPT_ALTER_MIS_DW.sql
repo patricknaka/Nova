@@ -216,3 +216,9 @@ ADD ID_REF_FISCAL varchar(40)
 ALTER TABLE MIS_DW_MIGRACAO.DBO.stg_sige_cmv_hist
 ALTER COLUMN ID_ITEM NUMERIC(32)
 
+
+--------------------------------------------------------------------
+--Inclusão do flag kit
+ALTER TABLE dbo.stg_sige_detalhe_pedido 
+ADD NR_KIT int NULL
+
