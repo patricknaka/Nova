@@ -60,7 +60,7 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
           end SERIE_NF_REMESSA,
         ' ' NUMERO_NF_CONSOLIDADA,       -- *** AGUARDANDO DEFINIÇAO FUNCIONAL
         ' ' SERIE_NF_CONSOLIDADA,        -- *** AGUARDANDO DEFINIÇAO FUNCIONAL
-        cisli940.t$stat$l STATUS_NFE,
+        cisli940.t$stat$l COD_SITUACAO_NOTA,
         (Select 
 		 CAST((FROM_TZ(CAST(TO_CHAR(max(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE)
