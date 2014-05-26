@@ -27,7 +27,7 @@ SELECT
 	'CR' COD_MODULO,
 	tfacr200.t$doct$l COD_DOCUMENTO,
 	tfacr200.t$tdoc COD_TRANSACAO,
-	tfacr200.t$trec COD_TIPO_DE_VALOR,
+	tfacr200.t$trec COD_TIPO_DOCUMENTO,
 	CASE WHEN tfacr200.t$amnt<0 THEN '-' ELSE '+' END SINAL,
 	tfacr200.t$docd DATA_TRANSACAO,
 	tfacr200.t$amnt VALOR_TRANSACAO,
@@ -35,7 +35,7 @@ SELECT
 	(select p.t$rpst$l from ttfacr201201 p
 	 where p.t$ttyp=tfacr200.t$ttyp
 	 and p.t$ninv=tfacr200.t$ninv 
-	 and p.t$schn=tfacr200.t$schn) SITUACAO_MOVIMENTO,													--#FAF.079.n
+	 and p.t$schn=tfacr200.t$schn) COD_PREP_PAGAMENTO,													--#FAF.079.n
 --	CAST((FROM_TZ(CAST(TO_CHAR(tfcmg409.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 --		AT time zone sessiontimezone) AS DATE) DATA_SITUACAO_MOVIMENTO,									--#FAF.079.o
 	CASE WHEN t.t$balc=t.t$bala															-- Liquidado	--#FAF.079.sn
