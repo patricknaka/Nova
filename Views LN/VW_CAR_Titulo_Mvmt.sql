@@ -26,7 +26,7 @@ SELECT
 	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NUM_TITULO,
 	'CR' COD_MODULO,
 	tfacr200.t$doct$l COD_DOCUMENTO,
-	tfacr200.t$tdoc COD_TRANSACAO,
+	tfacr200.t$tdoc COD_TIPO_TRANSACAO,
 	tfacr200.t$trec COD_TIPO_DOCUMENTO,
 	CASE WHEN tfacr200.t$amnt<0 THEN '-' ELSE '+' END SINAL,
 	tfacr200.t$docd DATA_TRANSACAO,
