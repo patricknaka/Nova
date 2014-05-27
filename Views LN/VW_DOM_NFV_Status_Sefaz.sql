@@ -1,5 +1,5 @@
 SELECT d.t$cnst COD_STATUS_SEFAZ,
-       l.t$desc DESCR
+       l.t$desc DESC_STATUS_SEFAZ
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='ci'

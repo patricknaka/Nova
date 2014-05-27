@@ -1,9 +1,9 @@
 --	FAF.003 - 12-mai-2014, Fabio Ferreira, 	Icluido os tipos de operação de saida
---	FAF.008 - 21-jun-2014, Fabio Ferreira, 	Correção os registros do módulo NR estavam mostrando os registros de NF
+--	FAF.008 - 21-mai-2014, Fabio Ferreira, 	Correção os registros do módulo NR estavam mostrando os registros de NF
 --*******************************************************************************************************************************************
-SELECT d.t$cnst COD_CONTROLE,
-       l.t$desc DESCR,
-	   'NR' MODULO													--#FAF.003.n
+SELECT d.t$cnst COD_TIPO_OPERACAO,
+       l.t$desc DESC_TIPO_OPERACAO,
+	   'NR' CD_MODULO													--#FAF.003.n
 FROM tttadv401000 d,
      tttadv140000 l
 --WHERE d.t$cpac='ci'												--#FAF.008.o
@@ -36,4 +36,5 @@ AND l.t$clan='p'
 AND l.t$cpac='ci'
 AND l.t$vers='B61U'
 AND l.t$rele='a7'
-AND l.t$cust='glo1'													--#FAF.003.en
+AND l.t$cust='glo1'
+order by 1													--#FAF.003.en
