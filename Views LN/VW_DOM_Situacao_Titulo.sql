@@ -2,7 +2,7 @@
   --****************************************************************************************************************************************************
 SELECT d.t$cnst COD_SITUACAO_TITULO,
        l.t$desc DESC_SITUACAO_TITULO,
-      'CAP' MODULO
+      'CAP' ID_MODULO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'
@@ -19,7 +19,7 @@ AND l.t$cust=' '
 UNION
 SELECT d.t$cnst COD_SITUACAO,
        l.t$desc DESC_SITUACAO_TITULO,
-      'CAR' MODULO
+      'CAR' ID_MODULO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'
