@@ -1,3 +1,5 @@
+-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal						
+--************************************************************************************************************************************************************
 SELECT
     201 COMPANHIA,
 	(SELECT tcemm030.t$euca FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
@@ -41,22 +43,35 @@ SELECT
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=2) VALOR_ICMS_ST,
-	0 VALOR_ICMS_DESTACADO,													-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
+	
+	(SELECT sum(tdrec942.t$amnr$l) FROM ttdrec942201 tdrec942
+	WHERE tdrec942.t$fire$l=tdrec940.t$fire$l
+	AND tdrec942.t$brty$l=1) VALOR_ICMS_DESTACADO,	
+	
+	
 	(SELECT tdrec949.t$base$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=3) VALOR_BASE_IPI,
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=3) VALOR_IPI,
-	0 VALOR_IPI_DESTACADO,													-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VALOR_SERVICO,														-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
+	
+	(SELECT sum(tdrec942.t$amnr$l) FROM ttdrec942201 tdrec942
+	WHERE tdrec942.t$fire$l=tdrec940.t$fire$l
+	AND tdrec942.t$brty$l=1) VALOR_IPI_DESTACADO,
+
+	nvl((	select sum(a.t$tamt$l) from ttdrec941201 a, ttcibd001201 b
+			where a.t$fire$l=tdrec941.t$fire$l
+			and b.t$item=a.t$item$l
+			and b.t$kitm=5),0)	VALOR_SERVICO,
+
 	tdrec940.t$gexp$l VALOR_DESPESA,
 	tdrec940.t$addc$l VALOR_DESCONTO,
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=7) VALOR_ISS,
 	tdrec940.t$fght$l VALOR_FRETE,
-	0 VALOR_DESPESA_ACESSORIA,												-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
+	0 VALOR_DESPESA_ACESSORIA,												-- *** DUVIDA ***
 	tdrec940.t$tfda$l VALOR_TOTAL_NOTA,
 	tdrec940.t$gwgt$l PESO_BRUTO,
 	nvl((select t.t$text from ttttxt010201 t 
@@ -72,14 +87,19 @@ SELECT
 	(SELECT tdrec947.t$rcno$l FROM ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
 	AND rownum=1) NUM_LOTE,
-	0 FLAG_SUFRAMA,															-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
+	CASE WHEN tccom966.t$insu$l=' ' THEN 2 ELSE 1 END FLAG_SUFRAMA,		
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=5) VALOR_PIS,
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=6) VALOR_COFINS,
-	0 VALOR_CSLL,															-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
+	
+	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
+	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
+	AND tdrec949.t$brty$l=13) VALOR_CSLL,
+	
+	
 	0 VALOR_DESCONTO_CONDICIONAL,											-- *** DESCONSIDERAR ***
 	tdrec940.t$addc$l VALOR_DESC_INCONDICIONAL,
 	(SELECT tdrec949.t$base$l FROM ttdrec949201 tdrec949
@@ -89,12 +109,37 @@ SELECT
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=16) VALOR_IMPOSTO_IMPORT,
 	tdrec940.t$cchr$l VL_DESPESA_ADUANEIRA,
-	0 VALOR_ADICIONAL_IMPORTACAO,											-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VALOR_PIS_IMPORTACAO,													-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VALOR_COFINS_IMPORT,													-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VALOR_CIF,															-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 COD_MOTIVO_DEVOLUCAO_ATO,												-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 DT_HR_MOTIVO_DEVOLUCAO_ATO,											-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ***
+
+	
+	nvl((select sum(l.t$gexp$l) from ttdrec941201 l
+		where	l.t$fire$l = tdrec940.t$fire$l
+		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VALOR_ADICIONAL_IMPORTACAO,
+	
+	nvl((select sum(li.t$amnt$l) from ttdrec942201 li, ttdrec941201 l
+		where	l.t$fire$l = tdrec940.t$fire$l
+		and li.t$fire$l=li.t$fire$l
+		and (l.t$sour$l=2 or l.t$sour$l=8)
+		and li.t$brty$l=5),0) VALOR_PIS_IMPORTACAO,
+	
+	nvl((select sum(li.t$amnt$l) from ttdrec942201 li, ttdrec941201 l
+		where	l.t$fire$l = tdrec940.t$fire$l
+		and li.t$fire$l=li.t$fire$l
+		and (l.t$sour$l=2 or l.t$sour$l=8)
+		and li.t$brty$l=6),0) VALOR_COFINS_IMPORT,	
+
+	nvl((select sum(l.t$fght$l) from ttdrec941201 l
+		where	l.t$fire$l = tdrec940.t$fire$l
+		and l.t$crpd$l=1),0) VALOR_CIF,
+	
+	nvl((select lr.t$mdev$c from twhinh312201 lr, ttdrec947201 rf
+		where rf.t$fire$l=tdrec940.t$fire$l
+		and	lr.t$rcno=rf.t$rcno$l
+		and lr.t$rcln=rf.t$rcln$l
+		and lr.t$mdev$c!=' '
+		and rownum=1),' ') COD_MOTIVO_DEVOLUCAO_ATO,	
+	
+
+	0 DT_HR_MOTIVO_DEVOLUCAO_ATO,											-- *** NÃO TEMOS ESTA INFORMAÇÃO ***
 	nvl((Select max(d.t$crpd$l) from ttdrec941201 d
 	where d.t$fire$l=tdrec940.t$fire$l),2) TIPO_FRETE,																
 	tdrec940.t$fire$l NUM_REFERENCIA_DOCUMENTAL,
@@ -103,5 +148,7 @@ SELECT
 	AND tdrec949.t$brty$l=2),2) FLAG_ICMS_ST_SEM_CONV								
 FROM
 	ttdrec940201 tdrec940
+	LEFT JOIN ttccom966201 tccom966 ON tccom966.t$comp$d=tdrec940.t$fovn$l
 WHERE tdrec940.t$rfdt$l not in (3,5,8,13,16,22,33)
 AND tdrec940.t$stat$l>3
+
