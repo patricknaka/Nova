@@ -1,5 +1,5 @@
 SELECT d.t$cnst COD_GENERO,
-       l.t$desc DESCR
+       l.t$desc DESC_GENERO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tc'
@@ -13,3 +13,4 @@ AND l.t$cpac='tc'
 AND l.t$vers='B61'
 AND l.t$rele='a'
 AND l.t$cust=' '
+order by 1

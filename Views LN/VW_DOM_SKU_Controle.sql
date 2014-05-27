@@ -1,5 +1,5 @@
 SELECT d.t$cnst COD_CONTROLE,
-       l.t$desc DESCR
+       l.t$desc DESC_CONTROLE
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='zn'
@@ -19,4 +19,4 @@ FROM DUAL
 UNION SELECT  20 COD_CONTROLE,
               'AMOSTRA GRATIS' DESCR
 FROM DUAL
-
+order by 1
