@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD_MODALIDADE,
-       l.t$desc DESCR
+SELECT d.t$cnst COD_MODALIDADE_PGTO,
+       l.t$desc DESC_MODALIDE_PGTO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'
@@ -13,3 +13,4 @@ AND l.t$cpac='tf'
 AND l.t$vers='B61U'
 AND l.t$rele='a7'
 AND l.t$cust='glo1'
+order by 1
