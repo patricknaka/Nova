@@ -1,4 +1,5 @@
--- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal						
+-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
+-- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA					
 --************************************************************************************************************************************************************
 SELECT
   tdrec941.t$fire$l REF_FISCAL,
@@ -252,7 +253,7 @@ SELECT
   THEN tdrec941.t$copr$l ELSE 0 END VALOR_CUSTO_IMPOTACAO, 
 
   
- (SELECT tdrec940.t$amnr$l FROM ttdrec942201 tdrec942
+ (SELECT tdrec942.t$amnr$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VALOR_ICMS_DESTACADO, 
@@ -262,7 +263,13 @@ SELECT
   	(SELECT tdrec947.t$orno$l FROM ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
 	AND tdrec947.t$line$l=tdrec941.t$line$l
-	AND rownum=1)  NUM_PEDIDO_COMPRA
+	AND rownum=1)  NUM_PEDIDO_COMPRA,
+	CASE WHEN tdrec940.t$stoa$l=' ' THEN
+	tdrec940.t$ctno$l ELSE
+	(select e.t$fovn$l from ttccom130201 e
+	 where e.t$cadr=tdrec940.t$stoa$l)
+	END CNPJ_CPF_ENTREGA 
+	
 FROM
   ttdrec941201 tdrec941,
   ttdrec940201 tdrec940,
