@@ -1,5 +1,5 @@
-SELECT d.t$cnst TIPO_CADASTRO,
-       l.t$desc DESCR
+SELECT d.t$cnst COD_TIPO_CADASTRO,
+       l.t$desc DESC_TIPO_CADASTRO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tc'
@@ -15,3 +15,4 @@ AND l.t$rele='a'
 AND l.t$cust='stnd'
 UNION SELECT 10, 'Transportador' FROM Dual
 UNION SELECT 11, 'Fabricante' FROM Dual
+order by 1

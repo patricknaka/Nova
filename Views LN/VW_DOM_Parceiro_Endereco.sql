@@ -1,4 +1,4 @@
--- 06-jan-2014, Fabio Ferreira, Correção timezone
+-- 06-mai-2014, Fabio Ferreira, Correção timezone
 --								Inclusão do código do endereço
 -- FAF.003 - 12-mai-2014, Fabio Ferreira, Exclusão dos campos UF e Pais e alteração do alias COD_CIDADE
 --****************************************************************************************************************************************************************
