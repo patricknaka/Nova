@@ -28,7 +28,7 @@ SELECT
 	and d.t$ninv=tfacp200.t$ninv) 
 	ELSE to_date('1970-01-01', 'YYYY-MM-DD')
 	END DATA_DE_LIQUID_TITULO,
-	tfacp600.t$payt COD_DA_TRANSACAO,
+	tfacp600.t$payt COD_TIPO_TRANSACAO,
 	tfcmg011f.t$baoc$l COD_BANCO_DEST,
 	tfcmg011f.t$agcd$l NUM_DA_AGENCIA_DEST,
 	tccom125.t$bano NUM_DA_CONTA_DEST,
