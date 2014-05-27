@@ -1,3 +1,5 @@
+-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal						
+--************************************************************************************************************************************************************
 SELECT
   tdrec941.t$fire$l REF_FISCAL,
   201 COMPANHIA,
@@ -58,12 +60,21 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=3) VALOR_IPI,
-  0 VALOR_IPI_DESTACADO,              -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 VALOR_SERVICOS,                -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+  
+   (SELECT tdrec942.t$amnr$l FROM ttdrec942201 tdrec942
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND tdrec942.t$line$l=tdrec941.t$line$l
+  AND tdrec942.t$brty$l=3) VALOR_IPI_DESTACADO,
+ 
+  nvl((	select sum(a.t$tamt$l) from ttdrec941201 a, ttcibd001201 b
+		where a.t$fire$l=tdrec941.t$fire$l
+		and b.t$item=a.t$item$l
+		and b.t$kitm=5),0) VALOR_SERVICOS, 
+  
   tdrec941.t$gexp$l VALOR_DESPESAS,
   tdrec941.t$addc$l VALOR_DESCONTO,
   tdrec941.t$fght$l VALOR_FRETE,
-  0 VALOR_DESPESA_ACESSORIA,            -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+  0 VALOR_DESPESA_ACESSORIA,            -- *** DUVIDA ***
   (SELECT tdrec942.t$rate$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
@@ -84,19 +95,49 @@ SELECT
   AND (tdrec942.t$brty$l=9 OR tdrec942.t$brty$l=10)
   AND tdrec942.t$amnt$l>0
   AND rownum=1) VALOR_IRRF,
-  0 NUM_NOTA_RECEB_REF,              -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 NUM_ITEM_NOTA_RECEB_REF,            -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+  0 NUM_NOTA_RECEB_REF,              -- *** DUVIDA ***
+  0 NUM_ITEM_NOTA_RECEB_REF,            -- *** DUVIDA ***
   (SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VALOR_PIS,
-  0 BASE_ICMS_NAO_REDUTOR,              -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+
+
+  (SELECT tdrec942.t$fbex$l + tdrec942.t$fbot$l FROM ttdrec942201 tdrec942
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND tdrec942.t$line$l=tdrec941.t$line$l
+  AND tdrec942.t$brty$l=1) BASE_ICMS_NAO_REDUTOR,  
+
+
+
   (SELECT tdrec942.t$amni$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VALOR_ICMS_MERCADORIA,
-  0 VALOR_ICMS_FRETE,                -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 VALOR_ICM_OUTROS,                -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+  
+  nvl((SELECT sum(tdrec942.t$amnt$l) FROM 	ttdrec942201 tdrec942, 
+											ttdrec941201 tdrec941b,
+											ttcibd001201 tcibd001b
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND 	tdrec941b.t$fire$l=tdrec941.t$fire$l
+  AND	tcibd001b.t$item=tdrec941b.t$item$l
+  AND	tcibd001b.t$ctyp$l=2
+  AND 	tdrec942.t$brty$l=1),0) VALOR_ICMS_FRETE,
+  
+
+  nvl((SELECT sum(tdrec942.t$amnt$l) FROM 	ttdrec942201 tdrec942, 
+											ttdrec941201 tdrec941b,
+											ttcibd001201 tcibd001b
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND 	tdrec941b.t$fire$l=tdrec941.t$fire$l
+  AND	tcibd001b.t$item=tdrec941b.t$item$l
+  AND	tcibd001b.t$kitm>3
+  AND	tcibd001b.t$ctyp$l!=2
+  AND 	tdrec942.t$brty$l=1),0) VALOR_ICM_OUTROS,  
+  
+  
+  
+  
   (SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
@@ -121,14 +162,45 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=6) PERCENTUAL_COFINS,
-  0 PERCENTUAL_CSLL,              -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 VALOR_CSLL,                -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 VALOR_CSLL_MERCADORIA,          -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 VALOR_CSLL_FRETE,
-  0 VALOR_CSLL_OUTROS,
+  
+  (SELECT tdrec942.t$rate$l FROM ttdrec942201 tdrec942
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND tdrec942.t$line$l=tdrec941.t$line$l
+  AND tdrec942.t$brty$l=13) PERCENTUAL_CSLL,  
+
+  (SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND tdrec942.t$line$l=tdrec941.t$line$l
+  AND tdrec942.t$brty$l=13) VALOR_CSLL,
+  
+  (SELECT tdrec942.t$amni$l FROM ttdrec942201 tdrec942
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND tdrec942.t$line$l=tdrec941.t$line$l
+  AND tdrec942.t$brty$l=13) VALOR_CSLL_MERCADORIA,
+  
+  nvl((SELECT sum(tdrec942.t$amnt$l) FROM 	ttdrec942201 tdrec942, 
+											ttdrec941201 tdrec941b,
+											ttcibd001201 tcibd001b
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND 	tdrec941b.t$fire$l=tdrec941.t$fire$l
+  AND	tcibd001b.t$item=tdrec941b.t$item$l
+  AND	tcibd001b.t$ctyp$l=2
+  AND 	tdrec942.t$brty$l=13),0) VALOR_CSLL_FRETE,
+  
+  nvl((SELECT sum(tdrec942.t$amnt$l) FROM 	ttdrec942201 tdrec942, 
+											ttdrec941201 tdrec941b,
+											ttcibd001201 tcibd001b
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND 	tdrec941b.t$fire$l=tdrec941.t$fire$l
+  AND	tcibd001b.t$item=tdrec941b.t$item$l
+  AND	tcibd001b.t$kitm>3
+  AND	tcibd001b.t$ctyp$l!=2
+  AND 	tdrec942.t$brty$l=13),0) VALOR_CSLL_OUTROS, 
+  
+
   -- VALOR_DESCONTO_CONDICIONAL,            *** DESCONSIDERAR ****
   tdrec941.t$addc$l VALOR_DESCONTO_INCONDICIONAL,
-  0 QTD_NAO_RECEB_SER_DEVOLVIDA,          -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+  tdrec941.t$rtin$l QTD_NAO_RECEB_SER_DEVOLVIDA,     
   (SELECT tdrec942.t$base$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
@@ -150,14 +222,42 @@ SELECT
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=16) VALOR_IMPOSTO_IMPOTACAO,
   tdrec941.t$cchr$l VALOR_DESPESA_ADUANEIRA,
-  0 VALOR_ADICIONAL_IMPOTACAO,          -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 VALOR_PIS_IMPOTACAO,              -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 VALOR_COFINS_IMPOTACAO,            -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 VALOR_CIF_IMPOTACAO,              -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+  
+  CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8
+  THEN tdrec941.t$gexp$l ELSE 0
+  END VALOR_ADICIONAL_IMPOTACAO,
+  
+  CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 THEN
+  (SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND tdrec942.t$line$l=tdrec941.t$line$l
+  AND tdrec942.t$brty$l=5)
+  ELSE 0 END VALOR_PIS_IMPOTACAO,
+  
+  CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 THEN
+  (SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND tdrec942.t$line$l=tdrec941.t$line$l
+  AND tdrec942.t$brty$l=6) 
+  ELSE 0 END VALOR_COFINS_IMPOTACAO, 
+  
+  CASE WHEN tdrec941.t$crpd$l=1 and (tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8) 
+  THEN tdrec941.t$fght$l ELSE 0 END VALOR_CIF_IMPOTACAO,
+  
+  
 	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO,      
-  0 VALOR_CUSTO_IMPOTACAO,            -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-  0 VALOR_ICMS_DESTACADO,              -- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+			AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO,   
+
+  CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 
+  THEN tdrec941.t$copr$l ELSE 0 END VALOR_CUSTO_IMPOTACAO, 
+
+  
+ (SELECT tdrec940.t$amnr$l FROM ttdrec942201 tdrec942
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND tdrec942.t$line$l=tdrec941.t$line$l
+  AND tdrec942.t$brty$l=1) VALOR_ICMS_DESTACADO, 
+			
+
   tdrec941.t$qnty$l+tdrec941.t$saof$l QTD_RECEBIDA_FISICA,
   	(SELECT tdrec947.t$orno$l FROM ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
