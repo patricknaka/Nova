@@ -1,6 +1,7 @@
   -- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Diversas correções e inclusão de campos
   -- #FAF.043 - 22-mai-2014, Fabio Ferreira, 	Rtrim Ltrim no codigo da garantia
   -- #FAF.043.1 - 23-mai-2014, Fabio Ferreira, 	Ajustes
+  -- #FAF.044 - 23-mai-2014, Fabio Ferreira, 	Correção VALOR_CSLL
   --********************************************************************************************************************************************************
   SELECT
     znsls400.T$PECL$C PEDIDO,																													 
@@ -19,7 +20,10 @@
     sum(zncom005.t$piof$c) VALOR_IOF,										
     sum(zncom005.t$ppis$c) VALOR_PIS,
     sum(zncom005.t$pcof$c) VALOR_COFINS,
-    0 VALOR_CSLL,														
+    nvl((select a.t$amnt$l from tcisli943201 a
+		where a.t$fire$l=zncom005.t$fire$c
+		and a.t$line$l=zncom005.t$line$c
+		and a.t$brty$l=13),0) VALOR_CSLL,														
     sum(zncom005.t$irrf$c) VALOR_IRRF,
     avg(tdsls401.t$qoor) QTD_GARANTIA
   FROM
@@ -57,6 +61,6 @@
   AND tcibd001.T$ITGA$C=1
   AND zncom005.T$TPAP$C=2
   GROUP BY	znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$idpa$c, tdsls400.t$hdst, znsls400.t$dtem$c,
-        tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item
+        tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item, zncom005.t$fire$c, zncom005.t$line$c
                                               
   
