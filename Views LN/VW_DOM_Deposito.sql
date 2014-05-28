@@ -1,10 +1,10 @@
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo data de atualização		
 --**********************************************************************************************************************************************************
-SELECT  201 COMPANHIA,
-        tcemm030.t$euca COD_FILIAL,
-		tcemm112.t$grid UNID_EMPRESARIAL,
-        tcmcs003.t$cwar,
-        tcmcs003.t$dsca
+SELECT  201 CD_CIA,
+        tcemm030.t$euca CD_FILIAL,
+        tcmcs003.t$cwar CD_DEPOSITO,
+        tcmcs003.t$dsca DS_DEPOSITO,
+	tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
 --        SYSDATE DATA_ATUALIZAÇÂO -- *** PRECISA SER ATIVADO NA TABELA tmcs003
 FROM    ttcmcs003201 tcmcs003,
         ttcemm112201 tcemm112,

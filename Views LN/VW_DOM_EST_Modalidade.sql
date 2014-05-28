@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD_MODALIDADE,
-       l.t$desc DESCR
+SELECT d.t$cnst CD_ESTOQUE_MODALIDADE,
+       l.t$desc DS_MODALIDADE
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tc'
@@ -14,7 +14,7 @@ AND l.t$vers='B61U'
 AND l.t$rele='a7'
 AND l.t$cust='glo1'
 UNION
-SELECT 0 COD_MODALIDADE,
-       'NORMAL' DESCR
+SELECT 0 CD_ESTOQUE_MODALIDADE,
+       'NORMAL' DS_MODALIDADE
 FROM DUAL
 order by 1

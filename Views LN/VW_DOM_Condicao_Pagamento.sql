@@ -1,6 +1,6 @@
 SELECT
- 201 AS COMPANHIA,
-  tcmcs013.t$cpay COD_CONDICAO_PAGAMENTO,
-  tcmcs013.t$dsca DESCR
+ 201 AS CD_CIA,
+  tcmcs013.t$cpay CD_CONDICAO_PAGAMENTO,
+  tcmcs013.t$dsca DS_CONDICAO_PAGAMENTO
 FROM ttcmcs013201 tcmcs013 
 order by 1,2

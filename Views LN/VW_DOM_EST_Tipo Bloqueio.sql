@@ -1,5 +1,5 @@
-select  a.t$cdis COD_TIPO_BLOQUEIO,
-        a.t$dsca DESC_TIPO_BLOQUEIO
+select  a.t$cdis CD_TIPO_BLOQUEIO,
+        a.t$dsca DS_TIPO_BLOQUEIO
 from    ttcmcs005201 a
 WHERE   a.t$rstp=65
 UNION

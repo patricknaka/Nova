@@ -1,7 +1,7 @@
-SELECT  tcemm170.t$comp COD_CIA,
-        tcemm170.t$desc NOME_CIA,
-        tccom000.t$arcc SITUACAO_CIA,
-        tccom130.t$fovn$l CNPJ_CPF
+SELECT  tcemm170.t$comp CD_CIA,
+        tcemm170.t$desc NM_CIA,
+        tccom000.t$arcc CD_SITUACAO,
+        tccom130.t$fovn$l NR_CNPJ_CPF
 FROM    ttcemm170201 tcemm170,
         ttccom000201 tccom000,
         ttccom130201 tccom130

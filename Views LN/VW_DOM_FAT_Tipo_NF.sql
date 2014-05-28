@@ -1,9 +1,8 @@
 -- #FAF.005, 14-mai-2014, Fabio Ferreira,	Alteração Alias
 --							
 --**********************************************************************************************************************************************************
---SELECT d.t$cnst COD_CONTROLE,
-SELECT d.t$cnst COD_TIPO_NF,
-       l.t$desc DESC_TIPO_NF
+SELECT d.t$cnst CD_TIPO_NF,
+       l.t$desc DS_TIPO_NF
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='ci'

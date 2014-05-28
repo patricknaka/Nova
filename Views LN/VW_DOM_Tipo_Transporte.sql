@@ -1,4 +1,4 @@
-SELECT d.t$cnst TIPO_TRANSPORTE,
+SELECT d.t$cnst COD_TIPO_TRANSPORTE,
        l.t$desc DESCR
 FROM tttadv401000 d,
      tttadv140000 l
@@ -13,3 +13,4 @@ AND l.t$cpac='zn'
 AND l.t$vers='B61U'
 AND l.t$rele='a7'
 AND l.t$cust='npt0'
+order by 1

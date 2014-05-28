@@ -1,11 +1,11 @@
 -- #FAF.054 - 26-mai-2014, Fabio Ferreira, 	Incluída a descrição da contabilidade						
 --*************************************************************************************************************************************************************
-SELECT  tcemm030.t$euca COD_FILIAL,
-        tcemm030.T$EUNT UNID_EMPRESARIAL,
-        tcemm030.t$lcmp COD_CIA,
-        tcemm030.t$dsca NOME_FILIAL,
+SELECT  tcemm030.t$euca CD_FILIAL,
+        tcemm030.t$lcmp CD_CIA,
+        tcemm030.t$dsca NM_FILIAL,
         tccom130.t$fovn$l CNPJ_FILIAL,
-        tfgld010.t$desc DESC_FILIAL
+        tcemm030.T$EUNT CD_UNIDADE_EMPRESARIAL,
+        tfgld010.t$desc DS_FILIAL
 FROM    ttcemm030201 tcemm030
         LEFT JOIN ttcemm122201 tcemm122
         ON      tcemm122.t$grid=tcemm030.t$eunt
@@ -17,4 +17,4 @@ FROM    ttcemm030201 tcemm030
         LEFT JOIN ttfgld010201 tfgld010
         ON     tfgld010.t$dimx=tcemm030.t$euca
         AND    tfgld010.t$dtyp=2
-ORDER BY 2
+ORDER BY 5,1

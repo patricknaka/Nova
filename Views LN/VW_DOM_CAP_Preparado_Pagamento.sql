@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD_PREP_PAGAMENTO,
-       l.t$desc DESC_PREP_PAGAMENTO
+SELECT d.t$cnst CD_PREPARADO_PAGAMENTO,
+       l.t$desc DS_PREPARADO_PAGAMENTO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'
