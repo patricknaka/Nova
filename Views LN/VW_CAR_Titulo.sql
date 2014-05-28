@@ -5,9 +5,9 @@
 -- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Alterado alias campo método de pagamento/recebimento				
 --****************************************************************************************************************************************************************
 SELECT	
-  CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NUM_TITULO,
-  tfacr200.t$ttyp TIPO_TRANSAC,
-    201 COMPANHIA,
+  CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
+  tfacr200.t$ttyp CD_TIPO_TRANSACAO,
+    201 CD_CIA,
 	CASE WHEN nvl((	select c.t$styp from tcisli205201 c
 					where c.t$styp='BL ATC'
 					AND c.T$ITYP=tfacr200.t$ttyp
@@ -15,61 +15,60 @@ SELECT
 					AND rownum=1),0)=0 
 	THEN 2
 	ELSE 3
-	END COD_FILIAL,	
+	END CD_FILIAL,	
 	(Select u.t$eunt From ttcemm030201 u
 	 where u.t$euca!=' '
 	 AND TO_NUMBER(u.t$euca)=CASE WHEN tfacr200.t$dim2=' ' then 999
    WHEN tfacr200.t$dim2>to_char(0) then 999 
    else TO_NUMBER(tfacr200.t$dim2) END
    and rownum = 1
-   ) UNID_EMPRESARIAL,
-	'CAR' COD_MODULO,
-	tfacr200.t$doct$l COD_DOCUMENTO,
-	tfacr200.t$itbp COD_PARCEIRO,
-	tfacr200.t$docn$l NUM_NOTA_FISCAL,
-	tfacr200.t$seri$l SER_NOTA_FISCAL,
-	tfacr200.t$docd DATA_EMISSAO_TITULO,
-	TO_DATE(REGEXP_REPLACE(tfacr200.T$LIQD,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DATA_VENCIMENTO_TITULO,	--#FAF.001.n
+   ) CD_UNIDADE_EMPRESARIA,
+	'CAR' CD_MODULO,
+	tfacr200.t$doct$l SQ_DOCUMENTO,
+	tfacr200.t$itbp CD_PARCEIRO,
+	tfacr200.t$docn$l NR_NF,
+	tfacr200.t$seri$l NR_SERIE_NF,
+	tfacr200.t$docd DT_EMISSAO_TITULO,
+	TO_DATE(REGEXP_REPLACE(tfacr200.T$LIQD,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO,	--#FAF.001.n
   (select max(p.t$docd) from ttfacr200201 p
   where p.t$ttyp=tfacr200.t$ttyp
   and p.t$ninv=tfacr200.t$ninv
-  and p.t$trec=2) DATA_LIQUIDACAO_TITULO,
-	tfacr200.t$amnt VALOR_TITULO,
-	tfcmg011.t$baoc$l COD_BANCO,
-	tfcmg011.t$agcd$l NUM_AGENCIA,
-	tfcmg001.t$bano NUM_CONTA,
-	tfacr200.t$dim1 COD_CENTRO_CUSTO,
-	tfcmg401.t$btno NUM_REMESSA,
-	tfcmg409.t$date DATA_REMESSA,
---	tfcmg409.t$stdd SITUACAO_TITULO,																				--#FAF.002.o
+  and p.t$trec=2) DT_LIQUIDACAO_TITULO,
+	tfacr200.t$amnt VL_TITULO,
+	tfcmg011.t$baoc$l CD_BANCO,
+	tfcmg011.t$agcd$l NR_AGENCIA,
+	tfcmg001.t$bano NR_CONTA_CORRENTE,
+	tfacr200.t$dim1 CD_CENTRO_CUSTO,
+	tfcmg401.t$btno NR_REMESSA,
+	tfcmg409.t$date DT_REMESSA,
+--#FAF.002.o
 	nvl((select max(a.t$rpst$l) from ttfacr201201 a																	--#FAF.002.sn
 	 where a.t$ttyp=tfacr200.t$ttyp
-	 and a.t$ninv=tfacr200.t$ninv),1) SITUACAO_TITULO,
+	 and a.t$ninv=tfacr200.t$ninv),1) CD_SITUACAO_TITULO,
 	(select min(a.t$docd) from ttfacr200201 a
 	 where a.t$ttyp=tfacr200.t$ttyp 
 	 and a.t$ninv=tfacr200.t$ninv
-	 and a.t$docn!=0) DATA_SITUACAO_TITULO,																			--#FAF.002.en
-	TO_DATE(REGEXP_REPLACE(tfacr200.t$dued,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DATA_VENC_ORG_TITULO,		--#FAF.001.n
-	tfacr200.t$bank NUM_BANCARIO,
-	tfacr200.t$balc SALDO_TITULO,
-	tfacr200.t$amti VALOR_TITULO_DESCONTO,
-	tfacr200.t$ninv NUM_DOCUMENTO,
+	 and a.t$docn!=0) DT_SITUACAO_TITULO,																			--#FAF.002.en
+	TO_DATE(REGEXP_REPLACE(tfacr200.t$dued,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO_ORIGINAL,		--#FAF.001.n
+	tfacr200.t$bank NR_BANCARIO,
+	tfacr200.t$balc VL_SALDO,
+	tfacr200.t$amti VL_DESCONTO,
+	tfacr200.t$ninv NR_DOCUMENTO,
     nvl((select t.t$text from ttttxt010201 t 
 	where t$clan='p'
 	AND t.t$ctxt=tfacr200.t$text
-	and rownum=1),' ') OBSERVACAO_TITULO,
-	tfgld100.t$user USUARIO_CRIOU_TITULO,
+	and rownum=1),' ') DS_OBSERVACAO_TITULO,
+	tfgld100.t$user DS_USUARIO_GERACAO_TITULO,
 	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-		AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO,
+		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
 	(select znsls401.t$pecl$c from tznsls401201 znsls401, tcisli940201 rf, tcisli245201 ro
 	 where rf.t$ityp$l=tfacr200.t$ttyp
 	 and rf.t$idoc$l=tfacr200.t$ninv
 	 and ro.t$fire$l=rf.t$fire$l
 	 and znsls401.t$orno$c=ro.t$slso
 	 and znsls401.t$pono$c=ro.t$pono
-	 and rownum=1) NUM_PEDIDO,
---	 tfacr200.t$paym METODO_REC																				--#FAF.007.n	--#FAF.008.o
-	 tfacr200.t$paym COD_METODO_RECEBIMENTO																					--#FAF.008.n
+	 and rownum=1) NR_PEDIDO,
+	 tfacr200.t$paym CD_METODO_RECEBIMENTO	--#FAF.008.n
 FROM
 	ttfacr200201 tfacr200
 	LEFT JOIN ttfcmg001201 tfcmg001
