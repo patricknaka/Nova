@@ -3,17 +3,17 @@
 --											Retirado os campos TEL, FAX, MATRIZ
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
-       bspt.t$bpid codigo,
-       addr.t$fovn$l cnpj_cpf,
-       bspt.t$nama nome,
-       bspt.t$seak apelido,
-       addr.t$ftyp$l tipo_cliente,
+       bspt.t$bpid CD_PARCEIRO,
+       addr.t$fovn$l NR_CNPJ_CPF,
+       bspt.t$nama NM_PARCEIRO,
+       bspt.t$seak NM_APELIDO,
+       addr.t$ftyp$l CD_TIPO_CLIENTE,
        CASE
          WHEN Nvl(trnp.t$cfrw,' ')!=' ' then 10
          WHEN Nvl(fabr.t$cmnf,' ')!=' ' then 11
          ELSE bspt.t$bprl
-       END TIPO_CADASTRO,
-       addp.t$fovn$l cnpj_cpf_grupo ,
+       END CD_TIPO_CADASTRO,
+       addp.t$fovn$l NR_CNPJ_CPF_GRUPO,
 --       bspt.t$crdt DT_CADASTRO,																	--#FAF.005.o
 		CAST((FROM_TZ(CAST(TO_CHAR(bspt.t$crdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.005.n
 		AT time zone sessiontimezone) AS DATE) DT_CADASTRO,											--#FAF.005.n
@@ -22,13 +22,14 @@ SELECT DISTINCT
 		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,										--#FAF.005.n
 --       addr.t$telp TEL1,																			--#FAF.005.o
 --       addr.t$telx TEL2,																			--#FAF.005.o
---       addr.t$tefx FAX,																			--#FAF.005.o
-       bspt.t$okfi$c FLAG_IDONEO,
---       CASE WHEN addp.t$cadr=addr.t$cadr THEN 'MATRIZ' ELSE 'FILIAL' END MATRIZ_FILIAL,			--#FAF.005.o
-	   bspt.t$prst status
+--       addr.t$tefx NR_FAX,																			--#FAF.005.o
+       bspt.t$okfi$c IN_IDONEO,
+--       CASE WHEN addp.t$cadr=addr.t$cadr THEN 'MATRIZ' ELSE 'FILIAL' END NM_MATRIZ_FILIAL,			--#FAF.005.o
+	   bspt.t$prst CD_STATUS
 FROM ttccom100201 bspt
 LEFT JOIN ttccom130201 addp ON addp.t$cadr = bspt.t$cadr
 LEFT JOIN ttccom133201 adbp ON adbp.t$bpid = bspt.t$bpid
 LEFT JOIN ttccom130201 addr ON addr.t$cadr = adbp.t$cadr
 LEFT JOIN ttcmcs080201 trnp ON trnp.t$suno = bspt.t$bpid -- rel com transportadoras
 LEFT JOIN ttcmcs060201 fabr ON fabr.t$otbp = bspt.t$bpid -- rel com fabricantes
+order by 1

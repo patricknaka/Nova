@@ -1,8 +1,8 @@
 -- #FAF.005, 14-mai-2014, Fabio Ferreira,	Aterado o campo Natureza do lançamento para relacionar com a cat. Transação
 --							
 --**********************************************************************************************************************************************************
-SELECT d.t$cnst COD_NATUREZA_LANCAMENTO,
-       l.t$desc DESC_NATUREZA_LANCAMENTO
+SELECT d.t$cnst CD_NATUREZA_LANCAMENTO,
+       l.t$desc DS_NATUREZA_LANCAMENTO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'

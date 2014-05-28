@@ -1,8 +1,8 @@
 SELECT 	DISTINCT			
-	  tcmcs940.t$ofso$l COD_NATUREZA_OPER,
-	  tcmcs940.t$opor$l SEQ_NATUREZA_OPER,
-	  tcmcs947.t$rfdt$l COD_TIPO_OPER,
-	  dominio.DESCR DESC_TIPO_OPER
+	  tcmcs940.t$ofso$l CD_NATUREZA_OPERACAO,
+	  tcmcs940.t$opor$l SQ_NATUREZA_OPERACAO,
+	  tcmcs947.t$rfdt$l CD_TIPO_OPERACAO,
+	  dominio.DESCR DS_TIPO_OPERACAO
 FROM  ttcmcs940201 tcmcs940,
       ttcmcs947201 tcmcs947,      
       (SELECT d.t$cnst COD, l.t$desc DESCR,'NR' MODULO FROM tttadv401000 d, tttadv140000 l
