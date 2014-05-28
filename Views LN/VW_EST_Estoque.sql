@@ -1,15 +1,15 @@
-SELECT  201 COMPANHIA,
-        tcemm030.t$euca COD_FILIAL,
-        tcemm112.t$grid UNID_EMPRESARIAL,
-        whwmd215.t$cwar DEPOSITO,
-        ltrim(rtrim(whwmd215.t$item)) ITEM,
-        tcmcs003.t$tpar$l MODALIDADE,
-        whwmd215.t$qhnd - whwmd215.t$qblk QTD_FISICA,
-        whwmd215.t$qlal QTD_ROMANEADA,
-        whwmd215.t$qhnd - whwmd215.t$qall - whwmd215.t$qblk QTD_SALDO,
-        whwmd215.t$qall-whwmd215.t$qlal QTD_RESERVADA,
-        q1.mauc VALOR_CMV,
-        'WN' TIPO
+SELECT  201 CD_CIA,
+        tcemm030.t$euca CD_FILIAL,
+        tcemm112.t$grid CD_UNIDADE_EMPRESARIAL,
+        whwmd215.t$cwar CD_DEPOSITO,
+        ltrim(rtrim(whwmd215.t$item)) CD_ITEM,
+        tcmcs003.t$tpar$l CD_MODALIDADE,
+        whwmd215.t$qhnd - whwmd215.t$qblk QT_FISICA,
+        whwmd215.t$qlal QT_ROMANEADA,
+        whwmd215.t$qhnd - whwmd215.t$qall - whwmd215.t$qblk QT_SALDO,
+        whwmd215.t$qall-whwmd215.t$qlal QT_RESERVADA,
+        q1.mauc VL_CMV,
+        'WN' CD_TIPO_BLOQUEIO
 FROM    twhwmd215201 whwmd215
         LEFT JOIN ( SELECT 
 					 whwmd217.t$item,
@@ -31,18 +31,18 @@ AND 	tcemm030.t$eunt=tcemm112.t$grid
 AND     tcmcs003.t$cwar = whwmd215.t$cwar
 AND     (whwmd215.t$qhnd>0 or whwmd215.t$qall>0)
 UNION
-SELECT  201 COMPANHIA,
-        tcemm030.t$euca COD_FILIAL,
-        tcemm112.t$grid UNID_EMPRESARIAL,
-        whwmd630.t$cwar DEPOSITO,
-        ltrim(rtrim(whwmd630.t$item)) ITEM,
-        tcmcs003.t$tpar$l MODALIDADE,
-        whwmd630.t$qbls QTD_FISICA,
-        0 QTD_ROMANEADA,
-        0 QTD_SALDO,
-        0 QTD_RESERVADA,
-        q1.mauc VALOR_CMV,
-        whwmd630.t$bloc TIPO
+SELECT  201 CD_CIA,
+        tcemm030.t$euca CD_FILIAL,
+        tcemm112.t$grid CD_UNIDADE_EMPRESARIAL,
+        whwmd630.t$cwar CD_DEPOSITO,
+        ltrim(rtrim(whwmd630.t$item)) CD_ITEM,
+        tcmcs003.t$tpar$l CD_MODALIDADE,
+        whwmd630.t$qbls QT_FISICA,
+        0 QT_ROMANEADA,
+        0 QT_SALDO,
+        0 QT_RESERVADA,
+        q1.mauc VL_CMV,
+        whwmd630.t$bloc CD_TIPO_BLOQUEIO
 FROM    twhwmd630201 whwmd630
         LEFT JOIN ( SELECT 
 					 whwmd217.t$item,
