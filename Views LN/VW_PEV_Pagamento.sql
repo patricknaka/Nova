@@ -48,7 +48,7 @@ select
 	znsls402.t$txrp$c  DESC_MOTIVO_REPROVACAO,															--#FAF.076.n
     znsls402.t$idag$c  NUM_AGENCIA_DEBITO,
     znsls402.t$idct$c  NUM_CONTA_DEBITO,
-	znsls402.t$idad$c  ID_ADQUIRENTE																	--#FAF.085.n
+	znsls402.t$idad$c COD_ADQUIRENTE																	--#FAF.085.n
 FROM  tznsls400201 znsls400,
     (select distinct 
       znsls401.t$ncia$c      t$ncia$c,
