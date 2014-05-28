@@ -4,6 +4,7 @@
 -- #FAF.076 - 23-mai-2014, Fabio Ferreira, 	Incluida a descrição do COD_MOTIVO_REPROVACAO
 -- #FAF.047.1 - 23-mai-2014, Fabio Ferreira, 	Campo ENTREGA convertido para String
 -- #FAF.085 - 23-mai-2014, Fabio Ferreira, 	Inclusão do campo ID_ADQUIRENTE
+-- #FAF.089 - 28-mai-2014,	Fabio Ferreira,	NUN_TERMINAL convertido em String
 --***************************************************************************************************************************************************************
 select
     tdsls400.t$rcd_utc  DT_ULTIMA_ATUALIZ_PEDIDO,
@@ -43,7 +44,7 @@ select
     znsls402.t$nsua$c  NSU_AUTOR_CARTAO_CREDITO,
     znsls402.t$auto$c  COD_AUTOR_CARTAO_CREDITO,
     znsls402.t$maqu$c  NUM_MAQUINETA,
-    znsls402.t$nute$c  NUM_TERMINAL,
+    TO_CHAR(znsls402.t$nute$c)  NUM_TERMINAL,															--#FAF.089.n
     znsls402.t$mrep$c  COD_MOTIVO_REPROVACAO,
 	znsls402.t$txrp$c  DESC_MOTIVO_REPROVACAO,															--#FAF.076.n
     znsls402.t$idag$c  NUM_AGENCIA_DEBITO,
