@@ -3,37 +3,35 @@
 -- FAF.005 - 14-mai-2014, Fabio Ferreira, Retirada conversão de timezone do campo DT_HR_DE_ATUALIZACAO
 --****************************************************************************************************************************************************************
 SELECT
-	tfacp200.t$ttyp || tfacp200.t$ninv CHAVE,
-	tfacp200.t$ninv NUM_TITULO,
-	tfcmg011.t$baoc$l COD_BANCO,
-	tfcmg011.t$agcd$l NUM_DA_AGENCIA,
-	tfcmg001.t$bano NUM_DA_CONTA,
-	tfcmg103.T$MOPA$D COD_MODALIDADE_DE_PGTO, -- tfcmg103.mopa.d
-	tfacp200.t$docn SEQ_DOCUMENTO,
+	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
+	tfacp200.t$ninv NR_TITULO,
+	tfcmg011.t$baoc$l CD_BANCO,
+	tfcmg011.t$agcd$l NR_AGENCIA,
+	tfcmg001.t$bano NR_CONTA_CORRENTE,
+	tfcmg103.T$MOPA$D CD_MODALIDADE_PAGAMENTO, -- tfcmg103.mopa.d
+	tfacp200.t$docn SQ_DOCUMENTO,
   CAST((FROM_TZ(CAST(TO_CHAR(tfacp600.t$sdat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-    AT time zone sessiontimezone) AS DATE) DATA_PAGAMENTO,
-	ABS(tfacp200.t$amti + tfacp200.t$ramn$l) VALOR_PAGAMENTO,
-	tfacP200.t$lino NUM_MOVIMENTO,
+    AT time zone sessiontimezone) AS DATE) DT_PAGAMENTO,
+	ABS(tfacp200.t$amti + tfacp200.t$ramn$l) VL_PAGAMENTO,
+	tfacP200.t$lino NR_MOVIMENTO,
 	CASE WHEN tflcb230.t$revs$d=1 then TO_CHAR(tflcb230.t$lach$d)
 	ELSE ' '
-	END DATA_ESTORNO,
-	tflcb230.t$send$d COD_SITUACAO_PAGAMENTO_ELETR,
-	nvl(tfcmg109.t$stpp,0) COD_SITUACAO_PAGAMENTO,
---  CAST((FROM_TZ(CAST(TO_CHAR(tfacp600.t$ddat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 					--#FAF.005.o
---        AT time zone sessiontimezone) AS DATE) DT_HR_DE_ATUALIZACAO,												--#FAF.005.o
-	tfacp600.t$ddat DT_HR_DE_ATUALIZACAO,																			--#FAF.005.n
+	END DT_ESTORNO,
+	tflcb230.t$send$d CD_SITUACAO_PAGAMENTO_ELETRONICO,
+	nvl(tfcmg109.t$stpp,0) CD_SITUACAO_PAGAMENTO,
+	tfacp600.t$ddat DT_ATUALIZACAO,
 	CASE WHEN tfacp200.t$balc=0 then
 	(select max(d.t$docd) from ttfacp200201 d
 	where d.t$ttyp=tfacp200.t$ttyp
 	and d.t$ninv=tfacp200.t$ninv) 
 	ELSE to_date('1970-01-01', 'YYYY-MM-DD')
-	END DATA_DE_LIQUID_TITULO,
-	tfacp600.t$payt COD_TIPO_TRANSACAO,
-	tfcmg011f.t$baoc$l COD_BANCO_DEST,
-	tfcmg011f.t$agcd$l NUM_DA_AGENCIA_DEST,
-	tccom125.t$bano NUM_DA_CONTA_DEST,
-	tfacp200.t$paym METODO_PAGAMENTO,
-	tfacp600.t$ptbp COD_PARCEIRO																	--#FAF.003.n	
+	END DT_LIQUIDACAO_TITULO,
+	tfacp600.t$payt CD_TIPO_TRANSACAO,
+	tfcmg011f.t$baoc$l CD_BANCO_DESTINO,
+	tfcmg011f.t$agcd$l NR_AGENCIA_DESTINO,
+	tccom125.t$bano NR_CONTA_CORRENTE_DESTINO,
+	tfacp200.t$paym CD_METODO_PAGAMENTO,
+	tfacp600.t$ptbp CD_PARCEIRO																	--#FAF.003.n	
 FROM
 	ttfacp600201 tfacp600
   LEFT JOIN ttfcmg109201 tfcmg109
