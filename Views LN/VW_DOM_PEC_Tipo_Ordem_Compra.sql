@@ -1,4 +1,4 @@
-select  a.T$POTP COD_TIPO_ORDEM_COMPRA,
-        a.t$dsca DESC_TIPO_ORDEM_COMPRA
+select  a.T$POTP CD_TIPO_ORDEM,
+        a.t$dsca DS_TIPO_ORDEM
 from ttdpur094201 a
 order by 1

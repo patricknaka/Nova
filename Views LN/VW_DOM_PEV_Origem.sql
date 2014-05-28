@@ -1,7 +1,7 @@
 -- #FAF.075 - 22-mai-2014, Fabio Ferreira, 	Adicionados os códigos do banco do site
 --**********************************************************************************************************************************************************
-SELECT d.t$cnst COD_ORIGEM_PEDIDO,
-       l.t$desc DESC_ORIGEM_PEDIDO
+SELECT d.t$cnst CD_ORIGEM_PEDIDO,
+       l.t$desc DS_ORIGEM_PEDIDO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='zn'

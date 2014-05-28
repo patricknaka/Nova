@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD_TIPO_CADASTRO,
-       l.t$desc DESC_TIPO_CADASTRO
+SELECT d.t$cnst CD_TIPO_CADASTRO,
+       l.t$desc DS_TIPO_CADASTRO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tc'
