@@ -5,6 +5,7 @@
 -- #FAF.047.1 - 23-mai-2014, Fabio Ferreira, 	Campo ENTREGA convertido para String
 -- #FAF.085 - 23-mai-2014, Fabio Ferreira, 	Inclusão do campo ID_ADQUIRENTE
 -- #FAF.089 - 28-mai-2014,	Fabio Ferreira,	NUN_TERMINAL convertido em String
+-- #FAF.088 - 28-mai-2014,	Fabio Ferreira, conversão de timezone no campo DT_APROVACAO_PAGAMENTO_ERP 
 --***************************************************************************************************************************************************************
 select
     tdsls400.t$rcd_utc  DT_ULTIMA_ATUALIZ_PEDIDO,
@@ -34,7 +35,10 @@ select
     CASE WHEN znsls402.t$vlja$c!=0 THEN 1
 	ELSE 2
 	END FLAG_JUROS_ADMINISTRADORA,
-    (select min(a.t$trdt) from ttdsls451201 a
+    (select 
+	CAST((FROM_TZ(CAST(TO_CHAR(min(a.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 				--#FAF.088.n
+			AT time zone sessiontimezone) AS DATE)	
+	from ttdsls451201 a
     where a.t$orno=tdsls400.t$orno) DT_APROVACAO_PAGAMENTO_ERP,
     znsls402.t$vlju$c  VALOR_JUROS,
     ' ' COD_CICLO_PAGAMENTO,            -- *** NÃO EXISTE ESTA INFORMAÇÃO NO LN / PENDENTE DE DUVIDA ***
