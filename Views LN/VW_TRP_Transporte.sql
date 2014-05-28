@@ -1,5 +1,7 @@
-select DISTINCT
-  (select min(o.T$DATE$C) 
+select distinct
+  (select 
+  CAST((FROM_TZ(CAST(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+    AT time zone sessiontimezone) AS DATE) 
   from BAANDB.TZNFMD640201 o
   where o.T$COCI$C='ROT'
   and o.T$ETIQ$C=znfmd630.T$ETIQ$C) dofi_dt_saida_entrega, -- Fazer relacionamento
@@ -30,7 +32,8 @@ select DISTINCT
   pesovol.peso atdo_peso, 
   pesovol.vol*300 atdo_peso_cubado,
   znfmd630.T$CFRW$C dofi_id_transportadora,
-  znfmd630.T$CONO$C pedc_obs_romaneio 
+  znfmd060.T$REFE$C pedc_obs_romaneio,
+  znfmd630.T$PECL$C
 from  BAANDB.TZNFMD630201 znfmd630,
       BAANDB.TZNSLS401201 znsls401,
       (select
@@ -43,7 +46,10 @@ from  BAANDB.TZNFMD630201 znfmd630,
       where tdsls401.t$item=whwmd400.t$item
       and   tcibd001.t$item=tdsls401.t$item
       group by tdsls401.t$orno) pesovol,
-      tcisli940201 cisli940
+      tcisli940201 cisli940,
+      tznfmd060201 znfmd060
 WHERE znsls401.T$ORNO$C=znfmd630.T$ORNO$C
 AND pesovol.t$orno=znsls401.T$ORNO$C
 AND cisli940.t$fire$l=znfmd630.t$fire$c
+AND znfmd060.T$CFRW$C=znfmd630.T$CFRW$C
+AND znfmd060.T$CONO$C=znfmd630.t$cono$c
