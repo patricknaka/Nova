@@ -6,35 +6,31 @@
 --	FAF.007 - 12-jan-2014, Fabio Ferreira, 	Alteração valor original do título
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
-  tfacp200.t$ttyp || tfacp200.t$ninv CHAVE,
-  tfacp200.t$ttyp TIPO_TRANSACAO,
-  tfacp200.t$ninv NUMERO_TITULO,
-  tfacp200.t$pcom CODIGO_CIA,
+  tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
+  tfacp200.t$ttyp CD_TIPO_TRANSACAO,
+  tfacp200.t$ninv NR_TITULO,
+  tfacp200.t$pcom CD_CIA,
   --tfacp200.t$dim2 CODIGO_FILIAL,
 	CASE WHEN tfacp200.t$ttyp IN ('AGA', 'GA1')
 	THEN 3
 	ELSE 2
-	END CODIGO_FILIAL,
+	END CD_FILIAL,
   (Select u.t$eunt From ttcemm030201 u
    where u.t$euca!=' '
    AND TO_NUMBER(u.t$euca)=CASE WHEN tfacp200.t$dim2=' ' then 999
    WHEN tfacp200.t$dim2>to_char(0) then 999 
    else TO_NUMBER(tfacp200.t$dim2) END
    and rownum = 1
-   ) UNID_EMPRESARIAL,
-  tfacp200.t$tpay COD_TIPO_DOCUMENTO,
-  tfacp200.t$ifbp CODIGO_FORNECEDOR_CLIENTE,
-  tdrec947.t$rcno$l NUMERO_NOTA_RECEBIMENTO,
-  tfacp200.t$docn$l NUMERO_NOTA_FISCAL,
-  tfacp200.t$seri$l NUMERO_SERIE_NOTA_FISCAL,
-  tfacp200.t$line$l SEQUENCIA_NOTA_FISCAL,
---	CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$docd, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.001.o
---		AT time zone sessiontimezone) AS DATE) DATA_EMISSAO_TITULO,									--#FAF.001.o
-	tfacp200.t$docd DATA_EMISSAO_TITULO,															--#FAF.001.n
-	tfacp200.t$dued DATA_VENCIMENTO_TITULO,															--#FAF.001.n
---	CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$dued, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.001.o
---		AT time zone sessiontimezone) AS DATE)  DATA_VENCIMENTO_TITULO,								--#FAF.001.o
-	tfacp201.t$odue$l DATA_VENC_ORIG_TITULO,														--#FAF.001.n
+   ) CD_UNIDADE_EMPRESARIAL,
+  tfacp200.t$tpay CD_TIPO_DOCUMENTO,
+  tfacp200.t$ifbp CD_PARCEIRO,
+  tdrec947.t$rcno$l NR_NFR,
+  tfacp200.t$docn$l NR_NF_RECEBIDA,
+  tfacp200.t$seri$l NR_SERIE_NF_RECEBIDA,
+  tfacp200.t$line$l SQ_NF_RECEBIDA,
+	tfacp200.t$docd DT_EMISSAO_TITULO,															--#FAF.001.n
+	tfacp200.t$dued DT_VENCIMENTO,															--#FAF.001.n
+	tfacp201.t$odue$l DT_VENCIMENTO_ORIGINAL,														--#FAF.001.n
 --	CAST((FROM_TZ(CAST(TO_CHAR(tfacp201.t$odue$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.001.o
 --		AT time zone sessiontimezone) AS DATE) DATA_VENC_ORIG_TITULO,								--#FAF.001.o
 	(select 																						--#FAF.003.sn
@@ -42,44 +38,33 @@ SELECT DISTINCT
 	from ttfacp200201 p
 	where p.t$ttyp=tfacp200.t$ttyp
 	and p.t$ninv=tfacp200.t$ninv
-	and p.t$tpay=2) DATA_LIQUIDACAO_TITULO,															--#FAF.003.en
---  (select 																						--#FAF.001.so
---	CAST((FROM_TZ(CAST(TO_CHAR(max(p.t$docd), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
---		AT time zone sessiontimezone) AS DATE)  
---   from ttfacp200201 p
---  where p.t$ttyp=tfacp200.t$ttyp
---  and p.t$ninv=tfacp200.t$ninv
---  and p.t$tpay=2) DATA_LIQUIDACAO_TITULO,															--#FAF.001.eo
-  tfacp200.t$amnt VALOR_TITULO,
---  tfacp200.t$amth$1 VALOR_ORIGINAL_TITULO,														--#FAF.007.o
-	nvl(tdrec940.t$tfda$l, tfacp200.t$amnt)  VALOR_ORIGINAL_TITULO,									--#FAF.007.o	
+	and p.t$tpay=2) DT_LIQUIDACAO_TITULO,															--#FAF.003.en
+  tfacp200.t$amnt VL_TITULO,
+	nvl(tdrec940.t$tfda$l, tfacp200.t$amnt)  VL_ORIGINAL,									--#FAF.007.o	
   CASE WHEN tfacp200.t$afpy=2 THEN 1
   ELSE 2
-  END FLAG_TITULO_BLOQUEADO,
-  tfacp201.t$pyst$l FLAG_PREPARADO_PARA_PAGAMENTO,
-  tfacp200.t$stap COD_SITUACAO_TITULO,
+  END IN_BLOQUEIO_TITULO,
+  tfacp201.t$pyst$l CD_PREPARADO_PAGAMENTO,
+  tfacp200.t$stap CD_SITUACAO_TITULO,
   CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-		AT time zone sessiontimezone) AS DATE) DATA_SITUACAO_TITULO,
-  tfacp200.t$doty$l TIPO_NOTA_FISCAL,
-  tfacp200.t$balh$1 VALOR_SALDO_TITULO,
-  tdrec947.t$orno$l NUMERO_PEDIDO_VENDA,
-  tfcmg011f.t$baoc$l NUMERO_BANCO_DESTINO,
-  tfcmg011f.t$agcd$l NUMERO_AGENCIA_DESTINO,
-  tfcmg011f.t$agdg$l DIGITO_AGENCIA_DESTINO,
-  tfcmg001f.t$bano NUMERO_CONTA_DESTINO,
-  tfcmg001f.t$ofdg$l DIGITO_CONTA_DESTINO,
-  -- tfacp201.t$inta$l TAXA_MORA,																	--#FAF.001.o
-  tfacp200.t$lapa TAXA_MORA,																		--#FAF.001.n
-  -- tfacp201.t$inta$l TAXA_MULTA,																	--#FAF.001.o
-  -- tfacp200.t$inam$l TAXA_MULTA,																	--#FAF.001.n --#FAF.003.o
+		AT time zone sessiontimezone) AS DATE) DT_SITUACAO_TITULO,
+  tfacp200.t$doty$l CD_TIPO_NF,
+  tfacp200.t$balh$1 VL_SALDO,
+  tdrec947.t$orno$l NR_PEDIDO_VENDA,
+  tfcmg011f.t$baoc$l CD_BANCO_DESTINO,
+  tfcmg011f.t$agcd$l NR_AGENCIA_DESTINO,
+  tfcmg011f.t$agdg$l NR_DIGITO_AGENCIA_DESTINO,
+  tfcmg001f.t$bano NR_CONTA_CORRENTE_DESTINO,
+  tfcmg001f.t$ofdg$l NUM_DIGITO_CONTA_CORRENTE_DESTINO,
+  tfacp200.t$lapa VL_TAXA_MORA,																		--#FAF.001.n
   nvl((select p.t$inra$l from ttfacp201201 p														--#FAF.003.sn 
    where p.t$ttyp=tfacp200.t$ttyp
    and p.t$ninv=tfacp200.t$ninv
-   and ROWNUM=1),0) TAXA_MULTA,																		--#FAF.003.en
+   and ROWNUM=1),0) VL_TAXA_MULTA,																		--#FAF.003.en
   CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-        AT time zone sessiontimezone) AS DATE) DATA_HORA_ATUALIZACAO,
-  'CAP' COD_MODULO,
-  tdrec940.t$fire$l REFERENCIA_FICAL
+        AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+  'CAP' CD_MODULO,
+  tdrec940.t$fire$l NR_REFERENCIA_FISCAL
 FROM
   ttfacp200201 tfacp200
   LEFT JOIN ttdrec940201 tdrec940
