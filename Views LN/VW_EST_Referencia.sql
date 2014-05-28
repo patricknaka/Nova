@@ -1,11 +1,11 @@
-SELECT  201 COMPANHIA,
-        tcemm030.t$euca COD_FILIAL,
-        tcemm112.t$grid UNID_EMPRESARIAL,
-        whina112.t$cwar COD_DEPOSITO,
-        ltrim(rtrim(whina112.t$item)) COD_ITEM,
-        tcmcs003.t$tpar$l MODALIDADE,
-        sum(whina112.t$qstk) QTD_FISICA,
-		tdrec947.t$rcno$l RECEBIMENTO,
+SELECT  201 CD_CIA,
+        tcemm030.t$euca CD_FILIAL,
+        tcemm112.t$grid CD_UNIDADE_EMPRESARIAL,
+        whina112.t$cwar CD_DEPOSITO,
+        ltrim(rtrim(whina112.t$item)) CD_ITEM,
+        tcmcs003.t$tpar$l CD_MODALIDADE,
+        sum(whina112.t$qstk) QT_FISICA,
+		tdrec947.t$rcno$l NR_REFERENCIA,
 		tdrec940.t$fire$l fire,
 		(SELECT 
 		 case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd))=0 then 0
@@ -16,7 +16,7 @@ SELECT  201 COMPANHIA,
 		 AND   	whwmd217.t$cwar=whina112.t$cwar
 		 AND whwmd215.t$cwar=whwmd217.t$cwar
 		 AND whwmd215.t$item=whwmd217.t$item
-		 group by  whwmd217.t$item) VALOR_CMV
+		 group by  whwmd217.t$item) VL_CMV
 FROM    twhina112201 whina112,
         ttcemm112201 tcemm112,
 		ttcemm030201 tcemm030,
