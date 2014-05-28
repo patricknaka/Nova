@@ -1,12 +1,12 @@
 SELECT DISTINCT
-	tfcmg948.t$bank$l COD_DO_BANCO,
-	tfcmg948.t$btno$l NUM_REMESSA,
-	tfcmg948.t$docd$l DATA_REMESSA,
-	tfcmg011.t$agcd$l NUM_AGENCIA,
-	tfcmg948.t$acco$l NUM_CONTA,
-    201 COMPANHIA,
-	tfcmg948.t$stat$l SITUACAO_DO_ARQUIVO,
-	tfcmg948.t$send$l SITUACAO_REMESSA,
+	tfcmg948.t$bank$l CD_BANCO,
+	tfcmg948.t$btno$l NR_REMESSA,
+	tfcmg948.t$docd$l DT_REMESSA,
+	tfcmg011.t$agcd$l NR_AGENCIA,
+	tfcmg948.t$acco$l NR_CONTA,
+    201 CD_CIA,
+	tfcmg948.t$stat$l CD_SITUACAO_ARQUIVO,
+	tfcmg948.t$send$l CD_SITUACAO_REMESSA,
 	CAST((FROM_TZ(CAST(TO_CHAR(tfcmg948.t$lach$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALZACAO
 FROM
