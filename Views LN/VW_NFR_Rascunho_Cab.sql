@@ -1,4 +1,5 @@
--- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota			
+-- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota	
+-- #FAF.095 - 29-mai-2014, Fabio Ferreira, 	Correções para 	DT_SAIDA_NF em branco			
 --************************************************************************************************************************************************************
 SELECT 
 	brnfe940.t$fire$l NR_NF_RASCUNHO,
@@ -21,7 +22,10 @@ SELECT
 	brnfe940.t$docn$l NR_NF_REFERENCIA,	
 	brnfe940.t$seri$l NR_SERIE_NFR_REFERENCIA,											
 	brnfe940.t$idat$l DT_EMISSAO_NF,													
-	brnfe940.t$iodt$l DT_SAIDA_NF,													
+--	brnfe940.t$iodt$l DT_SAIDA_NF,																			--#FAF.095.o
+	CASE WHEN brnfe940.t$iodt$l<TO_DATE('01-01-1990', 'DD-MM-YYYY') THEN
+	brnfe940.t$idat$l ELSE brnfe940.t$iodt$l END DT_SAIDA_NF,												--#FAF.095.n
+													
 	tdpur400.t$orno NR_PEDIDO_COMPRA,
 	brnfe940.t$gtam$l VL_PRODUTO,
 	brnfe940.t$gexp$l VL_DESPESA,
