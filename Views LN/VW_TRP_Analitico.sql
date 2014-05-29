@@ -47,7 +47,7 @@ select distinct
       
       znfmd060.t$ttra$c pedc_id_tipo_transporte,
       
-      CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+      CAST((FROM_TZ(CAST(TO_CHAR(tdsls401.t$rdta, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
       AT time zone sessiontimezone) AS DATE) pedc_dt_limite_exp,    
     
        
@@ -72,12 +72,15 @@ select distinct
       znsls401.t$ufen$c atdo_uf_destinatario,
       znsls401.t$cepe$c atdo_cep_dest,
       tcmcs080.t$seak tran_apelido,
-      znfmd630.t$vlmr$c atdo_vl_total_nf,
+      cisli940.t$amnt$l atdo_vl_total_nf,
       znfmd630.t$vlfr$c atdo_vl_frete_cli,
 --      (select sum(znfmd171.t$volu$c)
 --      from BAANDB.TZNFMD171201 znfmd171
 --      where znfmd171.t$nent$c=znfmd630.t$nent$c) atdo_volume_m3,
-      znfmd630.t$qvol$c nfca_qt_volumes
+      (select sum(nl.t$dqua$l) from tcisli941201 nl, ttcibd001201 i
+		where nl.t$fire$l=znfmd630.t$fire$c
+		and i.t$item=nl.t$item$l
+		and i.t$kitm<3) nfca_qt_volumes
 from  BAANDB.TZNFMD630201 znfmd630,
       BAANDB.TZNSLS401201 znsls401,
       BAANDB.TZNSLS400201 znsls400,
@@ -88,7 +91,8 @@ from  BAANDB.TZNFMD630201 znfmd630,
       ttcmcs080201 tcmcs080,
       tznint002201 znint002,
       tznsls002201 znsls002,
-      BAANDB.tznfmd001201 znfmd001
+      BAANDB.tznfmd001201 znfmd001,
+	  tcisli940201 cisli940
 WHERE   znsls401.T$ORNO$C=znfmd630.T$ORNO$C
 AND     znsls400.t$ncia$c=znsls401.t$ncia$c
 AND     znsls400.t$uneg$c=znsls401.t$uneg$c
@@ -105,3 +109,4 @@ AND     tcmcs080.t$cfrw=znfmd630.T$CFRW$C
 AND     znint002.T$NCIA$C=znsls400.T$NCIA$C
 AND     znint002.T$UNEG$C=znsls400.t$uneg$c
 AND     znsls002.T$TPEN$C=znsls401.t$itpe$c
+AND		cisli940.t$fire$l=znfmd630.t$fire$c

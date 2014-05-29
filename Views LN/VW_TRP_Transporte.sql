@@ -4,8 +4,9 @@ select distinct
     AT time zone sessiontimezone) AS DATE) 
   from BAANDB.TZNFMD640201 o
   where o.T$COCI$C='ROT'
-  and o.T$ETIQ$C=znfmd630.T$ETIQ$C) dofi_dt_saida_entrega, -- Fazer relacionamento
-  znsls401.t$dtep$c dofi_dt_prometida,
+  and o.T$ETIQ$C=znfmd630.T$ETIQ$C) dofi_dt_saida_entrega, -- Fazer relacionamentoa
+  CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+    AT time zone sessiontimezone) AS DATE) dofi_dt_prometida,
   znfmd630.t$vlft$c dofi_vl_frete_pagar_gte,
   znfmd630.t$vlfr$c atdo_vl_frete_cli,
   znfmd630.t$vlfa$c atdo_vl_frete_cli_ori,
