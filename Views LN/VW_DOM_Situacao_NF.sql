@@ -1,6 +1,6 @@
-SELECT d.t$cnst COD_SITUACAO_NOTA,
-       l.t$desc DESC_SITUACAO_NOTA,
-       'NFV' COD_MODULO
+SELECT d.t$cnst CD_SITUACAO_NF,
+       l.t$desc DS_SITUACAO_NF,
+       'NFV' CD_MODULO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='ci'
@@ -13,9 +13,9 @@ AND l.t$clan='p'
 AND l.t$cpac='ci'
 AND l.t$vers=(select max(l1.t$vers) from tttadv140000 l1 where l1.t$clab=l.t$clab AND l1.t$clan=l.t$clan AND l1.t$cpac=l.t$cpac)
 UNION
-SELECT d.t$cnst COD_SITUACAO_NOTA,
-       l.t$desc DESC_SITUACAO_NOTA,
-       'NFR' COD_MODULO
+SELECT d.t$cnst CD_SITUACAO_NF,
+       l.t$desc DS_SITUACAO_NF,
+       'NFR' CD_MODULO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='td'

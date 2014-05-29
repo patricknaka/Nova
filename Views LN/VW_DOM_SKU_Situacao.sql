@@ -1,5 +1,5 @@
 SELECT
-  tcmcs018.t$csig COD_SITUACAO_ITEM,
-  tcmcs018.t$dsca DESCR
+  tcmcs018.t$csig CD_SITUACAO_ITEM,
+  tcmcs018.t$dsca DS_SITUACAO_ITEM
 FROM ttcmcs018201 tcmcs018
 order by 1

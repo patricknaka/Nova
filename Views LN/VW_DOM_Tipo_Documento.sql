@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD_TIPO_DOCUMENTO,
-       l.t$desc DESC_TIPO_DOCUMENTO
+SELECT d.t$cnst CD_TIPO_DOCUMENTO,
+       l.t$desc DS_TIPO_DOCUMENTO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'

@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD_GENERO,
-       l.t$desc DESC_GENERO
+SELECT d.t$cnst CD_GENERO,
+       l.t$desc DS_GENERO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tc'

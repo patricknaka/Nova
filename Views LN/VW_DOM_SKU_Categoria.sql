@@ -1,7 +1,7 @@
 
-SELECT 201 COMPANHIA, 
-	   d.t$cnst COD_CATEGORIA,
-       l.t$desc DESC_CATEGORIA
+SELECT 201 CD_CIA, 
+	   d.t$cnst CD_CATEGORIA,
+       l.t$desc DS_CATEGORIA
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='zn'

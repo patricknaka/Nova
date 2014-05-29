@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD_PROCEDENCIA,
-       l.t$desc DESC_PROCEDENCIA
+SELECT d.t$cnst CD_PROCEDENCIA,
+       l.t$desc DS_PROCEDENCIA
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tc'

@@ -1,8 +1,8 @@
   -- #FAF.080 - 23-mai-2014, Fabio Ferreira, 	Adcionada sitações do título CAR
   --****************************************************************************************************************************************************
-SELECT d.t$cnst COD_SITUACAO_TITULO,
-       l.t$desc DESC_SITUACAO_TITULO,
-      'CAP' ID_MODULO
+SELECT d.t$cnst CD_SITUACAO_TITULO,
+       l.t$desc DS_SITUACAO_TITULO,
+      'CAP' CD_MODULO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'
@@ -17,9 +17,9 @@ AND l.t$vers='B61'
 AND l.t$rele='a'
 AND l.t$cust=' '
 UNION
-SELECT d.t$cnst COD_SITUACAO,
-       l.t$desc DESC_SITUACAO_TITULO,
-      'CAR' ID_MODULO
+SELECT d.t$cnst CD_SITUACAO_TITULO,
+       l.t$desc DS_SITUACAO_TITULO,
+      'CAR' CD_MODULO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'

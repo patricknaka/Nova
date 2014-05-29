@@ -1,6 +1,6 @@
-SELECT d.t$cnst COD_SITUACAO_PGTO,
-       l.t$desc DESC_SITUACAO_PGTO,
-       'CAP' COD_MODULO
+SELECT d.t$cnst CD_SITUACAO_PAGAMENTO,
+       l.t$desc DS_SITUACAO_PAGAMENTO,
+       'CAP' CD_MODULO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'
@@ -15,9 +15,9 @@ AND l.t$vers='B61'
 AND l.t$rele='a'
 AND l.t$cust=' '
 UNION
-SELECT d.t$cnst COD_SITUACAO_PGTO,
-       l.t$desc DESC_SITUACAO_PGTO,
-        'CAPE' COD_MODULO
+SELECT d.t$cnst CD_SITUACAO_PAGAMENTO,
+       l.t$desc DS_SITUACAO_PAGAMENTO,
+        'CAPE' CD_MODULO
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tf'
