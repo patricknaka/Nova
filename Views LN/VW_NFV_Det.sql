@@ -1,5 +1,6 @@
 -- 05-jan-2014, Fabio Ferreira, Correção registros duplicados (relacionamento cisli245),
 --								Não mostrar linhas de frete e mostar o valor de frete rateado na coluna valor frete (frete da znsls401)
+-- #FAF.041 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -41,32 +42,139 @@ SELECT DISTINCT
 	WHERE cisli943.t$fire$l=cisli941.t$fire$l
 	AND cisli943.t$line$l=cisli941.t$line$l
 	AND cisli943.t$brty$l=5) VL_PIS,
-	0 VL_ICMS_PRODUTO,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_ICMS_FRETE,							-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_ICMS_OUTROS,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+	
+	Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
+             WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+             AND    cisli943.t$line$l=cisli941.t$line$l
+             AND    cisli943.t$brty$l=1),0) VL_ICMS_PRODUTO,
+			 
+	nvl((SELECT sum(cisli943.t$amnt$l) FROM 	tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$ctyp$l=2
+		AND 	cisli943.t$brty$l=1),0) VL_ICMS_FRETE,
+		
+	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$kitm>3
+		AND		tcibd001b.t$ctyp$l!=2
+		AND 	cisli943.t$brty$l=1),0) VL_ICMS_OUTROS,
+	
 	(SELECT cisli943.t$amnt$l FROM tcisli943201 cisli943
 	WHERE cisli943.t$fire$l=cisli941.t$fire$l
 	AND cisli943.t$line$l=cisli941.t$line$l
 	AND cisli943.t$brty$l=6) VL_COFINS,
-	0 VL_COFINS_PRODUTO,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_COFINS_FRETE,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_COFINS_OUTROS,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_PIS_PRODUTO,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_PIS_FRETE,							-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_PIS_OUTROS,							-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_CSLL,								-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_CSLL_PRODUTO,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_CSLL_FRETE,							-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_CSLL_OUTROS,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+	
+	Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
+		 WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+		 AND    cisli943.t$line$l=cisli941.t$line$l
+		 AND    cisli943.t$brty$l=6),0) VL_COFINS_PRODUTO,
+
+	nvl((SELECT sum(cisli943.t$amnt$l) FROM 	tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$ctyp$l=2
+		AND 	cisli943.t$brty$l=6),0) VL_COFINS_FRETE,
+		
+	nvl((SELECT sum(cisli943.t$amnt$l) FROM 	tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$kitm>3
+		AND		tcibd001b.t$ctyp$l!=2
+		AND 	cisli943.t$brty$l=6),0) VL_COFINS_OUTROS,
+	
+	Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
+		 WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+		 AND    cisli943.t$line$l=cisli941.t$line$l
+		 AND    cisli943.t$brty$l=5),0) VL_PIS_PRODUTO,
+
+	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+											tcisli941201 cisli941b,
+											ttcibd001201 tcibd001b
+	WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+	AND		tcibd001b.t$item=cisli941b.t$item$l
+	AND		tcibd001b.t$ctyp$l=2
+	AND 	cisli943.t$brty$l=5),0) VL_PIS_FRETE,
+
+	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+											tcisli941201 cisli941b,
+											ttcibd001201 tcibd001b
+	WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+	AND		tcibd001b.t$item=cisli941b.t$item$l
+	AND		tcibd001b.t$kitm>3
+	AND		tcibd001b.t$ctyp$l!=2
+	AND 	cisli943.t$brty$l=5),0)	VL_PIS_OUTROS,
+		 
+	Nvl((SELECT cisli943.t$amnt$l from tcisli943201 cisli943
+		 WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+		 AND    cisli943.t$line$l=cisli941.t$line$l
+		 AND    cisli943.t$brty$l=13),0) VL_CSLL,
+
+	Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
+		 WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+		 AND    cisli943.t$line$l=cisli941.t$line$l
+		 AND    cisli943.t$brty$l=13),0) VL_CSLL_PRODUTO,
+		 
+	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+											tcisli941201 cisli941b,
+											ttcibd001201 tcibd001b
+	WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+	AND		tcibd001b.t$item=cisli941b.t$item$l
+	AND		tcibd001b.t$ctyp$l=2
+	AND 	cisli943.t$brty$l=13),0) VL_CSLL_FRETE,
+
+	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+											tcisli941201 cisli941b,
+											ttcibd001201 tcibd001b
+	WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+	AND		tcibd001b.t$item=cisli941b.t$item$l
+	AND		tcibd001b.t$kitm>3
+	AND		tcibd001b.t$ctyp$l!=2
+	AND 	cisli943.t$brty$l=13),0) VL_CSLL_OUTROS,	
+
 	znsls401.t$vldi$c VL_DESCONTO_INCONDICIONAL,
 	cisli941.t$line$l NR_ITEM_NF,
 	cisli941.t$ccfo$l CD_NATUREZA_OPERACAO,
 	cisli941.t$opor$l SQ_NATUREZA_OPERACAO,
 	cisli941.t$cchr$l VL_DESPESA_ADUANEIRA,
-	0 VL_ADICIONAL_IMPORTACAO,				-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_PIS_IMPORTACAO,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_COFINS_IMPORTACAO,					-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-	0 VL_CIF_IMPORTACAO,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+	
+	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN cisli941.t$gexp$l
+	ELSE 0 END VL_ADICIONAL_IMPORTACAO,
+	
+	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN
+	nvl((select li.t$amnt$l from tcisli943201 li
+	where	li.t$fire$l=cisli941.t$fire$l
+	and		li.t$line$l=cisli941.t$line$l
+	and 	li.t$brty$l=5),0) 
+	ELSE 0 END VL_PIS_IMPORTACAO,
+
+	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN
+	nvl((select li.t$amnt$l from tcisli943201 li
+	where	li.t$fire$l=cisli941.t$fire$l
+	and		li.t$line$l=cisli941.t$line$l
+	and 	li.t$brty$l=6),0) 
+	ELSE 0 END VL_COFINS_IMPORTACAO,
+	
+	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN cisli941.t$fght$l
+	ELSE 0 END VL_CIF_IMPORTACAO,
+
 	CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO_NF
 FROM 
