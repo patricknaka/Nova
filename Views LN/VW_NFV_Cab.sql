@@ -1,3 +1,5 @@
+-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
+--**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
     (SELECT tcemm030.t$euca FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
@@ -78,7 +80,11 @@ SELECT
 		(SELECT cisli942.t$amnt$l FROM tcisli942201 cisli942
 		WHERE cisli942.t$fire$l=cisli940.t$fire$l
 		AND cisli942.t$brty$l=6) VL_COFINS,
-		0 VL_CSLL,								-- *** PEDENTE DE DEFINIÇÃO FUNCIONAL ****
+		
+        Nvl((SELECT sum(cisli943.t$amnt$l) from tcisli943201 cisli943
+             WHERE  cisli943.t$fire$l=cisli940.t$fire$l
+             AND    cisli943.t$brty$l=13),0) VL_CSLL,
+		
 		(SELECT SUM(znsls401.t$vldi$c) 
 		FROM tznsls401201 znsls401,
 			 tcisli245201 cisli245
@@ -86,10 +92,27 @@ SELECT
 		AND   cisli245.t$pono=znsls401.t$pono$c
 		AND   cisli245.t$fire$l=cisli940.t$fire$l) VL_DESCONTO_INCONDICIONAL,
 		cisli940.t$cchr$l VL_DESPESA_ADUANEIRA,
-		0 VL_ADICIONAL_IMPORTACAO,					-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-		0 VL_PIS_IMPORTACAO,							-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-		0 VL_COFINS_IMPORTACAO,						-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
-		0 VL_CIF_IMPORTACAO,							-- *** PENDENTE DE DEFINIÇÃO FUNCIONAL ***
+		
+		nvl((select sum(l.t$gexp$l) from tcisli941201 l
+		where	l.t$fire$l = cisli940.t$fire$l
+		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VL_ADICIONAL_IMPORTACAO,
+		
+		nvl((select sum(li.t$amnt$l) from tcisli943201 li, tcisli941201 l
+		where	l.t$fire$l = cisli940.t$fire$l
+		and li.t$fire$l=li.t$fire$l
+		and (l.t$sour$l=2 or l.t$sour$l=8)
+		and li.t$brty$l=5),0) VL_PIS_IMPORTACAO, 
+		
+		nvl((select sum(li.t$amnt$l) from tcisli943201 li, tcisli941201 l
+		where	l.t$fire$l = cisli940.t$fire$l
+		and li.t$fire$l=li.t$fire$l
+		and (l.t$sour$l=2 or l.t$sour$l=8)
+		and li.t$brty$l=6),0) VL_COFINS_IMPORTACAO,
+		
+		nvl((select sum(l.t$fght$l) from tcisli941201 l
+		where	l.t$fire$l = cisli940.t$fire$l
+		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VL_CIF_IMPORTACAO,
+		
 		CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO_NF
 FROM
