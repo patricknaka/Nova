@@ -8,40 +8,40 @@
 -- #FAF.048.1 - 26-mai-2014, Fabio Ferreira, 	Agrupado registros duplicados
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
-	   znsls401.t$pecl$c NUM_PEDIDO,
-       TO_CHAR(znsls401.t$entr$c) NUM_ENTREGA,																	-- #FAF.048.1.n
+	   znsls401.t$pecl$c NR_PEDIDO,
+       TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,																	-- #FAF.048.1.n
 --       znsls401.t$entr$c NUM_ENTREGA,																			-- #FAF.048.1.o
 --	   CONCAT(TRIM(znsls401.t$pecl$c), TRIM(to_char(znsls401.t$entr$c))) PEDIDO_ENTREGA, 						-- #FAF.007.o
 --	   znsls401.t$entr$c PEDIDO_ENTREGA, 																		-- #FAF.047.n	#FAF.048.o
-	   tdsls400.t$orno ORDEM,
-       tdsls400.t$ofbp CLIENTE_FATURA,
-       tccom130.t$ftyp$l TIPO_CLIENTE,
-       tccom130.t$ccit CIDADE_FATURA,
-       tccom130.t$ccty PAIS_FATURA,
-       tccom130.t$cste ESTADO_FATURA,
-       tccom130.t$pstc CEP_FATURA,
-       tccom130.t$namc LOGRAD_FATURA,
-       tccom130.t$dist$l BAIRRO_FATURA,
-       tccom130.t$hono NUM_FATURA,
-       znsls400.t$comf$c COMPLEMENTO_FATURA,
-       znsls400.t$reff$c REFERENCIA_FATURA,
-       tdsls400.t$stbp CLIENTE_ENTREGA,
-       tccom130c.t$ccit CIDADE_ENTREGA,
-       tccom130c.t$ccty PAIS_ENTREGA,
-       tccom130c.t$cste ESTADO_ENTREGA,
-       tccom130c.t$pstc CEP_ENTREGA,
-       tccom130c.t$namc LOGRAD_ENTREGA,
-       tccom130c.t$dist$l BAIRRO_ENTREGA,
+	   tdsls400.t$orno NR_ORDEM,
+       tdsls400.t$ofbp CD_CLIENTE_FATURA,
+       tccom130.t$ftyp$l CD_TIPO_CLIENTE,
+       tccom130.t$ccit CD_CIDADE_FATURA,
+       tccom130.t$ccty CD_PAIS_FATURA,
+       tccom130.t$cste CD_ESTADO_FATURA,
+       tccom130.t$pstc CD_CEP_FATURA,
+       tccom130.t$namc DS_ENDERECO_FATURA,
+       tccom130.t$dist$l DS_BAIRRO_FATURA,
+       tccom130.t$hono NR_FATURA,
+       znsls400.t$comf$c DS_COMPLEMENTO_FATURA,
+       znsls400.t$reff$c DS_REFERENCIA_ENDERECO_FATURA,
+       tdsls400.t$stbp CD_CLIENTE_ENTREGA,
+       tccom130c.t$ccit CD_CIDADE_ENTREGA,
+       tccom130c.t$ccty CD_PAIS_ENTREGA,
+       tccom130c.t$cste CD_ESTADO_ENTREGA,
+       tccom130c.t$pstc CD_CEP_ENTREGA,
+       tccom130c.t$namc DS_ENDERECO_ENTREGA,
+       tccom130c.t$dist$l DS_BAIRRO_ENTREGA,
 --       tccom130c.t$hono NUM_ENTREGA ,																			--#FAF.002.o
-       tccom130c.t$hono NUM_ENTREGA_END ,																		--#FAF.002.n
-       znsls401.t$come$c COMPLEMENTO_ENTREGA,
-       znsls401.t$refe$c REFERENCIA_ENTREGA,
+       tccom130c.t$hono NR_ENTREGA_ENDERECO,																		--#FAF.002.n
+       znsls401.t$come$c DS_COMPLEMENTO_ENTREGA,
+       znsls401.t$refe$c DS_REFERENCIA_ENDERECO_ENTREGA,
 	   CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DATA_EMISSAO,
+			AT time zone sessiontimezone) AS DATE) DT_EMISSAO,
 	   CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DATA_CHEGADA_PED,
-       Q1.trdt DATA_HR_ULTIMA_ATUALIZACAO,
-	   znsls400.t$idli$c ID_LISTA_CASAMENTO																		--#FAF.005.n
+			AT time zone sessiontimezone) AS DATE) DT_CHEGADA_PEDIDO,
+       Q1.trdt DT_ULTIMA_ATUALIZACAO,
+	   znsls400.t$idli$c NR_LISTA_CASAMENTO																		--#FAF.005.n
 FROM tznsls401201 znsls401,
      tznsls400201 znsls400,
      ttdsls400201 tdsls400,
