@@ -54,7 +54,7 @@ SELECT
 	(select a.t$mess$c from tznnfe004201 a
 	 where a.t$fire$c=brnfe940.t$fire$l
 	 and a.t$mess$c!=' '
-	 and rownum=1) CD_SITUACAO_ANALISE,
+	 and rownum=1) DS_SITUACAO_ANALISE,
 	
 	CAST((FROM_TZ(CAST(TO_CHAR(brnfe940.t$fcdt$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 		AT time zone sessiontimezone) AS DATE) DT_ANALISE,	
