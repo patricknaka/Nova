@@ -1,9 +1,9 @@
 SELECT DISTINCT
-	201 COMPANHIA,
-	ltrim(rtrim(q1.item)) COD_ITEM,
-	tcemm030.t$euca FILIAL,
-	q1.grid UNID_EMPRESARIAL,
-	q1.mauc VALOR_CMV
+	201 CD_CIA,
+	ltrim(rtrim(q1.item)) CD_ITEM,
+	tcemm030.t$euca CD_FILIAL,
+	q1.grid CD_UNIDADE_EMPRESARIAL,
+	q1.mauc VL_CMV
 FROM
 	ttcemm030201 tcemm030,	
 	(select a.t$item item,
