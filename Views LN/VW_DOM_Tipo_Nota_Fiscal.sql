@@ -1,5 +1,5 @@
-SELECT d.t$cnst COD_TIPO_NOTA,
-       l.t$desc DESCR
+SELECT d.t$cnst CD_TIPO_NF,
+       l.t$desc DS_TIPO_NF
 FROM tttadv401000 d,
      tttadv140000 l
 WHERE d.t$cpac='tc'
