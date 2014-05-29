@@ -138,10 +138,10 @@ SELECT
 		and	lr.t$rcno=rf.t$rcno$l
 		and lr.t$rcln=rf.t$rcln$l
 		and lr.t$mdev$c!=' '
-		and rownum=1),' ') CD_MOTIVO_DEVOLUCAO_ATO,	
+		and rownum=1),' ') DS_MOTIVO_DEVOLUCAO_ATO,	
 	
 
-	0 DT_MOTIVO_DEVOLUCAO_ATO,											-- *** NÃO TEMOS ESTA INFORMAÇÃO ***
+
 	nvl((Select max(d.t$crpd$l) from ttdrec941201 d
 	where d.t$fire$l=tdrec940.t$fire$l),2) CD_TIPO_FRETE,																
 	tdrec940.t$fire$l NR_REFERENCIA_FISCAL,
