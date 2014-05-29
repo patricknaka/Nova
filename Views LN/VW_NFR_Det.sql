@@ -16,7 +16,7 @@ SELECT
 	(SELECT tdrec947.t$rcno$l FROM ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
 	AND tdrec947.t$line$l=tdrec941.t$line$l
-	AND rownum=1) RECEBIMENTO,
+	AND rownum=1) NR_NFR,
   tdrec940.t$docn$l NR_NF_RECEBIDA,
   tdrec941.t$line$l SQ_ITEM_NF_RECEBIDA,
   rtrim(ltrim(tdrec941.t$item$l)) CD_ITEM,
