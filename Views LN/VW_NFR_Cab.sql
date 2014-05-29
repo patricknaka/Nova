@@ -26,7 +26,7 @@ SELECT
 	tdrec940.t$opfc$l CD_NATUREZA_OPERACAO,
 	CASE WHEN tdrec940.t$opor$l='1556' THEN 1
 	ELSE 2
-	END IN_MERCADORIA_UTILIZADA_CONSUMO,
+	END IN_MERC_UTILIZADA_CONSUMO,
 	(Select a.t$fire$l from ttdrec944201 a, ttdrec940201 b
 	where b.t$fire$l=a.t$fire$l 
 	AND b.T$RFDT$L=31
