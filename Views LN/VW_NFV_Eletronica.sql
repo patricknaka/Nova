@@ -1,5 +1,5 @@
 -- 06-jan-2014, Fabio Ferreira, Correção de conversão de timezone
---								
+-- #FAF.042 - 29-mai-2014, Fabio Ferreira, 	Correções timezone					
 --****************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -9,7 +9,9 @@ SELECT
     cisli940.t$seri$l NR_SERIE_NFE,
     cisli940.t$nfes$l CD_STATUS_SEFAZ,
     cisli940.t$prot$l NR_CHAVE_ACESSO_NFE,
-    nvl((SELECT MIN(brnfe020.t$date$l)
+    nvl((SELECT 
+	CAST((FROM_TZ(CAST(TO_CHAR(MIN(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+		AT time zone sessiontimezone) AS DATE)	
     FROM tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
 	  AND	  brnfe020.t$ncmp$l=201 	
