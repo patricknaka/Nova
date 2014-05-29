@@ -98,7 +98,7 @@ SELECT
 	from ttdpur451201 
 	where ttdpur451201.t$orno=tdpur400.t$orno
 	and ttdpur451201.t$clyn=1) DT_CANCELAMENTO,
-	brnfe940.t$opor$l ESPÉCIE_NOTA_FISCAL_RECEBIDA,														
+	brnfe940.t$opor$l ESPECIE_NOTA_FISCAL_RECEBIDA,														
 	brnfe940.t$frec$l NR_NOTA_RECEBIMENTO,																
 	tdpur400.t$cwar CD_DEPOSITO,
 	tdpur400.t$cpay CD_CONDICAO_PAGAMENTO,
