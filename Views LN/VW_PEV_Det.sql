@@ -12,9 +12,9 @@ SELECT
         FROM ttdsls451201
         WHERE ttdsls451201.t$orno=tdsls401.t$orno
         AND   ttdsls451201.t$pono=tdsls401.t$pono) DT_ATUALIZACAO,
-		  201 COMPANHIA,
-          znsls401.t$uneg$c COD_UNID_NEG,
-          tdsls401.t$orno ORDEM,
+		  201 CD_CIA,
+          znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
+          tdsls401.t$orno NR_ORDEM,
 		  CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_COMPRA,
 			
@@ -26,39 +26,39 @@ SELECT
 			WHEN tdsls400.t$hdst=20 THEN CASE WHEN nvl((Select max(atv.t$xcsq) From ttdsls413201 atv
                                                   where atv.t$orno=tdsls401.t$orno and atv.t$pono=tdsls401.t$pono and atv.t$xcst>=15),99)=99 THEN 10 
 										 ELSE 20 END
-			ELSE tdsls400.t$hdst END SITUACAO_PEDIDO,
-          znsls400.t$idca$c COD_CANAL_VENDAS,
-          ltrim(rtrim(tdsls401.t$item)) COD_ITEM,
-          tdsls401.t$qoor QTD_ITENS,
-          tdsls401.t$pric VALOR_ITEM,
+			ELSE tdsls400.t$hdst END CD_SITUACAO_PEDIDO,
+          znsls400.t$idca$c CD_CANAL_VENDAS,
+          ltrim(rtrim(tdsls401.t$item)) CD_ITEM,
+          tdsls401.t$qoor QT_ITENS,
+          tdsls401.t$pric VL_ITEM,
 --          0 VALOR_DESCONTO_CONDICIONAL,      -- **** DESCONSIDERAR - NÃO SERÁ USADO									--#FAF.002.o
-          znsls401.t$vldi$c VALOR_DESCONTO_INCONDICIONAL,
-          znsls401.t$vlfr$c VALOR_FRETE_CLIENTE,
+          znsls401.t$vldi$c VL_DESCONTO_INCONDICIONAL,
+          znsls401.t$vlfr$c VL_FRETE_CLIENTE,
           nvl((select sum(f.t$vlft$c) from tznfmd630201 f
-          where f.t$pecl$c=znsls400.t$pecl$c),0) VALOR_FRETE_CIA,
-          znsls400.t$cven$c COD_VENDEDOR,
-          znsls400.t$idli$c ID_LISTA_CASAMENTO,
-          'Aprovados' ESTADO_PAGAMENTO,        
-          ' ' DATA_PAGAMENTO,                -- **** DESCONSIDERAR - SOMENTE PGTO APROVADOS ESTÃO NO LN
-          ' ' UTM_PARCEIRO,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
-          ' ' UTM_MIDIA,                     -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
-          ' ' UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
-          znsls401.t$vlde$c VALOR_DESPESA_ACESSORIO,
-          znsls400.t$vldf$c VALOR_JUROS,
-          (znsls401.t$vlun$c + znsls401.t$vlfr$c - znsls401.t$vldi$c)*znsls401.t$qtve$c VALOR_TOTAL_ITEM,
+          where f.t$pecl$c=znsls400.t$pecl$c),0) VL_FRETE_CIA,
+          znsls400.t$cven$c CD_VENDEDOR,
+          znsls400.t$idli$c NR_LISTA_CASAMENTO,
+          'Aprovados' DS_STATUS_PAGAMENTO,        
+          ' ' DT_PAGAMENTO,                -- **** DESCONSIDERAR - SOMENTE PGTO APROVADOS ESTÃO NO LN
+          ' ' DS_UTM_PARCEIRO,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
+          ' ' DS_UTM_MIDIA,                     -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
+          ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
+          znsls401.t$vlde$c VL_DESPESA_ACESSORIO,
+          znsls400.t$vldf$c VL_JUROS,
+          (znsls401.t$vlun$c + znsls401.t$vlfr$c - znsls401.t$vldi$c)*znsls401.t$qtve$c VL_TOTAL_ITEM,
           (SELECT Count(lc.t$pono)
            FROM ttdsls401201 lc
            WHERE lc.t$orno=tdsls401.t$orno
            AND   lc.t$pono=tdsls401.t$pono
-           AND   lc.t$clyn=1) QTD_ITENS_CANCELADOS,
-          tcemm030.t$euca COD_FILIAL,
-		  tcemm124.t$grid UNID_EMPRESARIAL,
-		  znsls401.t$tpcb$c TP_COMBO,
-      znsls401.t$pecl$c NUM_PEDIDO,
-      znsls401.T$ENTR$C NUM_ENTREGA,
-	  znsls400.t$idco$c ID_CONTRATO_B2B,															--#FAF.003.sn
-	  znsls400.t$idCP$c ID_CAMPANHA_B2B,
-	  znsls004.t$orig$c COD_ORIGEM_PEDIDO															--#FAF.003.en
+           AND   lc.t$clyn=1) QT_ITENS_CANCELADOS,
+          tcemm030.t$euca CD_FILIAL,
+	  tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
+		  znsls401.t$tpcb$c CD_TIPO_COMBO,
+      znsls401.t$pecl$c NR_PEDIDO,
+      znsls401.T$ENTR$C NR_ENTREGA,
+	  znsls400.t$idco$c CD_CONTRATO_B2B,															--#FAF.003.sn
+	  znsls400.t$idCP$c CD_CAMPANHA_B2B,
+	  znsls004.t$orig$c CD_ORIGEM_PEDIDO															--#FAF.003.en
 FROM
         ttdsls401201 tdsls401
 --		LEFT JOIN tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls401.t$orno,						--#FAF.004.o
