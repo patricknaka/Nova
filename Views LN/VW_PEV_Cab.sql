@@ -7,59 +7,58 @@
 SELECT  DISTINCT
         CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
           AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
-        201 COMPANHIA,
-        tdsls400.t$orno ORDEM,
-        tdsls400.t$ofbp COD_CLIENTE,
+        201 CD_CIA,
+        tdsls400.t$orno NR_ORDEM,
+        tdsls400.t$ofbp CD_CLIENTE,
         CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DATA_COMPRA,
+          AT time zone sessiontimezone) AS DATE) DT_COMPRA,
         CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) HORA_COMPRA, -- * CAMPO DATA-HORA
-        znsls400.t$uneg$c COD_UNIDADE_NEGOCIO,
-        sls401q.t$pecl$c NUM_PEDIDO,
-		TO_CHAR(sls401q.t$entr$c) NUM_ENTREGA,																			--#FAF.046.n
---		sls401q.t$entr$c NUM_ENTREGA,																					--#FAF.046.o
+          AT time zone sessiontimezone) AS DATE) HR_COMPRA, -- * CAMPO DATA-HORA
+        znsls400.t$uneg$c CD_UNIDADE_NEGOCIO,
+        sls401q.t$pecl$c NR_PEDIDO_LOJA,
+		TO_CHAR(sls401q.t$entr$c) NR_ENTREGA,																			--#FAF.046.n
+--		sls401q.t$entr$c NR_ENTREGA,																					--#FAF.046.o
 --		CONCAT(TRIM(sls401q.t$pecl$c), TRIM(to_char(sls401q.t$entr$c))) PEDIDO_ENTREGA, 								--#FAF.007.o
-        znsls400.t$cven$c VENDEDOR,
-        tcemm030.t$euca COD_FILIAL,
-		tcemm112.t$grid UNID_EMPRESARIAL,
-        sls401q.t$opfc$l NATUREZA_OPERAÇÃO,
-        ' ' SEQ_NATUREZA_OPERAÇÃO,        -- *** NAO EXISTE NA PREVISAO DE IMPOSTOS
-        tdsls400.t$ccur MOEDA,
-        tdsls400.t$hdst SITUACAO_PEDIDO,
+        znsls400.t$cven$c CD_VENDEDOR,
+        tcemm030.t$euca CD_FILIAL,
+        sls401q.t$opfc$l CD_NATUREZA_OPERACAO,
+        ' ' SQ_NATUREZA_OPERACAO,        -- *** NAO EXISTE NA PREVISAO DE IMPOSTOS
+        tdsls400.t$ccur CD_MOEDA,
+        tdsls400.t$hdst CD_SITUACAO_PEDIDO,
         (SELECT 
 			CAST((FROM_TZ(CAST(TO_CHAR(Max(ttdsls450201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE)
          FROM ttdsls450201
-         WHERE ttdsls450201.t$orno=tdsls400.t$orno) DATA_SIT_PEDIDO,
-        znsls400.t$vlfr$c VALOR_FRETE_CLIENTE,
+         WHERE ttdsls450201.t$orno=tdsls400.t$orno) DT_SITUACAO_PEDIDO,
+        znsls400.t$vlfr$c VL_FRETE_CLIENTE,
         nvl((select sum(f.t$vlft$c) from tznfmd630201 f
-             where f.T$PECL$C=znsls400.t$pecl$c),0) VALOR_FRETE_CIA,
-        znsls400.t$idca$c COD_CANAL_VENDAS,
-        --znsls402.t$vlju$c VALOR_JUROS,
-        znsls004.t$orig$c COD_ORIGEM_PEDIDO,
-        znsls400.t$ipor$c IP_CLIENTE,
-        znsls400.t$vlme$c VALOR_PEDIDO,
+             where f.T$PECL$C=znsls400.t$pecl$c),0) VL_FRETE_CIA,
+        znsls400.t$idca$c CD_CANAL_VENDAS,
+        --znsls402.t$vlju$c VL_JUROS,
+        znsls004.t$orig$c CD_ORIGEM_PEDIDO,
+        znsls400.t$ipor$c NR_IP_CLIENTE,
+        znsls400.t$vlme$c VL_PEDIDO,
         nvl((select sum(f.t$vlfc$c) from tznfmd630201 f
-			where f.t$pecl$c=znsls400.t$pecl$c),0) VALOR_FRETE_TABELA,
-        endfat.t$ccit COD_CIDADE_FATURA,
-        endfat.t$ccty COD_PAIS_FATURA,
-        endfat.t$cste COD_ESTADO_FAURA,
-        endfat.t$pstc CEP_FATURA,
+			where f.t$pecl$c=znsls400.t$pecl$c),0) VL_FRETE_TABELA,
+        endfat.t$ccit CD_CIDADE_FATURA,
+        endfat.t$ccty CD_PAIS_FATURA,
+        endfat.t$cste CD_ESTADO_FAURA,
+        endfat.t$pstc CD_CEP_FATURA,
         tdsls400.t$stbp COD_CLIENTE_ENTREGA,
-        endent.t$ccit COD_CIDADE_ENTREGA,
-        endent.t$ccty COD_PAIS_ENTREGA,
-        endent.t$cste COD_ESTADO_ENTREGA,
-        endent.t$pstc CEP_ENTREGA,
-        znsls400.t$idli$c NUM_LISTA_CASAMENTO,
-        znsls400.t$idco$c NUM_CONTRATO_B2B,
-        znsls400.t$idcp$c NUM_CAMPANHA_B2B,
+        endent.t$ccit CD_CIDADE_ENTREGA,
+        endent.t$ccty CD_PAIS_ENTREGA,
+        endent.t$cste CD_ESTADO_ENTREGA,
+        endent.t$pstc CD_CEP_ENTREGA,
+        znsls400.t$idli$c NR_LISTA_CASAMENTO,
+        znsls400.t$idco$c NR_CONTRATO_B2B,
+        znsls400.t$idcp$c NR_CAMPANHA_B2B,
         sls401q.t$pztr$c PRAZO_TRANSIT_TIME,
         sls401q.t$pzcd$c PRAZO_CD,
-        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 END NUM_NOTA_CONSOLIDADA,						--#FAF.006.n      
-        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END SERIE_NOTA_CONSOLIDADA,					--#FAF.006.n
-        sls401q.t$pcga$c NUM_PEDIDO_GARANTIA,
-        sls401q.t$dtep$c DATA_LIMITE_EXPED,
-        znsls400.t$tped$c COD_TIPO_PEDIDO,
+        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 END NR_NF_CONSOLIDADA,						--#FAF.006.n      
+        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END NR_SERIE_NF_CONSOLIDADA,					--#FAF.006.n
+        sls401q.t$pcga$c NR_PEDIDO_GARANTIA,
+        sls401q.t$dtep$c DT_LIMITE_EXPED,
+        znsls400.t$tped$c CD_TIPO_PEDIDO,
         (SELECT  DISTINCT znsls402.t$idmp$c
         FROM    tznsls402201 znsls402
         WHERE   znsls402.t$ncia$c=znsls400.t$ncia$c
@@ -71,17 +70,18 @@ SELECT  DISTINCT
                               WHERE   znsls402b.t$ncia$c=znsls402.t$ncia$c
                               AND     znsls402b.t$uneg$c=znsls402.t$uneg$c
                               AND     znsls402b.t$pecl$c=znsls402.t$pecl$c
-                              AND     znsls402b.t$sqpd$c=znsls402.t$sqpd$c)) COD_MEIO_PAGAMENTO_PRINCIPAL,
-        znsls400.t$peex$c NUM_PEDIDO_EXTERNO,
-        sls401q.t$itpe$c COD_TIPO_ENTREGA,
-        sls401q.t$tptr$c COD_TIPO_TRANSPORTE,
+                              AND     znsls402b.t$sqpd$c=znsls402.t$sqpd$c)) CD_MEIO_PAGAMENTO_PRINCIPAL,
+        znsls400.t$peex$c NR_PEDIDO_EXTERNO,
+        sls401q.t$itpe$c CD_TIPO_ENTREGA,
+        sls401q.t$tptr$c CD_TIPO_TRANSPORTE,
 		(select tcmcs080.t$suno from ttcmcs080201 tcmcs080
-		where tcmcs080.t$cfrw=tdsls400.t$cfrw) COD_TRANSPORTADORA,
+		where tcmcs080.t$cfrw=tdsls400.t$cfrw) CD_TRANSPORTADORA,
         --tdsls400.t$cfrw COD_TRANSPORTADORA,
-        sls401q.t$mgrt$c COD_MEGA_ROTA,
-        ulttrc.poco STATUS_PEDIDO,
+        sls401q.t$mgrt$c CD_MEGA_ROTA,
+        ulttrc.poco CD_STATUS,
         CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DATA_STATUS_PEDIDO
+          AT time zone sessiontimezone) AS DATE) DT_STATUS_PEDIDO,
+	tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
 FROM    ttdsls400201 tdsls400
         LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls400.t$orno
 		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						--#FAF.006.sn
