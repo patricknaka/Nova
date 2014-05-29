@@ -4,28 +4,28 @@
   -- #FAF.044 - 23-mai-2014, Fabio Ferreira, 	Correção VALOR_CSLL
   --********************************************************************************************************************************************************
   SELECT
-    znsls400.T$PECL$C PEDIDO,																													 
-    znsls401.T$ENTR$C ENTREGA,
-    tdsls400.T$ORNO ORDEM_VENDA,																				
-    zncom005.t$idpa$c ID_GARANTIA_ESTENDIDA,
-    tdsls400.t$hdst STATUS_PEDIDO, 										
+    znsls400.T$PECL$C NR_PEDIDO,																													 
+    znsls401.T$ENTR$C NR_ENTREGA,
+    tdsls400.T$ORNO NR_ORDEM,																				
+    zncom005.t$idpa$c NR_GARANTIA_ESTENDIDA,
+    tdsls400.t$hdst CD_STATUS_PEDIDO, 										
     CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DATA_EMISSÃO_GARANTIA,											
+      AT time zone sessiontimezone) AS DATE) DT_EMISSAO_GARANTIA,											
     CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DATA_PEDIDO_PRODUTO,												
-    ltrim(rtrim(tdsls401p.t$item)) COD_PRODUTO,							
-    ltrim(rtrim(tdsls401.t$item)) COD_GARANTIA,																	
-    sum(zncom005.t$igva$c) VALOR_CUSTO,
-    sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VALOR_GARANTIA,
-    sum(zncom005.t$piof$c) VALOR_IOF,										
-    sum(zncom005.t$ppis$c) VALOR_PIS,
-    sum(zncom005.t$pcof$c) VALOR_COFINS,
+      AT time zone sessiontimezone) AS DATE) DT_PEDIDO_PRODUTO,												
+    ltrim(rtrim(tdsls401p.t$item)) CD_ITEM,							
+    ltrim(rtrim(tdsls401.t$item)) CD_ITEM_GARANTIA,																	
+    sum(zncom005.t$igva$c) VL_CUSTO,
+    sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_GARANTIA,
+    sum(zncom005.t$piof$c) VL_IOF,										
+    sum(zncom005.t$ppis$c) VL_PIS,
+    sum(zncom005.t$pcof$c) VL_COFINS,
     nvl((select a.t$amnt$l from tcisli943201 a
 		where a.t$fire$l=zncom005.t$fire$c
 		and a.t$line$l=zncom005.t$line$c
-		and a.t$brty$l=13),0) VALOR_CSLL,														
-    sum(zncom005.t$irrf$c) VALOR_IRRF,
-    avg(tdsls401.t$qoor) QTD_GARANTIA
+		and a.t$brty$l=13),0) VL_CSLL,														
+    sum(zncom005.t$irrf$c) VL_IRPF,
+    avg(tdsls401.t$qoor) QT_GARANTIA
   FROM
     BAANDB.tzncom005201 zncom005,
     ttcibd001201 tcibd001,																						
