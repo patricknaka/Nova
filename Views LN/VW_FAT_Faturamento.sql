@@ -9,6 +9,7 @@
 -- #FAF.008 - 17-mai-2014, Fabio Ferreira, 	Incluida condição para evitar divisão por zero
 -- #FAF.063 - 22-mai-2014, Fabio Ferreira, 	Alterado o código da transportadora para o código do parceiro
 -- #FAF.083 - 26-mai-2014, Fabio Ferreira, 	Campo NUM_ENTREGA convertido para string
+-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do financeiro
 --****************************************************************************************************************************************************************
 SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
@@ -58,8 +59,11 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
           and a.t$fire$l=b.t$refr$l)
           else ' '
           end NR_SERIE_NF_REMESSA,
-        ' ' NR_NF_CONSOLIDADA,       -- *** AGUARDANDO DEFINIÇAO FUNCIONAL
-        ' ' NR_SERIE_NF_CONSOLIDADA,        -- *** AGUARDANDO DEFINIÇAO FUNCIONAL
+
+		CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 END NR_NF_CONSOLIDADA,							--#FAF.087.n
+		CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END NR_SERIE_NF_CONSOLIDADA, 			--#FAF.087.n
+
+
         cisli940.t$stat$l CD_SITUACAO_NF,
         (Select 
 		 CAST((FROM_TZ(CAST(TO_CHAR(max(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -95,23 +99,116 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
              WHERE  cisli943.t$fire$l=cisli941.t$fire$l
              AND    cisli943.t$line$l=cisli941.t$line$l
              AND    cisli943.t$brty$l=5),0) VL_PIS,
-        0 VL_ICMS_PRODUTO,         -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_ICMS_FRETE,           -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_ICMS_OUTROS,          -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
+		
+        Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
+             WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+             AND    cisli943.t$line$l=cisli941.t$line$l
+             AND    cisli943.t$brty$l=1),0) VL_ICMS_PRODUTO,
+
+			 
+		nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$ctyp$l=2
+		AND 	cisli943.t$brty$l=1),0) VL_ICMS_FRETE,
+
+		nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$kitm>3
+		AND		tcibd001b.t$ctyp$l!=2
+		AND 	cisli943.t$brty$l=1),0) VL_ICMS_OUTROS,
+		
+
         Nvl((SELECT cisli943.t$amnt$l from tcisli943201 cisli943
              WHERE  cisli943.t$fire$l=cisli941.t$fire$l
              AND    cisli943.t$line$l=cisli941.t$line$l
              AND    cisli943.t$brty$l=6),0) VL_COFINS,
-        0 VL_COFINS_PRODUTO,         -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_COFINS_FRETE,           -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_COFINS_OUTROS,          -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_PIS_PRODUTO,            -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_PIS_FRETE,              -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_PIS_OUTROS,             -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_CSLL,                   -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_CSLL_PRODUTO,           -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_CSLL_FRETE,             -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
-        0 VL_CSLL_OUTROS,            -- ***  AGUARDANDO DEFINIÇÃO FUNCIONAL ****
+			 
+        Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
+             WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+             AND    cisli943.t$line$l=cisli941.t$line$l
+             AND    cisli943.t$brty$l=6),0) VL_COFINS_PRODUTO,			 
+			
+		nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$ctyp$l=2
+		AND 	cisli943.t$brty$l=6),0) VL_COFINS_FRETE,			
+
+		nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$kitm>3
+		AND		tcibd001b.t$ctyp$l!=2
+		AND 	cisli943.t$brty$l=6),0) VL_COFINS_OUTROS,
+
+        Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
+             WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+             AND    cisli943.t$line$l=cisli941.t$line$l
+             AND    cisli943.t$brty$l=5),0) VL_PIS_PRODUTO,
+			 
+		nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$ctyp$l=2
+		AND 	cisli943.t$brty$l=5),0) VL_PIS_FRETE,
+		
+		nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$kitm>3
+		AND		tcibd001b.t$ctyp$l!=2
+		AND 	cisli943.t$brty$l=5),0) VL_PIS_OUTROS,	
+
+        Nvl((SELECT cisli943.t$amnt$l from tcisli943201 cisli943
+             WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+             AND    cisli943.t$line$l=cisli941.t$line$l
+             AND    cisli943.t$brty$l=13),0) VL_CSLL,
+			
+        Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
+             WHERE  cisli943.t$fire$l=cisli941.t$fire$l
+             AND    cisli943.t$line$l=cisli941.t$line$l
+             AND    cisli943.t$brty$l=13),0) VL_CSLL_PRODUTO,
+			 
+		
+		nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$ctyp$l=2
+		AND 	cisli943.t$brty$l=13),0) VL_CSLL_FRETE,
+		
+		nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
+												tcisli941201 cisli941b,
+												ttcibd001201 tcibd001b
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
+		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
+		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND		tcibd001b.t$kitm>3
+		AND		tcibd001b.t$ctyp$l!=2
+		AND 	cisli943.t$brty$l=13),0) VL_CSLL_OUTROS,	
+		
         cisli941.t$tldm$l VL_DESCONTO_INCONDICIONAL,
 		CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_PEDIDO,
@@ -154,14 +251,21 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
 		(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l) CD_TIPO_CLIENTE_FATURA
 FROM    tcisli940201 cisli940,
         tcisli941201 cisli941,
-        
         tcisli245201 cisli245,
         ttdsls401201 tdsls401,
         tznsls401201 znsls401,
         tznsls400201 znsls400,
+		
+		ttdsls400201 tdsls400																					--#FAF.087.sn
+		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						
+					from tcisli245201 c245, tcisli941201 c941, tcisli940201 c940
+					where c941.t$fire$l=c245.T$FIRE$L
+					and c940.t$fire$l=c941.T$REFR$L) consold ON consold.T$SLSO=tdsls400.t$orno,					--#FAF.087.en		
+		
         ttccom130201 endfat,
         ttccom130201 endent,
-        ttcibd001201 tcibd001
+        ttcibd001201 tcibd001,
+		ttdsls094201 tdsls094																					--#FAF.087.n
 WHERE   cisli941.t$fire$l=cisli940.t$fire$l
 AND     cisli245.t$fire$l=cisli941.t$fire$l
 AND     cisli245.t$line$l=cisli941.t$line$l
@@ -176,3 +280,5 @@ AND     znsls400.t$sqpd$c=znsls401.t$sqpd$c
 AND     endfat.t$cadr=cisli940.t$itoa$l
 AND     endent.t$cadr=cisli940.t$stoa$l
 AND     tcibd001.t$item=cisli941.t$item$l
+AND		tdsls400.t$orno=tdsls401.t$orno																			--#FAF.087.n
+AND		tdsls094.t$sotp=tdsls400.t$sotp																			--#FAF.087.n
