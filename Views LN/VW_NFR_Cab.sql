@@ -1,4 +1,5 @@
--- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal						
+-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
+-- #FAF.094 - 29-mai-2014, Fabio Ferreira, 	Correção campo VL_SERVICO				
 --************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -61,7 +62,8 @@ SELECT
 	AND tdrec942.t$brty$l=1) VL_IPI_DESTACADO,
 
 	nvl((	select sum(a.t$tamt$l) from ttdrec941201 a, ttcibd001201 b
-			where a.t$fire$l=tdrec941.t$fire$l
+--			where a.t$fire$l=tdrec941.t$fire$l																--#FAF.094.o
+			where a.t$fire$l=tdrec940.t$fire$l																--#FAF.094.n
 			and b.t$item=a.t$item$l
 			and b.t$kitm=5),0)	VL_SERVICO,
 
