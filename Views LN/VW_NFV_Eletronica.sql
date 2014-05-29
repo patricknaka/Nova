@@ -2,13 +2,13 @@
 --								
 --****************************************************************************************************************************************************************
 SELECT
-    201 COMPANHIA,
-    tcemm030.t$euca FILIAL,
-	tcemm124.t$grid UNID_EMPRESARIAL,
-    cisli940.t$docn$l NUM_NOTA_FISCAL,
-    cisli940.t$seri$l SER_NOTA_FISCAL,
-    cisli940.t$nfes$l COD_STATUS_SEFAZ,
-    cisli940.t$prot$l CHAVE_ACESSO,
+    201 CD_CIA,
+    tcemm030.t$euca CD_FILIAL,
+	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
+    cisli940.t$docn$l NF_NFE,
+    cisli940.t$seri$l NR_SERIE_NFE,
+    cisli940.t$nfes$l CD_STATUS_SEFAZ,
+    cisli940.t$prot$l NR_CHAVE_ACESSO_NFE,
     nvl((SELECT MIN(brnfe020.t$date$l)
     FROM tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
@@ -26,7 +26,7 @@ SELECT
     FROM tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
     AND brnfe020.T$STAT$L=4) DT_CANCELAMENTO,
-    cisli940.t$rscd$l COD_MOTIVO_CANCELAMENTO
+    cisli940.t$rscd$l CD_MOTIVO_CANCELAMENTO
 FROM
     tcisli940201 cisli940,
     ttcemm124201 tcemm124,
