@@ -1,14 +1,14 @@
-SELECT  tdipu010.t$citg COD_DEPARTAMENTO,
-        znpur008.t$cpay$c COD_COND_PAGTO,
+SELECT  tdipu010.t$citg CD_DEPARTAMENTO,
+        znpur008.t$cpay$c CD_CONDICAO_PAGAMENTO,
         tdipu010.t$sbim COD_COND_PGTO_AUT,
         CASE WHEN tcmcs003.t$tpar$l=1 THEN 1
         ELSE  2
         END CONSIGNACAO,
-        201 COMPANHIA,
-        tdipu010.t$vlmf$c VALOR_MIN_PEDIDO,
+        201 CD_CIA,
+        tdipu010.t$vlmf$c VL_MINIMO_PEDIDO,
 		CAST((FROM_TZ(CAST(TO_CHAR(znpur008.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-				AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZAÇÂO,
-        tdipu010.t$otbp PARCEIRO
+				AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+        tdipu010.t$otbp CD_PARCEIRO
 FROM    ttdipu010201 tdipu010
 		LEFT JOIN ttdipu002201 tdipu002 ON tdipu002.t$citg=tdipu010.t$citg AND tdipu002.t$kitm=1
 		LEFT JOIN ttcmcs003201 tcmcs003 ON tcmcs003.t$cwar=tdipu002.t$cwar,
