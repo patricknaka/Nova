@@ -55,7 +55,7 @@ SELECT DISTINCT
   tfcmg011f.t$agcd$l NR_AGENCIA_DESTINO,
   tfcmg011f.t$agdg$l NR_DIGITO_AGENCIA_DESTINO,
   tfcmg001f.t$bano NR_CONTA_CORRENTE_DESTINO,
-  tfcmg001f.t$ofdg$l NUM_DIGITO_CONTA_CORRENTE_DESTINO,
+  tfcmg001f.t$ofdg$l NR_DIG_CONTA_CORRENTE_DESTINO,
   tfacp200.t$lapa VL_TAXA_MORA,																		--#FAF.001.n
   nvl((select p.t$inra$l from ttfacp201201 p														--#FAF.003.sn 
    where p.t$ttyp=tfacp200.t$ttyp
