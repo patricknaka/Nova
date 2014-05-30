@@ -33,7 +33,7 @@ SELECT
     and brmcs941.t$line$l=tdpur401.t$txli$l) VL_FINANCEIRO,
     (select z.t$vlsg$c from tznfmd630201 z
 	where z.t$orno$c=tdpur401.t$orno) VL_SEGURO,
-    ltrim(rtrim(tdpur401.t$ikit$c)) CD_KIT,   
+    ltrim(rtrim(tdpur401.t$ikit$c)) CD_ITEM_KIT,   
     (select t$opfc$l 
     from tbrmcs941201 brmcs941
     where brmcs941.t$txre$l=tdpur401.t$txre$l

@@ -23,7 +23,7 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         tcibd200.t$mioq QT_MINIMA_FORNECEDOR,
         tcibd936.t$sour$l CD_PROCEDENCIA,
 		tcibd001.t$okfi$c IN_OK_FISCAL,
-        tcibd001.t$subf$c CD_SUBFAMILIA,
+        tcibd001.t$subf$c CD_SUB_FAMILIA,
           CASE WHEN tcmcs023.t$tpit$c=2 THEN 10
                WHEN tcmcs023.t$tpit$c=3 THEN 20
           ELSE tcibd001.t$espe$c
