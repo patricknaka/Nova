@@ -2,6 +2,7 @@
   -- #FAF.043 - 22-mai-2014, Fabio Ferreira, 	Rtrim Ltrim no codigo da garantia
   -- #FAF.043.1 - 23-mai-2014, Fabio Ferreira, 	Ajustes
   -- #FAF.044 - 23-mai-2014, Fabio Ferreira, 	Correção VALOR_CSLL
+  -- #FAF.019 - 30-mai-2014, Fabio Ferreira, 	Filtro para mostrar somente pedidos que já foram enviados para o parceiro
   --********************************************************************************************************************************************************
   SELECT
     znsls400.T$PECL$C NR_PEDIDO,																													 
@@ -60,6 +61,7 @@
   AND tcibd001.T$ITEM=tdsls401.T$ITEM
   AND tcibd001.T$ITGA$C=1
   AND zncom005.T$TPAP$C=2
+  AND zncom005.t$avpn$c!=0																--#FAF.018.n
   GROUP BY	znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$idpa$c, tdsls400.t$hdst, znsls400.t$dtem$c,
         tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item, zncom005.t$fire$c, zncom005.t$line$c
                                               
