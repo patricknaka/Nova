@@ -1,10 +1,9 @@
--- 06-jan-2014, Fabio Ferreira, Correção de conversão de timezone
+-- 06-mai-2014, Fabio Ferreira, Correção de conversão de timezone
 -- #FAF.042 - 29-mai-2014, Fabio Ferreira, 	Correções timezone					
 --****************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
     tcemm030.t$euca CD_FILIAL,
-	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
     cisli940.t$docn$l NF_NFE,
     cisli940.t$seri$l NR_SERIE_NFE,
     cisli940.t$nfes$l CD_STATUS_SEFAZ,
@@ -28,7 +27,8 @@ SELECT
     FROM tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
     AND brnfe020.T$STAT$L=4) DT_CANCELAMENTO,
-    cisli940.t$rscd$l CD_MOTIVO_CANCELAMENTO
+    cisli940.t$rscd$l CD_MOTIVO_CANCELAMENTO,
+	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL
 FROM
     tcisli940201 cisli940,
     ttcemm124201 tcemm124,
