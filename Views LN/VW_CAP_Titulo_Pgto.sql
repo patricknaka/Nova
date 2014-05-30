@@ -1,5 +1,4 @@
 SELECT
-	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
 	tfacp200.t$ninv NR_TITULO,
 	tfcmg011.t$baoc$l CD_BANCO,
 	tfcmg011.t$agcd$l NR_AGENCIA,
@@ -22,7 +21,8 @@ SELECT
 	and d.t$ninv=tfacp200.t$ninv) 
   ELSE to_date('1970-01-01', 'YYYY-MM-DD')
   END DT_LIQUIDACAO_TITULO,
-  tfacp600.t$payt CD_TIPO_TRANSACAO,
+  tfacp600.t$payt CD_TRANSACAO_TITULO,
+	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
   tfcmg011f.t$baoc$l CD_BANCO_DESTINO,
   tfcmg011f.t$agcd$l NR_AGENCIA_DESTINO,
   tccom125.t$bano NR_CONTA_CORRENTE_DESTINO,

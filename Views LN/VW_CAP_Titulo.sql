@@ -7,7 +7,7 @@
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
   tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
-  tfacp200.t$ttyp CD_TRANSACAO,
+  tfacp200.t$ttyp CD_TRANSACAO_TITULO,
   tfacp200.t$ninv NR_TITULO,
   tfacp200.t$pcom CD_CIA,
   --tfacp200.t$dim2 CODIGO_FILIAL,

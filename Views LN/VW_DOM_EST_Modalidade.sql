@@ -1,4 +1,4 @@
-SELECT d.t$cnst CD_ESTOQUE_MODALIDADE,
+SELECT d.t$cnst CD_MODALIDADE,
        l.t$desc DS_MODALIDADE
 FROM tttadv401000 d,
      tttadv140000 l

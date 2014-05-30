@@ -6,32 +6,22 @@
 -- #FAF.079 - 26-mai-2014, Fabio Ferreira, 	Alterado o campo SITUACAO_MOVIMENTO para usar o valor da programação de pagamento						
 --****************************************************************************************************************************************************************
 SELECT
-    201 CD_CIA,
+	201 CD_CIA,
 	CASE WHEN nvl((	select c.t$styp from tcisli205201 c
 					where c.t$styp='BL ATC'
 					AND c.T$ITYP=tfacr200.t$ttyp
 					AND c.t$idoc=tfacr200.t$ninv
-					AND rownum=1),0)=0 
-	THEN 2
-	ELSE 3
-	END CD_FILIAL,
-	(Select u.t$eunt From ttcemm030201 u
-	 where u.t$euca!=' '
-   AND TO_NUMBER(u.t$euca)=CASE WHEN tfacr200.t$dim2=' ' then 999
-   WHEN tfacr200.t$dim2<=to_char(0) then 999 
-   else TO_NUMBER(tfacr200.t$dim2) END
-   and rownum = 1
-   ) CD_UNIDADE_EMPRESARIAL,
+					AND rownum=1),0)=0 THEN 2 ELSE 3 END CD_FILIAL,
 	tfacr200.t$lino NR_MOVIMENTO,
 	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
 	'CR' CD_MODULO,
 	tfacr200.t$doct$l COD_DOCUMENTO,
-	tfacr200.t$tdoc CD_TIPO_TRANSACAO,
+	tfacr200.t$tdoc CD_TRANSACAO_TITULO,
 	tfacr200.t$trec CD_TIPO_DOCUMENTO,
 	CASE WHEN tfacr200.t$amnt<0 THEN '-' ELSE '+' END IN_ENTRADA_SAIDA,
 	tfacr200.t$docd DT_TRANSACAO,
 	tfacr200.t$amnt VL_TRANSACAO,
---	tfcmg409.t$stdd SITUACAO_MOVIMENTO,																	--#FAF.079.o
+	--	tfcmg409.t$stdd SITUACAO_MOVIMENTO,																	--#FAF.079.o
 	(select p.t$rpst$l from ttfacr201201 p
 	 where p.t$ttyp=tfacr200.t$ttyp
 	 and p.t$ninv=tfacr200.t$ninv 
@@ -47,18 +37,25 @@ SELECT
 	 where m.t$ttyp=tfacr200.t$ttyp
 	 and m.t$ninv=tfacr200.t$ninv 
 	 and m.t$schn=tfacr200.t$schn)
-  END DT_SITUACAO_MOVIMENTO, 																			--#FAF.079.en
+	END DT_SITUACAO_MOVIMENTO, 																			--#FAF.079.en
+	tfcmg011.t$baoc$l CD_BANCO,
+	tfcmg011.t$agcd$l NR_AGENCIA,
+	tfcmg001.t$bano NR_CONTA_CORRENTE,																			--#FAF.001.n
+	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+	(Select u.t$eunt From ttcemm030201 u
+	 where u.t$euca!=' '
+	AND TO_NUMBER(u.t$euca)=CASE WHEN tfacr200.t$dim2=' ' then 999
+	WHEN tfacr200.t$dim2<=to_char(0) then 999 
+	else TO_NUMBER(tfacr200.t$dim2) END
+	and rownum = 1
+	) CD_UNIDADE_EMPRESARIAL,
 	nvl((select znacr005.t$ttyp$c || znacr005.t$ninv$c from BAANDB.tznacr005201 znacr005				--#FAF.002.sn
 		 where znacr005.t$tty1$c=tfacr200.t$ttyp and znacr005.t$nin1$c=tfacr200.t$ninv
 		 and znacr005.T$FLAG$C=1																		--#FAF.007.n
 		 and rownum=1), r.t$ttyp || r.t$ninv) NR_TITULO_REFERENCIA,												--#FAF.002.en
-	'CR' CD_MODULO_TITULO_REFERENCIA,																	--#FAF.005.n
-	tfcmg011.t$baoc$l CD_BANCO,
-	tfcmg011.t$agcd$l NR_AGENCIA,
-	tfcmg001.t$bano NR_CONTA_CORRENTE,																			--#FAF.001.n
-	--tfacr200.t$dim1 NUM_CONTA,																		--#FAF.001.o
-	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
+	'CR' CD_MODULO_TITULO_REFERENCIA																	--#FAF.005.n
+	--tfacr200.t$dim1 NUM_CONTA																		--#FAF.001.o
 FROM
 	ttfacr200201 tfacr200
 	LEFT JOIN (select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn from ttfacr200201 rs) r			--#FAF.002.sn		
