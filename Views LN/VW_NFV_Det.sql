@@ -1,11 +1,10 @@
--- 05-jan-2014, Fabio Ferreira, Correção registros duplicados (relacionamento cisli245),
+-- 05-mai-2014, Fabio Ferreira, Correção registros duplicados (relacionamento cisli245),
 --								Não mostrar linhas de frete e mostar o valor de frete rateado na coluna valor frete (frete da znsls401)
 -- #FAF.041 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
     tcemm030.t$euca CD_FILIAL,
-	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	cisli940.t$docn$l NR_NF,
 	cisli940.t$seri$l NR_SERIE_NF,
 	ltrim(rtrim(cisli941.t$item$l)) CD_ITEM,
@@ -176,7 +175,9 @@ SELECT DISTINCT
 	ELSE 0 END VL_CIF_IMPORTACAO,
 
 	CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO_NF
+			AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO_NF,
+	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL
+
 FROM 
 	tcisli941201 cisli941,
 	tcisli940201 cisli940,

@@ -7,10 +7,6 @@ SELECT
     AND tcemm030.t$eunt=tcemm124.t$grid
     AND tcemm124.t$loco=201
     AND rownum=1) CD_FILIAL,
-   (SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
-    WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
-    AND tcemm124.t$loco=201
-    AND rownum=1) CD_UNIDADE_EMPRESARIAL,
 		cisli940.t$docn$l NR_NF,
 		cisli940.t$seri$l NR_SERIE_NF,
 		cisli940.t$ccfo$l CD_NATUREZA_OPERACAO_NF,
@@ -114,7 +110,11 @@ SELECT
 		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VL_CIF_IMPORTACAO,
 		
 		CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO_NF
+			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO_NF,
+   (SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
+    WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
+    AND tcemm124.t$loco=201
+    AND rownum=1) CD_UNIDADE_EMPRESARIAL
 FROM
 		tcisli940201 cisli940
 		LEFT JOIN (SELECT DISTINCT znsls401.t$entr$c, cisli245.t$fire$l, znsls401.t$pecl$c , znsls401.t$orno$c 
