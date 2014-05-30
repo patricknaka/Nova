@@ -1,13 +1,13 @@
--- 06-jan-2014, Fabio Ferreira, Correção timezone
---	FAF.001 - 07-jan-2014, Fabio Ferreira, 	Retirada conversão de timezone para campos somente data
+-- 06-mai-2014, Fabio Ferreira, Correção timezone
+--	FAF.001 - 07-mai-2014, Fabio Ferreira, 	Retirada conversão de timezone para campos somente data
 --											Corrigido campos Taxa Juros, Taxa Mora
---	FAF.003 - 12-jan-2014, Fabio Ferreira, 	Retirada conversão de timezone para campo DATA_LIQUIDACAO_TITULO
+--	FAF.003 - 12-mai-2014, Fabio Ferreira, 	Retirada conversão de timezone para campo DATA_LIQUIDACAO_TITULO
 --											O campo taxa multa foi alterado apara ler o valor da tabela tfacp201
---	FAF.007 - 12-jan-2014, Fabio Ferreira, 	Alteração valor original do título
+--	FAF.007 - 12-mai-2014, Fabio Ferreira, 	Alteração valor original do título
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
   tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
-  tfacp200.t$ttyp CD_TIPO_TRANSACAO,
+  tfacp200.t$ttyp CD_TRANSACAO,
   tfacp200.t$ninv NR_TITULO,
   tfacp200.t$pcom CD_CIA,
   --tfacp200.t$dim2 CODIGO_FILIAL,
