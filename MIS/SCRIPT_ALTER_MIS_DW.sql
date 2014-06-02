@@ -419,6 +419,12 @@ GO
 ALTER TABLE [dbo].[ods_estoque_sige] CHECK CONSTRAINT [FK_ods_estoque_sige_ods_estoque_deposito]
 GO*/
 
+---------------------------------------------------------------------------------------------------
+
+--DE VARCHAR(30) PARA VARCHAR(40)
+
+ALTER TABLE dbo.dim_estoque_modalidade
+ALTER COLUMN ds_modalidade VARCHAR(40)
 
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
