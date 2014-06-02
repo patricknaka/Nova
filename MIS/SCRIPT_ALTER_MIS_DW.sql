@@ -394,4 +394,7 @@ ds_tipo_bloqueio varchar(50)
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
 --ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
 
-
+---------------------------------------------------------------------------------------------------
+--DE NUMERIC(2) para NUMERIC(3)
+ALTER TABLE mis_dw.dbo.stg_sige_pagamento_pedido
+ALTER COLUMN NR_ID_CIA numeric(3,0)
