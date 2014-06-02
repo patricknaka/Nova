@@ -1,4 +1,4 @@
---Banco MIS_STAGING
+﻿--Banco MIS_STAGING
 ------------------------------------------------------------------------------------------------------------------------
 --Script Altera��o Data Type
 
@@ -132,3 +132,67 @@ CREATE TABLE [dbo].[stg_rel_pedidos_minha_casa_amc](
 	[DataStatus] [datetime] NULL
 ) ON [PRIMARY]
 GO
+
+------------------------------------------------------------------------------------------------------
+
+--INCLUSÃO DE TABELAS SURROGATE KEY
+
+CREATE TABLE ln.stg_companhia_ref (
+  nr_id_companhia_sige INTEGER NULL,
+  nr_id_companhia_ln INTEGER NULL
+);
+
+CREATE TABLE ln.stg_condicao_pagamento_ref (
+  nr_id_condicao_pagamento INT NOT NULL IDENTITY,
+  nr_id_companhia INT NULL,
+  ds_id_condicao_pagamento VARCHAR(6) NULL,
+  ds_condicao_pagamento VARCHAR(60) NULL,
+  PRIMARY KEY(nr_id_condicao_pagamento)
+);
+
+CREATE TABLE ln.stg_departamento_ref (
+  nr_id_departamento BIGINT NOT NULL IDENTITY,
+  ds_id_departamento VARCHAR(6) NULL,
+  ds_departamento VARCHAR(60) NULL,
+  PRIMARY KEY(nr_id_departamento)
+);
+
+CREATE TABLE ln.stg_deposito_estoque_ref (
+  nr_id_deposito BIGINT NOT NULL IDENTITY,
+  nr_id_companhia INT NULL,
+  ds_id_filial VARCHAR(12) NULL,
+  ds_id_deposito VARCHAR(255) NULL,
+  PRIMARY KEY(nr_id_deposito)
+);
+
+CREATE TABLE ln.stg_nota_recebimento_ref (
+  nr_id_nota_recebimento BIGINT NOT NULL IDENTITY,
+  nr_id_compania INTEGER NULL,
+  ds_id_filial VARCHAR(12) NULL,
+  ds_id_nota_recebimento VARCHAR(18) NULL,
+  PRIMARY KEY(nr_id_nota_recebimento)
+);
+
+CREATE TABLE ln.stg_pedido_compra_cabecalho_ref (
+  nr_id_pedido_compra BIGINT NOT NULL IDENTITY,
+  nr_id_cia INT NULL,
+  ds_id_filial VARCHAR(12) NULL,
+  ds_num_ped_compra VARCHAR(18) NULL,
+  PRIMARY KEY(nr_id_pedido_compra)
+);
+
+CREATE TABLE ln.stg_titulo_cap_ref (
+  nr_id_titulo BIGINT NOT NULL IDENTITY,
+  ds_id_titulo VARCHAR(50) NULL,
+  ds_tipo_transacao VARCHAR(10) NULL,
+  PRIMARY KEY(nr_id_titulo)
+);
+
+CREATE TABLE ln.stg_titulo_car_ref (
+  nr_id_titulo BIGINT NOT NULL IDENTITY,
+  ds_id_titulo VARCHAR(50) NULL,
+  ds_tipo_transacao VARCHAR(10) NULL,
+  PRIMARY KEY(nr_id_titulo)
+);
+
+------------------------------------------------------------------------------------------------------
