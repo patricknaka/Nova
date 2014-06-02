@@ -367,6 +367,15 @@ ALTER COLUMN ID_TIPODEPOSITO VARCHAR(5)
 ALTER TABLE MIS_DW.DBO.ods_estoque_sige
 ADD id_tipo_bloqueio varchar(5)
 
+--------------------------------------------------------------------
+
+CREATE TABLE MIS_DW.dbo.dim_estoque_tipo_bloqueio
+(
+id_tipo_bloqueio varchar(5),
+ds_tipo_bloqueio varchar(50)
+)
+
+
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
