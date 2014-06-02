@@ -116,9 +116,50 @@ ALTER COLUMN id_cia NUMERIC(3)
 ALTER TABLE MIS_DW.dbo.AUX_ODS_DESPESA_LANCAMENTO
 ALTER COLUMN id_cia NUMERIC(3)
 
+----------------------------------------------------------------------------------------------------------------------------
+
+--APAGA INDICES
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_despesa_lancamento]') AND name = N'idx_v1')
+DROP INDEX [idx_v1] ON [dbo].[ods_despesa_lancamento] WITH ( ONLINE = OFF )
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_despesa_lancamento]') AND name = N'idx_v2')
+DROP INDEX [idx_v2] ON [dbo].[ods_despesa_lancamento] WITH ( ONLINE = OFF )
+
 --DE NUMERIC (2) para NUMERIC(3) --PROBLEMAS COM INDICE NA TABELA
 ALTER TABLE MIS_DW.dbo.ODS_DESPESA_LANCAMENTO
 ALTER COLUMN id_cia NUMERIC(3)
+
+--RECRIA INDICES
+CREATE NONCLUSTERED INDEX [idx_v1] ON [dbo].[ods_despesa_lancamento] 
+(
+	[id_cia] ASC,
+	[dt_lancamento] ASC,
+	[id_natlanc] ASC,
+	[num_lote] ASC,
+	[seq_lote] ASC
+)
+INCLUDE ( [ds_in_dc],
+[ds_lancamento],
+[vl_lancamento],
+[id_conta],
+[id_custo],
+[id_filial]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [idx_v2] ON [dbo].[ods_despesa_lancamento] 
+(
+	[id_cia] ASC,
+	[id_filial] ASC,
+	[dt_lancamento] ASC,
+	[id_conta] ASC,
+	[id_custo] ASC
+)
+INCLUDE ( [vl_lancamento],
+[ds_in_dc],
+[ds_lancamento]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+----------------------------------------------------------------------------------------------------------------------------
 
 --DE NUMERIC(7) para NUMERIC(9)
 ALTER TABLE MIS_DW.dbo.aux_ods_despesa_contas
