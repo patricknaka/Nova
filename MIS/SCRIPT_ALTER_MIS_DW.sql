@@ -233,6 +233,13 @@ ALTER TABLE MIS_DW.dbo.stg_estoque_sige
 ALTER COLUMN ID_CIA NUMERIC(3)
 
 --------------------------------------------------------------------
+
+--DE VARCHAR(2) para VARCHAR(5)
+ALTER TABLE MIS_DW_MIGRACAO.dbo.stg_estoque_sige
+ALTER COLUMN ID_TIPODEPOSITO VARCHAR(5)
+
+--------------------------------------------------------------------
+
 --Inclusão Atributo Tipo Bloqueio
 ALTER TABLE MIS_DW_MIGRACAO.DBO.ods_estoque_sige
-ADD id_tipo_bloqueio varchar(2)
+ADD id_tipo_bloqueio varchar(5)
