@@ -382,6 +382,12 @@ ID_TIPOBLOQ varchar(5),
 DS_TIPOBLOQ varchar(50)
 )
 
+CREATE TABLE MIS_DW.dbo.ods_estoque_tipo_bloqueio
+(
+id_tipo_bloqueio varchar(5),
+ds_tipo_bloqueio varchar(50)
+)
+
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
