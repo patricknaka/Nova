@@ -388,11 +388,7 @@ id_tipo_bloqueio varchar(5),
 ds_tipo_bloqueio varchar(50)
 )
 
----------------------------------------------------------------------------------------------------
---VERIFICAR
---DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
---ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
---ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
+
 
 ---------------------------------------------------------------------------------------------------
 --DE NUMERIC(2) para NUMERIC(3)
@@ -405,3 +401,27 @@ ALTER COLUMN NR_CIA numeric(3,0)
 
 ALTER TABLE mis_dw.dbo.stg_sige_faturamento
 ALTER COLUMN NR_NATOPE_SEQ_DET numeric(5,0)
+
+
+---------------------------------------------------------------------------------------------------
+
+--EXCLUSÃO DE FK DEVIDO A DESATIVAÇÃO DE CARGA DA TABELA ODS_ESTOQUE_DEPOSITO SUBSTITUIDA PELA TABELA ODS_ESTOQUE_TIPO_BLOQUEIO
+
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ods_estoque_sige_ods_estoque_deposito]') AND parent_object_id = OBJECT_ID(N'[dbo].[ods_estoque_sige]'))
+ALTER TABLE [dbo].[ods_estoque_sige] DROP CONSTRAINT [FK_ods_estoque_sige_ods_estoque_deposito]
+GO
+
+--CASO PRECISE RECRIAR
+
+/*ALTER TABLE [dbo].[ods_estoque_sige]  WITH CHECK ADD  CONSTRAINT [FK_ods_estoque_sige_ods_estoque_deposito] FOREIGN KEY([id_filial], [id_deposito])
+REFERENCES [dbo].[ods_estoque_deposito] ([id_filial], [id_deposito])
+GO
+ALTER TABLE [dbo].[ods_estoque_sige] CHECK CONSTRAINT [FK_ods_estoque_sige_ods_estoque_deposito]
+GO*/
+
+
+---------------------------------------------------------------------------------------------------
+--VERIFICAR
+--DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
+--ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
+--ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
