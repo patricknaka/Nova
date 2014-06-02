@@ -132,18 +132,3 @@ CREATE TABLE [dbo].[stg_rel_pedidos_minha_casa_amc](
 	[DataStatus] [datetime] NULL
 ) ON [PRIMARY]
 GO
-
-CREATE TABLE [stg_rel_pedidos_minha_casa_amc] (
-    [IdCliente] int,
-    [Nome] varchar(50),
-    [IdCanalVenda] varchar(20),
-    [Data] datetime,
-    [IdCompra] int,
-    [_ValorTotalComDesconto] money,
-    [ped_externo] varchar(50),
-    [CpfCnpj] varchar(50),
-    [DataStatus] datetime,
-    [_nr_id_unidade_negocio] int,
-    [ds_unidade_negocio] varchar(50)
-)
-GO
