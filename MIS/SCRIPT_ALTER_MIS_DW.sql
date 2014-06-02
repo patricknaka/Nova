@@ -398,3 +398,10 @@ ds_tipo_bloqueio varchar(50)
 --DE NUMERIC(2) para NUMERIC(3)
 ALTER TABLE mis_dw.dbo.stg_sige_pagamento_pedido
 ALTER COLUMN NR_ID_CIA numeric(3,0)
+
+ALTER TABLE mis_dw.dbo.stg_sige_faturamento
+ALTER COLUMN NR_CIA numeric(3,0)
+
+
+ALTER TABLE mis_dw.dbo.stg_sige_faturamento
+ALTER COLUMN NR_NATOPE_SEQ_DET numeric(5,0)
