@@ -1,6 +1,6 @@
 --Banco MIS_STAGING
 ------------------------------------------------------------------------------------------------------------------------
---Script AlteraÁ„o Data Type
+--Script AlteraÔøΩÔøΩo Data Type
 
 --DE VARCHAR(30) PARA VARCHAR(60)
 ALTER TABLE MIS_STAGING.SIGE.STG_DEPT
@@ -101,13 +101,13 @@ ALTER TABLE MIS_STAGING.FIN.aux_ods_sige_titulo_pagamento
 ALTER COLUMN NR_ID_TRANSACAO NUMERIC(3)
 
 ------------------------------------------------------------------------------------------------------------------------
---Inclus„o de Atributo
+--InclusÔøΩo de Atributo
 
 --ADICIONAR COLUNA DE CODIGO CATEGORIA
 ALTER TABLE MIS_STAGING.SIGE.STG_ITEM
 ADD nr_categoria int
 
---INCLUS√O DO CAMPO YN MKTPLACE
+--INCLUSÔøΩO DO CAMPO YN MKTPLACE
 --Tratamento direto na origem
 ALTER TABLE MIS_STAGING.SIGE.STG_ITEM
 ADD YN_MARKETPLACE BIT
@@ -116,3 +116,18 @@ ADD YN_MARKETPLACE BIT
 --INCLUSAO DA COLUNA DE CODIGO DEPARTAMENTO LN
 ALTER TABLE MIS_STAGING.SIGE.STG_DEPT
 ADD nr_dept_ln VARCHAR(6)
+
+--CRIA√á√ÉO DA TABELA TEMPOR√ÅRIA para o Relat√≥rio Minha Casa Minha Vida
+CREATE TABLE [dbo].[stg_rel_pedidos_minha_casa_amc](
+	[IdCliente] [int] NULL,
+	[Nome] [varchar](50) NULL,
+	[IdCanalVenda] [varchar](20) NULL,
+	[Data] [datetime] NULL,
+	[IdCompra] [int] NULL,
+	[_ValorTotalComDesconto] [money] NULL,
+	[ped_externo] [varchar](50) NULL,
+	[_nr_id_unidade_negocio] [int] NULL,
+	[ds_unidade_negocio] [varchar](50) NULL,
+	[CpfCnpj] [varchar](50) NULL,
+	[DataStatus] [datetime] NULL
+) ON [PRIMARY]
