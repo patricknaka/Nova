@@ -1,7 +1,6 @@
 -- 05-mai-2014, Fabio Ferreira, Correção registros duplicados (relacionamento cisli245),
 --								Não mostrar linhas de frete e mostar o valor de frete rateado na coluna valor frete (frete da znsls401)
 -- #FAF.041 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
--- #FAF.041b - 29-mai-2014, Fabio Ferreira, Alteração no relacionamento para melhora de performace
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -51,7 +50,7 @@ SELECT DISTINCT
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM 	tcisli943201 cisli943, 
 												tcisli941201 cisli941b,
 												ttcibd001201 tcibd001b
-		WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
 		AND		tcibd001b.t$ctyp$l=2
@@ -60,7 +59,7 @@ SELECT DISTINCT
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 												tcisli941201 cisli941b,
 												ttcibd001201 tcibd001b
-		WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
 		AND		tcibd001b.t$kitm>3
@@ -80,7 +79,7 @@ SELECT DISTINCT
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM 	tcisli943201 cisli943, 
 												tcisli941201 cisli941b,
 												ttcibd001201 tcibd001b
-		WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
 		AND		tcibd001b.t$ctyp$l=2
@@ -89,7 +88,7 @@ SELECT DISTINCT
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM 	tcisli943201 cisli943, 
 												tcisli941201 cisli941b,
 												ttcibd001201 tcibd001b
-		WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
+		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
 		AND		tcibd001b.t$kitm>3
@@ -104,7 +103,7 @@ SELECT DISTINCT
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 											tcisli941201 cisli941b,
 											ttcibd001201 tcibd001b
-	WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
+	WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 	AND		tcibd001b.t$item=cisli941b.t$item$l
 	AND		tcibd001b.t$ctyp$l=2
@@ -113,7 +112,7 @@ SELECT DISTINCT
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 											tcisli941201 cisli941b,
 											ttcibd001201 tcibd001b
-	WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
+	WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 	AND		tcibd001b.t$item=cisli941b.t$item$l
 	AND		tcibd001b.t$kitm>3
@@ -133,7 +132,7 @@ SELECT DISTINCT
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 											tcisli941201 cisli941b,
 											ttcibd001201 tcibd001b
-	WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
+	WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 	AND		tcibd001b.t$item=cisli941b.t$item$l
 	AND		tcibd001b.t$ctyp$l=2
@@ -142,7 +141,7 @@ SELECT DISTINCT
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 											tcisli941201 cisli941b,
 											ttcibd001201 tcibd001b
-	WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
+	WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 	AND		tcibd001b.t$item=cisli941b.t$item$l
 	AND		tcibd001b.t$kitm>3
