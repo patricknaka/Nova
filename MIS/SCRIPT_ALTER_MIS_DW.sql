@@ -231,3 +231,8 @@ ADD NR_KIT int NULL
 --DE NUMERIC(4) PARA NUMERIC(3)
 ALTER TABLE MIS_DW.dbo.stg_estoque_sige
 ALTER COLUMN ID_CIA NUMERIC(3)
+
+--------------------------------------------------------------------
+--Inclusão Atributo Tipo Bloqueio
+ALTER TABLE MIS_DW_MIGRACAO.DBO.ods_estoque_sige
+ADD id_tipo_bloqueio varchar(2)
