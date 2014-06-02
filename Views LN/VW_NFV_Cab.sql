@@ -1,4 +1,5 @@
 -- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
+-- #FAF.098 - 06-jun-2014, Fabio Ferreira, 	Alterações
 --**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -20,8 +21,8 @@ SELECT
 		cisli940.t$itbp$l CD_CLIENTE_FATURA,
 		cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
 		entr.t$pecl$c NR_PEDIDO,
-		entr.t$entr$c NR_ENTREGA,
-		CONCAT(TRIM(entr.t$pecl$c), TRIM(to_char(entr.t$entr$c))) NR_PEDIDO_ENTREGA,
+		TO_CHAR(entr.t$entr$c) NR_ENTREGA,																	--#FAF.098.n
+		--CONCAT(TRIM(entr.t$pecl$c), TRIM(to_char(entr.t$entr$c))) NR_PEDIDO_ENTREGA,						--#FAF.098.o
 		entr.t$orno$c NR_ORDEM,
 		(SELECT cisli942.t$amnt$l FROM tcisli942201 cisli942
 		WHERE cisli942.t$fire$l=cisli940.t$fire$l
@@ -114,10 +115,11 @@ SELECT
    (SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
     AND tcemm124.t$loco=201
-    AND rownum=1) CD_UNIDADE_EMPRESARIAL
+    AND rownum=1) CD_UNIDADE_EMPRESARIAL,
+	entr.t$uneg$c CD_UNIDADE_NEGOCIO																	--#FAF.098.n
 FROM
 		tcisli940201 cisli940
-		LEFT JOIN (SELECT DISTINCT znsls401.t$entr$c, cisli245.t$fire$l, znsls401.t$pecl$c , znsls401.t$orno$c 
+		LEFT JOIN (SELECT DISTINCT znsls401.t$entr$c, cisli245.t$fire$l, znsls401.t$pecl$c , znsls401.t$orno$c, znsls401.t$uneg$c 
 		FROM tznsls401201 znsls401 ,
          tcisli245201 cisli245
 		WHERE cisli245.t$slso=znsls401.t$orno$c
