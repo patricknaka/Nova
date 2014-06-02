@@ -1,4 +1,4 @@
--- 05-jan-2014, Fabio Ferreira, Correção timezone,
+-- 05-mai-2014, Fabio Ferreira, Correção timezone,
 --								Campo ESTADO_PAGAMENTO alterado para 'aprovados',
 --								Campo VALOR_TOTAL_ITEM alterado para  ( (Valor do Produto Unitário + Valor do Frete) - (valor desc incondicional)) * Quantidade
 -- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado campo DESCONTO_CONDICIONAL
@@ -16,8 +16,7 @@ SELECT
           znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
           tdsls401.t$orno NR_ORDEM,
 		  CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_COMPRA,
-			
+			AT time zone sessiontimezone) AS DATE) DT_COMPRA,			
 		  CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ENTREGA,
           CASE WHEN tdsls401.t$clyn=1 THEN 30
@@ -55,7 +54,7 @@ SELECT
 	  tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 		  znsls401.t$tpcb$c CD_TIPO_COMBO,
       znsls401.t$pecl$c NR_PEDIDO,
-      znsls401.T$ENTR$C NR_ENTREGA,
+      TO_CHAR(znsls401.T$ENTR$C) NR_ENTREGA,
 	  znsls400.t$idco$c CD_CONTRATO_B2B,															--#FAF.003.sn
 	  znsls400.t$idCP$c CD_CAMPANHA_B2B,
 	  znsls004.t$orig$c CD_ORIGEM_PEDIDO															--#FAF.003.en
