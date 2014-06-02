@@ -427,7 +427,43 @@ ALTER TABLE dbo.dim_estoque_modalidade
 ALTER COLUMN ds_modalidade VARCHAR(40)
 
 ---------------------------------------------------------------------------------------------------
+--ALTERAÇÃO DE VIEW (INCLUSÃO ATRIBUTO ID_TIPO_BLOQUEIO)
+
+ALTER view [dbo].[vw_fact_estoque_sige] as 
+select a.id_cia,
+a.id_filial,
+a.id_deposito,
+a.fl_disponivel,
+a.nr_item_sku,
+a.nr_product_sku,
+a.id_modalidade,
+a.id_tipo_bloqueio,
+sum(qt_fisica) as qt_fisica,
+sum(qt_romaneada) as qt_romaneada,
+sum(qt_saldo) as qt_saldo,
+sum(qt_reservada_dep) as qt_reservada_dep,
+sum(vl_cmv) as vl_cmv,
+sum(vl_cmv_total) as vl_cmv_total,
+sum(vl_venda) as vl_venda,
+sum(vl_venda_total) as vl_venda_total,
+sum(vl_cmv_fisico) as vl_cmv_fisico
+from ods_estoque_sige a
+	inner join MIS_SHARED_DIMENSION.dim.ods_produto b
+	on a.nr_item_sku = b.nr_item_sku
+	and a.nr_product_sku = b.nr_product_sku
+group by a.id_cia,
+a.id_filial,
+a.id_deposito,
+a.fl_disponivel,
+a.nr_item_sku,
+a.nr_product_sku,
+a.id_modalidade,
+a.id_tipo_bloqueio
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
 --ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
+
