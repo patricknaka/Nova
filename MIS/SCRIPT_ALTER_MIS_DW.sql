@@ -462,6 +462,42 @@ a.id_tipo_bloqueio
 
 ---------------------------------------------------------------------------------------------------
 
+--DE NUMERIC(1) para NUMERIC(3)		
+ALTER TABLE MIS_DW.DBO.stg_sige_estabelecimento
+ALTER COLUMN FILI_ID_CIA NUMERIC(3)		
+
+
+--altera objeto referencia
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_estabelecimento]') AND name = N'PK_ods_estabelecimento')
+ALTER TABLE [dbo].[ods_estabelecimento] DROP CONSTRAINT [PK_ods_estabelecimento]
+
+--DE NUMERIC (1) para NUMERIC(3)
+ALTER TABLE MIS_DW.DBO.ods_estabelecimento
+ALTER COLUMN NR_ID_CIA NUMERIC(3)	NOT NULL
+
+--Recria objeto referencia
+ALTER TABLE [dbo].[ods_estabelecimento] ADD  CONSTRAINT [PK_ods_estabelecimento] PRIMARY KEY CLUSTERED 
+(
+	[nr_id_filial] ASC,
+	[nr_id_cia] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+--delete objeto referencia
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[dim_estabelecimento]') AND name = N'PK_dim_estabelecimento')
+ALTER TABLE [dbo].[dim_estabelecimento] DROP CONSTRAINT [PK_dim_estabelecimento]
+
+--DE NUMERIC(1) para NUMERIC(3)
+ALTER TABLE MIS_DW.DBO.dim_estabelecimento
+ALTER COLUMN NR_ID_CIA NUMERIC(3)	NOT NULL	
+
+--recria objeto referencia
+ALTER TABLE [dbo].[dim_estabelecimento] ADD  CONSTRAINT [PK_dim_estabelecimento] PRIMARY KEY CLUSTERED 
+(
+	[nr_id_filial] ASC,
+	[nr_id_cia] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
