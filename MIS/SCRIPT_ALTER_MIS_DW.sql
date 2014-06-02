@@ -222,3 +222,7 @@ ALTER COLUMN ID_ITEM NUMERIC(32)
 ALTER TABLE dbo.stg_sige_detalhe_pedido 
 ADD NR_KIT int NULL
 
+--------------------------------------------------------------------
+--DE NUMERIC(2) PARA NUMERIC(3)
+ ALTER TABLE MIS_DW.DBO.ods_estoque_sige
+ ALTER COLUMN ID_CIA NUMERIC(3)
