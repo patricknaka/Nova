@@ -1,3 +1,6 @@
+USE MIS_DW
+GO
+
 
 ---ALTERAÇÕES NA BASE DE DADOS MIS_DW/MIS_DW
 
@@ -115,7 +118,6 @@ ALTER COLUMN id_cia NUMERIC(3)
 --DE NUMERIC (2) para NUMERIC(3)
 ALTER TABLE MIS_DW.dbo.AUX_ODS_DESPESA_LANCAMENTO
 ALTER COLUMN id_cia NUMERIC(3)
-
 ----------------------------------------------------------------------------------------------------------------------------
 
 --APAGA INDICES
@@ -165,9 +167,7 @@ GO
 ALTER TABLE MIS_DW.dbo.aux_ods_despesa_contas
 ALTER COLUMN id_conta NUMERIC(9)
 
---DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
-ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
-ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
+
 
 --DE NUMERIC(7) PARA NUMERIC(9) --PROBLEMA NO ALTER DEVIDO A DEPENDENCIA DE INDICE
 ALTER TABLE MIS_DW.dbo.ods_despesa_lancamento
@@ -301,9 +301,30 @@ ALTER TABLE dbo.stg_sige_detalhe_pedido
 ADD NR_KIT int NULL
 
 --------------------------------------------------------------------
+--DROP OBJETO DEPENDENCIA
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_estoque_sige]') AND name = N'idx_v1')
+DROP INDEX [idx_v1] ON [dbo].[ods_estoque_sige] WITH ( ONLINE = OFF )
+
+
 --DE NUMERIC(2) PARA NUMERIC(3)
  ALTER TABLE MIS_DW.DBO.ods_estoque_sige
  ALTER COLUMN ID_CIA NUMERIC(3)
+
+
+--RECRIA OBJETO DEPENDENCIA
+CREATE NONCLUSTERED INDEX [idx_v1] ON [dbo].[ods_estoque_sige] 
+(
+	[id_filial] ASC
+)
+INCLUDE ( [id_cia],
+[id_deposito],
+[fl_disponivel],
+[nr_item_sku],
+[nr_product_sku],
+[id_modalidade],
+[qt_saldo]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEX]
+
 
 --------------------------------------------------------------------
 --DE NUMERIC(4) PARA NUMERIC(3)
@@ -321,3 +342,10 @@ ALTER COLUMN ID_TIPODEPOSITO VARCHAR(5)
 --Inclusão Atributo Tipo Bloqueio
 ALTER TABLE MIS_DW.DBO.ods_estoque_sige
 ADD id_tipo_bloqueio varchar(5)
+
+
+---------------------------------------------------------------------------------------------------
+--VERIFICAR
+--DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
+--ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
+--ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
