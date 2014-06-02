@@ -344,8 +344,33 @@ ALTER TABLE MIS_DW.DBO.ods_estoque_sige
 ADD id_tipo_bloqueio varchar(5)
 
 
+--------------------------------------------------------------------
+
+ --DE NUMERIC(2) PARA NUMERIC(3)
+ ALTER TABLE MIS_DW.DBO.ods_estoque_sige
+ ALTER COLUMN ID_CIA NUMERIC(3)
+
+--------------------------------------------------------------------
+ 
+ --DE NUMERIC(4) PARA NUMERIC(3)
+ALTER TABLE MIS_DW.dbo.stg_estoque_sige
+ALTER COLUMN ID_CIA NUMERIC(3)
+
+--------------------------------------------------------------------
+
+ALTER TABLE MIS_DW.dbo.stg_estoque_sige
+ALTER COLUMN ID_TIPODEPOSITO VARCHAR(5)
+
+--------------------------------------------------------------------
+
+--Inclusão Atributo Tipo Bloqueio
+ALTER TABLE MIS_DW.DBO.ods_estoque_sige
+ADD id_tipo_bloqueio varchar(5)
+
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
 --ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
+
+
