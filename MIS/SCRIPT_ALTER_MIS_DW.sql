@@ -507,6 +507,13 @@ ALTER TABLE MIS_DW.DBO.stg_sige_titulo_documento
 ALTER COLUMN ID_DOCUMENTO varchar(3)
 
 ---------------------------------------------------------------------------------------------------
+
+--DE INT PARA VARCHAR(3)
+
+ALTER TABLE MIS_DW..stg_sige_titulo_movimento
+ALTER COLUMN ID_TRANSACAO VARCHAR(3)
+
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
