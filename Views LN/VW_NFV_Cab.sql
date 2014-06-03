@@ -1,5 +1,5 @@
 -- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
--- #FAF.098 - 06-jun-2014, Fabio Ferreira, 	Alterações
+-- #FAF.098 - 02-jun-2014, Fabio Ferreira, 	Alterações
 --**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
