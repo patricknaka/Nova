@@ -1,5 +1,6 @@
 -- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
--- #FAF.094 - 29-mai-2014, Fabio Ferreira, 	Correção campo VL_SERVICO				
+-- #FAF.094 - 29-mai-2014, Fabio Ferreira, 	Correção campo VL_SERVICO
+-- #FAF.021.1 - 27-mai-2014, Fabio Ferreira,Correções		
 --************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -97,9 +98,9 @@ SELECT
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=6) VL_COFINS,
 	
-	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
+	nvl((SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
-	AND tdrec949.t$brty$l=13) VL_CSLL,
+	AND tdrec949.t$brty$l=13),0) VL_CSLL,																	--#FAF.021.1.n
 	
 	
 	0 VL_DESCONTO_CONDICIONAL,											-- *** DESCONSIDERAR ***
