@@ -520,6 +520,10 @@ ALTER COLUMN ID_MODULO VARCHAR(3)
 ALTER TABLE MIS_DW..stg_sige_titulo
 ALTER COLUMN ID_MODULO VARCHAR(3)
 
+--DE NUMERIC(2) para NUMERIC(3)
+ALTER TABLE MIS_DW.dbo.stg_sige_titulo
+ALTER COLUMN ID_CIA numeric(3)
+
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
