@@ -537,6 +537,65 @@ ALTER TABLE MIS_DW.dbo.ods_sige_titulo_documento
 ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
 
 ---------------------------------------------------------------------------------------------------
+
+--DE VARCHAR(2) PARA VARCHAR(3)
+ALTER TABLE MIS_DW.dbo.ods_sige_titulo_movimento
+ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
+
+--APAGA INDICE DEPENDENTE 1
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_sige_titulo_movimento]') AND name = N'ix_v1')
+DROP INDEX [ix_v1] ON [dbo].[ods_sige_titulo_movimento] WITH ( ONLINE = OFF )
+
+--APAGA INDICE DEPENDENTE 2
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_sige_titulo_movimento]') AND name = N'ix_v2')
+DROP INDEX [ix_v2] ON [dbo].[ods_sige_titulo_movimento] WITH ( ONLINE = OFF )
+
+--APAGA INDICE DEPENDENTE 3
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_sige_titulo_movimento]') AND name = N'ix_v4')
+DROP INDEX [ix_v4] ON [dbo].[ods_sige_titulo_movimento] WITH ( ONLINE = OFF )
+
+--DE VARCHAR(2) PARA VARCHAR(3)
+ALTER TABLE MIS_DW.dbo.ods_sige_titulo_movimento
+ALTER COLUMN ID_TRANSACAO VARCHAR(3)
+
+----RECRIA INDICE DEPENDENTE 1
+CREATE NONCLUSTERED INDEX [ix_v1] ON [dbo].[ods_sige_titulo_movimento] 
+(
+	[id_titulo] ASC,
+	[id_modulo] ASC,
+	[id_documento] ASC
+)
+INCLUDE ( [ds_situacao],
+[id_tipo_valor],
+[id_transacao]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEX]
+
+
+----RECRIA INDICE DEPENDENTE 2
+CREATE NONCLUSTERED INDEX [ix_v2] ON [dbo].[ods_sige_titulo_movimento] 
+(
+	[id_titulo] ASC
+)
+INCLUDE ( [ds_situacao],
+[id_tipo_valor],
+[id_transacao],
+[id_modulo],
+[id_documento]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEX]
+
+
+----RECRIA INDICE DEPENDENTE 3
+CREATE NONCLUSTERED INDEX [ix_v4] ON [dbo].[ods_sige_titulo_movimento] 
+(
+	[ds_situacao] ASC,
+	[id_tipo_valor] ASC,
+	[id_transacao] ASC,
+	[id_titulo] ASC,
+	[id_modulo] ASC,
+	[id_documento] ASC
+)
+INCLUDE ( [vl_transacao]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEX]
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
