@@ -4,8 +4,8 @@ SELECT
  201 AS CD_CIA,
   tcmcs013.t$cpay CD_CONDICAO_PAGAMENTO,
   tcmcs013.t$dsca DS_CONDICAO_PAGAMENTO,
-  CASE WHEN tcmcs220.t$ptyp=1 THEN 'DIAS' ELSE 'MESES' END CD_TIPO_PER,				--#FAF.099.sn
-  tcmcs221.t$nods NUM_PERS															--#FAF.099.en
+  CASE WHEN tcmcs220.t$ptyp=1 THEN 'DIAS' ELSE 'MESES' END CD_TIPO_PERIODO,				--#FAF.099.sn
+  tcmcs221.t$nods NR_PERIODO															--#FAF.099.en
 FROM ttcmcs013201 tcmcs013,
 		ttcmcs220201 tcmcs220,														--#FAF.099.sn
 		(select a.t$pash, a.t$nods from ttcmcs221201 a
