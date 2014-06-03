@@ -6,9 +6,9 @@ SELECT DISTINCT
 	tfcmg948.t$acco$l NR_CONTA,
     201 CD_CIA,
 	tfcmg948.t$stat$l CD_SITUACAO_ARQUIVO,
-	tfcmg948.t$send$l CD_SITUACAO_REMESSA,
+	tfcmg948.t$send$l CD_SITUACAO_PAGAMENTO,
 	CAST((FROM_TZ(CAST(TO_CHAR(tfcmg948.t$lach$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_ATUALZACAO
+			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
 FROM
 	ttfcmg948201 tfcmg948
 	LEFT JOIN ttfcmg001201 tfcmg001
