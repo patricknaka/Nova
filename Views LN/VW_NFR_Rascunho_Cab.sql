@@ -1,5 +1,6 @@
 -- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota	
--- #FAF.095 - 29-mai-2014, Fabio Ferreira, 	Correções para 	DT_SAIDA_NF em branco			
+-- #FAF.095 - 29-mai-2014, Fabio Ferreira, 	Correções para 	DT_SAIDA_NF em branco
+-- #FAF.022.1 - 03-jun-2014, Fabio Ferreira, 	Correções			
 --************************************************************************************************************************************************************
 SELECT 
 	brnfe940.t$fire$l NR_NF_RASCUNHO,
@@ -19,7 +20,7 @@ SELECT
 	tdpur400.t$otbp CD_FORNECEDOR,	
 
 	
-	brnfe940.t$docn$l NR_NF_REFERENCIA,	
+	TO_CHAR(brnfe940.t$docn$l) NR_NF_REFERENCIA,															--#FAF.022.1.n																
 	brnfe940.t$seri$l NR_SERIE_NFR_REFERENCIA,											
 	brnfe940.t$idat$l DT_EMISSAO_NF,													
 --	brnfe940.t$iodt$l DT_SAIDA_NF,																			--#FAF.095.o
@@ -102,10 +103,10 @@ SELECT
 	brnfe940.t$frec$l NR_NOTA_RECEBIMENTO,																
 	tdpur400.t$cwar CD_DEPOSITO,
 	tdpur400.t$cpay CD_CONDICAO_PAGAMENTO,
-	(SELECT SUM(i.t$amnt$l)
+	nvl((SELECT SUM(i.t$amnt$l)
 	FROM tbrnfe942201 i
 	WHERE i.t$fire$l=brnfe940.t$fire$l
-	AND i.t$brty$l=16) VL_IMPOSTO_IMPORTACAO,
+	AND i.t$brty$l=16),0) VL_IMPOSTO_IMPORTACAO,
 	nvl((select sum(r.T$CCHR$L) FROM ttdrec941201 r
   where r.t$fire$l=brnfe940.t$frec$l),0)   VL_DESPESA_ADUANEIRA,
   
