@@ -267,7 +267,7 @@ SELECT
 	tdrec940.t$ctno$l ELSE
 	(select e.t$fovn$l from ttccom130201 e
 	 where e.t$cadr=tdrec940.t$stoa$l)
-	END CNPJ_CPF_ENTREGA 
+	END NR_CNPJ_CPF_ENTREGA 
 	
 FROM
   ttdrec941201 tdrec941,
