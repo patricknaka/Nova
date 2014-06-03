@@ -605,6 +605,13 @@ ALTER COLUMN CAP_ID_DOC nVARCHAR(3)
 ALTER TABLE stg_sige_titulo_complemento
 ALTER COLUMN TITD_ID_MODULO NVARCHAR(3)
 
+--DE VARCHAR(2) PARA VARCHAR(3)
+ALTER TABLE stg_sige_titulo_complemento
+ALTER COLUMN ID_CIA numeric(3)
+
+--DE VARCHAR(2) PARA VARCHAR(3)
+ALTER TABLE stg_sige_titulo_complemento
+ALTER COLUMN ID_NR NVARCHAR(10)
 
 ---------------------------------------------------------------------------------------------------
 
