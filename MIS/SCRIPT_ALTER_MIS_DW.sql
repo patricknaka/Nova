@@ -497,6 +497,12 @@ ALTER TABLE [dbo].[dim_estabelecimento] ADD  CONSTRAINT [PK_dim_estabelecimento]
 	[nr_id_cia] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 
+
+---------------------------------------------------------------------------------------------------
+--de varchar(2) PARA varchar(3)
+ALTER TABLE MIS_DW.DBO.stg_sige_titulo_documento
+ALTER COLUMN ID_MODULO varchar(3)
+
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
