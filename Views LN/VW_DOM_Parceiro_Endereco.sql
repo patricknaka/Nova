@@ -5,7 +5,7 @@
 --****************************************************************************************************************************************************************
 SELECT 	adbp.t$bpid CD_PARCEIRO,
 		adbp.t$cadr CD_ENDERECO,
-		addr.t$fovn$l CNPJ_CPF,																				--#FAF.091.n
+		addr.t$fovn$l NR_CNPJ_CPF,																				--#FAF.091.n
 		addr.t$namc NM_ENDERECO_PRINCIPAL,
 		addr.t$dist$l NM_BAIRRO,
 		addr.t$hono NR_NUMERO,
