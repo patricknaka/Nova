@@ -503,6 +503,9 @@ ALTER TABLE [dbo].[dim_estabelecimento] ADD  CONSTRAINT [PK_dim_estabelecimento]
 ALTER TABLE MIS_DW.DBO.stg_sige_titulo_documento
 ALTER COLUMN ID_MODULO varchar(3)
 
+ALTER TABLE MIS_DW.DBO.stg_sige_titulo_documento
+ALTER COLUMN ID_DOCUMENTO varchar(3)
+
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
