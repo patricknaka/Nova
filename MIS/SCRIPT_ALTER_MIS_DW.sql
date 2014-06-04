@@ -631,6 +631,11 @@ ALTER COLUMN ID_TIPODEPOSITO VARCHAR(6)
 
 ---------------------------------------------------------------------------------------------------
 
+ALTER TABLE ods_estoque_sige
+ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
