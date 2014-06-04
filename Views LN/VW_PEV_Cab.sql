@@ -3,6 +3,7 @@
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.028 - 17-mai-2014, Fabio Ferreira, 	Correção registros duplicados
 -- #FAF.046 - 23-mai-2014, Fabio Ferreira, 	Conversão do campo NUM_ENTREGA para String
+-- #FAF.104 - 04-jun-2014, Fabio Ferreira, 	Correção da data do status
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
         CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -79,8 +80,7 @@ SELECT  DISTINCT
         --tdsls400.t$cfrw COD_TRANSPORTADORA,
         sls401q.t$mgrt$c CD_MEGA_ROTA,
         ulttrc.poco CD_STATUS,
-        CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DT_STATUS_PEDIDO,
+        ulttrc.dtoc DT_STATUS_PEDIDO,
 	tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
 FROM    ttdsls400201 tdsls400
         LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls400.t$orno
