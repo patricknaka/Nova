@@ -621,8 +621,13 @@ ALTER COLUMN ID_TIPOBLOQ VARCHAR(6)
 ALTER TABLE MIS_DW.DBO.ODS_estoque_tipo_bloqueio
 ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
 
-ALTER TABLE MIS_DW.DBO.ODS_estoque_tipo_bloqueio
+ALTER TABLE MIS_DW.DBO.dim_estoque_tipo_bloqueio
 ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
+
+---------------------------------------------------------------------------------------------------
+
+ALTER TABLE MIS_DW.DBO.stg_estoque_sige
+ALTER COLUMN ID_TIPODEPOSITO VARCHAR(6)
 
 ---------------------------------------------------------------------------------------------------
 
