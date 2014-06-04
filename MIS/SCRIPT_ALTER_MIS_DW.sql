@@ -615,6 +615,17 @@ ALTER COLUMN ID_NR NVARCHAR(10)
 
 ---------------------------------------------------------------------------------------------------
 
+ALTER TABLE MIS_DW.DBO.stg_estoque_tipo_bloqueio
+ALTER COLUMN ID_TIPOBLOQ VARCHAR(6)
+
+ALTER TABLE MIS_DW.DBO.ODS_estoque_tipo_bloqueio
+ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
+
+ALTER TABLE MIS_DW.DBO.ODS_estoque_tipo_bloqueio
+ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
