@@ -22,7 +22,7 @@ SELECT
    WHEN tfacr200.t$dim2>to_char(0) then 999 
    else TO_NUMBER(tfacr200.t$dim2) END
    and rownum = 1
-   ) CD_UNIDADE_EMPRESARIA,
+   ) CD_UNIDADE_EMPRESARIAL,
 	'CAR' CD_MODULO,
 	tfacr200.t$doct$l SQ_DOCUMENTO,
 	tfacr200.t$itbp CD_PARCEIRO,
