@@ -10,7 +10,7 @@ SELECT
  tfgld106.t$dim2 CD_FILIAL,
  (Select u.t$eunt From ttcemm030201 u where u.t$euca!=' '
   AND TO_NUMBER(u.t$euca)=CASE WHEN tfgld106.t$dim2=' ' then 999
-   WHEN tfgld106.t$dim2<=to_char(0) then 999 else TO_NUMBER(tfgld106.t$dim2) END and rownum = 1) CD_UNIDADE_EMPRESARIA,
+   WHEN tfgld106.t$dim2<=to_char(0) then 999 else TO_NUMBER(tfgld106.t$dim2) END and rownum = 1) CD_UNIDADE_EMPRESARIAL,
  tfgld106.t$ocmp CD_CIA,
  tfgld106.t$desc$l DS_LANCAMENTO,
  tfgld106.t$dbcr IN_DEBITO_CREDITO,
