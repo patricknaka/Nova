@@ -75,7 +75,7 @@ SELECT
 	 and a.t$ninv$l=tfacr200.t$ninv
 	 and a.t$lach$l = (select max(b.t$lach$l) from ttfcmg948201 b
 					 where b.t$ttyp$l=a.t$ttyp$l
-					 and a.t$ninv$l=b.t$ninv$l)) CD_SITUACAO_REMESSA									--#FAF.108.n
+					 and a.t$ninv$l=b.t$ninv$l)) CD_SITUACAO_PAGAMENTO									--#FAF.108.n
 FROM
 	ttfacr200201 tfacr200
 	LEFT JOIN ttfcmg001201 tfcmg001
