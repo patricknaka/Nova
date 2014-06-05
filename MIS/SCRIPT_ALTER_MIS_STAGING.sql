@@ -196,3 +196,42 @@ CREATE TABLE ln.stg_titulo_car_ref (
 );
 
 ------------------------------------------------------------------------------------------------------
+--de numeric(7) para numeric(10)
+ALTER TABLE fin.stg_sige_centro_custo
+ALTER COLUMN CCUS_ID_CENTROCUSTOS numeric(10)
+
+--de numeric(2) para numeric(3)
+ALTER TABLE FIN.stg_sige_titulo_receber_movimento
+ALTER COLUMN MOCO_ID_CIA numeric(3)
+
+--de numeric(3) para varchar(3)
+ALTER TABLE FIN.stg_sige_titulo_receber_movimento
+ALTER COLUMN MOCO_ID_TRANSACAO varchar(3)
+
+--DE VARCHAR(2) PARA VARCHAR(3)
+ALTER TABLE FIN.stg_sige_titulo_receber
+ALTER COLUMN TITC_ID_MODULO VARCHAR(3)
+
+--DE NUMERIC(2) PARA NUMERIC(3)
+ALTER TABLE FIN.stg_sige_titulo_receber
+ALTER COLUMN TITC_ID_CIA NUMERIC(3)
+
+--DE VARCHAR(2) PARA VARCHAR(3)
+ALTER TABLE FIN.stg_sige_titulo_receber
+ALTER COLUMN TITC_ID_CARTEIRA VARCHAR(3)
+
+--DE NUMERIC(2) PARA NUMERIC(3)
+ALTER TABLE FIN.stg_sige_titulo_complemento_nf
+ALTER COLUMN NFCA_ID_CIA NUMERIC(3)
+
+--DE NUMERIC(2) PARA NUMERIC(3)
+ALTER TABLE FIN.stg_sige_contas_receber_campanha
+ALTER COLUMN PEDC_ID_CIA NUMERIC(3)
+
+--DE VARCHAR(2) PARA VARCHAR(3)
+ALTER TABLE fin.aux_ods_sige_titulo_receber
+ALTER COLUMN DS_ID_MODULO VARCHAR(3)
+
+--DE NUMERIC(2) PARA NUMERIC(3)
+ALTER TABLE FIN.aux_ods_sige_titulo_receber_complemento
+ALTER COLUMN NR_ID_CIA NUMERIC(3)
