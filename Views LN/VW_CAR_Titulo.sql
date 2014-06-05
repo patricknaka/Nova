@@ -2,7 +2,8 @@
 -- #FAF.001 - 06-mai-2014, Fabio Ferreira, 	Tratamento da data de vencimento	
 -- #FAF.002 - 09-mai-2014, Fabio Ferreira, 	Correção dos campos referente a situação do título				
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Adicionado campo método de pagamento/recebimento
--- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Alterado alias campo método de pagamento/recebimento				
+-- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Alterado alias campo método de pagamento/recebimento	
+-- #FAF.108 - 05-jun-2014, Fabio Ferreira, 	Inclusão da situação da remessa		
 --****************************************************************************************************************************************************************
 SELECT	
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
@@ -68,7 +69,13 @@ SELECT
 	 and znsls401.t$orno$c=ro.t$slso
 	 and znsls401.t$pono$c=ro.t$pono
 	 and rownum=1) NR_PEDIDO,
-	 tfacr200.t$paym CD_METODO_RECEBIMENTO	--#FAF.008.n
+	 tfacr200.t$paym CD_METODO_RECEBIMENTO,	--#FAF.008.n
+	(select a.t$send$l from ttfcmg948201 a
+	 where a.t$ttyp$l=tfacr200.t$ttyp
+	 and a.t$ninv$l=tfacr200.t$ninv
+	 and a.t$lach$l = (select max(b.t$lach$l) from ttfcmg948201 b
+					 where b.t$ttyp$l=a.t$ttyp$l
+					 and a.t$ninv$l=b.t$ninv$l)) CD_SITUACAO_REMESSA									--#FAF.108.n
 FROM
 	ttfacr200201 tfacr200
 	LEFT JOIN ttfcmg001201 tfcmg001
