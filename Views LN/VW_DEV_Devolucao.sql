@@ -92,7 +92,7 @@ SELECT
 	(select a.t$rcno from twhinh312201 a
 		where a.t$oorg=1
 		and a.t$orno=znsls401.t$orno$c
-		and a.t$pono=znsls401.t$pono$c) REC_DEVOLUCAO
+		and a.t$pono=znsls401.t$pono$c) NR_REC_DEVOLUCAO
 FROM
 	ttdrec940201 tdrec940,
 	ttdrec941201 tdrec941
