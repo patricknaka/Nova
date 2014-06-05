@@ -4,6 +4,7 @@
 -- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado campo DESCONTO_CONDICIONAL
 -- FAF.003 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Incluido novos campos
 -- FAF.004 - Fabio Ferreira, 13-mai-2014, Fabio Ferreira, 	Duplicando registros devido a problema de relacionamento na tabela znsls004
+-- FAF.105 - Fabio Ferreira, 05-jun-2014, Fabio Ferreira, 	Campo vendedor deve ser NULL quando valor = 100
 --***************************************************************************************************************************************************************
 SELECT
         (SELECT 
@@ -35,7 +36,7 @@ SELECT
           znsls401.t$vlfr$c VL_FRETE_CLIENTE,
           nvl((select sum(f.t$vlft$c) from tznfmd630201 f
           where f.t$pecl$c=znsls400.t$pecl$c),0) VL_FRETE_CIA,
-          znsls400.t$cven$c CD_VENDEDOR,
+          CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR,
           znsls400.t$idli$c NR_LISTA_CASAMENTO,
           'Aprovados' DS_STATUS_PAGAMENTO,        
           ' ' DT_PAGAMENTO,                -- **** DESCONSIDERAR - SOMENTE PGTO APROVADOS ESTÃO NO LN
@@ -44,7 +45,7 @@ SELECT
           ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
           znsls401.t$vlde$c VL_DESPESA_ACESSORIO,
           znsls400.t$vldf$c VL_JUROS,
-          (znsls401.t$vlun$c + znsls401.t$vlfr$c - znsls401.t$vldi$c)*znsls401.t$qtve$c VL_TOTAL_ITEM,
+          (znsls401.t$vlun$c + znsls401.t$vlfr$c - znsls401.t$vldi$c)*znsls401.t$qtve$c VL_TOTAL_ITEM,				--#FAF.105.n
           (SELECT Count(lc.t$pono)
            FROM ttdsls401201 lc
            WHERE lc.t$orno=tdsls401.t$orno
