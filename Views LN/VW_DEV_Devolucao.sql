@@ -88,7 +88,11 @@ SELECT
 	AND		znsls401nr.t$sqpd$c=znsls401.t$sqpd$c
 	AND		znsls401nr.t$entr$c>znsls401.t$entr$c),1)=1 then 1
 	ELSE 2
-	END IN_REPOSICAO
+	END IN_REPOSICAO,
+	(select a.t$rcno from twhinh312201 a
+		where a.t$oorg=1
+		and a.t$orno=znsls401.t$orno$c
+		and a.t$pono=znsls401.t$pono$c) REC_DEVOLUCAO
 FROM
 	ttdrec940201 tdrec940,
 	ttdrec941201 tdrec941
