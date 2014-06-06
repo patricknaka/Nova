@@ -9,10 +9,6 @@ SELECT
 	AND tcemm030.t$eunt=tcemm124.t$grid
 	AND tcemm124.t$loco=201
 	AND rownum=1) CD_FILIAL,	
-	(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
-	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
-	AND tcemm124.t$loco=201
-	AND rownum=1) CD_UNIDADE_EMPRESARIAL,
 	(SELECT tdrec947.t$rcno$l FROM ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
 	AND rownum=1) NR_NFR,
@@ -24,11 +20,9 @@ SELECT
 	tdrec940.t$doty$l CD_TIPO_NF,
 	CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NF_RECEBIDA,
 	CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE) DT_SAIDA_NF_RECEBIDA,	 
-	tdrec940.t$opor$l SQ_NATUREZA_OPERACAO,
 	tdrec940.t$opfc$l CD_NATUREZA_OPERACAO,
-	CASE WHEN tdrec940.t$opor$l='1556' THEN 1
-	ELSE 2
-	END IN_MERC_UTILIZADA_CONSUMO,
+	tdrec940.t$opor$l SQ_NATUREZA_OPERACAO,
+	CASE WHEN tdrec940.t$opor$l='1556' THEN 1 ELSE 2 END IN_MERC_UTILIZADA_CONSUMO,
 	(Select a.t$fire$l from ttdrec944201 a, ttdrec940201 b
 	where b.t$fire$l=a.t$fire$l 
 	AND b.T$RFDT$L=31
@@ -45,29 +39,23 @@ SELECT
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=2) VL_ICMS_ST,
-	
 	(SELECT sum(tdrec942.t$amnr$l) FROM ttdrec942201 tdrec942
 	WHERE tdrec942.t$fire$l=tdrec940.t$fire$l
 	AND tdrec942.t$brty$l=1) VL_ICMS_DESTACADO,	
-	
-	
 	(SELECT tdrec949.t$base$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=3) VL_BASE_IPI,
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=3) VL_IPI,
-	
 	(SELECT sum(tdrec942.t$amnr$l) FROM ttdrec942201 tdrec942
 	WHERE tdrec942.t$fire$l=tdrec940.t$fire$l
 	AND tdrec942.t$brty$l=1) VL_IPI_DESTACADO,
-
 	nvl((	select sum(a.t$tamt$l) from ttdrec941201 a, ttcibd001201 b
 --			where a.t$fire$l=tdrec941.t$fire$l																--#FAF.094.o
 			where a.t$fire$l=tdrec940.t$fire$l																--#FAF.094.n
 			and b.t$item=a.t$item$l
 			and b.t$kitm=5),0)	VL_SERVICO,
-
 	tdrec940.t$gexp$l VL_DESPESA,
 	tdrec940.t$addc$l VL_DESCONTO,
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
@@ -97,12 +85,9 @@ SELECT
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=6) VL_COFINS,
-	
 	nvl((SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=13),0) VL_CSLL,																	--#FAF.021.1.n
-	
-	
 	0 VL_DESCONTO_CONDICIONAL,											-- *** DESCONSIDERAR ***
 	tdrec940.t$addc$l VL_DESCONTO_INCONDICIONAL,
 	(SELECT tdrec949.t$base$l FROM ttdrec949201 tdrec949
@@ -112,43 +97,37 @@ SELECT
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=16) VL_IMPOSTO_IMPORTACAO,
 	tdrec940.t$cchr$l VL_DESPESA_ADUANEIRA,
-
-	
 	nvl((select sum(l.t$gexp$l) from ttdrec941201 l
 		where	l.t$fire$l = tdrec940.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VL_ADICIONAL_IMPORTACAO,
-	
 	nvl((select sum(li.t$amnt$l) from ttdrec942201 li, ttdrec941201 l
 		where	l.t$fire$l = tdrec940.t$fire$l
 		and li.t$fire$l=li.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)
 		and li.t$brty$l=5),0) VL_PIS_IMPORTACAO,
-	
 	nvl((select sum(li.t$amnt$l) from ttdrec942201 li, ttdrec941201 l
 		where	l.t$fire$l = tdrec940.t$fire$l
 		and li.t$fire$l=li.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)
 		and li.t$brty$l=6),0) VL_COFINS_IMPORTACAO,	
-
 	nvl((select sum(l.t$fght$l) from ttdrec941201 l
 		where	l.t$fire$l = tdrec940.t$fire$l
 		and l.t$crpd$l=1),0) VL_CIF,
-	
 	nvl((select lr.t$mdev$c from twhinh312201 lr, ttdrec947201 rf
 		where rf.t$fire$l=tdrec940.t$fire$l
 		and	lr.t$rcno=rf.t$rcno$l
 		and lr.t$rcln=rf.t$rcln$l
 		and lr.t$mdev$c!=' '
 		and rownum=1),' ') DS_MOTIVO_DEVOLUCAO_ATO,	
-	
-
-
 	nvl((Select max(d.t$crpd$l) from ttdrec941201 d
 	where d.t$fire$l=tdrec940.t$fire$l),2) CD_TIPO_FRETE,																
-	tdrec940.t$fire$l NR_REFERENCIA_FISCAL,
 	nvl((SELECT tdrec949.t$isco$c FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
-	AND tdrec949.t$brty$l=2),2) IN_ICMS_ST_SEM_CONVENIO								
+	AND tdrec949.t$brty$l=2),2) IN_ICMS_ST_SEM_CONVENIO,
+	(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
+	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
+	AND tcemm124.t$loco=201 AND rownum=1) CD_UNIDADE_EMPRESARIAL,
+	tdrec940.t$fire$l NR_REFERENCIA_FISCAL
 FROM
 	ttdrec940201 tdrec940
 	LEFT JOIN ttccom966201 tccom966 ON tccom966.t$comp$d=tdrec940.t$fovn$l
