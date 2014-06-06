@@ -6,17 +6,13 @@ SELECT
 	AND tcemm030.t$eunt=tcemm124.t$grid
 	AND tcemm124.t$loco=201
 	AND rownum=1) CD_FILIAL, 
-	(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
-	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
-	AND tcemm124.t$loco=201
-	AND rownum=1)	CD_UNIDADE_EMPRESARIAL,
 	tdrec940.t$docn$l NR_NF,
 	tdrec940.t$seri$l NR_SERIE_NF,
 	tdrec940.t$opfc$l CD_NATUREZA_OPERACAO,
 	tdrec940.t$opor$l SQ_NATUREZA_OPERACAO,
 	tdrec940.t$date$l DT_FATURA,
-	cisli940.t$itbp$l COD_CLIENTE_FATURA,
-	cisli940.t$stbp$l COD_CLIENTE_ENTREGA,
+	cisli940.t$itbp$l CD_CLIENTE_FATURA,
+	cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
 	znsls401.t$sequ$c SQ_ENTREGA,
 	znsls401.t$pecl$c NR_PEDIDO,
 	(select znsls410.t$poco$c
@@ -89,6 +85,10 @@ SELECT
 	AND		znsls401nr.t$entr$c>znsls401.t$entr$c),1)=1 then 1
 	ELSE 2
 	END IN_REPOSICAO,
+	(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
+	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
+	AND tcemm124.t$loco=201
+	AND rownum=1)	CD_UNIDADE_EMPRESARIAL,
 	(select a.t$rcno from twhinh312201 a
 		where a.t$oorg=1
 		and a.t$orno=znsls401.t$orno$c
