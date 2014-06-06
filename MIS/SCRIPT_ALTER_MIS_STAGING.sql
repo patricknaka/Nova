@@ -235,3 +235,13 @@ ALTER COLUMN DS_ID_MODULO VARCHAR(3)
 --DE NUMERIC(2) PARA NUMERIC(3)
 ALTER TABLE FIN.aux_ods_sige_titulo_receber_complemento
 ALTER COLUMN NR_ID_CIA NUMERIC(3)
+
+
+alter table sige.stg_item
+ADD nr_id_filial_venda numeric(3)
+
+alter table sige.stg_item
+ADD nr_dt_cadastro numeric(8)
+
+alter table sige.stg_item
+add ds_modelo_fabricante varchar(60)
