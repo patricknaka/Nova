@@ -5,7 +5,7 @@
 SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         201 CD_CIA,
 		tccom100.t$bpid CD_FORNECEDOR,
-        tccom130.t$fovn$l CNPJ_FORNCEDOR,
+        tccom130.t$fovn$l CNPJ_FORNECEDOR,
         tcibd004.t$aitc CD_ITEM_FORNECEDOR,
 		tcibd001.t$mdfb$c DS_MODELO_FABRICANTE,											--#FAF.084.n
         tcibd001.t$dsca DS_ITEM,
