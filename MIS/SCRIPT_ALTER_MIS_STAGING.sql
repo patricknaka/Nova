@@ -246,10 +246,6 @@ ADD nr_dt_cadastro numeric(8)
 alter table sige.stg_item
 add ds_modelo_fabricante varchar(60)
 
-
-alter table sige.stg_item
-add nr_kit_wms smallint
-
 alter table sige.stg_item
 add ds_kit_wms varchar(20)
 
