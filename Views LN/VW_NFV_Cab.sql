@@ -10,10 +10,9 @@ SELECT
     AND rownum=1) CD_FILIAL,
 		cisli940.t$docn$l NR_NF,
 		cisli940.t$seri$l NR_SERIE_NF,
-		cisli940.t$ccfo$l CD_NATUREZA_OPERACAO_NF,
+		cisli940.t$ccfo$l CD_NATUREZA_OPERACAO,
 		cisli940.t$opor$l SQ_NATUREZA_OPERACAO,
 		cisli940.t$fdty$l CD_TIPO_NF,
-		
 		CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NF,
 		CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
