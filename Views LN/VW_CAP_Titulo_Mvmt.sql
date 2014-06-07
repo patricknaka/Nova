@@ -2,9 +2,11 @@
 -- FAF.002 - 09-mai-2014, Fabio Ferreira, 	Correção campo COD_TRANSAÇAO
 --											CORREÇÃO TÍTULO REALCIONADO PARA MOTRAR O TITULO DE AGUPAMENTO QUANDO AGRUPADO
 -- FAF.003 - 12-mai-2014, Fabio Ferreira, 	Correção DT_HR_ATUALIZACAO para não fazer a conversão de timezone quando data=0
+-- #FAF.115 - 	07-jun-2014, Fabio Ferreira, 	Inclusão do campo CIA
 --****************************************************************************************************************************************************************
 
 SELECT 
+	201 CIA,																									--#FAF.113.n
   tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
   tfacp200.t$ttyp CD_TRANSACAO_TITULO,
 	tfacP200.t$lino NR_MOVIMENTO,
