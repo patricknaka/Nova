@@ -4,6 +4,7 @@
 --	FAF.003 - 12-mai-2014, Fabio Ferreira, 	Retirada conversão de timezone para campo DATA_LIQUIDACAO_TITULO
 --											O campo taxa multa foi alterado apara ler o valor da tabela tfacp201
 --	FAF.007 - 12-mai-2014, Fabio Ferreira, 	Alteração valor original do título
+--	FAF.116 - 07-jun-2014, Fabio Ferreira, 	Retirado campo NR_NFR
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
   tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
@@ -24,7 +25,7 @@ SELECT DISTINCT
    ) CD_UNIDADE_EMPRESARIAL,
   tfacp200.t$tpay CD_TIPO_DOCUMENTO,
   tfacp200.t$ifbp CD_PARCEIRO,
-  tdrec947.t$rcno$l NR_NFR,
+--  tdrec947.t$rcno$l NR_NFR,																		--#FAF.116.o	
   tfacp200.t$docn$l NR_NF_RECEBIDA,
   tfacp200.t$seri$l NR_SERIE_NF_RECEBIDA,
   tfacp200.t$line$l SQ_NF_RECEBIDA,
