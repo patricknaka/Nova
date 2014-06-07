@@ -6,8 +6,10 @@
 -- #FAF.048 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.048.1 - 23-mai-2014, Fabio Ferreira, 	NUM_ENTREGA convertido para string
 -- #FAF.048.1 - 26-mai-2014, Fabio Ferreira, 	Agrupado registros duplicados
+-- #FAF.113 - 	26-mai-2014, Fabio Ferreira, 	Inclusão do campo CIA
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
+		201 CIA,																								--#FAF.113.n
 	   znsls401.t$pecl$c NR_PEDIDO,
        TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,																	-- #FAF.048.1.n
 --       znsls401.t$entr$c NUM_ENTREGA,																			-- #FAF.048.1.o
