@@ -1,5 +1,6 @@
 -- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
--- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA					
+-- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
+-- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA			
 --************************************************************************************************************************************************************
 SELECT
   tdrec941.t$fire$l NR_REFERENCIA_FISCAL,
@@ -258,7 +259,14 @@ SELECT
   AND tdrec942.t$brty$l=1) VL_ICMS_DESTACADO, 
 			
 
-  tdrec941.t$qnty$l+tdrec941.t$saof$l QT_RECEBIDA_FISICA,
+  --tdrec941.t$qnty$l+tdrec941.t$saof$l QT_RECEBIDA_FISICA,													--#FAF.114.o
+  
+	nvl((select sum(ra.t$qrec) from twhinh312201 ra, ttdrec947201 rr
+		 where rr.t$fire$l=tdrec941.t$fire$l
+		 and rr.t$line$l=tdrec941.t$line$l
+		 and ra.t$rcno=rr.t$rcno$l
+		 and ra.t$rcln=rr.t$rcln$l),0) QT_RECEBIDA_FISICA,													--#FAF.114.n
+  
   	(SELECT tdrec947.t$orno$l FROM ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
 	AND tdrec947.t$line$l=tdrec941.t$line$l
