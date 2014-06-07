@@ -1,5 +1,6 @@
 -- 06-mai-2014, Fabio Ferreira, Correção de conversão de timezone
--- #FAF.042 - 29-mai-2014, Fabio Ferreira, 	Correções timezone					
+-- #FAF.042 - 29-mai-2014, Fabio Ferreira, 	Correções timezone	
+-- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal				
 --****************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -28,7 +29,8 @@ SELECT
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
     AND brnfe020.T$STAT$L=4) DT_CANCELAMENTO,
     cisli940.t$rscd$l CD_MOTIVO_CANCELAMENTO,
-	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL
+	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
+	cisli940.t$fire$l	REF_FISCAL																		--#FAF.109.n
 FROM
     tcisli940201 cisli940,
     ttcemm124201 tcemm124,

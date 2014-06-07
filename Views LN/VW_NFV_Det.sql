@@ -2,6 +2,7 @@
 --								Não mostrar linhas de frete e mostar o valor de frete rateado na coluna valor frete (frete da znsls401)
 -- #FAF.041 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
 -- #FAF.041b - 29-mai-2014, Fabio Ferreira, Alteração no relacionamento para melhora de performace
+-- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -177,7 +178,8 @@ SELECT DISTINCT
 
 	CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO_NF,
-	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL
+	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
+	cisli941.t$fire$l	REF_FISCAL																		--#FAF.109.n
 
 FROM 
 	tcisli941201 cisli941,
