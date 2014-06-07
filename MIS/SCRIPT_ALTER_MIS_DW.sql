@@ -652,6 +652,10 @@ ALTER TABLE MIS_DW..dim_estoque_tipo_bloqueio
 ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(10)
 
 ---------------------------------------------------------------------------------------------------
+--De varchar(10) para Varchar(20)
+alter table stg_sige_fornecedor
+alter column CLIE_APELIDO varchar(20)
+---------------------------------------------------------------------------------------------------
 
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
