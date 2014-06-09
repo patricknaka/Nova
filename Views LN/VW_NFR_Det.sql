@@ -3,21 +3,12 @@
 -- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA			
 --************************************************************************************************************************************************************
 SELECT
-  tdrec941.t$fire$l NR_REFERENCIA_FISCAL,
   201 CD_CIA,
   (SELECT tcemm030.t$euca FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
   WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
   AND tcemm030.t$eunt=tcemm124.t$grid
   AND tcemm124.t$loco=201
   AND rownum=1) CD_FILIAL,
-  (SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
-  WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
-  AND tcemm124.t$loco=201
-  AND rownum=1) CD_UNIDADE_EMPRESARIAL,
-	(SELECT tdrec947.t$rcno$l FROM ttdrec947201 tdrec947
-	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
-	AND tdrec947.t$line$l=tdrec941.t$line$l
-	AND rownum=1) NR_NFR,
   tdrec940.t$docn$l NR_NF_RECEBIDA,
   tdrec941.t$line$l SQ_ITEM_NF_RECEBIDA,
   rtrim(ltrim(tdrec941.t$item$l)) CD_ITEM,
@@ -62,17 +53,14 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=3) VL_IPI,
-  
    (SELECT tdrec942.t$amnr$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=3) VL_IPI_DESTACADO,
- 
   nvl((	select sum(a.t$tamt$l) from ttdrec941201 a, ttcibd001201 b
 		where a.t$fire$l=tdrec941.t$fire$l
 		and b.t$item=a.t$item$l
 		and b.t$kitm=5),0) VL_SERVICO, 
-  
   tdrec941.t$gexp$l VL_DESPESA,
   tdrec941.t$addc$l VL_DESCONTO,
   tdrec941.t$fght$l VL_FRETE,
@@ -103,20 +91,14 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VL_PIS,
-
-
   (SELECT tdrec942.t$fbex$l + tdrec942.t$fbot$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VL_BASE_ICMS_NAO_REDUTOR,  
-
-
-
   (SELECT tdrec942.t$amni$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VL_ICMS_MERCADORIA,
-  
   nvl((SELECT sum(tdrec942.t$amnt$l) FROM 	ttdrec942201 tdrec942, 
 											ttdrec941201 tdrec941b,
 											ttcibd001201 tcibd001b
@@ -125,8 +107,6 @@ SELECT
   AND	tcibd001b.t$item=tdrec941b.t$item$l
   AND	tcibd001b.t$ctyp$l=2
   AND 	tdrec942.t$brty$l=1),0) VL_ICMS_FRETE,
-  
-
   nvl((SELECT sum(tdrec942.t$amnt$l) FROM 	ttdrec942201 tdrec942, 
 											ttdrec941201 tdrec941b,
 											ttcibd001201 tcibd001b
@@ -136,10 +116,6 @@ SELECT
   AND	tcibd001b.t$kitm>3
   AND	tcibd001b.t$ctyp$l!=2
   AND 	tdrec942.t$brty$l=1),0) VL_ICM_OUTROS,  
-  
-  
-  
-  
   (SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
@@ -164,22 +140,18 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=6) VL_PERCENTUAL_COFINS,
-  
   (SELECT tdrec942.t$rate$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=13) VL_PERCENTUAL_CSLL,  
-
   (SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=13) VL_CSLL,
-  
   (SELECT tdrec942.t$amni$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=13) VL_CSLL_MERCADORIA,
-  
   nvl((SELECT sum(tdrec942.t$amnt$l) FROM 	ttdrec942201 tdrec942, 
 											ttdrec941201 tdrec941b,
 											ttcibd001201 tcibd001b
@@ -188,7 +160,6 @@ SELECT
   AND	tcibd001b.t$item=tdrec941b.t$item$l
   AND	tcibd001b.t$ctyp$l=2
   AND 	tdrec942.t$brty$l=13),0) VL_CSLL_FRETE,
-  
   nvl((SELECT sum(tdrec942.t$amnt$l) FROM 	ttdrec942201 tdrec942, 
 											ttdrec941201 tdrec941b,
 											ttcibd001201 tcibd001b
@@ -198,8 +169,6 @@ SELECT
   AND	tcibd001b.t$kitm>3
   AND	tcibd001b.t$ctyp$l!=2
   AND 	tdrec942.t$brty$l=13),0) VL_CSLL_OUTROS, 
-  
-
   tdrec941.t$addc$l VL_DESCONTO_INCONDICIONAL,
   tdrec941.t$rtin$l QT_NAO_RECEBIDA_DEVOLUCAO,     
   (SELECT tdrec942.t$base$l FROM ttdrec942201 tdrec942
@@ -223,60 +192,55 @@ SELECT
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=16) VL_IMPOSTO_IMPORTACAO,
   tdrec941.t$cchr$l VL_DESPESA_ADUANEIRA,
-  
   CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8
   THEN tdrec941.t$gexp$l ELSE 0
   END VL_ADICIONAL_IMPORTACAO,
-  
   CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 THEN
   (SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5)
   ELSE 0 END VL_PIS_IMPORTACAO,
-  
   CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 THEN
   (SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=6) 
   ELSE 0 END VL_COFINS_IMPORTACAO, 
-  
   CASE WHEN tdrec941.t$crpd$l=1 and (tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8) 
   THEN tdrec941.t$fght$l ELSE 0 END VL_CIF_IMPORTACAO,
-  
-  
-	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+  CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,   
-
   CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 
   THEN tdrec941.t$copr$l ELSE 0 END VL_CUSTO_IMPORTACAO, 
-
-  
  (SELECT tdrec942.t$amnr$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VL_ICMS_DESTACADO, 
-			
-
   --tdrec941.t$qnty$l+tdrec941.t$saof$l QT_RECEBIDA_FISICA,													--#FAF.114.o
-  
 	nvl((select sum(ra.t$qrec) from twhinh312201 ra, ttdrec947201 rr
 		 where rr.t$fire$l=tdrec941.t$fire$l
 		 and rr.t$line$l=tdrec941.t$line$l
 		 and ra.t$rcno=rr.t$rcno$l
 		 and ra.t$rcln=rr.t$rcln$l),0) QT_RECEBIDA_FISICA,													--#FAF.114.n
-  
   	(SELECT tdrec947.t$orno$l FROM ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
 	AND tdrec947.t$line$l=tdrec941.t$line$l
 	AND rownum=1)  NR_PEDIDO_COMPRA,
+  (SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
+  WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
+  AND tcemm124.t$loco=201
+  AND rownum=1) CD_UNIDADE_EMPRESARIAL,
+  tdrec941.t$fire$l NR_REFERENCIA_FISCAL,
+  (SELECT tdrec947.t$rcno$l FROM ttdrec947201 tdrec947
+	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
+	AND tdrec947.t$line$l=tdrec941.t$line$l
+	AND rownum=1) NR_NFR,
 	CASE WHEN tdrec940.t$stoa$l=' ' THEN
 	tdrec940.t$ctno$l ELSE
 	(select e.t$fovn$l from ttccom130201 e
 	 where e.t$cadr=tdrec940.t$stoa$l)
 	END NR_CNPJ_CPF_ENTREGA 
-	
 FROM
   ttdrec941201 tdrec941,
   ttdrec940201 tdrec940,
