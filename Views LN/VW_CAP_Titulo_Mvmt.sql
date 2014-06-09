@@ -6,7 +6,7 @@
 --****************************************************************************************************************************************************************
 
 SELECT 
-	201 CIA,																									--#FAF.113.n
+	201 CD_CIA,																									--#FAF.113.n
   tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
   tfacp200.t$ttyp CD_TRANSACAO_TITULO,
 	tfacP200.t$lino NR_MOVIMENTO,
