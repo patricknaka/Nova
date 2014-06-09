@@ -1,6 +1,7 @@
 -- #FAF.115 - 	07-jun-2014, Fabio Ferreira, 	Inclusão do campo CIA
+-- #FAF.119 - 	09-jun-2014, Fabio Ferreira, 	Correção registro duplicado
 --*************************************************************************************************************************************************************
-SELECT
+SELECT DISTINCT
 	201 CIA,																						--#FAF.113.n
 	tfacp200.t$ninv NR_TITULO,
 	tfcmg011.t$baoc$l CD_BANCO,
@@ -39,6 +40,8 @@ FROM
   ON tfcmg109.t$btno=tfacp600.t$pbtn
   LEFT JOIN ttfcmg103201 tfcmg103
   ON tfcmg103.T$BTNO=tfcmg109.T$BTNO
+  AND tfcmg103.t$ttyp=tfacp600.t$payt										--#FAF.119.n
+  AND tfcmg103.t$docn=tfacp600.t$payd
   LEFT JOIN ttfcmg001201 tfcmg001
   ON tfcmg001.t$bank=tfacp600.t$bank
 --  LEFT JOIN ttfcmg001201 tfcmg001f                    
