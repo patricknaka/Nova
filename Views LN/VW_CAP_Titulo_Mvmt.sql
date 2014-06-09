@@ -3,6 +3,7 @@
 --											CORREÇÃO TÍTULO REALCIONADO PARA MOTRAR O TITULO DE AGUPAMENTO QUANDO AGRUPADO
 -- FAF.003 - 12-mai-2014, Fabio Ferreira, 	Correção DT_HR_ATUALIZACAO para não fazer a conversão de timezone quando data=0
 -- #FAF.115 - 	07-jun-2014, Fabio Ferreira, 	Inclusão do campo CIA
+-- #FAF.111 - 	09-jun-2014, Fabio Ferreira, 	Campo CD_TIPO_MOVIMENTO
 --****************************************************************************************************************************************************************
 
 SELECT 
@@ -30,7 +31,12 @@ SELECT
 	ELSE	CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	
 				AT time zone sessiontimezone) AS DATE) END DT_ATUALIZACAO,
 	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
-	0 CD_TIPO_MOVIMENTO	----fabio, inserir nestre atributo a leitura do movimento
+	CASE WHEN (select a.t$catg from ttfgld011201 a where a.t$ttyp=tfacp200.t$tdoc)=10 THEN 3
+  WHEN tfacp200.t$tdoc='PLG' THEN 1
+  WHEN tfacp200.t$tdoc='LKF' THEN 2
+  WHEN tfacp200.t$tdoc='PKF' THEN 2
+  ELSE 0 END
+  CD_TIPO_MOVIMENTO
 --  CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.003.so
 --        AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO										--#FAF.003.eo
 FROM
