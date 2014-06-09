@@ -670,6 +670,14 @@ alter column ds_nome varchar(50)
 
 ---------------------------------------------------------------------------------------------------
 
+ALTER TABLE dbo.stg_sige_purchase_full
+ALTER COLUMN nr_nr varchar(18)
+
+ALTER TABLE stg_sige_purchase_full_complemento
+ALTER COLUMN NOCA_ID_NR_COMP VARCHAR(18)
+---------------------------------------------------------------------------------------------------
+
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
