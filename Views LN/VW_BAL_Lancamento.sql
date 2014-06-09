@@ -16,7 +16,7 @@ SELECT
  tfgld106.t$dbcr IN_DEBITO_CREDITO,
  tfgld106.t$amnt VL_LANCAMENTO,
 -- tfgld106.t$tcsh CD_NATUREZA_LANCAMENTO,																			--#FAF.005.o
- tfgld011.T$CATG NATUREZA_LANCAMENTO,                                                                          	--#FAF.005.n
+ tfgld011.T$CATG CD_NATUREZA_LANCAMENTO,                                                                          	--#FAF.005.n
  tfgld106.t$obat NR_LOTE,
  tfgld106.t$trun SQ_LOTE
 FROM ttfgld106201 tfgld106,
