@@ -105,4 +105,23 @@ from fin.ods_sige_titulo_receber_movimento b (nolock)
 --and b.nr_id_valor = 1
 group by  nr_id_cia, nr_id_filial, nr_id_titulo,nr_id_transacao,ds_id_documento
 
-SELECT * from fin.ods_sige_titulo_receber_movimento
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Tabela de Caracterização do Movimento do Titulo (Pendente CAR - 09/06)
+CREATE TABLE ln.ods_dom_tipo_movimento
+(
+id_tipo_movimento int,
+ds_tipo_movimento varchar(20),
+cd_modulo varchar(3)
+)
+
+INSERT ln.ods_dom_tipo_movimento
+values
+(1,'Agrupamento','CAP'),
+(2,'Abatimento','CAP'),
+(3,'Pagamento','CAP'),
+(4,'Reversão','CAP')
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
