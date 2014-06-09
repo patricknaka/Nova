@@ -242,12 +242,10 @@ SELECT
 	(select e.t$fovn$l from ttccom130201 e
 	 where e.t$cadr=tdrec940.t$stoa$l)
 	END NR_CNPJ_CPF_ENTREGA ,
-	
   nvl((SELECT tdrec942.t$nmrg$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
-  AND tdrec942.t$brty$l=2),0) IVA																				--#FAF.119.n
- 
+  AND tdrec942.t$brty$l=2),0) VL_IVA																				--#FAF.119.n
 FROM
   ttdrec941201 tdrec941,
   ttdrec940201 tdrec940,
