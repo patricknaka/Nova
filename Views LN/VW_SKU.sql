@@ -5,20 +5,20 @@
 --*********************************************************************************************************************************************************
 SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         201 CD_CIA,
-		tccom100.t$bpid CD_FORNECEDOR,
-        tccom130.t$fovn$l CNPJ_FORNECEDOR,
+		tccom130.t$fovn$l NR_CNPJ_FORNECEDOR,
+        tccom100.t$bpid CD_FORNECEDOR,
+        tcmcs060.t$otbp CD_FABRICANTE,
+        tccom100f.T$NAMA NM_NOME_FABRICANTE,
         tcibd004.t$aitc CD_ITEM_FORNECEDOR,
-		tcibd001.t$mdfb$c DS_MODELO_FABRICANTE,											--#FAF.084.n
         tcibd001.t$dsca DS_ITEM,
         tcibd936.t$frat$l NR_NBM,
         tcibd001.t$ceat$l CD_EAN,
         whwmd400.t$abcc CD_STATUS_ABC,
+        tdipu001.T$IXDN$C CD_CATEGORIA,
         tcibd001.t$citg CD_DEPARTAMENTO,
         tcibd001.t$seto$c CD_SETOR,
         tcibd001.t$fami$c CD_FAMILIA,
         tcibd001.t$csig CD_SITUACAO_ITEM,
-        tcmcs060.t$otbp CD_FABRICANTE,
-        tccom100f.T$NAMA NM_NOME_FABRICANTE,
         tcibd001.t$kitm CD_GENERO,
         tcibd001.t$nrpe$c QT_GARANTIA_FABRICANTE,
         tcibd200.t$mioq QT_MINIMA_FORNECEDOR,
@@ -54,11 +54,12 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         tcibd001.t$size$c NR_TAMANHO,
         tcibd001.T$NPCL$C CD_CLASSE_NPRODUTO,
         tdipu001.t$prip VL_COMPRA,
-        tdipu001.T$IXDN$C CD_CATEGORIA,
 		tcibd001.t$obse$c DS_OBSERVACAO,														--#FAF.008.sn
 		tcibd001.t$uatc$c IN_UTILIZACAO_ATACADO,
 		tcibd001.t$ppbe$c PPB,																--#FAF.008.en
-		tdisa001.t$cwar CD_ARMAZEM																--#FAF.009.n
+		tdisa001.t$cwar CD_ARMAZEM,					--#FAF.009.n
+		tcibd001.t$mdfb$c DS_MODELO_FABRICANTE											--#FAF.084.n
+
 FROM  ttcibd001201 tcibd001
 LEFT JOIN ttdipu001201 tdipu001 ON tdipu001.t$item=tcibd001.t$item
 LEFT JOIN ttccom100201 tccom100 ON tccom100.t$bpid=tdipu001.t$otbp

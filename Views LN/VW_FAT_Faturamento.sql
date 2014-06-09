@@ -245,9 +245,9 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
         znsls401.t$itpe$c CD_TIPO_ENTREGA,
         tcibd001.t$tptr$c CD_TIPO_TRANSPORTE,
         znsls400.t$idli$c NR_LISTA_CASAMENTO,
-		(select e.t$fovn$l from ttccom130201 e where e.t$cadr=cisli940.t$stoa$l) CNPJ_CPF_ENTREGA,
+		(select e.t$fovn$l from ttccom130201 e where e.t$cadr=cisli940.t$stoa$l) NR_CNPJ_CPF_ENTREGA,
 		(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=cisli940.t$stoa$l) CD_TIPO_CLIENTE_ENTREGA,
-		(select e.t$fovn$l from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l) CNPJ_CPF_FATURA,
+		(select e.t$fovn$l from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l) NR_CNPJ_CPF_FATURA,
 		(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l) CD_TIPO_CLIENTE_FATURA
 FROM    tcisli940201 cisli940,
         tcisli941201 cisli941,
