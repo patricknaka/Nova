@@ -3,7 +3,7 @@
 SELECT  tcemm030.t$euca CD_FILIAL,
         tcemm030.t$lcmp CD_CIA,
         tcemm030.t$dsca NM_FILIAL,
-        tccom130.t$fovn$l CNPJ_FILIAL,
+        tccom130.t$fovn$l NR_CNPJ_FILIAL,
         tcemm030.T$EUNT CD_UNIDADE_EMPRESARIAL,
         tfgld010.t$desc DS_FILIAL
 FROM    ttcemm030201 tcemm030
