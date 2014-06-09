@@ -677,6 +677,25 @@ ALTER TABLE stg_sige_purchase_full_complemento
 ALTER COLUMN NOCA_ID_NR_COMP VARCHAR(18)
 ---------------------------------------------------------------------------------------------------
 
+--EXCLUE OBJETO DEPENDENTE 
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[dim_condicao_pagamento]') AND name = N'PK_dim_condicao_pagamento')
+ALTER TABLE [dbo].[dim_condicao_pagamento] DROP CONSTRAINT [PK_dim_condicao_pagamento]
+
+--ALTERA ATRIBUTO
+
+ALTER TABLE dim_condicao_pagamento
+ALTER COLUMN NR_CIA NUMERIC(3) NOT NULL
+
+--RECRIA OBJETO DEPENDENTE
+
+ALTER TABLE [dbo].[dim_condicao_pagamento] ADD  CONSTRAINT [PK_dim_condicao_pagamento] PRIMARY KEY CLUSTERED 
+(
+	[nr_cia] ASC,
+	[cd_pagamento] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+---------------------------------------------------------------------------------------------------
 
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
