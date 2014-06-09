@@ -9,7 +9,7 @@
 -- #FAF.113 - 	26-mai-2014, Fabio Ferreira, 	Inclusão do campo CIA
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
-		201 CIA,																								--#FAF.113.n
+		201 CD_CIA,																								--#FAF.113.n
 	   znsls401.t$pecl$c NR_PEDIDO,
        TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,																	-- #FAF.048.1.n
 --       znsls401.t$entr$c NUM_ENTREGA,																			-- #FAF.048.1.o
