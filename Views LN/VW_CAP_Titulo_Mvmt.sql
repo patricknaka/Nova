@@ -35,6 +35,7 @@ SELECT
   WHEN tfacp200.t$tdoc='PLG' THEN 1
   WHEN tfacp200.t$tdoc='LKF' THEN 2
   WHEN tfacp200.t$tdoc='PKF' THEN 2
+  WHEN tfacp200.t$tdoc='RKF' THEN 4
   ELSE 0 END
   CD_TIPO_MOVIMENTO
 --  CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.003.so
