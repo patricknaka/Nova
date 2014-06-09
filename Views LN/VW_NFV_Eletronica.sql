@@ -30,7 +30,7 @@ SELECT
     AND brnfe020.T$STAT$L=4) DT_CANCELAMENTO,
     cisli940.t$rscd$l CD_MOTIVO_CANCELAMENTO,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
-	cisli940.t$fire$l	REF_FISCAL																		--#FAF.109.n
+	cisli940.t$fire$l NR_REFERENCIA_FISCAL																		--#FAF.109.n
 FROM
     tcisli940201 cisli940,
     ttcemm124201 tcemm124,

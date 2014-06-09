@@ -43,12 +43,10 @@ SELECT DISTINCT
 	WHERE cisli943.t$fire$l=cisli941.t$fire$l
 	AND cisli943.t$line$l=cisli941.t$line$l
 	AND cisli943.t$brty$l=5) VL_PIS,
-	
 	Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
              WHERE  cisli943.t$fire$l=cisli941.t$fire$l
              AND    cisli943.t$line$l=cisli941.t$line$l
              AND    cisli943.t$brty$l=1),0) VL_ICMS_PRODUTO,
-			 
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM 	tcisli943201 cisli943, 
 												tcisli941201 cisli941b,
 												ttcibd001201 tcibd001b
@@ -57,7 +55,6 @@ SELECT DISTINCT
 		AND		tcibd001b.t$item=cisli941b.t$item$l
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	cisli943.t$brty$l=1),0) VL_ICMS_FRETE,
-		
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 												tcisli941201 cisli941b,
 												ttcibd001201 tcibd001b
@@ -67,17 +64,14 @@ SELECT DISTINCT
 		AND		tcibd001b.t$kitm>3
 		AND		tcibd001b.t$ctyp$l!=2
 		AND 	cisli943.t$brty$l=1),0) VL_ICMS_OUTROS,
-	
 	(SELECT cisli943.t$amnt$l FROM tcisli943201 cisli943
 	WHERE cisli943.t$fire$l=cisli941.t$fire$l
 	AND cisli943.t$line$l=cisli941.t$line$l
 	AND cisli943.t$brty$l=6) VL_COFINS,
-	
 	Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
 		 WHERE  cisli943.t$fire$l=cisli941.t$fire$l
 		 AND    cisli943.t$line$l=cisli941.t$line$l
 		 AND    cisli943.t$brty$l=6),0) VL_COFINS_PRODUTO,
-
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM 	tcisli943201 cisli943, 
 												tcisli941201 cisli941b,
 												ttcibd001201 tcibd001b
@@ -86,7 +80,6 @@ SELECT DISTINCT
 		AND		tcibd001b.t$item=cisli941b.t$item$l
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	cisli943.t$brty$l=6),0) VL_COFINS_FRETE,
-		
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM 	tcisli943201 cisli943, 
 												tcisli941201 cisli941b,
 												ttcibd001201 tcibd001b
@@ -96,12 +89,10 @@ SELECT DISTINCT
 		AND		tcibd001b.t$kitm>3
 		AND		tcibd001b.t$ctyp$l!=2
 		AND 	cisli943.t$brty$l=6),0) VL_COFINS_OUTROS,
-	
 	Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
 		 WHERE  cisli943.t$fire$l=cisli941.t$fire$l
 		 AND    cisli943.t$line$l=cisli941.t$line$l
 		 AND    cisli943.t$brty$l=5),0) VL_PIS_PRODUTO,
-
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 											tcisli941201 cisli941b,
 											ttcibd001201 tcibd001b
@@ -110,7 +101,6 @@ SELECT DISTINCT
 	AND		tcibd001b.t$item=cisli941b.t$item$l
 	AND		tcibd001b.t$ctyp$l=2
 	AND 	cisli943.t$brty$l=5),0) VL_PIS_FRETE,
-
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 											tcisli941201 cisli941b,
 											ttcibd001201 tcibd001b
@@ -120,17 +110,14 @@ SELECT DISTINCT
 	AND		tcibd001b.t$kitm>3
 	AND		tcibd001b.t$ctyp$l!=2
 	AND 	cisli943.t$brty$l=5),0)	VL_PIS_OUTROS,
-		 
 	Nvl((SELECT cisli943.t$amnt$l from tcisli943201 cisli943
 		 WHERE  cisli943.t$fire$l=cisli941.t$fire$l
 		 AND    cisli943.t$line$l=cisli941.t$line$l
 		 AND    cisli943.t$brty$l=13),0) VL_CSLL,
-
 	Nvl((SELECT cisli943.t$amni$l from tcisli943201 cisli943
 		 WHERE  cisli943.t$fire$l=cisli941.t$fire$l
 		 AND    cisli943.t$line$l=cisli941.t$line$l
 		 AND    cisli943.t$brty$l=13),0) VL_CSLL_PRODUTO,
-		 
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 											tcisli941201 cisli941b,
 											ttcibd001201 tcibd001b
@@ -139,7 +126,6 @@ SELECT DISTINCT
 	AND		tcibd001b.t$item=cisli941b.t$item$l
 	AND		tcibd001b.t$ctyp$l=2
 	AND 	cisli943.t$brty$l=13),0) VL_CSLL_FRETE,
-
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM tcisli943201 cisli943, 
 											tcisli941201 cisli941b,
 											ttcibd001201 tcibd001b
@@ -149,38 +135,31 @@ SELECT DISTINCT
 	AND		tcibd001b.t$kitm>3
 	AND		tcibd001b.t$ctyp$l!=2
 	AND 	cisli943.t$brty$l=13),0) VL_CSLL_OUTROS,	
-
 	znsls401.t$vldi$c VL_DESCONTO_INCONDICIONAL,
 	cisli941.t$line$l NR_ITEM_NF,
 	cisli941.t$ccfo$l CD_NATUREZA_OPERACAO,
 	cisli941.t$opor$l SQ_NATUREZA_OPERACAO,
 	cisli941.t$cchr$l VL_DESPESA_ADUANEIRA,
-	
 	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN cisli941.t$gexp$l
 	ELSE 0 END VL_ADICIONAL_IMPORTACAO,
-	
 	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN
 	nvl((select li.t$amnt$l from tcisli943201 li
 	where	li.t$fire$l=cisli941.t$fire$l
 	and		li.t$line$l=cisli941.t$line$l
 	and 	li.t$brty$l=5),0) 
 	ELSE 0 END VL_PIS_IMPORTACAO,
-
 	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN
 	nvl((select li.t$amnt$l from tcisli943201 li
 	where	li.t$fire$l=cisli941.t$fire$l
 	and		li.t$line$l=cisli941.t$line$l
 	and 	li.t$brty$l=6),0) 
 	ELSE 0 END VL_COFINS_IMPORTACAO,
-	
 	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN cisli941.t$fght$l
 	ELSE 0 END VL_CIF_IMPORTACAO,
-
 	CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO_NF,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
-	cisli941.t$fire$l	REF_FISCAL																		--#FAF.109.n
-
+	cisli941.t$fire$l NR_REFERENCIA_FISCAL																		--#FAF.109.n
 FROM 
 	tcisli941201 cisli941,
 	tcisli940201 cisli940,
