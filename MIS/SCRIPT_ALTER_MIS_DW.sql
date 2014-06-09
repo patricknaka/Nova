@@ -697,9 +697,19 @@ ALTER TABLE [dbo].[dim_condicao_pagamento] ADD  CONSTRAINT [PK_dim_condicao_paga
 
 ---------------------------------------------------------------------------------------------------
 
+
+ALTER TABLE aux_ods_sige_cmv_hist
+ALTER COLUMN ID_ITEM NUMERIC(20)
+
+ALTER TABLE ods_sige_cmv_hist
+ALTER COLUMN ID_ITEM NUMERIC(20)
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
 --ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
+
 
 
