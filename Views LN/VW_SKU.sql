@@ -1,6 +1,7 @@
 -- FAF.008 - Fabio Ferreira, 21-mai-2014, Fabio Ferreira, 	Incluido campos OBSERVACAO, FLAG_UTILIZ_ATAC, PPB
 -- FAF.009 - Fabio Ferreira, 21-mai-2014, Fabio Ferreira, 	Incluido campo Armazem
 -- #FAF.084 - Fabio Ferreira, 26-mai-2014, Fabio Ferreira, 	Inclusão do campo MODELO_FABRICANTE
+-- #FAF.120 - Fabio Ferreira, 09-jun-2014, Fabio Ferreira, 	Fitro de data de atualização
 --*********************************************************************************************************************************************************
 SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         201 CD_CIA,
@@ -72,3 +73,5 @@ LEFT JOIN ttccom100201 tccom100f ON tccom100f.T$BPID=tcmcs060.T$OTBP,
 ttcmcs023201 tcmcs023
 WHERE
 tcmcs023.t$citg=tcibd001.t$citg
+AND CAST((FROM_TZ(CAST(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+            AT time zone sessiontimezone) AS DATE)>=TRUNC(sysdate, 'DAY')                          		--#FAF.120.n
