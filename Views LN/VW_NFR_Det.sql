@@ -1,6 +1,7 @@
 -- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
 -- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
--- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA			
+-- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
+-- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)				
 --************************************************************************************************************************************************************
 SELECT
   201 CD_CIA,
@@ -240,7 +241,13 @@ SELECT
 	tdrec940.t$ctno$l ELSE
 	(select e.t$fovn$l from ttccom130201 e
 	 where e.t$cadr=tdrec940.t$stoa$l)
-	END NR_CNPJ_CPF_ENTREGA 
+	END NR_CNPJ_CPF_ENTREGA ,
+	
+  nvl((SELECT tdrec942.t$nmrg$l FROM ttdrec942201 tdrec942
+  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+  AND tdrec942.t$line$l=tdrec941.t$line$l
+  AND tdrec942.t$brty$l=2),0) IVA																				--#FAF.119.n
+ 
 FROM
   ttdrec941201 tdrec941,
   ttdrec940201 tdrec940,
