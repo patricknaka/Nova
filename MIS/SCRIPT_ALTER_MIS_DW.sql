@@ -699,11 +699,10 @@ ALTER TABLE [dbo].[dim_condicao_pagamento] ADD  CONSTRAINT [PK_dim_condicao_paga
 
 
 ALTER TABLE aux_ods_sige_cmv_hist
-ALTER COLUMN ID_ITEM NUMERIC(20)
+ALTER COLUMN ID_ITEM NUMERIC(18)
 
 ALTER TABLE ods_sige_cmv_hist
-ALTER COLUMN ID_ITEM NUMERIC(20)
-
+ALTER COLUMN ID_ITEM NUMERIC(18)
 ---------------------------------------------------------------------------------------------------
 
 --VERIFICAR
