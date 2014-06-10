@@ -705,10 +705,25 @@ ALTER TABLE ods_sige_cmv_hist
 ALTER COLUMN ID_ITEM NUMERIC(18)
 ---------------------------------------------------------------------------------------------------
 
+ALTER TABLE ods_sige_titulo
+ALTER COLUMN ID_MODULO VARCHAR(3)
+
+ALTER TABLE ods_sige_titulo
+ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
+
+ALTER TABLE aux_ods_sige_titulo
+ALTER COLUMN ID_MODULO VARCHAR(3)
+
+ALTER TABLE aux_ods_sige_titulo
+ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
 --ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
+
 
 
 
