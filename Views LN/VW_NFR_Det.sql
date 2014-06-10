@@ -1,7 +1,8 @@
 -- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
 -- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
 -- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
--- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)				
+-- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)	
+-- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Retirado campo VL_ICMS_ST1			
 --************************************************************************************************************************************************************
 SELECT
   201 CD_CIA,
@@ -182,7 +183,7 @@ SELECT
   AND tdrec942.t$brty$l=1) VL_PERCENTUAL_REDUTOR_ICMS,
   tdrec941.t$tamt$l VL_TOTAL_ITEM_NF,
   tdrec941.t$ikit$c CD_ITEM_KIT,
-  tdrec941.t$opfc$l VL_ICMS_ST1,*********
+--  tdrec941.t$opfc$l VL_ICMS_ST1,*********																--#FAF.126.o
   tdrec941.T$OPFC$L CD_NATUREZA_OPERACAO,
   tdrec941.t$opor$l SQ_NATUREZA_OPERACAO,
   (SELECT tdrec942.t$base$l FROM ttdrec942201 tdrec942
