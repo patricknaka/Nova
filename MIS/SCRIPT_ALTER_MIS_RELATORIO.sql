@@ -25,3 +25,8 @@ ALTER TABLE [fin].[ods_cap_reembolso] ADD  CONSTRAINT [PK_id_titulo] PRIMARY KEY
 	[id_documento] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEX]
 GO
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE stg_sige_extranet_fornecedores_liquidado
+ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
