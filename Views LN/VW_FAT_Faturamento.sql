@@ -10,6 +10,7 @@
 -- #FAF.063 - 22-mai-2014, Fabio Ferreira, 	Alterado o código da transportadora para o código do parceiro
 -- #FAF.083 - 26-mai-2014, Fabio Ferreira, 	Campo NUM_ENTREGA convertido para string
 -- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do financeiro
+-- #FAF.125 - 10-jun-2014, Fabio Ferreira, 	Correções impostos frete
 --****************************************************************************************************************************************************************
 SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
@@ -112,6 +113,7 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
 		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND   	cisli943.T$LINE$L=cisli941b.T$LINE$L
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	cisli943.t$brty$l=1),0) VL_ICMS_FRETE,
 
@@ -142,6 +144,7 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
 		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND   	cisli943.T$LINE$L=cisli941b.T$LINE$L
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	cisli943.t$brty$l=6),0) VL_COFINS_FRETE,			
 
@@ -166,6 +169,7 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
 		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND   	cisli943.T$LINE$L=cisli941b.T$LINE$L
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	cisli943.t$brty$l=5),0) VL_PIS_FRETE,
 		
@@ -196,6 +200,7 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
 		WHERE 	cisli943.t$fire$l=cisli941.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND   	cisli943.T$LINE$L=cisli941b.T$LINE$L
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	cisli943.t$brty$l=13),0) VL_CSLL_FRETE,
 		
