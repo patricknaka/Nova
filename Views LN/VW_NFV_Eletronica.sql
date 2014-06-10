@@ -1,6 +1,7 @@
 -- 06-mai-2014, Fabio Ferreira, Correção de conversão de timezone
 -- #FAF.042 - 29-mai-2014, Fabio Ferreira, 	Correções timezone	
--- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal				
+-- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal	
+-- #FAF.124 - 10-jun-2014, Fabio Ferreira, 	Correção Chave de acesso				
 --****************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -8,7 +9,8 @@ SELECT
     cisli940.t$docn$l NF_NFE,
     cisli940.t$seri$l NR_SERIE_NFE,
     cisli940.t$nfes$l CD_STATUS_SEFAZ,
-    cisli940.t$prot$l NR_CHAVE_ACESSO_NFE,
+--    cisli940.t$prot$l NR_CHAVE_ACESSO_NFE,
+    cisli940.t$cnfe$l NR_CHAVE_ACESSO_NFE,
     nvl((SELECT 
 	CAST((FROM_TZ(CAST(TO_CHAR(MIN(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 		AT time zone sessiontimezone) AS DATE)	
