@@ -182,7 +182,8 @@ SELECT
   AND tdrec942.t$brty$l=1) VL_PERCENTUAL_REDUTOR_ICMS,
   tdrec941.t$tamt$l VL_TOTAL_ITEM_NF,
   tdrec941.t$ikit$c CD_ITEM_KIT,
-  tdrec941.t$opfc$l VL_ICMS_ST1,
+  tdrec941.t$opfc$l VL_ICMS_ST1,*********
+  tdrec941.T$OPFC$L CD_NATUREZA_OPERACAO,
   tdrec941.t$opor$l SQ_NATUREZA_OPERACAO,
   (SELECT tdrec942.t$base$l FROM ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
