@@ -36,7 +36,7 @@ SELECT DISTINCT
 		AT time zone sessiontimezone) AS DATE) DT_SITUACAO_TITULO,
 	tfacp200.t$doty$l CD_TIPO_NF,
 	tfacp200.t$balh$1 VL_SALDO,
-	tdrec947.t$orno$l NR_PEDIDO_VENDA,
+	tdrec947.t$orno$l NR_PEDIDO_COMPRA,
 	tfcmg011f.t$baoc$l CD_BANCO_DESTINO,
 	tfcmg011f.t$agcd$l NR_AGENCIA_DESTINO,
 	tfcmg011f.t$agdg$l NR_DIGITO_AGENCIA_DESTINO,
