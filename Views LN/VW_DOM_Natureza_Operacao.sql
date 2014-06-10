@@ -3,6 +3,7 @@
 --	FAF.005 - 14-mai-2014, Fabio Ferreira,	Retirado campo Data/hora atualiz		
 --	FAF.006 - 15-mai-2014, Fabio Ferreira,	Reirado campo tipo operação
 --	FAF.007 - 15-mai-2014, Fabio Ferreira,	Inclusão dos campos DESCR_NATUREZA_OPER	 e DESCR_SEQ_NATUREZA_OPER
+--	FAF.127 - 10-mai-2014, Fabio Ferreira,	Correção de filtro
 --****************************************************************************************************************************************************************
 
 -- SELECT 																										--#FAF.003.o
@@ -16,9 +17,9 @@ SELECT 	DISTINCT																								--#FAF.003.n
 --	CAST((FROM_TZ(CAST(TO_CHAR(tcmcs940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 			--#FAF.005.o
 --		AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO           										--#FAF.005.o
 FROM  ttcmcs940201 tcmcs940,
-      ttcmcs947201 tcmcs947,
+--      ttcmcs947201 tcmcs947,																					--#FAF.127.o
       ttcmcs964201 tcmcs964
 WHERE 	tcmcs964.T$OPOR$D=tcmcs940.T$OPOR$L
-AND		  tcmcs947.t$cfoc$l=tcmcs940.t$ofso$l
-AND		  tcmcs947.t$tror$l=1
+--AND		  tcmcs947.t$cfoc$l=tcmcs940.t$ofso$l																--#FAF.127.o
+--AND		  tcmcs947.t$tror$l=1																				--#FAF.127.o
 order by 1
