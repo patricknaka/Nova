@@ -6,6 +6,7 @@
 -- FAF.004 - Fabio Ferreira, 13-mai-2014, Fabio Ferreira, 	Duplicando registros devido a problema de relacionamento na tabela znsls004
 -- FAF.105 - Fabio Ferreira, 05-jun-2014, Fabio Ferreira, 	Campo vendedor deve ser NULL quando valor = 100
 -- FAF.122 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Correção campo VL_TOTAL_ITEM
+-- FAF.123 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Correção campo VL_ITEM
 --***************************************************************************************************************************************************************
 SELECT
         (SELECT 
@@ -31,7 +32,8 @@ SELECT
           znsls400.t$idca$c CD_CANAL_VENDAS,
           ltrim(rtrim(tdsls401.t$item)) CD_ITEM,
           tdsls401.t$qoor QT_ITENS,
-          tdsls401.t$pric VL_ITEM,
+--          tdsls401.t$pric VL_ITEM,																					--#FAF.123.o
+          tdsls401.t$pric*tdsls401.t$qoor VL_ITEM,																		--#FAF.123.n
 --          0 VALOR_DESCONTO_CONDICIONAL,      -- **** DESCONSIDERAR - NÃO SERÁ USADO									--#FAF.002.o
           znsls401.t$vldi$c VL_DESCONTO_INCONDICIONAL,
           znsls401.t$vlfr$c VL_FRETE_CLIENTE,
