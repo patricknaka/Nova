@@ -755,6 +755,15 @@ ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
 ALTER TABLE AUX_ODS_SIGE_TITULO_MOVIMENTO
 ALTER COLUMN ID_MODULO_REF VARCHAR(3)
 ---------------------------------------------------------------------------------------------------
+
+ALTER TABLE stg_sige_titulo_abatimento
+ALTER COLUMN ID_DOCUMENTO_ABATIMENTO VARCHAR(3)
+
+ALTER TABLE stg_sige_titulo_abatimento
+ALTER COLUMN ID_MODULO_ABATIMENTO VARCHAR(3)
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
