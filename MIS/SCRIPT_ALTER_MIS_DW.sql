@@ -719,6 +719,17 @@ ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
 
 ---------------------------------------------------------------------------------------------------
 
+ALTER TABLE stg_sige_titulo_movimento
+ALTER COLUMN ID_MODULO VARCHAR(3)
+
+ALTER TABLE stg_sige_titulo_movimento
+ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
+
+ALTER TABLE stg_sige_titulo_movimento
+ALTER COLUMN ID_MODULO_REF VARCHAR(3)
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
