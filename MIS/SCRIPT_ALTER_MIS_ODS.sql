@@ -125,3 +125,33 @@ values
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------------
+
+--TABELAS DE AGRUPAMENTO DE TRANSACÕES
+CREATE TABLE ln.ods_agrupamento_transacao
+(
+id_agrupamento int,
+cd_transacao varchar(3),
+cd_modulo varchar(3)
+)
+
+CREATE TABLE ln.ods_agrupamento
+(
+id_agrupamento int,
+ds_agrupamento varchar(20)
+)
+
+--INSERT DESCRICAO AGRUPAMENTO
+insert ln.ods_agrupamento
+values (1,'Reembolso')
+
+--INSERT AGRUPAMENTO REEMBOLSO
+INSERT ln.ods_agrupamento_transacao (id_agrupamento,cd_transacao,cd_modulo)
+values (1,'PRD','CAP'),(1,'PRB','CAP'),(1,'PRQ','CAP'),(1,'PQR','CAP')
+
+
+CREATE CLUSTERED INDEX IDX_0 ON ln.ods_agrupamento_transacao
+(
+ID_AGRUPAMENTO ASC,
+CD_TRANSACAO ASC
+)
+-------------------------------------------------------------------------------------------------------------------------------------------------
