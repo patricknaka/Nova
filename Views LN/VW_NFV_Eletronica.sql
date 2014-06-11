@@ -9,7 +9,7 @@ SELECT
     cisli940.t$docn$l NF_NFE,
     cisli940.t$seri$l NR_SERIE_NFE,
     cisli940.t$nfes$l CD_STATUS_SEFAZ,
-    cisli940.t$prot$l PROTOCOLO,
+    cisli940.t$prot$l NR_PROTOCOLO,
     cisli940.t$cnfe$l NR_CHAVE_ACESSO_NFE,
     nvl((SELECT 
 	CAST((FROM_TZ(CAST(TO_CHAR(MIN(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
