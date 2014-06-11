@@ -1,4 +1,5 @@
 -- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	Alteração do campo situação 
+-- #FAF.131 - 11-jun-2014, Fabio Ferreira, 	Filtro detalhe
 --********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -47,5 +48,5 @@ FROM
 WHERE
         tcibd001.t$item=tdpur401.t$item
     AND tdipu001.t$item=tdpur401.t$item 
-    AND tdpur401.t$oltp!=2
+    AND tdpur401.t$oltp IN (1,4)															--#FAF.131.n
 
