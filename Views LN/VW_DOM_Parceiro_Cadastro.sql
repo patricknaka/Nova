@@ -2,10 +2,13 @@
 -- FAF.005 - 12-mai-2014, Fabio Ferreira, 	Conversão de timezone
 --											Retirado os campos TEL, FAX, MATRIZ
 --	#FAF.091 - 29-mai-2014,	Fabio Ferreira,	Excluir CNPJ_CPF_GRUPO
+--	#FAF.130 - 11-jun-2014,	Fabio Ferreira,	Quando Tipo de ident. fiscal igual 'NA' mostrar CNPJ "00000000000000"
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
        bspt.t$bpid CD_PARCEIRO,
-       addr.t$fovn$l NR_CNPJ_CPF,
+--	   addr.t$fovn$l NR_CNPJ_CPF,																	--#FAF.130.o
+       CASE WHEN addr.t$ftyp$l='NA' THEN '00000000000000'											
+	   ELSE addr.t$fovn$l END NR_CNPJ_CPF,															--#FAF.130.n
        bspt.t$nama NM_PARCEIRO,
        bspt.t$seak NM_APELIDO,
        addr.t$ftyp$l CD_TIPO_CLIENTE,
