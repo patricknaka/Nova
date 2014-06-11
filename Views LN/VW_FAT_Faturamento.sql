@@ -20,10 +20,6 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
 		AND tcemm030.t$eunt=tcemm124.t$grid
 		AND tcemm124.t$loco=201
 		AND rownum=1) CD_FILIAL,
-		(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
-		WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
-		AND tcemm124.t$loco=201
-		AND rownum=1) CD_UNIDADE_EMPRESARIAL,	
         cisli940.t$docn$l NR_NF,
         cisli940.t$seri$l NR_SERIE_NF,
         cisli940.t$ccfo$l CD_NATUREZA_OPERACAO,
@@ -250,6 +246,10 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
         znsls401.t$itpe$c CD_TIPO_ENTREGA,
         tcibd001.t$tptr$c CD_TIPO_TRANSPORTE,
         znsls400.t$idli$c NR_LISTA_CASAMENTO,
+		(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
+		WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
+		AND tcemm124.t$loco=201
+		AND rownum=1) CD_UNIDADE_EMPRESARIAL,	
 		(select e.t$fovn$l from ttccom130201 e where e.t$cadr=cisli940.t$stoa$l) NR_CNPJ_CPF_ENTREGA,
 		(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=cisli940.t$stoa$l) CD_TIPO_CLIENTE_ENTREGA,
 		(select e.t$fovn$l from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l) NR_CNPJ_CPF_FATURA,
