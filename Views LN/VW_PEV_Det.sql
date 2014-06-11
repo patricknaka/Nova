@@ -70,7 +70,7 @@ SELECT
 	   and cisli245.t$pono=tdsls401.t$pono
 	   and cisli245.t$ortp=1
 	   and cisli245.t$koor=3
-	   and cisli940.t$fire$l=cisli245.t$fire$l) STATUS_REFFIS										--#FAF.129.n
+	   and cisli940.t$fire$l=cisli245.t$fire$l) CD_SITUACAO_NF										--#FAF.129.n
 FROM
         ttdsls401201 tdsls401
 --		LEFT JOIN tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls401.t$orno,						--#FAF.004.o
