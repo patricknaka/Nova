@@ -109,7 +109,7 @@ group by  nr_id_cia, nr_id_filial, nr_id_titulo,nr_id_transacao,ds_id_documento
 -------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- Tabela de Caracterização do Movimento do Titulo (Pendente CAR - 09/06)
-CREATE TABLE ln.ods_dom_tipo_movimento
+CREATE TABLE ln.ods_tipo_movimento
 (
 id_tipo_movimento int,
 ds_tipo_movimento varchar(20),
