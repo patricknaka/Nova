@@ -764,6 +764,28 @@ ALTER COLUMN ID_MODULO_ABATIMENTO VARCHAR(3)
 
 ---------------------------------------------------------------------------------------------------
 
+--DELETA OBJETO DEPENDENTE
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_purchase]') AND name = N'PK_ods_purchase')
+ALTER TABLE [dbo].[ods_purchase] DROP CONSTRAINT [PK_ods_purchase]
+
+--ALTERA DATA TYPE
+ALTER TABLE ODS_PURCHASE
+ALTER COLUMN NR_CIA NUMERIC(3) NOT NULL
+
+
+--RECRIA OBJETO DEPENDENTE
+ALTER TABLE [dbo].[ods_purchase] ADD  CONSTRAINT [PK_ods_purchase] PRIMARY KEY CLUSTERED 
+(
+	[nr_cia] ASC,
+	[nr_ped] ASC,
+	[nr_forn] ASC,
+	[nr_item_ordem] ASC,
+	[nr_item_sku] ASC,
+	[nr_product_sku] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
