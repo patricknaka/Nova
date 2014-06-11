@@ -7,6 +7,7 @@
 -- FAF.105 - Fabio Ferreira, 05-jun-2014, Fabio Ferreira, 	Campo vendedor deve ser NULL quando valor = 100
 -- FAF.122 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Correção campo VL_TOTAL_ITEM
 -- FAF.123 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Correção campo VL_ITEM
+-- FAF.129 - Fabio Ferreira, 11-jun-2014, Fabio Ferreira, 	Status da ref,fiscal
 --***************************************************************************************************************************************************************
 SELECT
         (SELECT 
@@ -62,7 +63,14 @@ SELECT
       TO_CHAR(znsls401.T$ENTR$C) NR_ENTREGA,
 	  znsls400.t$idco$c CD_CONTRATO_B2B,															--#FAF.003.sn
 	  znsls400.t$idCP$c CD_CAMPANHA_B2B,
-	  znsls004.t$orig$c CD_ORIGEM_PEDIDO															--#FAF.003.en
+	  znsls004.t$orig$c CD_ORIGEM_PEDIDO,															--#FAF.003.en
+	  (select min(cisli940.t$stat$l) 
+	   from tcisli940201 cisli940, tcisli245201 cisli245
+	   where cisli245.t$slso=tdsls401.t$orno
+	   and cisli245.t$pono=tdsls401.t$pono
+	   and cisli245.t$ortp=1
+	   and cisli245.t$koor=3
+	   and cisli940.t$fire$l=cisli245.t$fire$l) STATUS_REFFIS										--#FAF.129.n
 FROM
         ttdsls401201 tdsls401
 --		LEFT JOIN tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls401.t$orno,						--#FAF.004.o
