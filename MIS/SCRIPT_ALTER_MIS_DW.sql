@@ -786,6 +786,10 @@ ALTER TABLE [dbo].[ods_purchase] ADD  CONSTRAINT [PK_ods_purchase] PRIMARY KEY C
 
 ---------------------------------------------------------------------------------------------------
 
+ALTER TABLE STG_SIGE_PURCHASE
+ADD ds_tipo_propriedade CHAR(1)
+
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
