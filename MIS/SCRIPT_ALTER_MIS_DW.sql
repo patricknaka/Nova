@@ -797,6 +797,9 @@ add ds_tipo_propriedade char(1)
 alter table aux_ods_purchase
 add ds_tipo_propriedade char(1)
 
+alter table aux_ods_purchase
+alter column nr_cia numeric(3)
+
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
