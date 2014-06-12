@@ -806,6 +806,15 @@ ALTER TABLE dim_purchase_status
 ALTER COLUMN DS_CD_STATUS VARCHAR(2)
 
 ---------------------------------------------------------------------------------------------------
+--ATUALIZAÇÃO DE ADEQUAÇÃO AO DOMINIO LN
+
+UPDATE ODS_PURCHASE
+  SET ds_stts_ped = CASE ds_stts_ped WHEN 'A' THEN '99'
+				     WHEN 'L' THEN '98'
+				     WHEN 'C' THEN '30' END
+---------------------------------------------------------------------------------------------------
+
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
