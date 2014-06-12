@@ -801,6 +801,11 @@ alter table aux_ods_purchase
 alter column nr_cia numeric(3)
 
 ---------------------------------------------------------------------------------------------------
+
+ALTER TABLE dim_purchase_status
+ALTER COLUMN DS_CD_STATUS VARCHAR(2)
+
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
