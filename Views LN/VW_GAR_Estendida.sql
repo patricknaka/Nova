@@ -29,7 +29,7 @@
 		and a.t$brty$l=13),0) VL_CSLL,														
     sum(zncom005.t$irrf$c) VL_IRPF,
     avg(tdsls401.t$qoor) QT_GARANTIA,
-	znsls400.T$idca$c CD_CANAL_VENDAS,																	--#FAF.134.sn
+	znsls400.T$idca$c CD_CANAL_VENDA,																	--#FAF.134.sn
 	znsls400.T$cven$c CD_VENDEDOR,
 	znsls400.t$idli$c NR_LISTA_CASAMENTO,
 	(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA		--#FAF.134.en
