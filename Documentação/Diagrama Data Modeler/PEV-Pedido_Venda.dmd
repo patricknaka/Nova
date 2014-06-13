@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="PEV-Pedido_Venda" id="346ECD3E-BCE6-AC24-21A9-22EE68633E11" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-02 17:06:06 UTC</createdTime>
+<ownerDesignName>PEV-Pedido_Venda</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>346ECD3E-BCE6-AC24-21A9-22EE68633E11</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="DE8AAD8D-AD7A-533D-0E81-D245CBF22022">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="19E61EAE-24C6-ECF6-1EDB-26D3D668F1D9">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="AF43EE58-26C3-0E09-2F8A-7820C3EB7E71">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

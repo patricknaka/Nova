@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="FAT-Faturamento" id="C1B20CE7-21BA-3183-71EC-543D68981663" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-03 12:38:30 UTC</createdTime>
+<ownerDesignName>FAT-Faturamento</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>C1B20CE7-21BA-3183-71EC-543D68981663</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="5D875499-AD55-B2EC-BA4F-6FC778571D56">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

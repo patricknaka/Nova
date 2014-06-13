@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="EST-Estoque" id="9D62D1AB-3AAC-5EA6-0859-153297B7B8B9" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-06 14:26:08 UTC</createdTime>
+<ownerDesignName>EST-Estoque</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>9D62D1AB-3AAC-5EA6-0859-153297B7B8B9</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="D3CC0F10-F78A-1790-EB7B-5CA09471D7DC">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

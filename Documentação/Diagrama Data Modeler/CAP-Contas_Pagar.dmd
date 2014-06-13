@@ -1,0 +1,34 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="CAP-Contas_Pagar" id="D11B4BE6-295E-1E1A-A0A5-2ED9FBD89444" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-04 10:49:20 UTC</createdTime>
+<ownerDesignName>CAP-Contas_Pagar</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>D11B4BE6-295E-1E1A-A0A5-2ED9FBD89444</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="2A4FD2FA-8408-B053-9A0D-B1F087D33896">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="93C45971-E3A1-3F73-F310-6B15FACC4F0C">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="DAAFAFB6-49EC-9C98-4879-0F567FE00E35">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="FE1D7313-24E8-B50B-7C8E-95942429E389">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="F14612B4-F5FC-6322-55FD-CB0ED25D6E45">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="F4F87C74-DA1C-1411-490A-8C08A7B3F7BD">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="73077ED8-B686-B65F-3F33-124395E68281">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="59E76D06-D93B-E554-D3DE-AE4E84ADAAE9">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

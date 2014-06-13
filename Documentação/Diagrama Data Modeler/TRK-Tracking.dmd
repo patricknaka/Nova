@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="TRK-Tracking" id="3A8F188F-F5E5-844E-549A-155EB5476CCE" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-06 17:13:36 UTC</createdTime>
+<ownerDesignName>TRK-Tracking</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>3A8F188F-F5E5-844E-549A-155EB5476CCE</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="161DEFCA-9619-CED8-2FCD-14B4A009297B">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

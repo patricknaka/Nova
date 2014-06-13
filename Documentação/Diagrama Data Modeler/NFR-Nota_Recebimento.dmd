@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="NFR-Nota_Recebimento" id="95796066-FE3C-D8B9-EA05-EFA2FD331A8B" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-02 18:45:19 UTC</createdTime>
+<ownerDesignName>NFR-Nota_Recebimento</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>95796066-FE3C-D8B9-EA05-EFA2FD331A8B</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="FC58E4C5-87A6-1D54-E0F7-16A6656A56A5">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="A8069A40-E9B9-64FF-5956-D0A7AE258E99">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="2149C98B-80B9-00F3-1BAD-7C62A7375A2A">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="CAR-Contas_Receber" id="F5642820-2E0B-3F51-CAC6-554BD667702B" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-04 17:40:43 UTC</createdTime>
+<ownerDesignName>CAR-Contas_Receber</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>F5642820-2E0B-3F51-CAC6-554BD667702B</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="848E9066-6220-9817-85D7-DBEAE68C8B2E">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="BE844A58-82C4-BDC0-5BFA-34FE5688BAE9">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="C5393B2B-9A3E-E4E5-BFA3-4ECDD465C6DB">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

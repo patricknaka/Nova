@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="NFV_Nota_Venda" id="38B2481D-DF96-1F25-7C11-81EF9C5FAF8A" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-03 11:52:31 UTC</createdTime>
+<ownerDesignName>NFV_Nota_Venda</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>38B2481D-DF96-1F25-7C11-81EF9C5FAF8A</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="7B8BF90D-D7CD-66FA-E7D3-5C27935D1B08">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="EDBEBBB0-32FB-1186-81CF-B1C00A678644">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="71079E56-459B-2A27-9ABE-E27992DCC3B0">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

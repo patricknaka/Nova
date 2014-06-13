@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="SKU-Sku" id="CABBD3DE-63F5-D591-9EFA-1FD57917C949" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-06 16:30:17 UTC</createdTime>
+<ownerDesignName>SKU-Sku</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>CABBD3DE-63F5-D591-9EFA-1FD57917C949</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="09C18181-C4EF-65FA-D2BE-C19EDF85CCC3">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="59331B61-611A-C05B-5882-32644750090B">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="AD50C9E1-575E-8324-E061-776D64B9A50D">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

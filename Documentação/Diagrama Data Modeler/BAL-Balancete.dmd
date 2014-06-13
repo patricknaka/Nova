@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="BAL-Balancete" id="C2DE07DE-AD91-1CB9-1A24-B476D97C2FB4" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-05 17:38:58 UTC</createdTime>
+<ownerDesignName>BAL-Balancete</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>C2DE07DE-AD91-1CB9-1A24-B476D97C2FB4</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="BB1483D5-330A-75A9-91D8-A2DA7E779C99">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="C0B926A0-F506-2B86-C061-91CBA3692880">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

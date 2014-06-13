@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="ORC-Orcamento" id="9F96CF82-9A1F-2D0D-595C-67E1F53ED16C" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-06 16:24:10 UTC</createdTime>
+<ownerDesignName>ORC-Orcamento</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>9F96CF82-9A1F-2D0D-595C-67E1F53ED16C</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="4B1DDFC5-630C-CD2F-6F12-A87DFF01687C">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="E0572186-6343-266C-AE3C-72F082A5EA8F">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="DEV-Devolucao" id="17904F1B-FC2A-51DD-66F7-0711DC459D03" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-06 14:02:05 UTC</createdTime>
+<ownerDesignName>DEV-Devolucao</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>17904F1B-FC2A-51DD-66F7-0711DC459D03</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="5185F753-DEB8-CB24-DD4F-6A32EBB8B0B4">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>
