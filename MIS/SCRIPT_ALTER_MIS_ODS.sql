@@ -155,3 +155,33 @@ ID_AGRUPAMENTO ASC,
 CD_TRANSACAO ASC
 )
 -------------------------------------------------------------------------------------------------------------------------------------------------
+
+--TABELAS DE CHAVE PARA PROCESSO DE EXTRAÇÃO DO ORÇAMENTO
+
+--TABELA CHAVE DE AGRUPAMENTO
+CREATE TABLE ln.ods_agrupamento_orcamento
+(
+id_unidade_negocio int,
+id_tipo_orcamento int,
+id_orcamento int
+)
+
+--TABELA DE DOMINIO
+CREATE TABLE ln.ods_tipo_agrupamento_orcamento
+(
+id_tipo_orcamento int,
+ds_tipo_orcamento varchar(6)
+)
+
+--VALORES PADRÕES SIGE
+
+INSERT ln.ods_tipo_agrupamento_orcamento
+VALUES (1,'Sales'),(2,'Orders')
+
+
+--VALORES PADRÕES SIGE QUE SE MANTEM NO LN
+INSERT ln.ods_agrupamento_orcamento
+VALUES(1,1,1),(2,1,19),(4,1,8),(5,1,5),(6,1,15),(7,1,12),(8,1,9),(9,1,17),(11,1,21),(12,1,24),(13,1,26),
+(1,2,2),(2,2,20),(4,2,7),(5,2,6),(6,2,16),(7,2,13),(8,2,10),(9,2,18),(11,2,22),(12,2,23),(13,2,25)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
