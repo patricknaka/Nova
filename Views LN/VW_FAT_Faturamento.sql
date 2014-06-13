@@ -11,6 +11,7 @@
 -- #FAF.083 - 26-mai-2014, Fabio Ferreira, 	Campo NUM_ENTREGA convertido para string
 -- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do financeiro
 -- #FAF.125 - 10-jun-2014, Fabio Ferreira, 	Correções impostos frete
+-- #FAF.138 - 13-jun-2014, Fabio Ferreira, 	Correção campo CD_VENDEDOR
 --****************************************************************************************************************************************************************
 SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
@@ -228,7 +229,7 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
         ' ' CD_MODULO_GERENCIAL,        -- *** AGUARDANDO DUVIDAS
         cisli941.t$ccfo$l CD_NATUREZA_OPERACAO_ITEM,
         cisli941.t$opor$l SQ_NATUREZA_OPERACAO_ITEM,
-        znsls400.t$cven$c CD_VENDEDOR,
+        CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR,
         Nvl((SELECT cisli943.t$base$l from tcisli943201 cisli943
              WHERE  cisli943.t$fire$l=cisli941.t$fire$l
              AND    cisli943.t$line$l=cisli941.t$line$l
