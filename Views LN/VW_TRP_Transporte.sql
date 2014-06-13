@@ -1,3 +1,5 @@
+--	FAF.136 - 13-jun-2014, Fabio Ferreira, 	CNPJ Transportadora
+--**********************************************************************************************************************************************************
 select distinct
   (select 
   CAST((FROM_TZ(CAST(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -33,9 +35,13 @@ select distinct
   pesovol.peso VL_PESO, 
   pesovol.vol*300 VL_PESO_CUBADO,
   znfmd630.T$CFRW$C CD_DOFI_TRANSPORTADORA,
+  tccom130.t$fovn$l NR_CNPJ_TRANSPORTADORA,
   znfmd060.T$REFE$C DS_OBS_ROMANEIO,
   znfmd630.T$PECL$C NR_ENTREGA
 from  BAANDB.TZNFMD630201 znfmd630,
+	  ttcmcs080201 tcmcs080,	
+	  ttccom100201 tccom100,
+	  ttccom130201 tccom130,
       BAANDB.TZNSLS401201 znsls401,
       (select
         tdsls401.t$orno,
@@ -54,3 +60,6 @@ AND pesovol.t$orno=znsls401.T$ORNO$C
 AND cisli940.t$fire$l=znfmd630.t$fire$c
 AND znfmd060.T$CFRW$C=znfmd630.T$CFRW$C
 AND znfmd060.T$CONO$C=znfmd630.t$cono$c
+AND tcmcs080.t$cfrw=znfmd630.T$CFRW$C
+AND tccom100.t$bpid=tcmcs080.t$suno
+AND tccom130.t$cadr=tccom100.t$cadr
