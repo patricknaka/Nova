@@ -3,8 +3,10 @@
   -- #FAF.043.1 - 23-mai-2014, Fabio Ferreira, 	Ajustes
   -- #FAF.044 - 23-mai-2014, Fabio Ferreira, 	Correção VALOR_CSLL
   -- #FAF.019 - 30-mai-2014, Fabio Ferreira, 	Filtro para mostrar somente pedidos que já foram enviados para o parceiro
+  -- #FAF.134 - 14-jun-2014, Fabio Ferreira, 	Novos campos 
   --********************************************************************************************************************************************************
   SELECT
+	znsls400.T$uneg$c CD_UNIDADE_NEGOCIO,																--#FAF.134.n
     znsls400.T$PECL$C NR_PEDIDO,																													 
     znsls401.T$ENTR$C NR_ENTREGA,
     tdsls400.T$ORNO NR_ORDEM,																				
@@ -26,7 +28,11 @@
 		and a.t$line$l=zncom005.t$line$c
 		and a.t$brty$l=13),0) VL_CSLL,														
     sum(zncom005.t$irrf$c) VL_IRPF,
-    avg(tdsls401.t$qoor) QT_GARANTIA
+    avg(tdsls401.t$qoor) QT_GARANTIA,
+	znsls400.T$idca$c CD_CANAL_VENDAS,																	--#FAF.134.sn
+	znsls400.T$cven$c CD_VENDEDOR,
+	znsls400.t$idli$c NR_LISTA_CASAMENTO,
+	(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA		--#FAF.134.en
   FROM
     BAANDB.tzncom005201 zncom005,
     ttcibd001201 tcibd001,																						
@@ -62,7 +68,8 @@
   AND tcibd001.T$ITGA$C=1
   AND zncom005.T$TPAP$C=2
   AND zncom005.t$avpn$c!=0																--#FAF.018.n
-  GROUP BY	znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$idpa$c, tdsls400.t$hdst, znsls400.t$dtem$c,
-        tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item, zncom005.t$fire$c, zncom005.t$line$c
+  GROUP BY	znsls400.T$uneg$c, znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$idpa$c, tdsls400.t$hdst, znsls400.t$dtem$c,
+        tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item, zncom005.t$fire$c, zncom005.t$line$c, znsls400.T$idca$c,
+        znsls400.T$cven$c, znsls400.t$idli$c, tdsls400.t$itbp
                                               
   
