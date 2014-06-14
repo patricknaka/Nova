@@ -1,3 +1,6 @@
+
+-- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
+--*************************************************************************************************************************************************************
 SELECT
 	GREATEST(tdrec940.t$date$l,tdrec940.t$idat$l,tdrec940.t$odat$l) ULTIMA_ATUALIZ_NF,
     201 CD_CIA,
@@ -92,7 +95,18 @@ SELECT
 	(select a.t$rcno from twhinh312201 a
 		where a.t$oorg=1
 		and a.t$orno=znsls401.t$orno$c
-		and a.t$pono=znsls401.t$pono$c) NR_REC_DEVOLUCAO
+		and a.t$pono=znsls401.t$pono$c) NR_REC_DEVOLUCAO,
+	
+	znsls401.t$lcat$c MOTIVO_CATG,																--#FAF.140.sn
+	znsls401.t$lass$c MOTIVO_ASSU,
+	znsls401.t$lmot$c MOTIVO,
+	CASE WHEN nvl((	select max(a.t$list$c) from tznsls405201 a
+					where a.t$ncia$c=znsls401.t$ncia$c
+					and a.t$uneg$c=znsls401.t$uneg$c
+					and a.t$pecl$c=znsls401.t$pecl$c
+					and a.t$sqpd$c=znsls401.t$sqpd$c
+					and a.t$entr$c=znsls401.t$entr$c
+					and a.t$sequ$c=znsls401.t$sequ$c),1)=0 THEN 1 ELSE 2 END FORCADO			--#FAF.140.en
 FROM
 	ttdrec940201 tdrec940,
 	ttdrec941201 tdrec941
