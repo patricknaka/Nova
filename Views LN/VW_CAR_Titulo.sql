@@ -3,7 +3,8 @@
 -- #FAF.002 - 09-mai-2014, Fabio Ferreira, 	Correção dos campos referente a situação do título				
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Adicionado campo método de pagamento/recebimento
 -- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Alterado alias campo método de pagamento/recebimento	
--- #FAF.108 - 05-jun-2014, Fabio Ferreira, 	Inclusão da situação da remessa		
+-- #FAF.108 - 05-jun-2014, Fabio Ferreira, 	Inclusão da situação da remessa
+-- #FAF.141 - 16-jun-2014, Fabio Ferreira, 	Problema mais de um registro na subquery
 --****************************************************************************************************************************************************************
 SELECT	
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
@@ -72,6 +73,7 @@ SELECT
 	(select a.t$send$l from ttfcmg948201 a
 	 where a.t$ttyp$l=tfacr200.t$ttyp
 	 and a.t$ninv$l=tfacr200.t$ninv
+	 and rownum=1																						--#FAF.141.n
 	 and a.t$lach$l = (select max(b.t$lach$l) from ttfcmg948201 b
 					 where b.t$ttyp$l=a.t$ttyp$l
 					 and a.t$ninv$l=b.t$ninv$l)) CD_SITUACAO_PAGAMENTO									--#FAF.108.n
