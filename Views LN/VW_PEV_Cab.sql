@@ -4,6 +4,7 @@
 -- #FAF.028 - 17-mai-2014, Fabio Ferreira, 	Correção registros duplicados
 -- #FAF.046 - 23-mai-2014, Fabio Ferreira, 	Conversão do campo NUM_ENTREGA para String
 -- #FAF.104 - 04-jun-2014, Fabio Ferreira, 	Correção da data do status
+-- #FAF.143 - 16-jun-2014, Fabio Ferreira, 	Correções
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
         CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -66,6 +67,7 @@ SELECT  DISTINCT
         AND     znsls402.t$uneg$c=znsls400.t$uneg$c
         AND     znsls402.t$pecl$c=znsls400.t$pecl$c
         AND     znsls402.t$sqpd$c=znsls400.t$sqpd$c
+		AND     rownum=1																				--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
         AND     znsls402.t$vlmr$c = (SELECT Max(znsls402b.t$vlmr$c)
                               FROM tznsls402201 znsls402b
                               WHERE   znsls402b.t$ncia$c=znsls402.t$ncia$c
@@ -81,7 +83,8 @@ SELECT  DISTINCT
         sls401q.t$mgrt$c CD_MEGA_ROTA,
         ulttrc.poco CD_STATUS,
         ulttrc.dtoc DT_STATUS_PEDIDO,
-	tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
+	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
+	sls401q.t$idor$c CD_TIPO_SITE																				--#FAF.143.n
 FROM    ttdsls400201 tdsls400
         LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls400.t$orno
 		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						--#FAF.006.sn
@@ -105,7 +108,8 @@ FROM    ttdsls400201 tdsls400
           znsls401.t$orno$c       t$orno,
           --znsls401.t$pono$c       t$pono$c,
           tcibd001.t$tptr$c       t$tptr$c,
-          brmcs941.t$opfc$l       t$opfc$l
+          brmcs941.t$opfc$l       t$opfc$l,
+		  znsls401.t$idor$c		  t$idor$c	
          FROM tznsls401201 znsls401,
               ttcibd001201 tcibd001,
               ttdsls401201 tdsls401
@@ -114,7 +118,7 @@ FROM    ttdsls400201 tdsls400
          WHERE  tcibd001.t$item=tdsls401.t$item
          AND    znsls401.t$orno$c=tdsls401.t$orno
          AND    znsls401.t$pono$c=tdsls401.t$pono
-		 AND    tcibd001.T$KITM<3																			--#FAF.028
+		 AND    tcibd001.T$KITM IN (1,2,3,5)																			--#FAF.028
          GROUP BY
           znsls401.t$ncia$c,
           znsls401.t$uneg$c,
@@ -126,8 +130,9 @@ FROM    ttdsls400201 tdsls400
           znsls401.t$mgrt$c,
           znsls401.t$orno$c,
           tcibd001.t$tptr$c,
-          brmcs941.t$opfc$l) sls401q,
-        ttcemm112201 tcemm112,
+          brmcs941.t$opfc$l,
+		  znsls401.t$idor$c) sls401q,
+        ttcemm124201 tcemm124,
 		ttcemm030201 tcemm030,
         ttccom130201 endfat,
         ttccom130201 endent,
@@ -157,13 +162,14 @@ AND     znsls400.t$ncia$c=sls401q.t$ncia$c
 AND     znsls400.t$uneg$c=sls401q.t$uneg$c
 AND     znsls400.t$pecl$c=sls401q.t$pecl$c
 AND     znsls400.t$sqpd$c=sls401q.t$sqpd$c
-AND     tdsls400.t$cwar=tcemm112.t$waid
-AND		tcemm030.t$eunt=tcemm112.t$grid
+AND     tdsls400.t$cofc=tcemm124.t$cwoc
+AND		tcemm124.t$dtyp=1
+AND		tcemm030.t$eunt=tcemm124.t$grid
 AND     endfat.t$cadr=tdsls400.t$itad
 AND     endent.t$cadr=tdsls400.t$stad
 AND     ulttrc.ncia=sls401q.t$ncia$c
 AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
-AND     ulttrc.sqpd=sls401q.t$sqpd$c
+--AND     ulttrc.sqpd=sls401q.t$sqpd$c																--FAF.143.o
 AND		tdsls094.t$sotp=tdsls400.t$sotp																--#FAF.006.n
 ORDER BY tdsls400.t$orno
