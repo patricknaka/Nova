@@ -17,13 +17,6 @@ SELECT
 	THEN 2
 	ELSE 3
 	END CD_FILIAL,	
-	(Select u.t$eunt From ttcemm030201 u
-	 where u.t$euca!=' '
-	 AND TO_NUMBER(u.t$euca)=CASE WHEN tfacr200.t$dim2=' ' then 999
-   WHEN tfacr200.t$dim2>to_char(0) then 999 
-   else TO_NUMBER(tfacr200.t$dim2) END
-   and rownum = 1
-   ) CD_UNIDADE_EMPRESARIAL,
 	'CAR' CD_MODULO,
 	tfacr200.t$doct$l SQ_DOCUMENTO,
 	tfacr200.t$itbp CD_PARCEIRO,
@@ -62,6 +55,12 @@ SELECT
 	tfgld100.t$user DS_USUARIO_GERACAO_TITULO,
 	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+	(Select u.t$eunt From ttcemm030201 u
+		where u.t$euca!=' '
+		AND TO_NUMBER(u.t$euca)=CASE WHEN tfacr200.t$dim2=' ' then 999
+			WHEN tfacr200.t$dim2>to_char(0) then 999 
+			else TO_NUMBER(tfacr200.t$dim2) END
+			and rownum = 1) CD_UNIDADE_EMPRESARIAL,
 	(select znsls401.t$pecl$c from tznsls401201 znsls401, tcisli940201 rf, tcisli245201 ro
 	 where rf.t$ityp$l=tfacr200.t$ttyp
 	 and rf.t$idoc$l=tfacr200.t$ninv
