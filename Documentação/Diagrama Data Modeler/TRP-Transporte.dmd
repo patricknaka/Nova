@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="TRP-Transporte" id="3241D6C2-E9A5-996C-5129-AF1AB86D7688" version="3.5">
+<createdBy>rosana.prignolato</createdBy>
+<createdTime>2014-06-13 17:56:26 UTC</createdTime>
+<ownerDesignName>TRP-Transporte</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>3241D6C2-E9A5-996C-5129-AF1AB86D7688</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="BA01459B-8F2E-43FF-449C-3E691357F353">
+<designStoragePath>N:\</designStoragePath>
+</designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="2360BA72-ADE4-6937-D529-C41B0691FF68">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

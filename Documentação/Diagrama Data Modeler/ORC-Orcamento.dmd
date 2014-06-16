@@ -12,5 +12,8 @@
 <designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="E0572186-6343-266C-AE3C-72F082A5EA8F">
 <designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
 </designDescr>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="B34F8857-C35D-612E-0911-EBACB85C56AC">
+<designStoragePath>N:\Migracao\Documentacao_Rosana\Documentacao</designStoragePath>
+</designDescr>
 </usedDesignStorageDescriptors>
 </OSDM_Design>
