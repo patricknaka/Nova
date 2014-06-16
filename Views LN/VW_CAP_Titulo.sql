@@ -5,6 +5,7 @@
 --											O campo taxa multa foi alterado apara ler o valor da tabela tfacp201
 --	FAF.007 - 12-mai-2014, Fabio Ferreira, 	Alteração valor original do título
 --	FAF.116 - 07-jun-2014, Fabio Ferreira, 	Retirado campo NR_NFR
+--	FAF.116 - 16-jun-2014, Fabio Ferreira, 	Retirado campo NR_PEDIDO_COMPRA
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	'CAP' CD_MODULO,
@@ -36,7 +37,7 @@ SELECT DISTINCT
 		AT time zone sessiontimezone) AS DATE) DT_SITUACAO_TITULO,
 	tfacp200.t$doty$l CD_TIPO_NF,
 	tfacp200.t$balh$1 VL_SALDO,
-	tdrec947.t$orno$l NR_PEDIDO_COMPRA,
+--	tdrec947.t$orno$l NR_PEDIDO_COMPRA,																	--#FAF.144.o
 	tfcmg011f.t$baoc$l CD_BANCO_DESTINO,
 	tfcmg011f.t$agcd$l NR_AGENCIA_DESTINO,
 	tfcmg011f.t$agdg$l NR_DIGITO_AGENCIA_DESTINO,
