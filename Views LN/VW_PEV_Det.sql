@@ -8,6 +8,7 @@
 -- FAF.122 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Correção campo VL_TOTAL_ITEM
 -- FAF.123 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Correção campo VL_ITEM
 -- FAF.129 - Fabio Ferreira, 11-jun-2014, Fabio Ferreira, 	Status da ref,fiscal
+-- FAF.147 - Fabio Ferreira, 17-jun-2014, Fabio Ferreira, 	Incluído campo CD produto com o código do produto da garantia estendida
 --***************************************************************************************************************************************************************
 SELECT
         (SELECT 
@@ -70,7 +71,10 @@ SELECT
 	   and cisli245.t$pono=tdsls401.t$pono
 	   and cisli245.t$ortp=1
 	   and cisli245.t$koor=3
-	   and cisli940.t$fire$l=cisli245.t$fire$l) CD_SITUACAO_NF										--#FAF.129.n
+	   and cisli940.t$fire$l=cisli245.t$fire$l) CD_SITUACAO_NF,										--#FAF.129.n
+	  CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
+	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO												--#FAF.147.n
+	   
 FROM
         ttdsls401201 tdsls401
 --		LEFT JOIN tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls401.t$orno,						--#FAF.004.o
