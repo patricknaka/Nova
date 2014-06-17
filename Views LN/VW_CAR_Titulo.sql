@@ -7,7 +7,7 @@
 -- #FAF.141 - 16-jun-2014, Fabio Ferreira, 	Problema mais de um registro na subquery
 -- #FAF.146 - 17-jun-2014, Fabio Ferreira, 	Correção DT_LIQUIDACAO_TITULO
 --****************************************************************************************************************************************************************
-SELECT	
+SELECT DISTINCT	
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
   tfacr200.t$ttyp CD_TIPO_TRANSACAO,
     201 CD_CIA,
@@ -26,7 +26,7 @@ SELECT
 	tfacr200.t$seri$l NR_SERIE_NF,
 	tfacr200.t$docd DT_EMISSAO_TITULO,
 	TO_DATE(REGEXP_REPLACE(tfacr200.T$LIQD,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO,			--#FAF.001.n
-	CASE WHEN tfacr200.t$balc<=tfacr200.t$bala THEN																--#FAF.146.n														 													
+	CASE WHEN tfacr200.t$balc=0 THEN																--#FAF.146.n														 													
 	(select max(p.t$docd) 
 		from ttfacr200201 p
 		where p.t$ttyp=tfacr200.t$ttyp
