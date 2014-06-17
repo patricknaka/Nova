@@ -159,7 +159,15 @@ SELECT DISTINCT
 	CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO_NF,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
-	cisli941.t$fire$l NR_REFERENCIA_FISCAL																		--#FAF.109.n
+	cisli941.t$fire$l NR_REFERENCIA_FISCAL,				--#FAF.109.n
+	(SELECT cisli943.t$sbas$l FROM tcisli943201 cisli943
+		WHERE cisli943.t$fire$l=cisli941.t$fire$l
+		AND cisli943.t$line$l=cisli941.t$line$l
+		AND cisli943.t$brty$l=1) VL_BASE_ICMS,
+	(SELECT cisli943.t$sbas$l FROM tcisli943201 cisli943
+		WHERE cisli943.t$fire$l=cisli941.t$fire$l
+		AND cisli943.t$line$l=cisli941.t$line$l
+		AND cisli943.t$brty$l=3) VL_BASE_IPI
 FROM 
 	tcisli941201 cisli941,
 	tcisli940201 cisli940,
