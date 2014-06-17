@@ -5,6 +5,7 @@
 -- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Alterado alias campo método de pagamento/recebimento	
 -- #FAF.108 - 05-jun-2014, Fabio Ferreira, 	Inclusão da situação da remessa
 -- #FAF.141 - 16-jun-2014, Fabio Ferreira, 	Problema mais de um registro na subquery
+-- #FAF.146 - 17-jun-2014, Fabio Ferreira, 	Correção DT_LIQUIDACAO_TITULO
 --****************************************************************************************************************************************************************
 SELECT	
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
@@ -24,11 +25,13 @@ SELECT
 	tfacr200.t$docn$l NR_NF,
 	tfacr200.t$seri$l NR_SERIE_NF,
 	tfacr200.t$docd DT_EMISSAO_TITULO,
-	TO_DATE(REGEXP_REPLACE(tfacr200.T$LIQD,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO,	--#FAF.001.n
-  (select max(p.t$docd) from ttfacr200201 p
-  where p.t$ttyp=tfacr200.t$ttyp
-  and p.t$ninv=tfacr200.t$ninv
-  and p.t$trec=2) DT_LIQUIDACAO_TITULO,
+	TO_DATE(REGEXP_REPLACE(tfacr200.T$LIQD,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO,			--#FAF.001.n
+	CASE WHEN tfacr200.t$balc<=tfacr200.t$bala THEN																--#FAF.146.n														 													
+	(select max(p.t$docd) 
+		from ttfacr200201 p
+		where p.t$ttyp=tfacr200.t$ttyp
+		and p.t$ninv=tfacr200.t$ninv) 
+	ELSE NULL END DT_LIQUIDACAO_TITULO,																			--#FAF.146.n
 	tfacr200.t$amnt VL_TITULO,
 	tfcmg011.t$baoc$l CD_BANCO,
 	tfcmg011.t$agcd$l NR_AGENCIA,
