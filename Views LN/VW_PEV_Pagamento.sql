@@ -16,7 +16,7 @@ select
     znsls402.t$sequ$c  SQ_PAGAMENTO,
     znsls402.t$idmp$c  CD_MEIO_PAGAMENTO,
     znsls402.t$cccd$c  CD_BANDEIRA,
-    TO_CHAR(a.t$idbc$c, '000')  CD_BANCO,
+    znsls402.t$idbc$c  CD_BANCO,
     znsls402.t$nupa$c  NR_PARCELAS,
     znsls402.t$vlmr$c  VL_PAGAMENTO,
     znsls402.t$stat$c  CD_STATUS_PAGAMENTO,
