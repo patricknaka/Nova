@@ -4,7 +4,8 @@
 -- #FAF.005 - 14-mai-2014, Fabio Ferreira, 	Incluido campo módulo do título de referência (sempre 'CR')	
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Correção tpitulo de referência agrupado	
 -- #FAF.079 - 26-mai-2014, Fabio Ferreira, 	Alterado o campo SITUACAO_MOVIMENTO para usar o valor da programação de pagamento
--- #FAF.102 - 04-jun-2014, Fabio Ferreira, 	Correçãp campo COD_DOCUMENTO e alteração de alias						
+-- #FAF.102 - 04-jun-2014, Fabio Ferreira, 	Correçãp campo COD_DOCUMENTO e alteração de alias		
+-- #FAF.148 - 18-jun-2014, Fabio Ferreira, 	Alteração campo NR_MOVIMENTO							
 --****************************************************************************************************************************************************************
 SELECT
 	201 CD_CIA,
@@ -13,7 +14,8 @@ SELECT
 					AND c.T$ITYP=tfacr200.t$ttyp
 					AND c.t$idoc=tfacr200.t$ninv
 					AND rownum=1),0)=0 THEN 2 ELSE 3 END CD_FILIAL,
-	tfacr200.t$lino NR_MOVIMENTO,
+	tfacr200.t$docn NR_MOVIMENTO,
+--	tfacr200.t$lino NR_MOVIMENTO,
 	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
 	'CR' CD_MODULO,
 --	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o
