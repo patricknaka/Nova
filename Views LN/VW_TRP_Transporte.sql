@@ -1,4 +1,5 @@
 --	FAF.136 - 13-jun-2014, Fabio Ferreira, 	CNPJ Transportadora
+--	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --**********************************************************************************************************************************************************
 select distinct
   (select 
@@ -35,7 +36,15 @@ select distinct
   pesovol.peso VL_PESO, 
   pesovol.vol*300 VL_PESO_CUBADO,
   znfmd630.T$CFRW$C CD_DOFI_TRANSPORTADORA,
-  tccom130.t$fovn$l NR_CNPJ_TRANSPORTADORA,
+--  tccom130.t$fovn$l NR_CNPJ_TRANSPORTADORA,																--#FAF.151.o
+ 
+        CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
+		THEN '00000000000000' 
+		WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
+		THEN '00000000000000'
+		ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') END NR_CNPJ_TRANSPORTADORA,					--#FAF.151.n
+  
+  
   znfmd060.T$REFE$C DS_OBS_ROMANEIO,
   znfmd630.T$PECL$C NR_ENTREGA
 from  BAANDB.TZNFMD630201 znfmd630,

@@ -12,6 +12,7 @@
 -- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do financeiro
 -- #FAF.125 - 10-jun-2014, Fabio Ferreira, 	Correções impostos frete
 -- #FAF.138 - 13-jun-2014, Fabio Ferreira, 	Correção campo CD_VENDEDOR
+--	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --****************************************************************************************************************************************************************
 SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
@@ -251,9 +252,23 @@ SELECT  CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l
 		WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
 		AND tcemm124.t$loco=201
 		AND rownum=1) CD_UNIDADE_EMPRESARIAL,	
-		(select e.t$fovn$l from ttccom130201 e where e.t$cadr=cisli940.t$stoa$l) NR_CNPJ_CPF_ENTREGA,
+		(select 
+        CASE WHEN regexp_replace(e.t$fovn$l, '[^0-9]', '') IS NULL
+		THEN '00000000000000' 
+		WHEN LENGTH(regexp_replace(e.t$fovn$l, '[^0-9]', ''))<11
+		THEN '00000000000000'
+		ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END																--#FAF.151.n	
+--		e.t$fovn$l 																										--#FAF.151.o
+		from ttccom130201 e where e.t$cadr=cisli940.t$stoa$l) NR_CNPJ_CPF_ENTREGA,
 		(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=cisli940.t$stoa$l) CD_TIPO_CLIENTE_ENTREGA,
-		(select e.t$fovn$l from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l) NR_CNPJ_CPF_FATURA,
+		(select 
+        CASE WHEN regexp_replace(e.t$fovn$l, '[^0-9]', '') IS NULL
+		THEN '00000000000000' 
+		WHEN LENGTH(regexp_replace(e.t$fovn$l, '[^0-9]', ''))<11
+		THEN '00000000000000'
+		ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END																--#FAF.151.n	
+--		e.t$fovn$l 																										--#FAF.151.o
+		from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l) NR_CNPJ_CPF_FATURA,
 		(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l) CD_TIPO_CLIENTE_FATURA
 FROM    tcisli940201 cisli940,
         tcisli941201 cisli941,

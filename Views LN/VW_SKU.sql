@@ -2,10 +2,18 @@
 -- FAF.009 - Fabio Ferreira, 21-mai-2014, Fabio Ferreira, 	Incluido campo Armazem
 -- #FAF.084 - Fabio Ferreira, 26-mai-2014, Fabio Ferreira, 	Inclusão do campo MODELO_FABRICANTE
 -- #FAF.120 - Fabio Ferreira, 09-jun-2014, Fabio Ferreira, 	Fitro de data de atualização
+--	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --*********************************************************************************************************************************************************
 SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         201 CD_CIA,
-		tccom130.t$fovn$l NR_CNPJ_FORNECEDOR,
+		
+        CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
+		THEN '00000000000000' 
+		WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
+		THEN '00000000000000'
+		ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') END NR_CNPJ_FORNECEDOR,				--#FAF.151.n		
+		
+--		tccom130.t$fovn$l NR_CNPJ_FORNECEDOR,														--#FAF.151.o
         tccom100.t$bpid CD_FORNECEDOR,
         tcmcs060.t$otbp CD_FABRICANTE,
         tccom100f.T$NAMA NM_NOME_FABRICANTE,

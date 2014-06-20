@@ -1,7 +1,13 @@
+--	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
+--************************************************************************************************************************************************************
 SELECT  tcemm170.t$comp CD_CIA,
         tcemm170.t$desc NM_CIA,
         tccom000.t$arcc CD_SITUACAO,
-        tccom130.t$fovn$l NR_CNPJ_CPF
+        CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
+		THEN '00000000000000' 
+		WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
+		THEN '00000000000000'
+		ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') END NR_CNPJ_CPF
 FROM    ttcemm170201 tcemm170,
         ttccom000201 tccom000,
         ttccom130201 tccom130

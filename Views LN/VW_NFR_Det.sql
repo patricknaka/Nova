@@ -2,7 +2,8 @@
 -- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
 -- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
 -- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)	
--- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Retirado campo VL_ICMS_ST1			
+-- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Retirado campo VL_ICMS_ST1
+--	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ			
 --************************************************************************************************************************************************************
 SELECT
   201 CD_CIA,
@@ -240,8 +241,22 @@ SELECT
 	AND tdrec947.t$line$l=tdrec941.t$line$l
 	AND rownum=1) NR_NFR,
 	CASE WHEN tdrec940.t$stoa$l=' ' THEN
-	tdrec940.t$ctno$l ELSE
-	(select e.t$fovn$l from ttccom130201 e
+	
+        CASE WHEN regexp_replace(tdrec940.t$ctno$l, '[^0-9]', '') IS NULL
+		THEN '00000000000000' 
+		WHEN LENGTH(regexp_replace(tdrec940.t$ctno$l, '[^0-9]', ''))<11
+		THEN '00000000000000'
+		ELSE regexp_replace(tdrec940.t$ctno$l, '[^0-9]', '') END													--#FAF.151.n	
+	ELSE
+	--tdrec940.t$ctno$l ELSE																						--FAF.151.o
+	(select 
+        CASE WHEN regexp_replace(e.t$fovn$l, '[^0-9]', '') IS NULL
+		THEN '00000000000000' 
+		WHEN LENGTH(regexp_replace(e.t$fovn$l, '[^0-9]', ''))<11
+		THEN '00000000000000'
+		ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END															--FAF.151.n
+	 --e.t$fovn$l 																									--FAF.151.o
+	 from ttccom130201 e
 	 where e.t$cadr=tdrec940.t$stoa$l)
 	END NR_CNPJ_CPF_ENTREGA ,
   nvl((SELECT tdrec942.t$nmrg$l FROM ttdrec942201 tdrec942
