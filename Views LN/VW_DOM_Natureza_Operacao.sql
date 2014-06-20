@@ -4,13 +4,16 @@
 --	FAF.006 - 15-mai-2014, Fabio Ferreira,	Reirado campo tipo operação
 --	FAF.007 - 15-mai-2014, Fabio Ferreira,	Inclusão dos campos DESCR_NATUREZA_OPER	 e DESCR_SEQ_NATUREZA_OPER
 --	FAF.127 - 10-mai-2014, Fabio Ferreira,	Correção de filtro
+-- 	FAF.159 - 20-jun-2014, Fabio Ferreira,	Correção para sequencia do CFOP
 --****************************************************************************************************************************************************************
 
 -- SELECT 																										--#FAF.003.o
 SELECT 	DISTINCT																								--#FAF.003.n
-  tcmcs940.t$ofso$l CD_NATUREZA_OPERACAO,
+--  tcmcs940.t$ofso$l CD_NATUREZA_OPERACAO,																		--#FAF.159.o
+  tcmcs940.t$ocfo$l CD_NATUREZA_OPERACAO,																		--#FAF.159.n
   tcmcs940.t$dsca$l DS_NATUREZA_OPERACAO,																		--#FAF.007.n
-  tcmcs940.t$opor$l SQ_NATUREZA_OPERACAO,
+--  tcmcs940.t$opor$l SQ_NATUREZA_OPERACAO,																		--#FAF.159.o
+  substr(tcmcs940.t$ofso$l,instr(tcmcs940.t$ofso$l,'-')+1,9) SQ_NATUREZA_OPERACAO,								--#FAF.159.n
   tcmcs964.t$desc$d DS_SEQUENCIA_NATUREZA_OPERACAO,
 --  tcmcs947.t$rfdt$l COD_TIPO_OPER,																			--#FAF.005.o
   ' ' DS_OBJETIVO_NATUREZA_OPERACAO   
