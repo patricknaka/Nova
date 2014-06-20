@@ -46,25 +46,29 @@ SELECT
         CASE WHEN cisli940.t$fdty$l=15 then
           (select distinct a.t$docn$l from tcisli940201 a, tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l)
+          and a.t$fire$l=b.t$refr$l
+		  and rownum=1)
           else 0
           end  NR_NF_FATURA,
        CASE WHEN cisli940.t$fdty$l=15 then
           (select distinct a.t$seri$l from tcisli940201 a, tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l)
+          and a.t$fire$l=b.t$refr$l
+		  and rownum=1)
           else ' '
           end  NR_SERIE_NF_FATURA, 
         CASE WHEN cisli940.t$fdty$l=16 then
           (select distinct a.t$docn$l from tcisli940201 a, tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l)
+          and a.t$fire$l=b.t$refr$l
+		  and rownum=1)
           else 0
           end NR_NF_REMESSA,
         CASE WHEN cisli940.t$fdty$l=16 then
           (select distinct a.t$seri$l from tcisli940201 a, tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l)
+          and a.t$fire$l=b.t$refr$l
+		  and rownum=1)
           else ' '
           end NR_SERIE_NF_REMESSA,
 		CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
