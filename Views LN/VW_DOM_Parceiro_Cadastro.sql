@@ -3,6 +3,7 @@
 --											Retirado os campos TEL, FAX, MATRIZ
 --	#FAF.091 - 29-mai-2014,	Fabio Ferreira,	Excluir CNPJ_CPF_GRUPO
 --	#FAF.130 - 11-jun-2014,	Fabio Ferreira,	Quando Tipo de ident. fiscal igual 'NA' mostrar CNPJ "00000000000000"
+--	#FAF.153 - 20-jun-2014,	Fabio Ferreira,	Incluído campo condição de pagamento da sessão parceiro de negócio faturadores
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
        bspt.t$bpid CD_PARCEIRO,
@@ -29,7 +30,9 @@ SELECT DISTINCT
 --       addr.t$tefx NR_FAX,																			--#FAF.005.o
        bspt.t$okfi$c IN_IDONEO,
 --       CASE WHEN addp.t$cadr=addr.t$cadr THEN 'MATRIZ' ELSE 'FILIAL' END NM_MATRIZ_FILIAL,			--#FAF.005.o
-	   bspt.t$prst CD_STATUS
+	   bspt.t$prst CD_STATUS,
+	   (select pf.t$cpay from ttccom122201 pf 
+	    where pf.t$ifbp=bspt.t$bpid and rownum=1) CD_CONDICAO_PGTO									--#FAF.153.n
 FROM ttccom100201 bspt
 --LEFT JOIN ttccom130201 addp ON addp.t$cadr = bspt.t$cadr											--#FAF.091.so
 --LEFT JOIN ttccom133201 adbp ON adbp.t$bpid = bspt.t$bpid
