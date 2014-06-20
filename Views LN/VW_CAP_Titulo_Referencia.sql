@@ -1,12 +1,10 @@
 --	FAF.116 - 16-jun-2014, Fabio Ferreira, 	Adicionado campo NR_PEDIDO_COMPRA
 --************************************************************************************************************************************************************
-select
-        tfacp200.t$ninv NR_TITULO,
-        tfacp200.t$ttyp CD_TRANSACAO_TITULO,
+select  tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
         tdrec947.t$rcno$l NR_NFR,
         sum(tdpur401.t$oamt) VL_PEDIDO_COMPRA,
         tdrec940.T$FIRE$L NR_REFERENCIA_FISCAL,
-		tdrec947.t$orno$l NR_PEDIDO_COMPRA
+    tdrec947.t$orno$l NR_PEDIDO_COMPRA
 FROM
         ttfacp200201 tfacp200
         INNER JOIN ttdrec940201 tdrec940
@@ -21,9 +19,10 @@ FROM
 WHERE
       tfacp200.t$docn=0
 AND   tdrec947.t$rcno$l!=' '
-GROUP BY 
+GROUP BY
         tfacp200.t$ninv,
         tfacp200.t$ttyp,
         tdrec947.t$rcno$l,
         tdrec940.T$FIRE$L,
-		tdrec947.t$orno$l
+    tdrec947.t$orno$l
+    
