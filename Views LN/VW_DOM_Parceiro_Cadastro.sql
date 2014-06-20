@@ -40,7 +40,7 @@ SELECT DISTINCT
 --       CASE WHEN addp.t$cadr=addr.t$cadr THEN 'MATRIZ' ELSE 'FILIAL' END NM_MATRIZ_FILIAL,			--#FAF.005.o
 	   bspt.t$prst CD_STATUS,
 	   (select pf.t$cpay from ttccom122201 pf 
-	    where pf.t$ifbp=bspt.t$bpid and rownum=1) CD_CONDICAO_PGTO									--#FAF.153.n
+	    where pf.t$ifbp=bspt.t$bpid and rownum=1) CD_CONDICAO_PAGAMENTO									--#FAF.153.n
 FROM ttccom100201 bspt
 --LEFT JOIN ttccom130201 addp ON addp.t$cadr = bspt.t$cadr											--#FAF.091.so
 --LEFT JOIN ttccom133201 adbp ON adbp.t$bpid = bspt.t$bpid
