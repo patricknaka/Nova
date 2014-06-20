@@ -1,6 +1,7 @@
 SELECT
-          S.STORERKEY COD_TRANSPORTADORA,
-          S.COMPANY NOME_TRANSPORTADORA,
-          S.DESCRIPTION APELIDO_TRANSPORTADORA
+          t.t$suno CD_PARCEIRO,
+          t.t$cfrw CD_TRANSPORTADORA,
+          t.T$SEAK APELIDO_TRANSPORTADORA
 FROM
-          ENTERPRISE.STORER S
+          ttcmcs080201 t
+WHERE     t.t$suno!=' '
