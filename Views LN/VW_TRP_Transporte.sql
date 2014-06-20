@@ -35,8 +35,7 @@ select distinct
   pesovol.vol VL_VOLUME_M3,
   pesovol.peso VL_PESO, 
   pesovol.vol*300 VL_PESO_CUBADO,
-  znfmd630.T$CFRW$C CD_DOFI_TRANSPORTADORA,
---  tccom130.t$fovn$l NR_CNPJ_TRANSPORTADORA,																--#FAF.151.o
+  --znfmd630.T$CFRW$C CD_DOFI_TRANSPORTADORA,
  
         CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
 		THEN '00000000000000' 
