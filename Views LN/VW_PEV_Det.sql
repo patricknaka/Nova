@@ -9,8 +9,9 @@
 -- FAF.123 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Correção campo VL_ITEM
 -- FAF.129 - Fabio Ferreira, 11-jun-2014, Fabio Ferreira, 	Status da ref,fiscal
 -- FAF.147 - Fabio Ferreira, 17-jun-2014, Fabio Ferreira, 	Incluído campo CD produto com o código do produto da garantia estendida
+-- FAF.164 - Fabio Ferreira, 23-jun-2014, Fabio Ferreira, 	Correção de duplicidade de registro devido ao rel. com a tabela znsls004
 --***************************************************************************************************************************************************************
-SELECT
+SELECT DISTINCT
         (SELECT 
 		CAST((FROM_TZ(CAST(TO_CHAR(Max(ttdsls451201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE)
