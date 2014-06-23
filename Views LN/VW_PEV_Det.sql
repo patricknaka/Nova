@@ -95,3 +95,4 @@ AND     znsls400.t$ncia$c=znsls401.t$ncia$c
 AND     znsls400.t$uneg$c=znsls401.t$uneg$c
 AND     znsls400.t$pecl$c=znsls401.t$pecl$c
 AND     znsls400.t$sqpd$c=znsls401.t$sqpd$c
+AND     znsls004.T$ENTR$C=znsls401.T$ENTR$C															--#FAF.164.n
