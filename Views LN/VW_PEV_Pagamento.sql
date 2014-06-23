@@ -1,3 +1,4 @@
+-- VIEW: VW_PEV_PAGAMENTO
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega, adicionado o campo NUM_ENTREGA
 -- #FAF.047 - 22-mai-2014, Fabio Ferreira, 	Retirado campo ENTREGA
 -- #FAF.049 - 22-mai-2014, Fabio Ferreira, 	Alterado o campo FLAG_VALE_LISTA_CASAMENTO para trazer sim(1) quando existe lista de casmento ou não (2)
@@ -11,8 +12,8 @@ select
     tdsls400.t$rcd_utc  DT_ULTIMA_ATUALIZACAO_PEDIDO,
     201 CD_CIA,
     tdsls400.t$orno NR_ORDEM,
-    TO_CHAR(sls401q.t$entr$c) NR_ENTREGA, 																--#FAF.047.1.n
 	TRIM(sls401q.t$pecl$c) NR_PEDIDO,
+    TO_CHAR(sls401q.t$entr$c) NR_ENTREGA, 																--#FAF.047.1.n
     znsls402.t$sequ$c  SQ_PAGAMENTO,
     znsls402.t$idmp$c  CD_MEIO_PAGAMENTO,
     znsls402.t$cccd$c  CD_BANDEIRA,
