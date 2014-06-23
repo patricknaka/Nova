@@ -5,6 +5,7 @@
 -- #FAF.046 - 23-mai-2014, Fabio Ferreira, 	Conversão do campo NUM_ENTREGA para String
 -- #FAF.104 - 04-jun-2014, Fabio Ferreira, 	Correção da data do status
 -- #FAF.143 - 16-jun-2014, Fabio Ferreira, 	Correções
+-- #FAF.165 - 23-jun-2014, Fabio Ferreira, 	Tipo de entrega duplicado
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
         CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -103,7 +104,7 @@ FROM    ttdsls400201 tdsls400
           znsls401.t$pcga$c       t$pcga$c,
 		  CAST((FROM_TZ(CAST(TO_CHAR(max(znsls401.t$dtep$c), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) t$dtep$c,
-          znsls401.t$itpe$c       t$itpe$c,
+          max(znsls401.t$itpe$c)       t$itpe$c,
           znsls401.t$mgrt$c       t$mgrt$c,
           znsls401.t$orno$c       t$orno,
           --znsls401.t$pono$c       t$pono$c,
@@ -126,7 +127,7 @@ FROM    ttdsls400201 tdsls400
           znsls401.t$sqpd$c,
           znsls401.t$entr$c,
           znsls401.t$pcga$c,
-          znsls401.t$itpe$c,
+--          znsls401.t$itpe$c,																							--#FAF.165.o
           znsls401.t$mgrt$c,
           znsls401.t$orno$c,
           tcibd001.t$tptr$c,
@@ -172,4 +173,5 @@ AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
 --AND     ulttrc.sqpd=sls401q.t$sqpd$c																--FAF.143.o
 AND		tdsls094.t$sotp=tdsls400.t$sotp																--#FAF.006.n
+--AND tdsls400.t$orno='V20000886'
 ORDER BY tdsls400.t$orno
