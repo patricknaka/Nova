@@ -45,7 +45,8 @@ CREATE TABLE [dim].[ods_parceiro_endereco](
 	[ds_matriz_filial] [nvarchar](10) NULL,
 	[nr_status] [int] NULL,
 	[dt_cadastro] [datetime] NULL,
-	[dt_atualizacao] [datetime] NULL
+	[dt_atualizacao] [datetime] NULL,
+	[nr_condicao_pagamento] [numeric] (3,0) NULL
 ) ON [PRIMARY]
 
 GO
