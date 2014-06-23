@@ -1,5 +1,6 @@
 -- #FAF.115 - 	07-jun-2014, Fabio Ferreira, 	Inclusão do campo CIA
 -- #FAF.119 - 	09-jun-2014, Fabio Ferreira, 	Correção registro duplicado
+-- #FAF.163 - 	23-jun-2014, Fabio Ferreira, 	Correção registros duplicados e filtro para não mostrar encontro de contas
 --*************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,																						--#FAF.113.n
@@ -32,7 +33,7 @@ SELECT DISTINCT
   tccom125.t$bano NR_CONTA_CORRENTE_DESTINO,
   tfacp200.t$paym CD_METODO_PAGAMENTO,
   tfacp600.t$ptbp CD_PARCEIRO                        
-
+ 
           --#FAF.003.n  
 FROM
   ttfacp600201 tfacp600
@@ -71,3 +72,6 @@ WHERE
       tfacp200.t$tdoc=tfacp600.t$payt
   AND  tfacp200.t$docn=tfacp600.t$payd
   AND tfacp200.t$lino=tfacp600.t$payl
+  AND tfacp200.T$PTBP=tfacp600.T$PTBP																								--#FAF.163.n
+  AND tfacp200.T$TDOC NOT IN (select a.t$tlif$c from BAANDB.tznacr013201 a where a.t$lndt$c<TO_DATE('1990-01-01', 'YYYY-MM-DD'))	--#FAF.163.n
+--AND tfacp200.t$ttyp || tfacp200.t$ninv='PFS124'
