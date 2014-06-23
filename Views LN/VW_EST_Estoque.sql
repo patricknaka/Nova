@@ -1,6 +1,5 @@
 SELECT  201 CD_CIA,
         tcemm030.t$euca CD_FILIAL,
-        tcemm112.t$grid CD_UNIDADE_EMPRESARIAL,
         whwmd215.t$cwar CD_DEPOSITO,
         ltrim(rtrim(whwmd215.t$item)) CD_ITEM,
         tcmcs003.t$tpar$l CD_MODALIDADE,
@@ -9,7 +8,8 @@ SELECT  201 CD_CIA,
         whwmd215.t$qhnd - whwmd215.t$qall - whwmd215.t$qblk QT_SALDO,
         whwmd215.t$qall-whwmd215.t$qlal QT_RESERVADA,
         q1.mauc VL_CMV,
-        'WN' CD_TIPO_BLOQUEIO
+        'WN' CD_TIPO_BLOQUEIO,
+        tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
 FROM    twhwmd215201 whwmd215
         LEFT JOIN ( SELECT 
 					 whwmd217.t$item,
@@ -33,7 +33,6 @@ AND     (whwmd215.t$qhnd>0 or whwmd215.t$qall>0)
 UNION
 SELECT  201 CD_CIA,
         tcemm030.t$euca CD_FILIAL,
-        tcemm112.t$grid CD_UNIDADE_EMPRESARIAL,
         whwmd630.t$cwar CD_DEPOSITO,
         ltrim(rtrim(whwmd630.t$item)) CD_ITEM,
         tcmcs003.t$tpar$l CD_MODALIDADE,
@@ -42,7 +41,8 @@ SELECT  201 CD_CIA,
         0 QT_SALDO,
         0 QT_RESERVADA,
         q1.mauc VL_CMV,
-        whwmd630.t$bloc CD_TIPO_BLOQUEIO
+        whwmd630.t$bloc CD_TIPO_BLOQUEIO,
+        tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
 FROM    twhwmd630201 whwmd630
         LEFT JOIN ( SELECT 
 					 whwmd217.t$item,
