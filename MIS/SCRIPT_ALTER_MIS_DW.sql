@@ -852,8 +852,30 @@ ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRI
 	[nr_item_ordem] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 
+
 ---------------------------------------------------------------------------------------------------
 
+
+--DE CHAR(1) PARA CHAR(2) - ADAPTAÇÃO LN
+ALTER TABLE ods_purchase
+ALTER COLUMN DS_STTS_PED CHAR(2)
+
+ALTER TABLE ods_purchase
+ALTER COLUMN DS_STTS_ITEM CHAR(2)
+
+---------------------------------------------------------------------------------------------------
+--DE NUMERIC(5) PARA NUMERIC(8)
+
+ALTER TABLE stg_cfop
+ALTER COLUMN nr_cfop NUMERIC(8)
+
+ALTER TABLE ods_cfop
+ALTER COLUMN nr_cfop NUMERIC(8)
+
+ALTER TABLE dim_cfop
+ALTER COLUMN nr_cfop NUMERIC(8)
+
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
