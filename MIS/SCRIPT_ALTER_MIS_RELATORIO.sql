@@ -1,4 +1,4 @@
-USE MIS_RELATORIO
+USE MIS_RELATORIO_
 GO
 
 ALTER TABLE fin.aux_ods_cap_reembolso
@@ -23,7 +23,7 @@ ALTER TABLE [fin].[ods_cap_reembolso] ADD  CONSTRAINT [PK_id_titulo] PRIMARY KEY
 	[id_titulo] ASC,
 	[id_filial] ASC,
 	[id_documento] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEX]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
