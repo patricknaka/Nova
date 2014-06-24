@@ -6,7 +6,7 @@ SELECT
         ' ' COD_TERCEIRO, -- NÃO EXISITE NO WMS/LN
         TCMCS003.T$DSCA NOME_PLANTA,
         WMSWHS.WHSEID COD_FILIAL,
-		
+		tcemm030.t$euca NUM_FIALIAL,
         CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
 		THEN '00000000000000' 
 		WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
