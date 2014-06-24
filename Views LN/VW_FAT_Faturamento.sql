@@ -14,8 +14,9 @@
 -- #FAF.138 - 13-jun-2014, Fabio Ferreira, 	Correção campo CD_VENDEDOR
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --	#FAF.169 - 24-jun-2014,	Fabio Ferreira,	Mostrar linha da NF de remessa e fatura
+--	#FAF.172 - 24-jun-2014,	Fabio Ferreira,	Inclusão do campo referencia fiscal
 --****************************************************************************************************************************************************************
-SELECT cisli941f.t$fire$l,  
+SELECT cisli941f.t$fire$l NR_REFERENCIA_FISCAL,  															--#FAF.172.n
       CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
         cisli940.t$sfcp$l CD_CIA,
