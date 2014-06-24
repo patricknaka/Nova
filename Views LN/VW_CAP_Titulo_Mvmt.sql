@@ -4,11 +4,12 @@
 -- FAF.003 - 12-mai-2014, Fabio Ferreira, 	Correção DT_HR_ATUALIZACAO para não fazer a conversão de timezone quando data=0
 -- #FAF.115 - 	07-jun-2014, Fabio Ferreira, 	Inclusão do campo CIA
 -- #FAF.111 - 	09-jun-2014, Fabio Ferreira, 	Campo CD_TIPO_MOVIMENTO
+-- #FAF.168 - 	24-jun-2014, Fabio Ferreira, 	Correção registros duplicados
 --****************************************************************************************************************************************************************
 
-SELECT 
+SELECT DISTINCT
 	201 CD_CIA,																									--#FAF.113.n
-	tfacP200.t$lino NR_MOVIMENTO,
+	nvl(r.t$lino, tfacP200.t$lino) NR_MOVIMENTO,
 	tfacp200.t$ninv NR_TITULO,
     tfacp200.t$ttyp CD_TRANSACAO_TITULO,
 	'CAP' CD_MODULO,																		
@@ -26,7 +27,7 @@ SELECT
 	(select CAST((FROM_TZ(CAST(TO_CHAR(max(s.t$sdat), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) from ttfacp600201 s 
 		where s.t$payt=tfacp200.t$tdoc and s.t$payd=tfacp200.t$docn) DT_SITUACAO,
-	tfacp200.t$amth$1 VL_TRANSACAO,
+	nvl(r.t$amth$1, tfacp200.t$amth$1) VL_TRANSACAO,
 	CASE WHEN tfacp200.t$rcd_utc<TO_DATE('1990-01-01', 'YYYY-MM-DD') THEN tfacp200.t$rcd_utc					--#FAF.003.en
 	ELSE	CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	
 				AT time zone sessiontimezone) AS DATE) END DT_ATUALIZACAO,
@@ -42,9 +43,10 @@ SELECT
 --        AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO										--#FAF.003.eo
 FROM
 	ttfacp200201 tfacp200
-  LEFT JOIN (select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn from ttfacp200201 rs) r
+  LEFT JOIN (select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn, rs.t$lino, rs.t$amth$1 from ttfacp200201 rs) r
   ON r.t$tdoc=tfacp200.t$tdoc 
   and r.t$docn=tfacp200.t$docn
   and r.t$ttyp!=tfacp200.t$ttyp
   and r.t$ninv!=tfacp200.t$ninv
 WHERE tfacp200.t$docn>0
+--AND tfacp200.t$ttyp || tfacp200.t$ninv='PNG6'
