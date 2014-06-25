@@ -16,6 +16,7 @@
 --	#FAF.169 - 24-jun-2014,	Fabio Ferreira,	Mostrar linha da NF de remessa e fatura
 --	#FAF.172 - 24-jun-2014,	Fabio Ferreira,	Inclusão do campo referencia fiscal
 --	#FAF.173 - 25-jun-2014,	Fabio Ferreira,	Correção duplicidade
+--	#FAF.176 - 25-jun-2014,	Fabio Ferreira,	Inclusão do campo CD_STATUS_SEFAZ
 --****************************************************************************************************************************************************************
 SELECT 
       CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -274,7 +275,8 @@ SELECT
 --    e.t$fovn$l                                                     --#FAF.151.o
     from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) NR_CNPJ_CPF_FATURA,
     (select e.t$ftyp$l from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) CD_TIPO_CLIENTE_FATURA,
-    cisli941f.t$fire$l NR_REFERENCIA_FISCAL  															--#FAF.172.
+    cisli941f.t$fire$l NR_REFERENCIA_FISCAL,  															--#FAF.172.n
+	cisli940.t$nfes$l CD_STATUS_SEFAZ																	--#FAF.176.n
 FROM    tcisli940201 cisli940,
         tcisli941201 cisli941,
     tcisli941201 cisli941f,                                          --#FAF.169.n
