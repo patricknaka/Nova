@@ -6,6 +6,7 @@
 -- #FAF.104 - 04-jun-2014, Fabio Ferreira, 	Correção da data do status
 -- #FAF.143 - 16-jun-2014, Fabio Ferreira, 	Correções
 -- #FAF.165 - 23-jun-2014, Fabio Ferreira, 	Tipo de entrega duplicado
+-- #FAF.174 - 23-jun-2014, Fabio Ferreira, 	Correções de duplicidade
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
         CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -87,7 +88,7 @@ SELECT  DISTINCT
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	sls401q.t$idor$c CD_TIPO_SITE																				--#FAF.143.n
 FROM    ttdsls400201 tdsls400
-        LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls400.t$orno
+--        LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls400.t$orno									--#FAF.174.o
 		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						--#FAF.006.sn
 					from tcisli245201 c245, tcisli941201 c941, tcisli940201 c940
 					where c941.t$fire$l=c245.T$FIRE$L
@@ -132,7 +133,8 @@ FROM    ttdsls400201 tdsls400
           znsls401.t$orno$c,
           tcibd001.t$tptr$c,
           brmcs941.t$opfc$l,
-		  znsls401.t$idor$c) sls401q,
+		  znsls401.t$idor$c) sls401q
+		  LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=sls401q.t$orno AND znsls004.t$entr$c=sls401q.t$entr$c,			--#FAF.174.n
         ttcemm124201 tcemm124,
 		ttcemm030201 tcemm030,
         ttccom130201 endfat,
@@ -142,7 +144,7 @@ FROM    ttdsls400201 tdsls400
                  tznsls410201.t$ncia$c ncia,
                  tznsls410201.t$uneg$c uneg,
                  tznsls410201.t$pecl$c pecl,
-                 tznsls410201.t$sqpd$c sqpd,
+                 --tznsls410201.t$sqpd$c sqpd,																					--#FAF.174.o
 				 CAST((FROM_TZ(CAST(TO_CHAR(Max(tznsls410201.t$dtoc$c), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 				  AT time zone sessiontimezone) AS DATE) dtoc
           FROM tznsls410201
@@ -156,8 +158,8 @@ FROM    ttdsls400201 tdsls400
           GROUP BY --tznsls410201.t$poco$c,
                    tznsls410201.t$ncia$c,
                    tznsls410201.t$uneg$c,
-                   tznsls410201.t$pecl$c,
-                   tznsls410201.t$sqpd$c) ulttrc
+                   tznsls410201.t$pecl$c) ulttrc	
+					--tznsls410201.t$sqpd$c) ulttrc																			--#FAF.174.o
 WHERE   sls401q.t$orno=tdsls400.t$orno
 AND     znsls400.t$ncia$c=sls401q.t$ncia$c
 AND     znsls400.t$uneg$c=sls401q.t$uneg$c
