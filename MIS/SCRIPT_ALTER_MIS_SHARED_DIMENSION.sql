@@ -73,5 +73,14 @@ CREATE TABLE [dim].[ods_parceiro_cadastro](
 ) ON [PRIMARY]
 
 GO
+--------------------------------------------------------------------------------------------------------------------
 
-
+CREATE TABLE dim.ods_produto_preco_compra
+(
+nr_product_sku bigint,
+vl_preco_compra numeric(18,2),
+ CONSTRAINT [PK_dim_produto_preco_compra] PRIMARY KEY CLUSTERED 
+(
+	[nr_product_sku] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
