@@ -6,6 +6,7 @@
 --	FAF.007 - 12-mai-2014, Fabio Ferreira, 	Alteração valor original do título
 --	FAF.116 - 07-jun-2014, Fabio Ferreira, 	Retirado campo NR_NFR
 --	FAF.116 - 16-jun-2014, Fabio Ferreira, 	Retirado campo NR_PEDIDO_COMPRA
+--	FAF.175 - 25-jun-2014, Fabio Ferreira, 	Correção data liquidação
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	'CAP' CD_MODULO,
@@ -25,9 +26,13 @@ SELECT DISTINCT
 	tfacp201.t$odue$l DT_VENCIMENTO_ORIGINAL,														--#FAF.001.n
 --	CAST((FROM_TZ(CAST(TO_CHAR(tfacp201.t$odue$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.001.o
 --		AT time zone sessiontimezone) AS DATE) DATA_VENC_ORIG_TITULO,								--#FAF.001.o
-	(select  																				--#FAF.003.sn
-		max(p.t$docd) from ttfacp200201 p where p.t$ttyp=tfacp200.t$ttyp
-		and p.t$ninv=tfacp200.t$ninv and p.t$tpay=2) DT_LIQUIDACAO_TITULO,															--#FAF.003.en
+	CASE WHEN tfacp200.t$balh$1=0 THEN																									--#FAF.175.n
+		(select  																														--#FAF.003.sn
+			max(p.t$docd) from ttfacp200201 p where p.t$ttyp=tfacp200.t$ttyp
+	--		and p.t$ninv=tfacp200.t$ninv and p.t$tpay=2) DT_LIQUIDACAO_TITULO,															--#FAF.003.en	--#FAF.175.o
+			and p.t$ninv=tfacp200.t$ninv) 
+	ELSE NULL
+	END													DT_LIQUIDACAO_TITULO,															--#FAF.175.n
 	tfacp200.t$amnt VL_TITULO,
 	nvl(tdrec940.t$tfda$l, tfacp200.t$amnt)  VL_ORIGINAL,									--#FAF.007.o	
 	CASE WHEN tfacp200.t$afpy=2 THEN 1 ELSE 2 END IN_BLOQUEIO_TITULO,
