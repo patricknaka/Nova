@@ -7,6 +7,7 @@
 -- #FAF.143 - 16-jun-2014, Fabio Ferreira, 	Correções
 -- #FAF.165 - 23-jun-2014, Fabio Ferreira, 	Tipo de entrega duplicado
 -- #FAF.174 - 23-jun-2014, Fabio Ferreira, 	Correções de duplicidade
+-- #FAF.177 - 26-jun-2014, Fabio Ferreira, 	Correções de duplicidade
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
         CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -69,7 +70,7 @@ SELECT  DISTINCT
         AND     znsls402.t$uneg$c=znsls400.t$uneg$c
         AND     znsls402.t$pecl$c=znsls400.t$pecl$c
         AND     znsls402.t$sqpd$c=znsls400.t$sqpd$c
-		AND     rownum=1																				--xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+		AND     rownum=1																				
         AND     znsls402.t$vlmr$c = (SELECT Max(znsls402b.t$vlmr$c)
                               FROM tznsls402201 znsls402b
                               WHERE   znsls402b.t$ncia$c=znsls402.t$ncia$c
@@ -102,21 +103,32 @@ FROM    ttdsls400201 tdsls400
           znsls401.t$entr$c       t$entr$c,
           max(znsls401.t$pztr$c)  t$pztr$c,
           max(znsls401.t$pzcd$c)  t$pzcd$c,
-          znsls401.t$pcga$c       t$pcga$c,
+--          znsls401.t$pcga$c       t$pcga$c,																		--#FAF.177.o
+          max(znsls401.t$pcga$c)       t$pcga$c,																	--#FAF.177.n
 		  CAST((FROM_TZ(CAST(TO_CHAR(max(znsls401.t$dtep$c), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) t$dtep$c,
           max(znsls401.t$itpe$c)       t$itpe$c,
-          znsls401.t$mgrt$c       t$mgrt$c,
+--          znsls401.t$mgrt$c       t$mgrt$c,																		--#FAF.177.o
+          max(znsls401.t$mgrt$c)       t$mgrt$c,																	--#FAF.177.n
           znsls401.t$orno$c       t$orno,
           --znsls401.t$pono$c       t$pono$c,
-          tcibd001.t$tptr$c       t$tptr$c,
+--          tcibd001.t$tptr$c       t$tptr$c,																		--#FAF.177.o
+          max(tcibd001.t$tptr$c)       t$tptr$c,																	--#FAF.177.n
           brmcs941.t$opfc$l       t$opfc$l,
 		  znsls401.t$idor$c		  t$idor$c	
          FROM tznsls401201 znsls401,
               ttcibd001201 tcibd001,
               ttdsls401201 tdsls401
-              LEFT JOIN tbrmcs941201 brmcs941 ON  brmcs941.t$txre$l=tdsls401.t$txre$l
-              AND brmcs941.t$line$l=tdsls401.t$txli$l
+              LEFT JOIN 
+				(select o.t$orno, max(n.t$opfc$l) t$opfc$l  from tbrmcs941201 n, ttdsls401201 o
+				where n.T$LINE$L=(select min(n1.t$line$l) from tbrmcs941201 n1
+								  where n1.T$GAMT$L=(select max(n2.T$GAMT$L) 
+													  from tbrmcs941201 n2
+													  where n2.T$TXRE$L=n1.T$TXRE$L))
+        and o.T$TXRE$L=n.T$TXRE$L
+		GROUP BY o.t$orno) brmcs941																						--#FAF.177.n
+			  ON  brmcs941.t$orno=tdsls401.t$orno
+              --AND brmcs941.t$line$l=tdsls401.t$txli$l																	--#FAF.177.o
          WHERE  tcibd001.t$item=tdsls401.t$item
          AND    znsls401.t$orno$c=tdsls401.t$orno
          AND    znsls401.t$pono$c=tdsls401.t$pono
@@ -127,11 +139,11 @@ FROM    ttdsls400201 tdsls400
           znsls401.t$pecl$c,
           znsls401.t$sqpd$c,
           znsls401.t$entr$c,
-          znsls401.t$pcga$c,
+--          znsls401.t$pcga$c,																							--#FAF.177.o
 --          znsls401.t$itpe$c,																							--#FAF.165.o
-          znsls401.t$mgrt$c,
+--          znsls401.t$mgrt$c,																							--#FAF.177.o
           znsls401.t$orno$c,
-          tcibd001.t$tptr$c,
+--          tcibd001.t$tptr$c,																							--#FAF.177.o
           brmcs941.t$opfc$l,
 		  znsls401.t$idor$c) sls401q
 		  LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=sls401q.t$orno AND znsls004.t$entr$c=sls401q.t$entr$c,			--#FAF.174.n
@@ -175,5 +187,5 @@ AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
 --AND     ulttrc.sqpd=sls401q.t$sqpd$c																--FAF.143.o
 AND		tdsls094.t$sotp=tdsls400.t$sotp																--#FAF.006.n
---AND tdsls400.t$orno='V20000886'
+--AND tdsls400.t$orno='V20005476'
 ORDER BY tdsls400.t$orno
