@@ -35,3 +35,9 @@ ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
 
 ALTER TABLE stg_tb_planilhao
 ALTER COLUMN EAN numeric(15)
+
+ALTER TABLE stg_tb_planilhao
+ADD ds_cor varchar(25)
+
+ALTER TABLE stg_tb_planilhao
+ADD tamanho varchar(60)
