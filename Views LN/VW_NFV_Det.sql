@@ -3,7 +3,6 @@
 -- #FAF.041 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
 -- #FAF.041b - 29-mai-2014, Fabio Ferreira, Alteração no relacionamento para melhora de performace
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
--- #FAF.178 - 26-jun-2014, Fabio Ferreira, 	Inclusão do campo linha ref.fiscal
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -168,8 +167,7 @@ SELECT DISTINCT
 	(SELECT cisli943.t$sbas$l FROM tcisli943201 cisli943
 		WHERE cisli943.t$fire$l=cisli941.t$fire$l
 		AND cisli943.t$line$l=cisli941.t$line$l
-		AND cisli943.t$brty$l=3) VL_BASE_IPI,
-	cisli941.t$line$l LINHA_REF_FISCAL																				--#FAF.178.n
+		AND cisli943.t$brty$l=3) VL_BASE_IPI
 FROM 
 	tcisli941201 cisli941,
 	tcisli940201 cisli940,
