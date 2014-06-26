@@ -84,3 +84,9 @@ vl_preco_compra numeric(18,2),
 	[nr_product_sku] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+ALTER TABLE dim.ods_parceiro_endereco
+add ds_email varchar(100)
