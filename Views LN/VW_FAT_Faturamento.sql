@@ -16,7 +16,7 @@
 --	#FAF.169 - 24-jun-2014,	Fabio Ferreira,	Mostrar linha da NF de remessa e fatura
 --	#FAF.172 - 24-jun-2014,	Fabio Ferreira,	Inclusão do campo referencia fiscal
 --	#FAF.173 - 25-jun-2014,	Fabio Ferreira,	Correção duplicidade
---	#FAF.176 - 25-jun-2014,	Fabio Ferreira,	Inclusão do campo CD_STATUS_SEFAZ
+--	#FAF.176 - 25-jun-2014,	Fabio Ferreira,	Inclusão do campo CD_STATUS_SEFAZ, filtro status e sefaz
 --****************************************************************************************************************************************************************
 SELECT 
       CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -314,6 +314,7 @@ AND    tdsls094.t$sotp=tdsls400.t$sotp                                      --#F
 --and (cisli941.T$fire$L= cisli941f.T$REFR$L or cisli941.T$fire$L= cisli941f.T$fire$L)              --#FAF.169.n
 --and (cisli941.T$line$L= cisli941f.T$rfdl$L or cisli941.T$line$L= cisli941f.T$line$l)              --#FAF.169.n
 and ((cisli941.T$fire$L= cisli941f.T$REFR$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))  
-      or cisli941.T$fire$L= cisli941f.T$fire$L)              --#FAF.173.n
+      or cisli941.T$fire$L= cisli941f.T$fire$L)              										--#FAF.173.n
 and ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))  
-      or cisli941.T$line$L= cisli941f.T$line$l)              --#FAF.173.n
+      or cisli941.T$line$L= cisli941f.T$line$l)              										--#FAF.173.n
+and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (2,5)										--#FAF.176.n		
