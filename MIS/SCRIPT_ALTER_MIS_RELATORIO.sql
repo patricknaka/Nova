@@ -41,3 +41,6 @@ ADD ds_cor varchar(25)
 
 ALTER TABLE stg_tb_planilhao
 ADD ds_tamanho varchar(60)
+
+alter table stg_sige_preco_tabela
+alter column ITEM_NR_ITEM numeric(15)
