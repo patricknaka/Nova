@@ -4,6 +4,7 @@
   -- #FAF.044 - 23-mai-2014, Fabio Ferreira, 	Correção VALOR_CSLL
   -- #FAF.019 - 30-mai-2014, Fabio Ferreira, 	Filtro para mostrar somente pedidos que já foram enviados para o parceiro
   -- #FAF.134 - 14-jun-2014, Fabio Ferreira, 	Novos campos 
+  -- #FAF.161 - 26-jun-2014, Fabio Ferreira, 	Campo indicando se a garantia foi cancelado
   --********************************************************************************************************************************************************
   SELECT
 	znsls400.T$uneg$c CD_UNIDADE_NEGOCIO,																--#FAF.134.n
@@ -32,9 +33,21 @@
 	znsls400.T$idca$c CD_CANAL_VENDA,																	--#FAF.134.sn
 	znsls400.T$cven$c CD_VENDEDOR,
 	znsls400.t$idli$c NR_LISTA_CASAMENTO,
-	(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA		--#FAF.134.en
+	(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,		--#FAF.134.en
+	
+	CASE WHEN znint501.t$canc$c!=1 THEN 2																--#FAF.161.n
+	ELSE 1
+	END CANCEL
+	
   FROM
-    BAANDB.tzncom005201 zncom005,
+    BAANDB.tzncom005201 zncom005
+	LEFT JOIN BAANDB.tznint501201 znint501																--#FAF.161.sn
+		ON	znint501.t$ncia$c=zncom005.t$ncia$c
+		AND	znint501.t$uneg$c=zncom005.t$uneg$c
+		AND znint501.t$pecl$c=zncom005.t$pecl$c
+		AND znint501.t$sqpd$c=zncom005.t$sqpd$c
+		AND znint501.t$entr$c=zncom005.t$entr$c
+		AND znint501.t$sequ$c=zncom005.t$sequ$c,														--#FAF.161.en
     ttcibd001201 tcibd001,																						
     ttdsls400201 tdsls400,
     ttdsls401201 tdsls401,
@@ -70,6 +83,6 @@
   AND zncom005.t$avpn$c!=0																--#FAF.018.n
   GROUP BY	znsls400.T$uneg$c, znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$idpa$c, tdsls400.t$hdst, znsls400.t$dtem$c,
         tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item, zncom005.t$fire$c, zncom005.t$line$c, znsls400.T$idca$c,
-        znsls400.T$cven$c, znsls400.t$idli$c, tdsls400.t$itbp
+        znsls400.T$cven$c, znsls400.t$idli$c, tdsls400.t$itbp, znint501.t$canc$c
                                               
   
