@@ -1,4 +1,4 @@
---	FAF.004 - 13-mai-2014, Fabio Ferreira, 	Correção situação do item e data da situação
+--	FAF.004 - 13-jan-2014, Fabio Ferreira, 	Correção situação do item e data da situação
 --											Correção QT cancelada
 --*******************************************************************************************************************************************
 SELECT
