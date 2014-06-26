@@ -44,3 +44,6 @@ ADD ds_tamanho varchar(60)
 
 alter table stg_sige_preco_tabela
 alter column ITEM_NR_ITEM numeric(15)
+
+alter table ods_tb_planilhao
+alter column Ean numeric(15,0)
