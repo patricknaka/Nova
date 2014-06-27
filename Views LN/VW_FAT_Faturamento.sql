@@ -17,6 +17,7 @@
 --	#FAF.172 - 24-jun-2014,	Fabio Ferreira,	Inclusão do campo referencia fiscal
 --	#FAF.173 - 25-jun-2014,	Fabio Ferreira,	Correção duplicidade
 --	#FAF.176 - 25-jun-2014,	Fabio Ferreira,	Inclusão do campo CD_STATUS_SEFAZ, filtro status e sefaz
+--	#FAF.180 - 27-jun-2014,	Fabio Ferreira,	Inclusão do campo VL_JUROS E VL_JUROS_ADMINISTRADORA
 --****************************************************************************************************************************************************************
 SELECT 
       CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -276,20 +277,22 @@ SELECT
     from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) NR_CNPJ_CPF_FATURA,
     (select e.t$ftyp$l from ttccom130201 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) CD_TIPO_CLIENTE_FATURA,
     cisli941f.t$fire$l NR_REFERENCIA_FISCAL,  															--#FAF.172.n
-	cisli940.t$nfes$l CD_STATUS_SEFAZ																	--#FAF.176.n
+	cisli940.t$nfes$l CD_STATUS_SEFAZ,																	--#FAF.176.n
+	znsls402.t$vlju$c VL_JUROS,																			--#FAF.180.n
+	znsls402.t$vlju$c VL_JUROS_ADMINISTRADORA															--#FAF.180.n	
 FROM    tcisli940201 cisli940,
         tcisli941201 cisli941,
-    tcisli941201 cisli941f,                                          --#FAF.169.n
+		tcisli941201 cisli941f,                                          								--#FAF.169.n
         tcisli245201 cisli245,
         ttdsls401201 tdsls401,
         tznsls401201 znsls401,
         tznsls400201 znsls400,
-    
-    ttdsls400201 tdsls400                                          --#FAF.087.sn
+		tznsls402201 znsls402,																			--#FAF.180.n																	
+		ttdsls400201 tdsls400                                      										--#FAF.087.sn
     LEFT JOIN (  select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE             
           from tcisli245201 c245, tcisli941201 c941, tcisli940201 c940
           where c941.t$fire$l=c245.T$FIRE$L
-          and c940.t$fire$l=c941.T$REFR$L) consold ON consold.T$SLSO=tdsls400.t$orno,          --#FAF.087.en    
+          and c940.t$fire$l=c941.T$REFR$L) consold ON consold.T$SLSO=tdsls400.t$orno,          			--#FAF.087.en    
     
         ttccom130201 endfat,
         ttccom130201 endent,
@@ -306,6 +309,12 @@ AND     znsls400.t$ncia$c=znsls401.t$ncia$c
 AND     znsls400.t$uneg$c=znsls401.t$uneg$c
 AND     znsls400.t$pecl$c=znsls401.t$pecl$c
 AND     znsls400.t$sqpd$c=znsls401.t$sqpd$c
+
+AND     znsls402.t$ncia$c=znsls401.t$ncia$c																--#FAF.180.sn													
+AND     znsls402.t$uneg$c=znsls401.t$uneg$c
+AND     znsls402.t$pecl$c=znsls401.t$pecl$c
+AND     znsls402.t$sqpd$c=znsls401.t$sqpd$c																--#FAF.180.en
+
 AND     endfat.t$cadr=cisli940.t$itoa$l
 AND     endent.t$cadr=cisli940.t$stoa$l
 AND     tcibd001.t$item=cisli941.t$item$l
