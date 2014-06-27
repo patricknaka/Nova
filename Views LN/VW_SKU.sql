@@ -3,6 +3,7 @@
 -- #FAF.084 - Fabio Ferreira, 26-mai-2014, Fabio Ferreira, 	Inclusão do campo MODELO_FABRICANTE
 -- #FAF.120 - Fabio Ferreira, 09-jun-2014, Fabio Ferreira, 	Fitro de data de atualização
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
+--	#FAF.181 - 27-jun-2014,	Fabio Ferreira,	Adicionado o campo NM_APELIDO
 --*********************************************************************************************************************************************************
 SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         201 CD_CIA,
@@ -15,6 +16,7 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
 		
 --		tccom130.t$fovn$l NR_CNPJ_FORNECEDOR,														--#FAF.151.o
         tccom100.t$bpid CD_FORNECEDOR,
+		tccom100.t$seak NM_APELIDO,																	--#FAF.181.n
         tcmcs060.t$otbp CD_FABRICANTE,
         tccom100f.T$NAMA NM_NOME_FABRICANTE,
         tcibd004.t$aitc CD_ITEM_FORNECEDOR,
