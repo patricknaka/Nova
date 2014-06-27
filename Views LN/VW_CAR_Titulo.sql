@@ -6,6 +6,7 @@
 -- #FAF.108 - 05-jun-2014, Fabio Ferreira, 	Inclusão da situação da remessa
 -- #FAF.141 - 16-jun-2014, Fabio Ferreira, 	Problema mais de um registro na subquery
 -- #FAF.146 - 17-jun-2014, Fabio Ferreira, 	Correção DT_LIQUIDACAO_TITULO
+-- #FAF.146.1 - 27-jun-2014, Fabio Ferreira, 	Correção VL_DESCONTO
 --****************************************************************************************************************************************************************
 SELECT DISTINCT	
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
@@ -50,7 +51,8 @@ SELECT DISTINCT
 	TO_DATE(REGEXP_REPLACE(tfacr200.t$dued,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO_ORIGINAL,		--#FAF.001.n
 	tfacr200.t$bank NR_BANCARIO,
 	tfacr200.t$balc VL_SALDO,
-	tfacr200.t$amti VL_DESCONTO,
+--	tfacr200.t$amti VL_DESCONTO,																						--#FAF.146.1.o
+	tfacr200.t$dc1h$1 + tfacr200.t$dc2h$1 +tfacr200.t$dc3h$1 VL_DESCONTO,														--#FAF.146.1.n
 	tfacr200.t$ninv NR_DOCUMENTO,
     nvl((select t.t$text from ttttxt010201 t 
 	where t$clan='p'
