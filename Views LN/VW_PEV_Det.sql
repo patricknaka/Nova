@@ -10,6 +10,7 @@
 -- FAF.129 - Fabio Ferreira, 11-jun-2014, Fabio Ferreira, 	Status da ref,fiscal
 -- FAF.147 - Fabio Ferreira, 17-jun-2014, Fabio Ferreira, 	Incluído campo CD produto com o código do produto da garantia estendida
 -- FAF.164 - Fabio Ferreira, 23-jun-2014, Fabio Ferreira, 	Correção de duplicidade de registro devido ao rel. com a tabela znsls004
+-- FAF.174 - Fabio Ferreira, 27-jun-2014, Fabio Ferreira, 	Correção relaconamento tabela znsls004
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
         (SELECT 
@@ -77,11 +78,21 @@ SELECT DISTINCT
 	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO												--#FAF.147.n
 	   
 FROM
-        ttdsls401201 tdsls401
+        ttdsls401201 tdsls401,
 --		LEFT JOIN tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls401.t$orno,						--#FAF.004.o
-		LEFT JOIN tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls401.t$orno  						--#FAF.004.n
-										AND znsls004.t$pono$c=tdsls401.t$pono,						--#FAF.004.n
-        tznsls401201 znsls401,
+
+        tznsls401201 znsls401
+		
+				LEFT JOIN tznsls004201 znsls004 													--#FAF.174.sn
+										ON	znsls004.t$ncia$c=znsls401.t$ncia$c
+										AND znsls004.t$uneg$c=znsls401.t$uneg$c
+										AND znsls004.t$pecl$c=znsls401.t$pecl$c
+										AND znsls004.t$sqpd$c=znsls401.t$sqpd$c
+										AND znsls004.t$entr$c=znsls401.t$entr$c
+										AND znsls004.t$sequ$c=znsls401.t$sequ$c										
+										AND znsls004.t$orno$c=znsls401.t$orno$c  						
+										AND znsls004.t$pono$c=znsls401.t$pono$c,					--#FAF.174.en						
+		
         ttdsls400201 tdsls400,
         ttcemm124201 tcemm124,
 		ttcemm030201 tcemm030,
@@ -95,4 +106,4 @@ AND     znsls400.t$ncia$c=znsls401.t$ncia$c
 AND     znsls400.t$uneg$c=znsls401.t$uneg$c
 AND     znsls400.t$pecl$c=znsls401.t$pecl$c
 AND     znsls400.t$sqpd$c=znsls401.t$sqpd$c
-AND     znsls004.T$ENTR$C=znsls401.T$ENTR$C															--#FAF.164.n
+--AND     znsls004.T$ENTR$C=znsls401.T$ENTR$C															--#FAF.164.n	--#FAF.174.o
