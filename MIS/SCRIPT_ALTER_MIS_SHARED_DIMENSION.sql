@@ -90,3 +90,11 @@ vl_preco_compra numeric(18,2),
 
 ALTER TABLE dim.ods_parceiro_endereco
 add ds_email varchar(100)
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+CREATE NONCLUSTERED INDEX IDX_1 ON dim.ods_produto
+(
+nr_id_product_type ASC
+)INCLUDE(nr_item_sku,nr_product_sku

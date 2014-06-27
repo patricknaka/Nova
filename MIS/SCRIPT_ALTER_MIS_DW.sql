@@ -876,6 +876,21 @@ ALTER TABLE dim_cfop
 ALTER COLUMN nr_cfop NUMERIC(8)
 
 ---------------------------------------------------------------------------------------------------
+--Performance no Processo de carga Shared Produto
+
+CREATE CLUSTERED INDEX IDX_0 ON ods_estoque_loja
+(
+nr_item_sku ASC,
+nr_product_sku ASC
+)
+
+
+CREATE NONCLUSTERED INDEX IDX_1 ON ods_estoque_loja
+(
+id_tipo_estoque ASC
+)INCLUDE(nr_item_sku,nr_product_sku)
+
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
