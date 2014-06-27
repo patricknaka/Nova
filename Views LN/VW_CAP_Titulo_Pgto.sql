@@ -1,6 +1,7 @@
 -- #FAF.115 - 	07-jun-2014, Fabio Ferreira, 	Inclusão do campo CIA
 -- #FAF.119 - 	09-jun-2014, Fabio Ferreira, 	Correção registro duplicado
 -- #FAF.163 - 	23-jun-2014, Fabio Ferreira, 	Correção registros duplicados e filtro para não mostrar encontro de contas
+-- #FAF.163.1 - 	27-jun-2014, Fabio Ferreira, 	Filtro para não mostrar correções de multas e juros
 --*************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,																						--#FAF.113.n
@@ -75,3 +76,4 @@ WHERE
   AND tfacp200.T$PTBP=tfacp600.T$PTBP																								--#FAF.163.n
   AND tfacp200.T$TDOC NOT IN (select a.t$tlif$c from BAANDB.tznacr013201 a where a.t$lndt$c<TO_DATE('1990-01-01', 'YYYY-MM-DD'))	--#FAF.163.n
 --AND tfacp200.t$ttyp || tfacp200.t$ninv='PFS124'
+  AND tfacp200.t$tpay!=5																											--#FAF.163.1.n
