@@ -1,9 +1,27 @@
+--	#FAF.179 - 30-jun-2014,	Fabio Ferreira,	Inclusão do campo DT_SITUACAO_LISTA 
+--****************************************************************************************************************************************************************
 select distinct
             znsls401.t$entr$c NR_ENTREGA,
             znsls400.t$idli$c NR_LISTA_CASAMENTO,
             CASE WHEN tdsls400.t$hdst=40 THEN 'A'
             WHEN nvl(znacr200.t$vale$c,' ')!=' ' THEN 'V'
-            ELSE 'L' END      DS_SITUACAO_LISTA
+            ELSE 'L' END      DS_SITUACAO_LISTA,
+			
+            CASE WHEN tdsls400.t$hdst=40 THEN
+              (select min(a.t$trdt) 
+               from ttdsls450201 a
+               where A.T$orno = znsls401.T$ORNO$C)
+            ELSE 
+              (select  min(a.t$trdt) 
+              from ttdsls450201 a
+              where A.T$BKYN=2
+              and A.T$TRDT>(select  max(b.t$trdt) 
+                            from ttdsls450201 b
+                            where b.T$BKYN=1 
+                            and b.t$orno=a.t$orno)
+              AND a.t$orno=znsls401.T$ORNO$C)
+            END      DT_SITUACAO_LISTA    
+			
 from        tznsls401201 znsls401
 inner join  ttdsls401201 tdsls401
             ON  tdsls401.t$orno=znsls401.t$orno$c
