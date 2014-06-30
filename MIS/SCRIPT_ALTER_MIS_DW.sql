@@ -908,10 +908,18 @@ ALTER COLUMN nr_cfop_seq NUMERIC(6)
 ALTER TABLE dim_cfop
 ALTER COLUMN nr_cfop_seq NUMERIC(6)
 
+---------------------------------------------------------------------------------------------------
 
+alter table ods_purchase
+alter column nr_seq numeric(5)
 
+alter table ods_purchase
+alter column ds_stts_ped varchar(1)
 
+alter table ods_purchase
+alter column ds_stts_item varchar(1)
 
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
