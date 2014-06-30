@@ -898,6 +898,11 @@ ALTER TABLE stg_cfop
 ALTER COLUMN nr_cfop_seq NUMERIC(6)
 ---------------------------------------------------------------------------------------------------
 
+ALTER TABLE ods_cfop
+ALTER COLUMN nr_cfop_seq NUMERIC(6)
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
