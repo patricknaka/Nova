@@ -2,6 +2,7 @@
 -- #FAF.119 - 	09-jun-2014, Fabio Ferreira, 	Correção registro duplicado
 -- #FAF.163 - 	23-jun-2014, Fabio Ferreira, 	Correção registros duplicados e filtro para não mostrar encontro de contas
 -- #FAF.163.1 - 	27-jun-2014, Fabio Ferreira, 	Filtro para não mostrar correções de multas e juros
+-- #FAF.184 - 	30-jun-2014, Fabio Ferreira, 	Correção registros duplicados (relac tfcmg103)
 --*************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,																						--#FAF.113.n
@@ -44,6 +45,7 @@ FROM
   ON tfcmg103.T$BTNO=tfcmg109.T$BTNO
   AND tfcmg103.t$ttyp=tfacp600.t$payt										--#FAF.119.n
   AND tfcmg103.t$docn=tfacp600.t$payd
+  AND tfcmg103.t$ptbp=tfacp600.t$ptbp										--#FAF.184.n
   LEFT JOIN ttfcmg001201 tfcmg001
   ON tfcmg001.t$bank=tfacp600.t$bank
 --  LEFT JOIN ttfcmg001201 tfcmg001f                    
