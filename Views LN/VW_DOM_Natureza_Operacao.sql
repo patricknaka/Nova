@@ -5,6 +5,7 @@
 --	FAF.007 - 15-mai-2014, Fabio Ferreira,	Inclusão dos campos DESCR_NATUREZA_OPER	 e DESCR_SEQ_NATUREZA_OPER
 --	FAF.127 - 10-mai-2014, Fabio Ferreira,	Correção de filtro
 -- 	FAF.159 - 20-jun-2014, Fabio Ferreira,	Correção para sequencia do CFOP
+-- 	FAF.187 - 30-jun-2014, Fabio Ferreira,	Correção para sequencia do SEQ CFOP
 --****************************************************************************************************************************************************************
 
 -- SELECT 																										--#FAF.003.o
@@ -13,7 +14,14 @@ SELECT 	DISTINCT																								--#FAF.003.n
   tcmcs940.t$ocfo$l CD_NATUREZA_OPERACAO,																		--#FAF.159.n
   tcmcs940.t$dsca$l DS_NATUREZA_OPERACAO,																		--#FAF.007.n
 --  tcmcs940.t$opor$l SQ_NATUREZA_OPERACAO,																		--#FAF.159.o
-  substr(tcmcs940.t$ofso$l,instr(tcmcs940.t$ofso$l,'-')+1,9) SQ_NATUREZA_OPERACAO,								--#FAF.159.n
+--  substr(tcmcs940.t$ofso$l,instr(tcmcs940.t$ofso$l,'-')+1,9) SQ_NATUREZA_OPERACAO,							--#FAF.159.n	--#FAF.187.o
+
+  CASE WHEN instr(tcmcs940.t$ofso$l,'-')=0 THEN tcmcs940.t$opor$l
+  ELSE regexp_replace(substr(tcmcs940.t$ofso$l,instr(tcmcs940.t$ofso$l,'-')+1,3), '[^0-9]', '') 
+  END SQ_NATUREZA_OPERACAO,								
+  instr(tcmcs940.t$ofso$l,'-'),
+  tcmcs964.t$desc$d DS_SEQUENCIA_NATUREZA_OPERACAO,																--#FAF.187.n
+
   tcmcs964.t$desc$d DS_SEQUENCIA_NATUREZA_OPERACAO,
 --  tcmcs947.t$rfdt$l COD_TIPO_OPER,																			--#FAF.005.o
   ' ' DS_OBJETIVO_NATUREZA_OPERACAO   
