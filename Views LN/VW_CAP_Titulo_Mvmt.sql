@@ -5,15 +5,19 @@
 -- #FAF.115 - 	07-jun-2014, Fabio Ferreira, 	Inclusão do campo CIA
 -- #FAF.111 - 	09-jun-2014, Fabio Ferreira, 	Campo CD_TIPO_MOVIMENTO
 -- #FAF.168 - 	24-jun-2014, Fabio Ferreira, 	Correção registros duplicados
+-- #FAF.188 - 	30-jun-2014, Fabio Ferreira, 	Correção alias e inclusão do número da programação
 --****************************************************************************************************************************************************************
 
 SELECT DISTINCT
 	201 CD_CIA,																									--#FAF.113.n
-	nvl(r.t$lino, tfacP200.t$lino) NR_MOVIMENTO,
+--	nvl(r.t$lino, tfacP200.t$lino) NR_MOVIMENTO,																--#FAF.188.o
+	nvl(r.t$lino, tfacP200.t$lino) SQ_DOCUMENTO,																--#FAF.188.n
 	tfacp200.t$ninv NR_TITULO,
     tfacp200.t$ttyp CD_TRANSACAO_TITULO,
 	'CAP' CD_MODULO,																		
-	tfacp200.t$docn SQ_DOCUMENTO,
+--	tfacp200.t$docn SQ_DOCUMENTO,																				--#FAF.188.o
+	tfacp200.t$docn NR_DOCUMENTO,																				--#FAF.188.n
+	tfacp200.t$schn NR_PROGRAMACAO,																				--#FAF.188.n	
 	tfacp200.t$tdoc CD_TRANSACAO_DOCUMENTO,																		--#FAF.002.n
 	tfacp200.t$tpay CD_TIPO_PAGAMENTO,
 	tfacp200.t$docd DT_TRANSACAO,
