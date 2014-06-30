@@ -7,19 +7,19 @@ SELECT 	DISTINCT
 	  dominio.DESCR DS_TIPO_OPERACAO
 FROM  ttcmcs940201 tcmcs940,
       ttcmcs947201 tcmcs947,      
-      (SELECT d.t$cnst COD,
+      (SELECT d.t$cnst cod,
        l.t$desc DESCR,
-	   'NF' CD_MODULO
+	   'NR' CD_MODULO											
 		FROM tttadv401000 d,
 			 tttadv140000 l
-		WHERE d.t$cpac='ci'
-		AND d.t$cdom='sli.tdff.l'
+		WHERE d.t$cpac='td'										
+		AND d.t$cdom='rec.trfd.l'					
 		AND d.t$vers='B61U'
 		AND d.t$rele='a7'
 		AND d.t$cust='glo1'
 		AND l.t$clab=d.t$za_clab
 		AND l.t$clan='p'
-		AND l.t$cpac='ci'
+		AND l.t$cpac='td'												
 		AND l.t$vers='B61U'
 		AND l.t$rele='a7'
 		AND l.t$cust='glo1') dominio
