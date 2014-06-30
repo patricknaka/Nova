@@ -920,6 +920,27 @@ alter table ods_purchase
 alter column ds_stts_item varchar(1)
 
 ---------------------------------------------------------------------------------------------------
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_purchase_full]') AND name = N'PK_ods_purchase_full')
+ALTER TABLE [dbo].[ods_purchase_full] DROP CONSTRAINT [PK_ods_purchase_full]
+GO
+
+alter table ods_purchase_full
+alter column nr_id_nr varchar(18) not null
+
+
+ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRIMARY KEY CLUSTERED 
+(
+	[nr_cia] ASC,
+	[nr_id_filial] ASC,
+	[nr_id_nr] ASC,
+	[nr_item_sku] ASC,
+	[nr_product_sku] ASC,
+	[nr_item_ordem] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
