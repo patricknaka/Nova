@@ -1,9 +1,9 @@
 select distinct
-            znsls401.t$entr$c ENTREGA,
+            znsls401.t$entr$c NR_ENTREGA,
             znsls400.t$idli$c NR_LISTA_CASAMENTO,
             CASE WHEN tdsls400.t$hdst=40 THEN 'A'
             WHEN nvl(znacr200.t$vale$c,' ')!=' ' THEN 'V'
-            ELSE 'L' END      SITUACAO
+            ELSE 'L' END      DS_SITUACAO_LISTA
 from        tznsls401201 znsls401
 inner join  ttdsls401201 tdsls401
             ON  tdsls401.t$orno=znsls401.t$orno$c
