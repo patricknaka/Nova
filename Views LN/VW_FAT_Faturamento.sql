@@ -279,7 +279,7 @@ SELECT
     cisli941f.t$fire$l NR_REFERENCIA_FISCAL,  															--#FAF.172.n
 	cisli940.t$nfes$l CD_STATUS_SEFAZ,																	--#FAF.176.n
 	znsls402.t$vlju$c VL_JUROS,																			--#FAF.180.n
-	znsls402.t$vlju$c VL_JUROS_ADMINISTRADORA															--#FAF.180.n	
+	znsls402.t$vlja$c VL_JUROS_ADMINISTRADORA															--#FAF.180.n	
 FROM    tcisli940201 cisli940,
         tcisli941201 cisli941,
 		tcisli941201 cisli941f,                                          								--#FAF.169.n
