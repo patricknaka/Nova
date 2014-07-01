@@ -23,13 +23,14 @@ SELECT DISTINCT
 	tfacr200.t$schn NR_PROGRAMACAO,																			--#FAF.186.n
 --	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,											--#FAF.186.1.o
 	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,									--#FAF.186.1.sn
-	tfacr200.t$ninv NR_TITULO,
-	tfacr200.t$ttyp CD_TRANSACAO_TITULO,																	--#FAF.186.1.en
 	'CR' CD_MODULO,
+<<<<<<< HEAD
 	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o
 	tfacr200.t$tdoc CD_TRANSACAO_DOCUMENTO,																	--#FAF.186.1.n
+=======
+>>>>>>> origin/master
 	t.t$doct$l CD_TIPO_NF,																					--#FAF.102.n
---	tfacr200.t$tdoc CD_TRANSACAO_TITULO,
+	tfacr200.t$ttyp CD_TRANSACAO_TITULO,																	--#FAF.186.1.en
 	tfacr200.t$trec CD_TIPO_DOCUMENTO,
 	CASE WHEN tfacr200.t$amnt<0 THEN '-' ELSE '+' END IN_ENTRADA_SAIDA,
 	tfacr200.t$docd DT_TRANSACAO,
@@ -69,10 +70,14 @@ SELECT DISTINCT
 		 and znacr005.T$FLAG$C=1																		--#FAF.007.n
 		 and rownum=1), r.t$ttyp || r.t$ninv) NR_TITULO_REFERENCIA,												--#FAF.002.en
 	'CR' CD_MODULO_TITULO_REFERENCIA,																	--#FAF.005.n
+	tfacr200.t$ninv NR_TITULO,
+--	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o	--#FAF.186.1.o
+	tfacr200.t$doct$l CD_TRANSACAO_DOCUMENTO,																--#FAF.186.1.o
+--	tfacr200.t$tdoc CD_TRANSACAO_TITULO,
 	--tfacr200.t$dim1 NUM_CONTA																			--#FAF.001.o
-	tfacr201.t$recd DT_VENC_PRG,																		--#FAF.186.1.sn
-	tfacr201.t$dued$l DT_VENC_ORIG_PRG,
-	tfacr201.t$liqd DT_PREV_REC_PRG																		--#FAF.186.1.en
+	tfacr201.t$recd DT_VENCTO_PRORROGADO,																		--#FAF.186.1.sn
+	tfacr201.t$dued$l DT_VENCTO_ORIGINAL_PRORROGADO,
+	tfacr201.t$liqd DT_LIQUIDEZ_PREVISTA																		--#FAF.186.1.en
 	
 FROM
 	ttfacr200201 tfacr200
