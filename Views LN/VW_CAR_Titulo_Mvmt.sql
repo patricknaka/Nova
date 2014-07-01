@@ -9,7 +9,7 @@
 -- #FAF.186 - 30-jun-2014, Fabio Ferreira, 	Correção alias e inclusão do número da programação
 -- #FAF.186.1 - 01-jul-2014, Fabio Ferreira, 	Padronização de alias CAR CAP e inclusão das datas da agenda							
 --****************************************************************************************************************************************************************
-SELECT
+SELECT DISTINCT
 	201 CD_CIA,
 	CASE WHEN nvl((	select c.t$styp from tcisli205201 c
 					where c.t$styp='BL ATC'
@@ -19,21 +19,22 @@ SELECT
 --	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.o
 	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.n
 --	tfacr200.t$lino NR_MOVIMENTO,
-	tfacr200.t$lino SQ_MOVIMENTO,																			--#FAF.186.n
+	nvl(r.t$lino, tfacr200.t$lino) SQ_MOVIMENTO,															--#FAF.186.1.n
 	tfacr200.t$schn NR_PROGRAMACAO,																			--#FAF.186.n
 --	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,											--#FAF.186.1.o
 	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,									--#FAF.186.1.sn
 	tfacr200.t$ninv NR_TITULO,
 	tfacr200.t$ttyp CD_TRANSACAO_TITULO,																	--#FAF.186.1.en
 	'CR' CD_MODULO,
---	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o	--#FAF.186.1.o
-	tfacr200.t$doct$l CD_TRANSACAO_DOCUMENTO,																--#FAF.186.1.o
+	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o
+	tfacr200.t$tdoc CD_TRANSACAO_DOCUMENTO,																	--#FAF.186.1.n
 	t.t$doct$l CD_TIPO_NF,																					--#FAF.102.n
 --	tfacr200.t$tdoc CD_TRANSACAO_TITULO,
 	tfacr200.t$trec CD_TIPO_DOCUMENTO,
 	CASE WHEN tfacr200.t$amnt<0 THEN '-' ELSE '+' END IN_ENTRADA_SAIDA,
 	tfacr200.t$docd DT_TRANSACAO,
-	tfacr200.t$amnt VL_TRANSACAO,
+--	tfacr200.t$amnt VL_TRANSACAO,																			--#FAF.186.o
+	nvl(r.t$amnt*-1, tfacr200.t$amnt)  VL_TRANSACAO,															--#FAF.186.n
 	--	tfcmg409.t$stdd SITUACAO_MOVIMENTO,																	--#FAF.079.o
 	(select p.t$rpst$l from ttfacr201201 p
 	 where p.t$ttyp=tfacr200.t$ttyp
@@ -75,7 +76,9 @@ SELECT
 	
 FROM
 	ttfacr200201 tfacr200
-	LEFT JOIN (select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn from ttfacr200201 rs) r			--#FAF.002.sn		
+	LEFT JOIN (	select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn,
+								rs.t$lino, rs.t$amnt														--#FAF.186.1.n
+				from ttfacr200201 rs) r																		--#FAF.002.sn		
 	ON r.t$tdoc=tfacr200.t$tdoc 
 	and r.t$docn=tfacr200.t$docn
 	and r.t$ttyp!=tfacr200.t$ttyp
