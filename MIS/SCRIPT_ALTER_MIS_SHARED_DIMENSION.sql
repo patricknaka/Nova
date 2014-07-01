@@ -36,7 +36,7 @@ CREATE TABLE [dim].[ods_parceiro_endereco](
 	[ds_endereco_principal] [nvarchar](30) NULL,
 	[ds_bairro] [nvarchar](30) NULL,
 	[nr_numero] [nvarchar](10) NULL,
-	[ds_municipio] [nvarchar](8) NULL,
+	[ds_municipio] [bigint] NULL,
 	[nr_cep] [nvarchar](10) NULL,
 	[ds_complemento] [nvarchar](30) NULL,
 	[nr_telefone_principal] [nvarchar](15) NULL,
@@ -98,3 +98,19 @@ CREATE NONCLUSTERED INDEX IDX_1 ON dim.ods_produto
 (
 nr_id_product_type ASC
 )INCLUDE(nr_item_sku,nr_product_sku
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+CREATE TABLE [dim].[ods_municipio](
+	[nr_municipio] [bigint] NOT NULL,
+	[ds_municipio] [varchar](30) NULL,
+	[nr_pais] [varchar](30) NULL,
+	[ds_pais] [varchar](30) NULL,
+	[nr_estado] [varchar](2) NULL,
+	[ds_estado] [varchar](30) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[nr_municipio] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
