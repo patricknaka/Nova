@@ -24,11 +24,8 @@ SELECT DISTINCT
 --	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,											--#FAF.186.1.o
 	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,									--#FAF.186.1.sn
 	'CR' CD_MODULO,
-<<<<<<< HEAD
 	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o
 	tfacr200.t$tdoc CD_TRANSACAO_DOCUMENTO,																	--#FAF.186.1.n
-=======
->>>>>>> origin/master
 	t.t$doct$l CD_TIPO_NF,																					--#FAF.102.n
 	tfacr200.t$ttyp CD_TRANSACAO_TITULO,																	--#FAF.186.1.en
 	tfacr200.t$trec CD_TIPO_DOCUMENTO,
