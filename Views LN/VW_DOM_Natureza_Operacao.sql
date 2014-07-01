@@ -19,10 +19,7 @@ SELECT 	DISTINCT																								--#FAF.003.n
   CASE WHEN instr(tcmcs940.t$ofso$l,'-')=0 THEN tcmcs940.t$opor$l
   ELSE regexp_replace(substr(tcmcs940.t$ofso$l,instr(tcmcs940.t$ofso$l,'-')+1,3), '[^0-9]', '') 
   END SQ_NATUREZA_OPERACAO,								
-  instr(tcmcs940.t$ofso$l,'-'),
   tcmcs964.t$desc$d DS_SEQUENCIA_NATUREZA_OPERACAO,																--#FAF.187.n
-
-  tcmcs964.t$desc$d DS_SEQUENCIA_NATUREZA_OPERACAO,
 --  tcmcs947.t$rfdt$l COD_TIPO_OPER,																			--#FAF.005.o
   ' ' DS_OBJETIVO_NATUREZA_OPERACAO   
 --	CAST((FROM_TZ(CAST(TO_CHAR(tcmcs940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 			--#FAF.005.o
