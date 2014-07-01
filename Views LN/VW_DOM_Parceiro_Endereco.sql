@@ -4,6 +4,7 @@
 --	#FAF.091 - 29-mai-2014,	Fabio Ferreira,	Correções para incluir os dados da query de telefone
 --	#FAF.133 - 12-jun-2014,	Fabio Ferreira,	Quando Tipo de ident. fiscal igual 'NA' mostrar CNPJ "00000000000000"
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
+--	#FAF.189 - 01-jul-2014,	Fabio Ferreira,	Correção campo Complemento
 --****************************************************************************************************************************************************************
 SELECT 	adbp.t$bpid CD_PARCEIRO,
     adbp.t$cadr CD_ENDERECO,
@@ -25,7 +26,8 @@ SELECT 	adbp.t$bpid CD_PARCEIRO,
 --       addr.t$cste COD_UF,                                        --#FAF.003.O
 --       addr.t$ccty COD_PAIS,                                        --#FAF.003.O
     addr.t$pstc CD_CEP,
-    addr.t$namd DS_COMPLEMENTO, 
+--    addr.t$namd DS_COMPLEMENTO, 										--#FAF.189.o
+    addr.t$bldg DS_COMPLEMENTO, 										--#FAF.189.n
     addr.t$telp NR_TELEFONE_PRINCIPAL,                                  --#FAF.091.sn
     addr.t$telx NR_TELEFONE_SECUNDARIO,                                  
     addr.t$tefx NR_FAX,                                          
