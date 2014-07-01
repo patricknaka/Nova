@@ -7,10 +7,13 @@
 -- #FAF.141 - 16-jun-2014, Fabio Ferreira, 	Problema mais de um registro na subquery
 -- #FAF.146 - 17-jun-2014, Fabio Ferreira, 	Correção DT_LIQUIDACAO_TITULO
 -- #FAF.146.1 - 27-jun-2014, Fabio Ferreira, 	Correção VL_DESCONTO
+-- #FAF.193 - 27-jun-2014, Fabio Ferreira, 	Padronização de alias
 --****************************************************************************************************************************************************************
 SELECT DISTINCT	
-  CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
-  tfacr200.t$ttyp CD_TIPO_TRANSACAO,
+--  CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,												--#FAF.193.o
+  CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,											--#FAF.193.n
+--  tfacr200.t$ttyp CD_TIPO_TRANSACAO,																			--#FAF.193.o
+	tfacr200.t$ttyp CD_TRANSACAO_TITULO,																		--#FAF.193.o
     201 CD_CIA,
 	CASE WHEN nvl((	select c.t$styp from tcisli205201 c
 					where c.t$styp='BL ATC'
@@ -53,7 +56,8 @@ SELECT DISTINCT
 	tfacr200.t$balc VL_SALDO,
 --	tfacr200.t$amti VL_DESCONTO,																						--#FAF.146.1.o
 	tfacr200.t$dc1h$1 + tfacr200.t$dc2h$1 +tfacr200.t$dc3h$1 VL_DESCONTO,														--#FAF.146.1.n
-	tfacr200.t$ninv NR_DOCUMENTO,
+--	tfacr200.t$ninv NR_DOCUMENTO,																						--#FAF.193.o
+	tfacr200.t$ninv NR_TITULO,																							--#FAF.193.n
     nvl((select t.t$text from ttttxt010201 t 
 	where t$clan='p'
 	AND t.t$ctxt=tfacr200.t$text
