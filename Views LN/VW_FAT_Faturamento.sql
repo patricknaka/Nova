@@ -18,6 +18,7 @@
 --	#FAF.173 - 25-jun-2014,	Fabio Ferreira,	Correção duplicidade
 --	#FAF.176 - 25-jun-2014,	Fabio Ferreira,	Inclusão do campo CD_STATUS_SEFAZ, filtro status e sefaz
 --	#FAF.180 - 27-jun-2014,	Fabio Ferreira,	Inclusão do campo VL_JUROS E VL_JUROS_ADMINISTRADORA
+--	#FAF.190 - 01-jul-2014,	Fabio Ferreira,	Filtro de status SEFAZ alterado para mostrar status 1 (nenhum)
 --****************************************************************************************************************************************************************
 SELECT 
       CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -326,4 +327,5 @@ and ((cisli941.T$fire$L= cisli941f.T$REFR$L and (cisli940.t$fdty$l=15 or cisli94
       or cisli941.T$fire$L= cisli941f.T$fire$L)              										--#FAF.173.n
 and ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))  
       or cisli941.T$line$L= cisli941f.T$line$l)              										--#FAF.173.n
-and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (2,5)										--#FAF.176.n		
+--and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (2,5)										--#FAF.176.n	--FAF.190.o		
+and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (1,2,5)										--FAF.190.n		
