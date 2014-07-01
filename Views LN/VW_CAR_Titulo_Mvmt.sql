@@ -16,9 +16,9 @@ SELECT
 					AND c.t$idoc=tfacr200.t$ninv
 					AND rownum=1),0)=0 THEN 2 ELSE 3 END CD_FILIAL,
 --	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.o
-	tfacr200.t$docn NR_DOCUMENTO,																			--#FAF.186.n
+	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.n
 --	tfacr200.t$lino NR_MOVIMENTO,
-	tfacr200.t$lino SQ_DOCUMENTO,																			--#FAF.186.n
+	tfacr200.t$lino SQ_MOVIMENTO,																			--#FAF.186.n
 	tfacr200.t$schn NR_PROGRAMACAO,																			--#FAF.186.n
 	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,
 	'CR' CD_MODULO,
