@@ -8,7 +8,7 @@
 -- #FAF.148 - 18-jun-2014, Fabio Ferreira, 	Alteração campo NR_MOVIMENTO
 -- #FAF.186 - 30-jun-2014, Fabio Ferreira, 	Correção alias e inclusão do número da programação
 -- #FAF.186.1 - 01-jul-2014, Fabio Ferreira, 	Padronização de alias CAR CAP e inclusão das datas da agenda
--- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção campo CD_TRANSACAO_DOCUMENTO								
+-- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção campo CD_TRANSACAO_DOCUMENTO / Correção de duplicidade								
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,
@@ -20,7 +20,8 @@ SELECT DISTINCT
 --	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.o
 	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.n
 --	tfacr200.t$lino NR_MOVIMENTO,
-	nvl(r.t$lino, tfacr200.t$lino) SQ_MOVIMENTO,															--#FAF.186.1.n
+--	nvl(r.t$lino, tfacr200.t$lino) SQ_MOVIMENTO,															--#FAF.186.1.n	--#FAF.186.2.o
+	tfacr200.t$lino SQ_MOVIMENTO,																			--#FAF.186.2.n
 	tfacr200.t$schn NR_PROGRAMACAO,																			--#FAF.186.n
 --	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,											--#FAF.186.1.o
 	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,									--#FAF.186.1.sn
@@ -31,8 +32,8 @@ SELECT DISTINCT
 	tfacr200.t$trec CD_TIPO_DOCUMENTO,
 	CASE WHEN tfacr200.t$amnt<0 THEN '-' ELSE '+' END IN_ENTRADA_SAIDA,
 	tfacr200.t$docd DT_TRANSACAO,
---	tfacr200.t$amnt VL_TRANSACAO,																			--#FAF.186.o
-	nvl(r.t$amnt*-1, tfacr200.t$amnt)  VL_TRANSACAO,															--#FAF.186.n
+	tfacr200.t$amnt VL_TRANSACAO,																			--#FAF.186.o	--#FAF.186.2.n
+--	nvl(r.t$amnt*-1, tfacr200.t$amnt)  VL_TRANSACAO,														--#FAF.186.n	--#FAF.186.2.o
 	--	tfcmg409.t$stdd SITUACAO_MOVIMENTO,																	--#FAF.079.o
 	(select p.t$rpst$l from ttfacr201201 p
 	 where p.t$ttyp=tfacr200.t$ttyp
@@ -65,7 +66,16 @@ SELECT DISTINCT
 	nvl((select znacr005.t$ttyp$c || znacr005.t$ninv$c from BAANDB.tznacr005201 znacr005				--#FAF.002.sn
 		 where znacr005.t$tty1$c=tfacr200.t$ttyp and znacr005.t$nin1$c=tfacr200.t$ninv
 		 and znacr005.T$FLAG$C=1																		--#FAF.007.n
-		 and rownum=1), r.t$ttyp || r.t$ninv) NR_TITULO_REFERENCIA,												--#FAF.002.en
+		 and rownum=1), 
+		 (select rs.t$ttyp || rs.t$ninv from ttfacr200201 rs											--#FAF.186.2.sn
+		  where rs.t$tdoc=tfacr200.t$tdoc 
+		  and rs.t$docn=tfacr200.t$docn
+		  and rs.t$ttyp!=tfacr200.t$ttyp
+		  and rs.t$ninv!=tfacr200.t$ninv
+		  and rs.t$amnt=tfacr200.t$amnt*-1
+		  and rownum=1)																					--#FAF.186.2.en
+--		 r.t$ttyp || r.t$ninv																			--#FAF.186.2.o
+									) NR_TITULO_REFERENCIA,												--#FAF.002.en
 	'CR' CD_MODULO_TITULO_REFERENCIA,																	--#FAF.005.n
 	tfacr200.t$ninv NR_TITULO,
 --	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o	--#FAF.186.1.o
@@ -79,13 +89,13 @@ SELECT DISTINCT
 	
 FROM
 	ttfacr200201 tfacr200
-	LEFT JOIN (	select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn,
-								rs.t$lino, rs.t$amnt														--#FAF.186.1.n
-				from ttfacr200201 rs) r																		--#FAF.002.sn		
-	ON r.t$tdoc=tfacr200.t$tdoc 
-	and r.t$docn=tfacr200.t$docn
-	and r.t$ttyp!=tfacr200.t$ttyp
-	and r.t$ninv!=tfacr200.t$ninv																			--#FAF.002.en
+--	LEFT JOIN (	select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn,
+--								rs.t$lino, rs.t$amnt														--#FAF.186.1.n	--#FAF.186.2.so
+--				from ttfacr200201 rs) r																		--#FAF.002.sn		
+--	ON r.t$tdoc=tfacr200.t$tdoc 
+--	and r.t$docn=tfacr200.t$docn
+--	and r.t$ttyp!=tfacr200.t$ttyp
+--	and r.t$ninv!=tfacr200.t$ninv																			--#FAF.002.en	--#FAF.186.2.eo
 	
 --	LEFT JOIN (select a.t$ttyp, a.t$ninv, a.t$brel FROM ttfacr201201 a										--#FAF.001.sn	--#FAF.186.1.so
 --	where a.t$brel!=' '
