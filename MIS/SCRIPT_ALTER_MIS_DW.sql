@@ -941,6 +941,14 @@ ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRI
 GO
 ---------------------------------------------------------------------------------------------------
 
+alter table ods_purchase
+alter column ds_stts_ped varchar(2)
+
+alter table ods_purchase
+alter column ds_stts_item varchar(2)
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
