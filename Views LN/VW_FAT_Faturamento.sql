@@ -19,6 +19,7 @@
 --	#FAF.176 - 25-jun-2014,	Fabio Ferreira,	Inclusão do campo CD_STATUS_SEFAZ, filtro status e sefaz
 --	#FAF.180 - 27-jun-2014,	Fabio Ferreira,	Inclusão do campo VL_JUROS E VL_JUROS_ADMINISTRADORA
 --	#FAF.190 - 01-jul-2014,	Fabio Ferreira,	Filtro de status SEFAZ alterado para mostrar status 1 (nenhum)
+--	#FAF.195 - 02-jul-2014,	Fabio Ferreira,	Inclusão do campo CD_PRODUTO
 --****************************************************************************************************************************************************************
 SELECT 
       CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -280,7 +281,9 @@ SELECT
     cisli941f.t$fire$l NR_REFERENCIA_FISCAL,  															--#FAF.172.n
 	cisli940.t$nfes$l CD_STATUS_SEFAZ,																	--#FAF.176.n
 	znsls402.t$vlju$c VL_JUROS,																			--#FAF.180.n
-	znsls402.t$vlja$c VL_JUROS_ADMINISTRADORA															--#FAF.180.n	
+	znsls402.t$vlja$c VL_JUROS_ADMINISTRADORA,															--#FAF.180.n
+	CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
+	ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO														--#FAF.195.n	
 FROM    tcisli940201 cisli940,
         tcisli941201 cisli941,
 		tcisli941201 cisli941f,                                          								--#FAF.169.n
