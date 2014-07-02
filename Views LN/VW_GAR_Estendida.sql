@@ -7,10 +7,6 @@
   -- #FAF.161 - 26-jun-2014, Fabio Ferreira, 	Campo indicando se a garantia foi cancelado
   --********************************************************************************************************************************************************
   SELECT
-	znsls400.T$uneg$c CD_UNIDADE_NEGOCIO,																--#FAF.134.n
-    znsls400.T$PECL$C NR_PEDIDO,																													 
-    znsls401.T$ENTR$C NR_ENTREGA,
-    tdsls400.T$ORNO NR_ORDEM,																				
     zncom005.t$idpa$c NR_GARANTIA_ESTENDIDA,
     tdsls400.t$hdst CD_STATUS_PEDIDO, 										
     CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -29,15 +25,16 @@
 		and a.t$line$l=zncom005.t$line$c
 		and a.t$brty$l=13),0) VL_CSLL,														
     sum(zncom005.t$irrf$c) VL_IRPF,
+    znsls400.T$PECL$C NR_PEDIDO,																													 
+    znsls401.T$ENTR$C NR_ENTREGA,
+    tdsls400.T$ORNO NR_ORDEM,																				
     avg(tdsls401.t$qoor) QT_GARANTIA,
-	znsls400.T$idca$c CD_CANAL_VENDA,																	--#FAF.134.sn
+	znsls400.T$uneg$c CD_UNIDADE_NEGOCIO,																--#FAF.134.n
 	znsls400.T$cven$c CD_VENDEDOR,
+	znsls400.T$idca$c CD_CANAL_VENDA,																	--#FAF.134.sn
 	znsls400.t$idli$c NR_LISTA_CASAMENTO,
 	(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,		--#FAF.134.en
-	
-	CASE WHEN znint501.t$canc$c!=1 THEN 2																--#FAF.161.n
-	ELSE 1
-	END CANCEL
+	CASE WHEN znint501.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO										--#FAF.161.n
 	
   FROM
     BAANDB.tzncom005201 zncom005
