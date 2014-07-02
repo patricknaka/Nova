@@ -6,6 +6,7 @@
 -- #FAF.111 - 	09-jun-2014, Fabio Ferreira, 	Campo CD_TIPO_MOVIMENTO
 -- #FAF.168 - 	24-jun-2014, Fabio Ferreira, 	Correção registros duplicados
 -- #FAF.188 - 	30-jun-2014, Fabio Ferreira, 	Correção alias e inclusão do número da programação
+-- #FAF.192 - 	02-jul-2014, Fabio Ferreira, 	Correção duplicidade devido a referência com pagamento previsto
 --****************************************************************************************************************************************************************
 
 SELECT DISTINCT
@@ -47,10 +48,11 @@ SELECT DISTINCT
 --        AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO										--#FAF.003.eo
 FROM
 	ttfacp200201 tfacp200
-  LEFT JOIN (select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn, rs.t$lino, rs.t$amth$1 from ttfacp200201 rs) r
+  LEFT JOIN (select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn, rs.t$lino, rs.t$amth$1, rs.t$tpay from ttfacp200201 rs) r
   ON r.t$tdoc=tfacp200.t$tdoc 
   and r.t$docn=tfacp200.t$docn
   and r.t$ttyp!=tfacp200.t$ttyp
   and r.t$ninv!=tfacp200.t$ninv
+  and r.t$tpay!=8																								--#FAF.192.n
 WHERE tfacp200.t$docn>0
 --AND tfacp200.t$ttyp || tfacp200.t$ninv='PNG6'
