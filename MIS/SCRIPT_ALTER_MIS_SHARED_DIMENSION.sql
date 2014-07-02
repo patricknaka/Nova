@@ -114,3 +114,16 @@ PRIMARY KEY CLUSTERED
 	[nr_municipio] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+
+--------------------------------------------------------------------------------------------------------------------
+CREATE TABLE dim.ods_tipo_ordem_compra
+(
+nr_tipo_ordem varchar(4) not null primary key,
+ds_tipo_ordem varchar(40)
+)
+--------------------------------------------------------------------------------------------------------------------
+create table dim.ods_tipo_entrega
+(
+nr_tipo_entrega int not null primary key,
+ds_tipo_entrega varchar(50)
+)
