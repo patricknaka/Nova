@@ -11,6 +11,7 @@
 -- FAF.147 - Fabio Ferreira, 17-jun-2014, Fabio Ferreira, 	Incluído campo CD produto com o código do produto da garantia estendida
 -- FAF.164 - Fabio Ferreira, 23-jun-2014, Fabio Ferreira, 	Correção de duplicidade de registro devido ao rel. com a tabela znsls004
 -- FAF.174 - Fabio Ferreira, 27-jun-2014, Fabio Ferreira, 	Correção relaconamento tabela znsls004
+-- FAF.201 - Fabio Ferreira, 03-jul-2014, Fabio Ferreira, 	Inclusão do numero da linha da ordem para adicionar na chave e evitar duplicidade
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
         (SELECT 
@@ -22,6 +23,7 @@ SELECT DISTINCT
 		  201 CD_CIA,
           znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
           tdsls401.t$orno NR_ORDEM,
+		  tdsls401.t$pono SQ_ORDEM,																						--#FAF.201.n
 		  CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_COMPRA,			
 		  CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
