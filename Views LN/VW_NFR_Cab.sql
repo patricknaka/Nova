@@ -1,6 +1,7 @@
 -- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
 -- #FAF.094 - 29-mai-2014, Fabio Ferreira, 	Correção campo VL_SERVICO
--- #FAF.021.1 - 27-mai-2014, Fabio Ferreira,Correções		
+-- #FAF.021.1 - 27-mai-2014, Fabio Ferreira,	Correções
+-- #FAF.199 - 	27-mai-2014, Fabio Ferreira,	Inclusão do campo RECDOC			
 --************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -127,7 +128,10 @@ SELECT
 	(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
 	AND tcemm124.t$loco=201 AND rownum=1) CD_UNIDADE_EMPRESARIAL,
-	tdrec940.t$fire$l NR_REFERENCIA_FISCAL
+	tdrec940.t$fire$l NR_REFERENCIA_FISCAL,
+	nvl((select ca.t$recd$c from twhinh300201 ca														--#FAF.199.n
+		where ca.t$fire$c=tdrec940.t$fire$l
+		and rownum=1),' ') RECDOC
 FROM
 	ttdrec940201 tdrec940
 	LEFT JOIN ttccom966201 tccom966 ON tccom966.t$comp$d=tdrec940.t$fovn$l
