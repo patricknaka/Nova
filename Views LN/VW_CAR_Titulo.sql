@@ -8,6 +8,7 @@
 -- #FAF.146 - 17-jun-2014, Fabio Ferreira, 	Correção DT_LIQUIDACAO_TITULO
 -- #FAF.146.1 - 27-jun-2014, Fabio Ferreira, 	Correção VL_DESCONTO
 -- #FAF.193 - 27-jun-2014, Fabio Ferreira, 	Padronização de alias
+-- #FAF.203 - 03-jul-2014, Fabio Ferreira, 	Retirados campos da remessa
 --****************************************************************************************************************************************************************
 SELECT DISTINCT	
 --  CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,												--#FAF.193.o
@@ -41,8 +42,8 @@ SELECT DISTINCT
 	tfcmg011.t$agcd$l NR_AGENCIA,
 	tfcmg001.t$bano NR_CONTA_CORRENTE,
 	tfacr200.t$dim1 CD_CENTRO_CUSTO,
-	tfcmg401.t$btno NR_REMESSA,
-	tfcmg409.t$date DT_REMESSA,
+--	tfcmg401.t$btno NR_REMESSA,																						--#FAF.203.o
+--	tfcmg409.t$date DT_REMESSA,																						--#FAF.203.o
 --#FAF.002.o
 	nvl((select max(a.t$rpst$l) from ttfacr201201 a																	--#FAF.002.sn
 	 where a.t$ttyp=tfacr200.t$ttyp
