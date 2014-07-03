@@ -131,10 +131,9 @@ SELECT
 	tdrec940.t$fire$l NR_REFERENCIA_FISCAL,
 	nvl((select ca.t$recd$c from twhinh300201 ca														--#FAF.199.n
 		where ca.t$fire$c=tdrec940.t$fire$l
-		and rownum=1),' ') RECDOC
+		and rownum=1),' ') NR_RECEB_DOCTO_WMS
 FROM
 	ttdrec940201 tdrec940
 	LEFT JOIN ttccom966201 tccom966 ON tccom966.t$comp$d=tdrec940.t$fovn$l
 WHERE tdrec940.t$rfdt$l not in (3,5,8,13,16,22,33)
 AND tdrec940.t$stat$l>3
-
