@@ -20,6 +20,7 @@
 --	#FAF.180 - 27-jun-2014,	Fabio Ferreira,	Inclusão do campo VL_JUROS E VL_JUROS_ADMINISTRADORA
 --	#FAF.190 - 01-jul-2014,	Fabio Ferreira,	Filtro de status SEFAZ alterado para mostrar status 1 (nenhum)
 --	#FAF.195 - 02-jul-2014,	Fabio Ferreira,	Inclusão do campo CD_PRODUTO
+--	#FAF.178 - 03-jul-2014,	Fabio Ferreira, Correção diplicidade devido a inclusão do campo VL_JUROS E VL_JUROS_ADMINISTRADORA #180
 --****************************************************************************************************************************************************************
 SELECT 
       CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -291,7 +292,20 @@ FROM    tcisli940201 cisli940,
         ttdsls401201 tdsls401,
         tznsls401201 znsls401,
         tznsls400201 znsls400,
-		tznsls402201 znsls402,																			--#FAF.180.n																	
+--		tznsls402201 znsls402,																			--#FAF.180.n	--#FAF.178.o
+		(select 																										--#FAF.178.sn
+			znsls402q.t$ncia$c,
+			znsls402q.t$uneg$c,
+			znsls402q.t$pecl$c,
+			znsls402q.t$sqpd$c,
+			sum(znsls402q.t$vlju$c) t$vlju$c, 
+			sum(znsls402q.t$vlja$c) t$vlja$c  
+		 from	tznsls402201 znsls402q
+		 group by
+			znsls402q.t$ncia$c,
+			znsls402q.t$uneg$c,
+			znsls402q.t$pecl$c,
+			znsls402q.t$sqpd$c) znsls402,																				--#FAF.178.en																																		
 		ttdsls400201 tdsls400                                      										--#FAF.087.sn
     LEFT JOIN (  select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE             
           from tcisli245201 c245, tcisli941201 c941, tcisli940201 c940
