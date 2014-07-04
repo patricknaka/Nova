@@ -949,6 +949,11 @@ alter column ds_stts_item varchar(2)
 
 ---------------------------------------------------------------------------------------------------
 
+CREATE TABLE [dbo].[stg_estoque_loja_precovenda_ln](
+	[Id_Sku] [bigint] NULL,
+	[Vl_Venda] [money] NULL
+) ON [PRIMARY]
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
