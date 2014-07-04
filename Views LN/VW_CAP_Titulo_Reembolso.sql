@@ -1,14 +1,14 @@
 SELECT
             znsls412.T$TTYP$C || znsls412.t$ninv$c || znsls401.t$orno$c CD_CHAVE_PRIMARIA,
-            201 CIA,
+            201 CD_CIA,
             znsls412.T$TTYP$C CD_TRANSACAO_TITULO,
             tcemm030.t$euca CD_FILIAL,
             znsls401.t$orno$c NR_ORDEM_VENDA,
-            znsls401o.t$orno$c NR_ORDEM_VENDA_ORIG,
+            znsls401o.t$orno$c NR_ORDEM_VENDA_ORIGINAL,
             znsls412.t$pecl$c NR_PEDIDO_LOJA,
-            znsls412.t$uneg$c UNIDADE_NEGOCIO,
+            znsls412.t$uneg$c CD_UNIDADE_NEGOCIO,
             znsls412.t$ninv$c NR_ID_TITULO,
-            znsls412.t$bpid$c PARCEIRO_NEGOCIO
+            znsls412.t$bpid$c CD_PARCEIRO
 FROM        tznsls412201 znsls412
 INNER JOIN  ttfacp200201 tfacp200
             ON  tfacp200.t$ttyp=znsls412.t$ttyp$c
