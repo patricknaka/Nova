@@ -1,5 +1,8 @@
+--	#FAF.200 - 04-jul-2014, Fabio Ferreira,	Alteração da chave para tipo de transação + numero do título
+--****************************************************************************************************************************************************************
 SELECT
-            znsls412.T$TTYP$C || znsls412.t$ninv$c || znsls401.t$orno$c CD_CHAVE_PRIMARIA,
+ --           znsls412.T$TTYP$C || znsls412.t$ninv$c || znsls401.t$orno$c CD_CHAVE_PRIMARIA,			--#FAF.200.o
+			znsls412.T$TTYP$C || znsls412.t$ninv$c CD_CHAVE_PRIMARIA,									--#FAF.200.n
             201 CIA,
             znsls412.T$TTYP$C CD_TRANSACAO_TITULO,
             tcemm030.t$euca CD_FILIAL,
