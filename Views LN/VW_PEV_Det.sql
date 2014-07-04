@@ -23,7 +23,6 @@ SELECT DISTINCT
 		  201 CD_CIA,
           znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
           tdsls401.t$orno NR_ORDEM,
-		  tdsls401.t$pono SQ_ORDEM,																						--#FAF.201.n
 		  CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_COMPRA,			
 		  CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -77,7 +76,8 @@ SELECT DISTINCT
 	   and cisli245.t$koor=3
 	   and cisli940.t$fire$l=cisli245.t$fire$l) CD_SITUACAO_NF,										--#FAF.129.n
 	  CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
-	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO												--#FAF.147.n
+	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,												--#FAF.147.n
+	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM																						--#FAF.201.n
 	   
 FROM
         ttdsls401201 tdsls401,
