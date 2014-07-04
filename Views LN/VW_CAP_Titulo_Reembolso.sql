@@ -1,14 +1,11 @@
 --	#FAF.200 - 04-jul-2014, Fabio Ferreira,	Alteração da chave para tipo de transação + numero do título
 --****************************************************************************************************************************************************************
 SELECT
-<<<<<<< HEAD:Views LN/VW_Reembolso.sql
  --           znsls412.T$TTYP$C || znsls412.t$ninv$c || znsls401.t$orno$c CD_CHAVE_PRIMARIA,			--#FAF.200.o
 			znsls412.T$TTYP$C || znsls412.t$ninv$c CD_CHAVE_PRIMARIA,									--#FAF.200.n
             201 CIA,
-=======
             znsls412.T$TTYP$C || znsls412.t$ninv$c || znsls401.t$orno$c CD_CHAVE_PRIMARIA,
             201 CD_CIA,
->>>>>>> origin/master:Views LN/VW_CAP_Titulo_Reembolso.sql
             znsls412.T$TTYP$C CD_TRANSACAO_TITULO,
             tcemm030.t$euca CD_FILIAL,
             znsls401.t$orno$c NR_ORDEM_VENDA,
@@ -39,7 +36,6 @@ INNER JOIN  ttcemm124201 tcemm124
             ON tcemm124.t$cwoc=tdsls400.t$cofc
 INNER JOIN  ttcemm030201 tcemm030 
             ON tcemm030.t$eunt=tcemm124.t$grid
-
 WHERE       znsls412.t$ttyp$c IN (select distinct zncmg011.t$typd$c
                                   from tzncmg011201 zncmg011
                                   where zncmg011.t$typd$c!=' ')
