@@ -47,7 +47,7 @@ SELECT  DISTINCT
 			where f.t$pecl$c=znsls400.t$pecl$c),0) VL_FRETE_TABELA,
         endfat.t$ccit CD_CIDADE_FATURA,
         endfat.t$ccty CD_PAIS_FATURA,
-        endfat.t$cste CD_ESTADO_FAURA,
+        endfat.t$cste CD_ESTADO_FATURA,
         endfat.t$pstc CD_CEP_FATURA,
         tdsls400.t$stbp COD_CLIENTE_ENTREGA,
         endent.t$ccit CD_CIDADE_ENTREGA,
