@@ -8,6 +8,7 @@
 -- #FAF.188 - 	30-jun-2014, Fabio Ferreira, 	Correção alias e inclusão do número da programação
 -- #FAF.192 - 	02-jul-2014, Fabio Ferreira, 	Correção duplicidade devido a referência com pagamento previsto
 -- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção duplicidade
+-- #FAF.211 - 	07-jul-2014, Fabio Ferreira, 	Correção relacionamento titulo agrupado
 --****************************************************************************************************************************************************************
 
 SELECT DISTINCT
@@ -28,6 +29,7 @@ SELECT DISTINCT
 	'CAP' CD_MODULO_REFERENCIA, 
 	nvl((select znacp004.t$ttyp$c || znacp004.t$ninv$c from BAANDB.tznacp004201 znacp004						--#FAF.002.sn
 		 where znacp004.t$tty1$c=tfacp200.t$ttyp and znacp004.t$nin1$c=tfacp200.t$ninv
+		 and znacp004.t$tty2$c=tfacp200.t$tdoc and znacp004.t$nin2$c=tfacp200.t$docn							--#FAF.211.o
 		 and rownum=1), 
 		(select  rs.t$ttyp || rs.t$ninv from ttfacp200201 rs
 		 where rs.t$tdoc=tfacp200.t$tdoc
