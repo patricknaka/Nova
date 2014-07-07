@@ -8,7 +8,8 @@
 -- #FAF.148 - 18-jun-2014, Fabio Ferreira, 	Alteração campo NR_MOVIMENTO
 -- #FAF.186 - 30-jun-2014, Fabio Ferreira, 	Correção alias e inclusão do número da programação
 -- #FAF.186.1 - 01-jul-2014, Fabio Ferreira, 	Padronização de alias CAR CAP e inclusão das datas da agenda
--- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção campo CD_TRANSACAO_DOCUMENTO / Correção de duplicidade								
+-- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção campo CD_TRANSACAO_DOCUMENTO / Correção de duplicidade	
+-- #FAF.213 - 	07-jul-2014, Fabio Ferreira, 	Adicão do campo CD_TIPO_MOVIMENTO							
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,
@@ -85,7 +86,15 @@ SELECT DISTINCT
 	tfacr200.t$tdoc CD_TRANSACAO_DOCUMENTO,																	--#FAF.186.1.n
 	tfacr201.t$recd DT_VENCTO_PRORROGADO,																		--#FAF.186.1.sn
 	tfacr201.t$dued$l DT_VENCTO_ORIGINAL_PRORROGADO,
-	tfacr201.t$liqd DT_LIQUIDEZ_PREVISTA																		--#FAF.186.1.en
+	tfacr201.t$liqd DT_LIQUIDEZ_PREVISTA,																		--#FAF.186.1.en
+	CASE WHEN (select a.t$catg from ttfgld011201 a where a.t$ttyp=tfacr200.t$tdoc)=10 THEN 3					--#FAF.213.sn
+	WHEN tfacr200.t$tdoc='RGL' THEN 1
+	WHEN tfacr200.t$tdoc='LKC' THEN 2
+	WHEN tfacr200.t$tdoc='RLA' THEN 2
+	WHEN tfacr200.t$tdoc='RRK' THEN 4
+	WHEN tfacr200.t$tdoc='RRL' THEN 4
+	WHEN tfacr200.t$tdoc='ENC' THEN 5	
+	ELSE 0 END	CD_TIPO_MOVIMENTO																				--#FAF.213.en		 	
 	
 FROM
 	ttfacr200201 tfacr200
