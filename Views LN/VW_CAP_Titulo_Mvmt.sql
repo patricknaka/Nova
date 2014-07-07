@@ -9,6 +9,7 @@
 -- #FAF.192 - 	02-jul-2014, Fabio Ferreira, 	Correção duplicidade devido a referência com pagamento previsto
 -- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção duplicidade
 -- #FAF.211 - 	07-jul-2014, Fabio Ferreira, 	Correção relacionamento titulo agrupado
+-- #FAF.212 - 	07-jul-2014, Fabio Ferreira, 	Alteração campo CD_TIPO_MOVIMENTO
 --****************************************************************************************************************************************************************
 
 SELECT DISTINCT
@@ -55,8 +56,10 @@ SELECT DISTINCT
 	CASE WHEN (select a.t$catg from ttfgld011201 a where a.t$ttyp=tfacp200.t$tdoc)=10 THEN 3
   WHEN tfacp200.t$tdoc='PLG' THEN 1
   WHEN tfacp200.t$tdoc='LKF' THEN 2
-  WHEN tfacp200.t$tdoc='PKF' THEN 2
+--  WHEN tfacp200.t$tdoc='PKF' THEN 2																			--#FAF.212.o
+  WHEN tfacp200.t$tdoc='ENC' THEN 5																				--#FAF.212.n
   WHEN tfacp200.t$tdoc='RKF' THEN 4
+  
   ELSE 0 END
   CD_TIPO_MOVIMENTO
 --  CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.003.so
