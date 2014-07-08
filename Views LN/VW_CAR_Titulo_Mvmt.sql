@@ -9,7 +9,8 @@
 -- #FAF.186 - 30-jun-2014, Fabio Ferreira, 	Correção alias e inclusão do número da programação
 -- #FAF.186.1 - 01-jul-2014, Fabio Ferreira, 	Padronização de alias CAR CAP e inclusão das datas da agenda
 -- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção campo CD_TRANSACAO_DOCUMENTO / Correção de duplicidade	
--- #FAF.213 - 	07-jul-2014, Fabio Ferreira, 	Adicão do campo CD_TIPO_MOVIMENTO							
+-- #FAF.213 - 	07-jul-2014, Fabio Ferreira, 	Adicão do campo CD_TIPO_MOVIMENTO		
+-- #FAF.213.1 - 08-jul-2014, Fabio Ferreira, 	Correção NR_TITULO_REFERENCIA						
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,
@@ -71,8 +72,9 @@ SELECT DISTINCT
 		 (select rs.t$ttyp || rs.t$ninv from ttfacr200201 rs											--#FAF.186.2.sn
 		  where rs.t$tdoc=tfacr200.t$tdoc 
 		  and rs.t$docn=tfacr200.t$docn
-		  and rs.t$ttyp!=tfacr200.t$ttyp
-		  and rs.t$ninv!=tfacr200.t$ninv
+		  and rs.t$ttyp || rs.t$ninv!=tfacr200.t$ttyp || tfacr200.t$ninv								--#FAF.213.1.n
+--		  and rs.t$ttyp!=tfacr200.t$ttyp																--#FAF.213.1.o
+--		  and rs.t$ninv!=tfacr200.t$ninv																--#FAF.213.1.o
 		  and rs.t$amnt=tfacr200.t$amnt*-1
 		  and rownum=1)																					--#FAF.186.2.en
 --		 r.t$ttyp || r.t$ninv																			--#FAF.186.2.o
