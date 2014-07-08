@@ -4,7 +4,8 @@ SELECT  201 CD_CIA,
         tcccp070.t$stdt DT_ORCAMENTO,
         tdsta200.t$sbam$1 VL_ORCAMENTO,
         tdsta200.t$csor CD_ORCAMENTO,
-        SYSDATE DT_ATUALIZACAO --*** ATIVAR DATA DE ATUALIZAÇÃO ****
+		CAST((FROM_TZ(CAST(TO_CHAR(tdsta200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
 FROM  ttdsta200201 tdsta200,
       ttcccp070201 tcccp070
 WHERE tcccp070.t$yrno = tdsta200.t$yrno
