@@ -5,6 +5,7 @@
   -- #FAF.019 - 30-mai-2014, Fabio Ferreira, 	Filtro para mostrar somente pedidos que já foram enviados para o parceiro
   -- #FAF.134 - 14-jun-2014, Fabio Ferreira, 	Novos campos 
   -- #FAF.161 - 26-jun-2014, Fabio Ferreira, 	Campo indicando se a garantia foi cancelado
+  -- #FAF.205 - 08-juL-2014, Fabio Ferreira, 	ADICIONADO CAMPO COM DATA DE ATUALIZAÇÃO
   --********************************************************************************************************************************************************
   SELECT
     zncom005.t$idpa$c NR_GARANTIA_ESTENDIDA,
@@ -34,7 +35,9 @@
 	znsls400.T$idca$c CD_CANAL_VENDA,																	--#FAF.134.sn
 	znsls400.t$idli$c NR_LISTA_CASAMENTO,
 	(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,		--#FAF.134.en
-	CASE WHEN znint501.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO										--#FAF.161.n
+	CASE WHEN znint501.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO,										--#FAF.161.n
+    CAST((FROM_TZ(CAST(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+      AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO												--#FAF.205.n
 	
   FROM
     BAANDB.tzncom005201 zncom005
