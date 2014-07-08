@@ -350,3 +350,91 @@ GO
 SET ANSI_PADDING OFF
 GO
 
+
+USE [mis_ods]
+GO
+
+/****** Object:  View [mkt].[mis_vw_arquivo_asm_samsung]    Script Date: 07/08/2014 10:52:00 ******/
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[mkt].[mis_vw_arquivo_asm_samsung]'))
+DROP VIEW [mkt].[mis_vw_arquivo_asm_samsung]
+GO
+
+USE [mis_ods]
+GO
+
+/****** Object:  View [mkt].[mis_vw_arquivo_asm_samsung]    Script Date: 07/08/2014 10:52:00 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE view [mkt].[mis_vw_arquivo_asm_samsung] as
+
+select
+ '01' +
+ '09358108000397' +
+ replace(convert(varchar(10),GETDATE(),102), '.', '') + replace(convert(varchar(5),GETDATE(),14), ':', '') as arquivo
+union all
+select
+ '02' +
+ cast(replicate('0', 11 - len(nr_cod_vendedor)) + cast(nr_cod_vendedor as varchar) as char(11)) + 
+ cast(ds_nome_vendedor as char(50)) +
+ cast(replicate('0', 14 - len(ds_cnpj_distribuidor)) + cast(ds_cnpj_distribuidor as varchar) as char(14)) as arquivo
+from
+ com.ods_vendedor_asm_samsung
+union all
+select
+ '03' +
+  cast(replicate('0', 20 - len(nr_nota_fiscal)) + cast(nr_nota_fiscal as varchar) as char(20)) +
+  cast(replicate('0', 13 - len(nr_ean13)) + cast(nr_ean13 as varchar) as char(13)) +
+  cast(nr_data_emissao as char(8)) +
+  cast(replicate('0', 14 - len(ds_cnpj_distribuidor)) + cast(ds_cnpj_distribuidor as varchar) as char(14)) +
+  cast(replicate('0', 11 - len(nr_cod_vendedor)) + cast(nr_cod_vendedor as varchar) as char(11)) +
+  cast(replicate('0', 11 - len(ds_cpf_cliente)) + cast(ds_cpf_cliente as varchar) as char(11)) +
+  cast(replicate('0', 14 - len(ds_cnpj_cliente)) + cast(ds_cnpj_cliente as varchar) as char(14)) +
+  cast(ds_tipo_faturamento as char(2)) +
+  cast(replicate('0', 15 - len(nr_qtde_venda)) + cast(nr_qtde_venda as varchar) as char(15)) +
+  cast(replicate('0', 15 - len(replace(nr_vlr_unid,'.',''))) + cast(replace(nr_vlr_unid,'.','') as varchar) as char(15)) +
+  cast(replicate('0', 15 - len(replace(nr_vlr_bruto,'.',''))) + cast(replace(nr_vlr_bruto,'.','') as varchar) as char(15)) +
+  cast(replicate('0', 15 - len(replace(nr_vlr_liquido,'.',''))) + cast(replace(nr_vlr_liquido,'.','') as varchar) as char(15))+
+  cast('0' + replace(cast(nr_percentual_icms / 100 as decimal(4,2)), '.','') as char(4))  +
+  cast(ds_tipo_movimento as char(2)) +
+  cast(ds_part_number_prod as char(20)) as arquivo
+from
+ com.ods_vendas_asm_samsung
+union all
+select
+ '04' +
+  cast(replicate('0', 13 - len(nr_ean13)) + cast(nr_ean13 as varchar) as char(13)) +
+  cast(nr_data as char(8)) +
+  cast(replicate('0', 14 - len(ds_cnpj_distribuidor)) + cast(ds_cnpj_distribuidor as varchar) as char(14)) +
+  cast(replicate('0', 15 - len(nr_qtde_estoque)) + cast(nr_qtde_estoque as varchar) as char(15)) +
+  cast(ds_tipo_estoque as char(2)) +
+  cast(ds_part_number_prod as char(20)) as arquivo
+from  
+ com.ods_estoque_asm_samsung
+union all
+select
+ '05' +
+  cast(replicate('0', 14 - len(ds_cnpj_cliente)) + cast(ds_cnpj_cliente as varchar) as char(14)) +
+  cast(replicate('0', 11 - len(ds_cpf)) + cast(ds_cpf as varchar) as char(11)) +
+  cast(nr_ddd as char(2)) +
+  cast(replicate('0', 8 - len(nr_telefone)) + cast(nr_telefone as varchar) as char(8)) +
+  cast(replicate('0', 8 - len(nr_cep)) + cast(nr_cep as varchar) as char(8)) +
+  cast(ds_uf as char(2)) +
+  cast(ds_cidade as char(50)) +
+  cast(ltrim(rtrim(ds_endereco)) as char(75)) +
+  cast(replace(ds_cliente, nchar(9), '') as char(50)) +
+  cast(replicate('0', 14 - len(ds_cnpj_distribuidor)) + cast(ds_cnpj_distribuidor as varchar) as char(14)) +
+  cast(isnull(ds_email, replicate(' ',50)) as char(50)) +
+  cast(isnull(ds_classificacao_venda, replicate(' ',50)) as char(100)) as arquivo
+from  
+ com.ods_cliente_asm_samsung
+
+
+
+GO
+
