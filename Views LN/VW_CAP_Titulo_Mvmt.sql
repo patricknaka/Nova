@@ -10,6 +10,7 @@
 -- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção duplicidade
 -- #FAF.211 - 	07-jul-2014, Fabio Ferreira, 	Correção relacionamento titulo agrupado
 -- #FAF.212 - 	07-jul-2014, Fabio Ferreira, 	Alteração campo CD_TIPO_MOVIMENTO
+-- #FAF.215 - 	08-jul-2014, Fabio Ferreira, 	Correção campo NR_TITULO_REFERENCIA
 --****************************************************************************************************************************************************************
 
 SELECT DISTINCT
@@ -35,9 +36,10 @@ SELECT DISTINCT
 		(select  rs.t$ttyp || rs.t$ninv from ttfacp200201 rs
 		 where rs.t$tdoc=tfacp200.t$tdoc
 		 and rs.t$docn=tfacp200.t$docn
-		 and rs.t$ttyp!=tfacp200.t$ttyp
-		 and rs.t$ninv!=tfacp200.t$ninv
-		 and rs.t$tpay!=8
+		 and rs.t$ttyp || rs.t$ninv!=tfacp200.t$ttyp || tfacp200.t$ninv											--#FAF.215.n
+--		 and rs.t$ttyp!=tfacp200.t$ttyp																			--#FAF.215.o
+--		 and rs.t$ninv!=tfacp200.t$ninv																			--#FAF.215.o
+		 and rs.t$tpay!=8	
 		 and rs.t$amnt=tfacp200.t$amnt*-1
 		 and rownum=1)
 --		 r.t$ttyp || r.t$ninv																					--#FAF.186.2.o
