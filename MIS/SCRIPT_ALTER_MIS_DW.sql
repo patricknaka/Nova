@@ -966,6 +966,9 @@ alter column ds_stts_item char(2)
 alter table ods_purchase_full
 alter column ds_stts char(3)
 
+alter table ods_purchase_full
+alter column nr_cfop_seq numeric(5)
+
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
