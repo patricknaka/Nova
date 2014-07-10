@@ -992,6 +992,9 @@ alter column ds_stts_ped char(2)
 alter table aux_ods_purchase
 alter column ds_stts_item char(2)
 
+alter table ods_purchase
+alter column ds_stts_item char(1)
+
 ---------------------------------------------------------------------------------------------------
 
 --VERIFICAR
