@@ -6,6 +6,7 @@
   -- #FAF.134 - 14-jun-2014, Fabio Ferreira, 	Novos campos 
   -- #FAF.161 - 26-jun-2014, Fabio Ferreira, 	Campo indicando se a garantia foi cancelado
   -- #FAF.205 - 08-juL-2014, Fabio Ferreira, 	ADICIONADO CAMPO COM DATA DE ATUALIZAÇÃO
+  -- #FAF.043.2 - 10-jul-2014, Fabio Ferreira, 	Ajustes
   --********************************************************************************************************************************************************
   SELECT
     zncom005.t$idpa$c NR_GARANTIA_ESTENDIDA,
@@ -16,8 +17,12 @@
       AT time zone sessiontimezone) AS DATE) DT_PEDIDO_PRODUTO,												
     ltrim(rtrim(tdsls401p.t$item)) CD_ITEM,							
     ltrim(rtrim(tdsls401.t$item)) CD_ITEM_GARANTIA,																	
-    sum(zncom005.t$igva$c) VL_CUSTO,
-    sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_GARANTIA,
+--    sum(zncom005.t$igva$c) VL_CUSTO,																	--#FAF.043.2.o
+    sum(zncom005.t$igva$c) VL_ITEM_GAR,																	--#FAF.043.2.n
+    zncom005.t$enga$c CD_PLAN_GAR,																		--#FAF.043.2.n
+	max(tdsls401.t$pric) VL_GARANTIA,																	--#FAF.043.2.n
+    sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_CUSTO,												--#FAF.043.2.n
+--    sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_GARANTIA,											--#FAF.043.2.o
     sum(zncom005.t$piof$c) VL_IOF,										
     sum(zncom005.t$ppis$c) VL_PIS,
     sum(zncom005.t$pcof$c) VL_COFINS,
@@ -83,6 +88,6 @@
   AND zncom005.t$avpn$c!=0																--#FAF.018.n
   GROUP BY	znsls400.T$uneg$c, znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$idpa$c, tdsls400.t$hdst, znsls400.t$dtem$c,
         tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item, zncom005.t$fire$c, zncom005.t$line$c, znsls400.T$idca$c,
-        znsls400.T$cven$c, znsls400.t$idli$c, tdsls400.t$itbp, znint501.t$canc$c
+        znsls400.T$cven$c, znsls400.t$idli$c, tdsls400.t$itbp, znint501.t$canc$c, zncom005.t$enga$c
                                               
   
