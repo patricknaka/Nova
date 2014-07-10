@@ -954,9 +954,23 @@ CREATE TABLE [dbo].[stg_estoque_loja_precovenda_ln](
 	[Vl_Venda] [money] NULL
 ) ON [PRIMARY]
 ---------------------------------------------------------------------------------------------------
+
+alter table stg_sige_purchase
+alter column ds_stts_ped char(2)
+
+alter table stg_sige_purchase
+alter column ds_stts_item char(2)
+
+---------------------------------------------------------------------------------------------------
+
+alter table ods_purchase_full
+alter column ds_stts char(2)
+
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
 --ALTER COLUMN CONT_ID_CONTA NUMERIC(9)
+
 
 
