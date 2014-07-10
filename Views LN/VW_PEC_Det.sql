@@ -18,9 +18,9 @@ SELECT
 	END QT_ENTREGUE_EXCESSO,
     tdpur401.t$qiap QT_LIQUIDADA,
     tdpur401.t$qirj QT_CANCELADA,
-    CASE WHEN tdpur401.t$clyn=1 then 5															--#FAF.006.sn
-	WHEN tdpur401.t$fire=1 THEN 2
-	ELSE 1 END CD_STATUS_ITEM,																	--#FAF.006.en
+    CASE WHEN tdpur401.t$clyn=1 then 'C'															--#FAF.006.sn
+	WHEN tdpur401.t$fire=1 THEN 'L'
+	ELSE 'A' END CD_STATUS_ITEM,																	--#FAF.006.en
 	--tdpur401.t$clyn=1 SITUACAO_ITEM,															--#FAF.006.o
     --tdpru451.t$trdt DATA SITUAÇÃO DO ITEM,
     tcibd001.t$obse$c DS_OBSERVACAO_ITEM,
@@ -49,4 +49,3 @@ WHERE
         tcibd001.t$item=tdpur401.t$item
     AND tdipu001.t$item=tdpur401.t$item 
     AND tdpur401.t$oltp IN (1,4)															--#FAF.131.n
-
