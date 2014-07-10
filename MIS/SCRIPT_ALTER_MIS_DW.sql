@@ -986,6 +986,14 @@ ds_status varchar(50) NULL,
 )on [primary]
 ---------------------------------------------------------------------------------------------------
 
+alter table aux_ods_purchase
+alter column ds_stts_ped char(2)
+
+alter table aux_ods_purchase
+alter column ds_stts_item char(2)
+
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
