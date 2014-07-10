@@ -964,7 +964,7 @@ alter column ds_stts_item char(2)
 ---------------------------------------------------------------------------------------------------
 
 alter table ods_purchase_full
-alter column ds_stts char(2)
+alter column ds_stts char(3)
 
 ---------------------------------------------------------------------------------------------------
 --VERIFICAR
