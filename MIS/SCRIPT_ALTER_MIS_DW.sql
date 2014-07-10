@@ -970,6 +970,22 @@ alter table ods_purchase_full
 alter column nr_cfop_seq numeric(5)
 
 ---------------------------------------------------------------------------------------------------
+
+--TABELA DE STATUS DO PEDIDO PURCHASE 
+
+create table dim_purchase_order_status
+(
+cd_status char(2) NOT NULL,
+cd_agrupamento char(1) NOT NULL,
+ds_status varchar(50) NULL,
+ CONSTRAINT [PK_dim_purchase_order_status] PRIMARY KEY CLUSTERED 
+(
+	[cd_status] ASC,
+	[cd_agrupamento] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+)on [primary]
+---------------------------------------------------------------------------------------------------
+
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
