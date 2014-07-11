@@ -4,12 +4,12 @@
 -- #FAF.005 - 14-mai-2014, Fabio Ferreira, 	Incluido campo módulo do título de referência (sempre 'CR')	
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Correção tpitulo de referência agrupado	
 -- #FAF.079 - 26-mai-2014, Fabio Ferreira, 	Alterado o campo SITUACAO_MOVIMENTO para usar o valor da programação de pagamento
--- #FAF.102 - 04-jun-2014, Fabio Ferreira, 	Correçãp campo COD_DOCUMENTO e alteração de alias		
+-- #FAF.102 - 04-jun-2014, Fabio Ferreira, 	Correção campo COD_DOCUMENTO e alteração de alias		
 -- #FAF.148 - 18-jun-2014, Fabio Ferreira, 	Alteração campo NR_MOVIMENTO
 -- #FAF.186 - 30-jun-2014, Fabio Ferreira, 	Correção alias e inclusão do número da programação
 -- #FAF.186.1 - 01-jul-2014, Fabio Ferreira, 	Padronização de alias CAR CAP e inclusão das datas da agenda
 -- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção campo CD_TRANSACAO_DOCUMENTO / Correção de duplicidade	
--- #FAF.213 - 	07-jul-2014, Fabio Ferreira, 	Adicão do campo CD_TIPO_MOVIMENTO		
+-- #FAF.213 - 	07-jul-2014, Fabio Ferreira, 	Adição do campo CD_TIPO_MOVIMENTO		
 -- #FAF.213.1 - 08-jul-2014, Fabio Ferreira, 	Correção NR_TITULO_REFERENCIA	
 -- #FAF.213.2 - 11-jul-2014, Fabio Ferreira, 	Correção campo CD_TIPO_MOVIMENTO					
 --****************************************************************************************************************************************************************
@@ -28,7 +28,7 @@ SELECT DISTINCT
 	tfacr200.t$schn NR_PROGRAMACAO,																			--#FAF.186.n
 --	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,											--#FAF.186.1.o
 	CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,									--#FAF.186.1.sn
-	'CR' CD_MODULO,
+	'CAR' CD_MODULO,
 --	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o
 	t.t$doct$l CD_TIPO_NF,																					--#FAF.102.n
 	tfacr200.t$ttyp CD_TRANSACAO_TITULO,																	--#FAF.186.1.en
@@ -80,7 +80,7 @@ SELECT DISTINCT
 		  and rownum=1)																					--#FAF.186.2.en
 --		 r.t$ttyp || r.t$ninv																			--#FAF.186.2.o
 									) NR_TITULO_REFERENCIA,												--#FAF.002.en
-	'CR' CD_MODULO_TITULO_REFERENCIA,																	--#FAF.005.n
+	'CAR' CD_MODULO_TITULO_REFERENCIA,																	--#FAF.005.n
 	tfacr200.t$ninv NR_TITULO,
 --	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o	--#FAF.186.1.o
 --	tfacr200.t$doct$l CD_TRANSACAO_DOCUMENTO,																--#FAF.186.1.o
