@@ -19,11 +19,9 @@
       AT time zone sessiontimezone) AS DATE) DT_PEDIDO_PRODUTO,												
     ltrim(rtrim(tdsls401p.t$item)) CD_ITEM,							
     ltrim(rtrim(tdsls401.t$item)) CD_ITEM_GARANTIA,																	
---    sum(zncom005.t$igva$c) VL_CUSTO,																	--#FAF.043.2.o
-    sum(zncom005.t$igva$c) VL_ITEM_GAR,																	--#FAF.043.2.n
-    zncom005.t$enga$c CD_PLAN_GAR,																		--#FAF.043.2.n
-	max(tdsls401.t$pric) VL_GARANTIA,																	--#FAF.043.2.n
     sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_CUSTO,												--#FAF.043.2.n
+--    sum(zncom005.t$igva$c) VL_CUSTO,																	--#FAF.043.2.o
+	max(tdsls401.t$pric) VL_GARANTIA,																	--#FAF.043.2.n
 --    sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_GARANTIA,											--#FAF.043.2.o
     sum(zncom005.t$piof$c) VL_IOF,										
     sum(zncom005.t$ppis$c) VL_PIS,
@@ -44,7 +42,9 @@
 	(select e.t$ftyp$l from ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,		--#FAF.134.en
 	CASE WHEN znint501.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO,										--#FAF.161.n
     CAST((FROM_TZ(CAST(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO												--#FAF.205.n
+      AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,											--#FAF.205.n
+    sum(zncom005.t$igva$c) VL_ITEM_GARANTIA,																	--#FAF.043.2.n
+    zncom005.t$enga$c CD_PLANO_GARANTIA																		--#FAF.043.2.n
 	
   FROM
     BAANDB.tzncom005201 zncom005
