@@ -997,6 +997,9 @@ alter column ds_stts_item char(1)
 
 ---------------------------------------------------------------------------------------------------
 
+alter table dim_purchase_status alter column ds_cd_status varchar(3)
+
+---------------------------------------------------------------------------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE MIS_DW.STG_DESPESA_CONTAS
