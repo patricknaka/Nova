@@ -7,9 +7,11 @@
   -- #FAF.161 - 26-jun-2014, Fabio Ferreira, 	Campo indicando se a garantia foi cancelado
   -- #FAF.205 - 08-juL-2014, Fabio Ferreira, 	ADICIONADO CAMPO COM DATA DE ATUALIZAÇÃO
   -- #FAF.043.2 - 10-jul-2014, Fabio Ferreira, 	Ajustes
+  -- #FAF.043.3 - 11-jul-2014, Fabio Ferreira, 	Ajustes NR_GARANTIA_ESTENDIDA
   --********************************************************************************************************************************************************
   SELECT
-    zncom005.t$idpa$c NR_GARANTIA_ESTENDIDA,
+--    zncom005.t$idpa$c NR_GARANTIA_ESTENDIDA,															--#FAF.043.3.o
+    zncom005.t$cdve$c NR_GARANTIA_ESTENDIDA,															--#FAF.043.3.o
     tdsls400.t$hdst CD_STATUS_PEDIDO, 										
     CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
       AT time zone sessiontimezone) AS DATE) DT_EMISSAO_GARANTIA,											
@@ -86,7 +88,7 @@
   AND tcibd001.T$ITGA$C=1
   AND zncom005.T$TPAP$C=2
   AND zncom005.t$avpn$c!=0																--#FAF.018.n
-  GROUP BY	znsls400.T$uneg$c, znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$idpa$c, tdsls400.t$hdst, znsls400.t$dtem$c,
+  GROUP BY	znsls400.T$uneg$c, znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$cdve$c, tdsls400.t$hdst, znsls400.t$dtem$c,
         tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item, zncom005.t$fire$c, zncom005.t$line$c, znsls400.T$idca$c,
         znsls400.T$cven$c, znsls400.t$idli$c, tdsls400.t$itbp, znint501.t$canc$c, zncom005.t$enga$c
                                               
