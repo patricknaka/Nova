@@ -10,7 +10,8 @@
 -- #FAF.186.1 - 01-jul-2014, Fabio Ferreira, 	Padronização de alias CAR CAP e inclusão das datas da agenda
 -- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção campo CD_TRANSACAO_DOCUMENTO / Correção de duplicidade	
 -- #FAF.213 - 	07-jul-2014, Fabio Ferreira, 	Adicão do campo CD_TIPO_MOVIMENTO		
--- #FAF.213.1 - 08-jul-2014, Fabio Ferreira, 	Correção NR_TITULO_REFERENCIA						
+-- #FAF.213.1 - 08-jul-2014, Fabio Ferreira, 	Correção NR_TITULO_REFERENCIA	
+-- #FAF.213.2 - 11-jul-2014, Fabio Ferreira, 	Correção campo CD_TIPO_MOVIMENTO					
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,
@@ -84,18 +85,19 @@ SELECT DISTINCT
 --	tfacr200.t$doct$l COD_DOCUMENTO,																		--#FAF.102.o	--#FAF.186.1.o
 --	tfacr200.t$doct$l CD_TRANSACAO_DOCUMENTO,																--#FAF.186.1.o
 --	tfacr200.t$tdoc CD_TRANSACAO_TITULO,
-	--tfacr200.t$dim1 NUM_CONTA																			--#FAF.001.o
-	tfacr200.t$tdoc CD_TRANSACAO_DOCUMENTO,																	--#FAF.186.1.n
+	--tfacr200.t$dim1 NUM_CONTA																					--#FAF.001.o
+	tfacr200.t$tdoc CD_TRANSACAO_DOCUMENTO,																		--#FAF.186.1.n
 	tfacr201.t$recd DT_VENCTO_PRORROGADO,																		--#FAF.186.1.sn
 	tfacr201.t$dued$l DT_VENCTO_ORIGINAL_PRORROGADO,
 	tfacr201.t$liqd DT_LIQUIDEZ_PREVISTA,																		--#FAF.186.1.en
-	CASE WHEN (select a.t$catg from ttfgld011201 a where a.t$ttyp=tfacr200.t$tdoc)=10 THEN 3					--#FAF.213.sn
+	CASE WHEN tfacr200.t$tdoc='ENC' THEN 5																		--#FAF.213.n
+	WHEN (select a.t$catg from ttfgld011201 a where a.t$ttyp=tfacr200.t$tdoc)=10 THEN 3							--#FAF.213.sn
 	WHEN tfacr200.t$tdoc='RGL' THEN 1
 	WHEN tfacr200.t$tdoc='LKC' THEN 2
 	WHEN tfacr200.t$tdoc='RLA' THEN 2
 	WHEN tfacr200.t$tdoc='RRK' THEN 4
 	WHEN tfacr200.t$tdoc='RRL' THEN 4
-	WHEN tfacr200.t$tdoc='ENC' THEN 5	
+--	WHEN tfacr200.t$tdoc='ENC' THEN 5																			--#FAF.213.o	
 	ELSE 0 END	CD_TIPO_MOVIMENTO																				--#FAF.213.en		 	
 	
 FROM
