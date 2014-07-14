@@ -1059,6 +1059,9 @@ alter column ds_cd_status char(3)
 alter table stg_cfop
 alter column ds_nome varchar(45)
 
+alter table stg_sige_purchase
+add [ds_tipo_propriedade] [char](1) NULL
+
 ----------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
