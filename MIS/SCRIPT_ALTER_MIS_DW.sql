@@ -1070,6 +1070,10 @@ alter column CLIE_APELIDO nvarchar(20)
 alter table stg_sige_fornecedor
 alter column MUNI_ID_ESTADO nvarchar(3)
 
+alter table ods_cfop
+alter column ds_nome varchar(50)
+
+
 ----------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
