@@ -337,6 +337,27 @@ ADD ID_REF_FISCAL varchar(40)
 ALTER TABLE DBO.stg_sige_cmv_hist
 ALTER COLUMN ID_ITEM NUMERIC(32)
 
+alter table stg_sige_cmv_hist
+alter column nr_cia numeric(3)
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_sige_cmv_hist]') AND name = N'IDX_0')
+DROP INDEX [IDX_0] ON [dbo].[ods_sige_cmv_hist] WITH ( ONLINE = OFF )
+
+alter table ods_sige_cmv_hist
+alter column ID_ITEM numeric(32) not null
+
+alter table ods_sige_cmv_hist
+alter column nr_cia numeric(3) not null
+
+CREATE NONCLUSTERED INDEX [IDX_0] ON [dbo].[ods_sige_cmv_hist] 
+(
+	[nr_cia] ASC,
+	[ID_FILIAL] ASC,
+	[DT_CMV] ASC,
+	[ID_ITEM] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+
 
 --------------------------------------------------------------------
 --Inclusão do flag kit
