@@ -708,15 +708,13 @@ ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(10)
 alter table stg_sige_fornecedor
 alter column CLIE_APELIDO varchar(20)
 
---DE varchar(30) para varchar(45)
+
 alter table stg_cfop
 alter column ds_nome varchar(50)
 
---DE varchar(30) para varchar(45)
 alter table ods_cfop
 alter column ds_nome varchar(50)
 
---DE VARCHAR(30) para VARCHAR(50)
 alter table dim_cfop
 alter column ds_nome varchar(50)
 
