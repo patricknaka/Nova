@@ -1055,7 +1055,11 @@ alter table dim_purchase_status alter column ds_cd_status varchar(3)
 alter table dim_purchase_status
 alter column ds_cd_status char(3)
 
----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------
+alter table stg_cfop
+alter column ds_nome varchar(45)
+
+----------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
 --ALTER TABLE STG_DESPESA_CONTAS
