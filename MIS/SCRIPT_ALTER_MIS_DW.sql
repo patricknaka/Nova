@@ -1050,6 +1050,12 @@ alter column ds_stts_item char(2)
 alter table ods_purchase
 alter column ds_stts_item char(1)
 
+
+alter table ods_purchase
+alter column nr_cfop numeric(5)
+
+alter table ods_purchase
+alter column nr_seq numeric(5)
 ---------------------------------------------------------------------------------------------------
 
 alter table dim_purchase_status alter column ds_cd_status varchar(3)
