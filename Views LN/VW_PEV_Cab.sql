@@ -49,7 +49,7 @@ SELECT  DISTINCT
         endfat.t$ccty CD_PAIS_FATURA,
         endfat.t$cste CD_ESTADO_FATURA,
         endfat.t$pstc CD_CEP_FATURA,
-        tdsls400.t$stbp COD_CLIENTE_ENTREGA,
+        tdsls400.t$stbp CD_CLIENTE_ENTREGA,
         endent.t$ccit CD_CIDADE_ENTREGA,
         endent.t$ccty CD_PAIS_ENTREGA,
         endent.t$cste CD_ESTADO_ENTREGA,
@@ -57,8 +57,8 @@ SELECT  DISTINCT
         znsls400.t$idli$c NR_LISTA_CASAMENTO,
         znsls400.t$idco$c NR_CONTRATO_B2B,
         znsls400.t$idcp$c NR_CAMPANHA_B2B,
-        sls401q.t$pztr$c PRAZO_TRANSIT_TIME,
-        sls401q.t$pzcd$c PRAZO_CD,
+        sls401q.t$pztr$c QT_PRAZO_TRANSIT_TIME,
+        sls401q.t$pzcd$c QT_PRAZO_CD,
         CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 END NR_NF_CONSOLIDADA,						--#FAF.006.n      
         CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END NR_SERIE_NF_CONSOLIDADA,					--#FAF.006.n
         sls401q.t$pcga$c NR_PEDIDO_GARANTIA,
