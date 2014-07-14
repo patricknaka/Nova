@@ -1062,6 +1062,12 @@ alter column ds_nome varchar(45)
 alter table stg_sige_purchase
 add [ds_tipo_propriedade] [char](1) NULL
 
+alter table stg_sige_fornecedor
+alter column CLIE_APELIDO nvarchar(20)
+
+alter table stg_sige_fornecedor
+alter column MUNI_ID_ESTADO nvarchar(3)
+
 ----------------------------------
 --VERIFICAR
 --DE NUMERIC(24) para NUMERIC(9) --DEVIDO A FALHA NO LOOKUP
