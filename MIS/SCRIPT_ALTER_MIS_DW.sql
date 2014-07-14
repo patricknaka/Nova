@@ -1011,7 +1011,7 @@ alter table stg_sige_purchase
 alter column ds_stts_ped char(2)
 
 alter table stg_sige_purchase
-alter column ds_stts_item char(2)
+alter column ds_stts_item varchar(1)
 
 ---------------------------------------------------------------------------------------------------
 
