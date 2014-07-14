@@ -949,18 +949,18 @@ id_tipo_estoque ASC
 --DE SMALLINT PARA NUMERIC(6)
 
 ALTER TABLE stg_cfop
-ALTER COLUMN nr_cfop_seq NUMERIC(6)
+ALTER COLUMN nr_cfop_seq NUMERIC(5)
 ---------------------------------------------------------------------------------------------------
---DE SMALLINT PARA NUMERIC(6)
+
 
 ALTER TABLE ods_cfop
-ALTER COLUMN nr_cfop_seq NUMERIC(6)
+ALTER COLUMN nr_cfop_seq NUMERIC(5)
 
 ---------------------------------------------------------------------------------------------------
---DE SMALLINT PARA NUMERIC(6)
+
 
 ALTER TABLE dim_cfop
-ALTER COLUMN nr_cfop_seq NUMERIC(6)
+ALTER COLUMN nr_cfop_seq NUMERIC(5)
 
 ---------------------------------------------------------------------------------------------------
 
