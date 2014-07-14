@@ -916,16 +916,18 @@ ALTER TABLE ods_purchase
 ALTER COLUMN DS_STTS_ITEM CHAR(2)
 
 ---------------------------------------------------------------------------------------------------
---DE NUMERIC(5) PARA NUMERIC(8)
 
 ALTER TABLE stg_cfop
-ALTER COLUMN nr_cfop NUMERIC(8)
+ALTER COLUMN nr_cfop NUMERIC(5)
 
 ALTER TABLE ods_cfop
-ALTER COLUMN nr_cfop NUMERIC(8)
+ALTER COLUMN nr_cfop NUMERIC(5)
 
 ALTER TABLE dim_cfop
-ALTER COLUMN nr_cfop NUMERIC(8)
+ALTER COLUMN nr_cfop NUMERIC(5)
+
+alter table ods_cfop
+alter column nr_cfop_seq numeric(5)
 
 ---------------------------------------------------------------------------------------------------
 --Performance no Processo de carga Shared Produto
