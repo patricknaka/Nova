@@ -1109,3 +1109,69 @@ alter column ds_nome varchar(50)
 
 
 
+
+--Criar coluna
+ALTER TABLE stg_sige_detalhe_pedido ADD NR_KIT int NULL
+ALTER TABLE stg_sige_detalhe_pedido ADD NR_ID_PRODUTO int NULL
+ALTER TABLE stg_sige_detalhe_pedido ADD NR_STATUS_PEDIDO_LN int NULL
+ALTER TABLE stg_sige_detalhe_pedido ADD NR_STATUS_NF_LN int NULL
+ALTER TABLE ods_sige_detalhe_pedido ADD nr_id_produto int NULL
+ALTER TABLE aux_ods_sige_detalhe_pedido ADD nr_id_produto int NULL
+ALTER TABLE ods_sige_faturamento ADD nr_id_produto int NULL
+ALTER TABLE ods_fatdev ADD nr_id_cia numeric(3,0) NULL
+ALTER TABLE aux_ods_fatdev ADD nr_id_cia numeric(3,0) NULL
+
+--Alterar datatype
+ALTER TABLE stg_sige_detalhe_pedido
+ALTER COLUMN DS_STATUS_PEDIDO char(1)
+
+ALTER TABLE ods_sige_detalhe_pedido
+ALTER COLUMN DS_STATUS_PEDIDO varchar(2)
+
+ALTER TABLE aux_ods_approved	
+ALTER COLUMN nr_cia numeric(5,3)
+
+ALTER TABLE aux_ods_fatdev	
+ALTER COLUMN nr_cfop_seq_det numeric(5,5)
+
+ALTER TABLE aux_ods_sige_detalhe_pedido	
+ALTER COLUMN NR_ID_CIA numeric(5,3)
+
+ALTER TABLE aux_ods_sige_pagamento_pedido	
+ALTER COLUMN NR_ID_CIA numeric(5,3)
+
+ALTER TABLE dump_ods_approved	
+ALTER COLUMN nr_cia numeric(5,3)
+
+ALTER TABLE dump_ods_sige_detalhe_pedido	
+ALTER COLUMN NR_ID_CIA numeric(5,3)
+
+ALTER TABLE dump_ods_sige_faturamento	
+ALTER COLUMN NR_ID_CIA numeric(5,3)
+
+ALTER TABLE dump_ods_sige_faturamento	
+ALTER COLUMN NR_CIA numeric(5,3)
+
+ALTER TABLE dump_ods_sige_pagamento_pedido	
+ALTER COLUMN NR_ID_CIA numeric(5,3)
+
+ALTER TABLE ods_fatdev	
+ALTER COLUMN nr_cfop_seq_det numeric(5,5)
+
+ALTER TABLE ods_sige_faturamento	
+ALTER COLUMN NR_ID_CIA numeric(5,3)
+
+ALTER TABLE ods_sige_faturamento	
+ALTER COLUMN NR_CIA numeric(5,3)
+
+ALTER TABLE ods_sige_pagamento_pedido	
+ALTER COLUMN NR_ID_CIA numeric(5,3)
+
+ALTER TABLE stg_sige_detalhe_pedido	
+ALTER COLUMN NR_ID_CIA numeric(5,3)
+
+ALTER TABLE stg_sige_faturamento	
+ALTER COLUMN NR_CIA numeric(5,3)
+
+ALTER TABLE stg_sige_pagamento_pedido	
+ALTER COLUMN NR_ID_CIA numeric(5,3)
