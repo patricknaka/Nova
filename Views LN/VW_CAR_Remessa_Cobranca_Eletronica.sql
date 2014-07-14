@@ -1,4 +1,7 @@
-SELECT
+--	#FAF.224 - 14-jul-2014,	Fabio Ferreira,	Corrção de duplicidade
+--****************************************************************************************************************************************************************
+--SELECT																								--#FAF.224.o
+SELECT DISTINCT																							--#FAF.224.o
 	tfcmg948.t$bank$l CD_BANCO,
 	tfcmg948.t$btno$l NR_REMESSA,
 	tfcmg948.t$occ2$l COD_COMANDO,
