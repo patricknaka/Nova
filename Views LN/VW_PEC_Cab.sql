@@ -1,6 +1,7 @@
 -- 05-mai-2014, Fabio Ferreira, Correção registro duplicado (problema mesma data na tabela de histórico),
 --								Inclusão do campo VALOR_TOTAL_MERCADOR,
 -- #FAF.005, 14-mai-2014, Fabio Ferreira, 	Alteração alias
+-- #FAF.228, 15-jul-2014, Fabio Ferreira, 	Alteração origem frete e seguro
 --*********************************************************************************************************************************************
 SELECT DISTINCT
     201 CD_CIA,
@@ -45,8 +46,9 @@ SELECT DISTINCT
     and rownum=1) CD_DEPARTAMENTO,
 --    tdpur400.t$corg COD_TIPO_GERACAO_PEDIDO,											--#FAF.005.o
 	tdpur400.t$corg CD_TIPO_CADASTRO,													--#FAF.005.n
-    (select z.t$vlft$c from tznfmd630201 z
-	where z.t$orno$c=tdpur400.t$orno) VL_FRETE,
+--    (select z.t$vlft$c from tznfmd630201 z											--#FAF.228.so
+--	where z.t$orno$c=tdpur400.t$orno) VL_FRETE,											--#FAF.228.eo
+	FreteSeg.fght VL_FRETE,																--#FAF.228.n
     (select sum(brmcs941.t$tamt$l) 
     from tbrmcs941201 brmcs941,
     ttdpur401201 tdpur401
@@ -54,8 +56,9 @@ SELECT DISTINCT
     and brmcs941.t$line$l=tdpur401.t$txli$l
     and tdpur401.t$orno=tdpur400.t$orno
     and tdpur401.t$oltp!=2) VL_FINANCEIRO,
-    (select z.t$vlsg$c from tznfmd630201 z
-	where z.t$orno$c=tdpur400.t$orno) VL_SEGURO, 
+--    (select z.t$vlsg$c from tznfmd630201 z											--#FAF.228.so
+--	where z.t$orno$c=tdpur400.t$orno) VL_SEGURO, 										--#FAF.228.eo
+	FreteSeg.insr VL_SEGURO, 															--#FAF.228.n
     tdpur400.t$sbim IN_LIQUIDACAO_AUTOMATICA,
     tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
     tdpur400.T$COTP CD_TIPO_ORDEM_COMPRA,
@@ -82,8 +85,15 @@ FROM
              where c.t$orno=a.t$orno
              and rownum=1
              and c.t$oamt=(select max(b.t$oamt) from ttdpur401201 b
-                          where b.t$orno=c.t$orno))) qopfc
-    ON qopfc.t$orno=tdpur400.t$orno,
+                          where b.t$orno=c.t$orno))) qopfc ON qopfc.t$orno=tdpur400.t$orno				  
+	LEFT JOIN (	select 	a.t$orno, sum(br.t$fght$l) fght, sum(br.t$insr$l) insr								--#FAF.228.sn
+				from 	ttdpur401201 a,
+						tbrmcs941201 br
+				where 	a.t$txre$l!=' '
+				and	 	a.t$oltp!=2
+				and		br.t$txre$l=a.t$txre$l
+				and 	br.t$line$l=a.t$txli$l
+				group by a.t$orno) FreteSeg ON FreteSeg.t$orno=tdpur400.t$orno, 							--#FAF.228.en
     ttcemm124201 tcemm124,
     ttcemm030201 tcemm030
 where tcemm124.t$cwoc=tdpur400.t$cofc
