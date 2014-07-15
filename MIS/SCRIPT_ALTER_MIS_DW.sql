@@ -912,7 +912,7 @@ ALTER TABLE [dbo].[ods_purchase_full] DROP CONSTRAINT [PK_ods_purchase_full]
 
 --ALTERA TABELA 
 alter table ods_purchase_full
-alter column nr_id_nr varchar(10) not null
+alter column nr_id_nr numeric(12) not null
 
 --RECRIA OBJETO DEPENDENTE
 ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRIMARY KEY CLUSTERED 
