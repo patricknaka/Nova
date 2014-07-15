@@ -1179,3 +1179,22 @@ ALTER COLUMN NR_CIA numeric(5,3)
 
 ALTER TABLE stg_sige_pagamento_pedido	
 ALTER COLUMN NR_ID_CIA numeric(5,3)
+
+
+ALTER TABLE stg_sige_purchase_full
+ADD nr_qtt_fisica int
+
+ALTER TABLE ods_purchase_full
+ADD nr_qtt_fisica int
+
+ALTER TABLE aux_ods_purchase_full
+ADD nr_qtt_fisica int
+
+ALTER TABLE stg_sige_purchase_full
+ADD nr_id_pedido_compra bigint
+
+ALTER TABLE ods_purchase_full
+ADD nr_id_pedido_compra bigint
+
+ALTER TABLE aux_ods_purchase_full
+ADD nr_id_pedido_compra bigint
