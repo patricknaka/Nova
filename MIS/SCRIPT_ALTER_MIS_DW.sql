@@ -743,9 +743,6 @@ alter column ds_nome varchar(50)
 
 ---------------------------------------------------------------------------------------------------
 
-ALTER TABLE dbo.stg_sige_purchase_full
-ALTER COLUMN nr_nr varchar(18)
-
 ALTER TABLE stg_sige_purchase_full_complemento
 ALTER COLUMN NOCA_ID_NR_COMP VARCHAR(18)
 ---------------------------------------------------------------------------------------------------
@@ -903,32 +900,7 @@ ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRI
 	[nr_item_ordem] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 
----------------------------------------------------------------------------------------------------
-
---APAGA OBJETO DEPENDENTE
-IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_purchase_full]') AND name = N'PK_ods_purchase_full')
-ALTER TABLE [dbo].[ods_purchase_full] DROP CONSTRAINT [PK_ods_purchase_full]
-
-
---ALTERA TABELA 
-alter table ods_purchase_full
-alter column nr_id_nr numeric(12) not null
-
---RECRIA OBJETO DEPENDENTE
-ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRIMARY KEY CLUSTERED 
-(
-	[nr_cia] ASC,
-	[nr_id_filial] ASC,
-	[nr_id_nr] ASC,
-	[nr_item_sku] ASC,
-	[nr_product_sku] ASC,
-	[nr_item_ordem] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-
-
----------------------------------------------------------------------------------------------------
-
-
+--------------------------------------------------------------
 --DE CHAR(1) PARA CHAR(2) - ADAPTAÇÃO LN
 ALTER TABLE ods_purchase
 ALTER COLUMN DS_STTS_PED CHAR(2)
@@ -994,27 +966,6 @@ alter column ds_stts_ped varchar(1)
 alter table ods_purchase
 alter column ds_stts_item varchar(1)
 
----------------------------------------------------------------------------------------------------
-
-IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_purchase_full]') AND name = N'PK_ods_purchase_full')
-ALTER TABLE [dbo].[ods_purchase_full] DROP CONSTRAINT [PK_ods_purchase_full]
-
-
-alter table ods_purchase_full
-alter column nr_id_nr varchar(18) not null
-
-
-ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRIMARY KEY CLUSTERED 
-(
-	[nr_cia] ASC,
-	[nr_id_filial] ASC,
-	[nr_id_nr] ASC,
-	[nr_item_sku] ASC,
-	[nr_product_sku] ASC,
-	[nr_item_ordem] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-GO
----------------------------------------------------------------------------------------------------
 
 alter table ods_purchase
 alter column ds_stts_ped varchar(2)
