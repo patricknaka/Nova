@@ -1,31 +1,36 @@
 
 -- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
+-- #FAF.227 - 16-jul-2014, Fabio Ferreira, 	Correções	
 --*************************************************************************************************************************************************************
 SELECT
-	GREATEST(tdrec940.t$date$l,tdrec940.t$idat$l,tdrec940.t$odat$l) ULTIMA_ATUALIZ_NF,
+
+	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(cisli940dev.t$datg$l,cisli940dev.t$date$l,cisli940dev.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+		AT time zone sessiontimezone) AS DATE) ULTIMA_ATUALIZ_NF,
     201 CD_CIA,
 	(SELECT tcemm030.t$euca FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
-	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
+	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l
 	AND tcemm030.t$eunt=tcemm124.t$grid
 	AND tcemm124.t$loco=201
 	AND rownum=1) CD_FILIAL, 
-	tdrec940.t$docn$l NR_NF,
-	tdrec940.t$seri$l NR_SERIE_NF,
-	tdrec940.t$opfc$l CD_NATUREZA_OPERACAO,
-	tdrec940.t$opor$l SQ_NATUREZA_OPERACAO,
-	tdrec940.t$date$l DT_FATURA,
-	cisli940.t$itbp$l CD_CLIENTE_FATURA,
-	cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
-	znsls401.t$sequ$c SQ_ENTREGA,
-	znsls401.t$pecl$c NR_PEDIDO,
+	tdrec940rec.t$docn$l NR_NF,													-- Nota fiscal recebimento devolução
+	tdrec940rec.t$seri$l NR_SERIE_NF,											-- Serie NF rec. devolucção
+	tdrec940rec.t$opfc$l CD_NATUREZA_OPERACAO,
+	tdrec940rec.t$opor$l SQ_NATUREZA_OPERACAO,
+	
+	CAST((FROM_TZ(CAST(TO_CHAR(cisli940org.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+		AT time zone sessiontimezone) AS DATE) DT_FATURA,						-- Data fatura pedido original
+	cisli940org.t$itbp$l CD_CLIENTE_FATURA,
+	cisli940org.t$stbp$l CD_CLIENTE_ENTREGA,
+	znsls401org.t$sequ$c SQ_ENTREGA,
+	znsls401org.t$pecl$c NR_PEDIDO,
 	(select znsls410.t$poco$c
 	FROM tznsls410201 znsls410
-	WHERE znsls410.t$ncia$c=znsls401.t$ncia$c
-	AND znsls410.t$uneg$c=znsls401.t$uneg$c
-	AND znsls410.t$pecl$c=znsls401.t$pecl$c
-	AND znsls410.t$sqpd$c=znsls401.t$sqpd$c
-	AND znsls410.t$entr$c=znsls401.t$entr$c
-  AND znsls410.t$dtoc$c= (SELECT MAX(c.t$dtoc$c)
+	WHERE znsls410.t$ncia$c=znsls401dev.t$ncia$c
+	AND znsls410.t$uneg$c=znsls401dev.t$uneg$c
+	AND znsls410.t$pecl$c=znsls401dev.t$pecl$c
+	AND znsls410.t$sqpd$c=znsls401dev.t$sqpd$c
+	AND znsls410.t$entr$c=znsls401dev.t$entr$c
+	AND znsls410.t$dtoc$c= (SELECT MAX(c.t$dtoc$c)
                           FROM tznsls410201 c
                           WHERE c.t$ncia$c=znsls410.t$ncia$c
                           AND c.t$uneg$c=znsls410.t$uneg$c
@@ -33,82 +38,120 @@ SELECT
                           AND c.t$sqpd$c=znsls410.t$sqpd$c
                           AND c.t$entr$c=znsls410.t$entr$c)                          
 	AND rownum=1) CD_STATUS,
-	(SELECT MAX(znsls410.t$dtoc$c)
+	(SELECT 
+	CAST((FROM_TZ(CAST(TO_CHAR(MAX(znsls410.t$dtoc$c), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+		AT time zone sessiontimezone) AS DATE)	
 	FROM tznsls410201 znsls410
-	WHERE znsls410.t$ncia$c=znsls401.t$ncia$c
-	AND znsls410.t$uneg$c=znsls401.t$uneg$c
-	AND znsls410.t$pecl$c=znsls401.t$pecl$c
-	AND znsls410.t$sqpd$c=znsls401.t$sqpd$c
-	AND znsls410.t$entr$c=znsls401.t$entr$c) DT_STATUS,
-	tdrec940.t$rfdt$l CD_TIPO_NF,
-	tdrec947.t$rcno$l NR_NFR_DEVOLUCAO,
-	ltrim(rtrim(tdrec941.t$item$l)) CD_ITEM,
-	tdrec941.t$qnty$l QT_DEVOLUCAO,
-	(SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
-	WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
-	AND tdrec942.t$line$l=tdrec941.t$line$l
-	AND tdrec942.t$brty$l=1) VL_ICMS,
-	tdrec941.t$gamt$l VL_PRODUTO,
-	tdrec941.t$fght$l VL_FRETE,
-	tdrec941.t$gexp$l VL_DESPESA,
-	tdrec941.t$addc$l VL_DESCONTO_INCONDICIONAL,
-	tdrec941.t$tamt$l VL_TOTAL_ITEM,
-	sls401orig.t$orno$c NR_PEDIDO_ORIGINAL,
-	znsls400.t$dtin$c DT_PEDIDO,
-	znsls400.t$idca$c CD_CANAL_VENDAS,
+	WHERE znsls410.t$ncia$c=znsls401org.t$ncia$c
+	AND znsls410.t$uneg$c=znsls401org.t$uneg$c
+	AND znsls410.t$pecl$c=znsls401org.t$pecl$c
+	AND znsls410.t$sqpd$c=znsls401org.t$sqpd$c
+	AND znsls410.t$entr$c=znsls401org.t$entr$c) DT_STATUS,
+	tdrec940rec.t$rfdt$l CD_TIPO_NF,
+	
+	tdrec940rec.t$fire$l NR_NFR_DEVOLUCAO,										-- Ref. Fiscal recebimento devolção
+	ltrim(rtrim(znsls401dev.t$item$c)) CD_ITEM,
+	znsls401dev.t$qtve$c QT_DEVOLUCAO,
+	(SELECT a.t$amnt$l FROM tcisli943201 a
+	WHERE a.t$fire$l=cisli941dev.t$fire$l
+	AND a.t$line$l=cisli941dev.t$line$l
+	AND a.t$brty$l=1) VL_ICMS,										
+	cisli941dev.t$gamt$l VL_PRODUTO,
+	cisli941dev.t$fght$l VL_FRETE,
+	cisli941dev.t$gexp$l VL_DESPESA,
+	cisli941dev.t$disc$l VL_DESCONTO_INCONDICIONAL,
+	cisli941dev.t$gamt$l VL_TOTAL_ITEM,
+	znsls401org.t$orno$c NR_PEDIDO_ORIGINAL,
+		CAST((FROM_TZ(CAST(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+			AT time zone sessiontimezone) AS DATE) DT_PEDIDO,
+	znsls400org.t$idca$c CD_CANAL_VENDAS,
 	tccom130.t$ftyp$l CD_TIPO_CLIENTE,
 	tccom130.t$ccit CD_CIDADE,
 	tccom130.t$ccty CD_PAIS,
 	tccom130.t$cste CD_ESTADO,
 	q1.mauc VL_CMV,												
-	cisli940.t$docn$l NR_NF_FATURA,
-	cisli940.t$seri$l NR_SERIE_NF_FATURA,
-	  (select distinct a.t$docn$l from tcisli940201 a, tcisli941201 b
-	  where b.t$fire$l=tdrec940.t$fire$l
-	  and a.t$fire$l=b.t$refr$l) NR_NF_REMESSA,									
-	  (select distinct a.t$seri$l from tcisli940201 a, tcisli941201 b
-	  where b.t$fire$l=tdrec940.t$fire$l
-	  and a.t$fire$l=b.t$refr$l) NR_SERIE_NF_REMESSA,		
-	(SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
-	WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
-	AND tdrec942.t$line$l=tdrec941.t$line$l
-	AND tdrec942.t$brty$l=5) VL_PIS,
-	(SELECT tdrec942.t$amnt$l FROM ttdrec942201 tdrec942
-	WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
-	AND tdrec942.t$line$l=tdrec941.t$line$l
-	AND tdrec942.t$brty$l=6) VL_COFINS,
-	znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
+	cisli940org.t$docn$l NR_NF_FATURA,												-- NF fatura entrega org
+	cisli940org.t$seri$l NR_SERIE_NF_FATURA,
+	cisli940dev.t$docn$l NR_NF_REMESSA,												-- NF devolução							
+	cisli940dev.t$seri$l NR_SERIE_NF_REMESSA,		
+	(SELECT a.t$amnt$l FROM tcisli943201 a
+	WHERE a.t$fire$l=cisli941dev.t$fire$l
+	AND a.t$line$l=cisli941dev.t$line$l
+	AND a.t$brty$l=5) VL_PIS,
+	(SELECT a.t$amnt$l FROM tcisli943201 a
+	WHERE a.t$fire$l=cisli941dev.t$fire$l
+	AND a.t$line$l=cisli941dev.t$line$l
+	AND a.t$brty$l=6) VL_COFINS,
+	znsls401dev.t$uneg$c CD_UNIDADE_NEGOCIO,
 	CASE WHEN 
 	nvl((select	znsls401nr.t$pecl$c
 	FROM	tznsls401201 znsls401nr
-	WHERE	znsls401nr.t$ncia$c=znsls401.t$ncia$c
-	AND		znsls401nr.t$uneg$c=znsls401.t$uneg$c
-	AND		znsls401nr.t$pecl$c=znsls401.t$pecl$c	 
-	AND		znsls401nr.t$sqpd$c=znsls401.t$sqpd$c
-	AND		znsls401nr.t$entr$c>znsls401.t$entr$c),1)=1 then 1
+	WHERE	znsls401nr.t$ncia$c=znsls401dev.t$ncia$c
+	AND		znsls401nr.t$uneg$c=znsls401dev.t$uneg$c
+	AND		znsls401nr.t$pecl$c=znsls401dev.t$pecl$c	 
+	AND		znsls401nr.t$sqpd$c=znsls401dev.t$sqpd$c
+	AND		znsls401nr.t$entr$c>znsls401dev.t$entr$c),1)=1 then 1
 	ELSE 2
 	END IN_REPOSICAO,
 	(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
-	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
+	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l
 	AND tcemm124.t$loco=201
 	AND rownum=1)	CD_UNIDADE_EMPRESARIAL,
-	(select a.t$rcno from twhinh312201 a
-		where a.t$oorg=1
-		and a.t$orno=znsls401.t$orno$c
-		and a.t$pono=znsls401.t$pono$c) NR_REC_DEVOLUCAO,
-	znsls401.t$lcat$c NM_MOTIVO_CATEGORIA,																--#FAF.140.sn
-	znsls401.t$lass$c NM_MOTIVO_ASSUNTO,
-	znsls401.t$lmot$c NM_MOTIVO_ETIQUETA,
+	tdsls406rec.t$rcid NR_REC_DEVOLUCAO,
+	znsls401dev.t$lcat$c NM_MOTIVO_CATEGORIA,																--#FAF.140.sn
+	znsls401dev.t$lass$c NM_MOTIVO_ASSUNTO,
+	znsls401dev.t$lmot$c NM_MOTIVO_ETIQUETA,
 	CASE WHEN nvl((	select max(a.t$list$c) from tznsls405201 a
-					where a.t$ncia$c=znsls401.t$ncia$c
-					and a.t$uneg$c=znsls401.t$uneg$c
-					and a.t$pecl$c=znsls401.t$pecl$c
-					and a.t$sqpd$c=znsls401.t$sqpd$c
-					and a.t$entr$c=znsls401.t$entr$c
-					and a.t$sequ$c=znsls401.t$sequ$c),1)=0 THEN 1 ELSE 2 END ID_FORCADO			--#FAF.140.en
+					where a.t$ncia$c=znsls401dev.t$ncia$c
+					and a.t$uneg$c=znsls401dev.t$uneg$c
+					and a.t$pecl$c=znsls401dev.t$pecl$c
+					and a.t$sqpd$c=znsls401dev.t$sqpd$c
+					and a.t$entr$c=znsls401dev.t$entr$c
+					and a.t$sequ$c=znsls401dev.t$sequ$c),1)=0 THEN 1 ELSE 2 END ID_FORCADO					--#FAF.140.en
 FROM
-	ttdrec940201 tdrec940,
-	ttdrec941201 tdrec941
+				tznsls401201 znsls401dev								-- Pedido de devolução
+	INNER JOIN	tznsls401201 znsls401org								-- Pedido de venda original
+			ON	znsls401org.t$pecl$c=znsls401dev.t$pvdt$c
+			AND	znsls401org.t$ncia$c=znsls401dev.t$ncia$c
+			AND	znsls401org.t$uneg$c=znsls401dev.t$uneg$c
+			AND	znsls401org.t$entr$c=znsls401dev.t$endt$c
+			AND	znsls401org.t$sequ$c=znsls401dev.t$sedt$c
+	INNER JOIN	tznsls400201 znsls400org
+			ON	znsls400org.t$ncia$c=znsls401org.t$ncia$c
+			AND	znsls400org.t$uneg$c=znsls401org.t$uneg$c
+			AND	znsls400org.t$pecl$c=znsls401org.t$pecl$c
+			AND	znsls400org.t$sqpd$c=znsls401org.t$sqpd$c
+	INNER JOIN 	tcisli245201 cisli245dev								-- Rel Devolução
+			ON	cisli245dev.t$ortp=1
+			AND	cisli245dev.t$koor=3
+			AND	cisli245dev.t$slso=znsls401dev.t$orno$c
+			AND	cisli245dev.t$pono=znsls401dev.t$pono$c
+	INNER JOIN	tcisli940201 cisli940dev
+			ON	cisli940dev.t$fire$l=cisli245dev.t$fire$l
+	INNER JOIN	tcisli941201 cisli941dev
+			ON	cisli941dev.t$fire$l=cisli245dev.t$fire$l
+			AND	cisli941dev.t$line$l=cisli245dev.t$line$l
+	INNER JOIN 	tcisli245201 cisli245org								-- Rel ordem orig
+			ON	cisli245dev.t$ortp=1
+			AND	cisli245dev.t$koor=3
+			AND	cisli245org.t$slso=znsls401org.t$orno$c
+			AND	cisli245org.t$pono=znsls401org.t$pono$c
+	INNER JOIN	tcisli940201 cisli940org
+			ON	cisli940org.t$fire$l=cisli245org.t$fire$l
+	INNER JOIN	ttccom130201 tccom130
+			ON	tccom130.t$cadr=cisli940org.t$stoa$l
+	LEFT JOIN	ttdsls406201 tdsls406rec								-- Rec da devolução
+			ON	tdsls406rec.t$orno=znsls401dev.t$orno$c
+			AND	tdsls406rec.t$pono=znsls401dev.t$pono$c
+	LEFT JOIN	ttdrec947201 tdrec947rec
+			ON	tdrec947rec.t$oorg$l=1
+			AND	tdrec947rec.t$orno$l=znsls401dev.t$orno$c
+			AND	tdrec947rec.t$pono$l=znsls401dev.t$pono$c
+	LEFT JOIN	ttdrec940201 tdrec940rec
+			ON	tdrec940rec.t$fire$l=tdrec947rec.t$fire$l
+	LEFT JOIN	ttdrec941201 tdrec941rec
+			ON	tdrec941rec.t$fire$l=tdrec947rec.t$fire$l
+			AND	tdrec941rec.t$line$l=tdrec947rec.t$line$l
 	LEFT JOIN ( SELECT 
 				 whwmd217.t$item,
 				 whwmd217.t$cwar,
@@ -119,41 +162,4 @@ FROM
 				 WHERE whwmd215.t$cwar=whwmd217.t$cwar
 				 AND whwmd215.t$item=whwmd217.t$item
 				 group by  whwmd217.t$item, whwmd217.t$cwar) q1 
-	ON q1.t$item = tdrec941.t$item$l AND q1.t$cwar = tdrec941.t$cwar$l,
-	ttdrec947201 tdrec947,
-	tznsls401201 znsls401,
-	tznsls401201 sls401orig,
-	tznsls400201 znsls400,
-	ttdsls400201 sls400orig,
-	ttccom130201 tccom130,
-	ttdsls401201 tdsls401orig,
-	tcisli245201 cisli245,
-	tcisli940201 cisli940
-WHERE	tdrec947.t$fire$l=tdrec940.t$fire$l
-AND		tdrec941.t$fire$l=tdrec941.t$fire$l
-AND		tdrec947.t$line$l=tdrec941.t$line$l
-AND 	znsls401.t$orno$c=tdrec947.t$orno$l
-AND 	znsls401.t$pono$c=tdrec947.t$pono$l
-AND		sls401orig.t$ncia$c=znsls401.t$ncia$c
-AND		sls401orig.t$uneg$c=znsls401.t$uneg$c
-AND		sls401orig.t$pecl$c=znsls401.t$pecl$c
-AND		sls401orig.t$sqpd$c=(select min(b.t$sqpd$c) from tznsls401201 b
-							 WHERE b.t$ncia$c=sls401orig.t$ncia$c
-							 AND   sls401orig.t$uneg$c=sls401orig.t$uneg$c
-							 AND   sls401orig.t$pecl$c=sls401orig.t$pecl$c)
-AND		sls401orig.t$entr$c=znsls401.t$endt$c
-AND		sls401orig.t$sequ$c=znsls401.t$sedt$c
-AND		znsls400.t$ncia$c=znsls401.t$ncia$c
-AND		znsls400.t$uneg$c=znsls401.t$uneg$c
-AND		znsls400.t$pecl$c=znsls401.t$pecl$c	 
-AND		znsls400.t$sqpd$c=znsls401.t$sqpd$c	 
-AND		sls400orig.t$orno=sls401orig.t$orno$c
-AND		tccom130.t$cadr=sls400orig.t$ofad
-AND		tdsls401orig.t$orno=sls401orig.t$orno$c
-AND		tdsls401orig.t$pono=sls401orig.t$pono$c
-AND		cisli245.t$slcp=201
-AND		cisli245.t$ortp=1
-AND		cisli245.t$koor=3
-AND		cisli245.t$slso=tdsls401orig.t$orno
-AND		cisli245.t$pono=tdsls401orig.t$pono
-AND		cisli940.t$fire$l=cisli245.t$fire$l
+	ON q1.t$item = cisli941dev.t$item$l AND q1.t$cwar = cisli941dev.t$cwar$l
