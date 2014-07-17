@@ -1085,6 +1085,9 @@ ALTER TABLE stg_sige_detalhe_pedido
 ALTER COLUMN DS_STATUS_PEDIDO char(1)
 
 ALTER TABLE ods_sige_detalhe_pedido
+ALTER COLUMN NR_ID_CIA int
+
+ALTER TABLE ods_sige_detalhe_pedido
 ALTER COLUMN DS_STATUS_PEDIDO varchar(2)
 
 ALTER TABLE aux_ods_approved	
@@ -1127,7 +1130,7 @@ ALTER TABLE ods_sige_pagamento_pedido
 ALTER COLUMN NR_ID_CIA numeric(5,3)
 
 ALTER TABLE stg_sige_detalhe_pedido	
-ALTER COLUMN NR_ID_CIA numeric(5,3)
+ALTER COLUMN NR_ID_CIA int
 
 ALTER TABLE stg_sige_faturamento	
 ALTER COLUMN NR_CIA numeric(5,3)
