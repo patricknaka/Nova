@@ -1,4 +1,3 @@
-
 -- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
 -- #FAF.227 - 16-jul-2014, Fabio Ferreira, 	Correções	
 -- #FAF.227.1 - 17-jul-2014, Fabio Ferreira, 	Correções campo disconto
