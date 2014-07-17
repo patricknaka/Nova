@@ -40,9 +40,9 @@ ALTER TABLE DBO.STG_DESPESA_CONTAS
 ALTER COLUMN CONT_ID_CONTAPAI NUMERIC(24)
 
 
---DE NUMERIC(2) para NUMERIC(4)
+--DE NUMERIC(2) para NUMERIC(3)
 ALTER TABLE DBO.stg_estoque_sige
-ALTER COLUMN ID_CIA NUMERIC(4)
+ALTER COLUMN ID_CIA NUMERIC(3)
 
 --DE VARCHAR(30) PARA VARCHAR(35)
 ALTER TABLE DBO.stg_estoque_sige
@@ -397,17 +397,6 @@ INCLUDE ( [id_cia],
 
 
 --------------------------------------------------------------------
---DE NUMERIC(4) PARA NUMERIC(3)
-ALTER TABLE dbo.stg_estoque_sige
-ALTER COLUMN ID_CIA NUMERIC(3)
-
---------------------------------------------------------------------
-
---DE VARCHAR(2) para VARCHAR(5)
-ALTER TABLE dbo.stg_estoque_sige
-ALTER COLUMN ID_TIPODEPOSITO VARCHAR(5)
-
---------------------------------------------------------------------
 
 --Inclusão Atributo Tipo Bloqueio
 ALTER TABLE DBO.ods_estoque_sige
@@ -420,16 +409,6 @@ ADD id_tipo_bloqueio varchar(5)
  ALTER TABLE DBO.ods_estoque_sige
  ALTER COLUMN ID_CIA NUMERIC(3)
 
---------------------------------------------------------------------
- 
- --DE NUMERIC(4) PARA NUMERIC(3)
-ALTER TABLE dbo.stg_estoque_sige
-ALTER COLUMN ID_CIA NUMERIC(3)
-
---------------------------------------------------------------------
-
-ALTER TABLE dbo.stg_estoque_sige
-ALTER COLUMN ID_TIPODEPOSITO VARCHAR(5)
 
 --------------------------------------------------------------------
 
@@ -703,10 +682,6 @@ ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
 ALTER TABLE DBO.dim_estoque_tipo_bloqueio
 ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
 
----------------------------------------------------------------------------------------------------
-
-ALTER TABLE DBO.stg_estoque_sige
-ALTER COLUMN ID_TIPODEPOSITO VARCHAR(6)
 
 ---------------------------------------------------------------------------------------------------
 
