@@ -1,6 +1,7 @@
 
 -- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
 -- #FAF.227 - 16-jul-2014, Fabio Ferreira, 	Correções	
+-- #FAF.227.1 - 17-jul-2014, Fabio Ferreira, 	Correções campo disconto
 --*************************************************************************************************************************************************************
 SELECT
 
@@ -59,7 +60,8 @@ SELECT
 	cisli941dev.t$gamt$l VL_PRODUTO,
 	cisli941dev.t$fght$l VL_FRETE,
 	cisli941dev.t$gexp$l VL_DESPESA,
-	cisli941dev.t$disc$l VL_DESCONTO_INCONDICIONAL,
+--	cisli941dev.t$disc$l VL_DESCONTO_INCONDICIONAL,															--#FAF.227.1.o
+	cisli941dev.t$tldm$l VL_DESCONTO_INCONDICIONAL,															--#FAF.227.1.n
 	cisli941dev.t$gamt$l VL_TOTAL_ITEM,
 	znsls401org.t$orno$c NR_PEDIDO_ORIGINAL,
 		CAST((FROM_TZ(CAST(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
