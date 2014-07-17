@@ -420,20 +420,20 @@ ADD id_tipo_bloqueio varchar(5)
 
 CREATE TABLE dbo.dim_estoque_tipo_bloqueio
 (
-id_tipo_bloqueio varchar(5),
+id_tipo_bloqueio varchar(10),
 ds_tipo_bloqueio varchar(50)
 )
 
 
 CREATE TABLE dbo.stg_estoque_tipo_bloqueio
 (
-ID_TIPOBLOQ varchar(5),
+ID_TIPOBLOQ varchar(10),
 DS_TIPOBLOQ varchar(50)
 )
 
 CREATE TABLE dbo.ods_estoque_tipo_bloqueio
 (
-id_tipo_bloqueio varchar(5),
+id_tipo_bloqueio varchar(10),
 ds_tipo_bloqueio varchar(50)
 )
 
@@ -673,18 +673,6 @@ ALTER COLUMN ID_NR NVARCHAR(10)
 
 ---------------------------------------------------------------------------------------------------
 
-ALTER TABLE DBO.stg_estoque_tipo_bloqueio
-ALTER COLUMN ID_TIPOBLOQ VARCHAR(6)
-
-ALTER TABLE DBO.ODS_estoque_tipo_bloqueio
-ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
-
-ALTER TABLE DBO.dim_estoque_tipo_bloqueio
-ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
-
-
----------------------------------------------------------------------------------------------------
-
 ALTER TABLE ods_estoque_sige
 ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(6)
 
@@ -694,15 +682,6 @@ ALTER TABLE .stg_estoque_sige
 ALTER COLUMN ID_TIPODEPOSITO VARCHAR(10)
 
 ALTER TABLE .ods_estoque_sige
-ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(10)
-
-ALTER TABLE .stg_estoque_tipo_bloqueio
-ALTER COLUMN ID_TIPOBLOQ VARCHAR(10)
-
-ALTER TABLE .ods_estoque_tipo_bloqueio
-ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(10)
-
-ALTER TABLE .dim_estoque_tipo_bloqueio
 ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(10)
 
 ---------------------------------------------------------------------------------------------------
