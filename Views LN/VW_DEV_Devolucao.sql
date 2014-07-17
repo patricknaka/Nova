@@ -2,6 +2,7 @@
 -- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
 -- #FAF.227 - 16-jul-2014, Fabio Ferreira, 	Correções	
 -- #FAF.227.1 - 17-jul-2014, Fabio Ferreira, 	Correções campo disconto
+-- #FAF.227.2 - 17-jul-2014, Fabio Ferreira, 	Correções campo IN_REPOSICAO e DT_STATUS
 --*************************************************************************************************************************************************************
 SELECT
 
@@ -43,11 +44,11 @@ SELECT
 	CAST((FROM_TZ(CAST(TO_CHAR(MAX(znsls410.t$dtoc$c), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 		AT time zone sessiontimezone) AS DATE)	
 	FROM tznsls410201 znsls410
-	WHERE znsls410.t$ncia$c=znsls401org.t$ncia$c
-	AND znsls410.t$uneg$c=znsls401org.t$uneg$c
-	AND znsls410.t$pecl$c=znsls401org.t$pecl$c
-	AND znsls410.t$sqpd$c=znsls401org.t$sqpd$c
-	AND znsls410.t$entr$c=znsls401org.t$entr$c) DT_STATUS,
+	WHERE znsls410.t$ncia$c=znsls401dev.t$ncia$c
+	AND znsls410.t$uneg$c=znsls401dev.t$uneg$c
+	AND znsls410.t$pecl$c=znsls401dev.t$pecl$c
+	AND znsls410.t$sqpd$c=znsls401dev.t$sqpd$c
+	AND znsls410.t$entr$c=znsls401dev.t$entr$c) DT_STATUS,									--#FAF.227.2
 	tdrec940rec.t$rfdt$l CD_TIPO_NF,
 	
 	tdrec940rec.t$fire$l NR_NFR_DEVOLUCAO,										-- Ref. Fiscal recebimento devolção
@@ -92,8 +93,8 @@ SELECT
 	AND		znsls401nr.t$uneg$c=znsls401dev.t$uneg$c
 	AND		znsls401nr.t$pecl$c=znsls401dev.t$pecl$c	 
 	AND		znsls401nr.t$sqpd$c=znsls401dev.t$sqpd$c
-	AND		znsls401nr.t$entr$c>znsls401dev.t$entr$c),1)=1 then 1
-	ELSE 2
+	AND		znsls401nr.t$entr$c>znsls401dev.t$entr$c),1)=1 then 2
+	ELSE 1																									--#FAF.227.2
 	END IN_REPOSICAO,
 	(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
 	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l
