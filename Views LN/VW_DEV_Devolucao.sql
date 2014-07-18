@@ -2,6 +2,7 @@
 -- #FAF.227 - 16-jul-2014, Fabio Ferreira, 	Correções	
 -- #FAF.227.1 - 17-jul-2014, Fabio Ferreira, 	Correções campo disconto
 -- #FAF.227.2 - 17-jul-2014, Fabio Ferreira, 	Correções campo IN_REPOSICAO e DT_STATUS
+-- #FAF.227.3 - 18-jul-2014, Fabio Ferreira, 	Diversos ajustes #227
 --*************************************************************************************************************************************************************
 SELECT
 
@@ -62,7 +63,8 @@ SELECT
 	cisli941dev.t$gexp$l VL_DESPESA,
 --	cisli941dev.t$disc$l VL_DESCONTO_INCONDICIONAL,															--#FAF.227.1.o
 	cisli941dev.t$tldm$l VL_DESCONTO_INCONDICIONAL,															--#FAF.227.1.n
-	cisli941dev.t$gamt$l VL_TOTAL_ITEM,
+--	cisli941dev.t$gamt$l VL_TOTAL_ITEM,																		--#FAF.223.3.o
+	cisli941dev.t$amnt$l VL_TOTAL_ITEM,																		--#FAF.223.3.n
 	znsls401org.t$orno$c NR_PEDIDO_ORIGINAL,
 		CAST((FROM_TZ(CAST(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_PEDIDO,
@@ -109,7 +111,10 @@ SELECT
 					and a.t$pecl$c=znsls401dev.t$pecl$c
 					and a.t$sqpd$c=znsls401dev.t$sqpd$c
 					and a.t$entr$c=znsls401dev.t$entr$c
-					and a.t$sequ$c=znsls401dev.t$sequ$c),1)=0 THEN 1 ELSE 2 END ID_FORCADO					--#FAF.140.en
+					and a.t$sequ$c=znsls401dev.t$sequ$c),1)=0 THEN 1 ELSE 2 END ID_FORCADO,					--#FAF.140.en
+	znsls401org.t$entr$c NR_ENTREGA_ORIGINAL,																--#FAF.227.3.sn
+	znsls401dev.t$entr$c NR_ENTREGA_DEVOLUCAO,																	
+	cisli941dev.t$cwar$l CD_ARMAZEM 																		--#FAF.227.3.en
 FROM
 				tznsls401201 znsls401dev								-- Pedido de devolução
 	INNER JOIN	tznsls401201 znsls401org								-- Pedido de venda original
