@@ -1,6 +1,7 @@
 --	#FAF.200 - 04-jul-2014, Fabio Ferreira,	Alteração da chave para tipo de transação + numero do título
+--	#FAF.234 - 18-jul-2014, Fabio Ferreira,	Correção duplicidade
 --****************************************************************************************************************************************************************
-SELECT
+SELECT DISTINCT
  --           znsls412.T$TTYP$C || znsls412.t$ninv$c || znsls401.t$orno$c CD_CHAVE_PRIMARIA,			--#FAF.200.o
 			znsls412.T$TTYP$C || znsls412.t$ninv$c CD_CHAVE_PRIMARIA,									--#FAF.200.n
             201 CD_CIA,
