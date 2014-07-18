@@ -112,8 +112,8 @@ SELECT
 					and a.t$sqpd$c=znsls401dev.t$sqpd$c
 					and a.t$entr$c=znsls401dev.t$entr$c
 					and a.t$sequ$c=znsls401dev.t$sequ$c),1)=0 THEN 1 ELSE 2 END ID_FORCADO,					--#FAF.140.en
-	znsls401org.t$entr$c NR_ENTREGA_ORIGINAL,																--#FAF.227.3.sn
-	znsls401dev.t$entr$c NR_ENTREGA_DEVOLUCAO,																	
+	to_char(znsls401org.t$entr$c) NR_ENTREGA_ORIGINAL,																--#FAF.227.3.sn
+	to_char(znsls401dev.t$entr$c) NR_ENTREGA_DEVOLUCAO,																	
 	cisli941dev.t$cwar$l CD_ARMAZEM 																		--#FAF.227.3.en
 FROM
 				tznsls401201 znsls401dev								-- Pedido de devolução
