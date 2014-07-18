@@ -1,8 +1,11 @@
+-- #FAF.233 - 	18-jul-2014, 	Fabio Ferreira, 	Ajuste campo NR_TITULO
+--*************************************************************************************************************************************************************
 SELECT
 	tfcmg949.t$bank$l CD_BANCO,
 	tfcmg949.t$sern$l NR_RETORNO,
 	tfcmg949.t$seqf$l NM_NOME_ARQUIVO_RETORNO,
-	tfcmg949.t$ttyp$l + TO_CHAR(tfcmg949.t$ninv$l) NR_TITULO,
+--	tfcmg949.t$ttyp$l + TO_CHAR(tfcmg949.t$ninv$l) NR_TITULO,									--#FAF.233.o
+	tfcmg949.t$ttyp$l || TO_CHAR(tfcmg949.t$ninv$l) NR_TITULO,									--#FAF.233.o
 	tfcmg949.t$occu$l CD_OCORRENCIA,
 	tfcmg949.t$dare$l DT_OCORRENCIA,
 	tfcmg011.t$baoc$l NR_CONTA_CORRENTE,
