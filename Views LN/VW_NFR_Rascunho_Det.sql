@@ -1,4 +1,5 @@
 -- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota			
+-- #FAF.237 - 22-jul-2014, Fabio Ferreira, 	Correções 
 --************************************************************************************************************************************************************
 SELECT
 	brnfe941.t$fire$l NR_NF_RASCUNHO,
@@ -33,14 +34,14 @@ SELECT
 	brnfe941.t$addc$l VL_DESCONTO,
 	brnfe941.t$fght$l VL_FRETE,
 	brnfe941.t$insr$l VL_SEGURO,
-	brnfe941.t$addc$l VL_DESCONTO_INCONDICIONAL,									-- *** Não existe no LN na pré nota a separação da despes e despesa incondicional
+--	brnfe941.t$addc$l VL_DESCONTO_INCONDICIONAL,												--FAF.237.o		-- *** Não existe no LN na pré nota a separação da despes e despesa incondicional
 	brnfe941.t$tamt$l VL_TOTAL_ITEM,
 
 	(SELECT SUM(i.t$amnt$l)
 	FROM tbrnfe942201 i
 	WHERE i.t$fire$l=brnfe941.t$fire$l
 	AND i.t$line$l=brnfe941.t$line$l
-	AND i.t$brty$l=2) VL_IMPOSTO_IMPORTACAO,
+	AND i.t$brty$l=16) VL_IMPOSTO_IMPORTACAO,													--#FAF.237.n
 	
 	nvl((select sum(r.T$CCHR$L) FROM ttdrec941201 r
 	where r.t$fire$l=brnfe941.t$fire$c
@@ -61,7 +62,7 @@ SELECT
 	FROM tbrnfe942201 i
 	WHERE i.t$fire$l=brnfe941.t$fire$c
 	AND i.t$line$l=brnfe941.t$line$c
-	AND i.t$brty$l=5)
+	AND i.t$brty$l=6)																			--#FAF.237.n
 	ELSE 0 END VL_COFINS_IMPORTACAO,
 	
   CASE WHEN
