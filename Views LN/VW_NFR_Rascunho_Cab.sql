@@ -1,6 +1,7 @@
 -- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota	
 -- #FAF.095 - 29-mai-2014, Fabio Ferreira, 	Correções para 	DT_SAIDA_NF em branco
--- #FAF.022.1 - 03-jun-2014, Fabio Ferreira, 	Correções			
+-- #FAF.022.1 - 03-jun-2014, Fabio Ferreira, 	Correções	
+-- #FAF.235 - 	03-jun-2014, Fabio Ferreira, 	Correções Timezone	e retirado campo VL_DESCONTO_INCONDICIONAL		
 --************************************************************************************************************************************************************
 SELECT 
 	brnfe940.t$fire$l NR_NF_RASCUNHO,
@@ -25,7 +26,7 @@ SELECT
 	brnfe940.t$addc$l VL_DESCONTO,
 	brnfe940.t$fght$l VL_FRETE,
 	brnfe940.t$insr$l VL_SEGURO,
-	brnfe940.t$addc$l VL_DESCONTO_INCONDICIONAL,
+--	brnfe940.t$addc$l VL_DESCONTO_INCONDICIONAL,															--#FAF.235.o
 	(SELECT SUM(i.t$amnt$l)
 	FROM tbrnfe942201 i
 	WHERE i.t$fire$l=brnfe940.t$fire$l
@@ -55,14 +56,18 @@ SELECT
 	and ttdpur451201.t$trdt=(select min(d.t$trdt)
 							 from ttdpur451201 d 
 							 where d.t$orno=ttdpur451201.t$orno) and rownum=1) CD_USUARIO_INCLUSAO,
-	(select min(ttdpur451201.t$trdt)
+	(select 
+	CAST((FROM_TZ(CAST(TO_CHAR(min(ttdpur451201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+		AT time zone sessiontimezone) AS DATE)																	--#FAF.235.n
 	from ttdpur451201 where ttdpur451201.t$orno=tdpur400.t$orno) DT_INCLUSAO,
 	(select ttdpur451201.t$logn
 	from ttdpur451201 where ttdpur451201.t$orno=tdpur400.t$orno
 	and ttdpur451201.t$trdt=(select max(d.t$trdt)
 							 from ttdpur451201 d 
 							 where d.t$orno=ttdpur451201.t$orno) and rownum=1) CD_USUARIO_ALTERACAO,
-	(select max(ttdpur451201.t$trdt)
+	(select 
+	CAST((FROM_TZ(CAST(TO_CHAR(max(ttdpur451201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+		AT time zone sessiontimezone) AS DATE)																	--#FAF.235.n	
 	from ttdpur451201 where ttdpur451201.t$orno=tdpur400.t$orno) DT_ALTERACAO,
 	(select ttdpur451201.t$logn
 	from ttdpur451201 where ttdpur451201.t$orno=tdpur400.t$orno
@@ -70,7 +75,9 @@ SELECT
 							 from ttdpur451201 d 
 							 where d.t$orno=ttdpur451201.t$orno
 							 and d.t$clyn=1) and rownum=1 and ttdpur451201.t$clyn=1) CD_USUARIO_CANCELAMENTO,
-	(select min(ttdpur451201.t$trdt)
+	(select 
+	CAST((FROM_TZ(CAST(TO_CHAR(min(ttdpur451201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+		AT time zone sessiontimezone) AS DATE)																	--#FAF.235.n	
 	from ttdpur451201 where ttdpur451201.t$orno=tdpur400.t$orno and ttdpur451201.t$clyn=1) DT_CANCELAMENTO,
 	brnfe940.t$opor$l ESPECIE_NOTA_FISCAL_RECEBIDA,														
 	brnfe940.t$frec$l NR_NOTA_RECEBIMENTO,																
