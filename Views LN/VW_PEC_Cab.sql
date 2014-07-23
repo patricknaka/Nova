@@ -2,6 +2,7 @@
 --								Inclusão do campo VALOR_TOTAL_MERCADOR,
 -- #FAF.005, 14-mai-2014, Fabio Ferreira, 	Alteração alias
 -- #FAF.228, 15-jul-2014, Fabio Ferreira, 	Alteração origem frete e seguro
+-- #FAF.236, 23-jul-2014, Fabio Ferreira, 	Campo data da criação
 --*********************************************************************************************************************************************
 SELECT DISTINCT
     201 CD_CIA,
@@ -65,7 +66,9 @@ SELECT DISTINCT
 	tdpur400.t$cvpc$c CD_CONTRATO_VPC,
 	tdpur400.t$rfdt$l CD_TIPO_NF,
 	tdpur400.t$fdtc$l CD_TIPO_DOCUMENTO_FISCAL,
-	tdpur400.t$oamt VL_TOTAL_MERCADORIA
+	tdpur400.t$oamt VL_TOTAL_MERCADORIA,
+   (select min(tdpur450.t$trdt) from ttdpur450201 tdpur450
+    where tdpur450.t$orno=tdpur400.t$orno) DT_CRIACAO									--#FAF.236.n
 FROM
     ttdpur400201 tdpur400
     LEFT JOIN (select b.t$orno, min(b.t$trdt) dapr, b.t$logn from ttdpur450201 b
