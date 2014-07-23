@@ -11,14 +11,16 @@ SELECT
         znacr017.T$NINR$C NR_TRANSACAO_REVERSAO,
         znacr017.T$TINV$C || znacr017.T$NINV$C CD_CHAVE_PRIMARIA,
         tfgld018b.T$DCDT DT_BAIXA,												--#FAF.229.n
-        tfgld018b.T$DCDT DT_REVERSAO											--#FAF.229.n
-FROM    BAANDB.tznacr017201 znacr017,
-        BAANDB.ttfgld018201 tfgld018b,											--#FAF.229.n
-        BAANDB.ttfgld018201 tfgld018r											--#FAF.229.n
-WHERE   tfgld018b.T$TTYP=znacr017.T$TTYP$C										--#FAF.229.sn
-AND     tfgld018b.T$DOCN=znacr017.T$DOCN$C
-AND     tfgld018r.T$TTYP=znacr017.T$TINR$C
-AND     tfgld018r.T$DOCN=znacr017.T$NINR$C										--#FAF.229.en
+        tfgld018r.T$DCDT DT_REVERSAO											--#FAF.229.n
+FROM      BAANDB.tznacr017201 znacr017
+LEFT JOIN BAANDB.ttfgld018201 tfgld018b											--#FAF.229.sn
+          ON    tfgld018b.T$TTYP=znacr017.T$TTYP$C										
+          AND   tfgld018b.T$DOCN=znacr017.T$DOCN$C
+          AND   tfgld018b.T$TTYP!=' '
+LEFT JOIN BAANDB.ttfgld018201 tfgld018r											--#FAF.229.en
+          ON    tfgld018r.T$TTYP=znacr017.T$TINR$C
+          AND   tfgld018r.T$DOCN=znacr017.T$NINR$C
+          AND   tfgld018r.T$TTYP!=' '
 GROUP BY 		znacr017.t$ttyp$c,
             znacr017.t$docn$c,
             znacr017.T$TINV$C,
@@ -26,4 +28,4 @@ GROUP BY 		znacr017.t$ttyp$c,
             znacr017.T$TINR$C,
             znacr017.T$NINR$C,
             tfgld018b.T$DCDT,													--#FAF.229.n	
-            tfgld018b.T$DCDT													--#FAF.229.n
+            tfgld018r.T$DCDT													--#FAF.229.n
