@@ -1,7 +1,8 @@
--- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
--- #FAF.094 - 29-mai-2014, Fabio Ferreira, 	Correção campo VL_SERVICO
--- #FAF.021.1 - 27-mai-2014, Fabio Ferreira,	Correções
--- #FAF.199 - 	27-mai-2014, Fabio Ferreira,	Inclusão do campo RECDOC			
+-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	CorreÃ§Ãµes de pendencias funcionais da Ã¡rea fiscal	
+-- #FAF.094 - 29-mai-2014, Fabio Ferreira, 	CorreÃ§Ã£o campo VL_SERVICO
+-- #FAF.021.1 - 27-mai-2014, Fabio Ferreira,	CorreÃ§Ãµes
+-- #FAF.199 - 	27-mai-2014, Fabio Ferreira,	InclusÃ£o do campo RECDOC			
+-- #FAF.238 - 	24-jul-2014, Fabio Ferreira,	CorreÃ§Ã£o IPI_Destacado	
 --************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -51,7 +52,8 @@ SELECT
 	AND tdrec949.t$brty$l=3) VL_IPI,
 	(SELECT sum(tdrec942.t$amnr$l) FROM ttdrec942201 tdrec942
 	WHERE tdrec942.t$fire$l=tdrec940.t$fire$l
-	AND tdrec942.t$brty$l=1) VL_IPI_DESTACADO,
+--	AND tdrec942.t$brty$l=1) VL_IPI_DESTACADO,                                  --#FAF.238.o
+	AND tdrec942.t$brty$l=3) VL_IPI_DESTACADO,                                    --#FAF.238.n
 	nvl((	select sum(a.t$tamt$l) from ttdrec941201 a, ttcibd001201 b
 --			where a.t$fire$l=tdrec941.t$fire$l																--#FAF.094.o
 			where a.t$fire$l=tdrec940.t$fire$l																--#FAF.094.n
