@@ -1,6 +1,17 @@
 -- 	FAF.229 - 23-jul-2014, Fabio Ferreira,	Inclusão dos campos data de criação do doc de baixa e reversão
+-- 	FAF.229 - 25-jul-2014, Fabio Ferreira,	Inclusão código do parceiro
 --****************************************************************************************************************************************************************
 SELECT  
+        nvl((select a.t$itbp 
+            from BAANDB.ttfacr200201 a
+            where a.t$tdoc = znacr017.t$ttyp$c
+            and a.t$docn = znacr017.t$docn$c
+            and rownum=1),
+            (select a.t$ifbp 
+            from BAANDB.ttfacp200201 a
+            where a.t$tdoc = znacr017.t$ttyp$c
+            and a.t$docn = znacr017.t$docn$c
+            and rownum=1))  PARCEIRO,          
         znacr017.t$ttyp$c CD_TP_TRANSACAO_BAIXA,
         znacr017.t$docn$c NR_TRANSACAO_BAIXA,
         znacr017.T$TINV$C CD_TRANSACAO,
