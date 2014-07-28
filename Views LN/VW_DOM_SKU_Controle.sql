@@ -1,7 +1,7 @@
 SELECT d.t$cnst CD_CONTROLE,
        l.t$desc DS_CONTROLE
-FROM tttadv401000 d,
-     tttadv140000 l
+FROM baandb.tttadv401000 d,
+     baandb.tttadv140000 l
 WHERE d.t$cpac='zn'
 AND d.t$cdom='ibd.espe.c'
 AND d.t$vers='B61U'

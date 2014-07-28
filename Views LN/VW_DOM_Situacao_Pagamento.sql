@@ -1,8 +1,8 @@
 SELECT d.t$cnst CD_SITUACAO_PAGAMENTO,
        l.t$desc DS_SITUACAO_PAGAMENTO,
        'CAP' CD_MODULO
-FROM tttadv401000 d,
-     tttadv140000 l
+FROM baandb.tttadv401000 d,
+     baandb.tttadv140000 l
 WHERE d.t$cpac='tf'
 AND d.t$cdom='cmg.stpp'
 AND d.t$vers='B61'
@@ -18,8 +18,8 @@ UNION
 SELECT d.t$cnst CD_SITUACAO_PAGAMENTO,
        l.t$desc DS_SITUACAO_PAGAMENTO,
         'CAPE' CD_MODULO
-FROM tttadv401000 d,
-     tttadv140000 l
+FROM baandb.tttadv401000 d,
+     baandb.tttadv140000 l
 WHERE d.t$cpac='tf'
 AND d.t$cdom='cmg.stat.l'
 AND d.t$vers='B61U'

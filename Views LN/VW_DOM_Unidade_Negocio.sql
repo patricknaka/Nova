@@ -11,4 +11,4 @@ SELECT
 --	SYSDATE DATA_CADASTRO,        -- *** PEDENTE DE ATIVAÇÃO NA TABELA
 	CAST((FROM_TZ(CAST(TO_CHAR(znint002.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
-FROM tznint002201 znint002
+FROM baandb.tznint002201 znint002

@@ -1,4 +1,4 @@
 SELECT  A.T$TPEN$C CD_TIPO_ENTREGA,
 A.T$DSCA$C DS_TIPO_ENTREGA
-FROM tznsls002201 a
+FROM baandb.tznsls002201 a
 order by 1

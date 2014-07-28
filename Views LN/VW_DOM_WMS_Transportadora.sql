@@ -8,9 +8,9 @@ SELECT
           t.T$SEAK NM_APELIDO_TRANSPORTADORA,
           t.T$CFRW CD_TRANSPORTADORA
 FROM
-          ttcmcs080201 t,
-          ttccom100201 p,
-          ttccom130201 e
+          baandb.ttcmcs080201 t,
+          baandb.ttccom100201 p,
+          baandb.ttccom130201 e
 WHERE     t.t$suno!=' '
 AND       p.T$BPID=t.T$SUNO
 AND       e.T$CADR=p.T$CADR

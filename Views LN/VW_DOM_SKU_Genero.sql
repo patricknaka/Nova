@@ -1,7 +1,7 @@
 SELECT d.t$cnst CD_GENERO,
        l.t$desc DS_GENERO
-FROM tttadv401000 d,
-     tttadv140000 l
+FROM baandb.tttadv401000 d,
+     baandb.tttadv140000 l
 WHERE d.t$cpac='tc'
 AND d.t$cdom='kitm'
 AND d.t$vers='B61'

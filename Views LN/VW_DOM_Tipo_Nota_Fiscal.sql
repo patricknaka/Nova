@@ -1,7 +1,7 @@
 SELECT d.t$cnst CD_TIPO_NF,
        l.t$desc DS_TIPO_NF
-FROM tttadv401000 d,
-     tttadv140000 l
+FROM baandb.tttadv401000 d,
+     baandb.tttadv140000 l
 WHERE d.t$cpac='tc'
 AND d.t$cdom='doty.l'
 AND d.t$vers='B61U'
