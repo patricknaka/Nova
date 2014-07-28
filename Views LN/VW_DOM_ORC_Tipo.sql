@@ -1,4 +1,4 @@
 select
 A.T$CSOR as CD_TIPO_ORCAMENTO,
 A.T$DSCA as DS_TIPO_ORCAMENTo
-from ttdsta100201 A
+from baandb.ttdsta100201 A

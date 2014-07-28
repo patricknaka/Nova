@@ -14,15 +14,15 @@ SELECT  tcemm030.t$euca CD_FILIAL,
 --        tccom130.t$fovn$l NR_CNPJ_FILIAL,																	--#FAF.151.o
         tcemm030.T$EUNT CD_UNIDADE_EMPRESARIAL,
         tfgld010.t$desc DS_FILIAL
-FROM    ttcemm030201 tcemm030
-        LEFT JOIN ttcemm122201 tcemm122
+FROM    baandb.ttcemm030201 tcemm030
+        LEFT JOIN baandb.ttcemm122201 tcemm122
         ON      tcemm122.t$grid=tcemm030.t$eunt
         AND     tcemm122.t$loco=tcemm030.t$lcmp        
-        LEFT JOIN ttccom100201 tccom100
+        LEFT JOIN baandb.ttccom100201 tccom100
         ON      tccom100.t$bpid=tcemm122.t$bupa        
-        LEFT JOIN ttccom130201 tccom130
+        LEFT JOIN baandb.ttccom130201 tccom130
         ON      tccom130.t$cadr=tccom100.t$cadr
-        LEFT JOIN ttfgld010201 tfgld010
+        LEFT JOIN baandb.ttfgld010201 tfgld010
         ON     tfgld010.t$dimx=tcemm030.t$euca
         AND    tfgld010.t$dtyp=2
 ORDER BY 5,1

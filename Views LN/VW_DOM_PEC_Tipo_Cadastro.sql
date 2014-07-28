@@ -1,7 +1,7 @@
 SELECT cast(d.t$cnst as int) CD_TIPO_CADASTRO,
        l.t$desc DS_TIPO_CADASTRO
-FROM tttadv401000 d,
-     tttadv140000 l
+FROM baandb.tttadv401000 d,
+     baandb.tttadv140000 l
 WHERE d.t$cpac='td'
 AND d.t$cdom='pur.corg'
 AND d.t$vers='B61U'

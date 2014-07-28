@@ -39,13 +39,13 @@ SELECT DISTINCT
        bspt.t$okfi$c IN_IDONEO,
 --       CASE WHEN addp.t$cadr=addr.t$cadr THEN 'MATRIZ' ELSE 'FILIAL' END NM_MATRIZ_FILIAL,			--#FAF.005.o
 	   bspt.t$prst CD_STATUS,
-	   (select pf.t$cpay from ttccom122201 pf 
+	   (select pf.t$cpay from baandb.ttccom122201 pf 
 	    where pf.t$ifbp=bspt.t$bpid and rownum=1) CD_CONDICAO_PAGAMENTO									--#FAF.153.n
-FROM ttccom100201 bspt
+FROM baandb.ttccom100201 bspt
 --LEFT JOIN ttccom130201 addp ON addp.t$cadr = bspt.t$cadr											--#FAF.091.so
 --LEFT JOIN ttccom133201 adbp ON adbp.t$bpid = bspt.t$bpid
 --LEFT JOIN ttccom130201 addr ON addr.t$cadr = adbp.t$cadr											--#FAF.091.eo
-LEFT JOIN ttccom130201 addr ON addr.t$cadr = bspt.t$cadr											--#FAF.091.n
-LEFT JOIN ttcmcs080201 trnp ON trnp.t$suno = bspt.t$bpid -- rel com transportadoras
-LEFT JOIN ttcmcs060201 fabr ON fabr.t$otbp = bspt.t$bpid -- rel com fabricantes
+LEFT JOIN baandb.ttccom130201 addr ON addr.t$cadr = bspt.t$cadr											--#FAF.091.n
+LEFT JOIN baandb.ttcmcs080201 trnp ON trnp.t$suno = bspt.t$bpid -- rel com transportadoras
+LEFT JOIN baandb.ttcmcs060201 fabr ON fabr.t$otbp = bspt.t$bpid -- rel com fabricantes
 order by 1

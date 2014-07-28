@@ -38,9 +38,9 @@ SELECT 	adbp.t$bpid CD_PARCEIRO,
         AT time zone sessiontimezone) AS DATE) DT_CADASTRO,     
     CAST((FROM_TZ(CAST(TO_CHAR(addr.t$dtlm, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
         AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO
-FROM   ttccom133201 adbp,
-    ttccom100201 tccom100,                                        --#FAF.091.n
-    ttccom130201 addr
+FROM   baandb.ttccom133201 adbp,
+    baandb.ttccom100201 tccom100,                                        --#FAF.091.n
+    baandb.ttccom130201 addr
 WHERE   addr.t$cadr = adbp.t$cadr
 and    tccom100.t$bpid=adbp.t$cadr
 order by 1,2

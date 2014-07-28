@@ -24,9 +24,9 @@ SELECT 	DISTINCT																								--#FAF.003.n
   ' ' DS_OBJETIVO_NATUREZA_OPERACAO   
 --	CAST((FROM_TZ(CAST(TO_CHAR(tcmcs940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 			--#FAF.005.o
 --		AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO           										--#FAF.005.o
-FROM  ttcmcs940201 tcmcs940,
+FROM  baandb.ttcmcs940201 tcmcs940,
 --      ttcmcs947201 tcmcs947,																					--#FAF.127.o
-      ttcmcs964201 tcmcs964
+      baandb.ttcmcs964201 tcmcs964
 WHERE 	tcmcs964.T$OPOR$D=tcmcs940.T$OPOR$L
 --AND		  tcmcs947.t$cfoc$l=tcmcs940.t$ofso$l																--#FAF.127.o
 --AND		  tcmcs947.t$tror$l=1																				--#FAF.127.o

@@ -5,13 +5,13 @@ SELECT 	DISTINCT
 	  tcmcs940.t$opor$l SQ_NATUREZA_OPERACAO,
 	  tcmcs947.t$rfdt$l CD_TIPO_OPERACAO,
 	  dominio.DESCR DS_TIPO_OPERACAO
-FROM  ttcmcs940201 tcmcs940,
-      ttcmcs947201 tcmcs947,      
+FROM  baandb.ttcmcs940201 tcmcs940,
+      baandb.ttcmcs947201 tcmcs947,      
       (SELECT d.t$cnst cod,
        l.t$desc DESCR,
 	   'NR' CD_MODULO											
-		FROM tttadv401000 d,
-			 tttadv140000 l
+		FROM baandb.tttadv401000 d,
+			 baandb.tttadv140000 l
 		WHERE d.t$cpac='td'										
 		AND d.t$cdom='rec.trfd.l'					
 		AND d.t$vers='B61U'

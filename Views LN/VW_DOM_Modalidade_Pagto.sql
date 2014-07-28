@@ -1,7 +1,7 @@
 SELECT d.t$cnst CD_MODALIDADE_PAGAMENTO,
        l.t$desc DS_MODALIDADE
-FROM tttadv401000 d,
-     tttadv140000 l
+FROM baandb.tttadv401000 d,
+     baandb.tttadv140000 l
 WHERE d.t$cpac='tf'
 AND d.t$cdom='cmg.mopa.d'
 AND d.t$vers='B61U'
