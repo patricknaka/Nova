@@ -8,7 +8,7 @@ SELECT
  tfgld106.t$leac CD_CONTA_CONTABIL,
  tfgld106.t$dim1 CD_CENTRO_CUSTO,
  tfgld106.t$dim2 CD_FILIAL,
- (Select u.t$eunt From ttcemm030201 u where u.t$euca!=' '
+ (Select u.t$eunt From baandb.ttcemm030201 u where u.t$euca!=' '
   AND TO_NUMBER(u.t$euca)=CASE WHEN tfgld106.t$dim2=' ' then 999
    WHEN tfgld106.t$dim2<=to_char(0) then 999 else TO_NUMBER(tfgld106.t$dim2) END and rownum = 1) CD_UNIDADE_EMPRESARIAL,
  tfgld106.t$ocmp CD_CIA,
@@ -19,7 +19,7 @@ SELECT
  tfgld011.T$CATG CD_NATUREZA_LANCAMENTO,                                                                          	--#FAF.005.n
  tfgld106.t$obat NR_LOTE,
  tfgld106.t$trun SQ_LOTE
-FROM ttfgld106201 tfgld106,
-ttfgld011201 tfgld011                                                                                           --#FAF.005.n
+FROM baandb.ttfgld106201 tfgld106,
+baandb.ttfgld011201 tfgld011                                                                                           --#FAF.005.n
 WHERE tfgld106.t$dim1!=' '
 AND   tfgld011.t$ttyp=tfgld106.T$OTYP                                                                           --#FAF.005.n

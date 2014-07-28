@@ -19,9 +19,9 @@ SELECT
 	tfcmg949.t$inam$l VL_JUROS,
 	tfcmg949.t$acce$l SITUACAO
 FROM
-	ttfcmg949201 tfcmg949
-	LEFT JOIN ttfcmg001201 tfcmg001
+	baandb.ttfcmg949201 tfcmg949
+	LEFT JOIN baandb.ttfcmg001201 tfcmg001
 	ON  tfcmg001.t$bank=tfcmg949.t$bank$l
-	LEFT JOIN ttfcmg011201 tfcmg011
+	LEFT JOIN baandb.ttfcmg011201 tfcmg011
 	ON  tfcmg011.t$bank=tfcmg001.t$brch
 WHERE tfcmg949.t$ttyp$l>0 AND tfcmg949.t$ttyp$l IS NOT NULL 

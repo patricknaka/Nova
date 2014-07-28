@@ -9,7 +9,7 @@ SELECT
 	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(cisli940dev.t$datg$l,cisli940dev.t$date$l,cisli940dev.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 		AT time zone sessiontimezone) AS DATE) ULTIMA_ATUALIZ_NF,
     201 CD_CIA,
-	(SELECT tcemm030.t$euca FROM ttcemm124201 tcemm124, ttcemm030201 tcemm030
+	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l
 	AND tcemm030.t$eunt=tcemm124.t$grid
 	AND tcemm124.t$loco=201
@@ -26,14 +26,14 @@ SELECT
 	znsls401org.t$sequ$c SQ_ENTREGA,
 	znsls401org.t$pecl$c NR_PEDIDO,
 	(select znsls410.t$poco$c
-	FROM tznsls410201 znsls410
+	FROM baandb.tznsls410201 znsls410
 	WHERE znsls410.t$ncia$c=znsls401dev.t$ncia$c
 	AND znsls410.t$uneg$c=znsls401dev.t$uneg$c
 	AND znsls410.t$pecl$c=znsls401dev.t$pecl$c
 	AND znsls410.t$sqpd$c=znsls401dev.t$sqpd$c
 	AND znsls410.t$entr$c=znsls401dev.t$entr$c
 	AND znsls410.t$dtoc$c= (SELECT MAX(c.t$dtoc$c)
-                          FROM tznsls410201 c
+                          FROM baandb.tznsls410201 c
                           WHERE c.t$ncia$c=znsls410.t$ncia$c
                           AND c.t$uneg$c=znsls410.t$uneg$c
                           AND c.t$pecl$c=znsls410.t$pecl$c
@@ -43,7 +43,7 @@ SELECT
 	(SELECT 
 	CAST((FROM_TZ(CAST(TO_CHAR(MAX(znsls410.t$dtoc$c), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 		AT time zone sessiontimezone) AS DATE)	
-	FROM tznsls410201 znsls410
+	FROM baandb.tznsls410201 znsls410
 	WHERE znsls410.t$ncia$c=znsls401dev.t$ncia$c
 	AND znsls410.t$uneg$c=znsls401dev.t$uneg$c
 	AND znsls410.t$pecl$c=znsls401dev.t$pecl$c
@@ -54,7 +54,7 @@ SELECT
 	tdrec940rec.t$fire$l NR_NFR_DEVOLUCAO,										-- Ref. Fiscal recebimento devolção
 	ltrim(rtrim(znsls401dev.t$item$c)) CD_ITEM,
 	znsls401dev.t$qtve$c QT_DEVOLUCAO,
-	(SELECT a.t$amnt$l FROM tcisli943201 a
+	(SELECT a.t$amnt$l FROM baandb.tcisli943201 a
 	WHERE a.t$fire$l=cisli941dev.t$fire$l
 	AND a.t$line$l=cisli941dev.t$line$l
 	AND a.t$brty$l=1) VL_ICMS,										
@@ -78,18 +78,18 @@ SELECT
 	cisli940org.t$seri$l NR_SERIE_NF_FATURA,
 	cisli940dev.t$docn$l NR_NF_REMESSA,												-- NF devolução							
 	cisli940dev.t$seri$l NR_SERIE_NF_REMESSA,		
-	(SELECT a.t$amnt$l FROM tcisli943201 a
+	(SELECT a.t$amnt$l FROM baandb.tcisli943201 a
 	WHERE a.t$fire$l=cisli941dev.t$fire$l
 	AND a.t$line$l=cisli941dev.t$line$l
 	AND a.t$brty$l=5) VL_PIS,
-	(SELECT a.t$amnt$l FROM tcisli943201 a
+	(SELECT a.t$amnt$l FROM baandb.tcisli943201 a
 	WHERE a.t$fire$l=cisli941dev.t$fire$l
 	AND a.t$line$l=cisli941dev.t$line$l
 	AND a.t$brty$l=6) VL_COFINS,
 	znsls401dev.t$uneg$c CD_UNIDADE_NEGOCIO,
 	CASE WHEN 
 	nvl((select	znsls401nr.t$pecl$c
-	FROM	tznsls401201 znsls401nr
+	FROM	baandb.tznsls401201 znsls401nr
 	WHERE	znsls401nr.t$ncia$c=znsls401dev.t$ncia$c
 	AND		znsls401nr.t$uneg$c=znsls401dev.t$uneg$c
 	AND		znsls401nr.t$pecl$c=znsls401dev.t$pecl$c	 
@@ -97,7 +97,7 @@ SELECT
 	AND		znsls401nr.t$entr$c>znsls401dev.t$entr$c),1)=1 then 2
 	ELSE 1																									--#FAF.227.2
 	END IN_REPOSICAO,
-	(SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
+	(SELECT tcemm124.t$grid FROM baandb.ttcemm124201 tcemm124
 	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l
 	AND tcemm124.t$loco=201
 	AND rownum=1)	CD_UNIDADE_EMPRESARIAL,
@@ -105,7 +105,7 @@ SELECT
 	znsls401dev.t$lcat$c NM_MOTIVO_CATEGORIA,																--#FAF.140.sn
 	znsls401dev.t$lass$c NM_MOTIVO_ASSUNTO,
 	znsls401dev.t$lmot$c NM_MOTIVO_ETIQUETA,
-	CASE WHEN nvl((	select max(a.t$list$c) from tznsls405201 a
+	CASE WHEN nvl((	select max(a.t$list$c) from baandb.tznsls405201 a
 					where a.t$ncia$c=znsls401dev.t$ncia$c
 					and a.t$uneg$c=znsls401dev.t$uneg$c
 					and a.t$pecl$c=znsls401dev.t$pecl$c
@@ -116,47 +116,47 @@ SELECT
 	to_char(znsls401dev.t$entr$c) NR_ENTREGA_DEVOLUCAO,																	
 	cisli941dev.t$cwar$l CD_ARMAZEM 																		--#FAF.227.3.en
 FROM
-				tznsls401201 znsls401dev								-- Pedido de devolução
-	INNER JOIN	tznsls401201 znsls401org								-- Pedido de venda original
+				baandb.tznsls401201 znsls401dev								-- Pedido de devolução
+	INNER JOIN	baandb.tznsls401201 znsls401org								-- Pedido de venda original
 			ON	znsls401org.t$pecl$c=znsls401dev.t$pvdt$c
 			AND	znsls401org.t$ncia$c=znsls401dev.t$ncia$c
 			AND	znsls401org.t$uneg$c=znsls401dev.t$uneg$c
 			AND	znsls401org.t$entr$c=znsls401dev.t$endt$c
 			AND	znsls401org.t$sequ$c=znsls401dev.t$sedt$c
-	INNER JOIN	tznsls400201 znsls400org
+	INNER JOIN	baandb.tznsls400201 znsls400org
 			ON	znsls400org.t$ncia$c=znsls401org.t$ncia$c
 			AND	znsls400org.t$uneg$c=znsls401org.t$uneg$c
 			AND	znsls400org.t$pecl$c=znsls401org.t$pecl$c
 			AND	znsls400org.t$sqpd$c=znsls401org.t$sqpd$c
-	INNER JOIN 	tcisli245201 cisli245dev								-- Rel Devolução
+	INNER JOIN 	baandb.tcisli245201 cisli245dev								-- Rel Devolução
 			ON	cisli245dev.t$ortp=1
 			AND	cisli245dev.t$koor=3
 			AND	cisli245dev.t$slso=znsls401dev.t$orno$c
 			AND	cisli245dev.t$pono=znsls401dev.t$pono$c
-	INNER JOIN	tcisli940201 cisli940dev
+	INNER JOIN	baandb.tcisli940201 cisli940dev
 			ON	cisli940dev.t$fire$l=cisli245dev.t$fire$l
-	INNER JOIN	tcisli941201 cisli941dev
+	INNER JOIN	baandb.tcisli941201 cisli941dev
 			ON	cisli941dev.t$fire$l=cisli245dev.t$fire$l
 			AND	cisli941dev.t$line$l=cisli245dev.t$line$l
-	INNER JOIN 	tcisli245201 cisli245org								-- Rel ordem orig
+	INNER JOIN 	baandb.tcisli245201 cisli245org								-- Rel ordem orig
 			ON	cisli245dev.t$ortp=1
 			AND	cisli245dev.t$koor=3
 			AND	cisli245org.t$slso=znsls401org.t$orno$c
 			AND	cisli245org.t$pono=znsls401org.t$pono$c
-	INNER JOIN	tcisli940201 cisli940org
+	INNER JOIN	baandb.tcisli940201 cisli940org
 			ON	cisli940org.t$fire$l=cisli245org.t$fire$l
-	INNER JOIN	ttccom130201 tccom130
+	INNER JOIN	baandb.ttccom130201 tccom130
 			ON	tccom130.t$cadr=cisli940org.t$stoa$l
-	LEFT JOIN	ttdsls406201 tdsls406rec								-- Rec da devolução
+	LEFT JOIN	baandb.ttdsls406201 tdsls406rec								-- Rec da devolução
 			ON	tdsls406rec.t$orno=znsls401dev.t$orno$c
 			AND	tdsls406rec.t$pono=znsls401dev.t$pono$c
-	LEFT JOIN	ttdrec947201 tdrec947rec
+	LEFT JOIN	baandb.ttdrec947201 tdrec947rec
 			ON	tdrec947rec.t$oorg$l=1
 			AND	tdrec947rec.t$orno$l=znsls401dev.t$orno$c
 			AND	tdrec947rec.t$pono$l=znsls401dev.t$pono$c
-	LEFT JOIN	ttdrec940201 tdrec940rec
+	LEFT JOIN	baandb.ttdrec940201 tdrec940rec
 			ON	tdrec940rec.t$fire$l=tdrec947rec.t$fire$l
-	LEFT JOIN	ttdrec941201 tdrec941rec
+	LEFT JOIN	baandb.ttdrec941201 tdrec941rec
 			ON	tdrec941rec.t$fire$l=tdrec947rec.t$fire$l
 			AND	tdrec941rec.t$line$l=tdrec947rec.t$line$l
 	LEFT JOIN ( SELECT 
@@ -165,7 +165,7 @@ FROM
 				 case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd))=0 then 0
 				 else round(sum(whwmd217.t$mauc$1)/(max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)),4) 
 				 end mauc
-				 FROM twhwmd217201 whwmd217, twhwmd215201 whwmd215
+				 FROM baandb.twhwmd217201 whwmd217, baandb.twhwmd215201 whwmd215
 				 WHERE whwmd215.t$cwar=whwmd217.t$cwar
 				 AND whwmd215.t$item=whwmd217.t$item
 				 group by  whwmd217.t$item, whwmd217.t$cwar) q1 

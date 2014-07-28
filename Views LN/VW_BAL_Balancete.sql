@@ -21,7 +21,7 @@ SELECT
 	tfgld205.t$leac CD_CONTA_CONTABIL,
 	tfgld205.t$dim1 CD_CENTRO_CUSTO,
 	nvl(tfgld212.t$ftob,0)+nvl((SELECT (SUM(s.t$fcam)-SUM(s.t$fdam))
-					FROM ttfgld205201 s
+					FROM baandb.ttfgld205201 s
 					WHERE s.t$cono=tfgld205.t$cono
 					AND   s.t$ptyp=tfgld205.t$ptyp
 					AND   s.t$year=tfgld205.t$year
@@ -42,16 +42,16 @@ SELECT
 --	CAST((FROM_TZ(CAST(TO_CHAR(MAX(tfgld100.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 		--#FAF.005.o
 --			AT time zone sessiontimezone) AS DATE)															--#FAF.005.o
 	MAX(tfgld100.t$trdt)																					--#FAF.005.n
-	FROM ttfgld100201 tfgld100
+	FROM baandb.ttfgld100201 tfgld100
 	WHERE tfgld100.t$year=tfgld205.t$year
 	AND   tfgld100.t$fprd=tfgld205.t$prno
 	AND   tfgld100.t$stat=6) DT_ATUALIZACAO,
-	(Select u.t$eunt From ttcemm030201 u where u.t$euca!=' '
+	(Select u.t$eunt From baandb.ttcemm030201 u where u.t$euca!=' '
 		AND TO_NUMBER(u.t$euca)=CASE WHEN tfgld205.t$dim2=' ' then 999
 		WHEN tfgld205.t$dim2<=to_char(0) then 999 else TO_NUMBER(tfgld205.t$dim2) END and rownum = 1) CD_UNIDADE_EMPRESARIAL
 FROM 
-	ttfgld205201 tfgld205
-	LEFT JOIN ttfgld212201 tfgld212
+	baandb.ttfgld205201 tfgld205
+	LEFT JOIN baandb.ttfgld212201 tfgld212
 ON	tfgld212.t$cono=tfgld205.t$cono
 AND	tfgld212.t$year=tfgld205.t$year
 AND	tfgld212.t$dim1=tfgld205.t$dim1

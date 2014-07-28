@@ -1,7 +1,7 @@
 SELECT d.t$cnst CD_PREPARADO_PAGAMENTO,
        l.t$desc DS_PREPARADO_PAGAMENTO
-FROM tttadv401000 d,
-     tttadv140000 l
+FROM baandb.tttadv401000 d,
+     baandb.tttadv140000 l
 WHERE d.t$cpac='tf'
 AND d.t$cdom='acp.pyst.l'
 AND d.t$vers='B61U'

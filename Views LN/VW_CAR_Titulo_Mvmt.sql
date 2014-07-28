@@ -15,7 +15,7 @@
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,
-	CASE WHEN nvl((	select c.t$styp from tcisli205201 c
+	CASE WHEN nvl((	select c.t$styp from baandb.tcisli205201 c
 					where c.t$styp='BL ATC'
 					AND c.T$ITYP=tfacr200.t$ttyp
 					AND c.t$idoc=tfacr200.t$ninv
@@ -38,18 +38,18 @@ SELECT DISTINCT
 	tfacr200.t$amnt VL_TRANSACAO,																			--#FAF.186.o	--#FAF.186.2.n
 --	nvl(r.t$amnt*-1, tfacr200.t$amnt)  VL_TRANSACAO,														--#FAF.186.n	--#FAF.186.2.o
 	--	tfcmg409.t$stdd SITUACAO_MOVIMENTO,																	--#FAF.079.o
-	(select p.t$rpst$l from ttfacr201201 p
+	(select p.t$rpst$l from baandb.ttfacr201201 p
 	 where p.t$ttyp=tfacr200.t$ttyp
 	 and p.t$ninv=tfacr200.t$ninv 
 	 and p.t$schn=tfacr200.t$schn) CD_PREPARADO_PAGAMENTO,													--#FAF.079.n
 	CASE WHEN t.t$balc=t.t$bala															-- Liquidado	--#FAF.079.sn
-	THEN (select max(t$docd) from ttfacr200201 m
+	THEN (select max(t$docd) from baandb.ttfacr200201 m
 	 where m.t$ttyp=tfacr200.t$ttyp
 	 and m.t$ninv=tfacr200.t$ninv 
 	 and m.t$schn=tfacr200.t$schn)
 	WHEN t.t$balc=t.t$amnt																-- Nenhum recebimento
 	THEN tfacr200.t$docd
-	ELSE (select min(t$docd) from ttfacr200201 m										-- Primeiro rec parcial 
+	ELSE (select min(t$docd) from baandb.ttfacr200201 m										-- Primeiro rec parcial 
 	 where m.t$ttyp=tfacr200.t$ttyp
 	 and m.t$ninv=tfacr200.t$ninv 
 	 and m.t$schn=tfacr200.t$schn)
@@ -59,7 +59,7 @@ SELECT DISTINCT
 	tfcmg001.t$bano NR_CONTA_CORRENTE,																			--#FAF.001.n
 	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
-	(Select u.t$eunt From ttcemm030201 u
+	(Select u.t$eunt From baandb.ttcemm030201 u
 	 where u.t$euca!=' '
 	AND TO_NUMBER(u.t$euca)=CASE WHEN tfacr200.t$dim2=' ' then 999
 	WHEN tfacr200.t$dim2<=to_char(0) then 999 
@@ -70,7 +70,7 @@ SELECT DISTINCT
 		 where znacr005.t$tty1$c=tfacr200.t$ttyp and znacr005.t$nin1$c=tfacr200.t$ninv
 		 and znacr005.T$FLAG$C=1																		--#FAF.007.n
 		 and rownum=1), 
-		 (select rs.t$ttyp || rs.t$ninv from ttfacr200201 rs											--#FAF.186.2.sn
+		 (select rs.t$ttyp || rs.t$ninv from baandb.ttfacr200201 rs											--#FAF.186.2.sn
 		  where rs.t$tdoc=tfacr200.t$tdoc 
 		  and rs.t$docn=tfacr200.t$docn
 		  and rs.t$ttyp || rs.t$ninv!=tfacr200.t$ttyp || tfacr200.t$ninv								--#FAF.213.1.n
@@ -91,7 +91,7 @@ SELECT DISTINCT
 	tfacr201.t$dued$l DT_VENCTO_ORIGINAL_PRORROGADO,
 	tfacr201.t$liqd DT_LIQUIDEZ_PREVISTA,																		--#FAF.186.1.en
 	CASE WHEN tfacr200.t$tdoc='ENC' THEN 5																		--#FAF.213.n
-	WHEN (select a.t$catg from ttfgld011201 a where a.t$ttyp=tfacr200.t$tdoc)=10 THEN 3							--#FAF.213.sn
+	WHEN (select a.t$catg from baandb.ttfgld011201 a where a.t$ttyp=tfacr200.t$tdoc)=10 THEN 3							--#FAF.213.sn
 	WHEN tfacr200.t$tdoc='RGL' THEN 1
 	WHEN tfacr200.t$tdoc='LKC' THEN 2
 	WHEN tfacr200.t$tdoc='RLA' THEN 2
@@ -101,7 +101,7 @@ SELECT DISTINCT
 	ELSE 0 END	CD_TIPO_MOVIMENTO																				--#FAF.213.en		 	
 	
 FROM
-	ttfacr200201 tfacr200
+	baandb.ttfacr200201 tfacr200
 --	LEFT JOIN (	select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn,
 --								rs.t$lino, rs.t$amnt														--#FAF.186.1.n	--#FAF.186.2.so
 --				from ttfacr200201 rs) r																		--#FAF.002.sn		
@@ -117,18 +117,18 @@ FROM
 --              and   a.t$ninv=b.t$ninv
 --              and   b.t$brel!=' ')) q1 on q1.t$ttyp=tfacr200.t$ttyp and q1.t$ninv=tfacr200.t$ninv			--#FAF.001.en	--#FAF.186.1.eo
 	
-	LEFT JOIN ttfacr201201 tfacr201 	ON 	tfacr201.t$ttyp=tfacr200.t$ttyp
+	LEFT JOIN baandb.ttfacr201201 tfacr201 	ON 	tfacr201.t$ttyp=tfacr200.t$ttyp
 										AND tfacr201.t$ninv=tfacr200.t$ninv
 										AND tfacr201.t$schn=tfacr200.t$schn
 
-	LEFT JOIN ttfcmg001201 tfcmg001
+	LEFT JOIN baandb.ttfcmg001201 tfcmg001
 --	ON  tfcmg001.t$bank=q1.t$brel																			--#FAF.186.1.o
 	ON  tfcmg001.t$bank=tfacr201.t$brel																		--#FAF.186.1.n
-	LEFT JOIN ttfcmg011201 tfcmg011
+	LEFT JOIN baandb.ttfcmg011201 tfcmg011
 	ON  tfcmg011.t$bank=tfcmg001.t$brch
-	LEFT JOIN ttfcmg409201 tfcmg409
+	LEFT JOIN baandb.ttfcmg409201 tfcmg409
 	ON  tfcmg409.t$btno=tfacr200.t$btno,
-	ttfacr200201 t																							--#FAF.079.n
+	baandb.ttfacr200201 t																							--#FAF.079.n
 	
 WHERE
       tfacr200.t$docn!=0

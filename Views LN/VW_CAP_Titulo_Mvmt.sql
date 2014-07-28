@@ -34,7 +34,7 @@ SELECT DISTINCT
 		 where znacp004.t$tty1$c=tfacp200.t$ttyp and znacp004.t$nin1$c=tfacp200.t$ninv
 		 and znacp004.t$tty2$c=tfacp200.t$tdoc and znacp004.t$nin2$c=tfacp200.t$docn							--#FAF.211.o
 		 and rownum=1), 
-		(select  rs.t$ttyp || rs.t$ninv from ttfacp200201 rs
+		(select  rs.t$ttyp || rs.t$ninv from baandb.ttfacp200201 rs
 		 where rs.t$tdoc=tfacp200.t$tdoc
 		 and rs.t$docn=tfacp200.t$docn
 		 and rs.t$ttyp || rs.t$ninv!=tfacp200.t$ttyp || tfacp200.t$ninv											--#FAF.215.n
@@ -48,7 +48,7 @@ SELECT DISTINCT
 	--(select t.t$stap from ttfacp200201 t 
 	--	where t.t$ttyp=tfacp200.t$ttyp and t.t$ninv=tfacp200.t$ninv and t.t$docn=0) CD_SITUACAO_MOVIMENTO,
 	(select CAST((FROM_TZ(CAST(TO_CHAR(max(s.t$sdat), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) from ttfacp600201 s 
+			AT time zone sessiontimezone) AS DATE) from baandb.ttfacp600201 s 
 		where s.t$payt=tfacp200.t$tdoc and s.t$payd=tfacp200.t$docn) DT_SITUACAO,
 --	nvl(r.t$amth$1, tfacp200.t$amth$1) VL_TRANSACAO,															--#FAF.186.2.o
 	tfacp200.t$amth$1 VL_TRANSACAO,																				--#FAF.186.2.n
@@ -57,7 +57,7 @@ SELECT DISTINCT
 				AT time zone sessiontimezone) AS DATE) END DT_ATUALIZACAO,
 	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
 	CASE WHEN tfacp200.t$tdoc='ENC' THEN 5																							--#FAF.212.1.n
-	  WHEN (select a.t$catg from ttfgld011201 a where a.t$ttyp=tfacp200.t$tdoc)=10 THEN 3
+	  WHEN (select a.t$catg from baandb.ttfgld011201 a where a.t$ttyp=tfacp200.t$tdoc)=10 THEN 3
 	  WHEN tfacp200.t$tdoc='PLG' THEN 1
 	  WHEN tfacp200.t$tdoc='LKF' THEN 2
 	--  WHEN tfacp200.t$tdoc='PKF' THEN 2																			--#FAF.212.o
@@ -69,7 +69,7 @@ SELECT DISTINCT
 --  CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.003.so
 --        AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO										--#FAF.003.eo
 FROM
-	ttfacp200201 tfacp200
+	baandb.ttfacp200201 tfacp200
 																																--#FAF.186.2.so
 --  LEFT JOIN (select distinct rs.t$ttyp, rs.t$ninv, rs.t$tdoc, rs.t$docn, rs.t$lino, rs.t$amth$1, rs.t$tpay from ttfacp200201 rs) r
 --  ON r.t$tdoc=tfacp200.t$tdoc 

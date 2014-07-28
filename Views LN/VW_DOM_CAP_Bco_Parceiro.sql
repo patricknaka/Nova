@@ -16,7 +16,7 @@ SELECT
 --	CAST((FROM_TZ(CAST(TO_CHAR(tccom125.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 		--#FAF.002.so
 --				AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO							--#FAF.002.eo
 FROM
-	ttccom125201 tccom125,
-	ttfcmg011201 tfcmg011
+	baandb.ttccom125201 tccom125,
+	baandb.ttfcmg011201 tfcmg011
 WHERE tfcmg011.t$bank=tccom125.t$brch
 order by 1

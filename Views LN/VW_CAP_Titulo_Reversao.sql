@@ -12,12 +12,12 @@ SELECT
                 znacp001.t$lirv$c nr_linha_reversao,
                 CAST((from_tz(CAST(to_char(znacp001.t$date$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
                   AT TIME ZONE SESSIONTIMEZONE) AS DATE) dt_reversao
-FROM          tznacp001201 znacp001
-INNER JOIN    ttfacp200201 tfacp200 ON  tfacp200.t$ttyp=znacp001.t$ttyp$c
-                                    AND tfacp200.t$ninv=znacp001.t$ninv$c
-                                    AND tfacp200.t$tdoc=znacp001.t$tdoc$c
-                                    AND tfacp200.t$docn=znacp001.t$docn$c
-                                    AND tfacp200.t$lino=znacp001.t$lino$c
-INNER JOIN   ttfacp200201 tfacp200d ON  tfacp200d.t$ttyp=znacp001.t$ttyp$c
-                                    AND tfacp200d.t$ninv=znacp001.t$ninv$c
-                                    AND tfacp200d.t$docn=0
+FROM          baandb.tznacp001201 znacp001
+INNER JOIN    baandb.ttfacp200201 tfacp200 ON  tfacp200.t$ttyp=znacp001.t$ttyp$c
+                                           AND tfacp200.t$ninv=znacp001.t$ninv$c
+                                           AND tfacp200.t$tdoc=znacp001.t$tdoc$c
+                                           AND tfacp200.t$docn=znacp001.t$docn$c
+                                           AND tfacp200.t$lino=znacp001.t$lino$c
+INNER JOIN   baandb.ttfacp200201 tfacp200d ON  tfacp200d.t$ttyp=znacp001.t$ttyp$c
+                                           AND tfacp200d.t$ninv=znacp001.t$ninv$c
+                                           AND tfacp200d.t$docn=0

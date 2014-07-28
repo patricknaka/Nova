@@ -11,4 +11,4 @@ SELECT DISTINCT																							--#FAF.224.o
 	CAST((FROM_TZ(CAST(TO_CHAR(tfcmg948.t$lach$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO
 FROM
-	ttfcmg948201 tfcmg948
+	baandb.ttfcmg948201 tfcmg948

@@ -25,7 +25,7 @@ SELECT DISTINCT
 	nvl(tfcmg109.t$stpp,0) CD_SITUACAO_PAGAMENTO,
 	tfacp600.t$ddat DT_ATUALIZACAO,
 	CASE WHEN tfacp200.t$balc=0 then
-	(select max(d.t$docd) from ttfacp200201 d
+	(select max(d.t$docd) from baandb.ttfacp200201 d
 	where d.t$ttyp=tfacp200.t$ttyp
 	and d.t$ninv=tfacp200.t$ninv) 
   ELSE to_date('1970-01-01', 'YYYY-MM-DD')
@@ -40,15 +40,15 @@ SELECT DISTINCT
  
           --#FAF.003.n  
 FROM
-  ttfacp600201 tfacp600
-  LEFT JOIN ttfcmg109201 tfcmg109
+  baandb.ttfacp600201 tfacp600
+  LEFT JOIN baandb.ttfcmg109201 tfcmg109
   ON tfcmg109.t$btno=tfacp600.t$pbtn
 --  LEFT JOIN ttfcmg103201 tfcmg103																						--#FAF.184.1.so
 --  ON tfcmg103.T$BTNO=tfcmg109.T$BTNO
 --  AND tfcmg103.t$ttyp=tfacp600.t$payt																	--#FAF.119.n
 --  AND tfcmg103.t$docn=tfacp600.t$payd
 --  AND tfcmg103.t$ptbp=tfacp600.t$ptbp																	--#FAF.184.n	--#FAF.184.1.eo
-  LEFT JOIN ttfcmg001201 tfcmg001
+  LEFT JOIN baandb.ttfcmg001201 tfcmg001
   ON tfcmg001.t$bank=tfacp600.t$bank
 --  LEFT JOIN ttfcmg001201 tfcmg001f                    
 
@@ -56,24 +56,24 @@ FROM
 --  ON tfcmg001f.t$bank=tfacp600.t$basu                    
 
 --#FAF.002.o
-  LEFT JOIN ttccom125201 tccom125                      
+  LEFT JOIN baandb.ttccom125201 tccom125                      
 
 --#FAF.002.sn                    
   ON tccom125.t$cban=tfacp600.t$basu                    
   AND tccom125.t$ptbp=tfacp600.t$ptbp                    
 
 --#FAF.002.en
-  LEFT JOIN ttfcmg011201 tfcmg011
+  LEFT JOIN baandb.ttfcmg011201 tfcmg011
   ON tfcmg011.t$bank=tfcmg001.t$brch
-  LEFT JOIN ttfcmg011201 tfcmg011f
+  LEFT JOIN baandb.ttfcmg011201 tfcmg011f
   ON tfcmg011f.t$bank=tccom125.t$brch,                  
 
-  ttfacp200201 tfacp200
-  LEFT JOIN ttflcb230201 tflcb230 
+  baandb.ttfacp200201 tfacp200
+  LEFT JOIN baandb.ttflcb230201 tflcb230 
   ON tflcb230.t$docn$d=tfacp200.t$docn
   AND tflcb230.t$ttyp$d=tfacp200.t$tdoc
   AND tflcb230.t$ninv$d=tfacp200.t$ninv,
-  ttfacp201201 tfacp201																									--#FAF.184.1.n
+  baandb.ttfacp201201 tfacp201																									--#FAF.184.1.n
 WHERE
       tfacp200.t$tdoc=tfacp600.t$payt
   AND  tfacp200.t$docn=tfacp600.t$payd
@@ -82,7 +82,7 @@ WHERE
   AND tfacp200.T$TDOC NOT IN (select a.t$tlif$c from BAANDB.tznacr013201 a where a.t$lndt$c<TO_DATE('1990-01-01', 'YYYY-MM-DD'))	--#FAF.163.n
 --AND tfacp200.t$ttyp || tfacp200.t$ninv='PFS124'
   AND tfacp200.t$tpay!=5																											--#FAF.163.1.sn
-  AND tfacp600.t$seqn=(select min(a.t$seqn) from ttfacp600201 a
+  AND tfacp600.t$seqn=(select min(a.t$seqn) from baandb.ttfacp600201 a
 						where a.t$pcom=tfacp600.t$pcom
 						and a.t$payt=tfacp600.t$payt
 						and a.t$payd=tfacp600.t$payd

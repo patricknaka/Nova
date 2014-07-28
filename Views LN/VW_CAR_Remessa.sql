@@ -10,8 +10,8 @@ SELECT DISTINCT
 	CAST((FROM_TZ(CAST(TO_CHAR(tfcmg948.t$lach$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
 FROM
-	ttfcmg948201 tfcmg948
-	LEFT JOIN ttfcmg001201 tfcmg001
+	baandb.ttfcmg948201 tfcmg948
+	LEFT JOIN baandb.ttfcmg001201 tfcmg001
 	ON  tfcmg001.t$bank=tfcmg948.t$bank$l
-	LEFT JOIN ttfcmg011201 tfcmg011
+	LEFT JOIN baandb.ttfcmg011201 tfcmg011
 	ON  tfcmg011.t$bank=tfcmg001.t$brch
