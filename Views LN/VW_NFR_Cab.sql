@@ -3,6 +3,7 @@
 -- #FAF.021.1 - 27-mai-2014, Fabio Ferreira,	Correções
 -- #FAF.199 - 	27-mai-2014, Fabio Ferreira,	Inclusão do campo RECDOC			
 -- #FAF.238 - 	24-jul-2014, Fabio Ferreira,	Correção IPI_Destacado	
+-- #FAF.238.1 - 	28-jul-2014, Fabio Ferreira,	Correções	
 --************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -81,7 +82,8 @@ SELECT
 	(SELECT tdrec947.t$rcno$l FROM ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
 	AND rownum=1) NR_LOTE,
-	CASE WHEN tccom966.t$insu$l=' ' THEN 2 ELSE 1 END IN_SUFRAMA,		
+--	CASE WHEN tccom966.t$insu$l=' ' THEN 2 ELSE 1 END IN_SUFRAMA,											--#FAF.238.1.o	
+	CASE WHEN nvl(tccom966.t$insu$l,' ')=' ' THEN 2 ELSE 1 END IN_SUFRAMA,									--#FAF.238.1.n	
 	(SELECT tdrec949.t$amnt$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=5) VL_PIS,
@@ -92,7 +94,7 @@ SELECT
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=13),0) VL_CSLL,																	--#FAF.021.1.n
 	0 VL_DESCONTO_CONDICIONAL,											-- *** DESCONSIDERAR ***
-	tdrec940.t$addc$l VL_DESCONTO_INCONDICIONAL,
+--	tdrec940.t$addc$l VL_DESCONTO_INCONDICIONAL,
 	(SELECT tdrec949.t$base$l FROM ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=16) VL_BASE_IMPOSTO_IMPORTACAO,
