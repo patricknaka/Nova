@@ -1,7 +1,7 @@
 --	#FAF.179 - 30-jun-2014,	Fabio Ferreira,	Inclusão do campo DT_SITUACAO_LISTA 
 --****************************************************************************************************************************************************************
 select distinct
-            znsls401.t$entr$c NR_ENTREGA,
+            to_char(znsls401.t$entr$c) NR_ENTREGA,
             znsls400.t$idli$c NR_LISTA_CASAMENTO,
             CASE WHEN tdsls400.t$hdst=40 THEN 'A'
             WHEN nvl(znacr200.t$vale$c,' ')!=' ' THEN 'V'
