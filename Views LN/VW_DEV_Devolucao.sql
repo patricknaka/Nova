@@ -7,7 +7,7 @@
 SELECT
 
 	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(cisli940dev.t$datg$l,cisli940dev.t$date$l,cisli940dev.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-		AT time zone sessiontimezone) AS DATE) ULTIMA_ATUALIZ_NF,
+		AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZ_NF,
     201 CD_CIA,
 	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l
