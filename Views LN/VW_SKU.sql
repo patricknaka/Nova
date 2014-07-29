@@ -70,18 +70,18 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
 		tdisa001.t$cwar CD_ARMAZEM,					--#FAF.009.n
 		tcibd001.t$mdfb$c DS_MODELO_FABRICANTE											--#FAF.084.n
 
-FROM  ttcibd001201 tcibd001
-LEFT JOIN ttdipu001201 tdipu001 ON tdipu001.t$item=tcibd001.t$item
-LEFT JOIN ttccom100201 tccom100 ON tccom100.t$bpid=tdipu001.t$otbp
-LEFT JOIN ttccom130201 tccom130 ON tccom130.t$cadr=tccom100.t$cadr
-LEFT JOIN ttcibd004201 tcibd004 ON tcibd004.t$item=tcibd001.t$item AND tcibd004.t$citt='000' --AND tcibd004.t$bpid=tccom100.t$bpid 
-LEFT JOIN ttcibd936201 tcibd936 ON tcibd936.t$ifgc$l=tcibd001.t$ifgc$l
-LEFT JOIN twhwmd400201 whwmd400 ON whwmd400.t$item=tcibd001.t$item
-LEFT JOIN ttcibd200201 tcibd200 ON tcibd200.t$item=tcibd001.t$item
-LEFT JOIN ttdisa001201 tdisa001 ON tdisa001.t$item=tcibd001.t$item
-LEFT JOIN ttcmcs060201 tcmcs060 ON tcmcs060.t$cmnf=tcibd001.t$cmnf
-LEFT JOIN ttccom100201 tccom100f ON tccom100f.T$BPID=tcmcs060.T$OTBP,
-ttcmcs023201 tcmcs023
+FROM  baandb.ttcibd001201 tcibd001
+LEFT JOIN baandb.ttdipu001201 tdipu001 ON tdipu001.t$item=tcibd001.t$item
+LEFT JOIN baandb.ttccom100201 tccom100 ON tccom100.t$bpid=tdipu001.t$otbp
+LEFT JOIN baandb.ttccom130201 tccom130 ON tccom130.t$cadr=tccom100.t$cadr
+LEFT JOIN baandb.ttcibd004201 tcibd004 ON tcibd004.t$item=tcibd001.t$item AND tcibd004.t$citt='000' --AND tcibd004.t$bpid=tccom100.t$bpid 
+LEFT JOIN baandb.ttcibd936201 tcibd936 ON tcibd936.t$ifgc$l=tcibd001.t$ifgc$l
+LEFT JOIN baandb.twhwmd400201 whwmd400 ON whwmd400.t$item=tcibd001.t$item
+LEFT JOIN baandb.ttcibd200201 tcibd200 ON tcibd200.t$item=tcibd001.t$item
+LEFT JOIN baandb.ttdisa001201 tdisa001 ON tdisa001.t$item=tcibd001.t$item
+LEFT JOIN baandb.ttcmcs060201 tcmcs060 ON tcmcs060.t$cmnf=tcibd001.t$cmnf
+LEFT JOIN baandb.ttccom100201 tccom100f ON tccom100f.T$BPID=tcmcs060.T$OTBP,
+baandb.ttcmcs023201 tcmcs023
 WHERE
 tcmcs023.t$citg=tcibd001.t$citg
 AND CAST((FROM_TZ(CAST(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 

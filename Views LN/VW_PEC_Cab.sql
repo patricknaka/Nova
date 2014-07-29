@@ -13,7 +13,7 @@ SELECT DISTINCT
     ' ' SQ_NATUREZA_OPERACAO,                  -- *** NÃO TEMOS ESTA INFORMAÇÃO NA ORDEM DE COMPRA ***
     tdpur400.t$cpay CD_CONDICAO_PAGAMENTO,
     (select sum((pl1.t$qoor-pl1.t$qidl)*pl1.t$pric) 
-    from ttdpur401201 pl1 
+    from baandb.ttdpur401201 pl1 
     where pl1.t$orno=tdpur400.t$orno
     and pl1.t$oltp!=2) VL_SALDO_PEC,
     tdpur400.t$cdec CD_TIPO_FRETE,
@@ -30,19 +30,19 @@ SELECT DISTINCT
     END IN_APROVADO,
     apr.dapr DT_APROVACAO_PEDIDO,
     tdpur400.t$hdst CD_SITUACAO_PEDIDO,
-    (select min(tdpur450.t$trdt) from ttdpur450201 tdpur450
+    (select min(tdpur450.t$trdt) from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno
     and tdpur450.t$hdst=tdpur400.t$hdst) DT_SITUACAO_PEDIDO,
-    (select tdpur450.t$logn from ttdpur450201 tdpur450
+    (select tdpur450.t$logn from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno
     and rownum=1) DS_USUARIO_GERACAO_PEDIDO,
-    (select max(tdpur401.t$rcd_utc) from ttdpur401201 tdpur401
+    (select max(tdpur401.t$rcd_utc) from baandb.ttdpur401201 tdpur401
 	where tdpur401.t$orno=tdpur400.t$orno) DT_ATUALIZACAO, 
-    nvl((select t.t$text from ttttxt010201 t 
+    nvl((select t.t$text from baandb.ttttxt010201 t 
 	where t$clan='p'
 	AND t.t$ctxt=tdpur400.t$txta
 	and rownum=1),' ') DS_OBSERVACAO_PEDIDO,
-    (select znpur003.t$citg$c from tznpur003201 znpur003
+    (select znpur003.t$citg$c from baandb.tznpur003201 znpur003
     where znpur003.t$cotp$c=tdpur400.t$cotp
     and rownum=1) CD_DEPARTAMENTO,
 --    tdpur400.t$corg COD_TIPO_GERACAO_PEDIDO,											--#FAF.005.o
@@ -51,8 +51,8 @@ SELECT DISTINCT
 --	where z.t$orno$c=tdpur400.t$orno) VL_FRETE,											--#FAF.228.eo
 	FreteSeg.fght VL_FRETE,																--#FAF.228.n
     (select sum(brmcs941.t$tamt$l) 
-    from tbrmcs941201 brmcs941,
-    ttdpur401201 tdpur401
+    from baandb.tbrmcs941201 brmcs941,
+         baandb.ttdpur401201 tdpur401
     where brmcs941.t$txre$l=tdpur401.t$txre$l
     and brmcs941.t$line$l=tdpur401.t$txli$l
     and tdpur401.t$orno=tdpur400.t$orno
@@ -67,31 +67,31 @@ SELECT DISTINCT
 	tdpur400.t$rfdt$l CD_TIPO_NF,
 	tdpur400.t$fdtc$l CD_TIPO_DOCUMENTO_FISCAL,
 	tdpur400.t$oamt VL_TOTAL_MERCADORIA,
-   (select min(tdpur450.t$trdt) from ttdpur450201 tdpur450
+   (select min(tdpur450.t$trdt) from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno) DT_CRIACAO									--#FAF.236.n
 FROM
-    ttdpur400201 tdpur400
-    LEFT JOIN (select b.t$orno, min(b.t$trdt) dapr, b.t$logn from ttdpur450201 b
+    baandb.ttdpur400201 tdpur400
+    LEFT JOIN (select b.t$orno, min(b.t$trdt) dapr, b.t$logn from baandb.ttdpur450201 b
       where b.t$hdst=10
-      and b.t$trdt = (select min(c.t$trdt) from ttdpur450201 c where c.t$hdst=10 and c.t$orno=b.t$orno)
+      and b.t$trdt = (select min(c.t$trdt) from baandb.ttdpur450201 c where c.t$hdst=10 and c.t$orno=b.t$orno)
       group by b.t$orno, b.t$logn) apr
     ON apr.t$orno=tdpur400.t$orno
     LEFT JOIN (SELECT br.t$opfc$l, a.t$orno 
-    from ttdpur401201 a,
-         tbrmcs941201 br
+    from baandb.ttdpur401201 a,
+         baandb.tbrmcs941201 br
     where br.t$txre$l=a.t$txre$l
     and br.t$line$l=a.t$txli$l
     and a.t$txre$l!=' '
     and a.t$oltp!=2
     and to_char(a.t$pono)+to_char(a.t$sqnb)=
-            (select to_char(c.t$pono)+to_char(c.t$sqnb) from ttdpur401201 c
+            (select to_char(c.t$pono)+to_char(c.t$sqnb) from baandb.ttdpur401201 c
              where c.t$orno=a.t$orno
              and rownum=1
-             and c.t$oamt=(select max(b.t$oamt) from ttdpur401201 b
+             and c.t$oamt=(select max(b.t$oamt) from baandb.ttdpur401201 b
                           where b.t$orno=c.t$orno))) qopfc ON qopfc.t$orno=tdpur400.t$orno				  
 	LEFT JOIN (	select 	a.t$orno, sum(br.t$fght$l) fght, sum(br.t$insr$l) insr								--#FAF.228.sn
-				from 	ttdpur401201 a,
-						tbrmcs941201 br
+				from 	baandb.ttdpur401201 a,
+              baandb.tbrmcs941201 br
 				where 	a.t$txre$l!=' '
 				and	 	a.t$oltp!=2
 				and		br.t$txre$l=a.t$txre$l
@@ -103,4 +103,4 @@ where tcemm124.t$cwoc=tdpur400.t$cofc
 and tcemm124.t$loco=201
 and tcemm124.T$DTYP=2
 AND tcemm030.t$eunt=tcemm124.t$grid
-AND (select count(*) from ttdpur401201 l where l.t$orno=tdpur400.T$orno)>0
+AND (select count(*) from baandb.ttdpur401201 l where l.t$orno=tdpur400.T$orno)>0

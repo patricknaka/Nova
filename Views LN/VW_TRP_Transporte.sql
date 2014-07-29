@@ -20,13 +20,13 @@ select distinct
   znfmd630.t$seri$c NR_SERIE_NOTA_FISCAL,
   znfmd630.T$FILI$C CD_FILIAL,
   CASE WHEN cisli940.t$fdty$l=16 then
-    (select distinct a.t$docn$l from tcisli940201 a, tcisli941201 b
+    (select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
     where b.t$fire$l=cisli940.t$fire$l
     and a.t$fire$l=b.t$refr$l)
     else 0
     end NR_NOTA_FATURA,
   CASE WHEN cisli940.t$fdty$l=16 then
-    (select distinct a.t$seri$l from tcisli940201 a, tcisli941201 b
+    (select distinct a.t$seri$l from baandb.tcisli940201 a, baandb.tcisli941201 b
     where b.t$fire$l=cisli940.t$fire$l
     and a.t$fire$l=b.t$refr$l)
     else ' '
@@ -47,22 +47,22 @@ select distinct
   znfmd060.T$REFE$C DS_OBS_ROMANEIO,
   znfmd630.T$PECL$C NR_ENTREGA
 from  BAANDB.TZNFMD630201 znfmd630,
-	  ttcmcs080201 tcmcs080,	
-	  ttccom100201 tccom100,
-	  ttccom130201 tccom130,
+	  baandb.ttcmcs080201 tcmcs080,	
+	  baandb.ttccom100201 tccom100,
+	  baandb.ttccom130201 tccom130,
       BAANDB.TZNSLS401201 znsls401,
       (select
         tdsls401.t$orno,
         sum(whwmd400.t$hght * whwmd400.t$wdth * whwmd400.T$DPTH) vol,
         sum(tcibd001.t$wght) peso
-      from  twhwmd400201 whwmd400,
-            ttdsls401201 tdsls401,
-            ttcibd001201 tcibd001
+      from  baandb.twhwmd400201 whwmd400,
+            baandb.ttdsls401201 tdsls401,
+            baandb.ttcibd001201 tcibd001
       where tdsls401.t$item=whwmd400.t$item
       and   tcibd001.t$item=tdsls401.t$item
       group by tdsls401.t$orno) pesovol,
-      tcisli940201 cisli940,
-      tznfmd060201 znfmd060
+      baandb.tcisli940201 cisli940,
+      baandb.tznfmd060201 znfmd060
 WHERE znsls401.T$ORNO$C=znfmd630.T$ORNO$C
 AND pesovol.t$orno=znsls401.T$ORNO$C
 AND cisli940.t$fire$l=znfmd630.t$fire$c

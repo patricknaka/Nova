@@ -14,30 +14,30 @@ SELECT
     nvl((SELECT 
 	CAST((FROM_TZ(CAST(TO_CHAR(MIN(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 		AT time zone sessiontimezone) AS DATE)	
-    FROM tbrnfe020201 brnfe020
+    FROM baandb.tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
 	  AND	  brnfe020.t$ncmp$l=201 	
     AND   brnfe020.T$STAT$L=cisli940.t$tsta$l),
     (SELECT 
 	CAST((FROM_TZ(CAST(TO_CHAR(MAX(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 		AT time zone sessiontimezone) AS DATE)
-    FROM tbrnfe020201 brnfe020
+    FROM baandb.tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
 	  AND	  brnfe020.t$ncmp$l=201)) DT_STATUS,
     (SELECT 
 	CAST((FROM_TZ(CAST(TO_CHAR(MIN(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 		AT time zone sessiontimezone) AS DATE)
-    FROM tbrnfe020201 brnfe020
+    FROM baandb.tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
     AND brnfe020.T$STAT$L=4) DT_CANCELAMENTO,
     cisli940.t$rscd$l CD_MOTIVO_CANCELAMENTO,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	cisli940.t$fire$l NR_REFERENCIA_FISCAL																		--#FAF.109.n
 FROM
-    tcisli940201 cisli940,
-    ttcemm124201 tcemm124,
-	ttcemm030201 tcemm030,
-	(select distinct anfe.t$ncmp$l, anfe.t$refi$l from tbrnfe020201 anfe) nfe
+    baandb.tcisli940201 cisli940,
+    baandb.ttcemm124201 tcemm124,
+    baandb.ttcemm030201 tcemm030,
+	(select distinct anfe.t$ncmp$l, anfe.t$refi$l from baandb.tbrnfe020201 anfe) nfe
 WHERE tcemm124.t$loco=201
 	AND tcemm124.t$dtyp=1
 	AND tcemm124.t$cwoc=cisli940.t$cofc$l

@@ -7,8 +7,8 @@ SELECT  201 CD_CIA,
 		CAST((FROM_TZ(CAST(TO_CHAR(znwmd200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 				AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
 		tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
-FROM    tznwmd200201 znwmd200,
-        ttcemm112201 tcemm112,
-		ttcemm030201 tcemm030
+FROM    baandb.tznwmd200201 znwmd200,
+        baandb.ttcemm112201 tcemm112,
+        baandb.ttcemm030201 tcemm030
 WHERE   tcemm112.t$waid = znwmd200.t$cwar$c
 AND 	tcemm030.t$eunt=tcemm112.t$grid

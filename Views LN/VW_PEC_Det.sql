@@ -31,7 +31,7 @@ SELECT
 --	where z.t$orno$c=tdpur401.t$orno) VL_FRETE,          											--#FAF.228.eo
 	FreteSeg.fght VL_FRETE,																			--#FAF.228.n
     (select sum(brmcs941.t$tamt$l) 
-    from tbrmcs941201 brmcs941
+    from baandb.tbrmcs941201 brmcs941
     where brmcs941.t$txre$l=tdpur401.t$txre$l
     and brmcs941.t$line$l=tdpur401.t$txli$l) VL_FINANCEIRO,
  --   (select z.t$vlsg$c from tznfmd630201 z														--#FAF.228.so
@@ -39,16 +39,16 @@ SELECT
 	FreteSeg.insr VL_SEGURO, 																		--#FAF.228.n
     ltrim(rtrim(tdpur401.t$ikit$c)) CD_ITEM_KIT,   
     (select t$opfc$l 
-    from tbrmcs941201 brmcs941
+    from baandb.tbrmcs941201 brmcs941
     where brmcs941.t$txre$l=tdpur401.t$txre$l
     and brmcs941.t$line$l=tdpur401.t$txli$l
     and rownum=1) CD_NATUREZA_OPERACAO,
     ' ' SQ_NATUREZA_OPERACAO                               -- *** NÃO TEMOS ESTA INFORMAÇÃO NA ORDEM DE COMPRA ***
 FROM
-    ttdpur401201 tdpur401
+    baandb.ttdpur401201 tdpur401
 	LEFT JOIN (	select 	a.t$orno, a.t$pono, sum(br.t$fght$l) fght, sum(br.t$insr$l) insr			--#FAF.228.sn
-				from 	ttdpur401201 a,
-						tbrmcs941201 br
+				from 	baandb.ttdpur401201 a,
+              baandb.tbrmcs941201 br
 				where 	a.t$txre$l!=' '
 				and	 	a.t$oltp!=2
 				and		br.t$txre$l=a.t$txre$l

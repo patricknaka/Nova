@@ -15,10 +15,10 @@ SELECT
     znsls410.T$UNEG$C CD_UNIDADE_NEGOCIO,
     znsls410.t$orno$c NR_ORDEM_VENDA
 FROM
-    tznsls410201 znsls410,
-	ttdsls400201 tdsls400,
-	ttcemm112201 tcemm112,
-	ttcemm030201 tcemm030
+    baandb.tznsls410201 znsls410,
+    baandb.ttdsls400201 tdsls400,
+    baandb.ttcemm112201 tcemm112,
+    baandb.ttcemm030201 tcemm030
 WHERE 	tdsls400.t$orno=znsls410.t$orno$c
 AND     tdsls400.t$cwar=tcemm112.t$waid
 AND		tcemm030.t$eunt=tcemm112.t$grid

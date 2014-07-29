@@ -55,7 +55,7 @@ select distinct
 --      (select sum(znfmd171.t$volu$c)
 --      from BAANDB.TZNFMD171201 znfmd171
 --      where znfmd171.t$nent$c=znfmd630.t$nent$c) atdo_volume_m3,
-      (select sum(nl.t$dqua$l) from tcisli941201 nl, ttcibd001201 i
+      (select sum(nl.t$dqua$l) from baandb.tcisli941201 nl, baandb.ttcibd001201 i
 		where nl.t$fire$l=znfmd630.t$fire$c
 		and i.t$item=nl.t$item$l
 		and i.t$kitm<3) QT_VOLUMES
@@ -64,13 +64,13 @@ from  BAANDB.TZNFMD630201 znfmd630,
       BAANDB.TZNSLS400201 znsls400,
       BAANDB.TZNFMD061201 znfmd061,
       BAANDB.TZNFMD060201 znfmd060,
-      ttdsls401201 tdsls401,
-      ttdsls400201 tdsls400,
-      ttcmcs080201 tcmcs080,
-      tznint002201 znint002,
-      tznsls002201 znsls002,
+      baandb.ttdsls401201 tdsls401,
+      baandb.ttdsls400201 tdsls400,
+      baandb.ttcmcs080201 tcmcs080,
+      baandb.tznint002201 znint002,
+      baandb.tznsls002201 znsls002,
       BAANDB.tznfmd001201 znfmd001,
-	  tcisli940201 cisli940
+      baandb.tcisli940201 cisli940
 WHERE   znsls401.T$ORNO$C=znfmd630.T$ORNO$C
 AND     znsls400.t$ncia$c=znsls401.t$ncia$c
 AND     znsls400.t$uneg$c=znsls401.t$uneg$c
