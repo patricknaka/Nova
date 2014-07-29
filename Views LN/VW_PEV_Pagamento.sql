@@ -35,7 +35,7 @@ select
     (select 
 	CAST((FROM_TZ(CAST(TO_CHAR(min(a.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 				--#FAF.088.n
 			AT time zone sessiontimezone) AS DATE)	
-	from ttdsls451201 a
+	from baandb.ttdsls451201 a
     where a.t$orno=tdsls400.t$orno) DT_APROVACAO_PAGAMENTO_ERP,
     znsls402.t$vlju$c  VL_JUROS,
     ' ' CD_CICLO_PAGAMENTO,            -- *** NÃO EXISTE ESTA INFORMAÇÃO NO LN / PENDENTE DE DUVIDA ***
@@ -51,7 +51,7 @@ select
     znsls402.t$idag$c  NR_AGENCIA,
     znsls402.t$idct$c  NR_CONTA_CORRENTE,
 	znsls402.t$idad$c CD_ADQUIRENTE																	--#FAF.085.n
-FROM  tznsls400201 znsls400,
+FROM  baandb.tznsls400201 znsls400,
     (select distinct 
       znsls401.t$ncia$c      t$ncia$c,
           znsls401.t$uneg$c       t$uneg$c,
@@ -59,9 +59,9 @@ FROM  tznsls400201 znsls400,
           znsls401.t$sqpd$c       t$sqpd$c,
           znsls401.t$entr$c       t$entr$c,
       znsls401.t$orno$c      t$orno$c
-    from tznsls401201 znsls401) sls401q,
-    ttdsls400201 tdsls400,
-    tznsls402201 znsls402
+    from baandb.tznsls401201 znsls401) sls401q,
+    baandb.ttdsls400201 tdsls400,
+    baandb.tznsls402201 znsls402
 where
       sls401q.t$ncia$c=znsls400.t$ncia$c
 and    sls401q.t$uneg$c=znsls400.t$uneg$c

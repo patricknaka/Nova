@@ -44,15 +44,15 @@ SELECT DISTINCT
 			AT time zone sessiontimezone) AS DATE) DT_CHEGADA_PEDIDO,
        Q1.trdt DT_ULTIMA_ATUALIZACAO,
 	   znsls400.t$idli$c NR_LISTA_CASAMENTO																		--#FAF.005.n
-FROM tznsls401201 znsls401,
-     tznsls400201 znsls400,
-     ttdsls400201 tdsls400,
-     ttccom130201 tccom130,
-     ttccom130201 tccom130c,
+FROM baandb.tznsls401201 znsls401,
+     baandb.tznsls400201 znsls400,
+     baandb.ttdsls400201 tdsls400,
+     baandb.ttccom130201 tccom130,
+     baandb.ttccom130201 tccom130c,
       (SELECT ttdsls450201.t$orno torno, 
 			CAST((FROM_TZ(CAST(TO_CHAR(Max(ttdsls450201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			    AT time zone sessiontimezone) AS DATE) trdt
-      FROM ttdsls450201
+      FROM baandb.ttdsls450201
       GROUP BY ttdsls450201.t$orno) q1
 WHERE znsls400.t$ncia$c = znsls401.t$ncia$c
 AND znsls400.t$uneg$c = znsls401.t$uneg$c

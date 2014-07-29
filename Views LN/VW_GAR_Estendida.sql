@@ -27,7 +27,7 @@
     sum(zncom005.t$piof$c) VL_IOF,                    
     sum(zncom005.t$ppis$c) VL_PIS,
     sum(zncom005.t$pcof$c) VL_COFINS,
-    nvl((select a.t$amnt$l from tcisli943201 a
+    nvl((select a.t$amnt$l from baandb.tcisli943201 a
     where a.t$fire$l=zncom005.t$fire$c
     and a.t$line$l=zncom005.t$line$c
     and a.t$brty$l=13),0) VL_CSLL,                            
@@ -40,7 +40,7 @@
   znsls400.T$cven$c CD_VENDEDOR,
   znsls400.T$idca$c CD_CANAL_VENDA,                                  --#FAF.134.sn
   znsls400.t$idli$c NR_LISTA_CASAMENTO,
-  (select e.t$ftyp$l from ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,    --#FAF.134.en
+  (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,    --#FAF.134.en
   CASE WHEN znint501.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO,                    --#FAF.161.n
     CAST((FROM_TZ(CAST(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
       AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                      --#FAF.205.n

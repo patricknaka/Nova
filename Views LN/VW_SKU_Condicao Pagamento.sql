@@ -15,13 +15,13 @@ SELECT
 				AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
         tccom100.t$bpid CD_PARCEIRO
 FROM    
-    tznpur008201 znpur008
-	LEFT JOIN ttccom130201 tccom130
+    baandb.tznpur008201 znpur008
+	LEFT JOIN baandb.ttccom130201 tccom130
 	ON		znpur008.t$ftyp$c=tccom130.t$ftyp$l
 	AND		znpur008.t$fovn$c=tccom130.t$fovn$l
-	INNER JOIN ttccom100201 tccom100
+	INNER JOIN baandb.ttccom100201 tccom100
 	ON		tccom130.t$cadr=tccom100.t$cadr
-	LEFT JOIN ttdipu010201 tdipu010
+	LEFT JOIN baandb.ttdipu010201 tdipu010
 	ON   	tccom100.t$bpid=tdipu010.t$otbp
 	AND		    znpur008.t$citg$c=tdipu010.t$citg
 --	LEFT JOIN ttdipu002201 tdipu002 ON tdipu002.t$citg=tdipu010.t$citg AND tdipu002.t$kitm=1					--#FAF.191.so

@@ -9,7 +9,7 @@ SELECT  201 CD_CIA,
 		 case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd))=0 then 0
 		 else round(sum(whwmd217.t$mauc$1)/(max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)),4) 
 		 end mauc
-		 FROM twhwmd217201 whwmd217, twhwmd215201 whwmd215
+		 FROM baandb.twhwmd217201 whwmd217, baandb.twhwmd215201 whwmd215
 		 WHERE 	whwmd217.t$item=whina112.t$item
 		 AND   	whwmd217.t$cwar=whina112.t$cwar
 		 AND whwmd215.t$cwar=whwmd217.t$cwar
@@ -17,13 +17,13 @@ SELECT  201 CD_CIA,
 		 group by  whwmd217.t$item) VL_CMV,
         tcemm112.t$grid CD_UNIDADE_EMPRESARIAL,
 		tdrec940.t$fire$l fire
-FROM    twhina112201 whina112,
-        ttcemm112201 tcemm112,
-		ttcemm030201 tcemm030,
-        ttcmcs003201 tcmcs003,
-		twhwmd200201 whwmd200,
-		ttdrec947201 tdrec947,
-		ttdrec940201 tdrec940
+FROM    baandb.twhina112201 whina112,
+        baandb.ttcemm112201 tcemm112,
+        baandb.ttcemm030201 tcemm030,
+        baandb.ttcmcs003201 tcmcs003,
+        baandb.twhwmd200201 whwmd200,
+        baandb.ttdrec947201 tdrec947,
+        baandb.ttdrec940201 tdrec940
 WHERE   tcemm112.t$loco = 201
 AND     tcemm112.t$waid = whina112.t$cwar
 AND 	tcemm030.t$eunt = tcemm112.t$grid

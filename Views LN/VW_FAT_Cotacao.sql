@@ -8,9 +8,9 @@ SELECT  tcmcs008.t$rtyp COD_COTACAO,
           AT time zone sessiontimezone) AS DATE) DT_COTACAO,
         CAST((FROM_TZ(CAST(TO_CHAR(tcmcs008.t$apdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
           AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
-        CASE WHEN (select MAX(b.t$stdt) From ttcmcs008201 b
+        CASE WHEN (select MAX(b.t$stdt) From baandb.ttcmcs008201 b
                   where b.t$rtyp=tcmcs008.t$rtyp
                   and   b.t$ccur=tcmcs008.t$ccur)=tcmcs008.t$stdt THEN 1 ELSE 2 END IN_EFETIVA
-FROM    ttcmcs008201 tcmcs008
+FROM    baandb.ttcmcs008201 tcmcs008
 WHERE	tcmcs008.t$bcur='BRL'
 AND		tcmcs008.t$rapr=1
