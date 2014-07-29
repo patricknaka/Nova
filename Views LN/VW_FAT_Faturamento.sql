@@ -254,7 +254,7 @@ SELECT
         (Select sum(znfmd630.t$qvol$c) From tznfmd630201 znfmd630 WHERE znfmd630.t$fire$c=cisli941f.t$fire$l and rownum=1) QT_VOLUME,
         cisli940.t$gwgt$l VL_PESO_BRUTO,
         cisli940.t$nwgt$l VL_PESO_LIQUIDO,
-        znsls401.t$itpe$c CD_TIPO_ENTREGA,
+        to_char(znsls401.t$itpe$c) CD_TIPO_ENTREGA,
         tcibd001.t$tptr$c CD_TIPO_TRANSPORTE,
         znsls400.t$idli$c NR_LISTA_CASAMENTO,
     (SELECT tcemm124.t$grid FROM ttcemm124201 tcemm124
@@ -345,4 +345,4 @@ and ((cisli941.T$fire$L= cisli941f.T$REFR$L and (cisli940.t$fdty$l=15 or cisli94
 and ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))  
       or cisli941.T$line$L= cisli941f.T$line$l)              										--#FAF.173.n
 --and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (2,5)										--#FAF.176.n	--FAF.190.o		
-and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (1,2,5)										--FAF.190.n		
+and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (1,2,5)										--FAF.190.n
