@@ -3,6 +3,7 @@
 -- #FAF.005, 14-mai-2014, Fabio Ferreira, 	Alteração alias
 -- #FAF.228, 15-jul-2014, Fabio Ferreira, 	Alteração origem frete e seguro
 -- #FAF.236, 23-jul-2014, Fabio Ferreira, 	Campo data da criação
+-- #FAF.246, 29-jul-2014, Fabio Ferreira, 	Tratamento timezone
 --*********************************************************************************************************************************************
 SELECT DISTINCT
     201 CD_CIA,
@@ -23,20 +24,28 @@ SELECT DISTINCT
     CASE WHEN tdpur400.t$cotp='003' THEN 1
     ELSE 2
     END IN_CONSUMO,
-    tdpur400.t$odat DT_EMISSAO_PEDIDO,
+    CAST((FROM_TZ(CAST(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+            AT time zone sessiontimezone) AS DATE)	DT_EMISSAO_PEDIDO,								--#FAF.246.n
     apr.t$logn DS_USUARIO_APROVACAO_PEDIDO,
     CASE WHEN tdpur400.t$hdst>=10 THEN 1
     ELSE 2
     END IN_APROVADO,
-    apr.dapr DT_APROVACAO_PEDIDO,
+    CAST((FROM_TZ(CAST(TO_CHAR(apr.dapr, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+            AT time zone sessiontimezone) AS DATE) DT_APROVACAO_PEDIDO,								--#FAF.246.n
     tdpur400.t$hdst CD_SITUACAO_PEDIDO,
-    (select min(tdpur450.t$trdt) from baandb.ttdpur450201 tdpur450
+    (select 
+        CAST((FROM_TZ(CAST(TO_CHAR(min(tdpur450.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+            AT time zone sessiontimezone) AS DATE)													--#FAF.246.n
+	from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno
     and tdpur450.t$hdst=tdpur400.t$hdst) DT_SITUACAO_PEDIDO,
     (select tdpur450.t$logn from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno
     and rownum=1) DS_USUARIO_GERACAO_PEDIDO,
-    (select max(tdpur401.t$rcd_utc) from baandb.ttdpur401201 tdpur401
+    (select 
+    CAST((FROM_TZ(CAST(TO_CHAR(max(tdpur401.t$rcd_utc), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+            AT time zone sessiontimezone) AS DATE)
+	from baandb.ttdpur401201 tdpur401
 	where tdpur401.t$orno=tdpur400.t$orno) DT_ATUALIZACAO, 
     nvl((select t.t$text from baandb.ttttxt010201 t 
 	where t$clan='p'
@@ -67,7 +76,10 @@ SELECT DISTINCT
 	tdpur400.t$rfdt$l CD_TIPO_NF,
 	tdpur400.t$fdtc$l CD_TIPO_DOCUMENTO_FISCAL,
 	tdpur400.t$oamt VL_TOTAL_MERCADORIA,
-   (select min(tdpur450.t$trdt) from baandb.ttdpur450201 tdpur450
+   (select 
+    CAST((FROM_TZ(CAST(TO_CHAR(min(tdpur450.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+            AT time zone sessiontimezone) AS DATE)   									--#FAF.246.n
+    from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno) DT_CRIACAO									--#FAF.236.n
 FROM
     baandb.ttdpur400201 tdpur400
