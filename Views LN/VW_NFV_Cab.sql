@@ -1,6 +1,7 @@
 -- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
 -- #FAF.098 - 02-jun-2014, Fabio Ferreira, 	Alterações
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
+-- #FAF.248 - 29-jul-2014, Fabio Ferreira, 	Inclusão do tipo doc fiscal
 --**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -114,7 +115,8 @@ SELECT
     AND tcemm124.t$loco=201
     AND rownum=1) CD_UNIDADE_EMPRESARIAL,
 	entr.t$uneg$c CD_UNIDADE_NEGOCIO,																	--#FAF.098.n
-	cisli940.t$fire$l NR_REFERENCIA_FISCAL																		--#FAF.109.n
+	cisli940.t$fire$l NR_REFERENCIA_FISCAL,																		--#FAF.109.n
+	cisli940.t$fdtc$l TIPO_DOC_FISCAL																	--#FAF.248.n
 FROM
 		baandb.tcisli940201 cisli940
 		LEFT JOIN (SELECT DISTINCT znsls401.t$entr$c, cisli245.t$fire$l, znsls401.t$pecl$c , znsls401.t$orno$c, znsls401.t$uneg$c 
