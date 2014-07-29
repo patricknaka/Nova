@@ -169,15 +169,26 @@ SELECT DISTINCT
 		AND cisli943.t$line$l=cisli941.t$line$l
 		AND cisli943.t$brty$l=3) VL_BASE_IPI
 FROM 
-	baandb.tcisli941201 cisli941,
+--	baandb.tcisli941201 cisli941,																	--#FAF.247.o
 	baandb.tcisli940201 cisli940,
 	baandb.ttcemm124201 tcemm124,
 	baandb.ttcemm030201 tcemm030,
-	baandb.tcisli245201 cisli245
+--	baandb.tcisli245201 cisli245																	--#FAF.247.o
+	baandb.tcisli941201 cisli941																	--#FAF.247.sn
+	LEFT JOIN baandb.tcisli245201 cisli245															
+				ON cisli245.t$fire$l=cisli941.t$fire$l
+				AND cisli245.t$line$l=cisli941.t$line$l												--#FAF.247.en
+	
+	
 	LEFT JOIN baandb.tznsls401201 znsls401 ON cisli245.t$slso=znsls401.t$orno$c
-							AND cisli245.t$pono=znsls401.t$pono$c,
-	baandb.ttdsls401201 tdsls401,
-  baandb.ttcibd001201 tcibd001
+							AND cisli245.t$pono=znsls401.t$pono$c
+--	baandb.ttdsls401201 tdsls401,																	--#FAF.247.o
+	LEFT JOIN baandb.ttdsls401201 tdsls401															--#FAF.247.sn
+				ON cisli245.t$slso=tdsls401.t$orno
+				AND cisli245.t$pono=tdsls401.t$pono
+				AND cisli245.t$sqnb=tdsls401.t$sqnb,													--#FAF.247.en
+	
+	baandb.ttcibd001201 tcibd001
 WHERE
 		cisli940.t$fire$l=cisli941.t$fire$l
 	--AND entr.t$fire$l=cisli940.t$fire$l
@@ -185,10 +196,10 @@ WHERE
 	AND tcemm124.t$dtyp=1
 	AND tcemm124.t$cwoc=cisli940.t$cofc$l
 	AND tcemm030.t$eunt=tcemm124.t$grid
-	AND cisli245.t$fire$l=cisli941.t$fire$l
-	AND cisli245.t$line$l=cisli941.t$line$l
-	AND cisli245.t$slso=tdsls401.t$orno
-	AND cisli245.t$pono=tdsls401.t$pono
-	AND cisli245.t$sqnb=tdsls401.t$sqnb
+--	AND cisli245.t$fire$l=cisli941.t$fire$l															--#FAF.247.so
+--	AND cisli245.t$line$l=cisli941.t$line$l															
+--	AND cisli245.t$slso=tdsls401.t$orno
+--	AND cisli245.t$pono=tdsls401.t$pono
+--	AND cisli245.t$sqnb=tdsls401.t$sqnb																--#FAF.247.eo
   AND tcibd001.t$item=cisli941.t$item$l
   AND tcibd001.t$ctyp$l!=2
