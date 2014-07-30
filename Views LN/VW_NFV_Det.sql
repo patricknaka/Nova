@@ -3,6 +3,7 @@
 -- #FAF.041 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
 -- #FAF.041b - 29-mai-2014, Fabio Ferreira, Alteração no relacionamento para melhora de performace
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
+-- #FAF.247.1 - 30-jun-2014, Fabio Ferreira, 	Correções Frete
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -27,7 +28,8 @@ SELECT DISTINCT
 	AND cisli943.t$line$l=cisli941.t$line$l
 	AND cisli943.t$brty$l=3) VL_IPI,
 	cisli941.t$gamt$l VL_PRODUTO,
-	znsls401.T$VLFR$C VL_FRETE,
+--	znsls401.T$VLFR$C VL_FRETE,																	--#FAF.247.1.o
+	cisli941.t$fght$l VL_FRETE,																	--#FAF.247.1.n
 	cisli941.t$insr$l VL_SEGURO,
 	cisli941.t$gexp$l VL_DESPESA,
 	(SELECT cisli943.t$amnt$l FROM baandb.tcisli943201 cisli943
@@ -53,6 +55,7 @@ SELECT DISTINCT
 		WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND   	cisli943.t$line$l=cisli941b.t$line$l												--#FAF.247.1.n
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	cisli943.t$brty$l=1),0) VL_ICMS_FRETE,
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
@@ -61,6 +64,7 @@ SELECT DISTINCT
 		WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND   	cisli943.t$line$l=cisli941b.t$line$l												--#FAF.247.1.n
 		AND		tcibd001b.t$kitm>3
 		AND		tcibd001b.t$ctyp$l!=2
 		AND 	cisli943.t$brty$l=1),0) VL_ICMS_OUTROS,
@@ -78,6 +82,7 @@ SELECT DISTINCT
 		WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND   	cisli943.t$line$l=cisli941b.t$line$l												--#FAF.247.1.n
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	cisli943.t$brty$l=6),0) VL_COFINS_FRETE,
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
@@ -86,6 +91,7 @@ SELECT DISTINCT
 		WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
 		AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 		AND		tcibd001b.t$item=cisli941b.t$item$l
+		AND   	cisli943.t$line$l=cisli941b.t$line$l												--#FAF.247.1.n
 		AND		tcibd001b.t$kitm>3
 		AND		tcibd001b.t$ctyp$l!=2
 		AND 	cisli943.t$brty$l=6),0) VL_COFINS_OUTROS,
@@ -99,6 +105,7 @@ SELECT DISTINCT
 	WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
 	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 	AND		tcibd001b.t$item=cisli941b.t$item$l
+	AND   	cisli943.t$line$l=cisli941b.t$line$l												--#FAF.247.1.n
 	AND		tcibd001b.t$ctyp$l=2
 	AND 	cisli943.t$brty$l=5),0) VL_PIS_FRETE,
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
@@ -107,6 +114,7 @@ SELECT DISTINCT
 	WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
 	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 	AND		tcibd001b.t$item=cisli941b.t$item$l
+	AND   	cisli943.t$line$l=cisli941b.t$line$l												--#FAF.247.1.n
 	AND		tcibd001b.t$kitm>3
 	AND		tcibd001b.t$ctyp$l!=2
 	AND 	cisli943.t$brty$l=5),0)	VL_PIS_OUTROS,
@@ -124,6 +132,7 @@ SELECT DISTINCT
 	WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
 	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 	AND		tcibd001b.t$item=cisli941b.t$item$l
+	AND   	cisli943.t$line$l=cisli941b.t$line$l												--#FAF.247.1.n
 	AND		tcibd001b.t$ctyp$l=2
 	AND 	cisli943.t$brty$l=13),0) VL_CSLL_FRETE,
 	nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
@@ -132,6 +141,7 @@ SELECT DISTINCT
 	WHERE 	cisli943.t$fire$l=cisli941b.t$fire$l
 	AND 	cisli941b.t$fire$l=cisli941.t$fire$l
 	AND		tcibd001b.t$item=cisli941b.t$item$l
+	AND   	cisli943.t$line$l=cisli941b.t$line$l												--#FAF.247.1.n
 	AND		tcibd001b.t$kitm>3
 	AND		tcibd001b.t$ctyp$l!=2
 	AND 	cisli943.t$brty$l=13),0) VL_CSLL_OUTROS,	
