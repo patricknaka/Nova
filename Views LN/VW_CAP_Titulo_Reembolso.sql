@@ -1,5 +1,6 @@
 --	#FAF.200 - 04-jul-2014, Fabio Ferreira,	Alteração da chave para tipo de transação + numero do título
 --	#FAF.234 - 18-jul-2014, Fabio Ferreira,	Correção duplicidade
+--	#FAF.250 - 30-jul-2014, Fabio Ferreira,	Inclusão dos  campos CD_CANAL_VENDAS e CD_MEIO_PAGAMENTO
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
  --           znsls412.T$TTYP$C || znsls412.t$ninv$c || znsls401.t$orno$c CD_CHAVE_PRIMARIA,			--#FAF.200.o
@@ -12,7 +13,11 @@ SELECT DISTINCT
             znsls412.t$pecl$c NR_PEDIDO_LOJA,
             znsls412.t$uneg$c CD_UNIDADE_NEGOCIO,
             znsls412.t$ninv$c NR_ID_TITULO,
-            znsls412.t$bpid$c CD_PARCEIRO
+            znsls412.t$bpid$c CD_PARCEIRO,
+			
+			znsls400o.t$idca$c CD_CANAL_VENDAS,															--#FAF.250.n
+			znsls402.t$idmp$c CD_MEIO_PAGAMENTO															--#FAF.250.n
+			
 FROM        baandb.tznsls412201 znsls412
 INNER JOIN  baandb.ttfacp200201 tfacp200
             ON  tfacp200.t$ttyp=znsls412.t$ttyp$c
@@ -29,6 +34,21 @@ INNER JOIN  baandb.tznsls401201 znsls401o
             AND znsls401o.t$pecl$c=znsls401.t$pvdt$c
             AND znsls401o.t$entr$c=znsls401.t$endt$c
             AND znsls401o.t$sequ$c=znsls401.t$sedt$c
+			
+INNER JOIN  baandb.tznsls400201 znsls400o																--#FAF.250.sn
+			ON  znsls400o.t$ncia$c=znsls401o.t$ncia$c
+            AND znsls400o.t$uneg$c=znsls401o.t$uneg$c
+            AND znsls400o.t$pecl$c=znsls401o.t$pecl$c
+            AND znsls400o.t$sqpd$c=znsls401o.t$sqpd$c
+			
+INNER JOIN 	baandb.tznsls402201 znsls402
+            ON  znsls402.t$ncia$c=znsls412.t$ncia$c
+            AND znsls402.t$uneg$c=znsls412.t$uneg$c
+            AND znsls402.t$pecl$c=znsls412.t$pecl$c
+            AND znsls402.t$sqpd$c=znsls412.t$sqpd$c
+			AND znsls402.t$sequ$c=znsls412.t$sequ$c														--#FAF.250.en
+
+			
 INNER JOIN  baandb.ttdsls400201 tdsls400 
             ON tdsls400.t$orno=znsls401.t$orno$c
 INNER JOIN  baandb.ttcemm124201 tcemm124 
