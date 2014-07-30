@@ -21,6 +21,7 @@
 --	#FAF.190 - 01-jul-2014,	Fabio Ferreira,	Filtro de status SEFAZ alterado para mostrar status 1 (nenhum)
 --	#FAF.195 - 02-jul-2014,	Fabio Ferreira,	Inclusão do campo CD_PRODUTO
 --	#FAF.201 - 03-jul-2014,	Fabio Ferreira, Correção diplicidade devido a inclusão do campo VL_JUROS E VL_JUROS_ADMINISTRADORA #180
+--	#FAF.249 - 30-jul-2014,	Fabio Ferreira, Ajuste Natureza daa operação e sequencia
 --****************************************************************************************************************************************************************
 SELECT 
       CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
@@ -33,8 +34,14 @@ SELECT
     AND rownum=1) CD_FILIAL,
         cisli940.t$docn$l NR_NF,
         cisli940.t$seri$l NR_SERIE_NF,
-        cisli940.t$ccfo$l CD_NATUREZA_OPERACAO,
-        cisli940.t$opor$l SQ_NATUREZA_OPERACAO,
+--        cisli940.t$ccfo$l CD_NATUREZA_OPERACAO,														--#FAF.249.o
+		CASE WHEN instr(cisli940.t$ccfo$l,'-')=0 THEN cisli940.t$ccfo$l
+		ELSE regexp_replace(substr(cisli940.t$ccfo$l,0,instr(cisli940.t$ccfo$l,'-')-1), '[^0-9]', '') 
+		END	CD_NATUREZA_OPERACAO,																		--#FAF.249.n	
+--        cisli940.t$opor$l SQ_NATUREZA_OPERACAO,														--#FAF.249.o		
+		CASE WHEN instr(cisli940.t$opor$l,'-')=0 THEN cisli940.t$opor$l
+		ELSE regexp_replace(substr(cisli940.t$opor$l,instr(cisli940.t$opor$l,'-')+1,3), '[^0-9]', '') 
+		END	SQ_NATUREZA_OPERACAO,																		--#FAF.249.n	
     CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
       AT time zone sessiontimezone) AS DATE) DT_FATURA,
         cisli940.t$itbp$l CD_CLIENTE_FATURA,
@@ -237,8 +244,14 @@ SELECT
       and    a.t$pono=tdsls401.t$pono),0) VL_CMV,
         znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
         ' ' CD_MODULO_GERENCIAL,        -- *** AGUARDANDO DUVIDAS
-        cisli941f.t$ccfo$l CD_NATUREZA_OPERACAO_ITEM,
-        cisli941f.t$opor$l SQ_NATUREZA_OPERACAO_ITEM,
+--        cisli941f.t$ccfo$l CD_NATUREZA_OPERACAO_ITEM,													--#FAF.249.o	
+		CASE WHEN instr(cisli941f.t$ccfo$l,'-')=0 THEN cisli941f.t$ccfo$l
+		ELSE regexp_replace(substr(cisli941f.t$ccfo$l,0,instr(cisli941f.t$ccfo$l,'-')-1), '[^0-9]', '') 
+		END	CD_NATUREZA_OPERACAO_ITEM,																	--#FAF.249.n		
+--        cisli941f.t$opor$l SQ_NATUREZA_OPERACAO_ITEM,													--#FAF.249.o
+		CASE WHEN instr(cisli941f.t$opor$l,'-')=0 THEN cisli941f.t$opor$l
+		ELSE regexp_replace(substr(cisli941f.t$opor$l,instr(cisli941f.t$opor$l,'-')+1,3), '[^0-9]', '') 
+		END	SQ_NATUREZA_OPERACAO_ITEM,																	--#FAF.249.n		
         CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR,
         Nvl((SELECT cisli943.t$base$l from baandb.tcisli943201 cisli943
              WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
