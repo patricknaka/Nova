@@ -39,8 +39,8 @@ SELECT
 		ELSE regexp_replace(substr(cisli940.t$ccfo$l,0,instr(cisli940.t$ccfo$l,'-')-1), '[^0-9]', '') 
 		END	CD_NATUREZA_OPERACAO,																		--#FAF.249.n	
 --        cisli940.t$opor$l SQ_NATUREZA_OPERACAO,														--#FAF.249.o		
-		CASE WHEN instr(cisli940.t$opor$l,'-')=0 THEN cisli940.t$opor$l
-		ELSE regexp_replace(substr(cisli940.t$opor$l,instr(cisli940.t$opor$l,'-')+1,3), '[^0-9]', '') 
+		CASE WHEN instr(cisli940.t$ccfo$l,'-')=0 THEN cisli940.t$opor$l
+		ELSE regexp_replace(substr(cisli940.t$ccfo$l,instr(cisli940.t$ccfo$l,'-')+1,3), '[^0-9]', '') 
 		END	SQ_NATUREZA_OPERACAO,																		--#FAF.249.n	
     CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
       AT time zone sessiontimezone) AS DATE) DT_FATURA,
@@ -249,8 +249,8 @@ SELECT
 		ELSE regexp_replace(substr(cisli941f.t$ccfo$l,0,instr(cisli941f.t$ccfo$l,'-')-1), '[^0-9]', '') 
 		END	CD_NATUREZA_OPERACAO_ITEM,																	--#FAF.249.n		
 --        cisli941f.t$opor$l SQ_NATUREZA_OPERACAO_ITEM,													--#FAF.249.o
-		CASE WHEN instr(cisli941f.t$opor$l,'-')=0 THEN cisli941f.t$opor$l
-		ELSE regexp_replace(substr(cisli941f.t$opor$l,instr(cisli941f.t$opor$l,'-')+1,3), '[^0-9]', '') 
+		CASE WHEN instr(cisli941f.t$ccfo$l,'-')=0 THEN cisli941f.t$opor$l
+		ELSE regexp_replace(substr(cisli941f.t$ccfo$l,instr(cisli941f.t$ccfo$l,'-')+1,3), '[^0-9]', '') 
 		END	SQ_NATUREZA_OPERACAO_ITEM,																	--#FAF.249.n		
         CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR,
         Nvl((SELECT cisli943.t$base$l from baandb.tcisli943201 cisli943
