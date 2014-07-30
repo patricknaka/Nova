@@ -5,7 +5,7 @@ SELECT
         znpur008.t$citg$c CD_DEPARTAMENTO,
         znpur008.t$cpay$c CD_CONDICAO_PAGAMENTO,
         tdipu010.t$sbim COD_COND_PGTO_AUT,
-		znpur008.t$potp$c COD_TIPO_OC,																			--#FAF.191.n
+		znpur008.t$potp$c CD_TIPO_ORDEM,																			--#FAF.191.n
 --        CASE WHEN tcmcs003.t$tpar$l=1 THEN 1
 --        ELSE  2
 --        END CONSIGNACAO,																						--#FAF.191.o
