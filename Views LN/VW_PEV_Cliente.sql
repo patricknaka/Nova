@@ -7,6 +7,7 @@
 -- #FAF.048.1 - 23-mai-2014, Fabio Ferreira, 	NUM_ENTREGA convertido para string
 -- #FAF.048.1 - 26-mai-2014, Fabio Ferreira, 	Agrupado registros duplicados
 -- #FAF.113 - 	26-mai-2014, Fabio Ferreira, 	Inclusão do campo CIA
+-- #FAF.252 - 	30-jul-2014, Fabio Ferreira, 	Correção data atualização
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
 		201 CD_CIA,																								--#FAF.113.n
@@ -40,20 +41,22 @@ SELECT DISTINCT
        znsls401.t$refe$c DS_REFERENCIA_ENDERECO_ENTREGA,
 	   CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE) DT_EMISSAO,
-	   CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+	   CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')			--#FAF.252.n 
 			AT time zone sessiontimezone) AS DATE) DT_CHEGADA_PEDIDO,
-       Q1.trdt DT_ULTIMA_ATUALIZACAO,
+--       Q1.trdt DT_ULTIMA_ATUALIZACAO,																			--#FAF.252.o
+	   CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+			    AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZACAO,
 	   znsls400.t$idli$c NR_LISTA_CASAMENTO																		--#FAF.005.n
 FROM baandb.tznsls401201 znsls401,
      baandb.tznsls400201 znsls400,
      baandb.ttdsls400201 tdsls400,
      baandb.ttccom130201 tccom130,
-     baandb.ttccom130201 tccom130c,
-      (SELECT ttdsls450201.t$orno torno, 
-			CAST((FROM_TZ(CAST(TO_CHAR(Max(ttdsls450201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			    AT time zone sessiontimezone) AS DATE) trdt
-      FROM baandb.ttdsls450201
-      GROUP BY ttdsls450201.t$orno) q1
+     baandb.ttccom130201 tccom130c
+--      (SELECT ttdsls450201.t$orno torno,																		--#FAF.252.so 
+--			CAST((FROM_TZ(CAST(TO_CHAR(Max(ttdsls450201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+--			    AT time zone sessiontimezone) AS DATE) trdt
+	--      FROM baandb.ttdsls450201
+	--      GROUP BY ttdsls450201.t$orno) q1																	--#FAF.252.eo
 WHERE znsls400.t$ncia$c = znsls401.t$ncia$c
 AND znsls400.t$uneg$c = znsls401.t$uneg$c
 AND znsls400.t$pecl$c = znsls401.t$pecl$c
@@ -61,4 +64,4 @@ AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
 AND tdsls400.t$orno = znsls401.t$orno$c
 AND tccom130.t$cadr = tdsls400.t$itad
 AND tccom130c.t$cadr = tdsls400.t$stad
-AND q1.torno = tdsls400.t$orno
+--AND q1.torno = tdsls400.t$orno																				--#FAF.252.o
