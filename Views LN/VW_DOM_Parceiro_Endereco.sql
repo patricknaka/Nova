@@ -5,6 +5,7 @@
 --	#FAF.133 - 12-jun-2014,	Fabio Ferreira,	Quando Tipo de ident. fiscal igual 'NA' mostrar CNPJ "00000000000000"
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --	#FAF.189 - 01-jul-2014,	Fabio Ferreira,	Correção campo Complemento
+--	#FAF.255 - 31-jul-2014,	Fabio Ferreira,	Correção relacionamento
 --****************************************************************************************************************************************************************
 SELECT 	adbp.t$bpid CD_PARCEIRO,
     adbp.t$cadr CD_ENDERECO,
@@ -42,5 +43,6 @@ FROM   baandb.ttccom133201 adbp,
     baandb.ttccom100201 tccom100,                                        --#FAF.091.n
     baandb.ttccom130201 addr
 WHERE   addr.t$cadr = adbp.t$cadr
-and    tccom100.t$bpid=adbp.t$cadr
+--	and    tccom100.t$bpid=adbp.t$bpid									--#FAF.255.o
+and    tccom100.t$bpid=adbp.t$bpid										--#FAF.255.n
 order by 1,2
