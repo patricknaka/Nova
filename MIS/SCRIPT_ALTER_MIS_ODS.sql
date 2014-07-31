@@ -438,3 +438,34 @@ from
 
 GO
 
+--------------------------------------------
+
+alter table MIS_ODS.fin.ods_sige_titulo_receber_movimento
+alter column ds_id_modulo varchar(3)
+
+
+---------------------------------------------
+
+--Verificar se o campo ja existe
+
+alter table fin.ods_sige_titulo_receber_movimento
+add nr_sq_movimento int not null
+
+--Se campo existir recriar a constraint
+
+/****** Object:  Index [PK_TituloMovimento]    Script Date: 07/31/2014 18:34:41 ******/
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[fin].[ods_sige_titulo_receber_movimento]') AND name = N'PK_TituloMovimento')
+ALTER TABLE [fin].[ods_sige_titulo_receber_movimento] DROP CONSTRAINT [PK_TituloMovimento]
+GO
+
+USE [MIS_ODS]
+GO
+
+/****** Object:  Index [PK_TituloMovimento]    Script Date: 07/31/2014 18:34:42 ******/
+ALTER TABLE [fin].[ods_sige_titulo_receber_movimento] ADD  CONSTRAINT [PK_TituloMovimento] PRIMARY KEY NONCLUSTERED 
+(
+	[nr_id_titulo] ASC,
+	[nr_id_movimento] ASC,
+	[nr_sq_movimento] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEX]
+GO

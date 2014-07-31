@@ -329,3 +329,8 @@ CREATE TABLE [com].[stg_estoque_samsung](
 ) ON [PRIMARY]
 
 GO
+
+
+--------------------------------
+alter table fin.stg_sige_titulo_receber_movimento
+alter column MOCO_ID_MODULO varchar(3)
