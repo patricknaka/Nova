@@ -1051,7 +1051,7 @@ ALTER TABLE aux_ods_fatdev
 ALTER COLUMN nr_cfop_seq_det numeric(5,5)
 
 ALTER TABLE aux_ods_sige_detalhe_pedido	
-ALTER COLUMN NR_ID_CIA numeric(5,3)
+ALTER COLUMN NR_ID_CIA int
 
 ALTER TABLE aux_ods_sige_pagamento_pedido	
 ALTER COLUMN NR_ID_CIA numeric(5,3)
