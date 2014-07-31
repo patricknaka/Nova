@@ -334,3 +334,8 @@ GO
 --------------------------------
 alter table fin.stg_sige_titulo_receber_movimento
 alter column MOCO_ID_MODULO varchar(3)
+
+----------------------------------------
+
+ALTER TABLE fin.stg_sige_titulo_receber_movimento
+add MOCO_SQ_MOVIMENTO int null
