@@ -3,11 +3,13 @@
 -- #FAF.227.1 - 17-jul-2014, Fabio Ferreira, 	Correções campo disconto
 -- #FAF.227.2 - 17-jul-2014, Fabio Ferreira, 	Correções campo IN_REPOSICAO e DT_STATUS
 -- #FAF.227.3 - 18-jul-2014, Fabio Ferreira, 	Diversos ajustes #227
+-- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ULTIMA_ATUALIZ_NF
 --*************************************************************************************************************************************************************
 SELECT
 
-	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(cisli940dev.t$datg$l,cisli940dev.t$date$l,cisli940dev.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-		AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZ_NF,
+--	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(cisli940dev.t$datg$l,cisli940dev.t$date$l,cisli940dev.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAT.001.o
+    CAST((FROM_TZ(CAST(TO_CHAR(cisli940dev.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
+      AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZ_NF,
     201 CD_CIA,
 	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l

@@ -22,10 +22,12 @@
 --	#FAF.195 - 02-jul-2014,	Fabio Ferreira,	Inclusão do campo CD_PRODUTO
 --	#FAF.201 - 03-jul-2014,	Fabio Ferreira, Correção diplicidade devido a inclusão do campo VL_JUROS E VL_JUROS_ADMINISTRADORA #180
 --	#FAF.249 - 30-jul-2014,	Fabio Ferreira, Ajuste Natureza daa operação e sequencia
+--  #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
 --****************************************************************************************************************************************************************
 SELECT 
-      CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+--    CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.o
+    CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
+    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
         cisli940.t$sfcp$l CD_CIA,
     (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l

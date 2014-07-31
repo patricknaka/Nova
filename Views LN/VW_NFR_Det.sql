@@ -3,7 +3,8 @@
 -- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
 -- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)	
 -- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Retirado campo VL_ICMS_ST1
---	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ			
+-- #FAF.151 - 20-jun-2014, Fabio Ferreira,	Tratamento para o CNPJ			
+-- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
 --************************************************************************************************************************************************************
 SELECT
   201 CD_CIA,
@@ -213,8 +214,9 @@ SELECT
   ELSE 0 END VL_COFINS_IMPORTACAO, 
   CASE WHEN tdrec941.t$crpd$l=1 and (tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8) 
   THEN tdrec941.t$fght$l ELSE 0 END VL_CIF_IMPORTACAO,
-  CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,   
+--  CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.o
+    CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
+    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,   
   CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 
   THEN tdrec941.t$copr$l ELSE 0 END VL_CUSTO_IMPORTACAO, 
  (SELECT tdrec942.t$amnr$l FROM baandb.ttdrec942201 tdrec942

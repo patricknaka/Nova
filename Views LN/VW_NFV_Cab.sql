@@ -2,6 +2,7 @@
 -- #FAF.098 - 02-jun-2014, Fabio Ferreira, 	Alterações
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
 -- #FAF.248 - 29-jul-2014, Fabio Ferreira, 	Inclusão do tipo doc fiscal
+-- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO_NF
 --**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -108,7 +109,8 @@ SELECT
 		nvl((select sum(l.t$fght$l) from baandb.tcisli941201 l
 		where	l.t$fire$l = cisli940.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VL_CIF_IMPORTACAO,
-		CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+--	CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAT.001.o
+    CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
 			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO_NF,
    (SELECT tcemm124.t$grid FROM baandb.ttcemm124201 tcemm124
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
