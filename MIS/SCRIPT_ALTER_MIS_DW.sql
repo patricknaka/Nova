@@ -1081,7 +1081,7 @@ ALTER TABLE ods_sige_faturamento
 ALTER COLUMN NR_CIA numeric(5,3)
 
 ALTER TABLE ods_sige_pagamento_pedido	
-ALTER COLUMN NR_ID_CIA numeric(5,3)
+ALTER COLUMN NR_ID_CIA int
 
 ALTER TABLE stg_sige_detalhe_pedido	
 ALTER COLUMN NR_ID_CIA int
