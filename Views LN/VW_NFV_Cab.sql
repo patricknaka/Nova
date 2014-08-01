@@ -118,7 +118,8 @@ SELECT
     AND rownum=1) CD_UNIDADE_EMPRESARIAL,
 	entr.t$uneg$c CD_UNIDADE_NEGOCIO,																	--#FAF.098.n
 	cisli940.t$fire$l NR_REFERENCIA_FISCAL,																		--#FAF.109.n
-	cisli940.t$fdtc$l CD_TIPO_DOCUMENTO_FISCAL																	--#FAF.248.n
+	cisli940.t$fdtc$l CD_TIPO_DOCUMENTO_FISCAL,
+	cisli940.t$nfes$l CD_STATUS_SEFAZ																	--#FAF.248.n
 FROM
 		baandb.tcisli940201 cisli940
 		LEFT JOIN (SELECT DISTINCT znsls401.t$entr$c, cisli245.t$fire$l, znsls401.t$pecl$c , znsls401.t$orno$c, znsls401.t$uneg$c 
