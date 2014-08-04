@@ -5,6 +5,7 @@
 -- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Retirado campo VL_ICMS_ST1
 -- #FAF.151 - 20-jun-2014, Fabio Ferreira,	Tratamento para o CNPJ			
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
+-- #FAF.242 - 04-ago-2014, Fabio Ferreira,	Correções	
 --************************************************************************************************************************************************************
 SELECT
   201 CD_CIA,
@@ -128,14 +129,62 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=6) VL_COFINS_MERCADORIA,
-  0 VL_COFINS_FRETE,
-  0 VL_COFINS_OUTROS,
+--  0 VL_COFINS_FRETE,																		--#FAF.242.o
+  
+  
+	nvl((SELECT sum(tdrec942.t$amnt$l) FROM baandb.ttdrec942201 tdrec942, 					--#FAF.242.sn
+												baandb.ttdrec941201 tdrec941b,
+												baandb.ttcibd001201 tcibd001b
+		WHERE 	tdrec942.t$fire$l=tdrec941b.t$fire$l
+		AND 	tdrec941b.t$fire$l=tdrec941.t$fire$l
+		AND		tcibd001b.t$item=tdrec941b.t$item$l
+		AND   	tdrec942.t$line$l=tdrec941b.t$line$l												
+		AND		tcibd001b.t$ctyp$l=2
+		AND 	tdrec942.t$brty$l=6),0) VL_COFINS_FRETE,
+		
+	nvl((SELECT sum(tdrec942.t$amnt$l) FROM baandb.ttdrec942201 tdrec942, 					
+												baandb.ttdrec941201 tdrec941b,
+												baandb.ttcibd001201 tcibd001b
+		WHERE 	tdrec942.t$fire$l=tdrec941b.t$fire$l
+		AND 	tdrec941b.t$fire$l=tdrec941.t$fire$l
+		AND		tcibd001b.t$item=tdrec941b.t$item$l
+		AND   	tdrec942.t$line$l=tdrec941b.t$line$l												
+		AND		tcibd001b.t$kitm>3
+		AND		tcibd001b.t$ctyp$l!=2
+		AND 	tdrec942.t$brty$l=6),0) VL_COFINS_OUTROS,									--#FAF.242.en
+  
+  
+  
+--  0 VL_COFINS_OUTROS,																		--#FAF.242.o
   (SELECT tdrec942.t$amni$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VL_PIS_MERCADORIA,
-  0 VL_PIS_FRETE,
-  0 VL_PIS_OUTROS,
+  
+  
+	nvl((SELECT sum(tdrec942.t$amnt$l) FROM baandb.ttdrec942201 tdrec942, 					--#FAF.242.sn
+												baandb.ttdrec941201 tdrec941b,
+												baandb.ttcibd001201 tcibd001b
+		WHERE 	tdrec942.t$fire$l=tdrec941b.t$fire$l
+		AND 	tdrec941b.t$fire$l=tdrec941.t$fire$l
+		AND		tcibd001b.t$item=tdrec941b.t$item$l
+		AND   	tdrec942.t$line$l=tdrec941b.t$line$l												
+		AND		tcibd001b.t$ctyp$l=2
+		AND 	tdrec942.t$brty$l=5),0) VL_COFINS_FRETE,
+		
+	nvl((SELECT sum(tdrec942.t$amnt$l) FROM baandb.ttdrec942201 tdrec942, 					
+												baandb.ttdrec941201 tdrec941b,
+												baandb.ttcibd001201 tcibd001b
+		WHERE 	tdrec942.t$fire$l=tdrec941b.t$fire$l
+		AND 	tdrec941b.t$fire$l=tdrec941.t$fire$l
+		AND		tcibd001b.t$item=tdrec941b.t$item$l
+		AND   	tdrec942.t$line$l=tdrec941b.t$line$l												
+		AND		tcibd001b.t$kitm>3
+		AND		tcibd001b.t$ctyp$l!=2
+		AND 	tdrec942.t$brty$l=5),0) VL_COFINS_OUTROS,									--#FAF.242.en
+  
+--  0 VL_PIS_FRETE,																			--#FAF.242.o
+--  0 VL_PIS_OUTROS,																		--#FAF.242.o
   (SELECT tdrec942.t$rate$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
@@ -173,7 +222,7 @@ SELECT
   AND	tcibd001b.t$kitm>3
   AND	tcibd001b.t$ctyp$l!=2
   AND 	tdrec942.t$brty$l=13),0) VL_CSLL_OUTROS, 
-  tdrec941.t$addc$l VL_DESCONTO_INCONDICIONAL,
+--  tdrec941.t$addc$l VL_DESCONTO_INCONDICIONAL,														--#FAF.242.o
   tdrec941.t$rtin$l QT_NAO_RECEBIDA_DEVOLUCAO,     
   (SELECT tdrec942.t$base$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
