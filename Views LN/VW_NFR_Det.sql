@@ -141,7 +141,8 @@ SELECT
 		AND   	tdrec942.t$line$l=tdrec941b.t$line$l												
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	tdrec942.t$brty$l=6),0) VL_COFINS_FRETE,
-		
+
+--  0 VL_COFINS_OUTROS,																		--#FAF.242.o
 	nvl((SELECT sum(tdrec942.t$amnt$l) FROM baandb.ttdrec942201 tdrec942, 					
 												baandb.ttdrec941201 tdrec941b,
 												baandb.ttcibd001201 tcibd001b
@@ -152,10 +153,6 @@ SELECT
 		AND		tcibd001b.t$kitm>3
 		AND		tcibd001b.t$ctyp$l!=2
 		AND 	tdrec942.t$brty$l=6),0) VL_COFINS_OUTROS,									--#FAF.242.en
-  
-  
-  
---  0 VL_COFINS_OUTROS,																		--#FAF.242.o
   (SELECT tdrec942.t$amni$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
@@ -170,7 +167,7 @@ SELECT
 		AND		tcibd001b.t$item=tdrec941b.t$item$l
 		AND   	tdrec942.t$line$l=tdrec941b.t$line$l												
 		AND		tcibd001b.t$ctyp$l=2
-		AND 	tdrec942.t$brty$l=5),0) VL_COFINS_FRETE,
+		AND 	tdrec942.t$brty$l=5),0) VL_PIS_FRETE,
 		
 	nvl((SELECT sum(tdrec942.t$amnt$l) FROM baandb.ttdrec942201 tdrec942, 					
 												baandb.ttdrec941201 tdrec941b,
@@ -181,7 +178,7 @@ SELECT
 		AND   	tdrec942.t$line$l=tdrec941b.t$line$l												
 		AND		tcibd001b.t$kitm>3
 		AND		tcibd001b.t$ctyp$l!=2
-		AND 	tdrec942.t$brty$l=5),0) VL_COFINS_OUTROS,									--#FAF.242.en
+		AND 	tdrec942.t$brty$l=5),0) VL_PIS_OUTROS,									--#FAF.242.en
   
 --  0 VL_PIS_FRETE,																			--#FAF.242.o
 --  0 VL_PIS_OUTROS,																		--#FAF.242.o
