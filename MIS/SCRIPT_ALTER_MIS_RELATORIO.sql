@@ -95,3 +95,124 @@ CREATE TABLE [dbo].[stg_comp_ods_product](
 ) ON [PRIMARY]
 
 GO
+
+
+USE [MIS_RELATORIO]
+GO
+
+/****** Object:  Table [dbo].[ods_product_complemento]    Script Date: 08/04/2014 11:22:12 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ods_product_complemento]') AND type in (N'U'))
+DROP TABLE [dbo].[ods_product_complemento]
+GO
+
+USE [MIS_RELATORIO]
+GO
+
+/****** Object:  Table [dbo].[ods_product_complemento]    Script Date: 08/04/2014 11:22:12 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[ods_product_complemento](
+	[nr_product_sku] [bigint] NOT NULL,
+	[nr_item_sku] [bigint] NOT NULL,
+	[ds_sufa_nome] [varchar](80) NULL,
+	[nr_sufa] [int] NULL,
+	[ds_nbm_desc] [varchar](50) NULL,
+	[ds_observacao] [varchar](1000) NULL,
+	[dt_inclusao_item] [datetime] NULL,
+	[dt_datahora_item] [datetime] NULL,
+	[ds_usuario] [varchar](50) NULL,
+	[dt_validade] [varchar](50) NULL,
+	[nr_pz_garantia] [int] NULL,
+	[ds_tp_lote_serie] [varchar](50) NULL,
+	[ds_in_fabric_valid] [varchar](50) NULL,
+	[nr_pz_validade] [int] NULL,
+	[nr_pz_alarme_valid] [int] NULL,
+	[nr_pz_min_recebto] [int] NULL,
+	[nr_pz_min_exped] [int] NULL,
+	[nr_id_conite] [int] NULL,
+	[ds_modelo_fabricante] [varchar](50) NULL,
+	[nr_ean] [varchar](50) NULL,
+	[ds_coni_nome] [varchar](50) NULL,
+	[nr_id_item_tik] [bigint] NULL,
+	[ds_in_interface] [char](1) NULL,
+	[id_filial] [int] NULL,
+	[dt_ult_alt] [datetime] NULL,
+ CONSTRAINT [PK_ods_product_complemento] PRIMARY KEY CLUSTERED 
+(
+	[nr_product_sku] ASC,
+	[nr_item_sku] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+USE [MIS_RELATORIO]
+GO
+
+/****** Object:  Table [dbo].[aux_ods_product_compl]    Script Date: 08/04/2014 11:22:34 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[aux_ods_product_compl]') AND type in (N'U'))
+DROP TABLE [dbo].[aux_ods_product_compl]
+GO
+
+USE [MIS_RELATORIO]
+GO
+
+/****** Object:  Table [dbo].[aux_ods_product_compl]    Script Date: 08/04/2014 11:22:34 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[aux_ods_product_compl](
+	[nr_product_sku] [bigint] NOT NULL,
+	[nr_item_sku] [bigint] NOT NULL,
+	[ds_sufa_nome] [varchar](80) NULL,
+	[nr_sufa] [int] NULL,
+	[ds_nbm_desc] [varchar](50) NULL,
+	[ds_observacao] [varchar](1000) NULL,
+	[dt_inclusao_item] [datetime] NULL,
+	[dt_datahora_item] [datetime] NULL,
+	[ds_usuario] [varchar](50) NULL,
+	[dt_validade] [varchar](50) NULL,
+	[nr_pz_garantia] [int] NULL,
+	[ds_tp_lote_serie] [varchar](50) NULL,
+	[ds_in_fabric_valid] [varchar](50) NULL,
+	[nr_pz_validade] [int] NULL,
+	[nr_pz_alarme_valid] [int] NULL,
+	[nr_pz_min_recebto] [int] NULL,
+	[nr_pz_min_exped] [int] NULL,
+	[nr_id_conite] [int] NULL,
+	[ds_modelo_fabricante] [varchar](50) NULL,
+	[nr_ean] [varchar](50) NULL,
+	[ds_coni_nome] [varchar](50) NULL,
+	[nr_id_item_tik] [bigint] NULL,
+	[ds_in_interface] [char](1) NULL,
+	[id_filial] [int] NULL,
+	[dt_ult_alt] [datetime] NULL,
+ CONSTRAINT [PK_aux_product_complemento] PRIMARY KEY CLUSTERED 
+(
+	[nr_product_sku] ASC,
+	[nr_item_sku] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
