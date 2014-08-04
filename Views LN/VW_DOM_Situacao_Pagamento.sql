@@ -17,7 +17,7 @@ AND l.t$cust=' '
 UNION
 SELECT d.t$cnst CD_SITUACAO_PAGAMENTO,
        l.t$desc DS_SITUACAO_PAGAMENTO,
-        'CAPE' CD_MODULO
+        'CAR' CD_MODULO
 FROM baandb.tttadv401000 d,
      baandb.tttadv140000 l
 WHERE d.t$cpac='tf'
