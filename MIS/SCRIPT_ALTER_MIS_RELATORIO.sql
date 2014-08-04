@@ -216,3 +216,7 @@ GO
 SET ANSI_PADDING OFF
 GO
 
+
+use MIS_RELATORIO
+alter table dbo.stg_planilhao_ruptura
+add vl_cmv_ponderado numeric(26,5), dt_purchase int
