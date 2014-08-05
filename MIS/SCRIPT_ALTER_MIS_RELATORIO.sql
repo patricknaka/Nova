@@ -216,7 +216,148 @@ GO
 SET ANSI_PADDING OFF
 GO
 
+------------------------------------------------------------------
 
 use MIS_RELATORIO
 alter table dbo.stg_planilhao_ruptura
 add vl_cmv_ponderado numeric(26,5), dt_pri_recebimento int
+
+
+
+------------------------------------------------------------------
+
+
+ALTER proc [dbo].[pr_relatorio_orders_depto](@dt_inicio int,@dt_fim int)
+as
+begin
+
+
+IF OBJECT_ID('tempdb..#auxiliar') IS NOT NULL DROP TABLE #auxiliar
+	select *,
+		ROW_NUMBER() OVER(ORDER BY b.vl_com_desconto DESC) as contador into #auxiliar
+	from (	select 
+			aa.nr_item_sku,
+			aa.ds_product,
+			aa.qty_item,
+			aa.vl_com_desconto,
+			aa.vl_cmv,
+			aa.vl_impostos,
+			aa.vl_com_desconto - (aa.vl_cmv+aa.vl_impostos) as vl_margem,
+			((aa.vl_com_desconto - (aa.vl_cmv+aa.vl_impostos))/aa.vl_com_desconto) as vl_margem_percent,
+			aa.vl_cmd,
+			aa.estoque_sige,
+			aa.cobertura,
+			aa.ds_depto,
+			aa.ds_sector,
+			aa.nr_depto,
+			DENSE_RANK() OVER (ORDER BY aa.vl_com_desconto - (aa.vl_cmv+aa.vl_impostos) desc) AS 'Rank'
+		from (select 
+				a.nr_item_sku,
+				b.ds_product,
+				sum(a.qty_item) as qty_item,
+				sum(a.vl_com_desconto) as vl_com_desconto,
+				cast(sum(a.qty_item) * isnull(cm.vl_cmv,0) as decimal(20,2)) as vl_cmv, 
+				case when imp.vl_percent_imposto = null then 
+					cast(sum(a.vl_com_desconto) * 0.2725 as decimal(20,2))
+				else
+					cast(sum(a.vl_com_desconto) * imp.vl_percent_imposto as decimal(20,2)) 
+				end as vl_impostos, 
+				cast(e.vl_cmd as decimal(20,2)) as vl_cmd,
+				isnull(f.qt_saldo,0) as estoque_sige,
+				case when vl_cmd = 0 then 
+					0 
+				else 
+					cast((isnull(f.qt_saldo,0) / e.vl_cmd) as decimal(20,2)) 
+				end as cobertura,
+				b.ds_depto, b.ds_sector, b.nr_depto
+			from rpt_indicador_orders a (nolock)
+			inner join MIS_DW..ods_product b (nolock)
+				on a.nr_item_sku = b.nr_item_sku
+				and a.nr_product_sku = b.nr_product_sku
+				and b.ds_item = 'Produto'
+			left join mis_dw..stg_sige_estoque_cmd e (nolock)
+				on e.nr_item_sku = a.nr_item_sku
+				and e.nr_product_sku = a.nr_product_sku
+			left join (select es.nr_item_sku,SUM(es.qt_saldo) as qt_saldo
+						from MIS_DW..vw_fact_estoque_sige es (nolock)
+							left join MIS_DW..dim_estoque_tipo_bloqueio ed (nolock)
+							on es.id_tipo_bloqueio = ed.id_tipo_bloqueio
+						where ed.ds_tipo_bloqueio = 'WN'
+						and es.id_filial <> 3
+						group by es.nr_item_sku) f
+				on f.nr_item_sku = a.nr_item_sku
+			left join mis_dw..stg_cl_cmv cm (nolock)
+				on a.nr_item_sku = cm.nr_item
+			left join aux_indicador_orders_imposto imp (nolock)
+				on imp.nr_item_sku = a.nr_item_sku
+				and imp.nr_product_sku = a.nr_product_sku
+		where a.dt_orders between convert(varchar,@dt_inicio,112) and convert(varchar,@dt_fim,112)		
+		group by a.nr_item_sku,
+		b.ds_product,b.ds_depto, b.ds_sector,e.vl_cmd,f.qt_saldo, cm.vl_cmv, imp.vl_percent_imposto,b.nr_depto
+		)aa
+		)b
+		order by b.vl_com_desconto desc
+
+IF OBJECT_ID('tempdb..#report') IS NOT NULL DROP TABLE #report
+
+CREATE TABLE #report(
+	[nr_item_sku] [bigint] NULL,
+	[ds_product] [varchar](150) NULL,
+	[qty_item] [int] NULL,
+	[vl_com_desconto] [money] NULL,
+	[vl_cmv] [decimal](20, 2) NULL,
+	[vl_impostos] [decimal](20, 2) NULL,
+	[vl_margem] [decimal](24, 4) NULL,
+	[vl_margem_percent] [decimal](38, 14) NULL,
+	[vl_cmd] [decimal](20, 2) NULL,
+	[estoque_sige] [numeric](38, 0) NOT NULL,
+	[cobertura] [decimal](20, 2) NULL,
+	[ds_depto] [varchar](100) NULL,
+	[ds_sector] [varchar](130) NULL,
+	[Rank] [bigint] NULL,
+	[contador] [bigint] NULL
+)
+
+DECLARE	@nr_depto     int
+
+DECLARE c_report CURSOR FAST_FORWARD FOR 
+	
+select distinct b.nr_depto	
+from rpt_indicador_orders a (nolock)
+	inner join MIS_DW..ods_product b (nolock)
+		on a.nr_item_sku = b.nr_item_sku
+		and a.nr_product_sku = b.nr_product_sku
+		and b.ds_item = 'Produto'
+where a.dt_orders between convert(varchar,@dt_inicio,112) and convert(varchar,@dt_fim,112)		
+	
+OPEN c_report
+
+	FETCH NEXT 
+	FROM c_report 
+	INTO
+	  @nr_depto
+    
+    WHILE @@FETCH_STATUS = 0
+	BEGIN	
+		insert into #report
+		select top 10 [nr_item_sku],[ds_product],[qty_item],[vl_com_desconto],[vl_cmv],
+			[vl_impostos],[vl_margem],[vl_margem_percent],[vl_cmd],	[estoque_sige],
+			[cobertura],[ds_depto],[ds_sector],[Rank],
+		ROW_NUMBER() OVER(ORDER BY [vl_com_desconto] DESC) as contador 
+		from #auxiliar
+		where nr_depto = @nr_depto
+		order by vl_com_desconto desc
+
+	FETCH NEXT 
+	FROM c_report 
+	INTO
+	  @nr_depto
+	END
+	
+CLOSE c_report
+DEALLOCATE c_report
+
+
+select * from #report order by [ds_depto], [contador]
+
+end
