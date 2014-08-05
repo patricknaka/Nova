@@ -361,3 +361,42 @@ DEALLOCATE c_report
 select * from #report order by [ds_depto], [contador]
 
 end
+
+
+USE [MIS_RELATORIO]
+GO
+
+/****** Object:  Table [dbo].[stg_paway]    Script Date: 08/05/2014 20:11:02 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[stg_paway]') AND type in (N'U'))
+DROP TABLE [dbo].[stg_paway]
+GO
+
+USE [MIS_RELATORIO]
+GO
+
+/****** Object:  Table [dbo].[stg_paway]    Script Date: 08/05/2014 20:11:02 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[stg_paway](
+	[ds_bloco] [varchar](10) NULL,
+	[ds_marca] [varchar](10) NULL,
+	[num_nfs] [numeric](38, 0) NULL,
+	[vl_faturamento] [numeric](15, 2) NULL,
+	[vl_meta] [numeric](15, 2) NULL,
+	[vl_atingimento] [numeric](15, 2) NULL,
+	[crescimento] [numeric](15, 2) NULL,
+	[vl_faturamento_anterior] [numeric](15, 2) NULL
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
