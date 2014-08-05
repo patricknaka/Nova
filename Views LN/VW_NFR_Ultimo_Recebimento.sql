@@ -18,7 +18,8 @@ WHERE
     whina113.t$seqn = whina112.t$seqn AND
     whinr110.t$itid = whina112.t$itid AND
     tcemm030.t$eunt = tcemm112.t$grid AND
-    tcemm112.t$waid = whina112.t$cwar
+    tcemm112.t$waid = whina112.t$cwar AND
+    whina112.t$trdt >= sysdate-2
     AND
     whina113.t$trdt=( SELECT
                           max(whina112a.t$trdt)
@@ -38,6 +39,6 @@ WHERE
                           tcemm112a.t$waid = whina112a.t$cwar AND
                           whina112a.t$item = whina112.t$item  AND
                           tcemm030a.t$euca = tcemm030.t$euca  AND
-                          tcemm112a.t$grid = tcemm112.t$grid)
+                          tcemm112a.t$grid = tcemm112.t$grid) 
 GROUP BY
     whina112.t$item, whinr110.t$qstk, whina112.t$trdt, tcemm030.t$euca, tcemm112.t$grid
