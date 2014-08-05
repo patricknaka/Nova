@@ -11,7 +11,8 @@
 -- #FAF.186.2 - 02-jul-2014, Fabio Ferreira, 	Correção campo CD_TRANSACAO_DOCUMENTO / Correção de duplicidade	
 -- #FAF.213 - 	07-jul-2014, Fabio Ferreira, 	Adição do campo CD_TIPO_MOVIMENTO		
 -- #FAF.213.1 - 08-jul-2014, Fabio Ferreira, 	Correção NR_TITULO_REFERENCIA	
--- #FAF.213.2 - 11-jul-2014, Fabio Ferreira, 	Correção campo CD_TIPO_MOVIMENTO					
+-- #FAF.213.2 - 11-jul-2014, Fabio Ferreira, 	Correção campo CD_TIPO_MOVIMENTO	
+-- #FAF.259 - 	05-aug-2014, Fabio Ferreira, 	Correção titulo referencia				
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,
@@ -68,6 +69,7 @@ SELECT DISTINCT
 	) CD_UNIDADE_EMPRESARIAL,
 	nvl((select znacr005.t$ttyp$c || znacr005.t$ninv$c from BAANDB.tznacr005201 znacr005				--#FAF.002.sn
 		 where znacr005.t$tty1$c=tfacr200.t$ttyp and znacr005.t$nin1$c=tfacr200.t$ninv
+		 and znacr005.t$tty2$c=tfacr200.t$tdoc and znacr005.t$nin2$c=tfacr200.t$docn					--#FAF.259.n
 		 and znacr005.T$FLAG$C=1																		--#FAF.007.n
 		 and rownum=1), 
 		 (select rs.t$ttyp || rs.t$ninv from baandb.ttfacr200201 rs											--#FAF.186.2.sn
