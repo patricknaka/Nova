@@ -1,9 +1,9 @@
 SELECT
-    whina112.t$item     CD_ITEM,
+    LTRIM(RTRIM(whina112.t$item))     CD_ITEM,
     sum(whina113.t$mauc$1)   VL_CMV,
-    whinr110.t$qstk     QTDE_REC,
-    whina112.t$trdt     DATA_REC,
-    tcemm030.t$euca     FILIAL,
+    whinr110.t$qstk     QT_ULTIMO_RECEBIMENTO,
+    whina112.t$trdt     DT_ULTIMO_RECEBIMENTO,
+    tcemm030.t$euca     CD_FILIAL,
     tcemm112.t$grid     CD_UNIDADE_EMPRESARIAL
 FROM
     baandb.twhina112201 whina112,
