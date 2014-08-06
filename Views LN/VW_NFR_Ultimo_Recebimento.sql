@@ -1,8 +1,9 @@
 SELECT
     LTRIM(RTRIM(whina112.t$item))     CD_ITEM,
+    CAST((FROM_TZ(CAST(TO_CHAR(whina112.t$trdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  
+		AT time zone sessiontimezone) AS DATE) DT_ULTIMO_RECEBIMENTO,
     sum(whina113.t$mauc$1)   VL_CMV,
     whinr110.t$qstk     QT_ULTIMO_RECEBIMENTO,
-    whina112.t$trdt     DT_ULTIMO_RECEBIMENTO,
     tcemm030.t$euca     CD_FILIAL,
     tcemm112.t$grid     CD_UNIDADE_EMPRESARIAL
 FROM
