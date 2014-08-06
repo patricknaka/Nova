@@ -906,3 +906,117 @@ DEALLOCATE c_report
 select * from #report order by [DS_DEPTO], [contador]
 
 end
+------------------------------------------------------------------------------------
+
+
+ALTER proc [dbo].[pr_relatorio_faturamento_depto_unineg](@dt_inicio int,@dt_fim int, @ds_unineg varchar(50))
+as
+begin
+
+
+IF OBJECT_ID('tempdb..#auxiliar') IS NOT NULL DROP TABLE #auxiliar
+select * ,
+	ROW_NUMBER() OVER(ORDER BY A.VL_NOTA DESC) as contador into #auxiliar
+	from 
+	(
+	select t.ID_ITEM, 
+	d.DS_ITEM,
+	SUM(t.VL_NOTA) as VL_NOTA,
+	SUM(t.VL_REC_LIQ_PROD) as VL_REC_LIQ_PROD,
+	SUM(t.VL_CMV) as VL_CMV,
+	SUM(t.QTD_ITENS) as QTD_ITENS,
+	SUM(t.VL_REC_LIQ_PROD) - SUM(t.VL_CMV) as vl_rec_liq,
+	case when SUM(t.VL_REC_LIQ_PROD) =0 then 0 else
+	((SUM(t.VL_REC_LIQ_PROD) - SUM(t.VL_CMV))/SUM(t.VL_REC_LIQ_PROD)) end as vl_rec_liq_percent,
+	cast(e.vl_cmd as decimal(20,2)) as vl_cmd,
+	isnull(f.qt_saldo,0) as estoque_sige,
+	case when vl_cmd = 0 then 0 else cast((isnull(f.qt_saldo,0) / e.vl_cmd) as decimal(20,2)) end as cobertura,
+	d.DS_DEPTO,
+	d.DS_SETOR,
+	DENSE_RANK() OVER (ORDER BY SUM(t.VL_REC_LIQ_PROD) - SUM(t.VL_CMV) desc) AS 'Rank',
+    un.DS_UNINEG
+	from MIS_RELATORIO..rpt_indicador_rentabilidade t (nolock)
+		inner join MIS_RENTAB..dim_item d (nolock)
+		on d.ID_ITEM = t.ID_ITEM
+		inner join MIS_RENTAB..dim_unineg un (nolock)
+		on un.ID_UNINEG = t.ID_UNINEG
+		left join MIS_RELATORIO..ods_relatorio_cmd e (nolock)
+		on e.nr_item_sku = t.ID_ITEM
+		left join (select es.nr_item_sku,SUM(es.qt_saldo) as qt_saldo
+					from MIS_DW..vw_fact_estoque_sige es
+						left join MIS_DW..dim_estoque_tipo_bloqueio ed
+						on es.id_tipo_bloqueio = ed.id_tipo_bloqueio
+					where ed.ds_tipo_bloqueio = 'WN'
+					and es.id_filial <> 3
+					group by es.nr_item_sku) f
+		on f.nr_item_sku = t.ID_ITEM
+	where t.dt_fat between convert(varchar,@dt_inicio,112) and convert(varchar,@dt_fim,112)
+	and un.DS_UNINEG = @ds_unineg
+	group by t.ID_ITEM,d.DS_ITEM,d.DS_DEPTO,e.vl_cmd,f.qt_saldo,d.DS_SETOR,un.DS_UNINEG
+	) A
+	order by A.VL_NOTA desc
+	
+IF OBJECT_ID('tempdb..#report') IS NOT NULL DROP TABLE #report
+
+CREATE TABLE #report(
+	[ID_ITEM] [numeric](18, 0) NOT NULL,
+	[DS_ITEM] [varchar](50) NOT NULL,
+	[VL_NOTA] [numeric](38, 2) NULL,
+	[VL_REC_LIQ_PROD] [numeric](38, 2) NULL,
+	[VL_CMV] [numeric](38, 2) NULL,
+	[QTD_ITENS] [numeric](38, 0) NULL,
+	[vl_rec_liq] [numeric](38, 2) NULL,
+	[vl_rec_liq_percent] [numeric](38, 6) NULL,
+	[vl_cmd] [decimal](20, 2) NULL,
+	[estoque_sige] [numeric](38, 0) NOT NULL,
+	[cobertura] [decimal](20, 2) NULL,
+	[DS_DEPTO] [varchar](50) NOT NULL,
+	[DS_SETOR] [varchar](50) NOT NULL,
+	[Rank] [bigint] NULL,
+	[contador] [bigint] NULL,
+	DS_UNINEG [varchar](50)
+)
+
+DECLARE	@nr_depto  varchar(50)
+DECLARE	@unineg  varchar(50)
+
+DECLARE c_report CURSOR FAST_FORWARD FOR 
+	
+select distinct d.DS_DEPTO
+from MIS_RELATORIO..rpt_indicador_rentabilidade t (nolock)
+	inner join MIS_RENTAB..dim_item d (nolock)
+	on d.ID_ITEM = t.ID_ITEM
+where t.dt_fat between convert(varchar,@dt_inicio,112) and convert(varchar,@dt_fim,112)	
+	
+OPEN c_report
+
+	FETCH NEXT 
+	FROM c_report 
+	INTO
+	  @nr_depto
+    
+    WHILE @@FETCH_STATUS = 0
+	BEGIN	
+	
+	insert into #report
+	select top 50 [ID_ITEM],[DS_ITEM],[VL_NOTA],[VL_REC_LIQ_PROD],[VL_CMV],[QTD_ITENS],[vl_rec_liq],[vl_rec_liq_percent],
+	[vl_cmd],[estoque_sige],[cobertura],[DS_DEPTO],[DS_SETOR],[Rank],
+	ROW_NUMBER() OVER(ORDER BY VL_NOTA DESC) as contador,DS_UNINEG
+	from #auxiliar
+	where [DS_DEPTO] = @nr_depto
+	order by VL_NOTA desc
+
+
+	FETCH NEXT 
+	FROM c_report 
+	INTO
+	  @nr_depto
+	END
+	
+CLOSE c_report
+DEALLOCATE c_report
+
+
+select * from #report order by DS_UNINEG, [DS_DEPTO], [contador]
+
+end
