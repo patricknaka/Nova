@@ -536,3 +536,131 @@ DEALLOCATE c_report
 select * from #report order by [ds_depto], [contador]
 
 end
+---------------------------------------------------------------------------------
+
+
+ALTER proc [dbo].[pr_relatorio_orders_parceiro](@dt_inicio int,@dt_fim int)
+as
+begin
+IF OBJECT_ID('tempdb..#report') IS NOT NULL DROP TABLE #report
+
+CREATE TABLE #report(
+	[nr_item_sku] [bigint] NULL,
+	[qty_item] [int] NULL,
+	[vl_com_desconto] [money] NULL,
+	[vl_cmv] [decimal](20, 2) NULL,
+	[vl_impostos] [decimal](20, 2) NULL,
+	[vl_margem] [decimal](24, 4) NULL,
+	[vl_margem_percent] [decimal](38, 14) NULL,
+	[vl_cmd] [decimal](20, 2) NULL,
+	[estoque_sige] [numeric](38, 0) NOT NULL,
+	[cobertura] [decimal](20, 2) NULL,
+	[ds_parceiro] [varchar](100) NULL,
+	[Rank] [bigint] NULL,
+	[ds_product] [varchar](150) NULL,
+	[ds_depto] [varchar](100) NULL,
+	[ds_sector] [varchar](130) NULL,
+	[contador] [bigint] NULL,
+	[ordem] [smallint] null
+)
+
+DECLARE	@nr_parceiro     int
+DECLARE @vl_com_desconto money
+DECLARE @contador smallint
+
+set @contador= 0
+
+DECLARE c_report CURSOR FAST_FORWARD FOR 
+	
+select top 10 nr_parceiro,vl_com_desconto
+from (
+		select nr_parceiro, SUM(vl_com_desconto) as vl_com_desconto
+		from [rpt_indicador_orders_parceiro] (nolock)
+		where dt_orders between convert(varchar,@dt_inicio,112) and convert(varchar,@dt_fim,112)		
+		group by nr_parceiro) a
+order by vl_com_desconto desc	
+	
+OPEN c_report
+
+	FETCH NEXT 
+	FROM c_report 
+	INTO
+	  @nr_parceiro,
+	  @vl_com_desconto
+    
+    WHILE @@FETCH_STATUS = 0
+	BEGIN	
+		set @contador = @contador + 1
+	    insert into #report
+		select top 10 b.*, c.ds_product, c.ds_depto, c.ds_sector,
+		ROW_NUMBER() OVER(ORDER BY b.vl_com_desconto DESC) as contador,  @contador as ordem
+		from (
+		select 
+		aa.nr_item_sku,
+		aa.qty_item,
+		aa.vl_com_desconto,
+		aa.vl_cmv,
+		aa.vl_impostos,
+		aa.vl_com_desconto - (aa.vl_cmv+aa.vl_impostos) as vl_margem,
+		((aa.vl_com_desconto - (aa.vl_cmv+aa.vl_impostos))/aa.vl_com_desconto) as vl_margem_percent,
+		aa.vl_cmd,
+		aa.estoque_sige,
+		aa.cobertura,
+		aa.ds_parceiro,
+		DENSE_RANK() OVER (ORDER BY aa.vl_com_desconto - (aa.vl_cmv+aa.vl_impostos) desc) AS 'Rank'
+		from (
+		select 
+		a.nr_item_sku,
+		sum(a.qty_item) as qty_item,
+		sum(a.vl_com_desconto) as vl_com_desconto,
+		cast(sum(a.qty_item) * isnull(cm.vl_cmv,0) as decimal(20,2)) as vl_cmv, 
+		case when imp.vl_percent_imposto = null then 
+		cast(sum(a.vl_com_desconto) * 0.2725 as decimal(20,2))
+		else
+		cast(sum(a.vl_com_desconto) * imp.vl_percent_imposto as decimal(20,2)) end as vl_impostos, 
+		cast(e.vl_cmd as decimal(20,2)) as vl_cmd,
+		isnull(f.qt_saldo,0) as estoque_sige,
+		case when vl_cmd = 0 then 0 else cast((isnull(f.qt_saldo,0) / e.vl_cmd) as decimal(20,2)) end as cobertura,
+		pa.ds_parceiro
+		from rpt_indicador_orders_parceiro a  (nolock)
+			inner join mis_dw..dim_parceiro pa  (nolock)
+				on pa.nr_id_parceiro = a.nr_parceiro
+			left join mis_dw..stg_sige_estoque_cmd e  (nolock)
+				on e.nr_item_sku = a.nr_item_sku
+				and e.nr_product_sku = a.nr_product_sku
+			left join (select es.nr_item_sku,SUM(es.qt_saldo) as qt_saldo
+						from MIS_DW..vw_fact_estoque_sige es  (nolock)
+							left join MIS_DW..dim_estoque_tipo_bloqueio ed  (nolock)
+							on es.id_tipo_bloqueio = ed.id_tipo_bloqueio
+						where ed.ds_tipo_bloqueio = 'WN'
+						and es.id_filial <> 3
+						group by es.nr_item_sku) f
+				on f.nr_item_sku = a.nr_item_sku
+			left join mis_dw..stg_cl_cmv cm  (nolock)
+				on a.nr_item_sku = cm.nr_item
+			left join aux_indicador_orders_imposto imp  (nolock)
+				on imp.nr_item_sku = a.nr_item_sku
+				and imp.nr_product_sku = a.nr_product_sku
+		where a.dt_orders between convert(varchar,@dt_inicio,112) and convert(varchar,@dt_fim,112)		
+		and a.nr_parceiro = @nr_parceiro
+		group by a.nr_item_sku,
+		e.vl_cmd,f.qt_saldo, cm.vl_cmv, imp.vl_percent_imposto,pa.ds_parceiro
+		)aa
+		)b
+		inner join MIS_DW..ods_product c
+			on b.nr_item_sku = c.nr_item_sku
+			and c.ds_item = 'Produto'
+		order by b.vl_com_desconto desc
+
+	FETCH NEXT 
+	FROM c_report 
+	INTO
+	  @nr_parceiro,
+	  @vl_com_desconto
+	END
+	
+CLOSE c_report
+DEALLOCATE c_report
+
+select * from #report order by [ordem], [contador]
+end
