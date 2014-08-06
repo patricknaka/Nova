@@ -3,7 +3,7 @@
 --*******************************************************************************************************************************************
 SELECT d.t$cnst CD_TIPO_OPERACAO,
        l.t$desc DS_TIPO_OPERACAO,
-	   'NR' CD_MODULO													--#FAF.003.n
+	   'NFR' CD_MODULO													--#FAF.003.n
 FROM baandb.tttadv401000 d,
      baandb.tttadv140000 l
 --WHERE d.t$cpac='ci'												--#FAF.008.o
@@ -23,7 +23,7 @@ AND l.t$cust='glo1'
 UNION																--#FAF.003.sn
 SELECT d.t$cnst CD_TIPO_OPERACAO,
        l.t$desc DS_TIPO_OPERACAO,
-	   'NF' CD_MODULO
+	   'NFV' CD_MODULO
 FROM baandb.tttadv401000 d,
      baandb.tttadv140000 l
 WHERE d.t$cpac='ci'
