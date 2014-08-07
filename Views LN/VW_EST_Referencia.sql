@@ -4,7 +4,7 @@ SELECT  201 CD_CIA,
         ltrim(rtrim(whina112.t$item)) CD_ITEM,
         tcmcs003.t$tpar$l CD_MODALIDADE,
         sum(whina112.t$qstk) QT_FISICA,
-		tdrec947.t$rcno$l NR_REFERENCIA,
+		tdrec947.t$rcno$l NR_NFR,
 		(SELECT 
 		 case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd))=0 then 0
 		 else round(sum(whwmd217.t$mauc$1)/(max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)),4) 
@@ -16,7 +16,7 @@ SELECT  201 CD_CIA,
 		 AND whwmd215.t$item=whwmd217.t$item
 		 group by  whwmd217.t$item) VL_CMV,
         tcemm112.t$grid CD_UNIDADE_EMPRESARIAL,
-		tdrec940.t$fire$l fire
+		tdrec940.t$fire$l NR_REFERENCIA_FISCAL
 FROM    baandb.twhina112201 whina112,
         baandb.ttcemm112201 tcemm112,
         baandb.ttcemm030201 tcemm030,
