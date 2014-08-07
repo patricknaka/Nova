@@ -1,17 +1,22 @@
--- 05-mai-2014, Fabio Ferreira, Correções de timezone de todos os campos Data/hora
--- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	Inclusão do campo Nota e Serie consolidada
+-- 05-mai-2014, Fabio Ferreira, CorreÃ§Ãµes de timezone de todos os campos Data/hora
+-- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	InclusÃ£o do campo Nota e Serie consolidada
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
--- #FAF.028 - 17-mai-2014, Fabio Ferreira, 	Correção registros duplicados
--- #FAF.046 - 23-mai-2014, Fabio Ferreira, 	Conversão do campo NUM_ENTREGA para String
--- #FAF.104 - 04-jun-2014, Fabio Ferreira, 	Correção da data do status
--- #FAF.143 - 16-jun-2014, Fabio Ferreira, 	Correções
+-- #FAF.028 - 17-mai-2014, Fabio Ferreira, 	CorreÃ§Ã£o registros duplicados
+-- #FAF.046 - 23-mai-2014, Fabio Ferreira, 	ConversÃ£o do campo NUM_ENTREGA para String
+-- #FAF.104 - 04-jun-2014, Fabio Ferreira, 	CorreÃ§Ã£o da data do status
+-- #FAF.143 - 16-jun-2014, Fabio Ferreira, 	CorreÃ§Ãµes
 -- #FAF.165 - 23-jun-2014, Fabio Ferreira, 	Tipo de entrega duplicado
--- #FAF.174 - 23-jun-2014, Fabio Ferreira, 	Correções de duplicidade
--- #FAF.177 - 26-jun-2014, Fabio Ferreira, 	Correções de duplicidade
+-- #FAF.174 - 23-jun-2014, Fabio Ferreira, 	CorreÃ§Ãµes de duplicidade
+-- #FAF.177 - 26-jun-2014, Fabio Ferreira, 	CorreÃ§Ãµes de duplicidade
+-- #MAR.265 - 07-ago-2014, Marcia A. R. Torres, CorreÃ§Ã£o na DT_ATUALIZACAO
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
-        CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+--        CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAR.265.so
+--          AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                                        --#MAR.265.eo
+ 
+         CAST((FROM_TZ(CAST(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAR.265.sn
+          AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                                                                 --#MAR.265.en
+          
         201 CD_CIA,
         tdsls400.t$orno NR_ORDEM,
         tdsls400.t$ofbp CD_CLIENTE,
