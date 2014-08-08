@@ -12,7 +12,8 @@
 -- #FAF.213 - 	07-jul-2014, Fabio Ferreira, 	Adição do campo CD_TIPO_MOVIMENTO		
 -- #FAF.213.1 - 08-jul-2014, Fabio Ferreira, 	Correção NR_TITULO_REFERENCIA	
 -- #FAF.213.2 - 11-jul-2014, Fabio Ferreira, 	Correção campo CD_TIPO_MOVIMENTO	
--- #FAF.259 - 	05-aug-2014, Fabio Ferreira, 	Correção titulo referencia				
+-- #FAF.259 - 	05-aug-2014, Fabio Ferreira, 	Correção titulo referencia	
+-- #FAF.274 - 	08-aug-2014, Fabio Ferreira, 	Correção data de atualização			
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,
@@ -58,8 +59,14 @@ SELECT DISTINCT
 	tfcmg011.t$baoc$l CD_BANCO,
 	tfcmg011.t$agcd$l NR_AGENCIA,
 	tfcmg001.t$bano NR_CONTA_CORRENTE,																			--#FAF.001.n
+	GREATEST(																									--#FAF.274.n
 	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+			AT time zone sessiontimezone) AS DATE), 
+	tfacr201.t$rcd_utc,																							--#FAF.274.sn
+	tfcmg001.t$rcd_utc,
+	tfcmg409.t$rcd_utc)																							--#FAF.274.en
+				DT_ATUALIZACAO,
+	
 	(Select u.t$eunt From baandb.ttcemm030201 u
 	 where u.t$euca!=' '
 	AND TO_NUMBER(u.t$euca)=CASE WHEN tfacr200.t$dim2=' ' then 999
@@ -74,7 +81,7 @@ SELECT DISTINCT
 		 and rownum=1), 
 		 (select rs.t$ttyp || rs.t$ninv from baandb.ttfacr200201 rs											--#FAF.186.2.sn
 		  where rs.t$tdoc=tfacr200.t$tdoc 
-		  and rs.t$docn=tfacr200.t$docn
+		  and rs.t$docn=tfacr200.t$docn																	
 		  and rs.t$ttyp || rs.t$ninv!=tfacr200.t$ttyp || tfacr200.t$ninv								--#FAF.213.1.n
 --		  and rs.t$ttyp!=tfacr200.t$ttyp																--#FAF.213.1.o
 --		  and rs.t$ninv!=tfacr200.t$ninv																--#FAF.213.1.o
