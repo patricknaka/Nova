@@ -62,12 +62,12 @@ SELECT DISTINCT
 	GREATEST(																									--#FAF.274.n
 	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
 			AT time zone sessiontimezone) AS DATE), 
-	CAST((FROM_TZ(CAST(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 			--#FAF.274.sn
-	AT time zone sessiontimezone) AS DATE),																							
-	CAST((FROM_TZ(CAST(TO_CHAR(tfcmg001.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')
-	AT time zone sessiontimezone) AS DATE),	
-	CAST((FROM_TZ(CAST(TO_CHAR(tfcmg409.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-	AT time zone sessiontimezone) AS DATE))																	--#FAF.274.en
+	nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 			--#FAF.274.sn
+	AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),																							
+	nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfcmg001.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')
+	AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+	nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfcmg409.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+	AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')))																	--#FAF.274.en
 																							DT_ATUALIZACAO,
 	
 	(Select u.t$eunt From baandb.ttcemm030201 u
