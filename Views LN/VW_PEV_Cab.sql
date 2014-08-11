@@ -9,6 +9,7 @@
 -- #FAF.174 - 23-jun-2014, Fabio Ferreira, 	Correções de duplicidade
 -- #FAF.177 - 26-jun-2014, Fabio Ferreira, 	Correções de duplicidade
 -- #MAR.265 - 07-ago-2014, Marcia A. R. Torres, Correção na DT_ATUALIZACAO
+-- #FAF.276 - 11-aug-2014, Fabio Ferreira, 	Correção
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
 --        CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAR.265.so
@@ -137,7 +138,7 @@ FROM    baandb.ttdsls400201 tdsls400
          WHERE  tcibd001.t$item=tdsls401.t$item
          AND    znsls401.t$orno$c=tdsls401.t$orno
          AND    znsls401.t$pono$c=tdsls401.t$pono
-		 AND    tcibd001.T$KITM IN (1,2,3,5)																			--#FAF.028
+--		 AND    tcibd001.T$KITM IN (1,2,3,5)																			--#FAF.028	--#FAF.276.o
          GROUP BY
           znsls401.t$ncia$c,
           znsls401.t$uneg$c,

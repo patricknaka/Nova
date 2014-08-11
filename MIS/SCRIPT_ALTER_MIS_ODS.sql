@@ -469,3 +469,35 @@ ALTER TABLE [fin].[ods_sige_titulo_receber_movimento] ADD  CONSTRAINT [PK_Titulo
 	[nr_sq_movimento] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEX]
 GO
+
+USE [MIS_ODS]
+GO
+
+/****** Object:  Table [fin].[ods_sige_bandeira_pagto]    Script Date: 08/11/2014 16:51:19 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[fin].[ods_sige_bandeira_pagto]') AND type in (N'U'))
+DROP TABLE [fin].[ods_sige_bandeira_pagto]
+GO
+
+USE [MIS_ODS]
+GO
+
+/****** Object:  Table [fin].[ods_sige_bandeira_pagto]    Script Date: 08/11/2014 16:51:19 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [fin].[ods_sige_bandeira_pagto](
+	[CD_BANDEIRA] [int] NULL,
+	[DS_BANDEIRA] [varchar](30) NULL
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
