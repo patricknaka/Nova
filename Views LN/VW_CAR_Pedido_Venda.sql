@@ -1,6 +1,6 @@
 SELECT DISTINCT 
     znsls412.t$ttyp$c || znsls412.t$ninv$c    CD_CHAVE_PRIMARIA,
-    znsls412.t$ncia$c                         CD_CIA,
+    201				              CD_CIA,
     znsls412.t$pecl$c                         NR_PEDIDO,
     znsls401.t$orno$c                         NR_ORDEM,
 	CAST((FROM_TZ(CAST(TO_CHAR(znsls412.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
