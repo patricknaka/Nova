@@ -22,7 +22,7 @@ WHERE
     whinr110.t$itid = whina112.t$itid AND
     tcemm030.t$eunt = tcemm112.t$grid AND
     tcemm112.t$waid = whina112.t$cwar AND
-    whina112.t$trdt >= sysdate-2 AND
+    whina112.t$trdt >= sysdate-120 AND
 	whinr110.t$qstk > 0
     AND
     whina113.t$trdt=( SELECT
