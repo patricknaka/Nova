@@ -1020,3 +1020,7 @@ DEALLOCATE c_report
 select * from #report order by DS_UNINEG, [DS_DEPTO], [contador]
 
 end
+
+
+alter table dbo.stg_sige_arquivo_conciliacao
+alter column PEAP_NSU_AUTORIZADORA numeric(10,0)
