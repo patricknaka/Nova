@@ -1,5 +1,6 @@
 --	FAF.136 - 13-jun-2014, Fabio Ferreira, 	CNPJ Transportadora
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
+--	#MAR.258 - 11-ago-2014,	Marcia A R Torres,	Inclusão da DT_ATUALIZACAO
 --**********************************************************************************************************************************************************
 select distinct
   (select 
@@ -45,7 +46,10 @@ select distinct
   
   
   znfmd060.T$REFE$C DS_OBS_ROMANEIO,
-  znfmd630.T$PECL$C NR_ENTREGA
+  znfmd630.T$PECL$C NR_ENTREGA,
+	CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAR.258.sn
+		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO                                         --#MAR.258.en
+  
 from  BAANDB.TZNFMD630201 znfmd630,
 	  baandb.ttcmcs080201 tcmcs080,	
 	  baandb.ttccom100201 tccom100,
