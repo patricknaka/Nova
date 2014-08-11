@@ -1,14 +1,15 @@
--- 06-mai-2014, Fabio Ferreira, Inclus„o do numero do pedido
+-- 06-mai-2014, Fabio Ferreira, Inclus√£o do numero do pedido
 -- #FAF.001 - 06-mai-2014, Fabio Ferreira, 	Tratamento da data de vencimento	
--- #FAF.002 - 09-mai-2014, Fabio Ferreira, 	CorreÁ„o dos campos referente a situaÁ„o do tÌtulo				
--- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Adicionado campo mÈtodo de pagamento/recebimento
--- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Alterado alias campo mÈtodo de pagamento/recebimento	
--- #FAF.108 - 05-jun-2014, Fabio Ferreira, 	Inclus„o da situaÁ„o da remessa
+-- #FAF.002 - 09-mai-2014, Fabio Ferreira, 	Corre√ß√£o dos campos referente a situa√ß√£o do t√≠tulo				
+-- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Adicionado campo m√©todo de pagamento/recebimento
+-- #FAF.008 - 21-mai-2014, Fabio Ferreira, 	Alterado alias campo m√©todo de pagamento/recebimento	
+-- #FAF.108 - 05-jun-2014, Fabio Ferreira, 	Inclus√£o da situa√ß√£o da remessa
 -- #FAF.141 - 16-jun-2014, Fabio Ferreira, 	Problema mais de um registro na subquery
--- #FAF.146 - 17-jun-2014, Fabio Ferreira, 	CorreÁ„o DT_LIQUIDACAO_TITULO
--- #FAF.146.1 - 27-jun-2014, Fabio Ferreira, 	CorreÁ„o VL_DESCONTO
--- #FAF.193 - 27-jun-2014, Fabio Ferreira, 	PadronizaÁ„o de alias
+-- #FAF.146 - 17-jun-2014, Fabio Ferreira, 	Corre√ß√£o DT_LIQUIDACAO_TITULO
+-- #FAF.146.1 - 27-jun-2014, Fabio Ferreira, 	Corre√ß√£o VL_DESCONTO
+-- #FAF.193 - 27-jun-2014, Fabio Ferreira, 	Padroniza√ß√£o de alias
 -- #FAF.203 - 03-jul-2014, Fabio Ferreira, 	Retirados campos da remessa
+-- #MAR.273 - 11-ago-2014, Marcia A R Torres, Corre√ß√£o DT_ATUALIZACAO e CD_METODO_RECEBIMENTO.
 --****************************************************************************************************************************************************************
 --ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY HH:MI:SS AM';
 
@@ -66,8 +67,16 @@ SELECT DISTINCT
 	AND t.t$ctxt=tfacr200.t$text
 	and rownum=1),' ') DS_OBSERVACAO_TITULO,
 	tfgld100.t$user DS_USUARIO_GERACAO_TITULO,
-	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+--	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAR.273.so
+--		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                                        --#MAR.273.eo
+  GREATEST(                                                                                         --#MAR.273.sn
+    nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+      AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+    nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+      AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+    nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfcmg001.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+      AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')))
+                                              DT_ATUALIZACAO,                                     --#MAR.273.en
 	(Select u.t$eunt From baandb.ttcemm030201 u
 		where u.t$euca!=' '
 		AND TO_NUMBER(u.t$euca)=CASE WHEN tfacr200.t$dim2=' ' then 999
@@ -81,7 +90,8 @@ SELECT DISTINCT
 	 and znsls401.t$orno$c=ro.t$slso
 	 and znsls401.t$pono$c=ro.t$pono
 	 and rownum=1) NR_PEDIDO,
-	 tfacr200.t$paym CD_METODO_RECEBIMENTO,	--#FAF.008.n
+--	 tfacr200.t$paym CD_METODO_RECEBIMENTO,	--#FAF.008.n  --#MAR.273.o
+	 tfacr201.t$paym CD_METODO_RECEBIMENTO,	--#MAR.273.n
 	(select a.t$send$l from baandb.ttfcmg948201 a
 	 where a.t$ttyp$l=tfacr200.t$ttyp
 	 and a.t$ninv$l=tfacr200.t$ninv
@@ -90,6 +100,7 @@ SELECT DISTINCT
 					 where b.t$ttyp$l=a.t$ttyp$l
 					 and a.t$ninv$l=b.t$ninv$l)) CD_SITUACAO_PAGAMENTO									--#FAF.108.n
 FROM
+	baandb.ttfacr201201 tfacr201,             --#MAR.273.n
 	baandb.ttfacr200201 tfacr200
 	LEFT JOIN baandb.ttfcmg001201 tfcmg001
 	ON  tfcmg001.t$bank=tfacr200.t$bank
@@ -105,3 +116,5 @@ FROM
 WHERE tfgld100.t$btno=tfacr200.t$btno
 AND tfgld100.t$year=tfacr200.t$year
 AND tfacr200.t$docn=0
+AND tfacr201.t$ttyp = tfacr200.t$ttyp               --#MAR.273.sn
+AND tfacr201.t$ninv = tfacr200.t$ninv               --#MAR.273.en
