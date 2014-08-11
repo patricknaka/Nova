@@ -1024,3 +1024,6 @@ end
 
 alter table dbo.stg_sige_arquivo_conciliacao
 alter column PEAP_NSU_AUTORIZADORA numeric(10,0)
+
+alter table dbo.ods_sige_arquivo_conciliacao
+alter column autorizadora numeric(10,0)
