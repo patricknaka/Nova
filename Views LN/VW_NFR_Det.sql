@@ -6,6 +6,7 @@
 -- #FAF.151 - 20-jun-2014, Fabio Ferreira,	Tratamento para o CNPJ			
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
 -- #FAF.242 - 04-ago-2014, Fabio Ferreira,	Correções	
+-- #FAF.279 - 12-ago-2014, Fabio Ferreira,	Correções ICMS não redutor
 --************************************************************************************************************************************************************
 SELECT
   201 CD_CIA,
@@ -96,7 +97,9 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VL_PIS,
-  (SELECT tdrec942.t$fbex$l + tdrec942.t$fbot$l FROM baandb.ttdrec942201 tdrec942
+--  (SELECT tdrec942.t$fbex$l + tdrec942.t$fbot$l FROM baandb.ttdrec942201 tdrec942						--#FAF.279.o
+  (SELECT CASE WHEN tdrec942.t$rdbc$l!=0 then tdrec942.t$base$l/tdrec942.t$rdbc$l else 0 end			--#FAF.279.n
+  FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VL_BASE_ICMS_NAO_REDUTOR,  
@@ -225,7 +228,8 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=3) VL_BASE_IPI,
-  (SELECT tdrec942.t$rdam$l FROM baandb.ttdrec942201 tdrec942
+--  (SELECT tdrec942.t$rdam$l FROM baandb.ttdrec942201 tdrec942											--#FAF.279.o
+  (SELECT tdrec942.t$rdbc$l FROM baandb.ttdrec942201 tdrec942											--#FAF.279.n
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VL_PERCENTUAL_REDUTOR_ICMS,
