@@ -2,10 +2,10 @@ USE MIS_DW
 GO
 
 
----ALTERA«’ES NA BASE DE DADOS MIS_DW/MIS_DW
+---ALTERA√á√ïES NA BASE DE DADOS MIS_DW/MIS_DW
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
---ALTERA«’ES DE DATA TYPE
+--ALTERA√á√ïES DE DATA TYPE
 
 --DE NUMERIC(2) PARA INT
 ALTER TABLE DBO.STG_DESPESA
@@ -70,7 +70,7 @@ ALTER TABLE dbo.aux_produto_dw
 alter column ds_ean numeric(15)
 ----------------------------------------------------------------------------------------------------------------
 
---ALTERA«√O ATRIBUTO ID_CONTA TABELA ODS_DESPESA_CONTAS
+--ALTERA√á√ÉO ATRIBUTO ID_CONTA TABELA ODS_DESPESA_CONTAS
 
 --DROP OBJETO DEPENDENCIA
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ods_despesa_ods_despesa_contas]') AND parent_object_id = OBJECT_ID(N'[dbo].[ods_despesa]'))
@@ -82,8 +82,8 @@ IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_d
 ALTER TABLE [dbo].[ods_despesa_contas] DROP CONSTRAINT [PK_ods_despesa_contas]
 GO
 
---EFETIVA ALTERA«√O
---DE NUMERIC(7) para NUMERIC(9) --ESTA ALTERA«√O DEVER¡ FALHAR DEVIDO A USO DE CONSTRAINT
+--EFETIVA ALTERA√á√ÉO
+--DE NUMERIC(7) para NUMERIC(9) --ESTA ALTERA√á√ÉO DEVER√Å FALHAR DEVIDO A USO DE CONSTRAINT
 ALTER TABLE DBO.ODS_DESPESA_CONTAS
 ALTER COLUMN ID_CONTA NUMERIC(9) NOT NULL
 
@@ -258,7 +258,7 @@ ALTER COLUMN ID_DOCUMENTO varchar(3)
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[dim_condicao_pagamento]') AND name = N'PK_dim_condicao_pagamento')
 ALTER TABLE [dbo].[dim_condicao_pagamento] DROP CONSTRAINT [PK_dim_condicao_pagamento]
 
---DE NUMERIC(2) para NUMERIC(3)  --PROBLEMAS DE CONVERS√O DEVIDO FALHA DE PK
+--DE NUMERIC(2) para NUMERIC(3)  --PROBLEMAS DE CONVERS√ÉO DEVIDO FALHA DE PK
 ALTER TABLE DBO.DIM_CONDICAO_PAGAMENTO
 ALTER COLUMN NR_CIA NUMERIC (3) NOT NULL
 
@@ -296,7 +296,7 @@ ALTER TABLE dbo.ods_vendedor
 ALTER COLUMN ds_vendedor_afiliado varchar(100)
 
 
---Inclus„o Atributos
+--Inclus√£o Atributos
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------
@@ -306,7 +306,7 @@ ALTER COLUMN ds_vendedor_afiliado varchar(100)
 
 
 
---ALTERA«’ES DE DE-PARA DO SIGE PARA LN NA ESTRUTURA DE COMPANHIA/FILIAL
+--ALTERA√á√ïES DE DE-PARA DO SIGE PARA LN NA ESTRUTURA DE COMPANHIA/FILIAL
 --STAGE
 --INCLUSAO DE COLUNA DE COMPANHIA DO LN
 ALTER TABLE DBO.STG_SIGE_ESTABELECIMENTO
@@ -325,13 +325,13 @@ ADD nr_id_filial_ln NUMERIC(3)
 
 
 --------------------------------------------------------------------
---INCLUS√O DE ATRIBUTO PARA ADAPTA«√O AS REGRAS DO LN
+--INCLUS√ÉO DE ATRIBUTO PARA ADAPTA√á√ÉO AS REGRAS DO LN
 ALTER TABLE DBO.STG_SIGE_METAS_ORCAMENTO
 ADD nr_id_unidade_negocio int
 
 
 --------------------------------------------------------------------
---INCLUS√O DE ATRIBUTO DE REFERENCIA FISCAL
+--INCLUS√ÉO DE ATRIBUTO DE REFERENCIA FISCAL
 
 ALTER TABLE DBO.STG_SIGE_TITULO
 ADD ID_REF_FISCAL varchar(40)
@@ -366,7 +366,7 @@ alter column nr_cia numeric(3)
 
 
 --------------------------------------------------------------------
---Inclus„o do flag kit
+--Inclus√£o do flag kit
 ALTER TABLE dbo.stg_sige_detalhe_pedido 
 ADD NR_KIT int NULL
 
@@ -398,7 +398,7 @@ INCLUDE ( [id_cia],
 
 --------------------------------------------------------------------
 
---Inclus„o Atributo Tipo Bloqueio
+--Inclus√£o Atributo Tipo Bloqueio
 ALTER TABLE DBO.ods_estoque_sige
 ADD id_tipo_bloqueio varchar(5)
 
@@ -412,7 +412,7 @@ ADD id_tipo_bloqueio varchar(5)
 
 --------------------------------------------------------------------
 
---Inclus„o Atributo Tipo Bloqueio
+--Inclus√£o Atributo Tipo Bloqueio
 ALTER TABLE DBO.ods_estoque_sige
 ADD id_tipo_bloqueio varchar(5)
 
@@ -454,7 +454,7 @@ ALTER COLUMN NR_NATOPE_SEQ_DET numeric(5,0)
 
 ---------------------------------------------------------------------------------------------------
 
---EXCLUS√O DE FK DEVIDO A DESATIVA«√O DE CARGA DA TABELA ODS_ESTOQUE_DEPOSITO SUBSTITUIDA PELA TABELA ODS_ESTOQUE_TIPO_BLOQUEIO
+--EXCLUS√ÉO DE FK DEVIDO A DESATIVA√á√ÉO DE CARGA DA TABELA ODS_ESTOQUE_DEPOSITO SUBSTITUIDA PELA TABELA ODS_ESTOQUE_TIPO_BLOQUEIO
 
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ods_estoque_sige_ods_estoque_deposito]') AND parent_object_id = OBJECT_ID(N'[dbo].[ods_estoque_sige]'))
 ALTER TABLE [dbo].[ods_estoque_sige] DROP CONSTRAINT [FK_ods_estoque_sige_ods_estoque_deposito]
@@ -476,7 +476,7 @@ ALTER TABLE dbo.dim_estoque_modalidade
 ALTER COLUMN ds_modalidade VARCHAR(40)
 
 ---------------------------------------------------------------------------------------------------
---Inclus„o de coluna ODS_ESTOQUE_SIGE
+--Inclus√£o de coluna ODS_ESTOQUE_SIGE
 
 ALTER TABLE ods_estoque_sige
 DROP COLUMN [id_tipo_bloqueio]
@@ -485,7 +485,7 @@ ALTER TABLE ods_estoque_sige
 ADD [id_tipo_bloqueio] [varchar](10) NULL
 
 
---ALTERA«√O DE VIEW (INCLUS√O ATRIBUTO ID_TIPO_BLOQUEIO)
+--ALTERA√á√ÉO DE VIEW (INCLUS√ÉO ATRIBUTO ID_TIPO_BLOQUEIO)
 
 ALTER view [dbo].[vw_fact_estoque_sige] as 
 select a.id_cia,
@@ -834,7 +834,7 @@ ALTER TABLE dim_purchase_status
 ALTER COLUMN DS_CD_STATUS VARCHAR(2)
 
 ---------------------------------------------------------------------------------------------------
---ATUALIZA«√O DE ADEQUA«√O AO DOMINIO LN
+--ATUALIZA√á√ÉO DE ADEQUA√á√ÉO AO DOMINIO LN
 
 UPDATE ODS_PURCHASE
   SET ds_stts_ped = CASE ds_stts_ped WHEN 'A' THEN '99'
@@ -859,7 +859,7 @@ ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRI
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 
 --------------------------------------------------------------
---DE CHAR(1) PARA CHAR(2) - ADAPTA«√O LN
+--DE CHAR(1) PARA CHAR(2) - ADAPTA√á√ÉO LN
 ALTER TABLE ods_purchase
 ALTER COLUMN DS_STTS_PED CHAR(2)
 
@@ -1108,3 +1108,28 @@ ADD nr_id_pedido_compra bigint
 
 ALTER TABLE aux_ods_purchase_full
 ADD nr_id_pedido_compra bigint
+
+
+----------------------------------------------------
+
+alter table ods_terceiro_corporativo
+add id_cliente numeric(14) not null default 0
+
+begin
+update a
+set a.id_cliente = b.ID_CLIENTE
+from ods_terceiro_corporativo a
+inner join stg_sige_terceiro_corporativo b
+on a.id_cliente_grupo = b.ID_CLIENTE_GRUPO
+commit
+
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_terceiro_corporativo]') AND name = N'PK_ods_terceiro_corporativo')
+ALTER TABLE [dbo].[ods_terceiro_corporativo] DROP CONSTRAINT [PK_ods_terceiro_corporativo]
+
+
+ALTER TABLE [dbo].[ods_terceiro_corporativo] ADD  CONSTRAINT [PK_ods_terceiro_corporativo] PRIMARY KEY CLUSTERED 
+(
+	[id_cliente_grupo] ASC,
+	[id_cliente] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
