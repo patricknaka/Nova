@@ -5,6 +5,7 @@
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
 -- #FAF.247.1 - 30-jun-2014, Fabio Ferreira, 	Correções Frete
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO_NF
+-- #FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclusão do camopo ref fiscal e linha de fatura
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -179,7 +180,11 @@ SELECT DISTINCT
 	(SELECT cisli943.t$sbas$l FROM baandb.tcisli943201 cisli943
 		WHERE cisli943.t$fire$l=cisli941.t$fire$l
 		AND cisli943.t$line$l=cisli941.t$line$l
-		AND cisli943.t$brty$l=3) VL_BASE_IPI
+		AND cisli943.t$brty$l=3) VL_BASE_IPI,
+	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$refr$l											--#FAF.253.sn
+			ELSE NULL END	NR_REFERENCIA_FISCAL_FATURA,
+	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$rfdl$l
+			ELSE NULL END	NR_ITEM_NF_FATURA														--#FAF.253.en
 FROM 
 --	baandb.tcisli941201 cisli941,																	--#FAF.247.o
 	baandb.tcisli940201 cisli940,

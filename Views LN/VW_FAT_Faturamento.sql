@@ -23,6 +23,7 @@
 --	#FAF.201 - 03-jul-2014,	Fabio Ferreira, Correção diplicidade devido a inclusão do campo VL_JUROS E VL_JUROS_ADMINISTRADORA #180
 --	#FAF.249 - 30-jul-2014,	Fabio Ferreira, Ajuste Natureza daa operação e sequencia
 --  #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
+-- 	#FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclusão do camopo ref fiscal e linha de fatura
 --****************************************************************************************************************************************************************
 SELECT 
 --    CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.o
@@ -299,7 +300,11 @@ SELECT
 	znsls402.t$vlju$c VL_JUROS,																			--#FAF.180.n
 	znsls402.t$vlja$c VL_JUROS_ADMINISTRADORA,															--#FAF.180.n
 	CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
-	ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO														--#FAF.195.n	
+	ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,														--#FAF.195.n	
+	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$refr$l											--#FAF.253.sn
+			ELSE NULL END	NR_REFERENCIA_FISCAL_FATURA,
+	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$rfdl$l
+			ELSE NULL END	NR_ITEM_NF_FATURA														--#FAF.253.en	
 FROM    baandb.tcisli940201 cisli940,
         baandb.tcisli941201 cisli941,
         baandb.tcisli941201 cisli941f,                                          								--#FAF.169.n
