@@ -5,7 +5,7 @@
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
 -- #FAF.247.1 - 30-jun-2014, Fabio Ferreira, 	Correções Frete
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO_NF
--- #FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclusão do camopo ref fiscal e linha de fatura
+-- #FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclusão do campo ref fiscal e linha de fatura
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
