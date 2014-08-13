@@ -344,3 +344,6 @@ add MOCO_SQ_MOVIMENTO int null
 
 alter table fin.aux_contas_receber_transacao
 alter column ds_id_documento varchar(3)
+
+alter table fin.aux_contas_receber_transacao
+alter column ds_id_modulo varchar(3)
