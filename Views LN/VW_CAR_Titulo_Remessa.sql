@@ -4,7 +4,7 @@
 SELECT    tfcmg401.t$ttyp || tfcmg401.t$ninv CD_CHAVE_PRIMARIA,
           tfcmg401.t$btno NR_REMESSA,
           tfcmg409.t$date DT_REMESSA,
-          tfcmg401.t$schn NR_PROGRAMACAO,
+          tfcmg401.t$schn NR_PARCELA,
           tfacr201.t$liqd DT_PREVISTA_RECEBIMENTO,
           tfcmg401.t$paym CD_METODO_RECEBIMENTO,
           tfacr201.t$rpst$l CD_SITUACAO_TITULO,
