@@ -6,6 +6,7 @@
 -- #FAF.247.1 - 30-jun-2014, Fabio Ferreira, 	Correções Frete
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO_NF
 -- #FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclusão do campo ref fiscal e linha de fatura
+-- #FAF.287 - 14-aug-2014, Fabio Ferreira, Correção do campo DT_ATUALIZACAO_NF
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -169,7 +170,7 @@ SELECT DISTINCT
 	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN cisli941.t$fght$l
 	ELSE 0 END VL_CIF_IMPORTACAO,
 --	CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAT.001.o
-    CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
+    CAST((FROM_TZ(CAST(TO_CHAR(cisli941.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
     AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO_NF,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	cisli941.t$fire$l NR_REFERENCIA_FISCAL,				--#FAF.109.n
