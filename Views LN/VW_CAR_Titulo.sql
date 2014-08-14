@@ -10,6 +10,7 @@
 -- #FAF.193 - 27-jun-2014, Fabio Ferreira, 	Padronização de alias
 -- #FAF.203 - 03-jul-2014, Fabio Ferreira, 	Retirados campos da remessa
 -- #MAR.273 - 11-ago-2014, Marcia A R Torres, Correção DT_ATUALIZACAO e CD_METODO_RECEBIMENTO.
+-- #FAF.282 - 14-ago-2014, Fabio Ferreira, 	Retirados campo  método de pagamento
 --****************************************************************************************************************************************************************
 --ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY HH:MI:SS AM';
 
@@ -48,7 +49,7 @@ SELECT DISTINCT
 --	tfcmg401.t$btno NR_REMESSA,																						--#FAF.203.o
 --	tfcmg409.t$date DT_REMESSA,																						--#FAF.203.o
 --#FAF.002.o
-	nvl((select max(a.t$rpst$l) from baandb.ttfacr201201 a																	--#FAF.002.sn
+	nvl((select min(a.t$rpst$l) from baandb.ttfacr201201 a																	--#FAF.002.sn
 	 where a.t$ttyp=tfacr200.t$ttyp
 	 and a.t$ninv=tfacr200.t$ninv),1) CD_SITUACAO_TITULO,
 	(select min(a.t$docd) from baandb.ttfacr200201 a
@@ -72,7 +73,11 @@ SELECT DISTINCT
   GREATEST(                                                                                         --#MAR.273.sn
     nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
       AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
-    nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+--    nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 								--#FAF.282.o
+    nvl(CAST((FROM_TZ(CAST(TO_CHAR(																										--#FAF.282.sn
+	(select max(a.t$rcd_utc) from baandb.ttfacr201201 a
+	 where a.t$ttyp=tfacr200.t$ttyp
+	 and a.t$ninv=tfacr200.t$ninv)	, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 													--#FAF.282.en
       AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
     nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfcmg001.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
       AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')))
@@ -91,7 +96,7 @@ SELECT DISTINCT
 	 and znsls401.t$pono$c=ro.t$pono
 	 and rownum=1) NR_PEDIDO,
 --	 tfacr200.t$paym CD_METODO_RECEBIMENTO,	--#FAF.008.n  --#MAR.273.o
-	 tfacr201.t$paym CD_METODO_RECEBIMENTO,	--#MAR.273.n
+--	 tfacr201.t$paym CD_METODO_RECEBIMENTO,	--#MAR.273.n	--#FAF.282.o
 	(select a.t$send$l from baandb.ttfcmg948201 a
 	 where a.t$ttyp$l=tfacr200.t$ttyp
 	 and a.t$ninv$l=tfacr200.t$ninv
@@ -100,7 +105,7 @@ SELECT DISTINCT
 					 where b.t$ttyp$l=a.t$ttyp$l
 					 and a.t$ninv$l=b.t$ninv$l)) CD_SITUACAO_PAGAMENTO									--#FAF.108.n
 FROM
-	baandb.ttfacr201201 tfacr201,             --#MAR.273.n
+--	baandb.ttfacr201201 tfacr201,             --#MAR.273.n	--#FAF.282.o
 	baandb.ttfacr200201 tfacr200
 	LEFT JOIN baandb.ttfcmg001201 tfcmg001
 	ON  tfcmg001.t$bank=tfacr200.t$bank
@@ -116,5 +121,5 @@ FROM
 WHERE tfgld100.t$btno=tfacr200.t$btno
 AND tfgld100.t$year=tfacr200.t$year
 AND tfacr200.t$docn=0
-AND tfacr201.t$ttyp = tfacr200.t$ttyp               --#MAR.273.sn
-AND tfacr201.t$ninv = tfacr200.t$ninv               --#MAR.273.en
+--AND tfacr201.t$ttyp = tfacr200.t$ttyp               --#MAR.273.sn		--#FAF.282.o
+--AND tfacr201.t$ninv = tfacr200.t$ninv               --#MAR.273.en		--#FAF.282.o
