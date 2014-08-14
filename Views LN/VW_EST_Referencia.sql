@@ -22,6 +22,7 @@ FROM    baandb.twhina112201 whina112,
         baandb.ttcemm030201 tcemm030,
         baandb.ttcmcs003201 tcmcs003,
 --        baandb.twhwmd200201 whwmd200,
+        baandb.twhinr110201 whinr110,
         baandb.ttdrec947201 tdrec947,
         baandb.ttdrec940201 tdrec940
 WHERE   tcemm112.t$loco = 201
@@ -29,9 +30,12 @@ AND     tcemm112.t$waid = whina112.t$cwar
 AND 	tcemm030.t$eunt = tcemm112.t$grid
 --AND		whwmd200.t$cwar = tcmcs003.t$cwar
 AND     tcmcs003.t$cwar = whina112.t$cwar
-AND		tdrec947.t$orno$l=whina112.t$orno
-AND		tdrec947.t$pono$l=whina112.t$pono
-AND		tdrec947.t$seqn$l=whina112.t$srnb
+--AND		tdrec947.t$orno$l=whina112.t$orno
+--AND		tdrec947.t$pono$l=whina112.t$pono
+--AND		tdrec947.t$seqn$l=whina112.t$srnb
+AND   whina112.t$itid = whinr110.t$itid
+AND   whinr110.t$rcno = tdrec947.t$rcno$l
+AND   whinr110.t$rcln = tdrec947.t$rcln$l
 AND		tdrec940.t$fire$l=tdrec947.t$fire$l
 AND		(tdrec940.t$stat$l=4 OR tdrec940.t$stat$l=5)
 AND		tdrec940.t$rfdt$l not in (3,5,8,13,16,22,33)
