@@ -99,11 +99,11 @@ SELECT
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VL_PIS,
 --  (SELECT tdrec942.t$fbex$l + tdrec942.t$fbot$l FROM baandb.ttdrec942201 tdrec942						--#FAF.279.o
-  (SELECT CASE WHEN tdrec942.t$rdbc$l!=0 then tdrec942.t$base$l/(tdrec942.t$rdbc$l/100) else 0 end		--#FAF.279.n
+  cast((SELECT CASE WHEN tdrec942.t$rdbc$l!=0 then tdrec942.t$base$l/(tdrec942.t$rdbc$l/100) else 0 end		--#FAF.279.n
   FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
-  AND tdrec942.t$brty$l=1) VL_BASE_ICMS_NAO_REDUTOR,  
+  AND tdrec942.t$brty$l=1) as numeric (12,2)) VL_BASE_ICMS_NAO_REDUTOR,  
   (SELECT tdrec942.t$amni$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
