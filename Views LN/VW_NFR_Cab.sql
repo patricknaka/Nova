@@ -1,10 +1,11 @@
--- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
--- #FAF.094 - 29-mai-2014, Fabio Ferreira, 	Correção campo VL_SERVICO
--- #FAF.021.1 - 27-mai-2014, Fabio Ferreira,	Correções
--- #FAF.199 - 	27-mai-2014, Fabio Ferreira,	Inclusão do campo RECDOC			
--- #FAF.238 - 	24-jul-2014, Fabio Ferreira,	Correção IPI_Destacado	
--- #FAF.238.1 - 	28-jul-2014, Fabio Ferreira,	Correções	
---  #MAT.001 - 31-jul-2014, Marcia A. Torres, Corre��o do campo DT_ATUALIZACAO
+-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	CorreÃ§Ãµes de pendencias funcionais da Ã¡rea fiscal	
+-- #FAF.094 - 29-mai-2014, Fabio Ferreira, 	CorreÃ§Ã£o campo VL_SERVICO
+-- #FAF.021.1 - 27-mai-2014, Fabio Ferreira,	CorreÃ§Ãµes
+-- #FAF.199 - 	27-mai-2014, Fabio Ferreira,	InclusÃ£o do campo RECDOC			
+-- #FAF.238 - 	24-jul-2014, Fabio Ferreira,	CorreÃ§Ã£o IPI_Destacado	
+-- #FAF.238.1 - 	28-jul-2014, Fabio Ferreira,	CorreÃ§Ãµes	
+-- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
+-- #MAT.238.2 - 14-ago-2014, Marcia A. Torres, Exclusão dos campos NR_LOTE, VL_DESPESA_ACESSORIA e VL_DESCONTO_CONDICIONAL
 --************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -67,7 +68,7 @@ SELECT
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=7) VL_ISS,
 	tdrec940.t$fght$l VL_FRETE,
-	0 VL_DESPESA_ACESSORIA,												-- *** DUVIDA ***
+--	0 VL_DESPESA_ACESSORIA,												-- *** DUVIDA ***     --#MAT.238.2.o
 	tdrec940.t$tfda$l VL_TOTAL_NF,
 	tdrec940.t$gwgt$l VL_PESO_BRUTO,
 	nvl((select t.t$text from baandb.ttttxt010201 t 
@@ -81,9 +82,9 @@ SELECT
     CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
     AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
 	tdrec940.t$lipl$l COD_CAMINHAO,
-	(SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947
-	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
-	AND rownum=1) NR_LOTE,
+--	(SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947       --#MAT.238.2.so
+--	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
+--	AND rownum=1) NR_LOTE,                                            --#MAT.238.2.eo
 --	CASE WHEN tccom966.t$insu$l=' ' THEN 2 ELSE 1 END IN_SUFRAMA,											--#FAF.238.1.o	
 	CASE WHEN nvl(tccom966.t$insu$l,' ')=' ' THEN 2 ELSE 1 END IN_SUFRAMA,									--#FAF.238.1.n	
 	(SELECT tdrec949.t$amnt$l FROM baandb.ttdrec949201 tdrec949
@@ -95,7 +96,7 @@ SELECT
 	nvl((SELECT tdrec949.t$amnt$l FROM baandb.ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=13),0) VL_CSLL,																	--#FAF.021.1.n
-	0 VL_DESCONTO_CONDICIONAL,											-- *** DESCONSIDERAR ***
+--	0 VL_DESCONTO_CONDICIONAL,											-- *** DESCONSIDERAR ***    --#MAT.238.2.o
 --	tdrec940.t$addc$l VL_DESCONTO_INCONDICIONAL,
 	(SELECT tdrec949.t$base$l FROM baandb.ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
