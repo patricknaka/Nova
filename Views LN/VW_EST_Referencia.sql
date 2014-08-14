@@ -21,13 +21,13 @@ FROM    baandb.twhina112201 whina112,
         baandb.ttcemm112201 tcemm112,
         baandb.ttcemm030201 tcemm030,
         baandb.ttcmcs003201 tcmcs003,
-        baandb.twhwmd200201 whwmd200,
+--        baandb.twhwmd200201 whwmd200,
         baandb.ttdrec947201 tdrec947,
         baandb.ttdrec940201 tdrec940
 WHERE   tcemm112.t$loco = 201
 AND     tcemm112.t$waid = whina112.t$cwar
 AND 	tcemm030.t$eunt = tcemm112.t$grid
-AND		whwmd200.t$cwar = tcmcs003.t$cwar
+--AND		whwmd200.t$cwar = tcmcs003.t$cwar
 AND     tcmcs003.t$cwar = whina112.t$cwar
 AND		tdrec947.t$orno$l=whina112.t$orno
 AND		tdrec947.t$pono$l=whina112.t$pono
@@ -40,6 +40,6 @@ GROUP BY tcemm030.t$euca,
          whina112.t$item, 
          tcmcs003.t$tpar$l,
          tdrec940.t$fire$l,
-         whwmd200.t$wvgr,
+--         whwmd200.t$wvgr,
          tcemm112.t$grid,
          tdrec947.t$rcno$l
