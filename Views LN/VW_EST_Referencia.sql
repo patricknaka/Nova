@@ -1,9 +1,12 @@
+-- #FAF.283 - 18-ago-2014, Fabio Ferreira, Correção QT_FISICA
+--************************************************************************************************************************************************************
 SELECT  201 CD_CIA,
         tcemm030.t$euca CD_FILIAL,
         whina112.t$cwar CD_DEPOSITO,
         ltrim(rtrim(whina112.t$item)) CD_ITEM,
         tcmcs003.t$tpar$l CD_MODALIDADE,
-        sum(whina112.t$qstk) QT_FISICA,
+--        sum(whina112.t$qstk) QT_FISICA,												--#FAF.283.o
+        sum(whina112.t$qskt) QT_FISICA,													--#FAF.283.n
 		tdrec947.t$rcno$l NR_NFR,
 		(SELECT 
 		 case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd))=0 then 0
