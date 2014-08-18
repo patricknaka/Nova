@@ -12,7 +12,8 @@ SELECT
     tdipu001.t$prip VL_UNITARIO_ORIGINAL_ITEM,
     tdpur401.t$pric VL_UNITARIO_ATUAL_ITEM,
     tdpur401.t$qidl QT_ENTREGUE,
-    tdpur401.t$ddtb DT_ENTREGA,
+    CAST((FROM_TZ(CAST(TO_CHAR(tdpur401.t$ddtb, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+            AT time zone sessiontimezone) AS DATE) DT_ENTREGA,
     CASE WHEN ABS(tdpur401.t$qidl)>ABS(tdpur401.t$qoor)
 	THEN tdpur401.t$qidl-tdpur401.t$qoor 
 	ELSE 0
