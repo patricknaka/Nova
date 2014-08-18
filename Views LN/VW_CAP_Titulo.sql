@@ -7,6 +7,7 @@
 --	FAF.116 - 07-jun-2014, Fabio Ferreira, 	Retirado campo NR_NFR
 --	FAF.116 - 16-jun-2014, Fabio Ferreira, 	Retirado campo NR_PEDIDO_COMPRA
 --	FAF.175 - 25-jun-2014, Fabio Ferreira, 	Correção data liquidação
+--	FAF.288 - 18-ago-2014, Fabio Ferreira, 	Inclusão da conta contabil origem e destino
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	'CAP' CD_MODULO,
@@ -60,7 +61,18 @@ SELECT DISTINCT
 		else TO_NUMBER(tfacp200.t$dim2) END
 		and rownum = 1 ) CD_UNIDADE_EMPRESARIAL,
 	tdrec940.t$fire$l NR_REFERENCIA_FISCAL,
-	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA
+	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
+	tfacp200.t$leac CD_CONTA_ORIGEM,																		--#FAF.288.sn
+	
+	(Select distinct tdrec952.t$leac$l from baandb.ttdrec952201 tdrec952
+	 WHERE 	tdrec952.t$ttyp$l=tfacp200.t$ttyp
+	 AND 	tdrec952.t$invn$l=tfacp200.t$ninv
+	 AND    tdrec952.t$fire$l=tdrec940.t$fire$l
+	 AND 	tdrec952.t$dbcr$l=1
+	 AND	tdrec952.t$trtp$l=2
+	 AND 	tdrec952.t$brty$l=0)	CD_CONTA_DEST															--#FAF.288.en
+	
+	
 FROM
   baandb.ttfacp200201 tfacp200
   LEFT JOIN baandb.ttdrec940201 tdrec940
