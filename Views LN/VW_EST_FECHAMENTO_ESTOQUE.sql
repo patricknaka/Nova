@@ -1,3 +1,5 @@
+-- #FAF.221, 19-aug-2014, Fabio Ferreira, 	Correção sinal da transação
+--*********************************************************************************************************************************************
 SELECT  201                               CD_CIA,
         tcemm030.t$euca                   CD_FILIAL,
         tcemm112.t$grid                   CD_UNIDADE_EMPRESARIAL,
@@ -66,7 +68,8 @@ SELECT  201                               CD_CIA,
 		
 FROM    baandb.twhwmd215201 whwmd215
 
-		LEFT JOIN ( SELECT  sum(whinr110q.t$qstk * case when whinr110q.t$kost IN (5, 102) then -1 else 1 end)  t$qstk, 
+--		LEFT JOIN ( SELECT  sum(whinr110q.t$qstk * case when whinr110q.t$kost IN (5, 102) then -1 else 1 end)  t$qstk, 			--#FAF.221.o
+		LEFT JOIN ( SELECT  sum(whinr110q.t$qstk * case when whinr110q.t$kost IN (5, 102) then 1 else -1 end)  t$qstk, 			--#FAF.221.n
 							whinr110q.t$cwar,
 							whinr110q.t$item,
 							CAST((FROM_TZ(CAST(TO_CHAR(max(whinr110q.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
