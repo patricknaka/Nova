@@ -26,7 +26,8 @@ SELECT
 	--tdpur401.t$clyn=1 SITUACAO_ITEM,																--#FAF.006.o
     --tdpru451.t$trdt DATA SITUAÇÃO DO ITEM,
     tcibd001.t$obse$c DS_OBSERVACAO_ITEM,
-    tdpur401.t$rcd_utc DT_ATUALIZACAO,
+    CAST((FROM_TZ(CAST(TO_CHAR(tdpur401.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+            AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
     tdpur401.t$disc$1 VL_PERCENTUAL_DESCONTO,
 --    (select z.t$vlft$c from tznfmd630201 z														--#FAF.228.so
 --	where z.t$orno$c=tdpur401.t$orno) VL_FRETE,          											--#FAF.228.eo
