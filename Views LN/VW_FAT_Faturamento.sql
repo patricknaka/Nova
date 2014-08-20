@@ -326,16 +326,16 @@ FROM    baandb.tcisli940201 cisli940,
 			znsls402q.t$uneg$c,
 			znsls402q.t$pecl$c,
 			znsls402q.t$sqpd$c) znsls402,																				--#FAF.201.en																																		
-		ttdsls400201 tdsls400                                      										--#FAF.087.sn
+		baandb.ttdsls400201 tdsls400                                      										--#FAF.087.sn
     LEFT JOIN (  select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE             
           from baandb.tcisli245201 c245, baandb.tcisli941201 c941, baandb.tcisli940201 c940
           where c941.t$fire$l=c245.T$FIRE$L
           and c940.t$fire$l=c941.T$REFR$L) consold ON consold.T$SLSO=tdsls400.t$orno,          			--#FAF.087.en    
     
-        ttccom130201 endfat,
-        ttccom130201 endent,
-        ttcibd001201 tcibd001,
-    ttdsls094201 tdsls094                                          --#FAF.087.n
+        baandb.ttccom130201 endfat,
+        baandb.ttccom130201 endent,
+        baandb.ttcibd001201 tcibd001,
+        baandb.ttdsls094201 tdsls094                                          --#FAF.087.n
 WHERE   cisli941f.t$fire$l=cisli940.t$fire$l
 AND     cisli245.t$fire$l=cisli941.t$fire$l
 AND     cisli245.t$line$l=cisli941.t$line$l

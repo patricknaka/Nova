@@ -56,19 +56,19 @@
     AND znint501.t$sqpd$c=zncom005.t$sqpd$c
     AND znint501.t$entr$c=zncom005.t$entr$c
     AND znint501.t$sequ$c=zncom005.t$sequ$c,                            --#FAF.161.en
-    ttcibd001201 tcibd001,                                            
-    ttdsls400201 tdsls400,
-    ttdsls401201 tdsls401,
-    tznsls400201 znsls400,
-    tznsls401201 znsls401
-    LEFT JOIN tznsls401201 znsls401p
+    baandb.ttcibd001201 tcibd001,                                            
+    baandb.ttdsls400201 tdsls400,
+    baandb.ttdsls401201 tdsls401,
+    baandb.tznsls400201 znsls400,
+    baandb.tznsls401201 znsls401
+    LEFT JOIN baandb.tznsls401201 znsls401p
       ON  znsls401p.t$ncia$c=znsls401.t$ncia$c
       AND  znsls401p.t$uneg$c=znsls401.t$uneg$c
       AND znsls401p.t$pecl$c=znsls401.t$pcga$c
       AND znsls401p.t$sqpd$c=znsls401.t$sqpd$c
       AND znsls401p.t$entr$c=znsls401.t$entr$c
       AND znsls401p.t$sequ$c=znsls401.t$sgar$c  
-    LEFT JOIN ttdsls401201 tdsls401p
+    LEFT JOIN baandb.ttdsls401201 tdsls401p
       ON tdsls401p.t$orno=znsls401p.t$orno$c
       AND tdsls401p.t$pono=znsls401p.t$pono$c
   WHERE
