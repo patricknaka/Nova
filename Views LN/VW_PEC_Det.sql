@@ -1,6 +1,7 @@
 -- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	Alteração do campo situação 
 -- #FAF.131 - 11-jun-2014, Fabio Ferreira, 	Filtro detalhe
 -- #FAF.228, 15-jul-2014, Fabio Ferreira, 	Alteração origem frete e seguro
+-- SQ_NATUREZA_OPERACAO		retirado com autorização Patrick em 20/08/2014
 --********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -44,8 +45,8 @@ SELECT
     from baandb.tbrmcs941201 brmcs941
     where brmcs941.t$txre$l=tdpur401.t$txre$l
     and brmcs941.t$line$l=tdpur401.t$txli$l
-    and rownum=1) CD_NATUREZA_OPERACAO,
-    ' ' SQ_NATUREZA_OPERACAO                               -- *** NÃO TEMOS ESTA INFORMAÇÃO NA ORDEM DE COMPRA ***
+    and rownum=1) CD_NATUREZA_OPERACAO
+    --' ' SQ_NATUREZA_OPERACAO                               -- *** retirado com autorização Patrick em 20/08/2014 ***
 FROM
     baandb.ttdpur401201 tdpur401
 	LEFT JOIN (	select 	a.t$orno, a.t$pono, sum(br.t$fght$l) fght, sum(br.t$insr$l) insr			--#FAF.228.sn

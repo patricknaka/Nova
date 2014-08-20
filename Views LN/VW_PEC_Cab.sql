@@ -4,6 +4,7 @@
 -- #FAF.228, 15-jul-2014, Fabio Ferreira, 	Alteração origem frete e seguro
 -- #FAF.236, 23-jul-2014, Fabio Ferreira, 	Campo data da criação
 -- #FAF.246, 29-jul-2014, Fabio Ferreira, 	Tratamento timezone
+-- SQ_NATUREZA_OPERACAO e CD_DEPARTAMENTO	Eliminado com autorização do Patrick em 20/08/2014
 --*********************************************************************************************************************************************
 SELECT DISTINCT
     201 CD_CIA,
@@ -11,7 +12,7 @@ SELECT DISTINCT
     tdpur400.t$orno NR_PEDIDO_COMPRA,
     tdpur400.t$otbp CD_FORNECEDOR,
     qopfc.t$opfc$l CD_NATUREZA_OPERACAO,
-    ' ' SQ_NATUREZA_OPERACAO,                  -- *** NÃO TEMOS ESTA INFORMAÇÃO NA ORDEM DE COMPRA ***
+    --' ' SQ_NATUREZA_OPERACAO,                  -- *** eliminado com autorização Patrick 20/08/2014 ***
     tdpur400.t$cpay CD_CONDICAO_PAGAMENTO,
     (select sum((pl1.t$qoor-pl1.t$qidl)*pl1.t$pric) 
     from baandb.ttdpur401201 pl1 
@@ -47,13 +48,13 @@ SELECT DISTINCT
             AT time zone sessiontimezone) AS DATE)
 	from baandb.ttdpur401201 tdpur401
 	where tdpur401.t$orno=tdpur400.t$orno) DT_ATUALIZACAO, 
-    nvl((select t.t$text from baandb.ttttxt010201 t 
-	where t$clan='p'
-	AND t.t$ctxt=tdpur400.t$txta
-	and rownum=1),' ') DS_OBSERVACAO_PEDIDO,
-    (select znpur003.t$citg$c from baandb.tznpur003201 znpur003
-    where znpur003.t$cotp$c=tdpur400.t$cotp
-    and rownum=1) CD_DEPARTAMENTO,
+ --   nvl((select t.t$text from baandb.ttttxt010201 t 
+	--where t$clan='p'
+	--AND t.t$ctxt=tdpur400.t$txta
+	--and rownum=1),' ') DS_OBSERVACAO_PEDIDO,
+ --   (select znpur003.t$citg$c from baandb.tznpur003201 znpur003
+ --   where znpur003.t$cotp$c=tdpur400.t$cotp
+ --   and rownum=1) CD_DEPARTAMENTO,			-- *** eliminado com autorização Patrick 20/08/2014 ***
 --    tdpur400.t$corg COD_TIPO_GERACAO_PEDIDO,											--#FAF.005.o
 	tdpur400.t$corg CD_TIPO_CADASTRO,													--#FAF.005.n
 --    (select z.t$vlft$c from tznfmd630201 z											--#FAF.228.so
