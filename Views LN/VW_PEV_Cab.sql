@@ -1,4 +1,4 @@
--- 05-mai-2014, Fabio Ferreira, Correções de timezone de todos os campos Data/hora
+﻿-- 05-mai-2014, Fabio Ferreira, Correções de timezone de todos os campos Data/hora
 -- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	Inclusão do campo Nota e Serie consolidada
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.028 - 17-mai-2014, Fabio Ferreira, 	Correção registros duplicados
@@ -12,24 +12,18 @@
 -- #FAF.276 - 11-aug-2014, Fabio Ferreira, 	Correção
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
---        CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAR.265.so
---          AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                                        --#MAR.265.eo
- 
-         CAST((FROM_TZ(CAST(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAR.265.sn
-          AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                                                                 --#MAR.265.en
-          
+         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+         AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                                                                 --#MAR.265.en
         201 CD_CIA,
         tdsls400.t$orno NR_ORDEM,
         tdsls400.t$ofbp CD_CLIENTE,
-        CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DT_COMPRA,
-        CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) HR_COMPRA, -- * CAMPO DATA-HORA
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) DT_COMPRA,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) HR_COMPRA, -- * CAMPO DATA-HORA
         znsls400.t$uneg$c CD_UNIDADE_NEGOCIO,
         sls401q.t$pecl$c NR_PEDIDO_LOJA,
-		TO_CHAR(sls401q.t$entr$c) NR_ENTREGA,																			--#FAF.046.n
---		sls401q.t$entr$c NR_ENTREGA,																					--#FAF.046.o
---		CONCAT(TRIM(sls401q.t$pecl$c), TRIM(to_char(sls401q.t$entr$c))) PEDIDO_ENTREGA, 								--#FAF.007.o
+        TO_CHAR(sls401q.t$entr$c) NR_ENTREGA,																			--#FAF.046.n
         znsls400.t$cven$c CD_VENDEDOR,
         tcemm030.t$euca CD_FILIAL,
         sls401q.t$opfc$l CD_NATUREZA_OPERACAO,
@@ -37,15 +31,14 @@ SELECT  DISTINCT
         tdsls400.t$ccur CD_MOEDA,
         tdsls400.t$hdst CD_SITUACAO_PEDIDO,
         (SELECT 
-			CAST((FROM_TZ(CAST(TO_CHAR(Max(ttdsls450201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE)
+			CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(ttdsls450201.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)
          FROM baandb.ttdsls450201
          WHERE ttdsls450201.t$orno=tdsls400.t$orno) DT_SITUACAO_PEDIDO,
         znsls400.t$vlfr$c VL_FRETE_CLIENTE,
         nvl((select sum(f.t$vlft$c) from baandb.tznfmd630201 f
              where f.T$PECL$C=znsls400.t$pecl$c),0) VL_FRETE_CIA,
         znsls400.t$idca$c CD_CANAL_VENDAS,
-        --znsls402.t$vlju$c VL_JUROS,
         znsls004.t$orig$c CD_ORIGEM_PEDIDO,
         znsls400.t$ipor$c NR_IP_CLIENTE,
         znsls400.t$vlme$c VL_PEDIDO,
@@ -88,19 +81,17 @@ SELECT  DISTINCT
         sls401q.t$tptr$c CD_TIPO_TRANSPORTE,
 		(select tcmcs080.t$suno from baandb.ttcmcs080201 tcmcs080
 		where tcmcs080.t$cfrw=tdsls400.t$cfrw) CD_TRANSPORTADORA,
-        --tdsls400.t$cfrw COD_TRANSPORTADORA,
         sls401q.t$mgrt$c CD_MEGA_ROTA,
         ulttrc.poco CD_STATUS,
         ulttrc.dtoc DT_STATUS_PEDIDO,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	sls401q.t$idor$c CD_TIPO_SITE																				--#FAF.143.n
 FROM    baandb.ttdsls400201 tdsls400
---        LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls400.t$orno									--#FAF.174.o
 		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						--#FAF.006.sn
 					from baandb.tcisli245201 c245, baandb.tcisli941201 c941, baandb.tcisli940201 c940
 					where c941.t$fire$l=c245.T$FIRE$L
 					and c940.t$fire$l=c941.T$REFR$L) consold ON consold.T$SLSO=tdsls400.t$orno,					--#FAF.006.en
-          tznsls400201 znsls400,
+          baandb.tznsls400201 znsls400,
          (SELECT
           znsls401.t$ncia$c		    t$ncia$c,
           znsls401.t$uneg$c       t$uneg$c,
@@ -109,19 +100,15 @@ FROM    baandb.ttdsls400201 tdsls400
           znsls401.t$entr$c       t$entr$c,
           max(znsls401.t$pztr$c)  t$pztr$c,
           max(znsls401.t$pzcd$c)  t$pzcd$c,
---          znsls401.t$pcga$c       t$pcga$c,																		--#FAF.177.o
           max(znsls401.t$pcga$c)       t$pcga$c,																	--#FAF.177.n
-		  CAST((FROM_TZ(CAST(TO_CHAR(max(znsls401.t$dtep$c), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) t$dtep$c,
+		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(znsls401.t$dtep$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE) t$dtep$c,
           max(znsls401.t$itpe$c)       t$itpe$c,
---          znsls401.t$mgrt$c       t$mgrt$c,																		--#FAF.177.o
           max(znsls401.t$mgrt$c)       t$mgrt$c,																	--#FAF.177.n
           znsls401.t$orno$c       t$orno,
-          --znsls401.t$pono$c       t$pono$c,
---          tcibd001.t$tptr$c       t$tptr$c,																		--#FAF.177.o
           max(tcibd001.t$tptr$c)       t$tptr$c,																	--#FAF.177.n
           brmcs941.t$opfc$l       t$opfc$l,
-		  znsls401.t$idor$c		  t$idor$c	
+    		  znsls401.t$idor$c		  t$idor$c	
          FROM baandb.tznsls401201 znsls401,
               baandb.ttcibd001201 tcibd001,
               baandb.ttdsls401201 tdsls401
@@ -134,37 +121,30 @@ FROM    baandb.ttdsls400201 tdsls400
         and o.T$TXRE$L=n.T$TXRE$L
 		GROUP BY o.t$orno) brmcs941																						--#FAF.177.n
 			  ON  brmcs941.t$orno=tdsls401.t$orno
-              --AND brmcs941.t$line$l=tdsls401.t$txli$l																	--#FAF.177.o
-         WHERE  tcibd001.t$item=tdsls401.t$item
+             WHERE  tcibd001.t$item=tdsls401.t$item
          AND    znsls401.t$orno$c=tdsls401.t$orno
          AND    znsls401.t$pono$c=tdsls401.t$pono
---		 AND    tcibd001.T$KITM IN (1,2,3,5)																			--#FAF.028	--#FAF.276.o
          GROUP BY
           znsls401.t$ncia$c,
           znsls401.t$uneg$c,
           znsls401.t$pecl$c,
           znsls401.t$sqpd$c,
           znsls401.t$entr$c,
---          znsls401.t$pcga$c,																							--#FAF.177.o
---          znsls401.t$itpe$c,																							--#FAF.165.o
---          znsls401.t$mgrt$c,																							--#FAF.177.o
           znsls401.t$orno$c,
---          tcibd001.t$tptr$c,																							--#FAF.177.o
           brmcs941.t$opfc$l,
 		  znsls401.t$idor$c) sls401q
-		  LEFT JOIN  tznsls004201 znsls004 ON znsls004.t$orno$c=sls401q.t$orno AND znsls004.t$entr$c=sls401q.t$entr$c,			--#FAF.174.n
-        ttcemm124201 tcemm124,
-		ttcemm030201 tcemm030,
-        ttccom130201 endfat,
-        ttccom130201 endent,
-		ttdsls094201 tdsls094,																				--#FAF.006.n
+		  LEFT JOIN  baandb.tznsls004201 znsls004 ON znsls004.t$orno$c=sls401q.t$orno AND znsls004.t$entr$c=sls401q.t$entr$c,			--#FAF.174.n
+        baandb.ttcemm124201 tcemm124,
+        baandb.ttcemm030201 tcemm030,
+        baandb.ttccom130201 endfat,
+        baandb.ttccom130201 endent,
+        baandb.ttdsls094201 tdsls094,																				--#FAF.006.n
 		( SELECT Max(tznsls410201.t$poco$c) poco,
                  tznsls410201.t$ncia$c ncia,
                  tznsls410201.t$uneg$c uneg,
                  tznsls410201.t$pecl$c pecl,
-                 --tznsls410201.t$sqpd$c sqpd,																					--#FAF.174.o
-				 CAST((FROM_TZ(CAST(TO_CHAR(Max(tznsls410201.t$dtoc$c), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-				  AT time zone sessiontimezone) AS DATE) dtoc
+				 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(tznsls410201.t$dtoc$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone sessiontimezone) AS DATE) dtoc
           FROM baandb.tznsls410201
           WHERE
           tznsls410201.t$dtoc$c = (SELECT Max(b.t$dtoc$c)
@@ -173,11 +153,10 @@ FROM    baandb.ttdsls400201 tdsls400
                                     AND     b.t$uneg$c=tznsls410201.t$uneg$c
                                     AND     b.t$pecl$c=tznsls410201.t$pecl$c
                                     AND     b.t$sqpd$c=tznsls410201.t$sqpd$c)
-          GROUP BY --tznsls410201.t$poco$c,
+          GROUP BY 
                    tznsls410201.t$ncia$c,
                    tznsls410201.t$uneg$c,
                    tznsls410201.t$pecl$c) ulttrc	
-					--tznsls410201.t$sqpd$c) ulttrc																			--#FAF.174.o
 WHERE   sls401q.t$orno=tdsls400.t$orno
 AND     znsls400.t$ncia$c=sls401q.t$ncia$c
 AND     znsls400.t$uneg$c=sls401q.t$uneg$c
@@ -191,7 +170,5 @@ AND     endent.t$cadr=tdsls400.t$stad
 AND     ulttrc.ncia=sls401q.t$ncia$c
 AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
---AND     ulttrc.sqpd=sls401q.t$sqpd$c																--FAF.143.o
 AND		tdsls094.t$sotp=tdsls400.t$sotp																--#FAF.006.n
---AND tdsls400.t$orno='V20005476'
 ORDER BY tdsls400.t$orno
