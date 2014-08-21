@@ -4,6 +4,7 @@ SELECT DISTINCT
 	tfcmg948.t$docd$l DT_REMESSA,
 	tfcmg011.t$agcd$l NR_AGENCIA,
 	tfcmg948.t$acco$l NR_CONTA,
+  	tfcmg948.t$banu$l NR_BANCO,
     201 CD_CIA,
 	tfcmg948.t$stat$l CD_STATUS_ARQUIVO,
 	tfcmg948.t$send$l CD_STATUS_ENVIO,
