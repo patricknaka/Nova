@@ -7,14 +7,11 @@
 --*********************************************************************************************************************************************************
 SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         201 CD_CIA,
-		
         CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
 		THEN '00000000000000' 
 		WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
 		THEN '00000000000000'
 		ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') END NR_CNPJ_FORNECEDOR,				--#FAF.151.n		
-		
---		tccom130.t$fovn$l NR_CNPJ_FORNECEDOR,														--#FAF.151.o
         tccom100.t$bpid CD_FORNECEDOR,
 		tccom100.t$seak DS_APELIDO,																	--#FAF.181.n
         tcmcs060.t$otbp CD_FABRICANTE,
@@ -45,8 +42,8 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         tcibd001.t$nwgt$l VL_PESO_UNITARIO,
         tcibd001.t$wght VL_PESO_BRUTO,
         tcibd001.t$tptr$c CD_TIPO_TRANSPORTE,
-        CAST((FROM_TZ(CAST(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-            AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
         tcibd001.t$mont$c IN_MONTAGEM,
           CASE WHEN tcibd001.t$csig='SUS' THEN 1
           ELSE 2
@@ -55,8 +52,8 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         ELSE NULL END DT_LANCAMENTO_PREVENDA,
         whwmd400.t$slmp CD_ROTATIVIDADE,
         tcibd001.t$cuni CD_UNIDADE_MEDIDA,
-        CAST((FROM_TZ(CAST(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-            AT time zone sessiontimezone) AS DATE) DT_CADASTRO,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) DT_CADASTRO,
           CASE WHEN tcibd001.t$espe$c = 2 THEN 1
           ELSE 2
           END IN_KIT,
@@ -84,5 +81,5 @@ LEFT JOIN baandb.ttccom100201 tccom100f ON tccom100f.T$BPID=tcmcs060.T$OTBP,
 baandb.ttcmcs023201 tcmcs023
 WHERE
 tcmcs023.t$citg=tcibd001.t$citg
-AND CAST((FROM_TZ(CAST(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-            AT time zone sessiontimezone) AS DATE)>=TRUNC(sysdate, 'DAY')                          		--#FAF.120.n
+AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE)>=TRUNC(sysdate, 'DAY')                          		--#FAF.120.n
