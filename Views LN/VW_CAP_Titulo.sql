@@ -8,6 +8,7 @@
 --	FAF.116 - 16-jun-2014, Fabio Ferreira, 	Retirado campo NR_PEDIDO_COMPRA
 --	FAF.175 - 25-jun-2014, Fabio Ferreira, 	Correção data liquidação
 --	FAF.288 - 18-ago-2014, Fabio Ferreira, 	Inclusão da conta contabil origem e destino
+--	21/08/2014 - Correção da instrução timezone
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	'CAP' CD_MODULO,
@@ -39,7 +40,7 @@ SELECT DISTINCT
 	CASE WHEN tfacp200.t$afpy=2 THEN 1 ELSE 2 END IN_BLOQUEIO_TITULO,
 	tfacp201.t$pyst$l CD_PREPARADO_PAGAMENTO,
 	tfacp200.t$stap CD_SITUACAO_TITULO,
-	CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone sessiontimezone) AS DATE) DT_SITUACAO_TITULO,
 	tfacp200.t$doty$l CD_TIPO_NF,
 	tfacp200.t$balh$1 VL_SALDO,
@@ -53,7 +54,7 @@ SELECT DISTINCT
 	nvl((select p.t$inra$l from baandb.ttfacp201201 p														--#FAF.003.sn 
 		where p.t$ttyp=tfacp200.t$ttyp and p.t$ninv=tfacp200.t$ninv
 		and ROWNUM=1),0) VL_TAXA_MULTA,																		--#FAF.003.en
-	CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
 	(Select u.t$eunt From baandb.ttcemm030201 u where u.t$euca!=' '
 		AND TO_NUMBER(u.t$euca)=CASE WHEN tfacp200.t$dim2=' ' then 999
@@ -70,7 +71,7 @@ SELECT DISTINCT
 	 AND    tdrec952.t$fire$l=tdrec940.t$fire$l
 	 AND 	tdrec952.t$dbcr$l=1
 	 AND	tdrec952.t$trtp$l=2
-	 AND 	tdrec952.t$brty$l=0)	CD_CONTA_DEST															--#FAF.288.en
+	 AND 	tdrec952.t$brty$l=0)	CD_CONTA_DESTINO															--#FAF.288.en
 	
 	
 FROM

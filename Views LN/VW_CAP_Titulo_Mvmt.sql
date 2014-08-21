@@ -12,6 +12,7 @@
 -- #FAF.212 - 	07-jul-2014, Fabio Ferreira, 	Alteração campo CD_TIPO_MOVIMENTO
 -- #FAF.215 - 	08-jul-2014, Fabio Ferreira, 	Correção campo NR_TITULO_REFERENCIA
 -- #FAF.212.1 - 10-jul-2014, Fabio Ferreira, 	Correção campo CD_TIPO_MOVIMENTO
+-- 21/08/2014 - Atualização do timezone
 --****************************************************************************************************************************************************************
 
 SELECT DISTINCT
@@ -45,16 +46,18 @@ SELECT DISTINCT
 		 and rownum=1)
 --		 r.t$ttyp || r.t$ninv																					--#FAF.186.2.o
 											) NR_TITULO_REFERENCIA,												--#FAF.002.en
-	--(select t.t$stap from ttfacp200201 t 
-	--	where t.t$ttyp=tfacp200.t$ttyp and t.t$ninv=tfacp200.t$ninv and t.t$docn=0) CD_SITUACAO_MOVIMENTO,
-	(select CAST((FROM_TZ(CAST(TO_CHAR(max(s.t$sdat), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) from baandb.ttfacp600201 s 
+
+	(select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(s.t$sdat), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE) from baandb.ttfacp600201 s 
 		where s.t$payt=tfacp200.t$tdoc and s.t$payd=tfacp200.t$docn) DT_SITUACAO,
+		
 --	nvl(r.t$amth$1, tfacp200.t$amth$1) VL_TRANSACAO,															--#FAF.186.2.o
 	tfacp200.t$amth$1 VL_TRANSACAO,																				--#FAF.186.2.n
+
 	CASE WHEN tfacp200.t$rcd_utc<TO_DATE('1990-01-01', 'YYYY-MM-DD') THEN tfacp200.t$rcd_utc					--#FAF.003.en
-	ELSE	CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	
-				AT time zone sessiontimezone) AS DATE) END DT_ATUALIZACAO,
+	ELSE	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) END DT_ATUALIZACAO,
+
 	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
 	CASE WHEN tfacp200.t$tdoc='ENC' THEN 5																							--#FAF.212.1.n
 	  WHEN (select a.t$catg from baandb.ttfgld011201 a where a.t$ttyp=tfacp200.t$tdoc)=10 THEN 3

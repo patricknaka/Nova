@@ -4,6 +4,7 @@
 -- #FAF.163.1 - 	27-jun-2014, Fabio Ferreira, 	Filtro para não mostrar correções de multas e juros
 -- #FAF.184 - 	30-jun-2014, Fabio Ferreira, 	Correção registros duplicados (relac tfcmg103)
 -- #FAF.184.1 - 	01-jul-2014, Fabio Ferreira, 	Correção duplicidade
+-- 21/08/2014 - Atualização do timezone
 --*************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,																						--#FAF.113.n
@@ -14,7 +15,7 @@ SELECT DISTINCT
 --	tfcmg103.T$MOPA$D CD_MODALIDADE_PAGAMENTO, -- tfcmg103.mopa.d									--#FAF.184.1.o
 	tfacp201.t$mopa$d CD_MODALIDADE_PAGAMENTO,														--#FAF.184.1.n
 	tfacp200.t$docn SQ_DOCUMENTO,
-  CAST((FROM_TZ(CAST(TO_CHAR(tfacp600.t$sdat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp600.t$sdat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_PAGAMENTO,
 	ABS(tfacp200.t$amti + tfacp200.t$ramn$l) VL_PAGAMENTO,
 	tfacP200.t$lino NR_MOVIMENTO,
@@ -89,4 +90,4 @@ WHERE
 						and a.t$payl=tfacp600.t$payl)
   AND tfacp201.t$ttyp=tfacp200.t$ttyp
   AND tfacp201.t$ninv=tfacp200.t$ninv
-  AND tfacp201.t$schn=tfacp200.t$schn																								--#FAF.163.1.en				
+  AND tfacp201.t$schn=tfacp200.t$schn																								--#FAF.163.1.en
