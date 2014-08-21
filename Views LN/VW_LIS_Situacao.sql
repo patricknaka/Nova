@@ -1,4 +1,5 @@
 --	#FAF.179 - 30-jun-2014,	Fabio Ferreira,	Inclusão do campo DT_SITUACAO_LISTA 
+--	21/08/2014 - Atualização do timezone
 --****************************************************************************************************************************************************************
 select distinct
             to_char(znsls401.t$entr$c) NR_ENTREGA,
@@ -8,11 +9,13 @@ select distinct
             ELSE 'L' END      DS_SITUACAO_LISTA,
 			
             CASE WHEN tdsls400.t$hdst=40 THEN
-              (select min(a.t$trdt) 
+              (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+						AT time zone sessiontimezone) AS DATE)
                from baandb.ttdsls450201 a
                where A.T$orno = znsls401.T$ORNO$C)
             ELSE 
-              (select  min(a.t$trdt) 
+              (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+						AT time zone sessiontimezone) AS DATE) 
               from baandb.ttdsls450201 a
               where A.T$BKYN=2
               and A.T$TRDT>(select  max(b.t$trdt) 
