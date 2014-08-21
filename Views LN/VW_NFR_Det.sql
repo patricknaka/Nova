@@ -1,13 +1,13 @@
--- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
+-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	CorreÃ§Ãµes de pendencias funcionais da Ã¡rea fiscal	
 -- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
--- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
--- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)	
+-- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	CorreÃ§Ã£o QTD_FISICA_RECEBIDA
+-- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	InclusÃ£o do campo IVA (margem)	
 -- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Retirado campo VL_ICMS_ST1
 -- #FAF.151 - 20-jun-2014, Fabio Ferreira,	Tratamento para o CNPJ			
--- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
--- #FAF.242 - 04-ago-2014, Fabio Ferreira,	Correções	
--- #FAF.279 - 12-ago-2014, Fabio Ferreira,	Correções ICMS não redutor
--- #FAF.279 - 13-ago-2014, Fabio Ferreira,	Divisão percentual de redução base de cálculo
+-- #MAT.001 - 31-jul-2014, Marcia A. Torres, CorreÃ§Ã£o do campo DT_ATUALIZACAO
+-- #FAF.242 - 04-ago-2014, Fabio Ferreira,	CorreÃ§Ãµes	
+-- #FAF.279 - 12-ago-2014, Fabio Ferreira,	CorreÃ§Ãµes ICMS nÃ£o redutor
+-- #FAF.279 - 13-ago-2014, Fabio Ferreira,	DivisÃ£o percentual de reduÃ§Ã£o base de cÃ¡lculo
 --************************************************************************************************************************************************************
 SELECT
   201 CD_CIA,
@@ -98,7 +98,6 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VL_PIS,
---  (SELECT tdrec942.t$fbex$l + tdrec942.t$fbot$l FROM baandb.ttdrec942201 tdrec942						--#FAF.279.o
   cast((SELECT CASE WHEN tdrec942.t$rdbc$l!=0 then tdrec942.t$base$l/(tdrec942.t$rdbc$l/100) else 0 end		--#FAF.279.n
   FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
@@ -133,9 +132,6 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=6) VL_COFINS_MERCADORIA,
---  0 VL_COFINS_FRETE,																		--#FAF.242.o
-  
-  
 	nvl((SELECT sum(tdrec942.t$amnt$l) FROM baandb.ttdrec942201 tdrec942, 					--#FAF.242.sn
 												baandb.ttdrec941201 tdrec941b,
 												baandb.ttcibd001201 tcibd001b
@@ -145,8 +141,6 @@ SELECT
 		AND   	tdrec942.t$line$l=tdrec941b.t$line$l												
 		AND		tcibd001b.t$ctyp$l=2
 		AND 	tdrec942.t$brty$l=6),0) VL_COFINS_FRETE,
-
---  0 VL_COFINS_OUTROS,																		--#FAF.242.o
 	nvl((SELECT sum(tdrec942.t$amnt$l) FROM baandb.ttdrec942201 tdrec942, 					
 												baandb.ttdrec941201 tdrec941b,
 												baandb.ttcibd001201 tcibd001b
@@ -161,7 +155,6 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VL_PIS_MERCADORIA,
-  
   
 	nvl((SELECT sum(tdrec942.t$amnt$l) FROM baandb.ttdrec942201 tdrec942, 					--#FAF.242.sn
 												baandb.ttdrec941201 tdrec941b,
@@ -183,9 +176,6 @@ SELECT
 		AND		tcibd001b.t$kitm>3
 		AND		tcibd001b.t$ctyp$l!=2
 		AND 	tdrec942.t$brty$l=5),0) VL_PIS_OUTROS,									--#FAF.242.en
-  
---  0 VL_PIS_FRETE,																			--#FAF.242.o
---  0 VL_PIS_OUTROS,																		--#FAF.242.o
   (SELECT tdrec942.t$rate$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
@@ -223,20 +213,17 @@ SELECT
   AND	tcibd001b.t$kitm>3
   AND	tcibd001b.t$ctyp$l!=2
   AND 	tdrec942.t$brty$l=13),0) VL_CSLL_OUTROS, 
---  tdrec941.t$addc$l VL_DESCONTO_INCONDICIONAL,														--#FAF.242.o
   tdrec941.t$rtin$l QT_NAO_RECEBIDA_DEVOLUCAO,     
   (SELECT tdrec942.t$base$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=3) VL_BASE_IPI,
---  (SELECT tdrec942.t$rdam$l FROM baandb.ttdrec942201 tdrec942											--#FAF.279.o
   (SELECT tdrec942.t$rdbc$l FROM baandb.ttdrec942201 tdrec942											--#FAF.279.n
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VL_PERCENTUAL_REDUTOR_ICMS,
   tdrec941.t$tamt$l VL_TOTAL_ITEM_NF,
   tdrec941.t$ikit$c CD_ITEM_KIT,
---  tdrec941.t$opfc$l VL_ICMS_ST1,*********																--#FAF.126.o
   tdrec941.T$OPFC$L CD_NATUREZA_OPERACAO,
   tdrec941.t$opor$l SQ_NATUREZA_OPERACAO,
   (SELECT tdrec942.t$base$l FROM baandb.ttdrec942201 tdrec942
@@ -265,8 +252,7 @@ SELECT
   ELSE 0 END VL_COFINS_IMPORTACAO, 
   CASE WHEN tdrec941.t$crpd$l=1 and (tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8) 
   THEN tdrec941.t$fght$l ELSE 0 END VL_CIF_IMPORTACAO,
---  CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.o
-    CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,   
   CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 
   THEN tdrec941.t$copr$l ELSE 0 END VL_CUSTO_IMPORTACAO, 
@@ -274,8 +260,7 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VL_ICMS_DESTACADO, 
-  --tdrec941.t$qnty$l+tdrec941.t$saof$l QT_RECEBIDA_FISICA,													--#FAF.114.o
-	nvl((select sum(ra.t$qrec) from baandb.twhinh312201 ra, baandb.ttdrec947201 rr
+  	nvl((select sum(ra.t$qrec) from baandb.twhinh312201 ra, baandb.ttdrec947201 rr
 		 where rr.t$fire$l=tdrec941.t$fire$l
 		 and rr.t$line$l=tdrec941.t$line$l
 		 and ra.t$rcno=rr.t$rcno$l
@@ -294,22 +279,19 @@ SELECT
 	AND tdrec947.t$line$l=tdrec941.t$line$l
 	AND rownum=1) NR_NFR,
 	CASE WHEN tdrec940.t$stoa$l=' ' THEN
-	
-        CASE WHEN regexp_replace(tdrec940.t$ctno$l, '[^0-9]', '') IS NULL
+	        CASE WHEN regexp_replace(tdrec940.t$ctno$l, '[^0-9]', '') IS NULL
 		THEN '00000000000000' 
 		WHEN LENGTH(regexp_replace(tdrec940.t$ctno$l, '[^0-9]', ''))<11
 		THEN '00000000000000'
 		ELSE regexp_replace(tdrec940.t$ctno$l, '[^0-9]', '') END													--#FAF.151.n	
 	ELSE
-	--tdrec940.t$ctno$l ELSE																						--FAF.151.o
-	(select 
+		(select 
         CASE WHEN regexp_replace(e.t$fovn$l, '[^0-9]', '') IS NULL
 		THEN '00000000000000' 
 		WHEN LENGTH(regexp_replace(e.t$fovn$l, '[^0-9]', ''))<11
 		THEN '00000000000000'
 		ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END															--FAF.151.n
-	 --e.t$fovn$l 																									--FAF.151.o
-	 from baandb.ttccom130201 e
+		 from baandb.ttccom130201 e
 	 where e.t$cadr=tdrec940.t$stoa$l)
 	END NR_CNPJ_CPF_ENTREGA ,
   nvl((SELECT tdrec942.t$nmrg$l FROM baandb.ttdrec942201 tdrec942
