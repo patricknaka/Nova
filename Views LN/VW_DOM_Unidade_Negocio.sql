@@ -8,7 +8,7 @@ SELECT
       WHEN InStr(znint002.t$desc$c, 'B2C', 1, 1)>0 THEN 'B2C'
 	ELSE ' '
 	END NM_TIPO_VENDA,
---	SYSDATE DATA_CADASTRO,        -- *** PEDENTE DE ATIVAÇÃO NA TABELA
-	CAST((FROM_TZ(CAST(TO_CHAR(znint002.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znint002.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
 FROM baandb.tznint002201 znint002
+
