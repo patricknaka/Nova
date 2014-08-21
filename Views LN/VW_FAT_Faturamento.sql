@@ -1,33 +1,32 @@
 -- 05-mai-2014, Fabio Ferreira, Retirados os campos COD_PAIS_FATURA, COD_ESTADO_FATURA, COD_CEP_FATURA, COD_PAIS_ENTREGA, COD_ESTADO_ENTREGA, COD_CEP_ENTREGA,
---								Inclus„o dos campos VALOR_TOTAL_MERCADOR, CPF/CNPJ CLIENTE FATURA, TIPO CLENTE
--- 06-mai-2014, Fabio Ferreira, CorrecÁ„o timezone ULTIMA_ATUALIZACAO, DATA_FATURA, DT_ENTREGA
---								CorreÁ„o formataÁ„o campo PEDIDO_ENTREGA;
---								CorreÁ„o informaÁ„o da quantidade de volumes
--- 07-mai-2014, Fabio Ferreira, IncluÌdo campo COD_CIDADE_ENTREGA (Excluido indevidamente)
+--								Inclus√£o dos campos VALOR_TOTAL_MERCADOR, CPF/CNPJ CLIENTE FATURA, TIPO CLENTE
+-- 06-mai-2014, Fabio Ferreira, Correc√ß√£o timezone ULTIMA_ATUALIZACAO, DATA_FATURA, DT_ENTREGA
+--								Corre√ß√£o formata√ß√£o campo PEDIDO_ENTREGA;
+--								Corre√ß√£o informa√ß√£o da quantidade de volumes
+-- 07-mai-2014, Fabio Ferreira, Inclu√≠do campo COD_CIDADE_ENTREGA (Excluido indevidamente)
 --								Corrigido campo VALOR_CMV
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo PEDIDO_ENTREGA;
--- #FAF.008 - 17-mai-2014, Fabio Ferreira, 	Incluida condiÁ„o para evitar divis„o por zero
--- #FAF.063 - 22-mai-2014, Fabio Ferreira, 	Alterado o cÛdigo da transportadora para o cÛdigo do parceiro
+-- #FAF.008 - 17-mai-2014, Fabio Ferreira, 	Incluida condi√ß√£o para evitar divis√£o por zero
+-- #FAF.063 - 22-mai-2014, Fabio Ferreira, 	Alterado o c√≥digo da transportadora para o c√≥digo do parceiro
 -- #FAF.083 - 26-mai-2014, Fabio Ferreira, 	Campo NUM_ENTREGA convertido para string
--- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	CorreÁıes de informaÁıes que estavam pendente do financeiro
--- #FAF.125 - 10-jun-2014, Fabio Ferreira, 	CorreÁıes impostos frete
--- #FAF.138 - 13-jun-2014, Fabio Ferreira, 	CorreÁ„o campo CD_VENDEDOR
+-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Corre√ß√µes de informa√ß√µes que estavam pendente do financeiro
+-- #FAF.125 - 10-jun-2014, Fabio Ferreira, 	Corre√ß√µes impostos frete
+-- #FAF.138 - 13-jun-2014, Fabio Ferreira, 	Corre√ß√£o campo CD_VENDEDOR
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --	#FAF.169 - 24-jun-2014,	Fabio Ferreira,	Mostrar linha da NF de remessa e fatura
---	#FAF.172 - 24-jun-2014,	Fabio Ferreira,	Inclus„o do campo referencia fiscal
---	#FAF.173 - 25-jun-2014,	Fabio Ferreira,	CorreÁ„o duplicidade
---	#FAF.176 - 25-jun-2014,	Fabio Ferreira,	Inclus„o do campo CD_STATUS_SEFAZ, filtro status e sefaz
---	#FAF.180 - 27-jun-2014,	Fabio Ferreira,	Inclus„o do campo VL_JUROS E VL_JUROS_ADMINISTRADORA
+--	#FAF.172 - 24-jun-2014,	Fabio Ferreira,	Inclus√£o do campo referencia fiscal
+--	#FAF.173 - 25-jun-2014,	Fabio Ferreira,	Corre√ß√£o duplicidade
+--	#FAF.176 - 25-jun-2014,	Fabio Ferreira,	Inclus√£o do campo CD_STATUS_SEFAZ, filtro status e sefaz
+--	#FAF.180 - 27-jun-2014,	Fabio Ferreira,	Inclus√£o do campo VL_JUROS E VL_JUROS_ADMINISTRADORA
 --	#FAF.190 - 01-jul-2014,	Fabio Ferreira,	Filtro de status SEFAZ alterado para mostrar status 1 (nenhum)
---	#FAF.195 - 02-jul-2014,	Fabio Ferreira,	Inclus„o do campo CD_PRODUTO
---	#FAF.201 - 03-jul-2014,	Fabio Ferreira, CorreÁ„o diplicidade devido a inclus„o do campo VL_JUROS E VL_JUROS_ADMINISTRADORA #180
---	#FAF.249 - 30-jul-2014,	Fabio Ferreira, Ajuste Natureza daa operaÁ„o e sequencia
---  #MAT.001 - 31-jul-2014, Marcia A. Torres, CorreÁ„o do campo DT_ATUALIZACAO
--- 	#FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclus„o do camopo ref fiscal e linha de fatura
+--	#FAF.195 - 02-jul-2014,	Fabio Ferreira,	Inclus√£o do campo CD_PRODUTO
+--	#FAF.201 - 03-jul-2014,	Fabio Ferreira, Corre√ß√£o diplicidade devido a inclus√£o do campo VL_JUROS E VL_JUROS_ADMINISTRADORA #180
+--	#FAF.249 - 30-jul-2014,	Fabio Ferreira, Ajuste Natureza daa opera√ß√£o e sequencia
+--  #MAT.001 - 31-jul-2014, Marcia A. Torres, Corre√ß√£o do campo DT_ATUALIZACAO
+-- 	#FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclus√£o do camopo ref fiscal e linha de fatura
 --****************************************************************************************************************************************************************
 SELECT 
---    CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.o
-    CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
         cisli940.t$sfcp$l CD_CIA,
     (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
@@ -37,16 +36,14 @@ SELECT
     AND rownum=1) CD_FILIAL,
         cisli940.t$docn$l NR_NF,
         cisli940.t$seri$l NR_SERIE_NF,
---        cisli940.t$ccfo$l CD_NATUREZA_OPERACAO,														--#FAF.249.o
 		CASE WHEN instr(cisli940.t$ccfo$l,'-')=0 THEN cisli940.t$ccfo$l
 		ELSE regexp_replace(substr(cisli940.t$ccfo$l,0,instr(cisli940.t$ccfo$l,'-')-1), '[^0-9]', '') 
 		END	CD_NATUREZA_OPERACAO,																		--#FAF.249.n	
---        cisli940.t$opor$l SQ_NATUREZA_OPERACAO,														--#FAF.249.o		
 		CASE WHEN instr(cisli940.t$ccfo$l,'-')=0 THEN cisli940.t$opor$l
 		ELSE regexp_replace(substr(cisli940.t$ccfo$l,instr(cisli940.t$ccfo$l,'-')+1,3), '[^0-9]', '') 
 		END	SQ_NATUREZA_OPERACAO,																		--#FAF.249.n	
-    CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DT_FATURA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_FATURA,
         cisli940.t$itbp$l CD_CLIENTE_FATURA,
         cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
         znsls401.t$sequ$c NR_SEQ_ENTREGA,
@@ -84,8 +81,8 @@ SELECT
 
         cisli940.t$stat$l CD_SITUACAO_NF,
         (Select 
-     CAST((FROM_TZ(CAST(TO_CHAR(max(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE)
+     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(brnfe020.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE)
      FROM baandb.tbrnfe020201 brnfe020
     Where brnfe020.t$refi$l=cisli940.t$fire$l AND brnfe020.t$ncmp$l=201) DT_STATUS,
         cisli940.t$fdty$l CD_TIPO_NF,
@@ -232,8 +229,8 @@ SELECT
     AND   cisli943.t$brty$l=13),0) VL_CSLL_OUTROS,  
     
         cisli941f.t$tldm$l VL_DESCONTO_INCONDICIONAL,
-    CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DT_PEDIDO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_PEDIDO,
         znsls400.t$idca$c CD_CANAL,
         endfat.t$ccit CD_CIDADE_FATURA,
         endent.t$ccit CD_CIDADE_ENTREGA,
@@ -247,11 +244,9 @@ SELECT
       and    a.t$pono=tdsls401.t$pono),0) VL_CMV,
         znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
         ' ' CD_MODULO_GERENCIAL,        -- *** AGUARDANDO DUVIDAS
---        cisli941f.t$ccfo$l CD_NATUREZA_OPERACAO_ITEM,													--#FAF.249.o	
 		CASE WHEN instr(cisli941f.t$ccfo$l,'-')=0 THEN cisli941f.t$ccfo$l
 		ELSE regexp_replace(substr(cisli941f.t$ccfo$l,0,instr(cisli941f.t$ccfo$l,'-')-1), '[^0-9]', '') 
 		END	CD_NATUREZA_OPERACAO_ITEM,																	--#FAF.249.n		
---        cisli941f.t$opor$l SQ_NATUREZA_OPERACAO_ITEM,													--#FAF.249.o
 		CASE WHEN instr(cisli941f.t$ccfo$l,'-')=0 THEN cisli941f.t$opor$l
 		ELSE regexp_replace(substr(cisli941f.t$ccfo$l,instr(cisli941f.t$ccfo$l,'-')+1,3), '[^0-9]', '') 
 		END	SQ_NATUREZA_OPERACAO_ITEM,																	--#FAF.249.n		
@@ -265,8 +260,8 @@ SELECT
              AND    cisli943.t$line$l=cisli941f.t$line$l
              AND    cisli943.t$brty$l=3),0) VL_BASE_IPI,
     nvl((select t.t$suno from baandb.ttcmcs080201 t where t.t$cfrw=cisli940.t$cfrw$l and rownum=1),' ') CD_TRANSPORTADORA,      --#FAF.063.n
-    CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DT_ENTREGA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_ENTREGA,
         (Select sum(znfmd630.t$qvol$c) From baandb.tznfmd630201 znfmd630 WHERE znfmd630.t$fire$c=cisli941f.t$fire$l and rownum=1) QT_VOLUME,
         cisli940.t$gwgt$l VL_PESO_BRUTO,
         cisli940.t$nwgt$l VL_PESO_LIQUIDO,
@@ -283,7 +278,6 @@ SELECT
     WHEN LENGTH(regexp_replace(e.t$fovn$l, '[^0-9]', ''))<11
     THEN '00000000000000'
     ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END                                --#FAF.151.n  
---    e.t$fovn$l                                                     --#FAF.151.o
     from baandb.ttccom130201 e where e.t$cadr=cisli940.t$stoa$l and rownum=1) NR_CNPJ_CPF_ENTREGA,
     (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=cisli940.t$stoa$l and rownum=1) CD_TIPO_CLIENTE_ENTREGA,
     (select 
@@ -292,7 +286,6 @@ SELECT
     WHEN LENGTH(regexp_replace(e.t$fovn$l, '[^0-9]', ''))<11
     THEN '00000000000000'
     ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END                                --#FAF.151.n  
---    e.t$fovn$l                                                     --#FAF.151.o
     from baandb.ttccom130201 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) NR_CNPJ_CPF_FATURA,
     (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) CD_TIPO_CLIENTE_FATURA,
     cisli941f.t$fire$l NR_REFERENCIA_FISCAL,  															--#FAF.172.n
@@ -331,11 +324,10 @@ FROM    baandb.tcisli940201 cisli940,
           from baandb.tcisli245201 c245, baandb.tcisli941201 c941, baandb.tcisli940201 c940
           where c941.t$fire$l=c245.T$FIRE$L
           and c940.t$fire$l=c941.T$REFR$L) consold ON consold.T$SLSO=tdsls400.t$orno,          			--#FAF.087.en    
-    
         baandb.ttccom130201 endfat,
         baandb.ttccom130201 endent,
         baandb.ttcibd001201 tcibd001,
-        baandb.ttdsls094201 tdsls094                                          --#FAF.087.n
+    baandb.ttdsls094201 tdsls094                                          --#FAF.087.n
 WHERE   cisli941f.t$fire$l=cisli940.t$fire$l
 AND     cisli245.t$fire$l=cisli941.t$fire$l
 AND     cisli245.t$line$l=cisli941.t$line$l
@@ -358,11 +350,8 @@ AND     endent.t$cadr=cisli940.t$stoa$l
 AND     tcibd001.t$item=cisli941.t$item$l
 AND    tdsls400.t$orno=tdsls401.t$orno                                      --#FAF.087.n
 AND    tdsls094.t$sotp=tdsls400.t$sotp                                      --#FAF.087.n
---and (cisli941.T$fire$L= cisli941f.T$REFR$L or cisli941.T$fire$L= cisli941f.T$fire$L)              --#FAF.169.n
---and (cisli941.T$line$L= cisli941f.T$rfdl$L or cisli941.T$line$L= cisli941f.T$line$l)              --#FAF.169.n
 and ((cisli941.T$fire$L= cisli941f.T$REFR$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))  
       or cisli941.T$fire$L= cisli941f.T$fire$L)              										--#FAF.173.n
 and ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))  
       or cisli941.T$line$L= cisli941f.T$line$l)              										--#FAF.173.n
---and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (2,5)										--#FAF.176.n	--FAF.190.o		
 and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (1,2,5)										--FAF.190.n		
