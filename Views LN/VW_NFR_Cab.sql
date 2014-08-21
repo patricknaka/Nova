@@ -17,14 +17,14 @@ SELECT
 	(SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
 	AND rownum=1) NR_NFR,
-	CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NFR,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NFR,
 	tdrec940.t$rfdt$l CD_TIPO_OPERACAO,
 	tdrec940.t$bpid$l CD_FORNECEDOR,
 	tdrec940.t$docn$l NR_NF_RECEBIDA,
 	tdrec940.t$seri$l NR_SERIE_NF_RECEBIDA,
 	tdrec940.t$doty$l CD_TIPO_NF,
-	CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NF_RECEBIDA,
-	CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE) DT_SAIDA_NF_RECEBIDA,	 
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NF_RECEBIDA,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_SAIDA_NF_RECEBIDA,	 
 	tdrec940.t$opfc$l CD_NATUREZA_OPERACAO,
 	tdrec940.t$opor$l SQ_NATUREZA_OPERACAO,
 	CASE WHEN tdrec940.t$opor$l='1556' THEN 1 ELSE 2 END IN_MERC_UTILIZADA_CONSUMO,
@@ -68,7 +68,7 @@ SELECT
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=7) VL_ISS,
 	tdrec940.t$fght$l VL_FRETE,
---	0 VL_DESPESA_ACESSORIA,												-- *** DUVIDA ***     --#MAT.238.2.o
+	0 VL_DESPESA_ACESSORIA,												-- *** DUVIDA ***
 	tdrec940.t$tfda$l VL_TOTAL_NF,
 	tdrec940.t$gwgt$l VL_PESO_BRUTO,
 	nvl((select t.t$text from baandb.ttttxt010201 t 
@@ -76,16 +76,12 @@ SELECT
 	AND t.t$ctxt=tdrec940.t$obse$l
 	and rownum=1),' ') DS_OBSERVACAO_NFR,
 	tdrec940.t$stat$l CD_SITUACAO_NFR,
-	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_SITUACAO,
---	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.o
-    CAST((FROM_TZ(CAST(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  AT time zone sessiontimezone) AS DATE) DT_SITUACAO,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
 	tdrec940.t$lipl$l COD_CAMINHAO,
---	(SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947       --#MAT.238.2.so
---	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
---	AND rownum=1) NR_LOTE,                                            --#MAT.238.2.eo
---	CASE WHEN tccom966.t$insu$l=' ' THEN 2 ELSE 1 END IN_SUFRAMA,											--#FAF.238.1.o	
+	(SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947
+	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
+	AND rownum=1) NR_LOTE,
 	CASE WHEN nvl(tccom966.t$insu$l,' ')=' ' THEN 2 ELSE 1 END IN_SUFRAMA,									--#FAF.238.1.n	
 	(SELECT tdrec949.t$amnt$l FROM baandb.ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
@@ -96,8 +92,7 @@ SELECT
 	nvl((SELECT tdrec949.t$amnt$l FROM baandb.ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=13),0) VL_CSLL,																	--#FAF.021.1.n
---	0 VL_DESCONTO_CONDICIONAL,											-- *** DESCONSIDERAR ***    --#MAT.238.2.o
---	tdrec940.t$addc$l VL_DESCONTO_INCONDICIONAL,
+	0 VL_DESCONTO_CONDICIONAL,											-- *** DESCONSIDERAR ***
 	(SELECT tdrec949.t$base$l FROM baandb.ttdrec949201 tdrec949
 	WHERE tdrec949.t$fire$l=tdrec940.t$fire$l
 	AND tdrec949.t$brty$l=16) VL_BASE_IMPOSTO_IMPORTACAO,
