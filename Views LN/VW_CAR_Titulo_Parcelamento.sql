@@ -17,12 +17,9 @@ select
 	'CAR' CD_MODULO,
 	tfcmg011.t$baoc$l CD_BANCO,
 	tfcmg011.t$agcd$l NR_AGENCIA,
-	tfcmg001.t$bano NR_CONTA_CORRENTE
+	tfcmg001.t$bano   NR_CONTA_CORRENTE
 from	
-	baandb.ttfacr201201 tfacr201, baandb.ttfacr200201 tfacr200
-	LEFT JOIN baandb.ttfcmg001201 tfcmg001 ON tfcmg001.t$bank = tfacr200.t$bank
+	baandb.ttfacr201201 tfacr201
+	LEFT JOIN baandb.ttfcmg001201 tfcmg001 ON tfcmg001.t$bank = tfacr201.t$brel
 	LEFT JOIN baandb.ttfcmg011201 tfcmg011 ON tfcmg011.t$bank = tfcmg001.t$brch
-where
-    tfacr201.t$ttyp = tfacr200.t$ttyp AND
-    tfacr201.t$ninv = tfacr200.t$ninv 
  
