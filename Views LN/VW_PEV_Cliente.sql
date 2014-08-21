@@ -13,9 +13,6 @@ SELECT DISTINCT
 		201 CD_CIA,																								--#FAF.113.n
 	   znsls401.t$pecl$c NR_PEDIDO,
        TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,																	-- #FAF.048.1.n
---       znsls401.t$entr$c NUM_ENTREGA,																			-- #FAF.048.1.o
---	   CONCAT(TRIM(znsls401.t$pecl$c), TRIM(to_char(znsls401.t$entr$c))) PEDIDO_ENTREGA, 						-- #FAF.007.o
---	   znsls401.t$entr$c PEDIDO_ENTREGA, 																		-- #FAF.047.n	#FAF.048.o
 	   tdsls400.t$orno NR_ORDEM,
        tdsls400.t$ofbp CD_CLIENTE_FATURA,
        tccom130.t$ftyp$l CD_TIPO_CLIENTE,
@@ -35,28 +32,21 @@ SELECT DISTINCT
        tccom130c.t$pstc CD_CEP_ENTREGA,
        tccom130c.t$namc DS_ENDERECO_ENTREGA,
        tccom130c.t$dist$l DS_BAIRRO_ENTREGA,
---       tccom130c.t$hono NUM_ENTREGA ,																			--#FAF.002.o
        tccom130c.t$hono NR_ENTREGA_ENDERECO,																		--#FAF.002.n
        znsls401.t$come$c DS_COMPLEMENTO_ENTREGA,
        znsls401.t$refe$c DS_REFERENCIA_ENDERECO_ENTREGA,
-	   CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_EMISSAO,
-	   CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')			--#FAF.252.n 
-			AT time zone sessiontimezone) AS DATE) DT_CHEGADA_PEDIDO,
---       Q1.trdt DT_ULTIMA_ATUALIZACAO,																			--#FAF.252.o
-	   CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			    AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZACAO,
+	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_EMISSAO,
+	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_CHEGADA_PEDIDO,
+	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZACAO,
 	   znsls400.t$idli$c NR_LISTA_CASAMENTO																		--#FAF.005.n
 FROM baandb.tznsls401201 znsls401,
      baandb.tznsls400201 znsls400,
      baandb.ttdsls400201 tdsls400,
      baandb.ttccom130201 tccom130,
      baandb.ttccom130201 tccom130c
---      (SELECT ttdsls450201.t$orno torno,																		--#FAF.252.so 
---			CAST((FROM_TZ(CAST(TO_CHAR(Max(ttdsls450201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
---			    AT time zone sessiontimezone) AS DATE) trdt
-	--      FROM baandb.ttdsls450201
-	--      GROUP BY ttdsls450201.t$orno) q1																	--#FAF.252.eo
 WHERE znsls400.t$ncia$c = znsls401.t$ncia$c
 AND znsls400.t$uneg$c = znsls401.t$uneg$c
 AND znsls400.t$pecl$c = znsls401.t$pecl$c
@@ -64,4 +54,3 @@ AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
 AND tdsls400.t$orno = znsls401.t$orno$c
 AND tccom130.t$cadr = tdsls400.t$itad
 AND tccom130c.t$cadr = tdsls400.t$stad
---AND q1.torno = tdsls400.t$orno																				--#FAF.252.o
