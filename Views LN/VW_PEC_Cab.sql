@@ -69,8 +69,8 @@ SELECT DISTINCT
 	tdpur400.t$fdtc$l CD_TIPO_DOCUMENTO_FISCAL,
 	tdpur400.t$oamt VL_TOTAL_MERCADORIA,
    (select 
-    CAST((FROM_TZ(CAST(TO_CHAR(min(tdpur450.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-            AT time zone sessiontimezone) AS DATE)   									--#FAF.246.n
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(tdpur450.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)   									--#FAF.246.n
     from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno) DT_CRIACAO									--#FAF.236.n
 FROM
