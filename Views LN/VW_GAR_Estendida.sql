@@ -1,29 +1,26 @@
--- #FAF.008 - 21-mai-2014, Fabio Ferreira,   Diversas correÁıes e inclus„o de campos
+-- #FAF.008 - 21-mai-2014, Fabio Ferreira,   Diversas corre√ß√µes e inclus√£o de campos
   -- #FAF.043 - 22-mai-2014, Fabio Ferreira,   Rtrim Ltrim no codigo da garantia
   -- #FAF.043.1 - 23-mai-2014, Fabio Ferreira,   Ajustes
-  -- #FAF.044 - 23-mai-2014, Fabio Ferreira,   CorreÁ„o VALOR_CSLL
-  -- #FAF.019 - 30-mai-2014, Fabio Ferreira,   Filtro para mostrar somente pedidos que j· foram enviados para o parceiro
+  -- #FAF.044 - 23-mai-2014, Fabio Ferreira,   Corre√ß√£o VALOR_CSLL
+  -- #FAF.019 - 30-mai-2014, Fabio Ferreira,   Filtro para mostrar somente pedidos que j√° foram enviados para o parceiro
   -- #FAF.134 - 14-jun-2014, Fabio Ferreira,   Novos campos 
   -- #FAF.161 - 26-jun-2014, Fabio Ferreira,   Campo indicando se a garantia foi cancelado
-  -- #FAF.205 - 08-juL-2014, Fabio Ferreira,   ADICIONADO CAMPO COM DATA DE ATUALIZA«√O
+  -- #FAF.205 - 08-juL-2014, Fabio Ferreira,   ADICIONADO CAMPO COM DATA DE ATUALIZA√á√ÉO
   -- #FAF.043.2 - 10-jul-2014, Fabio Ferreira,   Ajustes
   -- #FAF.043.3 - 11-jul-2014, Fabio Ferreira,   Ajustes NR_GARANTIA_ESTENDIDA
   -- #MAT.001 - 24-jul-2014, Marcia Amador R. Torres,   Adicionado campo QT_PRAZO_GARANTIA
   --********************************************************************************************************************************************************
-  SELECT
---    zncom005.t$idpa$c NR_GARANTIA_ESTENDIDA,                              --#FAF.043.3.o
+    SELECT
     zncom005.t$cdve$c NR_GARANTIA_ESTENDIDA,                              --#FAF.043.3.o
     tdsls400.t$hdst CD_STATUS_PEDIDO,                     
-    CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DT_EMISSAO_GARANTIA,                      
-    CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DT_PEDIDO_PRODUTO,                        
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_EMISSAO_GARANTIA,                      
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_PEDIDO_PRODUTO,                        
     ltrim(rtrim(tdsls401p.t$item)) CD_ITEM,              
     ltrim(rtrim(tdsls401.t$item)) CD_ITEM_GARANTIA,                                  
     sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_CUSTO,                        --#FAF.043.2.n
---    sum(zncom005.t$igva$c) VL_CUSTO,                                  --#FAF.043.2.o
   max(tdsls401.t$pric) VL_GARANTIA,                                  --#FAF.043.2.n
---    sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_GARANTIA,                      --#FAF.043.2.o
     sum(zncom005.t$piof$c) VL_IOF,                    
     sum(zncom005.t$ppis$c) VL_PIS,
     sum(zncom005.t$pcof$c) VL_COFINS,
@@ -42,8 +39,8 @@
   znsls400.t$idli$c NR_LISTA_CASAMENTO,
   (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,    --#FAF.134.en
   CASE WHEN znint501.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO,                    --#FAF.161.n
-    CAST((FROM_TZ(CAST(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                      --#FAF.205.n
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                      --#FAF.205.n
     sum(zncom005.t$igva$c) VL_ITEM_GARANTIA,                                  --#FAF.043.2.n
     zncom005.t$enga$c CD_PLANO_GARANTIA,                                    --#FAF.043.2.n
     tcibd001.T$NRPE$C QT_PRAZO_GARANTIA                                 --#MAT.001.n
