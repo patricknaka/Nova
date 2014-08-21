@@ -1,6 +1,6 @@
 --Banco MIS_ODS
 -------------------------------------------------------------------------------------------------------------------------
---Script AlteraÁ„o Data Type
+--Script Altera√ß√£o Data Type
 
 --DE NUMERIC(2) para NUMERIC(3)
 ALTER TABLE MIS_ODS.fin.ods_sige_titulo_receber_movimento
@@ -33,7 +33,7 @@ DROP INDEX [idx_chave] ON [fin].[ods_sige_titulo_receber_complemento] WITH ( ONL
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[fin].[ods_sige_titulo_receber_complemento]') AND name = N'idx_v1')
 DROP INDEX [idx_v1] ON [fin].[ods_sige_titulo_receber_complemento] WITH ( ONLINE = OFF )
 
---ALTERA«√O TABELA
+--ALTERA√á√ÉO TABELA
 --DE NUMERIC(2) PARA NUMERIC(3)
 ALTER TABLE FIN.ods_sige_titulo_receber_complemento
 ALTER COLUMN NR_ID_CIA numeric(3)
@@ -82,7 +82,7 @@ ALTER TABLE FIN.ods_sige_titulo_receber_movimento
 ALTER COLUMN NR_ID_TRANSACAO VARCHAR(3)
 
 -------------------------------------------------------------------------------------------------------------------------------------------------
---ADAPTA«√O A CRIA«√O DA NOVA PK
+--ADAPTA√á√ÉO A CRIA√á√ÉO DA NOVA PK
 ALTER TABLE FIN.ods_sige_titulo_receber_movimento
 ALTER COLUMN NR_ID_TITULO NUMERIC(8) NOT NULL
 
@@ -108,7 +108,7 @@ group by  nr_id_cia, nr_id_filial, nr_id_titulo,nr_id_transacao,ds_id_documento
 
 -------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Tabela de CaracterizaÁ„o do Movimento do Titulo (Pendente CAR - 09/06)
+-- Tabela de Caracteriza√ß√£o do Movimento do Titulo (Pendente CAR - 09/06)
 CREATE TABLE ln.ods_tipo_movimento
 (
 id_tipo_movimento int,
@@ -121,12 +121,12 @@ values
 (1,'Agrupamento','CAP'),
 (2,'Abatimento','CAP'),
 (3,'Pagamento','CAP'),
-(4,'Revers„o','CAP')
+(4,'Revers√£o','CAP')
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------------
 
---TABELAS DE AGRUPAMENTO DE TRANSAC’ES
+--TABELAS DE AGRUPAMENTO DE TRANSAC√ïES
 CREATE TABLE ln.ods_agrupamento_transacao
 (
 id_agrupamento int,
@@ -156,7 +156,7 @@ CD_TRANSACAO ASC
 )
 -------------------------------------------------------------------------------------------------------------------------------------------------
 
---TABELAS DE CHAVE PARA PROCESSO DE EXTRA«√O DO OR«AMENTO
+--TABELAS DE CHAVE PARA PROCESSO DE EXTRA√á√ÉO DO OR√áAMENTO
 
 --TABELA CHAVE DE AGRUPAMENTO
 CREATE TABLE ln.ods_agrupamento_orcamento
@@ -173,13 +173,13 @@ id_tipo_orcamento int,
 ds_tipo_orcamento varchar(6)
 )
 
---VALORES PADR’ES SIGE
+--VALORES PADR√ïES SIGE
 
 INSERT ln.ods_tipo_agrupamento_orcamento
 VALUES (1,'Sales'),(2,'Orders')
 
 
---VALORES PADR’ES SIGE QUE SE MANTEM NO LN
+--VALORES PADR√ïES SIGE QUE SE MANTEM NO LN
 INSERT ln.ods_agrupamento_orcamento
 VALUES(1,1,1),(2,1,19),(4,1,8),(5,1,5),(6,1,15),(7,1,12),(8,1,9),(9,1,17),(11,1,21),(12,1,24),(13,1,26),
 (1,2,2),(2,2,20),(4,2,7),(5,2,6),(6,2,16),(7,2,13),(8,2,10),(9,2,18),(11,2,22),(12,2,23),(13,2,25),(14,1,28),(14,2,27)
@@ -495,6 +495,99 @@ CREATE TABLE [fin].[ods_sige_bandeira_pagto](
 	[CD_BANDEIRA] [int] NULL,
 	[DS_BANDEIRA] [varchar](30) NULL
 ) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+
+USE [MIS_ODS]
+GO
+
+/****** Object:  Table [com].[aux_relatorio_vpc]    Script Date: 08/21/2014 17:54:19 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [com].[aux_relatorio_vpc](
+	[COMPRADOR] [varchar](255) NULL,
+	[DT_EMISSAO] [datetime] NULL,
+	[TP_CONTRATO] [varchar](50) NULL,
+	[ID_CONTRATO] [int] NULL,
+	[CNPJ] [varchar](100) NULL,
+	[RAZAO_SOCIAL] [varchar](255) NULL,
+	[VALOR_CONTRATO] [numeric](20, 2) NULL,
+	[ID_DEPTO] [varchar](10) NULL,
+	[NOME_DEPTO] [varchar](100) NULL,
+	[TITULO] [text] NULL,
+	[VEICULO] [varchar](100) NULL,
+	[COMPETENCIA] [int] NULL,
+	[ASSINADO] [varchar](3) NULL,
+	[DT_ASSINATURA] [datetime] NULL,
+	[ASSINATURA_FORNEC] [text] NULL,
+	[ASSINATURA_CIA] [datetime] NULL,
+	[TIPO_PAGAMENTO] [varchar](100) NULL,
+	[ID_MODALIDADE] [varchar](4) NULL,
+	[DESC_MODALIDADE] [varchar](100) NULL,
+	[INICIO_VIGENCIA] [datetime] NULL,
+	[DT_VENCIMENTO] [datetime] NULL,
+	[DT_CONTRATO] [datetime] NULL,
+	[DT_ALTERACAO] [datetime] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+/*****************************************************/
+/*****************************************************/
+
+USE [MIS_ODS]
+GO
+
+/****** Object:  Table [com].[ods_relatorio_vpc]    Script Date: 08/21/2014 17:54:46 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [com].[ods_relatorio_vpc](
+	[COMPRADOR] [varchar](255) NULL,
+	[DT_EMISSAO] [datetime] NULL,
+	[TP_CONTRATO] [varchar](50) NULL,
+	[ID_CONTRATO] [int] NULL,
+	[CNPJ] [varchar](100) NULL,
+	[RAZAO_SOCIAL] [varchar](255) NULL,
+	[VALOR_CONTRATO] [numeric](20, 2) NULL,
+	[ID_DEPTO] [varchar](10) NULL,
+	[NOME_DEPTO] [varchar](100) NULL,
+	[TITULO] [text] NULL,
+	[VEICULO] [varchar](100) NULL,
+	[COMPETENCIA] [int] NULL,
+	[ASSINADO] [varchar](3) NULL,
+	[DT_ASSINATURA] [datetime] NULL,
+	[ASSINATURA_FORNEC] [text] NULL,
+	[ASSINATURA_CIA] [datetime] NULL,
+	[TIPO_PAGAMENTO] [varchar](100) NULL,
+	[ID_MODALIDADE] [varchar](4) NULL,
+	[DESC_MODALIDADE] [varchar](100) NULL,
+	[INICIO_VIGENCIA] [datetime] NULL,
+	[DT_VENCIMENTO] [datetime] NULL,
+	[DT_CONTRATO] [datetime] NULL,
+	[DT_ALTERACAO] [datetime] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
 
