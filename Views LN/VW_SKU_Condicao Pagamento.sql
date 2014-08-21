@@ -5,14 +5,11 @@ SELECT
         znpur008.t$citg$c CD_DEPARTAMENTO,
         znpur008.t$cpay$c CD_CONDICAO_PAGAMENTO,
         tdipu010.t$sbim COD_COND_PGTO_AUT,
-		znpur008.t$potp$c CD_TIPO_ORDEM,																			--#FAF.191.n
---        CASE WHEN tcmcs003.t$tpar$l=1 THEN 1
---        ELSE  2
---        END CONSIGNACAO,																						--#FAF.191.o
+        znpur008.t$potp$c CD_TIPO_ORDEM,																			--#FAF.191.n
         201 CD_CIA,
         tdipu010.t$vlmf$c VL_MINIMO_PEDIDO,
-		CAST((FROM_TZ(CAST(TO_CHAR(znpur008.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-				AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znpur008.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
         tccom100.t$bpid CD_PARCEIRO
 FROM    
     baandb.tznpur008201 znpur008
@@ -24,6 +21,4 @@ FROM
 	LEFT JOIN baandb.ttdipu010201 tdipu010
 	ON   	tccom100.t$bpid=tdipu010.t$otbp
 	AND		    znpur008.t$citg$c=tdipu010.t$citg
---	LEFT JOIN ttdipu002201 tdipu002 ON tdipu002.t$citg=tdipu010.t$citg AND tdipu002.t$kitm=1					--#FAF.191.so
---	LEFT JOIN ttcmcs003201 tcmcs003 ON tcmcs003.t$cwar=tdipu002.t$cwar											--#FAF.191.eo
 
