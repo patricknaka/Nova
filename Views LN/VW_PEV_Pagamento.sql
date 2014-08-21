@@ -9,7 +9,8 @@
 -- #FAF.088 - 28-mai-2014,	Fabio Ferreira, conversão de timezone no campo DT_APROVACAO_PAGAMENTO_ERP 
 --***************************************************************************************************************************************************************
 select
-    tdsls400.t$rcd_utc  DT_ULTIMA_ATUALIZACAO_PEDIDO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZACAO_PEDIDO,
     201 CD_CIA,
     tdsls400.t$orno NR_ORDEM,
 	TRIM(sls401q.t$pecl$c) NR_PEDIDO,
