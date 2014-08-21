@@ -1,13 +1,14 @@
--- 06-jan-2014, Fabio Ferreira, CorreÁ„o de convers„o de timezone
---								CriaÁ„o do campo Efetiva
+-- 06-jan-2014, Fabio Ferreira, Corre√ß√£o de convers√£o de timezone
+--								Cria√ß√£o do campo Efetiva
 --****************************************************************************************************************************************************************
 SELECT  tcmcs008.t$rtyp COD_COTACAO,
         tcmcs008.t$ccur CD_MOEDA,
         tcmcs008.t$rate VL_COTACAO,
-        CAST((FROM_TZ(CAST(TO_CHAR(tcmcs008.t$stdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DT_COTACAO,
-        CAST((FROM_TZ(CAST(TO_CHAR(tcmcs008.t$apdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-          AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcmcs008.t$stdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) DT_COTACAO,
+          
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcmcs008.t$apdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
         CASE WHEN (select MAX(b.t$stdt) From baandb.ttcmcs008201 b
                   where b.t$rtyp=tcmcs008.t$rtyp
                   and   b.t$ccur=tcmcs008.t$ccur)=tcmcs008.t$stdt THEN 1 ELSE 2 END IN_EFETIVA
