@@ -1,4 +1,4 @@
---	#FAF.257 - 11-aug-2014,	Fabio Ferreira,	Correção duplicidade
+﻿--	#FAF.257 - 11-aug-2014,	Fabio Ferreira,	Correção duplicidade
 --**********************************************************************************************************************************************************
 SELECT
     LTRIM(RTRIM(whina112.t$item))     CD_ITEM,
@@ -26,8 +26,10 @@ WHERE
     whina112.t$trdt >= sysdate-120 AND
 	whinr110.t$qstk > 0
     AND
-    whina113.t$trdt=( SELECT
-                          max(whina112a.t$trdt)
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whina113.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) =( SELECT
+                          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whina112a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+							AT time zone sessiontimezone) AS DATE)
                       FROM
                           baandb.twhina112201 whina112a,
                           baandb.twhina113201 whina113a,
