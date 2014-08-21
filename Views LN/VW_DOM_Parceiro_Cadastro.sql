@@ -5,6 +5,7 @@
 --	#FAF.130 - 11-jun-2014,	Fabio Ferreira,	Quando Tipo de ident. fiscal igual 'NA' mostrar CNPJ "00000000000000"
 --	#FAF.153 - 20-jun-2014,	Fabio Ferreira,	Incluído campo condição de pagamento da sessão parceiro de negócio faturadores
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
+--  21/08/2014  Atualização do timezone
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
        bspt.t$bpid CD_PARCEIRO,
@@ -28,11 +29,11 @@ SELECT DISTINCT
        END CD_TIPO_CADASTRO,
 --       addp.t$fovn$l NR_CNPJ_CPF_GRUPO,															--#FAF.091.o
 --       bspt.t$crdt DT_CADASTRO,																	--#FAF.005.o
-		CAST((FROM_TZ(CAST(TO_CHAR(bspt.t$crdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.005.n
-		AT time zone sessiontimezone) AS DATE) DT_CADASTRO,											--#FAF.005.n
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(bspt.t$crdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT time zone sessiontimezone) AS DATE) DT_CADASTRO,											--#FAF.005.n
 --       bspt.t$lmdt DT_ATUALIZACAO,																--#FAF.005.o
-		CAST((FROM_TZ(CAST(TO_CHAR(bspt.t$lmdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.005.n
-		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,										--#FAF.005.n
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(bspt.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,										--#FAF.005.n
 --       addr.t$telp TEL1,																			--#FAF.005.o
 --       addr.t$telx TEL2,																			--#FAF.005.o
 --       addr.t$tefx NR_FAX,																			--#FAF.005.o
