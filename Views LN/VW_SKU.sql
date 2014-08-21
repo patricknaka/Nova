@@ -4,6 +4,7 @@
 -- #FAF.120 - Fabio Ferreira, 09-jun-2014, Fabio Ferreira, 	Fitro de data de atualização
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --	#FAF.181 - 27-jun-2014,	Fabio Ferreira,	Adicionado o campo DS_APELIDO
+--  #FAF.296 - 21-aug-2014,	Fabio Ferreira,	Adicionado o campo NR_CNPJ_FABRICANTE
 --*********************************************************************************************************************************************************
 SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         201 CD_CIA,
@@ -15,6 +16,13 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         tccom100.t$bpid CD_FORNECEDOR,
 		tccom100.t$seak DS_APELIDO,																	--#FAF.181.n
         tcmcs060.t$otbp CD_FABRICANTE,
+
+        CASE WHEN regexp_replace(tccom130f.t$fovn$l, '[^0-9]', '') IS NULL							--#FAF.296.sn
+		THEN '00000000000000' 
+		WHEN LENGTH(regexp_replace(tccom130f.t$fovn$l, '[^0-9]', ''))<11
+		THEN '00000000000000'
+		ELSE regexp_replace(tccom130f.t$fovn$l, '[^0-9]', '') END NR_CNPJ_FABRICANTE,				--#FAF.296.en
+		
         tccom100f.T$NAMA NM_NOME_FABRICANTE,
         tcibd004.t$aitc CD_ITEM_FORNECEDOR,
         tcibd001.t$dsca DS_ITEM,
@@ -77,7 +85,8 @@ LEFT JOIN baandb.twhwmd400201 whwmd400 ON whwmd400.t$item=tcibd001.t$item
 LEFT JOIN baandb.ttcibd200201 tcibd200 ON tcibd200.t$item=tcibd001.t$item
 LEFT JOIN baandb.ttdisa001201 tdisa001 ON tdisa001.t$item=tcibd001.t$item
 LEFT JOIN baandb.ttcmcs060201 tcmcs060 ON tcmcs060.t$cmnf=tcibd001.t$cmnf
-LEFT JOIN baandb.ttccom100201 tccom100f ON tccom100f.T$BPID=tcmcs060.T$OTBP,
+LEFT JOIN baandb.ttccom100201 tccom100f ON tccom100f.T$BPID=tcmcs060.T$OTBP
+LEFT JOIN baandb.ttccom130201 tccom130f ON tccom130f.t$cadr=tcmcs060.t$cadr,						--#FAF.296.n
 baandb.ttcmcs023201 tcmcs023
 WHERE
 tcmcs023.t$citg=tcibd001.t$citg
