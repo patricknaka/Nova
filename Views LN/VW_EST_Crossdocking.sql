@@ -4,8 +4,8 @@ SELECT  201 CD_CIA,
         znwmd200.t$qtdf$c - znwmd200.t$sald$c QT_RESERVADA,
         znwmd200.t$qtdf$c QT_ARQUIVO,
         znwmd200.t$sald$c QT_SALDO,
-		CAST((FROM_TZ(CAST(TO_CHAR(znwmd200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-				AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znwmd200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
 		tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
 FROM    baandb.tznwmd200201 znwmd200,
         baandb.ttcemm112201 tcemm112,
