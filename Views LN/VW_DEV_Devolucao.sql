@@ -4,12 +4,11 @@
 -- #FAF.227.2 - 17-jul-2014, Fabio Ferreira, 	Correções campo IN_REPOSICAO e DT_STATUS
 -- #FAF.227.3 - 18-jul-2014, Fabio Ferreira, 	Diversos ajustes #227
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ULTIMA_ATUALIZ_NF
+-- 21/08/2014   Atualização timezone
 --*************************************************************************************************************************************************************
 SELECT
-
---	CAST((FROM_TZ(CAST(TO_CHAR(GREATEST(cisli940dev.t$datg$l,cisli940dev.t$date$l,cisli940dev.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAT.001.o
-    CAST((FROM_TZ(CAST(TO_CHAR(cisli940dev.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
-      AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZ_NF,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940dev.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZ_NF,
     201 CD_CIA,
 	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l
@@ -20,9 +19,8 @@ SELECT
 	tdrec940rec.t$seri$l NR_SERIE_NF,											-- Serie NF rec. devolucção
 	tdrec940rec.t$opfc$l CD_NATUREZA_OPERACAO,
 	tdrec940rec.t$opor$l SQ_NATUREZA_OPERACAO,
-	
-	CAST((FROM_TZ(CAST(TO_CHAR(cisli940org.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-		AT time zone sessiontimezone) AS DATE) DT_FATURA,						-- Data fatura pedido original
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940org.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE) DT_FATURA,
 	cisli940org.t$itbp$l CD_CLIENTE_FATURA,
 	cisli940org.t$stbp$l CD_CLIENTE_ENTREGA,
 	znsls401org.t$sequ$c SQ_ENTREGA,
@@ -43,16 +41,15 @@ SELECT
                           AND c.t$entr$c=znsls410.t$entr$c)                          
 	AND rownum=1) CD_STATUS,
 	(SELECT 
-	CAST((FROM_TZ(CAST(TO_CHAR(MAX(znsls410.t$dtoc$c), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-		AT time zone sessiontimezone) AS DATE)	
-	FROM baandb.tznsls410201 znsls410
-	WHERE znsls410.t$ncia$c=znsls401dev.t$ncia$c
-	AND znsls410.t$uneg$c=znsls401dev.t$uneg$c
-	AND znsls410.t$pecl$c=znsls401dev.t$pecl$c
-	AND znsls410.t$sqpd$c=znsls401dev.t$sqpd$c
-	AND znsls410.t$entr$c=znsls401dev.t$entr$c) DT_STATUS,									--#FAF.227.2
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.t$dtoc$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)
+		FROM baandb.tznsls410201 znsls410
+		WHERE znsls410.t$ncia$c=znsls401dev.t$ncia$c
+		AND znsls410.t$uneg$c=znsls401dev.t$uneg$c
+		AND znsls410.t$pecl$c=znsls401dev.t$pecl$c
+		AND znsls410.t$sqpd$c=znsls401dev.t$sqpd$c
+		AND znsls410.t$entr$c=znsls401dev.t$entr$c) DT_STATUS,									--#FAF.227.2
 	tdrec940rec.t$rfdt$l CD_TIPO_NF,
-	
 	tdrec940rec.t$fire$l NR_NFR_DEVOLUCAO,										-- Ref. Fiscal recebimento devolção
 	ltrim(rtrim(znsls401dev.t$item$c)) CD_ITEM,
 	znsls401dev.t$qtve$c QT_DEVOLUCAO,
@@ -68,8 +65,8 @@ SELECT
 --	cisli941dev.t$gamt$l VL_TOTAL_ITEM,																		--#FAF.223.3.o
 	cisli941dev.t$amnt$l VL_TOTAL_ITEM,																		--#FAF.223.3.n
 	znsls401org.t$orno$c NR_PEDIDO_ORIGINAL,
-		CAST((FROM_TZ(CAST(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_PEDIDO,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE) DT_PEDIDO,
 	znsls400org.t$idca$c CD_CANAL_VENDAS,
 	tccom130.t$ftyp$l CD_TIPO_CLIENTE,
 	tccom130.t$ccit CD_CIDADE,
