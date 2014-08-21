@@ -11,34 +11,19 @@ select distinct
 		where o.T$COCI$C='ENT' and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_ENTREGA_REALIZADA,
       CASE WHEN znfmd630.t$stat$c='F' THEN 'FINALIZADO' ELSE 'EM PROCESSO' END NM_TIPO_ESTAGIO,
       znfmd630.t$ncar$c NR_EXPEDICAO,
---      znfmd061.t$creg$c dofi_id_regiao_transportadora,
       ' ' CD_REGIAO_TRANSPORTADORA,
       znfmd630.T$FILI$C CD_ESTABELECIMENTO,
---      (select min(o.T$DATE$C) 
---      from BAANDB.TZNFMD640201 o,
---           BAANDB.TZNFMD030201 c
---      where o.T$ETIQ$C=znfmd630.T$ETIQ$C
---      and   c.t$ocin$c=o.T$COCI$C
---      and   c.t$tent$c=1) peen_horario_inicial,
---      (select max(o.T$DATE$C) 
---      from BAANDB.TZNFMD640201 o,
---           BAANDB.TZNFMD030201 c
---      where o.T$ETIQ$C=znfmd630.T$ETIQ$C
---      and   c.t$ocin$c=o.T$COCI$C
---      and   c.t$tent$c=1) peen_horario_final,
-      CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE) DT_PROMETIDA,
-      CAST((FROM_TZ(CAST(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE) DT_ENTREGA_PREVISTA,
---        znfmd060.t$cono$c dofi_id_contrato,
       znfmd630.t$fire$c NR_REFERENCIA_FISCAL,
       201 CD_CIA,
-      CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,    
       znfmd060.t$ttra$c CD_TIPO_TRANSPORTE,
-      CAST((FROM_TZ(CAST(TO_CHAR(tdsls401.t$rdta, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.t$rdta, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE) DT_LIMITE_EXPEDICAO,    
---      znfmd630.t$docn$c nfca_ped_cliente,
       (select o.T$COCI$C from BAANDB.TZNFMD640201 o
 		where o.T$date$c=(select max(o1.T$date$c) from BAANDB.TZNFMD640201 o1 where o1.T$ETIQ$C=o.T$ETIQ$C)
 		and o.T$ETIQ$C=znfmd630.T$ETIQ$C and rownum=1) CD_OCORRENCIA_INTERNA,
@@ -52,9 +37,6 @@ select distinct
       tcmcs080.t$seak NM_APELIDO_TRANSPORTADORA,
       cisli940.t$amnt$l VL_TOTAL_NF,
       znfmd630.t$vlfr$c VL_TOTAL_FRETE_CLIENTE,
---      (select sum(znfmd171.t$volu$c)
---      from BAANDB.TZNFMD171201 znfmd171
---      where znfmd171.t$nent$c=znfmd630.t$nent$c) atdo_volume_m3,
       (select sum(nl.t$dqua$l) from baandb.tcisli941201 nl, baandb.ttcibd001201 i
 		where nl.t$fire$l=znfmd630.t$fire$c
 		and i.t$item=nl.t$item$l
