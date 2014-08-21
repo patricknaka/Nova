@@ -1,7 +1,7 @@
--- 06-mai-2014, Fabio Ferreira, CorreÁ„o de convers„o de timezone
--- #FAF.042 - 29-mai-2014, Fabio Ferreira, 	CorreÁıes timezone	
--- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclus„o do campo ref.fiscal	
--- #FAF.124 - 10-jun-2014, Fabio Ferreira, 	CorreÁ„o Chave de acesso				
+-- 06-mai-2014, Fabio Ferreira, Corre√ß√£o de convers√£o de timezone
+-- #FAF.042 - 29-mai-2014, Fabio Ferreira, 	Corre√ß√µes timezone	
+-- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclus√£o do campo ref.fiscal	
+-- #FAF.124 - 10-jun-2014, Fabio Ferreira, 	Corre√ß√£o Chave de acesso				
 --****************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -12,20 +12,20 @@ SELECT
     cisli940.t$prot$l NR_PROTOCOLO,
     cisli940.t$cnfe$l NR_CHAVE_ACESSO_NFE,
     nvl((SELECT 
-	CAST((FROM_TZ(CAST(TO_CHAR(MIN(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-		AT time zone sessiontimezone) AS DATE)	
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(brnfe020.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)
     FROM baandb.tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
 	  AND	  brnfe020.t$ncmp$l=201 	
     AND   brnfe020.T$STAT$L=cisli940.t$tsta$l),
     (SELECT 
-	CAST((FROM_TZ(CAST(TO_CHAR(MAX(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(brnfe020.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone sessiontimezone) AS DATE)
     FROM baandb.tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
 	  AND	  brnfe020.t$ncmp$l=201)) DT_STATUS,
     (SELECT 
-	CAST((FROM_TZ(CAST(TO_CHAR(MIN(brnfe020.t$date$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(brnfe020.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone sessiontimezone) AS DATE)
     FROM baandb.tbrnfe020201 brnfe020
     WHERE brnfe020.t$refi$l=cisli940.t$fire$l
@@ -33,6 +33,7 @@ SELECT
     cisli940.t$rscd$l CD_MOTIVO_CANCELAMENTO,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	cisli940.t$fire$l NR_REFERENCIA_FISCAL																		--#FAF.109.n
+  
 FROM
     baandb.tcisli940201 cisli940,
     baandb.ttcemm124201 tcemm124,
