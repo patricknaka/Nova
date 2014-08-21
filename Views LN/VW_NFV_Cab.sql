@@ -1,8 +1,8 @@
--- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
--- #FAF.098 - 02-jun-2014, Fabio Ferreira, 	Alterações
--- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
--- #FAF.248 - 29-jul-2014, Fabio Ferreira, 	Inclusão do tipo doc fiscal
--- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO_NF
+-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	CorreÃ§Ãµes de informaÃ§Ãµes que estavam pendente do fiscal
+-- #FAF.098 - 02-jun-2014, Fabio Ferreira, 	AlteraÃ§Ãµes
+-- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	InclusÃ£o do campo ref.fiscal
+-- #FAF.248 - 29-jul-2014, Fabio Ferreira, 	InclusÃ£o do tipo doc fiscal
+-- #MAT.001 - 31-jul-2014, Marcia A. Torres, CorreÃ§Ã£o do campo DT_ATUALIZACAO_NF
 -- #FAF.286 - 29-jul-2014, Fabio Ferreira, 	Ajuste do campo DT_ATUALIZACAO_NF
 --**********************************************************************************************************************************************************
 SELECT
@@ -17,10 +17,12 @@ SELECT
 		cisli940.t$ccfo$l CD_NATUREZA_OPERACAO,
 		cisli940.t$opor$l SQ_NATUREZA_OPERACAO,
 		cisli940.t$fdty$l CD_TIPO_NF,
-		CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 			AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NF,
-		CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 			AT time zone sessiontimezone) AS DATE) HR_EMISSAO_NF,
+
 		cisli940.t$itbp$l CD_CLIENTE_FATURA,
 		cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
 		entr.t$pecl$c NR_PEDIDO,
@@ -74,7 +76,7 @@ SELECT
 		  and rownum=1)
           else ' '
           end NR_SERIE_NF_REMESSA,
-		CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 			AT time zone sessiontimezone) AS DATE) DT_SITUACAO_NF,
 		cisli940.t$stat$l CD_SITUACAO_NF,
 		cisli940.t$amfi$l VL_DESPESA_FINANCEIRA,
@@ -114,7 +116,7 @@ SELECT
 --   CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  --#MAT.001.n
 --			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO_NF,
 	GREATEST(																									--#FAF.286.sn
-	CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 			AT time zone sessiontimezone) AS DATE),
 	nvl((select max(c1.t$rcd_utc) from baandb.tcisli941201 c1 
 	    where c1.t$fire$l=cisli940.t$fire$l), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
