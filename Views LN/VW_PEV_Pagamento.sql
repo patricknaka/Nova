@@ -22,19 +22,19 @@ select
     znsls402.t$vlmr$c  VL_PAGAMENTO,
     znsls402.t$stat$c  CD_STATUS_PAGAMENTO,
 	CASE WHEN znsls400.t$idli$c!=0 THEN 1 ELSE 2 END IN_VALE_LISTA_CASAMENTO,							--#FAF.049.n
-	CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,
     znsls402.t$uneg$c  CD_UNIDADE_NEGOCIO,	
-	CAST((FROM_TZ(CAST(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_APROVACAO,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_APROVACAO,
     znsls402.t$valo$c  VL_ORIGINAL,
     znsls402.t$vlja$c  VL_JUROS_ADMINISTRADORA,
     CASE WHEN znsls402.t$vlja$c!=0 THEN 1
 	ELSE 2
 	END IN_JUROS_ADMINISTRADORA,
     (select 
-	CAST((FROM_TZ(CAST(TO_CHAR(min(a.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 				--#FAF.088.n
-			AT time zone sessiontimezone) AS DATE)	
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE)
 	from baandb.ttdsls451201 a
     where a.t$orno=tdsls400.t$orno) DT_APROVACAO_PAGAMENTO_ERP,
     znsls402.t$vlju$c  VL_JUROS,
