@@ -1,6 +1,6 @@
--- 06-mai-2014, Fabio Ferreira, CorreÁ„o timezone
---								AlteraÁ„o para cia 201
--- FAF.002 - 09-mai-2014, Fabio Ferreira, Quando a data no LN È zero (01/01/1970) n„o È feita a convers„o de timezone
+-- 06-mai-2014, Fabio Ferreira, Corre√ß√£o timezone
+--								Altera√ß√£o para cia 201
+-- FAF.002 - 09-mai-2014, Fabio Ferreira, Quando a data no LN √© zero (01/01/1970) n√£o √© feita a convers√£o de timezone
 --****************************************************************************************************************************************************************
 SELECT
 	tccom125.t$ptbp CD_PARCEIRO,
@@ -10,11 +10,9 @@ SELECT
 	tccom125.t$bano NR_CONTA,
 	tccom125.t$dacc$d NR_DIGITO_CONTA,
 	CASE WHEN tccom125.t$rcd_utc<TO_DATE('1990-01-01', 'YYYY-MM-DD') THEN tccom125.t$rcd_utc				--#FAF.002.sn
-	ELSE CAST((FROM_TZ(CAST(TO_CHAR(tccom125.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-				AT time zone sessiontimezone) AS DATE) 
+	ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom125.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) 
 	END DT_ATUALIZACAO																			--#FAF.002.en
---	CAST((FROM_TZ(CAST(TO_CHAR(tccom125.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 		--#FAF.002.so
---				AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO							--#FAF.002.eo
 FROM
 	baandb.ttccom125201 tccom125,
 	baandb.ttfcmg011201 tfcmg011
