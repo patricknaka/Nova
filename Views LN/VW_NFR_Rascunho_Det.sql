@@ -1,5 +1,5 @@
--- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota			
--- #FAF.237 - 22-jul-2014, Fabio Ferreira, 	Correções 
+-- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	CorreÃ§Ãµes e alteraÃ§Ã£o da origem da informaÃ§Ã£o para os dados da prÃ©-nota			
+-- #FAF.237 - 22-jul-2014, Fabio Ferreira, 	CorreÃ§Ãµes 
 --************************************************************************************************************************************************************
 SELECT
 	brnfe941.t$fire$l NR_NF_RASCUNHO,
@@ -34,7 +34,7 @@ SELECT
 	brnfe941.t$addc$l VL_DESCONTO,
 	brnfe941.t$fght$l VL_FRETE,
 	brnfe941.t$insr$l VL_SEGURO,
---	brnfe941.t$addc$l VL_DESCONTO_INCONDICIONAL,												--FAF.237.o		-- *** Não existe no LN na pré nota a separação da despes e despesa incondicional
+--	brnfe941.t$addc$l VL_DESCONTO_INCONDICIONAL,												--FAF.237.o		-- *** NÃ£o existe no LN na prÃ© nota a separaÃ§Ã£o da despes e despesa incondicional
 	brnfe941.t$tamt$l VL_TOTAL_ITEM,
 
 	(SELECT SUM(i.t$amnt$l)
