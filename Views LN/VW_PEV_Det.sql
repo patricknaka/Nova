@@ -15,18 +15,18 @@
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
         (SELECT 
-		CAST((FROM_TZ(CAST(TO_CHAR(Max(ttdsls451201.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE)
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(ttdsls451201.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE)
         FROM  baandb.ttdsls451201
         WHERE ttdsls451201.t$orno=tdsls401.t$orno
         AND   ttdsls451201.t$pono=tdsls401.t$pono) DT_ATUALIZACAO,
 		  201 CD_CIA,
           znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
           tdsls401.t$orno NR_ORDEM,
-		  CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_COMPRA,			
-		  CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE) DT_ENTREGA,
+		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_COMPRA,			
+		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_ENTREGA,
           CASE WHEN tdsls401.t$clyn=1 THEN 30
 			WHEN tdsls401.t$term=1 THEN 25
 			WHEN tdsls401.t$modi=1 THEN 35
@@ -37,9 +37,7 @@ SELECT DISTINCT
           znsls400.t$idca$c CD_CANAL_VENDAS,
           ltrim(rtrim(tdsls401.t$item)) CD_ITEM,
           tdsls401.t$qoor QT_ITENS,
---          tdsls401.t$pric VL_ITEM,																					--#FAF.123.o
           tdsls401.t$pric*tdsls401.t$qoor VL_ITEM,																		--#FAF.123.n
---          0 VALOR_DESCONTO_CONDICIONAL,      -- **** DESCONSIDERAR - NÃO SERÁ USADO									--#FAF.002.o
           znsls401.t$vldi$c VL_DESCONTO_INCONDICIONAL,
           znsls401.t$vlfr$c VL_FRETE_CLIENTE,
           nvl((select sum(f.t$vlft$c) from baandb.tznfmd630201 f
@@ -53,7 +51,6 @@ SELECT DISTINCT
           ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
           znsls401.t$vlde$c VL_DESPESA_ACESSORIO,
           znsls400.t$vldf$c VL_JUROS,
---          (znsls401.t$vlun$c + znsls401.t$vlfr$c - znsls401.t$vldi$c)*znsls401.t$qtve$c VL_TOTAL_ITEM,				--#FAF.105.n	--#FAF.122.o
           (znsls401.t$vlun$c*znsls401.t$qtve$c) + (znsls401.t$vlfr$c - znsls401.t$vldi$c) VL_TOTAL_ITEM,				--#FAF.122.n
           (SELECT Count(lc.t$pono)
            FROM  baandb.ttdsls401201 lc
@@ -81,8 +78,6 @@ SELECT DISTINCT
 	   
 FROM
         baandb.ttdsls401201 tdsls401,
---		LEFT JOIN tznsls004201 znsls004 ON znsls004.t$orno$c=tdsls401.t$orno,						--#FAF.004.o
-
         baandb.tznsls401201 znsls401
 		
 				LEFT JOIN baandb.tznsls004201 znsls004 													--#FAF.174.sn
@@ -108,4 +103,3 @@ AND     znsls400.t$ncia$c=znsls401.t$ncia$c
 AND     znsls400.t$uneg$c=znsls401.t$uneg$c
 AND     znsls400.t$pecl$c=znsls401.t$pecl$c
 AND     znsls400.t$sqpd$c=znsls401.t$sqpd$c
---AND     znsls004.T$ENTR$C=znsls401.T$ENTR$C															--#FAF.164.n	--#FAF.174.o
