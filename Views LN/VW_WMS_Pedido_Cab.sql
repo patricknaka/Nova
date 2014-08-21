@@ -1,415 +1,226 @@
---	FAF.004 - 12-jan-2014, Fabio Ferreira, 	Correções de datas e outros campos
+﻿--	FAF.004 - 12-jan-2014, Fabio Ferreira, 	Correções de datas e outros campos
 --	#FAF.150 - 24-jun-2014,	Fabio Ferreira,	Mostrar número da entrega do LN
 --*******************************************************************************************************************************************
-SELECT	
-	ORDERS.ORDERKEY NR_PEDIDO_WMS,
-	ORDERS.REFERENCELOCATION CD_FILIAL,
-	ORDERS.WHSEID CD_ARMAZEM,
-	' ' CD_PROGRAMA, 								-- *** AGUARDANDO DUVIDA ***
-	ORDERS.CONSIGNEEKEY CD_PARCEIRO,
-	WAVEDETAIL.wavekey CD_ONDA,					
-	TO_CHAR(OLN.t$entr$c) NR_ENTREGA,
-	' ' CD_RESTRICAO,								-- *** AGUARDANDO DUVIDA ***
-	' ' CD_IDENTIFICADO_PRE_VOLUME,				-- *** AGUARDANDO DUVIDA ***
-	ORDERS.ROUTE CD_ROTA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_ESTIMADA_ENTREGA,										--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,											--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_REGISTRO,												--#FAF.004.en		
-	ORDERSTATUSSETUP.DESCRIPTION DS_SITUACAO,
-	(SELECT 																								--#FAF.004.sn
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(orderstatushistory.adddate), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE)
-	FROM WMWHSE1.orderstatushistory orderstatushistory														--#FAF.004.en				
-	WHERE orderstatushistory.ORDERKEY=ORDERS.ORDERKEY
-	AND orderstatushistory.STATUS=ORDERSTATUSSETUP.CODE) DT_SITUACAO,
-	orders.TOTALQTY QT_ITENS,																		--#FAF.004.n
-	orders.CARRIERCODE CD_TRANSPORTADORA,
-	orders.route CD_CONTRATO_TRANSPORTADORA,
-	orders.SCHEDULEDSHIPDATE DT_LIMITE_EXPEDICAO,
-	' ' CD_CANAL_VENDA,						-- *** AGUARDANDO DUVIDA ***
-	orders.C_ZIP CD_CEP_ENTREGA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_MINIMA_EXPEDICAO,										--#FAF.004.en
-	' ' CD_REGIAO,										-- *** AGUARDANDO DUVIDA ***
-	 ORDERS.C_VAT CD_MEGA_ROTA,				
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
-	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_ATUALIZACAO
-FROM 	WMWHSE1.ORDERS ORDERS 
-      LEFT JOIN WMWHSE1.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
-      WMWHSE1.ORDERSTATUSSETUP ORDERSTATUSSETUP,
-      (select distinct o.t$pecl$c, o.t$entr$c, o.t$orno$c from BAANDB.TZNSLS401201@dln01 o) OLN
-WHERE	ORDERSTATUSSETUP.CODE=ORDERS.STATUS
-AND   OLN.t$orno$c=ORDERS.REFERENCEDOCUMENT
-
+select        o.WHSEID CD_ARMAZEM,
+              o.ORDERKEY NR_PEDIDO_WMS,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.ADDDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'WMS' CD_OCORRENCIA_TERCEIRO
+			  ,'P' CD_SITUACAO
+from WMWHSE1.ORDERS o
+UNION select  cd.WHSEID CD_ARMAZEM, 
+              cd.orderid,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(cd.ADDDATE), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'GAI' 
+			  ,'P' CD_SITUACAO
+from WMWHSE1.cageiddetail cd 
+GROUP BY cd.orderid, cd.WHSEID
+UNION select  o.WHSEID CD_ARMAZEM, 
+              o.ORDERKEY,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.actualshipdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'SEC' 
+			  ,'P' CD_SITUACAO
+from WMWHSE1.ORDERS o 
+WHERE o.actualshipdate IS NOT NULL
+--********************************************************************************************************************************************************
 UNION
-SELECT	
-	ORDERS.ORDERKEY NR_PEDIDO_WMS,
-	ORDERS.REFERENCELOCATION CD_FILIAL,
-	ORDERS.WHSEID CD_ARMAZEM,
-	' ' CD_PROGRAMA, 								-- *** AGUARDANDO DUVIDA ***
-	ORDERS.CONSIGNEEKEY CD_PARCEIRO,
-	WAVEDETAIL.wavekey CD_ONDA,					
-	TO_CHAR(OLN.t$entr$c) NR_ENTREGA,
-	' ' CD_RESTRICAO,								-- *** AGUARDANDO DUVIDA ***
-	' ' CD_IDENTIFICADO_PRE_VOLUME,				-- *** AGUARDANDO DUVIDA ***
-	ORDERS.ROUTE CD_ROTA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-  AT time zone sessiontimezone) AS DATE) DT_ESTIMADA_ENTREGA,										--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-	AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,											--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-  AT time zone sessiontimezone) AS DATE) DT_REGISTRO,												--#FAF.004.en		
-	ORDERSTATUSSETUP.DESCRIPTION DS_SITUACAO,
-	(SELECT 																								--#FAF.004.sn
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(orderstatushistory.adddate), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE)
-	FROM WMWHSE2.orderstatushistory orderstatushistory														--#FAF.004.en				
-	WHERE orderstatushistory.ORDERKEY=ORDERS.ORDERKEY
-	AND orderstatushistory.STATUS=ORDERSTATUSSETUP.CODE) DT_SITUACAO,
-	orders.TOTALQTY QT_ITENS,																		--#FAF.004.n
-	orders.CARRIERCODE CD_TRANSPORTADORA,
-	orders.route CD_CONTRATO_TRANSPORTADORA,
-	orders.SCHEDULEDSHIPDATE DT_LIMITE_EXPEDICAO,
-	' ' CD_CANAL_VENDA,						-- *** AGUARDANDO DUVIDA ***
-	orders.C_ZIP CD_CEP_ENTREGA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_MINIMA_EXPEDICAO,										--#FAF.004.en
-	' ' CD_REGIAO,										-- *** AGUARDANDO DUVIDA ***
-	 ORDERS.C_VAT CD_MEGA_ROTA,				
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
-	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_HR_ATUALIZACAO
-FROM 	WMWHSE2.ORDERS ORDERS 
-      LEFT JOIN WMWHSE2.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
-      WMWHSE2.ORDERSTATUSSETUP ORDERSTATUSSETUP,
-      (select distinct o.t$pecl$c, o.t$entr$c, o.t$orno$c from BAANDB.TZNSLS401201@dln01 o) OLN
-WHERE	ORDERSTATUSSETUP.CODE=ORDERS.STATUS
-AND   OLN.t$orno$c=ORDERS.REFERENCEDOCUMENT
-
+select        o.WHSEID CD_ARMAZEM,
+              o.ORDERKEY NR_PEDIDO_WMS,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.ADDDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'WMS' CD_OCORRENCIA_TERCEIRO
+			  ,'P' CD_SITUACAO
+from WMWHSE2.ORDERS o
+UNION select  cd.WHSEID CD_ARMAZEM, 
+              cd.orderid,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(cd.ADDDATE), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'GAI' 
+			  ,'P' CD_SITUACAO
+from WMWHSE2.cageiddetail cd 
+GROUP BY cd.orderid, cd.WHSEID
+UNION select  o.WHSEID CD_ARMAZEM, 
+              o.ORDERKEY,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.actualshipdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'SEC' 
+			  ,'P' CD_SITUACAO
+from WMWHSE2.ORDERS o 
+WHERE o.actualshipdate IS NOT NULL
+--********************************************************************************************************************************************************
 UNION
-SELECT	
-	ORDERS.ORDERKEY NR_PEDIDO_WMS,
-	ORDERS.REFERENCELOCATION CD_FILIAL,
-	ORDERS.WHSEID CD_ARMAZEM,
-	' ' CD_PROGRAMA, 								-- *** AGUARDANDO DUVIDA ***
-	ORDERS.CONSIGNEEKEY CD_PARCEIRO,
-	WAVEDETAIL.wavekey CD_ONDA,					
-	TO_CHAR(OLN.t$entr$c) NR_ENTREGA,
-	' ' CD_RESTRICAO,								-- *** AGUARDANDO DUVIDA ***
-	' ' CD_IDENTIFICADO_PRE_VOLUME,				-- *** AGUARDANDO DUVIDA ***
-	ORDERS.ROUTE CD_ROTA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-  AT time zone sessiontimezone) AS DATE) DT_ESTIMADA_ENTREGA,										--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')		--#FAF.004.sn
-    AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,											--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_REGISTRO,												--#FAF.004.en		
-	ORDERSTATUSSETUP.DESCRIPTION DS_SITUACAO,
-	(SELECT 																								--#FAF.004.sn
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(orderstatushistory.adddate), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    
-			AT time zone sessiontimezone) AS DATE)
-	FROM WMWHSE3.orderstatushistory orderstatushistory														--#FAF.004.en				
-	WHERE orderstatushistory.ORDERKEY=ORDERS.ORDERKEY
-	AND orderstatushistory.STATUS=ORDERSTATUSSETUP.CODE) DT_SITUACAO,
-	orders.TOTALQTY QT_ITENS,																		--#FAF.004.n
-	orders.CARRIERCODE CD_TRANSPORTADORA,
-	orders.route CD_CONTRATO_TRANSPORTADORA,
-	orders.SCHEDULEDSHIPDATE DT_LIMITE_EXPEDICAO,
-	' ' CD_CANAL_VENDA,						-- *** AGUARDANDO DUVIDA ***
-	orders.C_ZIP CD_CEP_ENTREGA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_MINIMA_EXPEDICAO,										--#FAF.004.en
-	' ' CD_REGIAO,										-- *** AGUARDANDO DUVIDA ***
-	 ORDERS.C_VAT CD_MEGA_ROTA,				
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
-	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_HR_ATUALIZACAO
-FROM 	WMWHSE3.ORDERS ORDERS 
-      LEFT JOIN WMWHSE3.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
-      WMWHSE3.ORDERSTATUSSETUP ORDERSTATUSSETUP,
-      (select distinct o.t$pecl$c, o.t$entr$c, o.t$orno$c from BAANDB.TZNSLS401201@dln01 o) OLN
-WHERE	ORDERSTATUSSETUP.CODE=ORDERS.STATUS
-AND   OLN.t$orno$c=ORDERS.REFERENCEDOCUMENT
-
+select        o.WHSEID CD_ARMAZEM,
+              o.ORDERKEY NR_PEDIDO_WMS,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.ADDDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'WMS' CD_OCORRENCIA_TERCEIRO
+			  ,'P' CD_SITUACAO
+from WMWHSE3.ORDERS o
+UNION select  cd.WHSEID CD_ARMAZEM, 
+              cd.orderid,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(cd.ADDDATE), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'GAI' 
+			  ,'P' CD_SITUACAO
+from WMWHSE3.cageiddetail cd 
+GROUP BY cd.orderid, cd.WHSEID
+UNION select  o.WHSEID CD_ARMAZEM, 
+              o.ORDERKEY,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.actualshipdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'SEC' 
+			  ,'P' CD_SITUACAO
+from WMWHSE3.ORDERS o 
+WHERE o.actualshipdate IS NOT NULL
+--********************************************************************************************************************************************************
 UNION
-SELECT	
-	ORDERS.ORDERKEY NR_PEDIDO_WMS,
-	ORDERS.REFERENCELOCATION CD_FILIAL,
-	ORDERS.WHSEID CD_ARMAZEM,
-	' ' CD_PROGRAMA, 								-- *** AGUARDANDO DUVIDA ***
-	ORDERS.CONSIGNEEKEY CD_PARCEIRO,
-	WAVEDETAIL.wavekey CD_ONDA,					
-	TO_CHAR(OLN.t$entr$c) NR_ENTREGA,
-	' ' CD_RESTRICAO,								-- *** AGUARDANDO DUVIDA ***
-	' ' CD_IDENTIFICADO_PRE_VOLUME,				-- *** AGUARDANDO DUVIDA ***
-	ORDERS.ROUTE CD_ROTA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_ESTIMADA_ENTREGA,										--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,											--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_REGISTRO,												--#FAF.004.en		
-	ORDERSTATUSSETUP.DESCRIPTION DS_SITUACAO,
-	(SELECT 																								--#FAF.004.sn
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(orderstatushistory.adddate), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE)
-	FROM WMWHSE4.orderstatushistory orderstatushistory														--#FAF.004.en				
-	WHERE orderstatushistory.ORDERKEY=ORDERS.ORDERKEY
-	AND orderstatushistory.STATUS=ORDERSTATUSSETUP.CODE) DT_SITUACAO,
-	orders.TOTALQTY QT_ITENS,																		--#FAF.004.n
-	orders.CARRIERCODE CD_TRANSPORTADORA,
-	orders.route CD_CONTRATO_TRANSPORTADORA,
-	orders.SCHEDULEDSHIPDATE DT_LIMITE_EXPEDICAO,
-	' ' CD_CANAL_VENDA,						-- *** AGUARDANDO DUVIDA ***
-	orders.C_ZIP CD_CEP_ENTREGA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_MINIMA_EXPEDICAO,										--#FAF.004.en
-	' ' CD_REGIAO,										-- *** AGUARDANDO DUVIDA ***
-	 ORDERS.C_VAT CD_MEGA_ROTA,				
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
-	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_HR_ATUALIZACAO
-FROM 	WMWHSE4.ORDERS ORDERS 
-      LEFT JOIN WMWHSE4.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
-      WMWHSE4.ORDERSTATUSSETUP ORDERSTATUSSETUP,
-      (select distinct o.t$pecl$c, o.t$entr$c, o.t$orno$c from BAANDB.TZNSLS401201@dln01 o) OLN
-WHERE	ORDERSTATUSSETUP.CODE=ORDERS.STATUS
-AND   OLN.t$orno$c=ORDERS.REFERENCEDOCUMENT
-
+select        o.WHSEID CD_ARMAZEM,
+              o.ORDERKEY NR_PEDIDO_WMS,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.ADDDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'WMS' CD_OCORRENCIA_TERCEIRO
+			  ,'P' CD_SITUACAO
+from WMWHSE4.ORDERS o
+UNION select  cd.WHSEID CD_ARMAZEM, 
+              cd.orderid,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(cd.ADDDATE), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'GAI' 
+			  ,'P' CD_SITUACAO
+from WMWHSE4.cageiddetail cd 
+GROUP BY cd.orderid, cd.WHSEID
+UNION select  o.WHSEID CD_ARMAZEM, 
+              o.ORDERKEY,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.actualshipdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'SEC' 
+			  ,'P' CD_SITUACAO
+from WMWHSE4.ORDERS o 
+WHERE o.actualshipdate IS NOT NULL
+--********************************************************************************************************************************************************
 UNION
-SELECT	
-	ORDERS.ORDERKEY NR_PEDIDO_WMS,
-	ORDERS.REFERENCELOCATION CD_FILIAL,
-	ORDERS.WHSEID CD_ARMAZEM,
-	' ' CD_PROGRAMA, 								-- *** AGUARDANDO DUVIDA ***
-	ORDERS.CONSIGNEEKEY CD_PARCEIRO,
-	WAVEDETAIL.wavekey CD_ONDA,					
-	TO_CHAR(OLN.t$entr$c) NR_ENTREGA,
-	' ' CD_RESTRICAO,								-- *** AGUARDANDO DUVIDA ***
-	' ' CD_IDENTIFICADO_PRE_VOLUME,				-- *** AGUARDANDO DUVIDA ***
-	ORDERS.ROUTE CD_ROTA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_ESTIMADA_ENTREGA,										--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,											--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_REGISTRO,												--#FAF.004.en		
-	ORDERSTATUSSETUP.DESCRIPTION DS_SITUACAO,
-	(SELECT 																								--#FAF.004.sn
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(orderstatushistory.adddate), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE)
-	FROM WMWHSE5.orderstatushistory orderstatushistory														--#FAF.004.en				
-	WHERE orderstatushistory.ORDERKEY=ORDERS.ORDERKEY
-	AND orderstatushistory.STATUS=ORDERSTATUSSETUP.CODE) DT_SITUACAO,
-	orders.TOTALQTY QT_ITENS,																		--#FAF.004.n
-	orders.CARRIERCODE CD_TRANSPORTADORA,
-	orders.route CD_CONTRATO_TRANSPORTADORA,
-	orders.SCHEDULEDSHIPDATE DT_LIMITE_EXPEDICAO,
-	' ' CD_CANAL_VENDA,						-- *** AGUARDANDO DUVIDA ***
-	orders.C_ZIP CD_CEP_ENTREGA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_MINIMA_EXPEDICAO,										--#FAF.004.en
-	' ' CD_REGIAO,										-- *** AGUARDANDO DUVIDA ***
-	 ORDERS.C_VAT CD_MEGA_ROTA,				
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
-	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_HR_ATUALIZACAO
-FROM 	WMWHSE5.ORDERS ORDERS 
-      LEFT JOIN WMWHSE5.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
-      WMWHSE5.ORDERSTATUSSETUP ORDERSTATUSSETUP,
-      (select distinct o.t$pecl$c, o.t$entr$c, o.t$orno$c from BAANDB.TZNSLS401201@dln01 o) OLN
-WHERE	ORDERSTATUSSETUP.CODE=ORDERS.STATUS
-AND   OLN.t$orno$c=ORDERS.REFERENCEDOCUMENT
-
+select        o.WHSEID CD_ARMAZEM,
+              o.ORDERKEY NR_PEDIDO_WMS,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.ADDDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'WMS' CD_OCORRENCIA_TERCEIRO
+			  ,'P' CD_SITUACAO
+from WMWHSE5.ORDERS o
+UNION select  cd.WHSEID CD_ARMAZEM, 
+              cd.orderid,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(cd.ADDDATE), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'GAI' 
+			  ,'P' CD_SITUACAO
+from WMWHSE5.cageiddetail cd 
+GROUP BY cd.orderid, cd.WHSEID
+UNION select  o.WHSEID CD_ARMAZEM, 
+              o.ORDERKEY,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.actualshipdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'SEC' 
+			  ,'P' CD_SITUACAO
+from WMWHSE5.ORDERS o 
+WHERE o.actualshipdate IS NOT NULL
+--********************************************************************************************************************************************************
 UNION
-SELECT	
-	ORDERS.ORDERKEY NR_PEDIDO_WMS,
-	ORDERS.REFERENCELOCATION CD_FILIAL,
-	ORDERS.WHSEID CD_ARMAZEM,
-	' ' CD_PROGRAMA, 								-- *** AGUARDANDO DUVIDA ***
-	ORDERS.CONSIGNEEKEY CD_PARCEIRO,
-	WAVEDETAIL.wavekey CD_ONDA,					
-	TO_CHAR(OLN.t$entr$c) NR_ENTREGA,
-	' ' CD_RESTRICAO,								-- *** AGUARDANDO DUVIDA ***
-	' ' CD_IDENTIFICADO_PRE_VOLUME,				-- *** AGUARDANDO DUVIDA ***
-	ORDERS.ROUTE CD_ROTA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_ESTIMADA_ENTREGA,										--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,											--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_REGISTRO,												--#FAF.004.en		
-	ORDERSTATUSSETUP.DESCRIPTION DS_SITUACAO,
-	(SELECT 																								--#FAF.004.sn
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(orderstatushistory.adddate), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE)
-	FROM WMWHSE6.orderstatushistory orderstatushistory														--#FAF.004.en				
-	WHERE orderstatushistory.ORDERKEY=ORDERS.ORDERKEY
-	AND orderstatushistory.STATUS=ORDERSTATUSSETUP.CODE) DT_SITUACAO,
-	orders.TOTALQTY QT_ITENS,																		--#FAF.004.n
-	orders.CARRIERCODE CD_TRANSPORTADORA,
-	orders.route CD_CONTRATO_TRANSPORTADORA,
-	orders.SCHEDULEDSHIPDATE DT_LIMITE_EXPEDICAO,
-	' ' CD_CANAL_VENDA,						-- *** AGUARDANDO DUVIDA ***
-	orders.C_ZIP CD_CEP_ENTREGA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_MINIMA_EXPEDICAO,										--#FAF.004.en
-	' ' CD_REGIAO,										-- *** AGUARDANDO DUVIDA ***
-	 ORDERS.C_VAT CD_MEGA_ROTA,				
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
-	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_HR_ATUALIZACAO
-FROM 	WMWHSE6.ORDERS ORDERS 
-      LEFT JOIN WMWHSE6.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
-      WMWHSE6.ORDERSTATUSSETUP ORDERSTATUSSETUP,
-      (select distinct o.t$pecl$c, o.t$entr$c, o.t$orno$c from BAANDB.TZNSLS401201@dln01 o) OLN
-WHERE	ORDERSTATUSSETUP.CODE=ORDERS.STATUS
-AND   OLN.t$orno$c=ORDERS.REFERENCEDOCUMENT
-
+select        o.WHSEID CD_ARMAZEM,
+              o.ORDERKEY NR_PEDIDO_WMS,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.ADDDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'WMS' CD_OCORRENCIA_TERCEIRO
+			  ,'P' CD_SITUACAO
+from WMWHSE6.ORDERS o
+UNION select  cd.WHSEID CD_ARMAZEM, 
+              cd.orderid,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(cd.ADDDATE), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'GAI' 
+			  ,'P' CD_SITUACAO
+from WMWHSE6.cageiddetail cd 
+GROUP BY cd.orderid, cd.WHSEID
+UNION select  o.WHSEID CD_ARMAZEM, 
+              o.ORDERKEY,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.actualshipdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'SEC' 
+			  ,'P' CD_SITUACAO
+from WMWHSE6.ORDERS o 
+WHERE o.actualshipdate IS NOT NULL
+--********************************************************************************************************************************************************
 UNION
-SELECT	
-	ORDERS.ORDERKEY NR_PEDIDO_WMS,
-	ORDERS.REFERENCELOCATION CD_FILIAL,
-	ORDERS.WHSEID CD_ARMAZEM,
-	' ' CD_PROGRAMA, 								-- *** AGUARDANDO DUVIDA ***
-	ORDERS.CONSIGNEEKEY CD_PARCEIRO,
-	WAVEDETAIL.wavekey CD_ONDA,					
-	TO_CHAR(OLN.t$entr$c) NR_ENTREGA,
-	' ' CD_RESTRICAO,								-- *** AGUARDANDO DUVIDA ***
-	' ' CD_IDENTIFICADO_PRE_VOLUME,				-- *** AGUARDANDO DUVIDA ***
-	ORDERS.ROUTE CD_ROTA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_ESTIMADA_ENTREGA,										--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,											--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_REGISTRO,												--#FAF.004.en		
-	ORDERSTATUSSETUP.DESCRIPTION DS_SITUACAO,
-	(SELECT 																								--#FAF.004.sn
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(orderstatushistory.adddate), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE)
-	FROM WMWHSE7.orderstatushistory orderstatushistory														--#FAF.004.en				
-	WHERE orderstatushistory.ORDERKEY=ORDERS.ORDERKEY
-	AND orderstatushistory.STATUS=ORDERSTATUSSETUP.CODE) DT_SITUACAO,
-	orders.TOTALQTY QT_ITENS,																		--#FAF.004.n
-	orders.CARRIERCODE CD_TRANSPORTADORA,
-	orders.route CD_CONTRATO_TRANSPORTADORA,
-	orders.SCHEDULEDSHIPDATE DT_LIMITE_EXPEDICAO,
-	' ' CD_CANAL_VENDA,						-- *** AGUARDANDO DUVIDA ***
-	orders.C_ZIP CD_CEP_ENTREGA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_MINIMA_EXPEDICAO,										--#FAF.004.en
-	' ' CD_REGIAO,										-- *** AGUARDANDO DUVIDA ***
-	 ORDERS.C_VAT CD_MEGA_ROTA,				
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
-	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_HR_ATUALIZACAO
-FROM 	WMWHSE7.ORDERS ORDERS 
-      LEFT JOIN WMWHSE7.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
-      WMWHSE7.ORDERSTATUSSETUP ORDERSTATUSSETUP,
-      (select distinct o.t$pecl$c, o.t$entr$c, o.t$orno$c from BAANDB.TZNSLS401201@dln01 o) OLN
-WHERE	ORDERSTATUSSETUP.CODE=ORDERS.STATUS
-AND   OLN.t$orno$c=ORDERS.REFERENCEDOCUMENT
-
+select        o.WHSEID CD_ARMAZEM,
+              o.ORDERKEY NR_PEDIDO_WMS,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.ADDDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'WMS' CD_OCORRENCIA_TERCEIRO
+			  ,'P' CD_SITUACAO
+from WMWHSE7.ORDERS o
+UNION select  cd.WHSEID CD_ARMAZEM, 
+              cd.orderid,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(cd.ADDDATE), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'GAI' 
+			  ,'P' CD_SITUACAO
+from WMWHSE7.cageiddetail cd 
+GROUP BY cd.orderid, cd.WHSEID
+UNION select  o.WHSEID CD_ARMAZEM, 
+              o.ORDERKEY,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.actualshipdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'SEC' 
+			  ,'P' CD_SITUACAO
+from WMWHSE7.ORDERS o 
+WHERE o.actualshipdate IS NOT NULL
+--********************************************************************************************************************************************************
 UNION
-SELECT	
-	ORDERS.ORDERKEY NR_PEDIDO_WMS,
-	ORDERS.REFERENCELOCATION CD_FILIAL,
-	ORDERS.WHSEID CD_ARMAZEM,
-	' ' CD_PROGRAMA, 								-- *** AGUARDANDO DUVIDA ***
-	ORDERS.CONSIGNEEKEY CD_PARCEIRO,
-	WAVEDETAIL.wavekey CD_ONDA,					
-	TO_CHAR(OLN.t$entr$c) NR_ENTREGA,
-	' ' CD_RESTRICAO,								-- *** AGUARDANDO DUVIDA ***
-	' ' CD_IDENTIFICADO_PRE_VOLUME,				-- *** AGUARDANDO DUVIDA ***
-	ORDERS.ROUTE CD_ROTA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_ESTIMADA_ENTREGA,										--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,											--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_REGISTRO,												--#FAF.004.en		
-	ORDERSTATUSSETUP.DESCRIPTION DS_SITUACAO,
-	(SELECT 																								--#FAF.004.sn
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(orderstatushistory.adddate), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE)
-	FROM WMWHSE8.orderstatushistory orderstatushistory														--#FAF.004.en				
-	WHERE orderstatushistory.ORDERKEY=ORDERS.ORDERKEY
-	AND orderstatushistory.STATUS=ORDERSTATUSSETUP.CODE) DT_SITUACAO,
-	orders.TOTALQTY QT_ITENS,																		--#FAF.004.n
-	orders.CARRIERCODE CD_TRANSPORTADORA,
-	orders.route CD_CONTRATO_TRANSPORTADORA,
-	orders.SCHEDULEDSHIPDATE DT_LIMITE_EXPEDICAO,
-	' ' CD_CANAL_VENDA,						-- *** AGUARDANDO DUVIDA ***
-	orders.C_ZIP CD_CEP_ENTREGA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_MINIMA_EXPEDICAO,										--#FAF.004.en
-	' ' CD_REGIAO,										-- *** AGUARDANDO DUVIDA ***
-	 ORDERS.C_VAT CD_MEGA_ROTA,				
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
-	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_HR_ATUALIZACAO
-FROM 	WMWHSE8.ORDERS ORDERS 
-      LEFT JOIN WMWHSE8.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
-      WMWHSE8.ORDERSTATUSSETUP ORDERSTATUSSETUP,
-      (select distinct o.t$pecl$c, o.t$entr$c, o.t$orno$c from BAANDB.TZNSLS401201@dln01 o) OLN
-WHERE	ORDERSTATUSSETUP.CODE=ORDERS.STATUS
-AND   OLN.t$orno$c=ORDERS.REFERENCEDOCUMENT
-
+select        o.WHSEID CD_ARMAZEM,
+              o.ORDERKEY NR_PEDIDO_WMS,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.ADDDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'WMS' CD_OCORRENCIA_TERCEIRO
+			  ,'P' CD_SITUACAO
+from WMWHSE8.ORDERS o
+UNION select  cd.WHSEID CD_ARMAZEM, 
+              cd.orderid,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(cd.ADDDATE), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'GAI' 
+			  ,'P' CD_SITUACAO
+from WMWHSE8.cageiddetail cd 
+GROUP BY cd.orderid, cd.WHSEID
+UNION select  o.WHSEID CD_ARMAZEM, 
+              o.ORDERKEY,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.actualshipdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'SEC' 
+			  ,'P' CD_SITUACAO
+from WMWHSE8.ORDERS o 
+WHERE o.actualshipdate IS NOT NULL
+--********************************************************************************************************************************************************
 UNION
-SELECT	
-	ORDERS.ORDERKEY NR_PEDIDO_WMS,
-	ORDERS.REFERENCELOCATION CD_FILIAL,
-	ORDERS.WHSEID CD_ARMAZEM,
-	' ' CD_PROGRAMA, 								-- *** AGUARDANDO DUVIDA ***
-	ORDERS.CONSIGNEEKEY CD_PARCEIRO,
-	WAVEDETAIL.wavekey CD_ONDA,					
-	TO_CHAR(OLN.t$entr$c) NR_ENTREGA,
-	' ' CD_RESTRICAO,								-- *** AGUARDANDO DUVIDA ***
-	' ' CD_IDENTIFICADO_PRE_VOLUME,				-- *** AGUARDANDO DUVIDA ***
-	ORDERS.ROUTE CD_ROTA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_ESTIMADA_ENTREGA,										--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,											--#FAF.004.en
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_REGISTRO,												--#FAF.004.en		
-	ORDERSTATUSSETUP.DESCRIPTION DS_SITUACAO,
-	(SELECT 																								--#FAF.004.sn
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(orderstatushistory.adddate), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE)
-	FROM WMWHSE9.orderstatushistory orderstatushistory														--#FAF.004.en				
-	WHERE orderstatushistory.ORDERKEY=ORDERS.ORDERKEY
-	AND orderstatushistory.STATUS=ORDERSTATUSSETUP.CODE) DT_SITUACAO,
-	orders.TOTALQTY QT_ITENS,																		--#FAF.004.n
-	orders.CARRIERCODE CD_TRANSPORTADORA,
-	orders.route CD_CONTRATO_TRANSPORTADORA,
-	orders.SCHEDULEDSHIPDATE DT_LIMITE_EXPEDICAO,
-	' ' CD_CANAL_VENDA,						-- *** AGUARDANDO DUVIDA ***
-	orders.C_ZIP CD_CEP_ENTREGA,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_MINIMA_EXPEDICAO,										--#FAF.004.en
-	' ' CD_REGIAO,										-- *** AGUARDANDO DUVIDA ***
-	 ORDERS.C_VAT CD_MEGA_ROTA,				
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
-	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_HR_ATUALIZACAO
-FROM 	WMWHSE9.ORDERS ORDERS 
-      LEFT JOIN WMWHSE9.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
-      WMWHSE9.ORDERSTATUSSETUP ORDERSTATUSSETUP,
-      (select distinct o.t$pecl$c, o.t$entr$c, o.t$orno$c from BAANDB.TZNSLS401201@dln01 o) OLN
-WHERE	ORDERSTATUSSETUP.CODE=ORDERS.STATUS
-AND   OLN.t$orno$c=ORDERS.REFERENCEDOCUMENT
+select        o.WHSEID CD_ARMAZEM,
+              o.ORDERKEY NR_PEDIDO_WMS,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.ADDDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'WMS' CD_OCORRENCIA_TERCEIRO
+			  ,'P' CD_SITUACAO
+from WMWHSE9.ORDERS o
+UNION select  cd.WHSEID CD_ARMAZEM, 
+              cd.orderid,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(cd.ADDDATE), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'GAI' 
+			  ,'P' CD_SITUACAO
+from WMWHSE9.cageiddetail cd 
+GROUP BY cd.orderid, cd.WHSEID
+UNION select  o.WHSEID CD_ARMAZEM, 
+              o.ORDERKEY,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(o.actualshipdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) DT_REGISTRO,
+              'SEC' 
+			  ,'P' CD_SITUACAO
+from WMWHSE9.ORDERS o 
+WHERE o.actualshipdate IS NOT NULL
