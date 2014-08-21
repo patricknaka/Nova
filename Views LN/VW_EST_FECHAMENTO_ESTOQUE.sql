@@ -1,12 +1,13 @@
 -- #FAF.221, 19-aug-2014, Fabio Ferreira, 	Correção sinal da transação
+-- 21/08/2014    Atualização do timezone
 --*********************************************************************************************************************************************
 SELECT  201                               CD_CIA,
         tcemm030.t$euca                   CD_FILIAL,
         tcemm112.t$grid                   CD_UNIDADE_EMPRESARIAL,
         ltrim(rtrim(whwmd215.t$item))     CD_ITEM,
         sum(whwmd215.t$qhnd - whwmd215.t$qblk)+ sum(nvl(whinr110.t$qstk,0)) QT_FISICA,
-		max(whwmd215.t$rcd_utc) DT_ATUALIZACAO,
-		
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whwmd215.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
 		(SELECT 
 			sum(whina113.t$mauc$1)   VL_CMV
 		FROM
@@ -24,7 +25,8 @@ SELECT  201                               CD_CIA,
 
 
 			whina113.t$trdt=( SELECT
-								  max(whina112a.t$trdt)
+								  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whina112a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+										AT time zone sessiontimezone) AS DATE)
 							  FROM
 								  baandb.twhina112201 whina112a,
 								  baandb.twhina113201 whina113a,
@@ -40,8 +42,8 @@ SELECT  201                               CD_CIA,
 								  whina112a.t$item = whina112.t$item  AND
 								  tcemm030qa.t$euca = tcemm030q.t$euca  AND
 								  tcemm112qa.t$grid = tcemm112q.t$grid
-								  AND CAST((FROM_TZ(CAST(TO_CHAR(whina112a.t$trdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT')  
-									AT time zone sessiontimezone) AS DATE) <= TRUNC(sysdate, 'DD')) AND
+								  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whina112a.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+										AT time zone sessiontimezone) AS DATE) <= TRUNC(sysdate, 'DD')) AND
 			whina113.t$seqn=( SELECT												
 								  max(whina112a.t$seqn)
 							  FROM
@@ -72,11 +74,11 @@ FROM    baandb.twhwmd215201 whwmd215
 		LEFT JOIN ( SELECT  sum(whinr110q.t$qstk * case when whinr110q.t$kost IN (5, 102) then 1 else -1 end)  t$qstk, 			--#FAF.221.n
 							whinr110q.t$cwar,
 							whinr110q.t$item,
-							CAST((FROM_TZ(CAST(TO_CHAR(max(whinr110q.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-								AT time zone sessiontimezone) AS DATE) t$trdt
+							CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whinr110q.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+								AT time zone sessiontimezone) AS DATE)t$trdt
 					FROM 	baandb.twhinr110201 whinr110q
-					WHERE	CAST((FROM_TZ(CAST(TO_CHAR(whinr110q.t$trdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-									AT time zone sessiontimezone) AS DATE) >= TRUNC(sysdate, 'DD')
+					WHERE	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whinr110q.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+								AT time zone sessiontimezone) AS DATE) >= TRUNC(sysdate, 'DD')
 GROUP BY 	    			whinr110q.t$cwar,
 							whinr110q.t$item) 		whinr110
 		ON     	whinr110.t$cwar = whwmd215.t$cwar
