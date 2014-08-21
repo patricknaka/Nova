@@ -347,3 +347,48 @@ alter column ds_id_documento varchar(3)
 
 alter table fin.aux_contas_receber_transacao
 alter column ds_id_modulo varchar(3)
+
+
+USE [MIS_STAGING]
+GO
+
+/****** Object:  Table [com].[stg_relatorio_vpc]    Script Date: 08/21/2014 17:49:22 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [com].[stg_relatorio_vpc](
+	[COMPRADOR] [varchar](255) NULL,
+	[DT_EMISSAO] [datetime] NULL,
+	[TP_CONTRATO] [varchar](50) NULL,
+	[ID_CONTRATO] [int] NULL,
+	[CNPJ] [varchar](100) NULL,
+	[RAZAO_SOCIAL] [varchar](255) NULL,
+	[VALOR_CONTRATO] [numeric](20, 2) NULL,
+	[ID_DEPTO] [varchar](10) NULL,
+	[NOME_DEPTO] [varchar](100) NULL,
+	[TITULO] [text] NULL,
+	[VEICULO] [varchar](100) NULL,
+	[COMPETENCIA] [int] NULL,
+	[ASSINADO] [varchar](3) NULL,
+	[DT_ASSINATURA] [datetime] NULL,
+	[ASSINATURA_FORNEC] [text] NULL,
+	[ASSINATURA_CIA] [datetime] NULL,
+	[TIPO_PAGAMENTO] [varchar](100) NULL,
+	[ID_MODALIDADE] [varchar](4) NULL,
+	[DESC_MODALIDADE] [varchar](100) NULL,
+	[INICIO_VIGENCIA] [datetime] NULL,
+	[DT_VENCIMENTO] [datetime] NULL,
+	[DT_CONTRATO] [datetime] NULL,
+	[DT_ALTERACAO] [datetime] NULL
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
