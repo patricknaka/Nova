@@ -12,7 +12,6 @@ SELECT DISTINCT
     tdpur400.t$orno NR_PEDIDO_COMPRA,
     tdpur400.t$otbp CD_FORNECEDOR,
     qopfc.t$opfc$l CD_NATUREZA_OPERACAO,
-    --' ' SQ_NATUREZA_OPERACAO,                  -- *** eliminado com autorização Patrick 20/08/2014 ***
     tdpur400.t$cpay CD_CONDICAO_PAGAMENTO,
     (select sum((pl1.t$qoor-pl1.t$qidl)*pl1.t$pric) 
     from baandb.ttdpur401201 pl1 
@@ -25,18 +24,18 @@ SELECT DISTINCT
     CASE WHEN tdpur400.t$cotp='003' THEN 1
     ELSE 2
     END IN_CONSUMO,
-    CAST((FROM_TZ(CAST(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-            AT time zone sessiontimezone) AS DATE)	DT_EMISSAO_PEDIDO,								--#FAF.246.n
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE)	DT_EMISSAO_PEDIDO,								--#FAF.246.n
     apr.t$logn DS_USUARIO_APROVACAO_PEDIDO,
     CASE WHEN tdpur400.t$hdst>=10 THEN 1
     ELSE 2
     END IN_APROVADO,
-    CAST((FROM_TZ(CAST(TO_CHAR(apr.dapr, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-            AT time zone sessiontimezone) AS DATE) DT_APROVACAO_PEDIDO,								--#FAF.246.n
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(apr.dapr, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_APROVACAO_PEDIDO,								--#FAF.246.n
     tdpur400.t$hdst CD_SITUACAO_PEDIDO,
     (select 
-        CAST((FROM_TZ(CAST(TO_CHAR(min(tdpur450.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-            AT time zone sessiontimezone) AS DATE)													--#FAF.246.n
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(tdpur450.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE)													--#FAF.246.n
 	from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno
     and tdpur450.t$hdst=tdpur400.t$hdst) DT_SITUACAO_PEDIDO,
@@ -44,21 +43,15 @@ SELECT DISTINCT
     where tdpur450.t$orno=tdpur400.t$orno
     and rownum=1) DS_USUARIO_GERACAO_PEDIDO,
     (select 
-    CAST((FROM_TZ(CAST(TO_CHAR(max(tdpur401.t$rcd_utc), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-            AT time zone sessiontimezone) AS DATE)
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(tdpur401.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE)
 	from baandb.ttdpur401201 tdpur401
 	where tdpur401.t$orno=tdpur400.t$orno) DT_ATUALIZACAO, 
- --   nvl((select t.t$text from baandb.ttttxt010201 t 
-	--where t$clan='p'
-	--AND t.t$ctxt=tdpur400.t$txta
-	--and rownum=1),' ') DS_OBSERVACAO_PEDIDO,
- --   (select znpur003.t$citg$c from baandb.tznpur003201 znpur003
- --   where znpur003.t$cotp$c=tdpur400.t$cotp
- --   and rownum=1) CD_DEPARTAMENTO,			-- *** eliminado com autorização Patrick 20/08/2014 ***
---    tdpur400.t$corg COD_TIPO_GERACAO_PEDIDO,											--#FAF.005.o
-	tdpur400.t$corg CD_TIPO_CADASTRO,													--#FAF.005.n
---    (select z.t$vlft$c from tznfmd630201 z											--#FAF.228.so
---	where z.t$orno$c=tdpur400.t$orno) VL_FRETE,											--#FAF.228.eo
+    nvl((select t.t$text from baandb.ttttxt010201 t 
+	where t$clan='p'
+	AND t.t$ctxt=tdpur400.t$txta
+	and rownum=1),' ') DS_OBSERVACAO_PEDIDO,
+ 	tdpur400.t$corg CD_TIPO_CADASTRO,													--#FAF.005.n
 	FreteSeg.fght VL_FRETE,																--#FAF.228.n
     (select sum(brmcs941.t$tamt$l) 
     from baandb.tbrmcs941201 brmcs941,
@@ -67,8 +60,6 @@ SELECT DISTINCT
     and brmcs941.t$line$l=tdpur401.t$txli$l
     and tdpur401.t$orno=tdpur400.t$orno
     and tdpur401.t$oltp!=2) VL_FINANCEIRO,
---    (select z.t$vlsg$c from tznfmd630201 z											--#FAF.228.so
---	where z.t$orno$c=tdpur400.t$orno) VL_SEGURO, 										--#FAF.228.eo
 	FreteSeg.insr VL_SEGURO, 															--#FAF.228.n
     tdpur400.t$sbim IN_LIQUIDACAO_AUTOMATICA,
     tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
@@ -110,8 +101,8 @@ FROM
 				and		br.t$txre$l=a.t$txre$l
 				and 	br.t$line$l=a.t$txli$l
 				group by a.t$orno) FreteSeg ON FreteSeg.t$orno=tdpur400.t$orno, 							--#FAF.228.en
-    ttcemm124201 tcemm124,
-    ttcemm030201 tcemm030
+    baandb.ttcemm124201 tcemm124,
+    baandb.ttcemm030201 tcemm030
 where tcemm124.t$cwoc=tdpur400.t$cofc
 and tcemm124.t$loco=201
 and tcemm124.T$DTYP=2
