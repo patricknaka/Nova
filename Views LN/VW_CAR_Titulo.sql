@@ -1,4 +1,4 @@
--- 06-mai-2014, Fabio Ferreira, Inclusão do numero do pedido
+﻿-- 06-mai-2014, Fabio Ferreira, Inclusão do numero do pedido
 -- #FAF.001 - 06-mai-2014, Fabio Ferreira, 	Tratamento da data de vencimento	
 -- #FAF.002 - 09-mai-2014, Fabio Ferreira, 	Correção dos campos referente a situação do título				
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Adicionado campo método de pagamento/recebimento
@@ -11,6 +11,7 @@
 -- #FAF.203 - 03-jul-2014, Fabio Ferreira, 	Retirados campos da remessa
 -- #MAR.273 - 11-ago-2014, Marcia A R Torres, Correção DT_ATUALIZACAO e CD_METODO_RECEBIMENTO.
 -- #FAF.282 - 14-ago-2014, Fabio Ferreira, 	Retirados campo  método de pagamento
+-- 21/08/2014    Atualização do timezone
 --****************************************************************************************************************************************************************
 --ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY HH:MI:SS AM';
 
@@ -70,18 +71,19 @@ SELECT DISTINCT
 	tfgld100.t$user DS_USUARIO_GERACAO_TITULO,
 --	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAR.273.so
 --		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                                        --#MAR.273.eo
+ 
   GREATEST(                                                                                         --#MAR.273.sn
-    nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
 --    nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 								--#FAF.282.o
-    nvl(CAST((FROM_TZ(CAST(TO_CHAR(																										--#FAF.282.sn
-	(select max(a.t$rcd_utc) from baandb.ttfacr201201 a
-	 where a.t$ttyp=tfacr200.t$ttyp
-	 and a.t$ninv=tfacr200.t$ninv)	, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 													--#FAF.282.en
-      AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
-    nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfcmg001.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')))
-                                              DT_ATUALIZACAO,                                     --#MAR.273.en
+	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(																										--#FAF.282.sn
+		(select max(a.t$rcd_utc) from baandb.ttfacr201201 a
+			where a.t$ttyp=tfacr200.t$ttyp
+			and a.t$ninv=tfacr200.t$ninv), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg001.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY'))) DT_ATUALIZACAO,                                     --#MAR.273.en
+	
 	(Select u.t$eunt From baandb.ttcemm030201 u
 		where u.t$euca!=' '
 		AND TO_NUMBER(u.t$euca)=CASE WHEN tfacr200.t$dim2=' ' then 999

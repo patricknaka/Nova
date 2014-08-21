@@ -1,18 +1,20 @@
+--21/08/2014  Atualização do timezone
+--=================================================================================
 SELECT DISTINCT
 	tfcmg948.t$bank$l CD_BANCO,
 	tfcmg948.t$btno$l NR_REMESSA,
 	tfcmg948.t$docd$l DT_REMESSA,
 	tfcmg011.t$agcd$l NR_AGENCIA,
 	tfcmg948.t$acco$l NR_CONTA,
-  	tfcmg948.t$banu$l NR_BANCO,
-    201 CD_CIA,
+    	201 CD_CIA,
 	tfcmg948.t$stat$l CD_STATUS_ARQUIVO,
 	tfcmg948.t$send$l CD_STATUS_ENVIO,
-  GREATEST(
-	nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfcmg948.t$lach$l, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
-  nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfcmg948.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-			AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')) ) DT_ATUALIZACAO      
+  	GREATEST(
+	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg948.t$lach$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg948.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')) ) DT_ATUALIZACAO,
+  	tfcmg948.t$banu$l NR_BANCO     
 FROM
 	baandb.ttfcmg948201 tfcmg948
 	LEFT JOIN baandb.ttfcmg001201 tfcmg001
