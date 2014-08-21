@@ -1,15 +1,15 @@
---	FAF.136 - 13-jun-2014, Fabio Ferreira, 	CNPJ Transportadora
+﻿--	FAF.136 - 13-jun-2014, Fabio Ferreira, 	CNPJ Transportadora
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --	#MAR.258 - 11-ago-2014,	Marcia A R Torres,	Inclusão da DT_ATUALIZACAO
 --**********************************************************************************************************************************************************
 select distinct
   (select 
-  CAST((FROM_TZ(CAST(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) 
   from BAANDB.TZNFMD640201 o
   where o.T$COCI$C='ROT'
   and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_SAIDA_ENTREGA, -- Fazer relacionamentoa
-  CAST((FROM_TZ(CAST(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_PROMETIDA,
   znfmd630.t$vlft$c VL_FRETE_PAGAR_GARANTIA,
   znfmd630.t$vlfr$c VL_FRETE_CLIENTE,
@@ -36,8 +36,7 @@ select distinct
   pesovol.vol VL_VOLUME_M3,
   pesovol.peso VL_PESO, 
   pesovol.vol*300 VL_PESO_CUBADO,
-  --znfmd630.T$CFRW$C CD_DOFI_TRANSPORTADORA,
- 
+   
         CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
 		THEN '00000000000000' 
 		WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
@@ -47,8 +46,8 @@ select distinct
   
   znfmd060.T$REFE$C DS_OBS_ROMANEIO,
   znfmd630.T$PECL$C NR_ENTREGA,
-	CAST((FROM_TZ(CAST(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAR.258.sn
-		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO                                         --#MAR.258.en
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO                                         --#MAR.258.en
   
 from  BAANDB.TZNFMD630201 znfmd630,
 	  baandb.ttcmcs080201 tcmcs080,	
