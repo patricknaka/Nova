@@ -1,4 +1,4 @@
-USE MIS_DW
+﻿USE MIS_DW
 GO
 
 
@@ -1133,3 +1133,7 @@ ALTER TABLE [dbo].[ods_terceiro_corporativo] ADD  CONSTRAINT [PK_ods_terceiro_co
 	[id_cliente_grupo] ASC,
 	[id_cliente] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+--DE VARCHAR(2) para VARCHAR(3)
+ALTER TABLE ods_sige_faturamento
+ALTER COLUMN DS_SERIE varchar(3)
