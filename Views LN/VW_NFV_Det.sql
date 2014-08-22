@@ -8,6 +8,7 @@
 -- #FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclusão do campo ref fiscal e linha de fatura
 -- #FAF.287 - 14-aug-2014, Fabio Ferreira, Correção do campo DT_ATUALIZACAO_NF
 -- 21/08/2014  Atualização do timezone
+--	#FAF.298 - 22-aug-2014, Fabio Ferreira, Ref fiscal relativa e linha
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -186,7 +187,9 @@ SELECT DISTINCT
 	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$refr$l											--#FAF.253.sn
 			ELSE NULL END	NR_REFERENCIA_FISCAL_FATURA,
 	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$rfdl$l
-			ELSE NULL END	NR_ITEM_NF_FATURA														--#FAF.253.en
+			ELSE NULL END	NR_ITEM_NF_FATURA,														--#FAF.253.en
+	cisli941.t$refr$l		REF_FISCAL_RELAT,														--#FAF.298.n
+	cisli941.t$rfdl$l		LINHA_REF_FISCAL_RELAT													--#FAF.298.n
 FROM 
 --	baandb.tcisli941201 cisli941,																	--#FAF.247.o
 	baandb.tcisli940201 cisli940,
