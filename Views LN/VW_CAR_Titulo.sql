@@ -12,6 +12,7 @@
 -- #MAR.273 - 11-ago-2014, Marcia A R Torres, Correção DT_ATUALIZACAO e CD_METODO_RECEBIMENTO.
 -- #FAF.282 - 14-ago-2014, Fabio Ferreira, 	Retirados campo  método de pagamento
 -- 21/08/2014    Atualização do timezone
+-- #FAF.282 - 23-ago-2014, Fabio Ferreira, 	Inclusão do campo conta controle
 --****************************************************************************************************************************************************************
 --ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY HH:MI:SS AM';
 
@@ -105,7 +106,8 @@ SELECT DISTINCT
 	 and rownum=1																						--#FAF.141.n
 	 and a.t$lach$l = (select max(b.t$lach$l) from baandb.ttfcmg948201 b
 					 where b.t$ttyp$l=a.t$ttyp$l
-					 and a.t$ninv$l=b.t$ninv$l)) CD_SITUACAO_PAGAMENTO									--#FAF.108.n
+					 and a.t$ninv$l=b.t$ninv$l)) CD_SITUACAO_PAGAMENTO,									--#FAF.108.n
+	tfacr200.t$leac								 CD_CONTA_CONTROLE										--#FAF.294.n	
 FROM
 --	baandb.ttfacr201201 tfacr201,             --#MAR.273.n	--#FAF.282.o
 	baandb.ttfacr200201 tfacr200
