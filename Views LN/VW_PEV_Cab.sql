@@ -35,13 +35,13 @@ SELECT  DISTINCT
       AT time zone sessiontimezone) AS DATE)
          FROM baandb.ttdsls450201
          WHERE ttdsls450201.t$orno=tdsls400.t$orno) DT_SITUACAO_PEDIDO,
-        znsls400.t$vlfr$c VL_FRETE_CLIENTE,
-        nvl((select sum(f.t$vlft$c) from baandb.tznfmd630201 f
-             where f.T$PECL$C=znsls400.t$pecl$c),0) VL_FRETE_CIA,
+        abs(znsls400.t$vlfr$c) VL_FRETE_CLIENTE,
+        abs(nvl((select sum(f.t$vlft$c) from baandb.tznfmd630201 f
+             where f.T$PECL$C=znsls400.t$pecl$c),0)) VL_FRETE_CIA,
         znsls400.t$idca$c CD_CANAL_VENDAS,
         znsls004.t$orig$c CD_ORIGEM_PEDIDO,
         znsls400.t$ipor$c NR_IP_CLIENTE,
-        znsls400.t$vlme$c VL_PEDIDO,
+        abs(znsls400.t$vlme$c) VL_PEDIDO,
         nvl((select sum(f.t$vlfc$c) from baandb.tznfmd630201 f
 			where f.t$pecl$c=znsls400.t$pecl$c),0) VL_FRETE_TABELA,
         endfat.t$ccit CD_CIDADE_FATURA,
@@ -171,4 +171,3 @@ AND     ulttrc.ncia=sls401q.t$ncia$c
 AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
 AND		tdsls094.t$sotp=tdsls400.t$sotp																--#FAF.006.n
-ORDER BY tdsls400.t$orno

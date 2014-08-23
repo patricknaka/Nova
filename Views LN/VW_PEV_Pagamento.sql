@@ -20,7 +20,7 @@ select
     znsls402.t$cccd$c  CD_BANDEIRA,
     znsls402.t$idbc$c  CD_BANCO,
     znsls402.t$nupa$c  NR_PARCELAS,
-    znsls402.t$vlmr$c  VL_PAGAMENTO,
+    abs(znsls402.t$vlmr$c)  VL_PAGAMENTO,
     znsls402.t$stat$c  CD_STATUS_PAGAMENTO,
 	CASE WHEN (znsls402.t$idmp$c = 4 and znsls400.t$idli$c!=0) THEN 1 ELSE 2 END IN_VALE_LISTA_CASAMENTO,							--#FAF.049.n
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')

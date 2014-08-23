@@ -51,7 +51,7 @@ SELECT DISTINCT
           ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
           znsls401.t$vlde$c VL_DESPESA_ACESSORIO,
           znsls400.t$vldf$c VL_JUROS,
-          (znsls401.t$vlun$c*znsls401.t$qtve$c) + (znsls401.t$vlfr$c - znsls401.t$vldi$c) VL_TOTAL_ITEM,				--#FAF.122.n
+          abs((znsls401.t$vlun$c*znsls401.t$qtve$c) + (znsls401.t$vlfr$c - znsls401.t$vldi$c)) VL_TOTAL_ITEM,				--#FAF.122.n
           (SELECT Count(lc.t$pono)
            FROM  baandb.ttdsls401201 lc
            WHERE lc.t$orno=tdsls401.t$orno
