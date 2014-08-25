@@ -32,7 +32,7 @@ SELECT DISTINCT
       znrec007.t$boni$c   DS_FLAG_PEDIDO_BONIFICADO,
       znrec007.t$mvpc$c   CD_MODALIDADE_VPC,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znrec007.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ALTERACAO
+		AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO
 FROM
       baandb.tznrec007201 znrec007,
       baandb.ttfacr200201 tfacr200
