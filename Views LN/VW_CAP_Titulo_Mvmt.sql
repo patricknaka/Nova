@@ -56,7 +56,7 @@ SELECT DISTINCT
 
 	CASE WHEN tfacp200.t$rcd_utc<TO_DATE('1990-01-01', 'YYYY-MM-DD') THEN tfacp200.t$rcd_utc					--#FAF.003.en
 	ELSE	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) END DT_ATUALIZACAO,
+    AT time zone sessiontimezone) AS DATE) END DT_ULT_ATUALIZACAO,
 
 	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
 	CASE WHEN tfacp200.t$tdoc='ENC' THEN 5																							--#FAF.212.1.n
