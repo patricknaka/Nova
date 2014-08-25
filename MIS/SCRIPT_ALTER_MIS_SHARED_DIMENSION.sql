@@ -130,3 +130,6 @@ ds_tipo_entrega varchar(50)
 ----------------------------------------------
 ALTER TABLE dim.ods_produto
 ALTER COLUMN ds_apelido VARCHAR(20)
+
+ALTER TABLE DIM.DIM_PRODUTO
+ALTER COLUMN DS_APELIDO VARCHAR(20)
