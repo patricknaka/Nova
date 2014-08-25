@@ -1,4 +1,4 @@
--- 06-mai-2014, Fabio Ferreira, Correção timezone
+﻿-- 06-mai-2014, Fabio Ferreira, Correção timezone
 --								Inclusão do código do endereço
 -- FAF.003 - 12-mai-2014, Fabio Ferreira, Exclusão dos campos UF e Pais e alteração do alias COD_CIDADE
 --	#FAF.091 - 29-mai-2014,	Fabio Ferreira,	Correções para incluir os dados da query de telefone
@@ -36,7 +36,7 @@ SELECT 	adbp.t$bpid CD_PARCEIRO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(addr.t$dtlm, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO
     --CAST((FROM_TZ(CAST(TO_CHAR(addr.t$dtlm, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      --  AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO
+      --  AT time zone sessiontimezone) AS DATE)  DT_ULT_ATUALIZACAO
       
 FROM   baandb.ttccom133201 adbp,
     baandb.ttccom100201 tccom100,                                        --#FAF.091.n
