@@ -24,6 +24,7 @@
 --	#FAF.249 - 30-jul-2014,	Fabio Ferreira, Ajuste Natureza daa operação e sequencia
 --  #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
 -- 	#FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclusão do camopo ref fiscal e linha de fatura
+-- 	#FAF.299 - 25-aug-2014, Fabio Ferreira, 	Correção campo VL_TOTAL_ITEM
 --****************************************************************************************************************************************************************
 SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -108,7 +109,8 @@ SELECT
                              and   tcibd001b.t$kitm<3),1)) VL_FRETE_CIA,            
         cisli941f.t$gexp$l VL_DESPESA,
         cisli941f.t$ldam$l VL_DESCONTO,
-        cisli941f.t$iprt$l VL_TOTAL_ITEM,
+        -- cisli941f.t$iprt$l VL_TOTAL_ITEM,															--#FAF.299.o
+        cisli941f.t$amnt$l VL_TOTAL_ITEM,																--#FAF.299.n
         cisli941f.t$AMFI$l VL_DESPESA_FINANCEIRA,
         Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943
              WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
