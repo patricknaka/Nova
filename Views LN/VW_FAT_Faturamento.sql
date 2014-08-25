@@ -25,6 +25,8 @@
 --  #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
 -- 	#FAF.253 - 13-aug-2014, Fabio Ferreira, 	Inclusão do camopo ref fiscal e linha de fatura
 -- 	#FAF.299 - 25-aug-2014, Fabio Ferreira, 	Correção campo VL_TOTAL_ITEM
+-- 	#FAF.301 - 25-aug-2014, Fabio Ferreira, 	Correção impostos
+-- 	#FAF.303 - 25-aug-2014, Fabio Ferreira, 	Correção despesas
 --****************************************************************************************************************************************************************
 SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -89,10 +91,11 @@ SELECT
         cisli940.t$fdty$l CD_TIPO_NF,
         ltrim(rtrim(cisli941f.t$item$l)) CD_ITEM,
         cisli941f.t$dqua$l QT_FATURADA,
-        Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943
-             WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
-             AND    cisli943.t$line$l=cisli941f.t$line$l
-             AND    cisli943.t$brty$l=1),0) VL_ICMS,
+        -- Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943							--#FAF.301.so
+             -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
+             -- AND    cisli943.t$line$l=cisli941f.t$line$l
+             -- AND    cisli943.t$brty$l=1),0) VL_ICMS,												--#FAF.301.eo
+		nvl(ICMS.t$amnt$l, 0) VL_ICMS,																--#FAF.301.n
         Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943
              WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
              AND    cisli943.t$line$l=cisli941f.t$line$l
@@ -107,130 +110,165 @@ SELECT
                              and   tcibd001b.T$ITEM=cisli941b.t$item$l
                              and   cisli941b.t$gamt$l!=0                                                --#FAF.008.n                              
                              and   tcibd001b.t$kitm<3),1)) VL_FRETE_CIA,            
-        cisli941f.t$gexp$l VL_DESPESA,
+        -- cisli941f.t$gexp$l VL_DESPESA,																--#FAF.303.o
+		CASE WHEN cisli941f.t$gexp$l>=znsls402.t$vlju$c THEN											--#FAF.303.n
+			cisli941f.t$gexp$l-znsls402.t$vlju$c 
+		ELSE cisli941f.t$gexp$l END VL_DESPESA,															--#FAF.303.o
+		
         cisli941f.t$ldam$l VL_DESCONTO,
         -- cisli941f.t$iprt$l VL_TOTAL_ITEM,															--#FAF.299.o
         cisli941f.t$amnt$l VL_TOTAL_ITEM,																--#FAF.299.n
-        cisli941f.t$AMFI$l VL_DESPESA_FINANCEIRA,
-        Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943
-             WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
-             AND    cisli943.t$line$l=cisli941f.t$line$l
-             AND    cisli943.t$brty$l=5),0) VL_PIS,
+        -- cisli941f.t$AMFI$l VL_DESPESA_FINANCEIRA,													--#FAF.303.o
+        znsls402.t$vlju$c VL_DESPESA_FINANCEIRA,														--#FAF.303.n
+        -- Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943								--#FAF.301.so
+             -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
+             -- AND    cisli943.t$line$l=cisli941f.t$line$l
+             -- AND    cisli943.t$brty$l=5),0) VL_PIS,													--#FAF.301.eo
+	nvl(PIS.t$amnt$l,0) VL_PIS,																			--#FAF.301.n
     
-        Nvl((SELECT cisli943.t$amni$l from baandb.tcisli943201 cisli943
-             WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
-             AND    cisli943.t$line$l=cisli941f.t$line$l
-             AND    cisli943.t$brty$l=1),0) VL_ICMS_PRODUTO,
+        -- Nvl((SELECT cisli943.t$amni$l from baandb.tcisli943201 cisli943								--#FAF.301.so
+             -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
+             -- AND    cisli943.t$line$l=cisli941f.t$line$l
+             -- AND    cisli943.t$brty$l=1),0) VL_ICMS_PRODUTO,											--#FAF.301.eo
+	cisli941f.t$iprt$l*(nvl(ICMS.t$rate$l,0)/100) VL_ICMS_PRODUTO,										--#FAF.301.n
 
        
-    nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
-                        baandb.tcisli941201 cisli941b,
-                        baandb.ttcibd001201 tcibd001b
-    WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
-    AND   cisli941b.t$fire$l=cisli941f.t$fire$l
-    AND    tcibd001b.t$item=cisli941b.t$item$l
-    AND     cisli943.T$LINE$L=cisli941b.T$LINE$L
-    AND    tcibd001b.t$ctyp$l=2
-    AND   cisli943.t$brty$l=1),0) VL_ICMS_FRETE,
+    -- nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 							--#FAF.301.so
+                        -- baandb.tcisli941201 cisli941b,
+                        -- baandb.ttcibd001201 tcibd001b
+    -- WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
+    -- AND   cisli941b.t$fire$l=cisli941f.t$fire$l
+    -- AND    tcibd001b.t$item=cisli941b.t$item$l
+    -- AND     cisli943.T$LINE$L=cisli941b.T$LINE$L
+    -- AND    tcibd001b.t$ctyp$l=2											
+    -- AND   cisli943.t$brty$l=1),0) VL_ICMS_FRETE,														--#FAF.301.eo
+	cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100) VL_ICMS_FRETE,											--#FAF.301.n	
 
-    nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
-                        baandb.tcisli941201 cisli941b,
-                        baandb.ttcibd001201 tcibd001b
-    WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
-    AND   cisli941b.t$fire$l=cisli941f.t$fire$l
-    AND    tcibd001b.t$item=cisli941b.t$item$l
-    AND    tcibd001b.t$kitm>3
-    AND    tcibd001b.t$ctyp$l!=2
-    AND   cisli943.t$brty$l=1),0) VL_ICMS_OUTROS,
+    -- nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 							--#FAF.301.so
+                        -- baandb.tcisli941201 cisli941b,
+                        -- baandb.ttcibd001201 tcibd001b
+    -- WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
+    -- AND   cisli941b.t$fire$l=cisli941f.t$fire$l
+    -- AND    tcibd001b.t$item=cisli941b.t$item$l
+    -- AND    tcibd001b.t$kitm>3
+    -- AND    tcibd001b.t$ctyp$l!=2
+    -- AND   cisli943.t$brty$l=1),0) VL_ICMS_OUTROS,													--#FAF.301.eo
+	CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN									--#FAF.301.sn
+	nvl(ICMS.t$amnt$l, 0)																				
+	-cisli941f.t$iprt$l*(nvl(ICMS.t$rate$l,0)/100)
+	-cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100) 
+	ELSE 0 END	VL_ICMS_OUTROS,																			--#FAF.301.en
     
 
-        Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943
-             WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
-             AND    cisli943.t$line$l=cisli941f.t$line$l
-             AND    cisli943.t$brty$l=6),0) VL_COFINS,
+        -- Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943								--#FAF.301.so
+             -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
+             -- AND    cisli943.t$line$l=cisli941f.t$line$l
+             -- AND    cisli943.t$brty$l=6),0) VL_COFINS,												--#FAF.301.eo
+    nvl(COFINS.t$amnt$l,0) VL_COFINS,																	--#FAF.301.n
+        -- Nvl((SELECT cisli943.t$amni$l from baandb.tcisli943201 cisli943								--#FAF.301.so
+             -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
+             -- AND    cisli943.t$line$l=cisli941f.t$line$l
+             -- AND    cisli943.t$brty$l=6),0) VL_COFINS_PRODUTO,  										--#FAF.301.eo     
+    cisli941f.t$iprt$l*(nvl(COFINS.t$rate$l,0)/100) VL_COFINS_PRODUTO,  									--#FAF.301.n
+	
+    -- nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943,							--#FAF.301.so 
+                        -- baandb.tcisli941201 cisli941b,
+                        -- baandb.ttcibd001201 tcibd001b
+    -- WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
+    -- AND   cisli941b.t$fire$l=cisli941f.t$fire$l
+    -- AND    tcibd001b.t$item=cisli941b.t$item$l
+    -- AND     cisli943.T$LINE$L=cisli941b.T$LINE$L
+    -- AND    tcibd001b.t$ctyp$l=2
+    -- AND   cisli943.t$brty$l=6),0) VL_COFINS_FRETE,    												--#FAF.301.eo
+	cisli941f.t$fght$l*(nvl(COFINS.t$rate$l,0)/100) VL_COFINS_FRETE,    									--#FAF.301.n
+
+    -- nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 							--#FAF.301.so						
+                        -- baandb.tcisli941201 cisli941b,
+                        -- baandb.ttcibd001201 tcibd001b
+    -- WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
+    -- AND   cisli941b.t$fire$l=cisli941f.t$fire$l
+    -- AND    tcibd001b.t$item=cisli941b.t$item$l
+    -- AND    tcibd001b.t$kitm>3
+    -- AND    tcibd001b.t$ctyp$l!=2
+    -- AND   cisli943.t$brty$l=6),0) VL_COFINS_OUTROS,													--#FAF.301.eo
+	CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN									--#FAF.301.sn
+	nvl(COFINS.t$amnt$l, 0)
+	-cisli941f.t$iprt$l*(nvl(COFINS.t$rate$l,0)/100)
+	-cisli941f.t$fght$l*(nvl(COFINS.t$rate$l,0)/100) 
+	ELSE 0 END	VL_COFINS_OUTROS,																		--#FAF.301.en
+
+        -- Nvl((SELECT cisli943.t$amni$l from baandb.tcisli943201 cisli943								--#FAF.301.so
+             -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
+             -- AND    cisli943.t$line$l=cisli941f.t$line$l
+             -- AND    cisli943.t$brty$l=5),0) VL_PIS_PRODUTO,											--#FAF.301.eo
+	cisli941f.t$iprt$l*(nvl(PIS.t$rate$l,0)/100) VL_PIS_PRODUTO,											--#FAF.301.n
+	
        
-        Nvl((SELECT cisli943.t$amni$l from baandb.tcisli943201 cisli943
-             WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
-             AND    cisli943.t$line$l=cisli941f.t$line$l
-             AND    cisli943.t$brty$l=6),0) VL_COFINS_PRODUTO,       
-      
-    nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
-                        baandb.tcisli941201 cisli941b,
-                        baandb.ttcibd001201 tcibd001b
-    WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
-    AND   cisli941b.t$fire$l=cisli941f.t$fire$l
-    AND    tcibd001b.t$item=cisli941b.t$item$l
-    AND     cisli943.T$LINE$L=cisli941b.T$LINE$L
-    AND    tcibd001b.t$ctyp$l=2
-    AND   cisli943.t$brty$l=6),0) VL_COFINS_FRETE,      
+    -- nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 							--#FAF.301.so			
+                        -- baandb.tcisli941201 cisli941b,
+                        -- baandb.ttcibd001201 tcibd001b
+    -- WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
+    -- AND   cisli941b.t$fire$l=cisli941f.t$fire$l
+    -- AND    tcibd001b.t$item=cisli941b.t$item$l
+    -- AND     cisli943.T$LINE$L=cisli941b.T$LINE$L
+    -- AND    tcibd001b.t$ctyp$l=2
+    -- AND   cisli943.t$brty$l=5),0) VL_PIS_FRETE,														--#FAF.301.eo
+    cisli941f.t$fght$l*(nvl(PIS.t$rate$l,0)/100) VL_PIS_FRETE,											--#FAF.301.n
+	
+    -- nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 							--#FAF.301.so
+                        -- baandb.tcisli941201 cisli941b,
+                        -- baandb.ttcibd001201 tcibd001b
+    -- WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
+    -- AND   cisli941b.t$fire$l=cisli941f.t$fire$l
+    -- AND    tcibd001b.t$item=cisli941b.t$item$l
+    -- AND    tcibd001b.t$kitm>3
+    -- AND    tcibd001b.t$ctyp$l!=2
+    -- AND   cisli943.t$brty$l=5),0) VL_PIS_OUTROS,  													--#FAF.301.eo
+	CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN									--#FAF.301.sn	
+	nvl(PIS.t$amnt$l, 0)
+	-cisli941f.t$iprt$l*(nvl(PIS.t$rate$l,0)/100)
+	-cisli941f.t$fght$l*(nvl(PIS.t$rate$l,0)/100) 
+	ELSE 0 END	VL_PIS_OUTROS,  																		--#FAF.301.en	
 
-    nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
-                        baandb.tcisli941201 cisli941b,
-                        baandb.ttcibd001201 tcibd001b
-    WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
-    AND   cisli941b.t$fire$l=cisli941f.t$fire$l
-    AND    tcibd001b.t$item=cisli941b.t$item$l
-    AND    tcibd001b.t$kitm>3
-    AND    tcibd001b.t$ctyp$l!=2
-    AND   cisli943.t$brty$l=6),0) VL_COFINS_OUTROS,
-
-        Nvl((SELECT cisli943.t$amni$l from baandb.tcisli943201 cisli943
-             WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
-             AND    cisli943.t$line$l=cisli941f.t$line$l
-             AND    cisli943.t$brty$l=5),0) VL_PIS_PRODUTO,
-       
-    nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
-                        baandb.tcisli941201 cisli941b,
-                        baandb.ttcibd001201 tcibd001b
-    WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
-    AND   cisli941b.t$fire$l=cisli941f.t$fire$l
-    AND    tcibd001b.t$item=cisli941b.t$item$l
-    AND     cisli943.T$LINE$L=cisli941b.T$LINE$L
-    AND    tcibd001b.t$ctyp$l=2
-    AND   cisli943.t$brty$l=5),0) VL_PIS_FRETE,
+        -- Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943								--#FAF.301.so
+             -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
+             -- AND    cisli943.t$line$l=cisli941f.t$line$l
+             -- AND    cisli943.t$brty$l=13),0) VL_CSLL,												--#FAF.301.eo
+    nvl(CSLL.t$amnt$l,0)  VL_CSLL,																		--#FAF.301.n
+	
+        -- Nvl((SELECT cisli943.t$amni$l from baandb.tcisli943201 cisli943								--#FAF.301.so
+             -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
+             -- AND    cisli943.t$line$l=cisli941f.t$line$l
+             -- AND    cisli943.t$brty$l=13),0) VL_CSLL_PRODUTO,										--#FAF.301.eo
+    cisli941f.t$iprt$l*(nvl(CSLL.t$rate$l,0)/100) VL_CSLL_PRODUTO,										--#FAF.301.n  
     
-    nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
-                        baandb.tcisli941201 cisli941b,
-                        baandb.ttcibd001201 tcibd001b
-    WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
-    AND   cisli941b.t$fire$l=cisli941f.t$fire$l
-    AND    tcibd001b.t$item=cisli941b.t$item$l
-    AND    tcibd001b.t$kitm>3
-    AND    tcibd001b.t$ctyp$l!=2
-    AND   cisli943.t$brty$l=5),0) VL_PIS_OUTROS,  
-
-        Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943
-             WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
-             AND    cisli943.t$line$l=cisli941f.t$line$l
-             AND    cisli943.t$brty$l=13),0) VL_CSLL,
-      
-        Nvl((SELECT cisli943.t$amni$l from baandb.tcisli943201 cisli943
-             WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
-             AND    cisli943.t$line$l=cisli941f.t$line$l
-             AND    cisli943.t$brty$l=13),0) VL_CSLL_PRODUTO,
-       
+    -- nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 							--#FAF.301.so
+                        -- baandb.tcisli941201 cisli941b,
+                        -- baandb.ttcibd001201 tcibd001b
+    -- WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
+    -- AND   cisli941b.t$fire$l=cisli941f.t$fire$l
+    -- AND    tcibd001b.t$item=cisli941b.t$item$l
+    -- AND     cisli943.T$LINE$L=cisli941b.T$LINE$L
+    -- AND    tcibd001b.t$ctyp$l=2
+    -- AND   cisli943.t$brty$l=13),0) VL_CSLL_FRETE,													--#FAF.301.eo
+    cisli941f.t$fght$l*(nvl(CSLL.t$rate$l,0)/100) VL_CSLL_FRETE,											--#FAF.301.n
+	
+    -- nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 							--#FAF.301.so
+                        -- baandb.tcisli941201 cisli941b,
+                        -- baandb.ttcibd001201 tcibd001b
+    -- WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
+    -- AND   cisli941b.t$fire$l=cisli941f.t$fire$l
+    -- AND    tcibd001b.t$item=cisli941b.t$item$l
+    -- AND    tcibd001b.t$kitm>3
+    -- AND    tcibd001b.t$ctyp$l!=2
+    -- AND   cisli943.t$brty$l=13),0) VL_CSLL_OUTROS,  													--#FAF.301.eo
+	CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN									--#FAF.301.sn
+	nvl(CSLL.t$amnt$l, 0)
+	-cisli941f.t$iprt$l*(nvl(CSLL.t$rate$l,0)/100)
+	-cisli941f.t$fght$l*(nvl(CSLL.t$rate$l,0)/100) 
+	ELSE 0 END	VL_CSLL_OUTROS,  																		--#FAF.301.en	
     
-    nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
-                        baandb.tcisli941201 cisli941b,
-                        baandb.ttcibd001201 tcibd001b
-    WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
-    AND   cisli941b.t$fire$l=cisli941f.t$fire$l
-    AND    tcibd001b.t$item=cisli941b.t$item$l
-    AND     cisli943.T$LINE$L=cisli941b.T$LINE$L
-    AND    tcibd001b.t$ctyp$l=2
-    AND   cisli943.t$brty$l=13),0) VL_CSLL_FRETE,
-    
-    nvl((SELECT sum(cisli943.t$amnt$l) FROM baandb.tcisli943201 cisli943, 
-                        baandb.tcisli941201 cisli941b,
-                        baandb.ttcibd001201 tcibd001b
-    WHERE   cisli943.t$fire$l=cisli941f.t$fire$l
-    AND   cisli941b.t$fire$l=cisli941f.t$fire$l
-    AND    tcibd001b.t$item=cisli941b.t$item$l
-    AND    tcibd001b.t$kitm>3
-    AND    tcibd001b.t$ctyp$l!=2
-    AND   cisli943.t$brty$l=13),0) VL_CSLL_OUTROS,  
-    
-        cisli941f.t$tldm$l VL_DESCONTO_INCONDICIONAL,
+    cisli941f.t$tldm$l VL_DESCONTO_INCONDICIONAL,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_PEDIDO,
         znsls400.t$idca$c CD_CANAL,
@@ -253,10 +291,11 @@ SELECT
 		ELSE regexp_replace(substr(cisli941f.t$ccfo$l,instr(cisli941f.t$ccfo$l,'-')+1,3), '[^0-9]', '') 
 		END	SQ_NATUREZA_OPERACAO_ITEM,																	--#FAF.249.n		
         CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR,
-        Nvl((SELECT cisli943.t$base$l from baandb.tcisli943201 cisli943
-             WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
-             AND    cisli943.t$line$l=cisli941f.t$line$l
-             AND    cisli943.t$brty$l=1),0) VL_BASE_ICMS,
+        -- Nvl((SELECT cisli943.t$base$l from baandb.tcisli943201 cisli943								--#FAF.301.so
+             -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
+             -- AND    cisli943.t$line$l=cisli941f.t$line$l
+             -- AND    cisli943.t$brty$l=1),0) VL_BASE_ICMS,											--#FAF.301.eo
+	nvl(ICMS.t$base$l,0) VL_BASE_ICMS,																	--#FAF.301.n
         Nvl((SELECT cisli943.t$base$l from baandb.tcisli943201 cisli943
              WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
              AND    cisli943.t$line$l=cisli941f.t$line$l
@@ -301,8 +340,23 @@ SELECT
 	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$rfdl$l
 			ELSE NULL END	NR_ITEM_NF_FATURA														--#FAF.253.en	
 FROM    baandb.tcisli940201 cisli940,
-        baandb.tcisli941201 cisli941,
-        baandb.tcisli941201 cisli941f,                                          								--#FAF.169.n
+        baandb.tcisli941201 cisli941,		
+        baandb.tcisli941201 cisli941f                                          								--#FAF.169.n
+		
+		LEFT JOIN baandb.tcisli943201 ICMS	ON 	ICMS.t$fire$l=cisli941f.t$fire$l									--#FAF.301.sn
+											AND	ICMS.t$line$l=cisli941f.t$line$l
+											AND ICMS.t$brty$l=1
+		LEFT JOIN baandb.tcisli943201 COFINS ON COFINS.t$fire$l=cisli941f.t$fire$l									
+											AND	COFINS.t$line$l=cisli941f.t$line$l
+											AND COFINS.t$brty$l=6
+		LEFT JOIN baandb.tcisli943201 PIS 	ON 	PIS.t$fire$l=cisli941f.t$fire$l									
+											AND	PIS.t$line$l=cisli941f.t$line$l
+											AND PIS.t$brty$l=5
+		LEFT JOIN baandb.tcisli943201 CSLL 	ON 	CSLL.t$fire$l=cisli941f.t$fire$l									
+											AND	CSLL.t$line$l=cisli941f.t$line$l
+											AND CSLL.t$brty$l=13,
+																												--#FAF.301.en
+		
         baandb.tcisli245201 cisli245,
         baandb.ttdsls401201 tdsls401,
         baandb.tznsls401201 znsls401,
