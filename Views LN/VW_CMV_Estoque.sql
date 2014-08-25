@@ -1,9 +1,9 @@
-SELECT  ltrim(rtrim(a.t$item)) ITEM, 
-        d.t$cwar ARMAZEM, 
-        c.t$grid UNID_EMPRESARIAL, 
-        cast(sum(a.t$mauc$1) as numeric(15,5)) CMV, 
-        cast(sum(d.t$qhnd-d.t$qblk) as numeric(15,0)) ESTOQUE_LIVRE,
-        cast(sum(d.t$qhnd)as numeric(15,0)) ESTOQUE_TOTAL
+SELECT  ltrim(rtrim(a.t$item)) CD_ITEM, 
+        d.t$cwar CD_ARMAZEM, 
+        c.t$grid CD_UNIDADE_EMPRESARIAL, 
+        cast(sum(a.t$mauc$1) as numeric(15,5)) VL_CMV, 
+        cast(sum(d.t$qhnd-d.t$qblk) as numeric(15,0)) QT_ESTOQUE_LIVRE,
+        cast(sum(d.t$qhnd)as numeric(15,0)) QT_ESTOQUE_TOTAL
 FROM    twhina113201 a, 
         twhina112201 b, 
         ttcemm112201 c, 

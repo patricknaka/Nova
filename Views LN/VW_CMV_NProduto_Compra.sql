@@ -1,5 +1,5 @@
-select  RTRIM(LTRIM(ipu001.t$item)) ITEM, 
-        ipu001.t$prip PRC_COMPRA
+select  RTRIM(LTRIM(ipu001.t$item)) CD_ITEM, 
+        ipu001.t$prip VL_PRECO_COMPRA
     from    ttdipu001201 ipu001, --DADOS DE COMPRA DO ITEM
             ttcibd001201 ibd001, --DADOS GERAIS DO ITEM
             tznisa002201 isa002 --DADOS DE VENDA DO ITEM
