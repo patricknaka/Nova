@@ -1,4 +1,4 @@
--- 06-mai-2014, Fabio Ferreira, Correção timezone
+﻿-- 06-mai-2014, Fabio Ferreira, Correção timezone
 --								Alteração para cia 201
 -- FAF.002 - 09-mai-2014, Fabio Ferreira, Quando a data no LN é zero (01/01/1970) não é feita a conversão de timezone
 --****************************************************************************************************************************************************************
@@ -12,7 +12,7 @@ SELECT
 	CASE WHEN tccom125.t$rcd_utc<TO_DATE('1990-01-01', 'YYYY-MM-DD') THEN tccom125.t$rcd_utc				--#FAF.002.sn
 	ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom125.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) 
-	END DT_ATUALIZACAO																			--#FAF.002.en
+	END DT_ULT_ATUALIZACAO																			--#FAF.002.en
 FROM
 	baandb.ttccom125201 tccom125,
 	baandb.ttfcmg011201 tfcmg011
