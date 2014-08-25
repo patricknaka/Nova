@@ -1,5 +1,6 @@
 --21/08/2014  Atualização do timezone
---=================================================================================
+-- 	#FAF.300 - 25-aug-2014, Fabio Ferreira, 	Inclusão dos campos do LN que fazem parte da chave da tabela tfcmg948
+--====================================================================================================================
 SELECT DISTINCT
 	tfcmg948.t$bank$l CD_BANCO,
 	tfcmg948.t$btno$l NR_REMESSA,
@@ -9,6 +10,13 @@ SELECT DISTINCT
     	201 CD_CIA,
 	tfcmg948.t$stat$l CD_STATUS_ARQUIVO,
 	tfcmg948.t$send$l CD_STATUS_ENVIO,
+	
+	tfcmg948.t$ptyp$l TP_TRANSACAO_MOV,								--#FAF.300.sn
+	tfcmg948.t$DOCN$L NR_DOC_MCOV,
+	tfcmg948.t$ttyp$l TP_TRANSACAO_TITULO,
+	tfcmg948.t$ninv$l NR_TITULO,
+	tfcmg948.t$sern$l NR_SERIE,										--#FAF.300.en
+	
   	GREATEST(
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg948.t$lach$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
