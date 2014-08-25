@@ -127,3 +127,6 @@ create table dim.ods_tipo_entrega
 nr_tipo_entrega int not null primary key,
 ds_tipo_entrega varchar(50)
 )
+----------------------------------------------
+ALTER TABLE dim.ods_produto
+ALTER COLUMN ds_apelido VARCHAR(20)
