@@ -33,7 +33,7 @@ SELECT DISTINCT
 			AT time zone sessiontimezone) AS DATE) DT_CADASTRO,											--#FAF.005.n
 --       bspt.t$lmdt DT_ATUALIZACAO,																--#FAF.005.o
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(bspt.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,										--#FAF.005.n
+			AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,										--#FAF.005.n
 --       addr.t$telp TEL1,																			--#FAF.005.o
 --       addr.t$telx TEL2,																			--#FAF.005.o
 --       addr.t$tefx NR_FAX,																			--#FAF.005.o
