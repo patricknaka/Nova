@@ -24,7 +24,7 @@ SELECT DISTINCT
 	END DT_ESTORNO,
 	tflcb230.t$send$d CD_SITUACAO_PAGTO_ELETRONICO,
 	nvl(tfcmg109.t$stpp,0) CD_SITUACAO_PAGAMENTO,
-	tfacp600.t$ddat DT_ATUALIZACAO,
+	tfacp600.t$ddat DT_ULT_ATUALIZACAO,
 	CASE WHEN tfacp200.t$balc=0 then
 	(select max(d.t$docd) from baandb.ttfacp200201 d
 	where d.t$ttyp=tfacp200.t$ttyp
