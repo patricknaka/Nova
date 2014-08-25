@@ -55,7 +55,7 @@ SELECT DISTINCT
 		where p.t$ttyp=tfacp200.t$ttyp and p.t$ninv=tfacp200.t$ninv
 		and ROWNUM=1),0) VL_TAXA_MULTA,																		--#FAF.003.en
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+		AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
 	(Select u.t$eunt From baandb.ttcemm030201 u where u.t$euca!=' '
 		AND TO_NUMBER(u.t$euca)=CASE WHEN tfacp200.t$dim2=' ' then 999
 		WHEN tfacp200.t$dim2>to_char(0) then 999 
