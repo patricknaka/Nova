@@ -7,7 +7,7 @@ SELECT  201                               CD_CIA,
         ltrim(rtrim(whwmd215.t$item))     CD_ITEM,
         sum(whwmd215.t$qhnd - whwmd215.t$qblk)+ sum(nvl(whinr110.t$qstk,0)) QT_FISICA,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whwmd215.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+			AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
 		(SELECT 
 			sum(whina113.t$mauc$1)   VL_CMV
 		FROM
