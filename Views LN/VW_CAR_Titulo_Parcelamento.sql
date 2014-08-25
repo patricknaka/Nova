@@ -13,7 +13,7 @@ select
 	tfacr201.t$rpst$l CD_SITUACAO_PAGAMENTO,
 	tfacr201.t$recd	DT_VENCIMENTO,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
 	'CAR' CD_MODULO,
 	tfcmg011.t$baoc$l CD_BANCO,
 	tfcmg011.t$agcd$l NR_AGENCIA,
