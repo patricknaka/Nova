@@ -1,4 +1,4 @@
---
+﻿--
 -- #FAF.005, 14-mai-2014, Fabio Ferreira,	Retirado convers�o de timezone do campo data de atualizacao
 --							
 --**********************************************************************************************************************************************************
@@ -45,7 +45,7 @@ SELECT
 	FROM baandb.ttfgld100201 tfgld100
 	WHERE tfgld100.t$year=tfgld205.t$year
 	AND   tfgld100.t$fprd=tfgld205.t$prno
-	AND   tfgld100.t$stat=6) DT_ATUALIZACAO,
+	AND   tfgld100.t$stat=6) DT_ULT_ATUALIZACAO,
 	(Select u.t$eunt From baandb.ttcemm030201 u where u.t$euca!=' '
 		AND TO_NUMBER(u.t$euca)=CASE WHEN tfgld205.t$dim2=' ' then 999
 		WHEN tfgld205.t$dim2<=to_char(0) then 999 else TO_NUMBER(tfgld205.t$dim2) END and rownum = 1) CD_UNIDADE_EMPRESARIAL
