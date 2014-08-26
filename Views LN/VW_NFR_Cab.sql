@@ -1,4 +1,4 @@
--- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	CorreÃ§Ãµes de pendencias funcionais da Ã¡rea fiscal	
+﻿-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	CorreÃ§Ãµes de pendencias funcionais da Ã¡rea fiscal	
 -- #FAF.094 - 29-mai-2014, Fabio Ferreira, 	CorreÃ§Ã£o campo VL_SERVICO
 -- #FAF.021.1 - 27-mai-2014, Fabio Ferreira,	CorreÃ§Ãµes
 -- #FAF.199 - 	27-mai-2014, Fabio Ferreira,	InclusÃ£o do campo RECDOC			
@@ -77,7 +77,7 @@ SELECT
 	and rownum=1),' ') DS_OBSERVACAO_NFR,
 	tdrec940.t$stat$l CD_SITUACAO_NFR,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  AT time zone sessiontimezone) AS DATE) DT_SITUACAO,
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
 	tdrec940.t$lipl$l COD_CAMINHAO,
 	(SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
