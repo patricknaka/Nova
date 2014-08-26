@@ -9,7 +9,7 @@ SELECT
     znsls410.t$poco$c CD_STATUS,
     znsls410.t$stor$c CD_SISTEMA_FONTE,	
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO_STATUS,
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
     znsls410.t$nmre$c NM_USUARIO_MODIFICACAO_STATUS,
     tcemm112.t$grid CD_UNIDADE_EMPRESARIAL,
     znsls410.T$UNEG$C CD_UNIDADE_NEGOCIO,
