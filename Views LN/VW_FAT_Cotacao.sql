@@ -1,4 +1,4 @@
--- 06-jan-2014, Fabio Ferreira, Correção de conversão de timezone
+﻿-- 06-jan-2014, Fabio Ferreira, Correção de conversão de timezone
 --								Criação do campo Efetiva
 --****************************************************************************************************************************************************************
 SELECT  tcmcs008.t$rtyp COD_COTACAO,
@@ -8,7 +8,7 @@ SELECT  tcmcs008.t$rtyp COD_COTACAO,
         AT time zone sessiontimezone) AS DATE) DT_COTACAO,
           
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcmcs008.t$apdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+      AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
         CASE WHEN (select MAX(b.t$stdt) From baandb.ttcmcs008201 b
                   where b.t$rtyp=tcmcs008.t$rtyp
                   and   b.t$ccur=tcmcs008.t$ccur)=tcmcs008.t$stdt THEN 1 ELSE 2 END IN_EFETIVA
