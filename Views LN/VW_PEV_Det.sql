@@ -19,7 +19,7 @@ SELECT DISTINCT
     AT time zone sessiontimezone) AS DATE)
         FROM  baandb.ttdsls451201
         WHERE ttdsls451201.t$orno=tdsls401.t$orno
-        AND   ttdsls451201.t$pono=tdsls401.t$pono) DT_ATUALIZACAO,
+        AND   ttdsls451201.t$pono=tdsls401.t$pono) DT_ULT_ATUALIZACAO,
 		  201 CD_CIA,
           znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
           tdsls401.t$orno NR_ORDEM,
