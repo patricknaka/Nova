@@ -1,4 +1,4 @@
---	FAF.004 - 12-jan-2014, Fabio Ferreira, 	Correções de datas e outros campos
+﻿--	FAF.004 - 12-jan-2014, Fabio Ferreira, 	Correções de datas e outros campos
 --	#FAF.150 - 24-jun-2014,	Fabio Ferreira,	Mostrar número da entrega do LN
 --*******************************************************************************************************************************************
 SELECT	
@@ -38,7 +38,7 @@ SELECT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(orders.DELIVERYDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone sessiontimezone) AS DATE) DT_LIMITE_ORIGINAL,										--#FAF.004.en	
 	' ' CD_ORIGEM_PEDIDO,								-- *** AGUARDANDO DUVIDA ***
-	orders.EDITDATE DT_ATUALIZACAO
+	orders.EDITDATE DT_ULT_ATUALIZACAO
 FROM 	WMWHSE1.ORDERS ORDERS 
       LEFT JOIN WMWHSE1.WAVEDETAIL WAVEDETAIL ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY, 
       WMWHSE1.ORDERSTATUSSETUP ORDERSTATUSSETUP,
