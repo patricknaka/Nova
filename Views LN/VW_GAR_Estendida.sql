@@ -1,4 +1,4 @@
--- #FAF.008 - 21-mai-2014, Fabio Ferreira,   Diversas correções e inclusão de campos
+﻿-- #FAF.008 - 21-mai-2014, Fabio Ferreira,   Diversas correções e inclusão de campos
   -- #FAF.043 - 22-mai-2014, Fabio Ferreira,   Rtrim Ltrim no codigo da garantia
   -- #FAF.043.1 - 23-mai-2014, Fabio Ferreira,   Ajustes
   -- #FAF.044 - 23-mai-2014, Fabio Ferreira,   Correção VALOR_CSLL
@@ -40,7 +40,7 @@
   (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,    --#FAF.134.en
   CASE WHEN znint501.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO,                    --#FAF.161.n
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                      --#FAF.205.n
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,                      --#FAF.205.n
     sum(zncom005.t$igva$c) VL_ITEM_GARANTIA,                                  --#FAF.043.2.n
     zncom005.t$enga$c CD_PLANO_GARANTIA,                                    --#FAF.043.2.n
     tcibd001.T$NRPE$C QT_PRAZO_GARANTIA                                 --#MAT.001.n
