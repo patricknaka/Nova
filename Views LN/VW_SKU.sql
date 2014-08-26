@@ -16,13 +16,6 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         tccom100.t$bpid CD_FORNECEDOR,
 		tccom100.t$seak DS_APELIDO,																	--#FAF.181.n
         tcmcs060.t$otbp CD_FABRICANTE,
-
-        CASE WHEN regexp_replace(tccom130f.t$fovn$l, '[^0-9]', '') IS NULL							--#FAF.296.sn
-		THEN '00000000000000' 
-		WHEN LENGTH(regexp_replace(tccom130f.t$fovn$l, '[^0-9]', ''))<11
-		THEN '00000000000000'
-		ELSE regexp_replace(tccom130f.t$fovn$l, '[^0-9]', '') END NR_CNPJ_FABRICANTE,				--#FAF.296.en
-		
         tccom100f.T$NAMA NM_NOME_FABRICANTE,
         tcibd004.t$aitc CD_ITEM_FORNECEDOR,
         tcibd001.t$dsca DS_ITEM,
@@ -34,6 +27,11 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         tcibd001.t$seto$c CD_SETOR,
         tcibd001.t$fami$c CD_FAMILIA,
         tcibd001.t$csig CD_SITUACAO_ITEM,
+        CASE WHEN regexp_replace(tccom130f.t$fovn$l, '[^0-9]', '') IS NULL							--#FAF.296.sn
+		THEN '00000000000000' 
+		WHEN LENGTH(regexp_replace(tccom130f.t$fovn$l, '[^0-9]', ''))<11
+		THEN '00000000000000'
+		ELSE regexp_replace(tccom130f.t$fovn$l, '[^0-9]', '') END NR_CNPJ_FABRICANTE,				--#FAF.296.en
         tcibd001.t$kitm CD_GENERO,
         tcibd001.t$nrpe$c QT_GARANTIA_FABRICANTE,
         tcibd200.t$mioq QT_MINIMA_FORNECEDOR,
@@ -51,7 +49,7 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         tcibd001.t$wght VL_PESO_BRUTO,
         tcibd001.t$tptr$c CD_TIPO_TRANSPORTE,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+        AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
         tcibd001.t$mont$c IN_MONTAGEM,
           CASE WHEN tcibd001.t$csig='SUS' THEN 1
           ELSE 2
@@ -74,7 +72,6 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
 		tcibd001.t$ppbe$c PPB,																--#FAF.008.en
 		tdisa001.t$cwar CD_ARMAZEM,					--#FAF.009.n
 		tcibd001.t$mdfb$c DS_MODELO_FABRICANTE											--#FAF.084.n
-
 FROM  baandb.ttcibd001201 tcibd001
 LEFT JOIN baandb.ttdipu001201 tdipu001 ON tdipu001.t$item=tcibd001.t$item
 LEFT JOIN baandb.ttccom100201 tccom100 ON tccom100.t$bpid=tdipu001.t$otbp
