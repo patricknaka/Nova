@@ -5,7 +5,7 @@ SELECT  201 CD_CIA,
         tdsta200.t$sbam$1 VL_ORCAMENTO,
         tdsta200.t$csor CD_ORCAMENTO,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsta200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO
 FROM  baandb.ttdsta200201 tdsta200,
       baandb.ttcccp070201 tcccp070
 WHERE tcccp070.t$yrno = tdsta200.t$yrno
