@@ -26,7 +26,7 @@ SELECT
 	ELSE 'A' END CD_STATUS_ITEM,																	--#FAF.006.en
     tcibd001.t$obse$c DS_OBSERVACAO_ITEM,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
     tdpur401.t$disc$1 VL_PERCENTUAL_DESCONTO,
 	FreteSeg.fght VL_FRETE,																			--#FAF.228.n
     (select sum(brmcs941.t$tamt$l) 
