@@ -40,7 +40,7 @@ SELECT DISTINCT
 	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_CHEGADA_PEDIDO,
 	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZACAO,
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
 	   znsls400.t$idli$c NR_LISTA_CASAMENTO																		--#FAF.005.n
 FROM baandb.tznsls401201 znsls401,
      baandb.tznsls400201 znsls400,
