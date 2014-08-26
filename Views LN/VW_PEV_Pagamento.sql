@@ -10,7 +10,7 @@
 --***************************************************************************************************************************************************************
 select
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ULTIMA_ATUALIZACAO_PEDIDO,
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
     201 CD_CIA,
     tdsls400.t$orno NR_ORDEM,
 	TRIM(sls401q.t$pecl$c) NR_PEDIDO,
