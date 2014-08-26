@@ -23,7 +23,7 @@ select distinct
                             where b.T$BKYN=1 
                             and b.t$orno=a.t$orno)
               AND a.t$orno=znsls401.T$ORNO$C)
-            END      DT_SITUACAO_LISTA    
+            END      DT_ULT_ATUALIZACAO
 			
 from        baandb.tznsls401201 znsls401
 inner join  baandb.ttdsls401201 tdsls401
