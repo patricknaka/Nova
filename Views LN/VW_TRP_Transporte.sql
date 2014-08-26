@@ -47,7 +47,7 @@ select distinct
   znfmd060.T$REFE$C DS_OBS_ROMANEIO,
   znfmd630.T$PECL$C NR_ENTREGA,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO                                         --#MAR.258.en
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO                                         --#MAR.258.en
   
 from  BAANDB.TZNFMD630201 znfmd630,
 	  baandb.ttcmcs080201 tcmcs080,	
