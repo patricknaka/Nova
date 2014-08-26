@@ -46,7 +46,7 @@ SELECT DISTINCT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(tdpur401.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE)
 	from baandb.ttdpur401201 tdpur401
-	where tdpur401.t$orno=tdpur400.t$orno) DT_ATUALIZACAO, 
+	where tdpur401.t$orno=tdpur400.t$orno) DT_ULT_ATUALIZACAO, 
     nvl((select t.t$text from baandb.ttttxt010201 t 
 	where t$clan='p'
 	AND t.t$ctxt=tdpur400.t$txta
