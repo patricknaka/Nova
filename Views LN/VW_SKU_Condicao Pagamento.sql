@@ -9,7 +9,7 @@ SELECT
         201 CD_CIA,
         tdipu010.t$vlmf$c VL_MINIMO_PEDIDO,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znpur008.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
         tccom100.t$bpid CD_PARCEIRO
 FROM    
     baandb.tznpur008201 znpur008
