@@ -1,4 +1,4 @@
--- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
+﻿-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
 -- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
 -- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
 -- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)	
@@ -253,7 +253,7 @@ SELECT
   CASE WHEN tdrec941.t$crpd$l=1 and (tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8) 
   THEN tdrec941.t$fght$l ELSE 0 END VL_CIF_IMPORTACAO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,   
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,   
   CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 
   THEN tdrec941.t$copr$l ELSE 0 END VL_CUSTO_IMPORTACAO, 
  (SELECT tdrec942.t$amnr$l FROM baandb.ttdrec942201 tdrec942
