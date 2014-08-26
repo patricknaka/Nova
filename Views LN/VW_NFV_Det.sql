@@ -217,7 +217,7 @@ SELECT DISTINCT
 	ELSE 0 END VL_CIF_IMPORTACAO,
 --	CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAT.001.o
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli941.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO_NF,
+    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	cisli941.t$fire$l NR_REFERENCIA_FISCAL,				--#FAF.109.n
 	-- (SELECT cisli943.t$sbas$l FROM baandb.tcisli943201 cisli943									--#FAF.302.so
