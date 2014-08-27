@@ -1147,3 +1147,10 @@ ALTER COLUMN DS_APELIDO VARCHAR(20)
 
 ALTER TABLE DIM_PRODUCT
 ALTER COLUMN DS_APELIDO VARCHAR(20)
+
+
+alter table ods_purchase
+add in_ativo bit default 0
+
+alter table ods_sige_titulo
+add in_ativo bit default 0

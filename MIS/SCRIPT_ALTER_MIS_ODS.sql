@@ -1,4 +1,4 @@
---Banco MIS_ODS
+﻿--Banco MIS_ODS
 -------------------------------------------------------------------------------------------------------------------------
 --Script Alteração Data Type
 
@@ -594,3 +594,10 @@ GO
 SET ANSI_PADDING OFF
 GO
 
+
+
+------------------------------------------------------------------
+
+
+alter table fin.ods_sige_titulo_receber
+add in_ativo bit default 0
