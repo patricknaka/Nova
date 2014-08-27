@@ -20,7 +20,8 @@ SELECT DISTINCT
 	tfcmg948.t$DOCN$L NR_DOC_MOVIMENTO,			
 	tfcmg948.t$ttyp$l CD_TRANSACAO_TITULO, 
 	tfcmg948.t$ninv$l NR_TITULO,		
-	tfcmg948.t$sern$l NR_SERIE										--#FAF.300.en
+	tfcmg948.t$sern$l NR_SERIE,										--#FAF.300.en
+  CONCAT(tfcmg948.t$ttyp$l, TO_CHAR(tfcmg948.t$ninv$l)) CD_CHAVE_PRIMARIA
 FROM
 	baandb.ttfcmg948201 tfcmg948
 	LEFT JOIN baandb.ttfcmg001201 tfcmg001
