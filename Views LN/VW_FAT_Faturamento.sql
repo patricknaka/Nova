@@ -1,4 +1,4 @@
-﻿-- 05-mai-2014, Fabio Ferreira, Retirados os campos COD_PAIS_FATURA, COD_ESTADO_FATURA, COD_CEP_FATURA, COD_PAIS_ENTREGA, COD_ESTADO_ENTREGA, COD_CEP_ENTREGA,
+-- 05-mai-2014, Fabio Ferreira, Retirados os campos COD_PAIS_FATURA, COD_ESTADO_FATURA, COD_CEP_FATURA, COD_PAIS_ENTREGA, COD_ESTADO_ENTREGA, COD_CEP_ENTREGA,
 --								Inclusão dos campos VALOR_TOTAL_MERCADOR, CPF/CNPJ CLIENTE FATURA, TIPO CLENTE
 -- 06-mai-2014, Fabio Ferreira, Correcção timezone ULTIMA_ATUALIZACAO, DATA_FATURA, DT_ENTREGA
 --								Correção formatação campo PEDIDO_ENTREGA;
@@ -27,6 +27,7 @@
 -- 	#FAF.299 - 25-aug-2014, Fabio Ferreira, 	Correção campo VL_TOTAL_ITEM
 -- 	#FAF.301 - 25-aug-2014, Fabio Ferreira, 	Correção impostos
 -- 	#FAF.303 - 25-aug-2014, Fabio Ferreira, 	Correção despesas
+--  #MAR.307 - 28-ago-2014, Marcia A. R. Torres, Inclusao do TIPO_ORDEM_VENDA.
 --****************************************************************************************************************************************************************
 SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -338,7 +339,9 @@ SELECT
 	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$refr$l											--#FAF.253.sn
 			ELSE NULL END	NR_REFERENCIA_FISCAL_FATURA,
 	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$rfdl$l
-			ELSE NULL END	NR_ITEM_NF_FATURA														--#FAF.253.en	
+			ELSE NULL END	NR_ITEM_NF_FATURA,														--#FAF.253.en	
+   tdsls400.t$sotp  TIPO_ORDEM_VENDA                                 --#MAR.307.n
+
 FROM    baandb.tcisli940201 cisli940,
         baandb.tcisli941201 cisli941,		
         baandb.tcisli941201 cisli941f                                          								--#FAF.169.n
