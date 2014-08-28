@@ -133,3 +133,10 @@ ALTER COLUMN ds_apelido VARCHAR(20)
 
 ALTER TABLE DIM.DIM_PRODUTO
 ALTER COLUMN DS_APELIDO VARCHAR(20)
+
+
+alter table aux_produto_dw
+alter column ds_procedencia varchar(60)
+
+alter table ods_product
+alter column ds_procedencia varchar(60)
