@@ -17,8 +17,8 @@ select
     TO_CHAR(sls401q.t$entr$c) NR_ENTREGA, 																--#FAF.047.1.n
     znsls402.t$sequ$c  SQ_PAGAMENTO,
     znsls402.t$idmp$c  CD_MEIO_PAGAMENTO,
-    znsls402.t$cccd$c  CD_BANDEIRA,
-    znsls402.t$idbc$c  CD_BANCO,
+    CASE WHEN (znsls402.t$idmp$c = 4) THEN 0 ELSE znsls402.t$cccd$c END CD_BANDEIRA,
+    CASE WHEN (znsls402.t$idmp$c = 4) THEN 0 ELSE znsls402.t$idbc$c END CD_BANCO,
     znsls402.t$nupa$c  NR_PARCELAS,
     abs(znsls402.t$vlmr$c)  VL_PAGAMENTO,
     znsls402.t$stat$c  CD_STATUS_PAGAMENTO,
@@ -72,4 +72,4 @@ and    sls401q.t$orno$c=tdsls400.t$orno
 and    znsls402.t$ncia$c=znsls400.t$ncia$c
 and    znsls402.t$uneg$c=znsls400.t$uneg$c
 and    znsls402.t$pecl$c=znsls400.t$pecl$c
-and    znsls402.t$sqpd$c=znsls400.t$sqpd$c
+and    znsls402.t$sqpd$c=znsls400.t$sqpd$c;
