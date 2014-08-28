@@ -2,7 +2,7 @@
 -- #FAF.204 - 04-jul-2014, Fabio Ferreira, 	Campo Nr. do banco tfcmg948
 --***************************************************************************************************************************************************
 
-SELECT    201 CD_CIA,
+SELECT distinct   201 CD_CIA,
 	  tfcmg401.t$ttyp || tfcmg401.t$ninv CD_CHAVE_PRIMARIA,
           tfcmg401.t$btno NR_REMESSA,
           tfcmg409.t$date DT_REMESSA,
