@@ -1,4 +1,4 @@
--- 05-mai-2014, Fabio Ferreira, Correção timezone,
+﻿-- 05-mai-2014, Fabio Ferreira, Correção timezone,
 --								Campo ESTADO_PAGAMENTO alterado para 'aprovados',
 --								Campo VALOR_TOTAL_ITEM alterado para  ( (Valor do Produto Unitário + Valor do Frete) - (valor desc incondicional)) * Quantidade
 -- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado campo DESCONTO_CONDICIONAL
@@ -76,7 +76,7 @@ SELECT DISTINCT
 	  CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
 	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,												--#FAF.147.n
 	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM,																						--#FAF.201.n
-	   tdsls400.t$sotp  TIPO_ORDEM_VENDA                                 --#MAR.306.n
+	   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA                                 --#MAR.306.n
   
 FROM
         baandb.ttdsls401201 tdsls401,

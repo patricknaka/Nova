@@ -1,4 +1,4 @@
--- 05-mai-2014, Fabio Ferreira, Correções de timezone de todos os campos Data/hora
+﻿-- 05-mai-2014, Fabio Ferreira, Correções de timezone de todos os campos Data/hora
 -- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	Inclusão do campo Nota e Serie consolidada
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.028 - 17-mai-2014, Fabio Ferreira, 	Correção registros duplicados
@@ -87,7 +87,7 @@ SELECT  DISTINCT
         ulttrc.dtoc DT_STATUS_PEDIDO,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	sls401q.t$idor$c CD_TIPO_SITE,																				--#FAF.143.n
-  tdsls400.t$sotp  TIPO_ORDEM_VENDA                                 --#MAR.306.n
+  tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA                                 --#MAR.306.n
 FROM    baandb.ttdsls400201 tdsls400
 		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						--#FAF.006.sn
 					from baandb.tcisli245201 c245, baandb.tcisli941201 c941, baandb.tcisli940201 c940
