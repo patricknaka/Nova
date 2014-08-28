@@ -1154,3 +1154,7 @@ add in_ativo bit default 0
 
 alter table ods_sige_titulo
 add in_ativo bit default 0
+
+
+alter table dbo.ods_financiamento_pedido_aberto
+alter column nr_cia numeric(3)
