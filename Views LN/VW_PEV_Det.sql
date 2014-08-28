@@ -1,17 +1,18 @@
--- 05-mai-2014, Fabio Ferreira, CorreÁ„o timezone,
+-- 05-mai-2014, Fabio Ferreira, Corre√ß√£o timezone,
 --								Campo ESTADO_PAGAMENTO alterado para 'aprovados',
---								Campo VALOR_TOTAL_ITEM alterado para  ( (Valor do Produto Unit·rio + Valor do Frete) - (valor desc incondicional)) * Quantidade
+--								Campo VALOR_TOTAL_ITEM alterado para  ( (Valor do Produto Unit√°rio + Valor do Frete) - (valor desc incondicional)) * Quantidade
 -- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado campo DESCONTO_CONDICIONAL
 -- FAF.003 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Incluido novos campos
 -- FAF.004 - Fabio Ferreira, 13-mai-2014, Fabio Ferreira, 	Duplicando registros devido a problema de relacionamento na tabela znsls004
 -- FAF.105 - Fabio Ferreira, 05-jun-2014, Fabio Ferreira, 	Campo vendedor deve ser NULL quando valor = 100
--- FAF.122 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	CorreÁ„o campo VL_TOTAL_ITEM
--- FAF.123 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	CorreÁ„o campo VL_ITEM
+-- FAF.122 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Corre√ß√£o campo VL_TOTAL_ITEM
+-- FAF.123 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Corre√ß√£o campo VL_ITEM
 -- FAF.129 - Fabio Ferreira, 11-jun-2014, Fabio Ferreira, 	Status da ref,fiscal
--- FAF.147 - Fabio Ferreira, 17-jun-2014, Fabio Ferreira, 	IncluÌdo campo CD produto com o cÛdigo do produto da garantia estendida
--- FAF.164 - Fabio Ferreira, 23-jun-2014, Fabio Ferreira, 	CorreÁ„o de duplicidade de registro devido ao rel. com a tabela znsls004
--- FAF.174 - Fabio Ferreira, 27-jun-2014, Fabio Ferreira, 	CorreÁ„o relaconamento tabela znsls004
--- FAF.201 - Fabio Ferreira, 03-jul-2014, Fabio Ferreira, 	Inclus„o do numero da linha da ordem para adicionar na chave e evitar duplicidade
+-- FAF.147 - Fabio Ferreira, 17-jun-2014, Fabio Ferreira, 	Inclu√≠do campo CD produto com o c√≥digo do produto da garantia estendida
+-- FAF.164 - Fabio Ferreira, 23-jun-2014, Fabio Ferreira, 	Corre√ß√£o de duplicidade de registro devido ao rel. com a tabela znsls004
+-- FAF.174 - Fabio Ferreira, 27-jun-2014, Fabio Ferreira, 	Corre√ß√£o relaconamento tabela znsls004
+-- FAF.201 - Fabio Ferreira, 03-jul-2014, Fabio Ferreira, 	Inclus√£o do numero da linha da ordem para adicionar na chave e evitar duplicidade
+-- MAR.306 - Marcia A. R. Torres, 28-ago-2014, 			Inclusao do TIPO_ORDEM_VENDA.
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
         (SELECT 
@@ -45,10 +46,10 @@ SELECT DISTINCT
           CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR,
           znsls400.t$idli$c NR_LISTA_CASAMENTO,
           'Aprovados' DS_STATUS_PAGAMENTO,        
-          ' ' DT_PAGAMENTO,                -- **** DESCONSIDERAR - SOMENTE PGTO APROVADOS EST√O NO LN
-          ' ' DS_UTM_PARCEIRO,                  -- **** DESCONSIDERAR - SER¡ EXTRAIDO DO SITE
-          ' ' DS_UTM_MIDIA,                     -- **** DESCONSIDERAR - SER¡ EXTRAIDO DO SITE
-          ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SER¡ EXTRAIDO DO SITE
+          ' ' DT_PAGAMENTO,                -- **** DESCONSIDERAR - SOMENTE PGTO APROVADOS EST√ÉO NO LN
+          ' ' DS_UTM_PARCEIRO,                  -- **** DESCONSIDERAR - SER√Å EXTRAIDO DO SITE
+          ' ' DS_UTM_MIDIA,                     -- **** DESCONSIDERAR - SER√Å EXTRAIDO DO SITE
+          ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SER√Å EXTRAIDO DO SITE
           znsls401.t$vlde$c VL_DESPESA_ACESSORIO,
           znsls400.t$vldf$c VL_JUROS,
           abs((znsls401.t$vlun$c*znsls401.t$qtve$c) + (znsls401.t$vlfr$c - znsls401.t$vldi$c)) VL_TOTAL_ITEM,				--#FAF.122.n
@@ -74,8 +75,9 @@ SELECT DISTINCT
 	   and cisli940.t$fire$l=cisli245.t$fire$l) CD_SITUACAO_NF,										--#FAF.129.n
 	  CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
 	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,												--#FAF.147.n
-	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM																						--#FAF.201.n
-	   
+	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM,																						--#FAF.201.n
+	   tdsls400.t$sotp  TIPO_ORDEM_VENDA                                 --#MAR.306.n
+  
 FROM
         baandb.ttdsls401201 tdsls401,
         baandb.tznsls401201 znsls401
