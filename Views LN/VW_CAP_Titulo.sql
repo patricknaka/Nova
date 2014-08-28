@@ -9,6 +9,7 @@
 --	FAF.175 - 25-jun-2014, Fabio Ferreira, 	Correção data liquidação
 --	FAF.288 - 18-ago-2014, Fabio Ferreira, 	Inclusão da conta contabil origem e destino
 --	21/08/2014 - Correção da instrução timezone
+--	FAF.305 - 28-ago-2014, Fabio Ferreira, 	Correção subquery conta destino
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	'CAP' CD_MODULO,
@@ -71,7 +72,8 @@ SELECT DISTINCT
 	 AND    tdrec952.t$fire$l=tdrec940.t$fire$l
 	 AND 	tdrec952.t$dbcr$l=1
 	 AND	tdrec952.t$trtp$l=2
-	 AND 	tdrec952.t$brty$l=0)	CD_CONTA_DESTINO															--#FAF.288.en
+	 AND 	tdrec952.t$brty$l=0
+	 and rownum=1)	CD_CONTA_DESTINO																		--#FAF.288.en
 	
 	
 FROM
