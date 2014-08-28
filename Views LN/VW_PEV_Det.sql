@@ -13,6 +13,7 @@
 -- FAF.174 - Fabio Ferreira, 27-jun-2014, Fabio Ferreira, 	Correção relaconamento tabela znsls004
 -- FAF.201 - Fabio Ferreira, 03-jul-2014, Fabio Ferreira, 	Inclusão do numero da linha da ordem para adicionar na chave e evitar duplicidade
 -- MAR.306 - Marcia A. R. Torres, 28-ago-2014, 			Inclusao do TIPO_ORDEM_VENDA.
+-- #FAF.276 - 28-aug-2014, Fabio Ferreira, 	Correção valor da linha
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
         (SELECT 
@@ -52,7 +53,10 @@ SELECT DISTINCT
           ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
           znsls401.t$vlde$c VL_DESPESA_ACESSORIO,
           znsls400.t$vldf$c VL_JUROS,
-          abs((znsls401.t$vlun$c*znsls401.t$qtve$c) + (znsls401.t$vlfr$c - znsls401.t$vldi$c)) VL_TOTAL_ITEM,				--#FAF.122.n
+		  nvl((select a.t$tamt$l from baandb.tbrmcs941201 a
+			  where a.t$txre$l=tdsls401.t$txre$l
+			  and a.t$line$l=tdsls401.t$txli$l), tdsls401.t$oamt)	VL_TOTAL_ITEM,															--#FAF.311.n
+--          abs((znsls401.t$vlun$c*znsls401.t$qtve$c) + (znsls401.t$vlfr$c - znsls401.t$vldi$c)) VL_TOTAL_ITEM,				--#FAF.122.n
           (SELECT Count(lc.t$pono)
            FROM  baandb.ttdsls401201 lc
            WHERE lc.t$orno=tdsls401.t$orno

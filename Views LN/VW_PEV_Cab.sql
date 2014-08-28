@@ -11,6 +11,7 @@
 -- #MAR.265 - 07-ago-2014, Marcia A. R. Torres, Correção na DT_ATUALIZACAO
 -- #FAF.276 - 11-aug-2014, Fabio Ferreira, 	Correção
 -- #MAR.306 - 28-ago-2014, Marcia A. R. Torres, Inclusao do TIPO_ORDEM_VENDA.
+-- #FAF.276 - 28-aug-2014, Fabio Ferreira, 	Correção valor da ordem
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -42,7 +43,7 @@ SELECT  DISTINCT
         znsls400.t$idca$c CD_CANAL_VENDAS,
         znsls004.t$orig$c CD_ORIGEM_PEDIDO,
         znsls400.t$ipor$c NR_IP_CLIENTE,
-        abs(znsls400.t$vlme$c) VL_PEDIDO,
+        tdsls400.t$oamt VL_PEDIDO,																	--#FAF.311
         nvl((select sum(f.t$vlfc$c) from baandb.tznfmd630201 f
 			where f.t$pecl$c=znsls400.t$pecl$c),0) VL_FRETE_TABELA,
         endfat.t$ccit CD_CIDADE_FATURA,
