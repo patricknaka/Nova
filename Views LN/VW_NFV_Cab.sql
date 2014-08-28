@@ -1,9 +1,10 @@
-﻿-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
+-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
 -- #FAF.098 - 02-jun-2014, Fabio Ferreira, 	Alterações
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
 -- #FAF.248 - 29-jul-2014, Fabio Ferreira, 	Inclusão do tipo doc fiscal
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO_NF
 -- #FAF.286 - 29-jul-2014, Fabio Ferreira, 	Ajuste do campo DT_ATUALIZACAO_NF
+-- #MAT.308 - 28-ago-2014, Marcia A. Torres, Inclusão do campo TIPO_ORDEM_VENDA.
 --**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -131,7 +132,15 @@ SELECT
 	entr.t$uneg$c CD_UNIDADE_NEGOCIO,																	--#FAF.098.n
 	cisli940.t$fire$l NR_REFERENCIA_FISCAL,																		--#FAF.109.n
 	cisli940.t$fdtc$l CD_TIPO_DOCUMENTO_FISCAL,
-	cisli940.t$nfes$l CD_STATUS_SEFAZ																	--#FAF.248.n
+	cisli940.t$nfes$l CD_STATUS_SEFAZ,																	--#FAF.248.n
+
+  (SELECT DISTINCT tdsls400.t$sotp FROM baandb.ttdsls400201 tdsls400,          --#MAT.308.sn
+                                        baandb.tcisli245201 cisli245a
+   WHERE cisli245a.t$ortp   = 1  AND
+	       cisli245a.t$koor   = 3  AND
+	       cisli940.t$fire$l = cisli245a.t$fire$l AND
+         cisli245a.t$slso   = tdsls400.t$orno)        TIPO_ORDEM_VENDA        --#MAT.308.en 
+
 FROM
 		baandb.tcisli940201 cisli940
 		LEFT JOIN (SELECT DISTINCT znsls401.t$entr$c, cisli245.t$fire$l, znsls401.t$pecl$c , znsls401.t$orno$c, znsls401.t$uneg$c 
