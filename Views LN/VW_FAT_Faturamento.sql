@@ -1,4 +1,4 @@
--- 05-mai-2014, Fabio Ferreira, Retirados os campos COD_PAIS_FATURA, COD_ESTADO_FATURA, COD_CEP_FATURA, COD_PAIS_ENTREGA, COD_ESTADO_ENTREGA, COD_CEP_ENTREGA,
+﻿-- 05-mai-2014, Fabio Ferreira, Retirados os campos COD_PAIS_FATURA, COD_ESTADO_FATURA, COD_CEP_FATURA, COD_PAIS_ENTREGA, COD_ESTADO_ENTREGA, COD_CEP_ENTREGA,
 --								Inclusão dos campos VALOR_TOTAL_MERCADOR, CPF/CNPJ CLIENTE FATURA, TIPO CLENTE
 -- 06-mai-2014, Fabio Ferreira, Correcção timezone ULTIMA_ATUALIZACAO, DATA_FATURA, DT_ENTREGA
 --								Correção formatação campo PEDIDO_ENTREGA;
@@ -340,7 +340,7 @@ SELECT
 			ELSE NULL END	NR_REFERENCIA_FISCAL_FATURA,
 	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$rfdl$l
 			ELSE NULL END	NR_ITEM_NF_FATURA,														--#FAF.253.en	
-   tdsls400.t$sotp  TIPO_ORDEM_VENDA                                 --#MAR.307.n
+   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA                                 --#MAR.307.n
 
 FROM    baandb.tcisli940201 cisli940,
         baandb.tcisli941201 cisli941,		
