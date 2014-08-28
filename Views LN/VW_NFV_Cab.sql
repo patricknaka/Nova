@@ -1,4 +1,4 @@
-﻿-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
+-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
 -- #FAF.098 - 02-jun-2014, Fabio Ferreira, 	Alterações
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
 -- #FAF.248 - 29-jul-2014, Fabio Ferreira, 	Inclusão do tipo doc fiscal
@@ -134,12 +134,9 @@ SELECT
 	cisli940.t$fdtc$l CD_TIPO_DOCUMENTO_FISCAL,
 	cisli940.t$nfes$l CD_STATUS_SEFAZ,																	--#FAF.248.n
 
-  (SELECT DISTINCT tdsls400.t$sotp FROM baandb.ttdsls400201 tdsls400,          --#MAT.308.sn
-                                        baandb.tcisli245201 cisli245a
-   WHERE cisli245a.t$ortp   = 1  AND
-	       cisli245a.t$koor   = 3  AND
-	       cisli940.t$fire$l = cisli245a.t$fire$l AND
-         cisli245a.t$slso   = tdsls400.t$orno)        CD_TIPO_ORDEM_VENDA        --#MAT.308.en 
+  (SELECT DISTINCT tdsls400.t$sotp                                        --#MAT.308.sn
+   FROM baandb.ttdsls400201 tdsls400            
+   WHERE tdsls400.t$orno=entr.t$orno$c)        CD_TIPO_ORDEM_VENDA        --#MAT.308.en 
 
 FROM
 		baandb.tcisli940201 cisli940
