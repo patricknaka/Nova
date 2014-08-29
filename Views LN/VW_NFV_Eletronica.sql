@@ -1,7 +1,8 @@
 -- 06-mai-2014, Fabio Ferreira, Correção de conversão de timezone
 -- #FAF.042 - 29-mai-2014, Fabio Ferreira, 	Correções timezone	
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal	
--- #FAF.124 - 10-jun-2014, Fabio Ferreira, 	Correção Chave de acesso				
+-- #FAF.124 - 10-jun-2014, Fabio Ferreira, 	Correção Chave de acesso
+-- #FAF.312 - 29-aug-2014, Fabio Ferreira, 	campo data atualização				
 --****************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -32,8 +33,9 @@ SELECT
     AND brnfe020.T$STAT$L=4) DT_CANCELAMENTO,
     cisli940.t$rscd$l CD_MOTIVO_CANCELAMENTO,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
-	cisli940.t$fire$l NR_REFERENCIA_FISCAL																		--#FAF.109.n
-  
+	cisli940.t$fire$l NR_REFERENCIA_FISCAL,																		--#FAF.109.n
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)     DT_ULT_ATUALIZACAO											--#FAF.312.n
 FROM
     baandb.tcisli940201 cisli940,
     baandb.ttcemm124201 tcemm124,
