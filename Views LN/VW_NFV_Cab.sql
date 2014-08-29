@@ -1,4 +1,4 @@
--- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
+﻿-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
 -- #FAF.098 - 02-jun-2014, Fabio Ferreira, 	Alterações
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
 -- #FAF.248 - 29-jul-2014, Fabio Ferreira, 	Inclusão do tipo doc fiscal
@@ -50,11 +50,11 @@ SELECT
 		WHERE cisli941.t$fire$l=cisli940.t$fire$l) VL_DESCONTO,
 		cisli940.t$amnt$l VL_TOTAL_NF,
         CASE WHEN cisli940.t$fdty$l=15 then
-          (select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
+          TO_CHAR((select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
           and a.t$fire$l=b.t$refr$l
-		  and rownum=1)
-          else 0
+		  and rownum=1))
+          else '0'
           end  NR_NF_FATURA,
        CASE WHEN cisli940.t$fdty$l=15 then
           (select distinct a.t$seri$l from baandb.tcisli940201 a, baandb.tcisli941201 b
@@ -64,11 +64,11 @@ SELECT
           else ' '
           end  NR_SERIE_NF_FATURA, 
         CASE WHEN cisli940.t$fdty$l=16 then
-          (select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
+          TO_CHAR((select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
           and a.t$fire$l=b.t$refr$l
-		  and rownum=1)
-          else 0
+		  and rownum=1))
+          else '0'
           end NR_NF_REMESSA,
         CASE WHEN cisli940.t$fdty$l=16 then
           (select distinct a.t$seri$l from baandb.tcisli940201 a, baandb.tcisli941201 b
