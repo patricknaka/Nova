@@ -39,11 +39,12 @@ SELECT
 FROM
     baandb.tcisli940201 cisli940,
     baandb.ttcemm124201 tcemm124,
-    baandb.ttcemm030201 tcemm030,
-	(select distinct anfe.t$ncmp$l, anfe.t$refi$l from baandb.tbrnfe020201 anfe) nfe
+    baandb.ttcemm030201 tcemm030
+--	(select distinct anfe.t$ncmp$l, anfe.t$refi$l from baandb.tbrnfe020201 anfe) nfe							--#FAF.312.o
 WHERE tcemm124.t$loco=201
 	AND tcemm124.t$dtyp=1
 	AND tcemm124.t$cwoc=cisli940.t$cofc$l
 	AND tcemm030.t$eunt=tcemm124.t$grid
-	AND nfe.t$refi$l=cisli940.t$fire$l
-	AND	nfe.t$ncmp$l=201 
+	AND cisli940.t$nfel$l=1																						--#FAF.312.n
+	-- AND nfe.t$refi$l=cisli940.t$fire$l																		--#FAF.312.so
+	-- AND	nfe.t$ncmp$l=201 																					--#FAF.312.eo
