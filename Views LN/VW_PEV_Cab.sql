@@ -37,9 +37,9 @@ SELECT  DISTINCT
       AT time zone sessiontimezone) AS DATE)
          FROM baandb.ttdsls450201
          WHERE ttdsls450201.t$orno=tdsls400.t$orno) DT_SITUACAO_PEDIDO,
-        abs(znsls400.t$vlfr$c) VL_FRETE_CLIENTE,
-        abs(nvl((select sum(f.t$vlft$c) from baandb.tznfmd630201 f
-             where f.T$PECL$C=znsls400.t$pecl$c),0)) VL_FRETE_CIA,
+        znsls400.t$vlfr$c VL_FRETE_CLIENTE,
+        nvl((select sum(f.t$vlft$c) from baandb.tznfmd630201 f
+             where f.T$PECL$C=znsls400.t$pecl$c),0) VL_FRETE_CIA,
         znsls400.t$idca$c CD_CANAL_VENDAS,
         znsls004.t$orig$c CD_ORIGEM_PEDIDO,
         znsls400.t$ipor$c NR_IP_CLIENTE,
