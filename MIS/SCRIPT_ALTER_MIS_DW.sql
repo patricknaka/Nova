@@ -1,4 +1,4 @@
-﻿USE MIS_DW
+﻿
 GO
 
 
@@ -1158,3 +1158,11 @@ add in_ativo bit default 0
 
 alter table dbo.ods_financiamento_pedido_aberto
 alter column nr_cia numeric(3)
+
+
+
+alter table aux_produto_dw
+alter column ds_procedencia varchar(60)
+
+alter table ods_product
+alter column ds_procedencia varchar(60)
