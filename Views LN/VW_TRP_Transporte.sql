@@ -24,13 +24,13 @@ select distinct
     (select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
     where b.t$fire$l=cisli940.t$fire$l
     and a.t$fire$l=b.t$refr$l)
-    else 0
+    else NULL    ---0
     end NR_NOTA_FATURA,
   CASE WHEN cisli940.t$fdty$l=16 then
     (select distinct a.t$seri$l from baandb.tcisli940201 a, baandb.tcisli941201 b
     where b.t$fire$l=cisli940.t$fire$l
     and a.t$fire$l=b.t$refr$l)
-    else ' '
+    else NULL   ---' '
     end NR_SERIE_NOTA_FATURA,
   201 CD_CIA,
   pesovol.vol VL_VOLUME_M3,

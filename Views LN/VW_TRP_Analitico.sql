@@ -10,15 +10,15 @@ select distinct
       (select min(o.T$DATE$C) from BAANDB.TZNFMD640201 o
 		where o.T$COCI$C='ENT' and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_ENTREGA_REALIZADA,
       CASE WHEN znfmd630.t$stat$c='F' THEN 'FINALIZADO' ELSE 'EM PROCESSO' END NM_TIPO_ESTAGIO,
-      znfmd630.t$ncar$c NR_EXPEDICAO,
-      ' ' CD_REGIAO_TRANSPORTADORA,
+      --znfmd630.t$ncar$c NR_EXPEDICAO,
+      --' ' CD_REGIAO_TRANSPORTADORA,
       znfmd630.T$FILI$C CD_ESTABELECIMENTO,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE) DT_PROMETIDA,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE) DT_ENTREGA_PREVISTA,
       znfmd630.t$fire$c NR_REFERENCIA_FISCAL,
-      201 CD_CIA,
+      --201 CD_CIA,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,    
       znfmd060.t$ttra$c CD_TIPO_TRANSPORTE,
