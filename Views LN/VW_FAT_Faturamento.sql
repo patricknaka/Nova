@@ -28,6 +28,7 @@
 -- 	#FAF.301 - 25-aug-2014, Fabio Ferreira, 	Correção impostos
 -- 	#FAF.303 - 25-aug-2014, Fabio Ferreira, 	Correção despesas
 --  #MAR.307 - 28-ago-2014, Marcia A. R. Torres, Inclusao do TIPO_ORDEM_VENDA.
+-- 	#FAF.303 - 29-aug-2014, Fabio Ferreira, 	Rateio do valor do juros
 --****************************************************************************************************************************************************************
 SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -332,8 +333,12 @@ SELECT
     (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) CD_TIPO_CLIENTE_FATURA,
     cisli941f.t$fire$l NR_REFERENCIA_FISCAL,  															--#FAF.172.n
 	cisli940.t$nfes$l CD_STATUS_SEFAZ,																	--#FAF.176.n
-	znsls402.t$vlju$c VL_JUROS,																			--#FAF.180.n
-	znsls402.t$vlja$c VL_JUROS_ADMINISTRADORA,															--#FAF.180.n
+	CASE WHEN cisli940.t$gamt$l!=0 THEN 																--#FAF.180.n
+		znsls402.t$vlju$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) 
+	ELSE znsls402.t$vlju$c END VL_JUROS,
+	CASE WHEN cisli940.t$gamt$l!=0 THEN 																--#FAF.180.n
+		znsls402.t$vlja$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) 
+	ELSE znsls402.t$vlja$c END VL_JUROS_ADMINISTRADORA,					
 	CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
 	ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,														--#FAF.195.n	
 	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$refr$l											--#FAF.253.sn
