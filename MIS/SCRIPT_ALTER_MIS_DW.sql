@@ -444,12 +444,13 @@ ds_tipo_bloqueio varchar(50)
 ALTER TABLE dbo.stg_sige_pagamento_pedido
 ALTER COLUMN NR_ID_CIA numeric(3,0)
 
-ALTER TABLE dbo.stg_sige_faturamento
-ALTER COLUMN NR_CIA numeric(3,0)
-
 
 ALTER TABLE dbo.stg_sige_faturamento
 ALTER COLUMN NR_NATOPE_SEQ_DET numeric(5,0)
+
+
+ALTER TABLE dbo.stg_sige_faturamento
+ALTER COLUMN NR_CIA INT
 
 
 ---------------------------------------------------------------------------------------------------
@@ -1045,7 +1046,7 @@ ALTER TABLE ods_sige_detalhe_pedido
 ALTER COLUMN DS_STATUS_PEDIDO varchar(2)
 
 ALTER TABLE aux_ods_approved	
-ALTER COLUMN nr_cia numeric(5,3)
+ALTER COLUMN nr_cia int
 
 ALTER TABLE aux_ods_fatdev	
 ALTER COLUMN nr_cfop_seq_det numeric(5,5)
@@ -1057,16 +1058,16 @@ ALTER TABLE aux_ods_sige_pagamento_pedido
 ALTER COLUMN NR_ID_CIA int
 
 ALTER TABLE dump_ods_approved	
-ALTER COLUMN nr_cia numeric(5,3)
+ALTER COLUMN nr_cia int
 
 ALTER TABLE dump_ods_sige_detalhe_pedido	
-ALTER COLUMN NR_ID_CIA numeric(5,3)
+ALTER COLUMN NR_ID_CIA int
 
 ALTER TABLE dump_ods_sige_faturamento	
-ALTER COLUMN NR_ID_CIA numeric(5,3)
+ALTER COLUMN NR_ID_CIA int
 
 ALTER TABLE dump_ods_sige_faturamento	
-ALTER COLUMN NR_CIA numeric(5,3)
+ALTER COLUMN NR_CIA int
 
 ALTER TABLE dump_ods_sige_pagamento_pedido	
 ALTER COLUMN NR_ID_CIA int
@@ -1083,9 +1084,6 @@ ALTER COLUMN NR_ID_CIA int
 
 ALTER TABLE stg_sige_detalhe_pedido	
 ALTER COLUMN NR_ID_CIA int
-
-ALTER TABLE stg_sige_faturamento	
-ALTER COLUMN NR_CIA numeric(5,3)
 
 ALTER TABLE stg_sige_pagamento_pedido	
 ALTER COLUMN NR_ID_CIA int
