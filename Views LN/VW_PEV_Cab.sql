@@ -12,7 +12,8 @@
         sls401q.t$pecl$c NR_PEDIDO_LOJA,
         TO_CHAR(sls401q.t$entr$c) NR_ENTREGA,																			--#FAF.046.n
         znsls400.t$cven$c CD_VENDEDOR,
-        tcemm030.t$euca CD_FILIAL,
+        --tcemm030.t$euca CD_FILIAL,
+        case when tcemm030.t$euca  = ' ' then substr(tcemm124.t$grid,-2,2) else tcemm030.t$euca end as CD_FILIAL,
         sls401q.t$opfc$l CD_NATUREZA_OPERACAO,
         ' ' SQ_NATUREZA_OPERACAO,        -- *** NAO EXISTE NA PREVISAO DE IMPOSTOS
         tdsls400.t$ccur CD_MOEDA,
