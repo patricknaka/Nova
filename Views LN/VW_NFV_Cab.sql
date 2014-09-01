@@ -5,6 +5,7 @@
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO_NF
 -- #FAF.286 - 29-jul-2014, Fabio Ferreira, 	Ajuste do campo DT_ATUALIZACAO_NF
 -- #MAT.308 - 28-ago-2014, Marcia A. Torres, Inclusão do campo TIPO_ORDEM_VENDA.
+-- #FAF.314 - 01-sep-2014, Fabio Ferreira, 	Correção impostos importação
 --**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -116,12 +117,14 @@ SELECT
 		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VL_ADICIONAL_IMPORTACAO,
 		nvl((select sum(li.t$amnt$l) from baandb.tcisli943201 li, baandb.tcisli941201 l
 		where	l.t$fire$l = cisli940.t$fire$l
-		and li.t$fire$l=li.t$fire$l
+		and li.t$fire$l=l.t$fire$l
+		and li.t$line$l=l.t$line$l																			--#FAF.312.n
 		and (l.t$sour$l=2 or l.t$sour$l=8)
 		and li.t$brty$l=5),0) VL_PIS_IMPORTACAO, 
 		nvl((select sum(li.t$amnt$l) from baandb.tcisli943201 li, baandb.tcisli941201 l
 		where	l.t$fire$l = cisli940.t$fire$l
-		and li.t$fire$l=li.t$fire$l
+		and li.t$fire$l=l.t$fire$l
+		and li.t$line$l=l.t$line$l																			--#FAF.312.n
 		and (l.t$sour$l=2 or l.t$sour$l=8)
 		and li.t$brty$l=6),0) VL_COFINS_IMPORTACAO,
 		nvl((select sum(l.t$fght$l) from baandb.tcisli941201 l
