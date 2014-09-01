@@ -1,5 +1,6 @@
 -- #FAF.204 - 04-jul-2014, Fabio Ferreira, 	Adicionado campo CD_MODULO
 -- #FAF.204 - 04-jul-2014, Fabio Ferreira, 	Campo Nr. do banco tfcmg948
+-- 01/09/2014 - inclusão do CD_STATUS_ARQUIVOM, CD_STATUS_ENVIO e NR_CONTA
 --***************************************************************************************************************************************************
 
 SELECT distinct   201 CD_CIA,
@@ -10,9 +11,11 @@ SELECT distinct   201 CD_CIA,
           tfacr201.t$liqd DT_PREVISTA_RECEBIMENTO,
           tfcmg401.t$paym CD_METODO_RECEBIMENTO,
           tfacr201.t$rpst$l CD_SITUACAO_TITULO,
-		  'CAR' CD_MODULO,
-		  tfcmg948.t$banu$l NR_BANCO												--#FAF.294.n.
-
+	  'CAR' CD_MODULO,
+	  tfcmg948.t$banu$l NR_BANCO,
+	  tfcmg948.t$stat$l CD_STATUS_ARQUIVO,
+  	  tfcmg948.t$send$l CD_STATUS_ENVIO,
+  	  tfcmg948.t$acco$l NR_CONTA												--#FAF.294.n.
 FROM        baandb.ttfcmg401201 tfcmg401
 INNER JOIN  baandb.ttfcmg409201 tfcmg409 ON  tfcmg409.t$btno=tfcmg401.t$btno
 INNER JOIN  baandb.ttfacr201201 tfacr201 ON  tfacr201.t$ttyp=tfcmg401.t$ttyp 
