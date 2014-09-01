@@ -7,7 +7,7 @@
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE) DT_COMPRA,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) HR_COMPRA, -- * CAMPO DATA-HORA
+        AT time zone sessiontimezone) AS DATE) HR_COMPRA, --- * CAMPO DATA-HORA
         znsls400.t$uneg$c CD_UNIDADE_NEGOCIO,
         sls401q.t$pecl$c NR_PEDIDO_LOJA,
         TO_CHAR(sls401q.t$entr$c) NR_ENTREGA,																			--#FAF.046.n
@@ -77,7 +77,7 @@
 	tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                 										--#MAR.306.n
 	sls401q.cancela IN_CANCELADO,
 	sls401q.seq_pedido_cancel SQ_PEDIDO_CANCELADO,
-	sls401q.entrega_cancel NR_ENTREGA_CANCELADO
+	TO_CHAR(sls401q.entrega_cancel) NR_ENTREGA_CANCELADO
 FROM    baandb.ttdsls400201 tdsls400
 		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						--#FAF.006.sn
 					from baandb.tcisli245201 c245, baandb.tcisli941201 c941, baandb.tcisli940201 c940
