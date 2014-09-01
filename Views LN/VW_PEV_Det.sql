@@ -14,6 +14,7 @@
 -- FAF.201 - Fabio Ferreira, 03-jul-2014, Fabio Ferreira, 	Inclusão do numero da linha da ordem para adicionar na chave e evitar duplicidade
 -- MAR.306 - Marcia A. R. Torres, 28-ago-2014, 			Inclusao do TIPO_ORDEM_VENDA.
 -- #FAF.276 - 28-aug-2014, Fabio Ferreira, 	Correção valor da linha
+-- #FAF.313 - 01-sep-2014, Fabio Ferreira, 	Flag cancelado
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
         (SELECT 
@@ -80,8 +81,9 @@ SELECT DISTINCT
 	   and cisli940.t$fire$l=cisli245.t$fire$l) CD_SITUACAO_NF,										--#FAF.129.n
 	  CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
 	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,												--#FAF.147.n
-	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM,																						--#FAF.201.n
-	   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA                                 --#MAR.306.n
+	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM,													--#FAF.201.n
+	   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                 						--#MAR.306.n
+	case when znsls401.t$qtve$c<0 then 2 else 1 end IN_CANCELADO									--#FAF.313.n
   
 FROM
         baandb.ttdsls401201 tdsls401,
