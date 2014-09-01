@@ -1,20 +1,4 @@
-﻿-- 05-mai-2014, Fabio Ferreira, Correções de timezone de todos os campos Data/hora
--- #FAF.006 - 15-mai-2014, Fabio Ferreira, 	Inclusão do campo Nota e Serie consolidada
--- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
--- #FAF.028 - 17-mai-2014, Fabio Ferreira, 	Correção registros duplicados
--- #FAF.046 - 23-mai-2014, Fabio Ferreira, 	Conversão do campo NUM_ENTREGA para String
--- #FAF.104 - 04-jun-2014, Fabio Ferreira, 	Correção da data do status
--- #FAF.143 - 16-jun-2014, Fabio Ferreira, 	Correções
--- #FAF.165 - 23-jun-2014, Fabio Ferreira, 	Tipo de entrega duplicado
--- #FAF.174 - 23-jun-2014, Fabio Ferreira, 	Correções de duplicidade
--- #FAF.177 - 26-jun-2014, Fabio Ferreira, 	Correções de duplicidade
--- #MAR.265 - 07-ago-2014, Marcia A. R. Torres, Correção na DT_ATUALIZACAO
--- #FAF.276 - 11-aug-2014, Fabio Ferreira, 	Correção
--- #MAR.306 - 28-ago-2014, Marcia A. R. Torres, Inclusao do TIPO_ORDEM_VENDA.
--- #FAF.276 - 28-aug-2014, Fabio Ferreira, 	Correção valor da ordem
--- #FAF.313 - 01-sep-2014, Fabio Ferreira, 	Novos campos
---***************************************************************************************************************************************************************
-SELECT  DISTINCT
+﻿SELECT  DISTINCT
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
          AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,                                                                 --#MAR.265.en
         201 CD_CIA,
@@ -90,9 +74,9 @@ SELECT  DISTINCT
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	sls401q.t$idor$c CD_TIPO_SITE,																				--#FAF.143.n
 	tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                 										--#MAR.306.n
-	sls401q.cancela,
-	sls401q.seq_pedido_cancel,
-	sls401q.entrega_cancel
+	sls401q.cancela IN_CANCELADO,
+	sls401q.seq_pedido_cancel SQ_PEDIDO_CANCELADO,
+	sls401q.entrega_cancel NR_ENTREGA_CANCELADO
 FROM    baandb.ttdsls400201 tdsls400
 		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						--#FAF.006.sn
 					from baandb.tcisli245201 c245, baandb.tcisli941201 c941, baandb.tcisli940201 c940
