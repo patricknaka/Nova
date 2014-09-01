@@ -11,6 +11,7 @@
 -- #FAF.298 - 22-aug-2014, Fabio Ferreira, Ref fiscal relativa e linha
 -- #FAF.302 - 25-aug-2014, Fabio Ferreira, Correção impostos
 -- #FAF.302.1 - 25-aug-2014, Fabio Ferreira, Correção despesas
+-- #FAF.302.2 - 01-sep-2014, Fabio Ferreira, Correção despesas
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -41,9 +42,32 @@ SELECT DISTINCT
 	cisli941.t$fght$l VL_FRETE,																	--#FAF.247.1.n
 	cisli941.t$insr$l VL_SEGURO,
 	-- cisli941.t$gexp$l VL_DESPESA,															--#FAF.302.1.o
-	CASE WHEN cisli941.t$gexp$l>=nvl(znsls402.t$vlju$c,0) THEN										--#FAF.302.1.sn
-		cisli941.t$gexp$l-nvl(znsls402.t$vlju$c,0) 
-	ELSE cisli941.t$gexp$l END VL_DESPESA,														--#FAF.302.1.en
+	
+	-- CASE WHEN cisli941.t$gexp$l>=nvl(znsls402.t$vlju$c,0) THEN								--#FAF.302.1.sn		--#FAF.302.1.so		
+		-- cisli941.t$gexp$l-nvl(znsls402.t$vlju$c,0) 
+	-- ELSE cisli941.t$gexp$l END VL_DESPESA,													--#FAF.302.1.en		--#FAF.302.1.eo
+	
+	case when cisli941.t$item$l not in															--#FAF.302.1.sn
+		(select a.t$itjl$c 
+				from tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmd$c 
+				from tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmf$c 
+				from tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b))
+	then 
+	cisli941.t$gexp$l-
+		nvl((select sum(c.t$amnt$l) from tcisli941201 c
+			where c.t$fire$l=cisli941.t$fire$l
+			and   c.t$item$l=(select a.t$itjl$c 
+							  from tznsls000201 a 
+							  where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b))),0) 
+	else 0 end VL_DESPESA,												
+																							--#FAF.302.1.en
 	(SELECT cisli943.t$amnt$l FROM baandb.tcisli943201 cisli943
 	WHERE cisli943.t$fire$l=cisli941.t$fire$l
 	AND cisli943.t$line$l=cisli941.t$line$l
@@ -53,7 +77,29 @@ SELECT DISTINCT
 	nvl(to_char((select cdv.t$docn$l from baandb.tcisli940201 cdv
 	where cdv.t$fire$l=tdsls401.t$fire$l)),' ') NR_NFR_DEVOLUCAO,
 	-- cisli941.t$amfi$l VL_DESPESA_FINANCEIRA,													--#FAF.302.1.o
-	nvl(znsls402.t$vlju$c,0) VL_DESPESA_FINANCEIRA,													--#FAF.302.1.n
+	-- nvl(znsls402.t$vlju$c,0) VL_DESPESA_FINANCEIRA,											--#FAF.302.1.n		--#FAF.302.1.o
+	
+	case when cisli941.t$item$l not in															--#FAF.302.1.sn
+		(select a.t$itjl$c 
+				from tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmd$c 
+				from tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmf$c 
+				from tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b))
+	then 	
+		nvl((select sum(c.t$amnt$l) from tcisli941201 c
+			where c.t$fire$l=cisli941.t$fire$l
+			and   c.t$item$l=(select a.t$itjl$c 
+							  from tznsls000201 a 
+							  where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b))),0)	
+	else 0 end VL_DESPESA_FINANCEIRA,
+																								--#FAF.302.1.en
+						  
 	-- (SELECT cisli943.t$amnt$l FROM baandb.tcisli943201 cisli943								--#FAF.302.so
 	-- WHERE cisli943.t$fire$l=cisli941.t$fire$l
 	-- AND cisli943.t$line$l=cisli941.t$line$l
@@ -269,23 +315,23 @@ FROM
 	
 	LEFT JOIN baandb.tznsls401201 znsls401 ON cisli245.t$slso=znsls401.t$orno$c
 							AND cisli245.t$pono=znsls401.t$pono$c
-	LEFT JOIN
-		(select 																					--#FAF.302.1.sn
-			znsls402q.t$ncia$c,
-			znsls402q.t$uneg$c,
-			znsls402q.t$pecl$c,
-			znsls402q.t$sqpd$c,
-			sum(znsls402q.t$vlju$c) t$vlju$c, 
-			sum(znsls402q.t$vlja$c) t$vlja$c  
-		 from	baandb.tznsls402201 znsls402q
-		 group by
-			znsls402q.t$ncia$c,
-			znsls402q.t$uneg$c,
-			znsls402q.t$pecl$c,
-			znsls402q.t$sqpd$c) znsls402	ON     	znsls402.t$ncia$c=znsls401.t$ncia$c
-			                                AND     znsls402.t$uneg$c=znsls401.t$uneg$c
-			                                AND     znsls402.t$pecl$c=znsls401.t$pecl$c
-			                                AND     znsls402.t$sqpd$c=znsls401.t$sqpd$c				--#FAF.302.1.en
+--	LEFT JOIN
+		-- (select 																					--#FAF.302.1.sn
+			-- znsls402q.t$ncia$c,
+			-- znsls402q.t$uneg$c,
+			-- znsls402q.t$pecl$c,
+			-- znsls402q.t$sqpd$c,
+			-- sum(znsls402q.t$vlju$c) t$vlju$c, 
+			-- sum(znsls402q.t$vlja$c) t$vlja$c  
+		 -- from	baandb.tznsls402201 znsls402q
+		 -- group by
+			-- znsls402q.t$ncia$c,
+			-- znsls402q.t$uneg$c,
+			-- znsls402q.t$pecl$c,
+			-- znsls402q.t$sqpd$c) znsls402	ON     	znsls402.t$ncia$c=znsls401.t$ncia$c
+			                                -- AND     znsls402.t$uneg$c=znsls401.t$uneg$c
+			                                -- AND     znsls402.t$pecl$c=znsls401.t$pecl$c
+			                                -- AND     znsls402.t$sqpd$c=znsls401.t$sqpd$c				--#FAF.302.1.en
 			
 			
 							
