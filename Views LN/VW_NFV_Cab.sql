@@ -8,11 +8,25 @@
 --**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
+    --(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
+    --WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
+    --AND tcemm030.t$eunt=tcemm124.t$grid
+    --AND tcemm124.t$loco=201
+    --AND rownum=1) CD_FILIAL,
+    case when (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
+    WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
+    AND tcemm030.t$eunt=tcemm124.t$grid
+    AND tcemm124.t$loco=201
+    AND rownum=1) = ' ' then
+    (SELECT substr(tcemm124.t$grid,-2,2) FROM baandb.ttcemm124201 tcemm124
+    WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
+    AND tcemm124.t$loco=201
+    AND rownum=1)else 
     (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
     AND tcemm030.t$eunt=tcemm124.t$grid
     AND tcemm124.t$loco=201
-    AND rownum=1) CD_FILIAL,
+    AND rownum=1) end as CD_FILIAL,    
 		cisli940.t$docn$l NR_NF,
 		cisli940.t$seri$l NR_SERIE_NF,
 		cisli940.t$ccfo$l CD_NATUREZA_OPERACAO,
