@@ -14,7 +14,8 @@
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
-    tcemm030.t$euca CD_FILIAL,
+    --tcemm030.t$euca,
+    CASE WHEN tcemm030.t$euca = ' ' then substr(tcemm124.t$grid,-2,2) else tcemm030.t$euca end as CD_FILIAL,
 	cisli940.t$docn$l NR_NF,
 	cisli940.t$seri$l NR_SERIE_NF,
 	ltrim(rtrim(cisli941.t$item$l)) CD_ITEM,
