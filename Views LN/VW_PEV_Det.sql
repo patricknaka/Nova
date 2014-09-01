@@ -62,7 +62,8 @@ SELECT DISTINCT
            WHERE lc.t$orno=tdsls401.t$orno
            AND   lc.t$pono=tdsls401.t$pono
            AND   lc.t$clyn=1) QT_ITENS_CANCELADOS,
-          tcemm030.t$euca CD_FILIAL,
+          --tcemm030.t$euca CD_FILIAL,
+          case when tcemm030.t$euca = ' ' then substr(tcemm124.t$grid,-2,2) else tcemm030.t$euca end as CD_FILIAL,
 	  tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 		  znsls401.t$tpcb$c CD_TIPO_COMBO,
       znsls401.t$pecl$c NR_PEDIDO,
