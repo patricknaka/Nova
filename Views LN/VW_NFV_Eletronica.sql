@@ -1,4 +1,4 @@
--- 06-mai-2014, Fabio Ferreira, Correção de conversão de timezone
+﻿-- 06-mai-2014, Fabio Ferreira, Correção de conversão de timezone
 -- #FAF.042 - 29-mai-2014, Fabio Ferreira, 	Correções timezone	
 -- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal	
 -- #FAF.124 - 10-jun-2014, Fabio Ferreira, 	Correção Chave de acesso
@@ -6,7 +6,8 @@
 --****************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
-    tcemm030.t$euca CD_FILIAL,
+--    tcemm030.t$euca CD_FILIAL,
+    CASE WHEN tcemm030.t$euca = ' ' THEN substr(tcemm124.t$grid,-2,2) ELSE tcemm030.t$euca END AS CD_FILIAL,
     cisli940.t$docn$l NF_NFE,
     cisli940.t$seri$l NR_SERIE_NFE,
     cisli940.t$nfes$l CD_STATUS_SEFAZ,
