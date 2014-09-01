@@ -12,6 +12,7 @@
 -- #FAF.276 - 11-aug-2014, Fabio Ferreira, 	Correção
 -- #MAR.306 - 28-ago-2014, Marcia A. R. Torres, Inclusao do TIPO_ORDEM_VENDA.
 -- #FAF.276 - 28-aug-2014, Fabio Ferreira, 	Correção valor da ordem
+-- #FAF.313 - 01-sep-2014, Fabio Ferreira, 	Novos campos
 --***************************************************************************************************************************************************************
 SELECT  DISTINCT
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -88,7 +89,10 @@ SELECT  DISTINCT
         ulttrc.dtoc DT_STATUS_PEDIDO,
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	sls401q.t$idor$c CD_TIPO_SITE,																				--#FAF.143.n
-  tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA                                 --#MAR.306.n
+	tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                 										--#MAR.306.n
+	sls401q.cancela,
+	sls401q.seq_pedido_cancel,
+	sls401q.entrega_cancel
 FROM    baandb.ttdsls400201 tdsls400
 		LEFT JOIN (	select DISTINCT c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE 						--#FAF.006.sn
 					from baandb.tcisli245201 c245, baandb.tcisli941201 c941, baandb.tcisli940201 c940
@@ -101,6 +105,9 @@ FROM    baandb.ttdsls400201 tdsls400
           znsls401.t$pecl$c       t$pecl$c,
           znsls401.t$sqpd$c       t$sqpd$c,
           znsls401.t$entr$c       t$entr$c,
+		  case when znsls401.t$qtve$c<0 then 2 else 1 end cancela,
+		  znsls401.t$sedt$c 	seq_pedido_cancel,
+		  znsls401.t$endt$c		entrega_cancel,
           max(znsls401.t$pztr$c)  t$pztr$c,
           max(znsls401.t$pzcd$c)  t$pzcd$c,
           max(znsls401.t$pcga$c)       t$pcga$c,																	--#FAF.177.n
@@ -134,6 +141,9 @@ FROM    baandb.ttdsls400201 tdsls400
           znsls401.t$sqpd$c,
           znsls401.t$entr$c,
           znsls401.t$orno$c,
+		  case when znsls401.t$qtve$c<0 then 2 else 1 end,
+		  znsls401.t$sedt$c,
+		  znsls401.t$endt$c,
           brmcs941.t$opfc$l,
 		  znsls401.t$idor$c) sls401q
 		  LEFT JOIN  baandb.tznsls004201 znsls004 ON znsls004.t$orno$c=sls401q.t$orno AND znsls004.t$entr$c=sls401q.t$entr$c,			--#FAF.174.n
