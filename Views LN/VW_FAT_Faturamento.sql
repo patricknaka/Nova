@@ -353,10 +353,10 @@ SELECT
     cisli941f.t$fire$l NR_REFERENCIA_FISCAL,  															--#FAF.172.n
 	cisli940.t$nfes$l CD_STATUS_SEFAZ,																	--#FAF.176.n
 	CASE WHEN cisli940.t$gamt$l!=0 THEN 																--#FAF.180.n
-		znsls402.t$vlju$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) 
+		TRUNC(znsls402.t$vlju$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) ,2)
 	ELSE znsls402.t$vlju$c END VL_JUROS,
 	CASE WHEN cisli940.t$gamt$l!=0 THEN 																--#FAF.180.n
-		znsls402.t$vlja$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) 
+		TRUNC(znsls402.t$vlja$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) ,2)
 	ELSE znsls402.t$vlja$c END VL_JUROS_ADMINISTRADORA,					
 	CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
 	ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,														--#FAF.195.n	
