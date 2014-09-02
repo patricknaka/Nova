@@ -49,23 +49,23 @@ SELECT DISTINCT
 	
 	case when cisli941.t$item$l not in															--#FAF.302.1.sn
 		(select a.t$itjl$c 
-				from tznsls000201 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b)
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
 		 UNION ALL
 		 select a.t$itmd$c 
-				from tznsls000201 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b)
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
 		 UNION ALL
 		 select a.t$itmf$c 
-				from tznsls000201 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b))
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))
 	then 
 	cisli941.t$gexp$l-
-		nvl((select sum(c.t$amnt$l) from tcisli941201 c
+		nvl((select sum(c.t$amnt$l) from baandb.tcisli941201 c
 			where c.t$fire$l=cisli941.t$fire$l
 			and   c.t$item$l=(select a.t$itjl$c 
-							  from tznsls000201 a 
-							  where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b))),0) 
+							  from baandb.tznsls000201 a 
+							  where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))),0) 
 	else 0 end VL_DESPESA,												
 																							--#FAF.302.1.en
 	(SELECT cisli943.t$amnt$l FROM baandb.tcisli943201 cisli943
@@ -81,22 +81,22 @@ SELECT DISTINCT
 	
 	case when cisli941.t$item$l not in															--#FAF.302.1.sn
 		(select a.t$itjl$c 
-				from tznsls000201 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b)
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
 		 UNION ALL
 		 select a.t$itmd$c 
-				from tznsls000201 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b)
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
 		 UNION ALL
 		 select a.t$itmf$c 
-				from tznsls000201 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b))
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))
 	then 	
-		nvl((select sum(c.t$amnt$l) from tcisli941201 c
+		nvl((select sum(c.t$amnt$l) from baandb.tcisli941201 c
 			where c.t$fire$l=cisli941.t$fire$l
 			and   c.t$item$l=(select a.t$itjl$c 
-							  from tznsls000201 a 
-							  where a.t$indt$c=(select min(b.t$indt$c) from tznsls000201 b))),0)	
+							  from baandb.tznsls000201 a 
+							  where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))),0)	
 	else 0 end VL_DESPESA_FINANCEIRA,
 																								--#FAF.302.1.en
 						  
