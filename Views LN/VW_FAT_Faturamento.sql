@@ -29,6 +29,7 @@
 -- 	#FAF.303 - 25-aug-2014, Fabio Ferreira, 	Correção despesas
 --  #MAR.307 - 28-ago-2014, Marcia A. R. Torres, Inclusao do TIPO_ORDEM_VENDA.
 -- 	#FAF.303 - 29-aug-2014, Fabio Ferreira, 	Rateio do valor do juros
+-- 	#FAF.316 - 02-set-2014, Fabio Ferreira, 	Mostrar ref fiscal de remessa quando fatura
 --****************************************************************************************************************************************************************
 SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -232,11 +233,13 @@ SELECT
 	znsls402.t$vlja$c VL_JUROS_ADMINISTRADORA,															--#FAF.180.n
 	CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
 	ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,														--#FAF.195.n	
-	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$refr$l											--#FAF.253.sn
+	-- CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$refr$l											--#FAF.253.sn	--#FAF.316.o
+	CASE WHEN (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16)  then cisli941f.t$refr$l					--#FAF.316.n
 			ELSE NULL END	NR_REFERENCIA_FISCAL_FATURA,
-	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$rfdl$l
-			ELSE NULL END	NR_ITEM_NF_FATURA,														--#FAF.253.en	
-   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA                                 --#MAR.307.n
+	-- CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$rfdl$l															--#FAF.316.o
+	CASE WHEN (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16) then cisli941f.t$rfdl$l					--#FAF.316.n
+			ELSE NULL END	NR_ITEM_NF_FATURA,															--#FAF.253.en	
+   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA                                 								--#MAR.307.n
 
 FROM    baandb.tcisli940201 cisli940,
         baandb.tcisli941201 cisli941,		
