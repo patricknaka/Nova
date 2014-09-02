@@ -20,7 +20,7 @@ AND sku.SKU=ll.SKU
 AND llid.WHSEID=sku.WHSEID
 AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
-AND UPPER(cl.LONG_VALUE)=llid.WHSEID
+AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
  ll.sku,
  ll.sku,
@@ -51,7 +51,7 @@ AND sku.SKU=ll.SKU
 AND llid.WHSEID=sku.WHSEID
 AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
-AND UPPER(cl.LONG_VALUE)=llid.WHSEID
+AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
  ll.sku,
  ll.sku,
@@ -82,7 +82,7 @@ AND sku.SKU=ll.SKU
 AND llid.WHSEID=sku.WHSEID
 AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
-AND UPPER(cl.LONG_VALUE)=llid.WHSEID
+AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
  ll.sku,
  ll.sku,
@@ -113,7 +113,7 @@ AND sku.SKU=ll.SKU
 AND llid.WHSEID=sku.WHSEID
 AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
-AND UPPER(cl.LONG_VALUE)=llid.WHSEID
+AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
  ll.sku,
  ll.sku,
@@ -144,7 +144,7 @@ AND sku.SKU=ll.SKU
 AND llid.WHSEID=sku.WHSEID
 AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
-AND UPPER(cl.LONG_VALUE)=llid.WHSEID
+AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
  ll.sku,
  ll.sku,
@@ -175,7 +175,7 @@ AND sku.SKU=ll.SKU
 AND llid.WHSEID=sku.WHSEID
 AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
-AND UPPER(cl.LONG_VALUE)=llid.WHSEID
+AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
  ll.sku,
  ll.sku,
@@ -206,7 +206,7 @@ AND sku.SKU=ll.SKU
 AND llid.WHSEID=sku.WHSEID
 AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
-AND UPPER(cl.LONG_VALUE)=llid.WHSEID
+AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
  ll.sku,
  ll.sku,
@@ -237,7 +237,7 @@ AND sku.SKU=ll.SKU
 AND llid.WHSEID=sku.WHSEID
 AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
-AND UPPER(cl.LONG_VALUE)=llid.WHSEID
+AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
  ll.sku,
  ll.sku,
@@ -268,7 +268,7 @@ AND sku.SKU=ll.SKU
 AND llid.WHSEID=sku.WHSEID
 AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
-AND UPPER(cl.LONG_VALUE)=llid.WHSEID
+AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
  ll.sku,
  ll.sku,
