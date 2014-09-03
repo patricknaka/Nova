@@ -31,7 +31,7 @@ select
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_APROVACAO,
     znsls402.t$valo$c  VL_ORIGINAL,
-    znsls402.t$vlja$c  VL_JUROS_ADMINISTRADORA,
+    (sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlja$c  VL_JUROS_ADMINISTRADORA,
     CASE WHEN znsls402.t$vlja$c!=0 THEN 1
 	ELSE 2
 	END IN_JUROS_ADMINISTRADORA,
@@ -40,7 +40,7 @@ select
     AT time zone sessiontimezone) AS DATE)
 	from baandb.ttdsls451201 a
     where a.t$orno=tdsls400.t$orno) DT_APROVACAO_PAGAMENTO_ERP,
-    znsls402.t$vlju$c  VL_JUROS,
+    (sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c  VL_JUROS,
     ' ' CD_CICLO_PAGAMENTO,            -- *** NÃO EXISTE ESTA INFORMAÇÃO NO LN / PENDENTE DE DUVIDA ***
     znsls402.t$cone$c  NR_TABELA_NEGOCIACAO,
     znsls402.t$ncam$c  NR_BIN_CARTAO_CREDITO,
