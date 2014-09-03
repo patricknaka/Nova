@@ -7,6 +7,7 @@
 -- #FAF.085 - 23-mai-2014, Fabio Ferreira, 	Inclusão do campo ID_ADQUIRENTE
 -- #FAF.089 - 28-mai-2014,	Fabio Ferreira,	NUN_TERMINAL convertido em String
 -- #FAF.088 - 28-mai-2014,	Fabio Ferreira, conversão de timezone no campo DT_APROVACAO_PAGAMENTO_ERP 
+-- #FAF.317 - 03-sep-2014,	Fabio Ferreira, VL_PAGAMENTO calculado com base no valor da entrega
 --***************************************************************************************************************************************************************
 select
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -20,7 +21,8 @@ select
     CASE WHEN (znsls402.t$idmp$c = 4) THEN 0 ELSE znsls402.t$cccd$c END CD_BANDEIRA,
     CASE WHEN (znsls402.t$idmp$c = 4) THEN 0 ELSE znsls402.t$idbc$c END CD_BANCO,
     znsls402.t$nupa$c  NR_PARCELAS,
-    abs(znsls402.t$vlmr$c)  VL_PAGAMENTO,
+    -- abs(znsls402.t$vlmr$c)  VL_PAGAMENTO,																						--#FAF.317.o
+	sls401q.VL_PGTO_ENTR VL_PAGAMENTO,																								--#FAF.317.n
     znsls402.t$stat$c  CD_STATUS_PAGAMENTO,
 	CASE WHEN (znsls402.t$idmp$c = 4 and znsls400.t$idli$c!=0) THEN 1 ELSE 2 END IN_VALE_LISTA_CASAMENTO,							--#FAF.049.n
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -51,20 +53,28 @@ select
 	znsls402.t$txrp$c  DS_MOTIVO_REPROVACAO,															--#FAF.076.n
     znsls402.t$idag$c  NR_AGENCIA,
     znsls402.t$idct$c  NR_CONTA_CORRENTE,
-	znsls402.t$idad$c CD_ADQUIRENTE																	--#FAF.085.n
+	znsls402.t$idad$c CD_ADQUIRENTE																		--#FAF.085.n
 FROM  baandb.tznsls400201 znsls400,
     (select distinct 
-      znsls401.t$ncia$c      t$ncia$c,
-          znsls401.t$uneg$c       t$uneg$c,
-          znsls401.t$pecl$c       t$pecl$c,
-          znsls401.t$sqpd$c       t$sqpd$c,
-          znsls401.t$entr$c       t$entr$c,
-      znsls401.t$orno$c      t$orno$c
-    from baandb.tznsls401201 znsls401) sls401q,
+		znsls401.t$ncia$c      	t$ncia$c,
+		znsls401.t$uneg$c       t$uneg$c,
+		znsls401.t$pecl$c       t$pecl$c,
+		znsls401.t$sqpd$c       t$sqpd$c,
+		znsls401.t$entr$c       t$entr$c,
+		znsls401.t$orno$c      	t$orno$c,
+		sum((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c) VL_PGTO_ENTR	--#FAF.317.n	
+    from baandb.tznsls401201 znsls401
+	group by
+		znsls401.t$ncia$c,																				--#FAF.317.sn
+		znsls401.t$uneg$c,
+		znsls401.t$pecl$c,
+		znsls401.t$sqpd$c,
+		znsls401.t$entr$c,
+		znsls401.t$orno$c) sls401q,																		--#FAF.317.en
     baandb.ttdsls400201 tdsls400,
     baandb.tznsls402201 znsls402
 where
-      sls401q.t$ncia$c=znsls400.t$ncia$c
+		sls401q.t$ncia$c=znsls400.t$ncia$c
 and    sls401q.t$uneg$c=znsls400.t$uneg$c
 and    sls401q.t$pecl$c=znsls400.t$pecl$c
 and    sls401q.t$sqpd$c=znsls400.t$sqpd$c
