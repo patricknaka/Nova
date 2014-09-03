@@ -29,7 +29,7 @@
 -- 	#FAF.303 - 25-aug-2014, Fabio Ferreira, 	Correção despesas
 --  #MAR.307 - 28-ago-2014, Marcia A. R. Torres, Inclusao do TIPO_ORDEM_VENDA.
 -- 	#FAF.303 - 29-aug-2014, Fabio Ferreira, 	Rateio do valor do juros
--- 	#FAF.316 - 02-set-2014, Fabio Ferreira, 	Mostrar ref fiscal de remessa quando fatura
+-- 	#FAF.303.2 - 02-set-2014, Fabio Ferreira, 	Alteração rateio de juros
 --****************************************************************************************************************************************************************
 SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -132,9 +132,29 @@ SELECT
                              and   cisli941b.t$gamt$l!=0                                                --#FAF.008.n                              
                              and   tcibd001b.t$kitm<3),1)) VL_FRETE_CIA,            
         -- cisli941f.t$gexp$l VL_DESPESA,																--#FAF.303.o
-		CASE WHEN cisli941f.t$gexp$l>=znsls402.t$vlju$c THEN											--#FAF.303.n
-			cisli941f.t$gexp$l-znsls402.t$vlju$c 
-		ELSE cisli941f.t$gexp$l END VL_DESPESA,															--#FAF.303.o
+		-- CASE WHEN cisli941f.t$gexp$l>=znsls402.t$vlju$c THEN											--#FAF.303.n
+			-- cisli941f.t$gexp$l-znsls402.t$vlju$c 
+		-- ELSE cisli941f.t$gexp$l END VL_DESPESA,															--#FAF.303.o
+	case when cisli941.t$item$l not in															--#FAF.302.1.sn
+		(select a.t$itjl$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmd$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmf$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))
+	then 
+		nvl((select sum(c.t$amnt$l) from baandb.tcisli941201 c
+			where c.t$fire$l=cisli941.t$fire$l
+			and   c.t$item$l=(select a.t$itmd$c 
+							  from baandb.tznsls000201 a 
+							  where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))),0)/
+		(cisli941.t$gamt$l/cisli940.t$gamt$l) 
+	else 0 end VL_DESPESA,
 		
         cisli941f.t$ldam$l VL_DESCONTO,
         -- cisli941f.t$iprt$l VL_TOTAL_ITEM,															--#FAF.299.o
@@ -352,9 +372,31 @@ SELECT
     (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) CD_TIPO_CLIENTE_FATURA,
     cisli941f.t$fire$l NR_REFERENCIA_FISCAL,  															--#FAF.172.n
 	cisli940.t$nfes$l CD_STATUS_SEFAZ,																	--#FAF.176.n
-	CASE WHEN cisli940.t$gamt$l!=0 THEN 																--#FAF.180.n
-		TRUNC(znsls402.t$vlju$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) ,2)
-	ELSE znsls402.t$vlju$c END VL_JUROS,
+	-- CASE WHEN cisli940.t$gamt$l!=0 THEN 																--#FAF.180.n
+		-- TRUNC(znsls402.t$vlju$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) ,2)
+	-- ELSE znsls402.t$vlju$c END VL_JUROS,
+
+	case when cisli941.t$item$l not in															--#FAF.302.1.sn
+		(select a.t$itjl$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmd$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmf$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))
+	then 	
+		nvl((select sum(c.t$amnt$l) from baandb.tcisli941201 c
+			where c.t$fire$l=cisli941.t$fire$l
+			and   c.t$item$l=(select a.t$itjl$c 
+							  from baandb.tznsls000201 a 
+							  where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))),0)/
+		(cisli941.t$gamt$l/cisli940.t$gamt$l) 
+	else 0 end VL_JUROS,
+	
 	CASE WHEN cisli940.t$gamt$l!=0 THEN 																--#FAF.180.n
 		TRUNC(znsls402.t$vlja$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) ,2)
 	ELSE znsls402.t$vlja$c END VL_JUROS_ADMINISTRADORA,					
