@@ -1,6 +1,6 @@
 -- 05-mai-2014, Fabio Ferreira, Correção timezone DATA_CHEGADA_PED
 -- 07-mai-2014, Fabio Ferreira, Correção cia 201
--- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Correção alias
+-- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Correção de alias
 -- FAF.005 - Fabio Ferreira, 14-mai-2014, Fabio Ferreira, 	Iclusão do camo ID_LISTA_CASAMENTO
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.048 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
@@ -10,7 +10,7 @@
 -- #FAF.252 - 	30-jul-2014, Fabio Ferreira, 	Correção data atualização
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
-		201 CD_CIA,																								--#FAF.113.n
+		znsls400.t$ncia$c CD_CIA,																								--#FAF.113.n
 	   znsls401.t$pecl$c NR_PEDIDO,
        TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,																	-- #FAF.048.1.n
 	   tdsls400.t$orno NR_ORDEM,
