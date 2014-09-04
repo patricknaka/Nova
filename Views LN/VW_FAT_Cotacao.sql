@@ -1,5 +1,5 @@
 ﻿-- 06-jan-2014, Fabio Ferreira, Correção de conversão de timezone
---								Criação do campo Efetiva
+-- Criação do campo Efetiva
 --****************************************************************************************************************************************************************
 SELECT  tcmcs008.t$rtyp COD_COTACAO,
         tcmcs008.t$ccur CD_MOEDA,
