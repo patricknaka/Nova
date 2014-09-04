@@ -1,7 +1,7 @@
 ﻿-- 05-mai-2014, Fabio Ferreira, Correção timezone,
 --								Campo ESTADO_PAGAMENTO alterado para 'aprovados',
 --								Campo VALOR_TOTAL_ITEM alterado para  ( (Valor do Produto Unitário + Valor do Frete) - (valor desc incondicional)) * Quantidade
--- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado campo DESCONTO_CONDICIONAL
+-- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado o campo DESCONTO_CONDICIONAL
 -- FAF.003 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Incluido novos campos
 -- FAF.004 - Fabio Ferreira, 13-mai-2014, Fabio Ferreira, 	Duplicando registros devido a problema de relacionamento na tabela znsls004
 -- FAF.105 - Fabio Ferreira, 05-jun-2014, Fabio Ferreira, 	Campo vendedor deve ser NULL quando valor = 100
@@ -23,7 +23,7 @@ SELECT DISTINCT
         FROM  baandb.ttdsls451201
         WHERE ttdsls451201.t$orno=tdsls401.t$orno
         AND   ttdsls451201.t$pono=tdsls401.t$pono) DT_ULT_ATUALIZACAO,
-		  201 CD_CIA,
+		  znsls400.t$ncia$c CD_CIA,
           znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
           tdsls401.t$orno NR_ORDEM,
 		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
