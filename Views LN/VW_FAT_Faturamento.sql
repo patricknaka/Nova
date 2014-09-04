@@ -34,7 +34,8 @@
 SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
-        cisli940.t$sfcp$l CD_CIA,
+ --       cisli940.t$sfcp$l CD_CIA,
+		znsls400.t$ncia$c CD_CIA,
     -- (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030			--#FAF.303.1.so
     -- WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
     -- AND tcemm030.t$eunt=tcemm124.t$grid
