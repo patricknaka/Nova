@@ -30,6 +30,7 @@
 --  #MAR.307 - 28-ago-2014, Marcia A. R. Torres, Inclusao do TIPO_ORDEM_VENDA.
 -- 	#FAF.303 - 29-aug-2014, Fabio Ferreira, 	Rateio do valor do juros
 -- 	#FAF.303.2 - 02-set-2014, Fabio Ferreira, 	Alteração rateio de juros
+-- 	#FAF.303.2 - 04-set-2014, Fabio Ferreira, 	Valor despesa financeira=jusro
 --****************************************************************************************************************************************************************
 SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -161,7 +162,27 @@ SELECT
         -- cisli941f.t$iprt$l VL_TOTAL_ITEM,															--#FAF.299.o
         cisli941f.t$amnt$l VL_TOTAL_ITEM,																--#FAF.299.n
         -- cisli941f.t$AMFI$l VL_DESPESA_FINANCEIRA,													--#FAF.303.o
-        znsls402.t$vlju$c VL_DESPESA_FINANCEIRA,														--#FAF.303.n
+ --       znsls402.t$vlju$c VL_DESPESA_FINANCEIRA,														--#FAF.303.n
+	case when cisli941.t$item$l not in															--#FAF.302.1.sn
+		(select a.t$itjl$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmd$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmf$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))
+	then 	
+		nvl((select sum(c.t$amnt$l) from baandb.tcisli941201 c
+			where c.t$fire$l=cisli941.t$fire$l
+			and   c.t$item$l=(select a.t$itjl$c 
+							  from baandb.tznsls000201 a 
+							  where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))),0)/
+		(cisli941.t$gamt$l/cisli940.t$gamt$l) 
+	else 0 end VL_DESPESA_FINANCEIRA,																	--#FAF.303.3.n							
         -- Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943								--#FAF.301.so
              -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
              -- AND    cisli943.t$line$l=cisli941f.t$line$l
