@@ -12,6 +12,7 @@
 -- #FAF.302 - 25-aug-2014, Fabio Ferreira, Correção impostos
 -- #FAF.302.1 - 25-aug-2014, Fabio Ferreira, Correção despesas
 -- #FAF.302.2 - 01-sep-2014, Fabio Ferreira, Correção despesas
+-- conversão para caracter de NR_ITEM_NF_FATURA
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
     201 CD_CIA,
@@ -284,7 +285,7 @@ SELECT DISTINCT
 		AND cisli943.t$brty$l=3) VL_BASE_IPI,
 	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$refr$l											--#FAF.253.sn
 			ELSE NULL END	NR_REFERENCIA_FISCAL_FATURA,
-	CASE WHEN cisli940.t$fdty$l=15 then cisli941.t$rfdl$l
+	CASE WHEN cisli940.t$fdty$l=15 then TO_CHAR(cisli941.t$rfdl$l)
 			ELSE NULL END	NR_ITEM_NF_FATURA,														--#FAF.253.en
 	cisli941.t$refr$l		NR_REFERENCIA_FISCAL_RELATIVA,														--#FAF.298.n
 	cisli941.t$rfdl$l		NR_LINHA_REF_FISCAL_RELATIVA													--#FAF.298.n
