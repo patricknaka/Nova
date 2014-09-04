@@ -12,7 +12,7 @@
 select
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
-    201 CD_CIA,
+    znsls400.t$ncia$c CD_CIA,
     tdsls400.t$orno NR_ORDEM,
 	TRIM(sls401q.t$pecl$c) NR_PEDIDO,
     TO_CHAR(sls401q.t$entr$c) NR_ENTREGA, 																--#FAF.047.1.n
@@ -22,7 +22,7 @@ select
     CASE WHEN (znsls402.t$idmp$c = 4) THEN 0 ELSE znsls402.t$idbc$c END CD_BANCO,
     znsls402.t$nupa$c  NR_PARCELAS,
     -- abs(znsls402.t$vlmr$c)  VL_PAGAMENTO,																						--#FAF.317.o
-	(sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlmr$c VL_PAGAMENTO,														--#FAF.317.n																							--#FAF.317.n
+	cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlmr$c as numeric(12,2)) VL_PAGAMENTO,														--#FAF.317.n																							--#FAF.317.n
     znsls402.t$stat$c  CD_STATUS_PAGAMENTO,
 	CASE WHEN (znsls402.t$idmp$c = 4 and znsls400.t$idli$c!=0) THEN 1 ELSE 2 END IN_VALE_LISTA_CASAMENTO,							--#FAF.049.n
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -31,7 +31,7 @@ select
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_APROVACAO,
     znsls402.t$valo$c  VL_ORIGINAL,
-    (sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlja$c  VL_JUROS_ADMINISTRADORA,
+    cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlja$c as numeric(12,2))  VL_JUROS_ADMINISTRADORA,
     CASE WHEN znsls402.t$vlja$c!=0 THEN 1
 	ELSE 2
 	END IN_JUROS_ADMINISTRADORA,
@@ -40,7 +40,7 @@ select
     AT time zone sessiontimezone) AS DATE)
 	from baandb.ttdsls451201 a
     where a.t$orno=tdsls400.t$orno) DT_APROVACAO_PAGAMENTO_ERP,
-    (sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c  VL_JUROS,
+    cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c  as numeric(12,2))  VL_JUROS,
     ' ' CD_CICLO_PAGAMENTO,            -- *** NÃO EXISTE ESTA INFORMAÇÃO NO LN / PENDENTE DE DUVIDA ***
     znsls402.t$cone$c  NR_TABELA_NEGOCIACAO,
     znsls402.t$ncam$c  NR_BIN_CARTAO_CREDITO,
@@ -99,4 +99,4 @@ and    sls401q.t$orno$c=tdsls400.t$orno
 and    znsls402.t$ncia$c=znsls400.t$ncia$c
 and    znsls402.t$uneg$c=znsls400.t$uneg$c
 and    znsls402.t$pecl$c=znsls400.t$pecl$c
-and    znsls402.t$sqpd$c=znsls400.t$sqpd$c;
+and    znsls402.t$sqpd$c=znsls400.t$sqpd$c
