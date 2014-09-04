@@ -1,7 +1,7 @@
 ﻿-- 05-mai-2014, Fabio Ferreira, Correção timezone,
 --								Campo ESTADO_PAGAMENTO alterado para 'aprovados',
 --								Campo VALOR_TOTAL_ITEM alterado para  ( (Valor do Produto Unitário + Valor do Frete) - (valor desc incondicional)) * Quantidade
--- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado o campo DESCONTO_CONDICIONAL
+-- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado campo DESCONTO_CONDICIONAL
 -- FAF.003 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Incluido novos campos
 -- FAF.004 - Fabio Ferreira, 13-mai-2014, Fabio Ferreira, 	Duplicando registros devido a problema de relacionamento na tabela znsls004
 -- FAF.105 - Fabio Ferreira, 05-jun-2014, Fabio Ferreira, 	Campo vendedor deve ser NULL quando valor = 100
@@ -15,6 +15,7 @@
 -- MAR.306 - Marcia A. R. Torres, 28-ago-2014, 			Inclusao do TIPO_ORDEM_VENDA.
 -- #FAF.276 - 28-aug-2014, Fabio Ferreira, 	Correção valor da linha
 -- #FAF.313 - 01-sep-2014, Fabio Ferreira, 	Flag cancelado
+-- #FAF.314 - 04-sep-2014, Fabio Ferreira, 	Correção valor do juros
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
         (SELECT 
@@ -53,7 +54,9 @@ SELECT DISTINCT
           ' ' DS_UTM_MIDIA,                     -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
           ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SERÁ EXTRAIDO DO SITE
           znsls401.t$vlde$c VL_DESPESA_ACESSORIO,
-          znsls400.t$vldf$c VL_JUROS,
+          -- znsls400.t$vldf$c VL_JUROS,																					--#FAF.317.o
+		  (((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c)
+				/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c VL_JUROS,															--#FAF.317.n
 		  nvl((select a.t$tamt$l from baandb.tbrmcs941201 a
 			  where a.t$txre$l=tdsls401.t$txre$l
 			  and a.t$line$l=tdsls401.t$txli$l), tdsls401.t$oamt)	VL_TOTAL_ITEM,															--#FAF.311.n
@@ -102,7 +105,31 @@ FROM
         baandb.ttdsls400201 tdsls400,
         baandb.ttcemm124201 tcemm124,
         baandb.ttcemm030201 tcemm030,
-        baandb.tznsls400201 znsls400
+        baandb.tznsls400201 znsls400,
+		(select distinct 																									--#FAF.317.sn
+			znsls401t.t$ncia$c      	t$ncia$c,
+			znsls401t.t$uneg$c       t$uneg$c,
+			znsls401t.t$pecl$c       t$pecl$c,
+			znsls401t.t$sqpd$c       t$sqpd$c,
+			sum((znsls401t.t$vlun$c*znsls401t.t$qtve$c)+znsls401t.t$vlfr$c-znsls401t.t$vldi$c+znsls401t.t$vlde$c) VL_PGTO_PED		
+		from baandb.tznsls401201 znsls401t
+		group by
+			znsls401t.t$ncia$c,																				
+			znsls401t.t$uneg$c,
+			znsls401t.t$pecl$c,
+			znsls401t.t$sqpd$c) sls401p,																							
+		(select	sum(znsls402t.t$vlju$c) t$vlju$c,
+				znsls402t.t$ncia$c,
+				znsls402t.t$uneg$c,
+				znsls402t.t$pecl$c,
+                znsls402t.t$sqpd$c
+		from baandb.tznsls402201 znsls402t
+		group by
+				znsls402t.t$ncia$c,
+				znsls402t.t$uneg$c,
+				znsls402t.t$pecl$c,
+                znsls402t.t$sqpd$c) znsls402																				--#FAF.317.en
+		
 WHERE   znsls401.t$orno$c=tdsls401.t$orno
 AND     znsls401.t$pono$c=tdsls401.t$pono
 AND     tdsls400.t$orno=tdsls401.t$orno
@@ -112,3 +139,13 @@ AND     znsls400.t$ncia$c=znsls401.t$ncia$c
 AND     znsls400.t$uneg$c=znsls401.t$uneg$c
 AND     znsls400.t$pecl$c=znsls401.t$pecl$c
 AND     znsls400.t$sqpd$c=znsls401.t$sqpd$c
+and	   sls401p.t$ncia$c=znsls401.t$ncia$c																					--#FAF.317.sn
+and    sls401p.t$uneg$c=znsls401.t$uneg$c
+and    sls401p.t$pecl$c=znsls401.t$pecl$c
+and    sls401p.t$sqpd$c=znsls401.t$sqpd$c																					
+and	   znsls402.t$ncia$c=znsls401.t$ncia$c
+and    znsls402.t$uneg$c=znsls401.t$uneg$c
+and    znsls402.t$pecl$c=znsls401.t$pecl$c
+and    znsls402.t$sqpd$c=znsls401.t$sqpd$c																					--#FAF.317.en
+
+
