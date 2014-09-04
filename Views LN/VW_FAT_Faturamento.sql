@@ -163,7 +163,7 @@ SELECT
         cisli941f.t$amnt$l VL_TOTAL_ITEM,																--#FAF.299.n
         -- cisli941f.t$AMFI$l VL_DESPESA_FINANCEIRA,													--#FAF.303.o
  --       znsls402.t$vlju$c VL_DESPESA_FINANCEIRA,														--#FAF.303.n
-	case when cisli941.t$item$l not in															--#FAF.302.1.sn
+	trunc(case when cisli941.t$item$l not in															--#FAF.302.1.sn
 		(select a.t$itjl$c 
 				from baandb.tznsls000201 a 
 				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
@@ -182,7 +182,7 @@ SELECT
 							  from baandb.tznsls000201 a 
 							  where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))),0)/
 		(cisli941.t$gamt$l/cisli940.t$gamt$l) 
-	else 0 end VL_DESPESA_FINANCEIRA,																	--#FAF.303.3.n							
+	else 0 end,2) VL_DESPESA_FINANCEIRA,																	--#FAF.303.3.n							
         -- Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943201 cisli943								--#FAF.301.so
              -- WHERE  cisli943.t$fire$l=cisli941f.t$fire$l
              -- AND    cisli943.t$line$l=cisli941f.t$line$l
