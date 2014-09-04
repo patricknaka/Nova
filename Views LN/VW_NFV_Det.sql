@@ -9,7 +9,7 @@
 -- #FAF.287 - 14-aug-2014, Fabio Ferreira, Correção do campo DT_ATUALIZACAO_NF
 -- 21/08/2014  Atualização do timezone
 -- #FAF.298 - 22-aug-2014, Fabio Ferreira, Ref fiscal relativa e linha
--- #FAF.302 - 25-aug-2014, Fabio Ferreira, Correção impostos
+-- #FAF.302 - 25-aug-2014, Fabio Ferreira, Correção dos impostos
 -- #FAF.302.1 - 25-aug-2014, Fabio Ferreira, Correção despesas
 -- #FAF.302.2 - 01-sep-2014, Fabio Ferreira, Correção despesas
 -- conversão para caracter de NR_ITEM_NF_FATURA
