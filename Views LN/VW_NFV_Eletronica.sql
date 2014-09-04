@@ -6,7 +6,6 @@
 --****************************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
---    tcemm030.t$euca CD_FILIAL,
     CASE WHEN tcemm030.t$euca = ' ' THEN substr(tcemm124.t$grid,-2,2) ELSE tcemm030.t$euca END AS CD_FILIAL,
     cisli940.t$docn$l NF_NFE,
     cisli940.t$seri$l NR_SERIE_NFE,
@@ -49,3 +48,4 @@ WHERE tcemm124.t$loco=201
 	AND cisli940.t$nfel$l=1																						--#FAF.312.n
 	-- AND nfe.t$refi$l=cisli940.t$fire$l																		--#FAF.312.so
 	-- AND	nfe.t$ncmp$l=201 																					--#FAF.312.eo
+																					--#FAF.312.eo
