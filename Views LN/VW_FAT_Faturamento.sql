@@ -398,7 +398,7 @@ SELECT
 		-- TRUNC(znsls402.t$vlju$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) ,2)
 	-- ELSE znsls402.t$vlju$c END VL_JUROS,
 
-	case when cisli941.t$item$l not in															--#FAF.302.1.sn
+	trunc(case when cisli941.t$item$l not in															--#FAF.302.1.sn
 		(select a.t$itjl$c 
 				from baandb.tznsls000201 a 
 				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
@@ -417,7 +417,7 @@ SELECT
 							  from baandb.tznsls000201 a 
 							  where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))),0)/
 		(cisli941.t$gamt$l/cisli940.t$gamt$l) 
-	else 0 end VL_JUROS,
+	else 0 end,2) VL_JUROS,
 	
 	CASE WHEN cisli940.t$gamt$l!=0 THEN 																--#FAF.180.n
 		TRUNC(znsls402.t$vlja$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) ,2)
