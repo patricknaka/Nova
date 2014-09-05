@@ -1,4 +1,4 @@
--- 05-mai-2014, Fabio Ferreira, Correção timezone,
+﻿-- 05-mai-2014, Fabio Ferreira, Correção timezone,
 --								Campo ESTADO_PAGAMENTO alterado para 'aprovados',
 --								Campo VALOR_TOTAL_ITEM alterado para  ( (Valor do Produto Unitário + Valor do Frete) - (valor desc incondicional)) * Quantidade
 -- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado campo DESCONTO_CONDICIONAL
@@ -19,11 +19,11 @@
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
         (SELECT 
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(ttdsls451301.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(ttdsls451201.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE)
-        FROM  baandb.ttdsls451301
-        WHERE ttdsls451301.t$orno=tdsls401.t$orno
-        AND   ttdsls451301.t$pono=tdsls401.t$pono) DT_ULT_ATUALIZACAO,
+        FROM  baandb.ttdsls451201
+        WHERE ttdsls451201.t$orno=tdsls401.t$orno
+        AND   ttdsls451201.t$pono=tdsls401.t$pono) DT_ULT_ATUALIZACAO,
 		  znsls400.t$ncia$c CD_CIA,
           znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
           tdsls401.t$orno NR_ORDEM,
@@ -34,7 +34,7 @@ SELECT DISTINCT
           CASE WHEN tdsls401.t$clyn=1 THEN 30
 			WHEN tdsls401.t$term=1 THEN 25
 			WHEN tdsls401.t$modi=1 THEN 35
-			WHEN tdsls400.t$hdst=20 THEN CASE WHEN nvl((Select max(atv.t$xcsq) From baandb.ttdsls413301 atv
+			WHEN tdsls400.t$hdst=20 THEN CASE WHEN nvl((Select max(atv.t$xcsq) From baandb.ttdsls413201 atv
                                                   where atv.t$orno=tdsls401.t$orno and atv.t$pono=tdsls401.t$pono and atv.t$xcst>=15),99)=99 THEN 10 
 										 ELSE 20 END
 			ELSE tdsls400.t$hdst END CD_SITUACAO_PEDIDO,
@@ -44,7 +44,7 @@ SELECT DISTINCT
           tdsls401.t$pric*tdsls401.t$qoor VL_ITEM,																		--#FAF.123.n
           znsls401.t$vldi$c VL_DESCONTO_INCONDICIONAL,
           znsls401.t$vlfr$c VL_FRETE_CLIENTE,
-          nvl((select sum(f.t$vlft$c) from baandb.tznfmd630301 f
+          nvl((select sum(f.t$vlft$c) from baandb.tznfmd630201 f
           where f.t$pecl$c=znsls400.t$pecl$c),0) VL_FRETE_CIA,
           CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR,
           znsls400.t$idli$c NR_LISTA_CASAMENTO,
@@ -57,7 +57,7 @@ SELECT DISTINCT
           -- znsls400.t$vldf$c VL_JUROS,																					--#FAF.317.o
 		  cast((((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c)
 				/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c as numeric(12,2)) VL_JUROS,															--#FAF.317.n
-		  -- nvl((select a.t$tamt$l from baandb.tbrmcs941301 a
+		  -- nvl((select a.t$tamt$l from baandb.tbrmcs941201 a
 			  -- where a.t$txre$l=tdsls401.t$txre$l
 			  -- and a.t$line$l=tdsls401.t$txli$l), tdsls401.t$oamt)	VL_TOTAL_ITEM,										--#FAF.311.n
 --          abs((znsls401.t$vlun$c*znsls401.t$qtve$c) + (znsls401.t$vlfr$c - znsls401.t$vldi$c)) VL_TOTAL_ITEM,				--#FAF.122.n
@@ -65,7 +65,7 @@ SELECT DISTINCT
 		  (((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c)
 				/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c as numeric(18,2)) VL_TOTAL_ITEM,														--#FAF.319.n
           (SELECT Count(lc.t$pono)
-           FROM  baandb.ttdsls401301 lc
+           FROM  baandb.ttdsls401201 lc
            WHERE lc.t$orno=tdsls401.t$orno
            AND   lc.t$pono=tdsls401.t$pono
            AND   lc.t$clyn=1) QT_ITENS_CANCELADOS,
@@ -79,7 +79,7 @@ SELECT DISTINCT
 	  znsls400.t$idCP$c CD_CAMPANHA_B2B,
 	  znsls004.t$orig$c CD_ORIGEM_PEDIDO,															--#FAF.003.en
 	  (select min(cisli940.t$stat$l) 
-	   from baandb.tcisli940301 cisli940, baandb.tcisli245301 cisli245
+	   from baandb.tcisli940201 cisli940, baandb.tcisli245201 cisli245
 	   where cisli245.t$slso=tdsls401.t$orno
 	   and cisli245.t$pono=tdsls401.t$pono
 	   and cisli245.t$ortp=1
@@ -87,15 +87,15 @@ SELECT DISTINCT
 	   and cisli940.t$fire$l=cisli245.t$fire$l) CD_SITUACAO_NF,										--#FAF.129.n
 	  CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
 	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,												--#FAF.147.n
-	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM,													--#FAF.301.n
+	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM,													--#FAF.201.n
 	   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                 						--#MAR.306.n
 	case when znsls401.t$qtve$c<0 then 2 else 1 end IN_CANCELADO									--#FAF.313.n
   
 FROM
-        baandb.ttdsls401301 tdsls401,
-        baandb.tznsls401301 znsls401
+        baandb.ttdsls401201 tdsls401,
+        baandb.tznsls401201 znsls401
 		
-				LEFT JOIN baandb.tznsls004301 znsls004 													--#FAF.174.sn
+				LEFT JOIN baandb.tznsls004201 znsls004 													--#FAF.174.sn
 										ON	znsls004.t$ncia$c=znsls401.t$ncia$c
 										AND znsls004.t$uneg$c=znsls401.t$uneg$c
 										AND znsls004.t$pecl$c=znsls401.t$pecl$c
@@ -105,17 +105,17 @@ FROM
 										AND znsls004.t$orno$c=znsls401.t$orno$c  						
 										AND znsls004.t$pono$c=znsls401.t$pono$c,					--#FAF.174.en						
 		
-        baandb.ttdsls400301 tdsls400,
-        baandb.ttcemm124301 tcemm124,
-        baandb.ttcemm030301 tcemm030,
-        baandb.tznsls400301 znsls400,
+        baandb.ttdsls400201 tdsls400,
+        baandb.ttcemm124201 tcemm124,
+        baandb.ttcemm030201 tcemm030,
+        baandb.tznsls400201 znsls400,
 		(select distinct 																									--#FAF.317.sn
 			znsls401t.t$ncia$c      	t$ncia$c,
 			znsls401t.t$uneg$c       t$uneg$c,
 			znsls401t.t$pecl$c       t$pecl$c,
 			znsls401t.t$sqpd$c       t$sqpd$c,
 			sum((znsls401t.t$vlun$c*znsls401t.t$qtve$c)+znsls401t.t$vlfr$c-znsls401t.t$vldi$c+znsls401t.t$vlde$c) VL_PGTO_PED		
-		from baandb.tznsls401301 znsls401t
+		from baandb.tznsls401201 znsls401t
 		group by
 			znsls401t.t$ncia$c,																				
 			znsls401t.t$uneg$c,
@@ -126,7 +126,7 @@ FROM
 				znsls402t.t$uneg$c,
 				znsls402t.t$pecl$c,
                 znsls402t.t$sqpd$c
-		from baandb.tznsls402301 znsls402t
+		from baandb.tznsls402201 znsls402t
 		group by
 				znsls402t.t$ncia$c,
 				znsls402t.t$uneg$c,
