@@ -51,7 +51,7 @@
         sls401q.t$pcga$c NR_PEDIDO_GARANTIA,
         sls401q.t$dtep$c DT_LIMITE_EXPED,
         znsls400.t$tped$c CD_TIPO_PEDIDO,
-        (SELECT  DISTINCT znsls402.t$idmp$c
+        (SELECT  DISTINCT to_char(znsls402.t$idmp$c)
         FROM    baandb.tznsls402201 znsls402
         WHERE   znsls402.t$ncia$c=znsls400.t$ncia$c
         AND     znsls402.t$uneg$c=znsls400.t$uneg$c
