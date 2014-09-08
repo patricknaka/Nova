@@ -32,6 +32,7 @@
 -- 	#FAF.303.2 - 02-set-2014, Fabio Ferreira, 	Alteração rateio de juros
 -- 	#FAF.303.2 - 04-set-2014, Fabio Ferreira, 	Valor despesa financeira=jusro
 -- 	#FAF.320 - 05-set-2014, Fabio Ferreira, 	Tratamento de divisão por zero.
+-- 	#FAF.321 - 08-set-2014, Fabio Ferreira, 	Alteração relacionamento
 --****************************************************************************************************************************************************************
 SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -76,7 +77,8 @@ SELECT
         znsls401.t$sequ$c NR_SEQ_ENTREGA,
         znsls401.t$pecl$c NR_PEDIDO,
         TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,                                  --#FAF.083.n
-    znsls401.t$orno$c NR_ORDEM,
+--    znsls401.t$orno$c NR_ORDEM,	-- origem OV
+		znsls401.t$orno$c NR_ORDEM,	-- origem OV
         CASE WHEN cisli940.t$fdty$l=15 then
           (select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
@@ -461,6 +463,7 @@ FROM    baandb.tcisli940201 cisli940,
 		
         baandb.tcisli245201 cisli245,
         baandb.ttdsls401201 tdsls401,
+		baandb.tznsls004201 znsls004,		--Origem OV
         baandb.tznsls401201 znsls401,
         baandb.tznsls400201 znsls400,
 --		baandb.tznsls402201 znsls402,																			--#FAF.180.n	--#FAF.201.o
@@ -491,8 +494,17 @@ AND     cisli245.t$fire$l=cisli941.t$fire$l
 AND     cisli245.t$line$l=cisli941.t$line$l
 AND     tdsls401.t$orno = cisli245.t$slso
 AND     tdsls401.t$pono = cisli245.t$pono
-AND     znsls401.t$orno$c=tdsls401.t$orno
-AND     znsls401.t$pono$c=tdsls401.t$pono
+AND		znsls004.t$orno$c=tdsls401.t$orno	-- Origem OV
+AND		znsls004.t$pono$c=tdsls401.t$pono 	-- Origem OV
+--AND     znsls401.t$orno$c=tdsls401.t$orno		-- Origem OV
+--AND     znsls401.t$pono$c=tdsls401.t$pono		-- Origem OV
+AND		znsls401.t$ncia$c=znsls004.t$ncia$c		-- Origem OV
+AND     znsls401.t$uneg$c=znsls004.t$uneg$c		-- Origem OV
+AND     znsls401.t$pecl$c=znsls004.t$pecl$c		-- Origem OV
+AND     znsls401.t$sqpd$c=znsls004.t$sqpd$c		-- Origem OV
+AND		znsls401.t$entr$c=znsls004.t$entr$c		-- Origem OV
+AND		znsls401.t$sequ$c=znsls004.t$sequ$c		-- Origem OV	
+AND		ltrim(rtrim(tdsls401.t$item))=ltrim(rtrim(znsls401.t$item$c)) 	-- Origem OV	
 AND     znsls400.t$ncia$c=znsls401.t$ncia$c
 AND     znsls400.t$uneg$c=znsls401.t$uneg$c
 AND     znsls400.t$pecl$c=znsls401.t$pecl$c
