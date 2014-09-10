@@ -168,4 +168,4 @@ AND     endent.t$cadr=tdsls400.t$stad
 AND     ulttrc.ncia=sls401q.t$ncia$c
 AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
-AND		tdsls094.t$sotp=tdsls400.t$sotp																--#FAF.006.n															--#FAF.006.n
+AND		tdsls094.t$sotp=tdsls400.t$sotp																--#FAF.006.n
