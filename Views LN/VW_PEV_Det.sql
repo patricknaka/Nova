@@ -149,4 +149,4 @@ and    sls401p.t$sqpd$c=znsls401.t$sqpd$c
 and	   znsls402.t$ncia$c=znsls401.t$ncia$c
 and    znsls402.t$uneg$c=znsls401.t$uneg$c
 and    znsls402.t$pecl$c=znsls401.t$pecl$c
-and    znsls402.t$sqpd$c=znsls401.t$sqpd$c;
+and    znsls402.t$sqpd$c=znsls401.t$sqpd$c

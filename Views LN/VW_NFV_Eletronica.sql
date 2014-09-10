@@ -47,4 +47,4 @@ WHERE tcemm124.t$loco=201
 	AND tcemm030.t$eunt=tcemm124.t$grid
 	AND cisli940.t$nfel$l=1																						--#FAF.312.n
 	-- AND nfe.t$refi$l=cisli940.t$fire$l																		--#FAF.312.so
-	-- AND	nfe.t$ncmp$l=201 																	--#FAF.312.eo
+	-- AND	nfe.t$ncmp$l=201 																					--#FAF.312.eo 																	--#FAF.312.eo
