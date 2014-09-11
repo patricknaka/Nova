@@ -1,27 +1,4 @@
-﻿ Skip to content
-This repository
-
-    Explore
-    Gist
-    Blog
-    Help
-
-    marcusmsv marcusmsv
-
-    9
-    0
-    0
-
-marcusmsv/Nova
-
-Nova / Views LN / VW_FAT_Faturamento.sql
-filipecomparini filipecomparini 2 days ago
-Update VW_FAT_Faturamento.sql
-
-5 contributors
-fabioInfor marcusmsv rosanaprignolato filipecomparini Marcia-Amador
-528 lines (497 sloc) 29.705 kb
--- 05-mai-2014, Fabio Ferreira, Retirados os campos COD_PAIS_FATURA, COD_ESTADO_FATURA, COD_CEP_FATURA, COD_PAIS_ENTREGA, COD_ESTADO_ENTREGA, COD_CEP_ENTREGA,
+﻿-- 05-mai-2014, Fabio Ferreira, Retirados os campos COD_PAIS_FATURA, COD_ESTADO_FATURA, COD_CEP_FATURA, COD_PAIS_ENTREGA, COD_ESTADO_ENTREGA, COD_CEP_ENTREGA,
 -- Inclusão dos campos VALOR_TOTAL_MERCADOR, CPF/CNPJ CLIENTE FATURA, TIPO CLENTE
 -- 06-mai-2014, Fabio Ferreira, Correcção timezone ULTIMA_ATUALIZACAO, DATA_FATURA, DT_ENTREGA
 -- Correção formatação campo PEDIDO_ENTREGA;
@@ -56,6 +33,7 @@ fabioInfor marcusmsv rosanaprignolato filipecomparini Marcia-Amador
 -- #FAF.303.2 - 04-set-2014, Fabio Ferreira, Valor despesa financeira=jusro
 -- #FAF.320 - 05-set-2014, Fabio Ferreira, Tratamento de divisão por zero.
 -- #FAF.321 - 08-set-2014, Fabio Ferreira, Alteração relacionamento
+-- #FAF.323 - 11-set-2014, Fabio Ferreira, Tratamento de divisão por zero.
 --****************************************************************************************************************************************************************
 SELECT
 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -171,7 +149,7 @@ select a.t$itmf$c
 from baandb.tznsls000201 a
 where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))
 then
-case when (cisli940.t$gamt$l!=0 or cisli941.t$gamt$l!=0) then
+case when (cisli940.t$gamt$l!=0 and cisli941.t$gamt$l!=0) then
 nvl((select sum(c.t$amnt$l) from baandb.tcisli941201 c
 where c.t$fire$l=cisli941.t$fire$l
 and c.t$item$l=(select a.t$itmd$c
@@ -198,7 +176,7 @@ select a.t$itmf$c
 from baandb.tznsls000201 a
 where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))
 then
-case when (cisli940.t$gamt$l!=0 or cisli941.t$gamt$l!=0) then
+case when (cisli940.t$gamt$l!=0 and cisli941.t$gamt$l!=0) then
 nvl((select sum(c.t$amnt$l) from baandb.tcisli941201 c
 where c.t$fire$l=cisli941.t$fire$l
 and c.t$item$l=(select a.t$itjl$c
@@ -417,7 +395,7 @@ select a.t$itmf$c
 from baandb.tznsls000201 a
 where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))
 then
-case when (cisli940.t$gamt$l!=0 or cisli941.t$gamt$l!=0) then
+case when (cisli940.t$gamt$l!=0 and cisli941.t$gamt$l!=0) then
 nvl((select sum(c.t$amnt$l) from baandb.tcisli941201 c
 where c.t$fire$l=cisli941.t$fire$l
 and c.t$item$l=(select a.t$itjl$c
