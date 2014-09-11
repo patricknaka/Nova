@@ -6,6 +6,7 @@
 -- #FAF.286 - 29-jul-2014, Fabio Ferreira, 	Ajuste do campo DT_ATUALIZACAO_NF
 -- #MAT.308 - 28-ago-2014, Marcia A. Torres, Inclusão do campo TIPO_ORDEM_VENDA.
 -- #FAF.314 - 01-sep-2014, Fabio Ferreira, 	Correção impostos importação
+-- #FAF.322 - 11-sep-2014, Fabio Ferreira, 	Correção relacionamento
 --**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -100,12 +101,7 @@ SELECT
         Nvl((SELECT sum(cisli943.t$amnt$l) from baandb.tcisli943201 cisli943
              WHERE  cisli943.t$fire$l=cisli940.t$fire$l
              AND    cisli943.t$brty$l=13),0) VL_CSLL,
-		(SELECT SUM(znsls401.t$vldi$c) 
-		FROM baandb.tznsls401201 znsls401,
-			   baandb.tcisli245201 cisli245
-		WHERE cisli245.t$slso=znsls401.t$orno$c
-		AND   cisli245.t$pono=znsls401.t$pono$c
-		AND   cisli245.t$fire$l=cisli940.t$fire$l) VL_DESCONTO_INCONDICIONAL,
+		entr.t$vldi$c VL_DESCONTO_INCONDICIONAL,
 		cisli940.t$cchr$l VL_DESPESA_ADUANEIRA,
 		nvl((select sum(l.t$gexp$l) from baandb.tcisli941201 l
 		where	l.t$fire$l = cisli940.t$fire$l
@@ -147,11 +143,29 @@ SELECT
 
 FROM
 		baandb.tcisli940201 cisli940
-		LEFT JOIN (SELECT DISTINCT znsls401.t$entr$c, cisli245.t$fire$l, znsls401.t$pecl$c , znsls401.t$orno$c, znsls401.t$uneg$c 
-		FROM baandb.tznsls401201 znsls401 ,
-         baandb.tcisli245201 cisli245
-		WHERE cisli245.t$slso=znsls401.t$orno$c
-		AND   cisli245.t$pono=znsls401.t$pono$c) entr ON entr.t$fire$l=cisli940.t$fire$l,
+		LEFT JOIN (SELECT 	znsls401.t$entr$c, 
+							cisli245.t$fire$l, 
+							znsls401.t$pecl$c , 
+							znsls401.t$orno$c, 
+							znsls401.t$uneg$c, 
+							SUM(znsls401.t$vldi$c) t$vldi$c 
+					FROM baandb.tznsls401201 znsls401,
+					 baandb.tcisli245201 cisli245,
+					 baandb.tznsls004301 znsls004																		--#FAF.322.n
+					WHERE cisli245.t$slso=znsls004.t$orno$c
+					AND   cisli245.t$pono=znsls004.t$pono$c
+					AND   znsls401.t$ncia$c=znsls004.t$ncia$c
+					AND   znsls401.t$uneg$c=znsls004.t$uneg$c
+					AND   znsls401.t$pecl$c=znsls004.t$pecl$c
+					AND   znsls401.t$sqpd$c=znsls004.t$sqpd$c
+					AND   znsls401.t$entr$c=znsls004.t$entr$c
+					AND   znsls401.t$sequ$c=znsls004.t$sequ$c
+					group by
+							znsls401.t$entr$c, 
+							cisli245.t$fire$l, 
+							znsls401.t$pecl$c ,
+							znsls401.t$orno$c, 
+							znsls401.t$uneg$c) entr ON entr.t$fire$l=cisli940.t$fire$l,
     baandb.ttcemm124201 tcemm124,
     baandb.ttcemm030201 tcemm030
 WHERE tcemm124.t$loco=201
