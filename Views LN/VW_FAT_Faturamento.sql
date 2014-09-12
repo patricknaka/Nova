@@ -136,7 +136,7 @@ and tcibd001b.t$kitm<3),1)) VL_FRETE_CIA,
 -- CASE WHEN cisli941f.t$gexp$l>=znsls402.t$vlju$c THEN --#FAF.303.n
 -- cisli941f.t$gexp$l-znsls402.t$vlju$c
 -- ELSE cisli941f.t$gexp$l END VL_DESPESA, --#FAF.303.o
-case when cisli941.t$item$l not in	--#FAF.302.1.sn
+TRUNC(case when cisli941.t$item$l not in	--#FAF.302.1.sn
 (select a.t$itjl$c
 from baandb.tznsls000201 a
 where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
@@ -157,7 +157,7 @@ from baandb.tznsls000201 a
 where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))),0)/
 (cisli941.t$gamt$l/cisli940.t$gamt$l)
 else 0 end
-else 0 end VL_DESPESA,
+else 0 end,2) VL_DESPESA,
 cisli941f.t$ldam$l VL_DESCONTO,
 -- cisli941f.t$iprt$l VL_TOTAL_ITEM, --#FAF.299.o
 cisli941f.t$amnt$l VL_TOTAL_ITEM,	--#FAF.299.n
