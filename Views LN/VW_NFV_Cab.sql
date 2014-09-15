@@ -39,7 +39,6 @@ SELECT
 		cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
 		entr.t$pecl$c NR_PEDIDO,
 		TO_CHAR(entr.t$entr$c) NR_ENTREGA,																	--#FAF.098.n
-		--CONCAT(TRIM(entr.t$pecl$c), TRIM(to_char(entr.t$entr$c))) NR_PEDIDO_ENTREGA,						--#FAF.098.o
 		entr.t$orno$c NR_ORDEM,
 		(SELECT cisli942.t$amnt$l FROM baandb.tcisli942201 cisli942
 		WHERE cisli942.t$fire$l=cisli940.t$fire$l
@@ -61,31 +60,36 @@ SELECT
 		WHERE cisli941.t$fire$l=cisli940.t$fire$l) VL_DESCONTO,
 		cisli940.t$amnt$l VL_TOTAL_NF,
         CASE WHEN cisli940.t$fdty$l=15 then
-          (select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
+          (select a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
           and a.t$fire$l=b.t$refr$l
-		  and rownum=1)
-          else 0
-          end  NR_NF_FATURA,
+          and rownum=1
+          group by a.t$docn$l
+          ) else 0
+       end  NR_NF_FATURA,
        CASE WHEN cisli940.t$fdty$l=15 then
-          (select distinct a.t$seri$l from baandb.tcisli940201 a, baandb.tcisli941201 b
+          (select a.t$seri$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
           and a.t$fire$l=b.t$refr$l
-		  and rownum=1)
+          and rownum=1
+          group by a.t$seri$l)
           else ' '
           end  NR_SERIE_NF_FATURA, 
         CASE WHEN cisli940.t$fdty$l=16 then
-          (select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
+          (select a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
           and a.t$fire$l=b.t$refr$l
-		  and rownum=1)
+          and rownum=1
+          group by a.t$docn$l)
           else 0
           end NR_NF_REMESSA,
         CASE WHEN cisli940.t$fdty$l=16 then
-          (select distinct a.t$seri$l from baandb.tcisli940201 a, baandb.tcisli941201 b
+          (select a.t$seri$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
           and a.t$fire$l=b.t$refr$l
-		  and rownum=1)
+          and rownum=1
+          group by a.t$seri$l
+          )
           else ' '
           end NR_SERIE_NF_REMESSA,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -137,9 +141,10 @@ SELECT
 	cisli940.t$fdtc$l CD_TIPO_DOCUMENTO_FISCAL,
 	cisli940.t$nfes$l CD_STATUS_SEFAZ,																	--#FAF.248.n
 
-  (SELECT DISTINCT tdsls400.t$sotp                                        --#MAT.308.sn
+  (SELECT tdsls400.t$sotp                                        --#MAT.308.sn
    FROM baandb.ttdsls400201 tdsls400            
-   WHERE tdsls400.t$orno=entr.t$orno$c)        CD_TIPO_ORDEM_VENDA        --#MAT.308.en 
+   WHERE tdsls400.t$orno=entr.t$orno$c
+   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA        --#MAT.308.en 
 
 FROM
 		baandb.tcisli940201 cisli940
@@ -151,7 +156,7 @@ FROM
 							SUM(znsls401.t$vldi$c) t$vldi$c 
 					FROM baandb.tznsls401201 znsls401,
 					 baandb.tcisli245201 cisli245,
-					 baandb.tznsls004301 znsls004																		--#FAF.322.n
+					 baandb.tznsls004201 znsls004																		--#FAF.322.n
 					WHERE cisli245.t$slso=znsls004.t$orno$c
 					AND   cisli245.t$pono=znsls004.t$pono$c
 					AND   znsls401.t$ncia$c=znsls004.t$ncia$c
@@ -171,4 +176,4 @@ FROM
 WHERE tcemm124.t$loco=201
 AND   tcemm124.t$dtyp=1
 AND   tcemm124.t$cwoc=cisli940.t$cofc$l
-AND   tcemm030.t$eunt=tcemm124.t$grid
+AND   tcemm030.t$eunt=tcemm124.t$grid;
