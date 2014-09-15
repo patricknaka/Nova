@@ -9,7 +9,7 @@
 -- #FAF.113 - 	26-mai-2014, Fabio Ferreira, 	Inclusão do campo CIA
 -- #FAF.252 - 	30-jul-2014, Fabio Ferreira, 	Correção data atualização
 --***************************************************************************************************************************************************************
-SELECT DISTINCT
+SELECT 
 		znsls400.t$ncia$c CD_CIA,																								--#FAF.113.n
 	   znsls401.t$pecl$c NR_PEDIDO,
        TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,																	-- #FAF.048.1.n
@@ -42,15 +42,47 @@ SELECT DISTINCT
 	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
 	   znsls400.t$idli$c NR_LISTA_CASAMENTO																		--#FAF.005.n
-FROM baandb.tznsls401201 znsls401,
-     baandb.tznsls400201 znsls400,
-     baandb.ttdsls400201 tdsls400,
-     baandb.ttccom130201 tccom130,
-     baandb.ttccom130201 tccom130c
-WHERE znsls400.t$ncia$c = znsls401.t$ncia$c
-AND znsls400.t$uneg$c = znsls401.t$uneg$c
-AND znsls400.t$pecl$c = znsls401.t$pecl$c
-AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
-AND tdsls400.t$orno = znsls401.t$orno$c
-AND tccom130.t$cadr = tdsls400.t$itad
-AND tccom130c.t$cadr = tdsls400.t$stad
+FROM baandb.tznsls401201 znsls401 
+INNER JOIN baandb.tznsls400201 znsls400 
+      ON  znsls400.t$ncia$c = znsls401.t$ncia$c
+      AND znsls400.t$uneg$c = znsls401.t$uneg$c
+      AND znsls400.t$pecl$c = znsls401.t$pecl$c
+      AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
+INNER JOIN baandb.ttdsls400201 tdsls400  on tdsls400.t$orno = znsls401.t$orno$c
+INNER JOIN baandb.ttccom130201 tccom130  on tccom130.t$cadr = tdsls400.t$itad
+INNER JOIN baandb.ttccom130201 tccom130c on tccom130c.t$cadr = tdsls400.t$stad
+GROUP BY 
+znsls400.t$ncia$c,
+znsls401.t$pecl$c,
+TO_CHAR(znsls401.t$entr$c),
+tdsls400.t$orno,
+tdsls400.t$ofbp,
+tccom130.t$ftyp$l,
+tccom130.t$ccit,
+tccom130.t$ccty,
+tccom130.t$cste,
+tccom130.t$pstc,
+tccom130.t$namc,
+tccom130.t$dist$l,
+tccom130.t$hono,
+znsls400.t$comf$c,
+znsls400.t$reff$c,
+tdsls400.t$stbp,
+tccom130c.t$ccit,
+tccom130c.t$ccty,
+tccom130c.t$cste,
+tccom130c.t$pstc,
+tccom130c.t$namc,
+tccom130c.t$dist$l,
+tccom130c.t$hono,
+znsls401.t$come$c,
+znsls401.t$refe$c,
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+AT time zone sessiontimezone) AS DATE),
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+AT time zone sessiontimezone) AS DATE),
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+AT time zone sessiontimezone) AS DATE),
+znsls400.t$idli$c;
+
+
