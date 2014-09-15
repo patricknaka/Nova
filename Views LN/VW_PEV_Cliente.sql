@@ -48,7 +48,28 @@ INNER JOIN baandb.tznsls400201 znsls400
       AND znsls400.t$uneg$c = znsls401.t$uneg$c
       AND znsls400.t$pecl$c = znsls401.t$pecl$c
       AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
-INNER JOIN baandb.ttdsls400201 tdsls400  on tdsls400.t$orno = znsls401.t$orno$c
+INNER JOIN (select 	znsls004q.t$ncia$c,
+                    znsls004q.t$uneg$c,
+                    znsls004q.t$pecl$c,
+                    znsls004q.t$sqpd$c,
+                    znsls004q.t$entr$c,
+                    znsls004q.t$sequ$c,
+					znsls004q.t$orno$c
+			from baandb.tznsls004201 znsls004q
+			where znsls004q.t$date$c=(select max(q004.t$date$c) from baandb.tznsls004201 q004
+									 where 	q004.t$ncia$c=znsls004q.t$ncia$c
+									 and	q004.t$uneg$c=znsls004q.t$uneg$c
+									 and	q004.t$pecl$c=znsls004q.t$pecl$c	
+									 and	q004.t$sqpd$c=znsls004q.t$sqpd$c										
+									 and	q004.t$entr$c=znsls004q.t$entr$c			
+									 and	q004.t$sequ$c=znsls004q.t$sequ$c)) znsls004						
+		ON  znsls004.t$ncia$c = znsls401.t$ncia$c
+        AND znsls004.t$uneg$c = znsls401.t$uneg$c
+        AND znsls004.t$pecl$c = znsls401.t$pecl$c
+        AND znsls004.t$sqpd$c = znsls401.t$sqpd$c
+		AND znsls004.t$entr$c = znsls401.t$entr$c
+		AND znsls004.t$sequ$c = znsls401.t$sequ$c		
+INNER JOIN baandb.ttdsls400201 tdsls400  on tdsls400.t$orno = znsls004.t$orno$c
 INNER JOIN baandb.ttccom130201 tccom130  on tccom130.t$cadr = tdsls400.t$itad
 INNER JOIN baandb.ttccom130201 tccom130c on tccom130c.t$cadr = tdsls400.t$stad
 GROUP BY 
