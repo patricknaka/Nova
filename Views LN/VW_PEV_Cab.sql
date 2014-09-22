@@ -1,4 +1,4 @@
-﻿SELECT  DISTINCT
+SELECT  DISTINCT
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
          AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,                                                                 --#MAR.265.en
         znsls400.t$ncia$c CD_CIA,
@@ -46,8 +46,9 @@
         znsls400.t$idcp$c NR_CAMPANHA_B2B,
         sls401q.t$pztr$c QT_PRAZO_TRANSIT_TIME,
         sls401q.t$pzcd$c QT_PRAZO_CD,
-        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 END NR_NF_CONSOLIDADA,            --#FAF.006.n      
-        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END NR_SERIE_NF_CONSOLIDADA,          --#FAF.006.n
+--        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 END NR_NF_CONSOLIDADA,     --#FAF.006.n   --#MAR.304.o    
+        CASE WHEN tdsls094.t$bill$c!=3 THEN to_char(consold.NOTA) ELSE '0' END NR_NF_CONSOLIDADA,           --#MAR.304.n      
+        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END NR_SERIE_NF_CONSOLIDADA,   --#FAF.006.n  
         sls401q.t$pcga$c NR_PEDIDO_GARANTIA,
         sls401q.t$dtep$c DT_LIMITE_EXPED,
         znsls400.t$tped$c CD_TIPO_PEDIDO,
