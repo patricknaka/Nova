@@ -1,4 +1,4 @@
-﻿-- 05-mai-2014, Fabio Ferreira, Retirados os campos COD_PAIS_FATURA, COD_ESTADO_FATURA, COD_CEP_FATURA, COD_PAIS_ENTREGA, COD_ESTADO_ENTREGA, COD_CEP_ENTREGA,
+-- 05-mai-2014, Fabio Ferreira, Retirados os campos COD_PAIS_FATURA, COD_ESTADO_FATURA, COD_CEP_FATURA, COD_PAIS_ENTREGA, COD_ESTADO_ENTREGA, COD_CEP_ENTREGA,
 -- Inclusão dos campos VALOR_TOTAL_MERCADOR, CPF/CNPJ CLIENTE FATURA, TIPO CLENTE
 -- 06-mai-2014, Fabio Ferreira, Correcção timezone ULTIMA_ATUALIZACAO, DATA_FATURA, DT_ENTREGA
 -- Correção formatação campo PEDIDO_ENTREGA;
@@ -34,6 +34,7 @@
 -- #FAF.320 - 05-set-2014, Fabio Ferreira, Tratamento de divisão por zero.
 -- #FAF.321 - 08-set-2014, Fabio Ferreira, Alteração relacionamento
 -- #FAF.323 - 11-set-2014, Fabio Ferreira, Tratamento de divisão por zero.
+-- #MAR.329 - 22-set-2014, Marcia A. R. Torres, Correção Base de Cálculo ICMS.
 --****************************************************************************************************************************************************************
 SELECT
 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -343,7 +344,8 @@ CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR
 -- WHERE cisli943.t$fire$l=cisli941f.t$fire$l
 -- AND cisli943.t$line$l=cisli941f.t$line$l
 -- AND cisli943.t$brty$l=1),0) VL_BASE_ICMS, --#FAF.201.eo
-nvl(ICMS.t$base$l,0) VL_BASE_ICMS,	--#FAF.201.n
+--nvl(ICMS.t$base$l,0) VL_BASE_ICMS,	--#FAF.201.n  --#MAR.329.o
+nvl(ICMS.t$fbtx$l,0) VL_BASE_ICMS,	--#MAR.329.n
 Nvl((SELECT cisli943.t$base$l from baandb.tcisli943201 cisli943
 WHERE cisli943.t$fire$l=cisli941f.t$fire$l
 AND cisli943.t$line$l=cisli941f.t$line$l
