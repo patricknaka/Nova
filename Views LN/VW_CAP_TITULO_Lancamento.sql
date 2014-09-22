@@ -1,92 +1,70 @@
-SELECT
-  DISTINCT
+
+select
+  distinct
     201                             CD_CIA,
-      CONCAT(CONCAT(      
-            TDREC940.T$TTYP$L, ''), 
-            TDREC940.T$INVN$L)
-                                    CD_CHAVE_PRIMARIA,
-    ITRTP.TRTPDESC                  DS_TIPO_LANCAMENTO,
-    IDBCR.DBCRDESC                  IN_DEBITO_CREDITO,
-    TDREC952.T$AMTH$L$1             VL_LANCAMENTO,
-    TDREC952.T$LEAC$L               CD_CONTA_CONTABIL,
-    TFGLD008.T$DESC                 DS_CONTA_CONTABIL,
-    TDREC952.T$LINE$L				NR_LINHA,
-	
-	(SELECT  
-		   l.t$desc DS_TIPO_NF
-	FROM baandb.tttadv401000 d,
-		 baandb.tttadv140000 l
-	WHERE d.t$cpac='tc'
-	AND d.t$cdom='mcs.brty.l'
-	AND rpad(d.t$vers,4) || rpad(d.t$rele,2) || rpad(d.t$cust,4)=
+    concat(concat(tdrec940.t$ttyp$l, ''), tdrec940.t$invn$l) CD_CHAVE_PRIMARIA,
+    itrtp.trtpdesc                  DS_TIPO_LANCAMENTO,
+    idbcr.dbcrdesc                  IN_DEBITO_CREDITO,
+    tdrec952.t$amth$l$1             VL_LANCAMENTO,
+    tdrec952.t$leac$l               CD_CONTA_CONTABIL,
+    tfgld008.t$desc                 DS_CONTA_CONTABIL,
+    tdrec952.t$line$l				NR_LINHA,
+	(select l.t$desc ds_tipo_nf
+		from baandb.tttadv401000 d, baandb.tttadv140000 l
+		where d.t$cpac='tc' and d.t$cdom='mcs.brty.l'
+		and rpad(d.t$vers,4) || rpad(d.t$rele,2) || rpad(d.t$cust,4)=
 										 (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele, 2) || rpad(l1.t$cust,4) ) 
 										  from baandb.tttadv401000 l1 
 										  where l1.t$cpac=d.t$cpac 
-										  AND l1.t$cdom=d.t$cdom)
-	AND l.t$clab=d.t$za_clab
-	AND l.t$clan='p'
-	AND l.t$cpac='tc'
-	AND d.t$cnst=TDREC952.T$brty$l
-	AND rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
+										  and l1.t$cdom=d.t$cdom)
+		and l.t$clab=d.t$za_clab
+		and l.t$clan='p' and l.t$cpac='tc'
+		and d.t$cnst=tdrec952.t$brty$l
+		and rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
 										(select max(rpad(l1.t$vers,4) || rpad(l1.t$rele,2) || rpad(l1.t$cust,4) ) 
 										  from baandb.tttadv140000 l1 
 										  where l1.t$clab=l.t$clab 
-										  AND l1.t$clan=l.t$clan 
-										  AND l1.t$cpac=l.t$cpac)) IMPOSTO	
-	
-	
-  
-FROM
-	BAANDB.TTDREC940201 TDREC940,
-	BAANDB.TTDREC952201 TDREC952
-                                  LEFT  JOIN  BAANDB.TTFGLD008201 TFGLD008
-                                        ON                        TFGLD008.T$LEAC=TDREC952.T$LEAC$L,
-      ( SELECT  D.T$CNST TRTPCODE, 
-                L.T$DESC TRTPDESC
-        FROM    TTTADV401000 D, 
-                TTTADV140000 L 
-        WHERE   D.T$CPAC='tf'
-        AND     D.T$CDOM='trtp.l'
-		AND rpad(d.t$vers,4) || rpad(d.t$rele,2) || rpad(d.t$cust,4)=
+										  and l1.t$clan=l.t$clan 
+										  and l1.t$cpac=l.t$cpac)) DS_TIPO_IMPOSTO	
+from
+	baandb.ttdrec940201 tdrec940,
+	baandb.ttdrec952201 tdrec952 
+	left  join  baandb.ttfgld008201 tfgld008 
+	on tfgld008.t$leac=tdrec952.t$leac$l,
+      ( select  d.t$cnst trtpcode, l.t$desc trtpdesc
+			from  tttadv401000 d, tttadv140000 l 
+			where d.t$cpac='tf' and d.t$cdom='trtp.l'
+			and rpad(d.t$vers,4) || rpad(d.t$rele,2) || rpad(d.t$cust,4)=
                                        (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele, 2) || rpad(l1.t$cust,4) ) 
                                         from baandb.tttadv401000 l1 
                                         where l1.t$cpac=d.t$cpac 
-                                        AND l1.t$cdom=d.t$cdom)
-        AND     L.T$CLAB=D.T$ZA_CLAB
-        AND     L.T$CLAN='p'
-        AND     L.T$CPAC='tf'
-		AND rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
+                                        and l1.t$cdom=d.t$cdom)
+			and l.t$clab=d.t$za_clab
+			and l.t$clan='p' and l.t$cpac='tf'
+			and rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
                                       (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele,2) || rpad(l1.t$cust,4) ) 
                                         from baandb.tttadv140000 l1 
                                         where l1.t$clab=l.t$clab 
-                                        AND l1.t$clan=l.t$clan 
-                                        AND l1.t$cpac=l.t$cpac)) ITRTP,
-      ( SELECT  D.T$CNST DBCRCODE, 
-                L.T$DESC DBCRDESC
-        FROM    TTTADV401000 D, 
-                TTTADV140000 L 
-        WHERE   D.T$CPAC='tf'
-        AND     D.T$CDOM='gld.dbcr'
-		AND rpad(d.t$vers,4) || rpad(d.t$rele,2) || rpad(d.t$cust,4)=
+                                        and l1.t$clan=l.t$clan 
+                                        and l1.t$cpac=l.t$cpac) ) itrtp,
+      ( select  d.t$cnst dbcrcode, l.t$desc dbcrdesc
+			from tttadv401000 d, tttadv140000 l 
+			where d.t$cpac='tf' and d.t$cdom='gld.dbcr'
+			and rpad(d.t$vers,4) || rpad(d.t$rele,2) || rpad(d.t$cust,4)=
                                        (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele, 2) || rpad(l1.t$cust,4) ) 
                                         from baandb.tttadv401000 l1 
                                         where l1.t$cpac=d.t$cpac 
-                                        AND l1.t$cdom=d.t$cdom)
-        AND     L.T$CLAB=D.T$ZA_CLAB
-        AND     L.T$CLAN='p'
-        AND     L.T$CPAC='tf'
-		AND rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
+                                        and l1.t$cdom=d.t$cdom)
+			and l.t$clab=d.t$za_clab
+			and l.t$clan='p' and l.t$cpac='tf'
+			and rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
                                       (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele,2) || rpad(l1.t$cust,4) ) 
                                         from baandb.tttadv140000 l1 
                                         where l1.t$clab=l.t$clab 
-                                        AND l1.t$clan=l.t$clan 
-                                        AND l1.t$cpac=l.t$cpac)) IDBCR                                        
+                                        and l1.t$clan=l.t$clan 
+                                        and l1.t$cpac=l.t$cpac) ) idbcr                                        
   
-WHERE
-	TDREC952.T$FIRE$L=TDREC940.T$FIRE$L
-AND
-  TDREC952.T$TRTP$L=ITRTP.TRTPCODE
-AND
-  TDREC952.T$DBCR$L=IDBCR.DBCRCODE  
-AND
-  TDREC940.T$INVN$L>0 
+where tdrec952.t$fire$l=tdrec940.t$fire$l
+and tdrec952.t$trtp$l=itrtp.trtpcode
+and tdrec952.t$dbcr$l=idbcr.dbcrcode  
+and tdrec940.t$invn$l>0 
