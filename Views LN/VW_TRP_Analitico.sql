@@ -1,13 +1,15 @@
 select distinct
       TO_CHAR(znsls401.T$NCIA$C) CD_FILIAL,
       znint002.T$DESC$C NM_UNIDADE_NEGOCIO,
-      (select min(o.T$DATE$C) from BAANDB.TZNFMD640201 o
+      (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE) from BAANDB.TZNFMD640201 o
 		where o.T$COCI$C='ROT' and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_SAIDA_ENTREGA,
-      znsls401.T$pecl$C NR_PEDIDO,
+     znsls401.T$pecl$C NR_PEDIDO,
       znfmd630.T$pecl$C NR_ENTREGA,
       znfmd630.t$vlft$c VL_FRETE_PAGAR_GARANTIA,
       znsls002.T$DSCA$C DS_TIPO_ENTREGA,
-      (select min(o.T$DATE$C) from BAANDB.TZNFMD640201 o
+      (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE) from BAANDB.TZNFMD640201 o
 		where o.T$COCI$C='ENT' and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_ENTREGA_REALIZADA,
       CASE WHEN znfmd630.t$stat$c='F' THEN 'FINALIZADO' ELSE 'EM PROCESSO' END NM_TIPO_ESTAGIO,
       --znfmd630.t$ncar$c NR_EXPEDICAO,
@@ -24,13 +26,14 @@ select distinct
       znfmd060.t$ttra$c CD_TIPO_TRANSPORTE,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.t$rdta, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE) DT_LIMITE_EXPEDICAO,    
-      (select o.T$COCI$C from BAANDB.TZNFMD640201 o
+       (select o.T$COCI$C from BAANDB.TZNFMD640201 o
 		where o.T$date$c=(select max(o1.T$date$c) from BAANDB.TZNFMD640201 o1 where o1.T$ETIQ$C=o.T$ETIQ$C)
 		and o.T$ETIQ$C=znfmd630.T$ETIQ$C and rownum=1) CD_OCORRENCIA_INTERNA,
       (select c.t$dsci$c from BAANDB.TZNFMD640201 o, BAANDB.TZNFMD030201 c
 		where o.T$date$c=(select max(o1.T$date$c) from BAANDB.TZNFMD640201 o1 where o1.T$ETIQ$C=o.T$ETIQ$C)
 		and o.T$ETIQ$C=znfmd630.T$ETIQ$C and c.t$ocin$c=o.T$COCI$C and rownum=1) DS_OCORRENCIA_INTERNA,
-      (select max(o.T$DATE$C) from BAANDB.TZNFMD640201 o, BAANDB.TZNFMD030201 c
+      (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)from BAANDB.TZNFMD640201 o, BAANDB.TZNFMD030201 c
 		where o.T$ETIQ$C=znfmd630.T$ETIQ$C and c.t$ocin$c=o.T$COCI$C) DT_OCORRENCIA,
       znsls401.t$ufen$c NM_UF_DESTINATARIO,
       to_char(znsls401.t$cepe$c) CD_CEP_DESTINATARIO,
