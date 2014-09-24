@@ -1,5 +1,5 @@
 select distinct
-      znsls401.T$NCIA$C CD_FILIAL,
+      TO_CHAR(znsls401.T$NCIA$C) CD_FILIAL,
       znint002.T$DESC$C NM_UNIDADE_NEGOCIO,
       (select min(o.T$DATE$C) from BAANDB.TZNFMD640201 o
 		where o.T$COCI$C='ROT' and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_SAIDA_ENTREGA,
