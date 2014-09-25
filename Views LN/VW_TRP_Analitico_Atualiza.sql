@@ -1,53 +1,42 @@
 ﻿select distinct
-      znfmd630.T$pecl$C NR_ENTREGA,
-      (select min(o.T$DATE$C)
-      from BAANDB.TZNFMD640201 o
-      where o.T$COCI$C='ENT'
-      and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_ENTREGA_REALIZADA,
-      CASE WHEN znfmd630.t$stat$c='F' THEN 'FINALIZADO' ELSE 'EM PROCESSO' END NM_TIPO_ESTAGIO,
-      (select o.T$COCI$C
-      from BAANDB.TZNFMD640201 o
-      where o.T$date$c=(select max(o1.T$date$c) from BAANDB.TZNFMD640201 o1 where o1.T$ETIQ$C=o.T$ETIQ$C)
-      and o.T$ETIQ$C=znfmd630.T$ETIQ$C
-      and rownum=1) CD_OCORRENCIA_INTERNA,
-      (select c.t$dsci$c
-      from BAANDB.TZNFMD640201 o,
-      BAANDB.TZNFMD030201 c
-      where o.T$date$c=(select max(o1.T$date$c) from BAANDB.TZNFMD640201 o1 where o1.T$ETIQ$C=o.T$ETIQ$C)
-      and o.T$ETIQ$C=znfmd630.T$ETIQ$C
-      and   c.t$ocin$c=o.T$COCI$C
-      and rownum=1) DS_OCORRENCIA_INTERNA,
-      (select max(o.T$DATE$C)
-      from BAANDB.TZNFMD640201 o,
-           BAANDB.TZNFMD030201 c
-      where o.T$ETIQ$C=znfmd630.T$ETIQ$C
-      and   c.t$ocin$c=o.T$COCI$C) DT_OCORRENCIA
-from  BAANDB.TZNFMD630201 znfmd630,
-      BAANDB.TZNSLS401201 znsls401,
-      BAANDB.TZNSLS400201 znsls400,
-      BAANDB.TZNFMD061201 znfmd061,
-      BAANDB.TZNFMD060201 znfmd060,
-      BAANDB.ttdsls401201 tdsls401,
-      BAANDB.ttdsls400201 tdsls400,
-      BAANDB.ttcmcs080201 tcmcs080,
-      BAANDB.tznint002201 znint002,
-      BAANDB.tznsls002201 znsls002,
-      BAANDB.tznfmd001201 znfmd001,
-      BAANDB.tcisli940201 cisli940
-WHERE   znsls401.T$ORNO$C=znfmd630.T$ORNO$C
-AND     znsls400.t$ncia$c=znsls401.t$ncia$c
-AND     znsls400.t$uneg$c=znsls401.t$uneg$c
-AND     znsls400.t$pecl$c=znsls401.t$pecl$c
-AND     znsls400.t$sqpd$c=znsls401.t$sqpd$c
-AND     znfmd061.T$CFRW$C=znfmd630.T$CFRW$C
-AND     znfmd061.T$CONO$C=znfmd630.t$cono$c
-AND     znfmd060.T$CFRW$C=znfmd630.T$CFRW$C
-AND     znfmd060.T$CONO$C=znfmd630.t$cono$c
-AND     tdsls401.t$orno=znsls401.T$ORNO$C
-AND     tdsls401.t$pono=znsls401.T$PONO$C
-AND     tdsls400.t$orno=tdsls401.t$orno
-AND     tcmcs080.t$cfrw=znfmd630.T$CFRW$C
-AND     znint002.T$NCIA$C=znsls400.T$NCIA$C
-AND     znint002.T$UNEG$C=znsls400.t$uneg$c
-AND     znsls002.T$TPEN$C=znsls401.t$itpe$c
-AND    cisli940.t$fire$l=znfmd630.t$fire$c
+      znfmd630.t$pecl$c NR_ENTREGA,
+      (select min(o.t$date$c) from baandb.tznfmd640201 o
+			where o.t$coci$c='ent'and o.t$etiq$c=znfmd630.t$etiq$c) DT_ENTREGA_REALIZADA,
+      case when znfmd630.t$stat$c='f' then 'FINALIZADO' else 'EM PROCESSO' end NM_TIPO_ESTAGIO,
+      (select o.t$coci$c from baandb.tznfmd640201 o
+			where o.t$date$c=(select max(o1.t$date$c) from baandb.tznfmd640201 o1 where o1.t$etiq$c=o.t$etiq$c)
+			and o.t$etiq$c=znfmd630.t$etiq$c and rownum=1) CD_OCORRENCIA_INTERNA,
+      (select c.t$dsci$c from baandb.tznfmd640201 o, baandb.tznfmd030201 c
+			where o.t$date$c=(select max(o1.t$date$c) from baandb.tznfmd640201 o1 where o1.t$etiq$c=o.t$etiq$c)
+			and o.t$etiq$c=znfmd630.t$etiq$c and c.t$ocin$c=o.t$coci$c and rownum=1) DS_OCORRENCIA_INTERNA,
+      (select max(o.t$date$c) from baandb.tznfmd640201 o, baandb.tznfmd030201 c
+			where o.t$etiq$c=znfmd630.t$etiq$c and c.t$ocin$c=o.t$coci$c) DT_OCORRENCIA
+from  baandb.tznfmd630201 znfmd630,
+      baandb.tznsls401201 znsls401,
+      baandb.tznsls400201 znsls400,
+      baandb.tznfmd061201 znfmd061,
+      baandb.tznfmd060201 znfmd060,
+      baandb.ttdsls401201 tdsls401,
+      baandb.ttdsls400201 tdsls400,
+      baandb.ttcmcs080201 tcmcs080,
+      baandb.tznint002201 znint002,
+      baandb.tznsls002201 znsls002,
+      baandb.tznfmd001201 znfmd001,
+      baandb.tcisli940201 cisli940
+where   znsls401.t$orno$c=znfmd630.t$orno$c
+and     znsls400.t$ncia$c=znsls401.t$ncia$c
+and     znsls400.t$uneg$c=znsls401.t$uneg$c
+and     znsls400.t$pecl$c=znsls401.t$pecl$c
+and     znsls400.t$sqpd$c=znsls401.t$sqpd$c
+and     znfmd061.t$cfrw$c=znfmd630.t$cfrw$c
+and     znfmd061.t$cono$c=znfmd630.t$cono$c
+and     znfmd060.t$cfrw$c=znfmd630.t$cfrw$c
+and     znfmd060.t$cono$c=znfmd630.t$cono$c
+and     tdsls401.t$orno=znsls401.t$orno$c
+and     tdsls401.t$pono=znsls401.t$pono$c
+and     tdsls400.t$orno=tdsls401.t$orno
+and     tcmcs080.t$cfrw=znfmd630.t$cfrw$c
+and     znint002.t$ncia$c=znsls400.t$ncia$c
+and     znint002.t$uneg$c=znsls400.t$uneg$c
+and     znsls002.t$tpen$c=znsls401.t$itpe$c
+and    cisli940.t$fire$l=znfmd630.t$fire$c
