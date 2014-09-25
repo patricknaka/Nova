@@ -1,6 +1,7 @@
 ﻿--	FAF.136 - 13-jun-2014, Fabio Ferreira, 	CNPJ Transportadora
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --	#MAR.258 - 11-ago-2014,	Marcia A R Torres,	Inclusão da DT_ATUALIZACAO
+--  25/09/2014 - Leitura do VL_PESO da znfmd630 - Rosana
 --**********************************************************************************************************************************************************
 select distinct
   (select 
@@ -17,9 +18,9 @@ select distinct
   TO_CHAR(znsls401.t$cepe$c) CD_CEP_DESTINATARIO,
   znsls401.t$cide$c NM_CIDADE_DESTINATARIO,
   znsls401.t$ufen$c NM_UF_DESTINATARIO,
-  znfmd630.t$docn$c NR_NOTA_FISCAL,
+  TO_CHAR(znfmd630.t$docn$c) NR_NOTA_FISCAL,
   znfmd630.t$seri$c NR_SERIE_NOTA_FISCAL,
-  znfmd630.T$FILI$C CD_FILIAL,
+  TO_CHAR(znfmd630.T$FILI$C) CD_FILIAL,
   CASE WHEN cisli940.t$fdty$l=16 then
     (select distinct a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
     where b.t$fire$l=cisli940.t$fire$l
@@ -34,7 +35,7 @@ select distinct
     end NR_SERIE_NOTA_FATURA,
   201 CD_CIA,
   pesovol.vol VL_VOLUME_M3,
-  pesovol.peso VL_PESO, 
+  znfmd630.t$wght$c VL_PESO,
   pesovol.vol*300 VL_PESO_CUBADO,
    
         CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
