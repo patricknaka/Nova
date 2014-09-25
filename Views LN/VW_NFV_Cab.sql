@@ -8,6 +8,7 @@
 -- #FAF.314 - 01-sep-2014, Fabio Ferreira, 	Correção impostos importação
 -- #FAF.322 - 11-sep-2014, Fabio Ferreira, 	Correção relacionamento
 -- #FAF.328 - 22-sep-2014, Fabio Ferreira, 	Correção relacionamento com a ordem de venda
+-- #FAF.328 - 25-sep-2014, Fabio Ferreira, 	Correção relacionamento com a ordem de venda
 --**********************************************************************************************************************************************************
 SELECT
     201 CD_CIA,
@@ -157,7 +158,23 @@ FROM
 							SUM(znsls401.t$vldi$c) t$vldi$c 
 					FROM
 					 baandb.tcisli245201 cisli245
-					 LEFT JOIN baandb.tznsls004201 znsls004 ON	znsls004.t$orno$c=cisli245.t$slso
+					 LEFT JOIN (select	r.t$ncia$c, 
+										r.t$uneg$c,
+										r.t$pecl$c,
+										r.t$sqpd$c,
+										r.t$entr$c,
+										r.t$sequ$c,
+										r.t$orno$c,
+										r.t$pono$c
+								 from baandb.tznsls004301  r
+								 where r.t$entr$c=( select  r0.t$entr$c 
+                                    from baandb.tznsls004301  r0
+                                    where r0.t$orno$c=r.t$orno$c
+                                    and rownum=1
+                                    and r0.t$date$c=  (select max(r1.t$date$c)
+                                                         from baandb.tznsls004301  r1
+                                                         where r1.t$orno$c=r0.t$orno$c))) znsls004 
+															ON	znsls004.t$orno$c=cisli245.t$slso
 					                                        AND znsls004.t$pono$c=cisli245.t$pono
 					 LEFT JOIN baandb.tznsls401201 znsls401 ON   znsls401.t$ncia$c=znsls004.t$ncia$c
 					                                        AND   znsls401.t$uneg$c=znsls004.t$uneg$c
