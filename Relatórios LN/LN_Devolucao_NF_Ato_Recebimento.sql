@@ -6,8 +6,11 @@ SELECT
   tccom100.t$nama        NOME_FORNEC, 
   tdrec940.t$docn$l      NUME_NF,
   tdrec940.t$seri$l      SERI_NF, 
-  tdrec940.t$idat$l      DATA_EMISS,
-  tdrec940.t$stat$l      CODE_STATUS, DESC_DOMAIN_STAT.DESC_STAT, 
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE) DATA_EMISS,
+  tdrec940.t$stat$l      CODE_STATUS, 
+  DESC_DOMAIN_STAT.DESC_STAT, 
   tdrec947.t$rcno$l      CODE_RECEB,
   Trim(tdrec941.t$item$l)CODE_ITEM,
   tdrec941.t$dsca$l      DESC_ITEM,
@@ -99,7 +102,9 @@ WHERE tdrec940.t$rfdt$l = 13
   AND tdrec941.t$item$l = tcibd001.t$item
   AND tcibd001.t$citg = tcmcs023.t$citg
   
-  AND Trunc(tdrec940.t$idat$l) between :EmissaoDe AND :EmissaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)) between :EmissaoDe AND :EmissaoAte
   AND tdrec940.t$stat$l = (CASE WHEN :StatusNF = 0 THEN tdrec940.t$stat$l ELSE :StatusNF END)
   AND Trim(tcibd001.t$citg) IN (:GrupoItem)
   AND ( (Trim(tccom130.t$fovn$l) like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null) )

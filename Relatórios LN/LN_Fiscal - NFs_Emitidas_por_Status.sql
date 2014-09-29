@@ -4,7 +4,10 @@ SELECT
     tcemm030.t$euca                         NUME_FILIAL,
     cisli940.t$docn$l                       NUME_NOTA,
     cisli940.t$seri$l                       NUME_SERIE,
-    cisli940.t$date$l                       DATA_EMISSAO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                                            DATA_EMISSAO,
     tccom130.t$fovn$l                       CNPJ_FORNECEDOR,
     tccom130.t$nama                         NOME_FORNECEDOR,
     cisli940.t$doty$l                       TIPO_DOCTO, DESC_TIPO_DOCTO,
@@ -88,7 +91,9 @@ WHERE cisli940.t$doty$l = DGET.CNST
   AND tcemm124.t$dtyp = 1 
   AND tcemm030.t$eunt = tcemm124.t$grid
   
-  AND Trunc(cisli940.t$date$l) Between :DataEmissaoDe And :DataEmissaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) Between :DataEmissaoDe And :DataEmissaoAte
   AND cisli940.t$cofc$l IN (:Depto)
   AND cisli940.t$ccfo$l IN (:CFOP)
   AND cisli940.t$fdty$l IN (:TipoOrdem)

@@ -15,7 +15,10 @@ SELECT
     tdrec940.t$logn$l         ID_USUARIO,
     ttaad200.t$name           DESC_USUARIO,
     tdrec940.t$cnfe$l         CHAVE_ACESSO, 
-    tdrec940.t$idat$l         DATA_RFISCAL,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                              DATA_RFISCAL,
     tdrec940.t$ptyp$l         TIPO_ORDEM,
     tdrec940.t$rfdt$l         CODE_TIPO_OPER,
   
@@ -94,6 +97,8 @@ WHERE tccom100.t$bpid = tdrec940.t$bpid$l
   AND tcemm124.t$dtyp = 2 
   AND tcemm030.t$eunt = tcemm124.t$grid 
   
-  AND Trunc(tdrec940.t$idat$l) BETWEEN :RefFiscal_De AND :RefFiscal_Ate
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) BETWEEN :RefFiscal_De AND :RefFiscal_Ate
   AND ( (Trim(tccom130.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ IS NULL) )
   AND ( (Trim(tdrec941.t$item$l) Like '%' || :Item || '%') OR (:Item IS NULL) )
