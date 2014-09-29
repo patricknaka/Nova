@@ -10,9 +10,7 @@ SELECT
     tdrec940.t$stat$l                                     STAT_REFF, iTABLE.iDESC, 
     tdrec940.t$fovn$l                                     CNPJ_PARC, 
     tdrec940.t$fids$l                                     NOME_PARC,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)            DATA_APROV,
+    tdrec940.t$adat$l                                     DATA_APROV,
     tdrec940.t$opfc$l                                     CODE_CFOP,
     tdrec947.t$orno$l                                     CODE_ORDEM,
     tdrec941.t$item$l                                     CODE_ITEM,
@@ -127,9 +125,7 @@ WHERE tdrec940.t$fire$l = tdrec941.t$fire$l
 
   AND tcemm030.T$EUNT IN (:Filial)
   AND tdrec940.t$stat$l IN (:Status)
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) BETWEEN :AprovacaoDe AND :AprovacaoAte
+  AND Trunc(tdrec940.t$adat$l) BETWEEN :AprovacaoDe AND :AprovacaoAte
   AND tdrec940.t$opfc$l IN (:CFOP)
   
   AND (   (( SELECT  tdrec949.t$isco$c

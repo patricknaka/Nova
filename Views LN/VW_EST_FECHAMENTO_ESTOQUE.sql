@@ -22,7 +22,11 @@ SELECT  201                               CD_CIA,
 			whina113.t$seqn = whina112.t$seqn AND
 			tcemm030q.t$eunt = tcemm112q.t$grid AND
 			tcemm112q.t$waid = whina112.t$cwar AND
-			whina113.t$trdt=( SELECT max(whina112a.t$trdt)
+
+
+			whina113.t$trdt=( SELECT
+								  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whina112a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+										AT time zone sessiontimezone) AS DATE)
 							  FROM
 								  baandb.twhina112201 whina112a,
 								  baandb.twhina113201 whina113a,
@@ -38,7 +42,8 @@ SELECT  201                               CD_CIA,
 								  whina112a.t$item = whina112.t$item  AND
 								  tcemm030qa.t$euca = tcemm030q.t$euca  AND
 								  tcemm112qa.t$grid = tcemm112q.t$grid
-								  AND whina112a.t$trdt <= TRUNC(sysdate, 'DD')) AND
+								  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whina112a.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+										AT time zone sessiontimezone) AS DATE) <= TRUNC(sysdate, 'DD')) AND
 			whina113.t$seqn=( SELECT												
 								  max(whina112a.t$seqn)
 							  FROM
@@ -65,13 +70,15 @@ SELECT  201                               CD_CIA,
 		
 FROM    baandb.twhwmd215201 whwmd215
 
+--		LEFT JOIN ( SELECT  sum(whinr110q.t$qstk * case when whinr110q.t$kost IN (5, 102) then -1 else 1 end)  t$qstk, 			--#FAF.221.o
 		LEFT JOIN ( SELECT  sum(whinr110q.t$qstk * case when whinr110q.t$kost IN (5, 102) then 1 else -1 end)  t$qstk, 			--#FAF.221.n
 							whinr110q.t$cwar,
 							whinr110q.t$item,
 							CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whinr110q.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 								AT time zone sessiontimezone) AS DATE)t$trdt
 					FROM 	baandb.twhinr110201 whinr110q
-					WHERE	whinr110q.t$trdt >= TRUNC(sysdate, 'DD')
+					WHERE	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whinr110q.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+								AT time zone sessiontimezone) AS DATE) >= TRUNC(sysdate, 'DD')
 GROUP BY 	    			whinr110q.t$cwar,
 							whinr110q.t$item) 		whinr110
 		ON     	whinr110.t$cwar = whwmd215.t$cwar

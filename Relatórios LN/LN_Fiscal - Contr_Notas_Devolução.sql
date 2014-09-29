@@ -6,10 +6,7 @@ SELECT
        where a.t$cadr=cisli940.t$sfra$l)    NUME_FILIAL,
     cisli940.t$docn$l                       NUME_NF,
     cisli940.t$seri$l                       SERI_NF,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
-                                            DATA_EMISSA,
+    cisli940.t$date$l                       DATA_EMISSA,
     cisli940.t$ccfo$l                       COD_CFOP,
     cisli245.t$slso                         ORDEM,
     tdsls400.t$sotp                         TIPO_ORD_VENDA_DEV,
@@ -24,10 +21,7 @@ SELECT
     cisli940d.t$docn$l                      NOTA_NF_VENDA,  
     cisli940d.t$seri$l                      SERI_NF_VENDA,
     cisli940d.t$cnfe$l                      CHAVE_NF_VENDA,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940d.t$date$l, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
-                                            DATA_NF_VENDA,
+    cisli940d.t$date$l                      DATA_NF_VENDA,
     cisli940d.t$amnt$l                      VALO_NF_VENDA,
     cisli245d.t$slso                        NUME_OV,
     cisli940.t$fdty$l                       COD_TIPO_DOC_FISCAL,
@@ -35,10 +29,7 @@ SELECT
     tdrec940.t$stat$l                       CODE_STAT_NF_ORIG,					-- Status ref fiscal
     iSTATRECFIS.DESCR                       DESCR_STAT_NF_ORIG, 				-- Descric Staus Rf fiscal
     tdrec940.t$fire$l                       REFFIS_REC,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
-                                            DATA_REC, 
+    tdrec940.t$date$l                       DATA_REC, 
     tdrec940.t$logn$l                       USER_REC,
     cisli940d.t$stat$l                      STATUS_NFD,
     ( SELECT l.t$desc DS_SITUACAO_NF
@@ -185,7 +176,5 @@ WHERE cisli940.t$fdty$l = 14
 
   AND tcemm030.T$EUNT IN (:Filial)
   AND tdrec940.t$stat$l IN(:StatusRefFiscal)
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) BETWEEN :EmissaoDE AND :EmissaoATE
+  AND Trunc(cisli940.t$date$l) BETWEEN :EmissaoDE AND :EmissaoATE
   AND tdrec940.t$opfc$l IN (:COD_CFOP) 
