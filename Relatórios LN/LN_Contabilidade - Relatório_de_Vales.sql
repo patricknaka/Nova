@@ -1,4 +1,4 @@
-SELECT DISTINCT 
+SELECT DISTINCT  
   znacr200.t$bpid$c,
   201                   NUM_CIA,
   znacr200.t$dim2$c     NUM_FILIAL,
