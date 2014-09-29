@@ -6,7 +6,10 @@ select
     cisli940.t$docn$l                                    Nota_Fiscal,
     cisli940.t$seri$l                                    Serie,
     whinh200.t$otyp                                      Tipo_de_Ordem,
-    cisli940.t$date$l                                    Data_de_Emissao,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                                                         Data_de_Emissao,
     cisli940.t$stat$l                                    Status_da_NF,    --Status da NF 
     
     ( SELECT l.t$desc
@@ -34,7 +37,7 @@ select
                                    where l1.t$clab = l.t$clab 
                                      and l1.t$clan = l.t$clan 
                                      and l1.t$cpac = l.t$cpac )
-         AND d.t$cnst = cisli940.t$stat$l )                 DESCR_Status_da_NF,  -- Descrição do staus da NF
+         AND d.t$cnst = cisli940.t$stat$l )               DESCR_Status_da_NF,  -- Descrição do staus da NF
     
     tccom130b.t$fovn$l                                    CNPJ,
     tccom100.t$nama                                       Nome_do_Parceiro,
@@ -84,7 +87,10 @@ select
          AND d.t$cnst = whinh200.t$hsta)                  DESCR_Status_Ordem_Armazem,
     
     cisli940.t$cnfe$l                                     Chave_de_Acesso,       
-    tdrec940.t$date$l                                     Data_Entrada,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                                                          Data_Entrada,
     tdrec940.t$fire$l                                     Ref_Fiscal_Entrada,  
     tdrec940.t$stat$l                                     CODE_STAT_REC,     --Status ref. Fiscal 
   
@@ -140,7 +146,9 @@ where tccom100.t$bpid   = cisli940.t$stbp$l
   and cisli245.t$oset   = whinh200.t$oset
   and cisli940.t$fdty$l = 4 
 
-  and Trunc(cisli940.t$date$l) Between :EmissaoDe and :EmissaoAte
+  and Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) Between :EmissaoDe and :EmissaoAte
   and tcemm122.t$grid In (:Filial)
   and cisli940.t$ccfo$l In (:CFOP)
   and cisli940.t$stat$l In (:StatusNF)

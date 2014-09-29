@@ -1,4 +1,4 @@
---Saída
+﻿--Saída
 select Q1.* 
   from  ( SELECT
             DISTINCT
@@ -22,8 +22,14 @@ select Q1.*
               tccom130.t$hono      END_NUMERO,
               tccom130.t$namd      END_COMPL,
               tccom130.t$cste      UF,
-              cisli940.t$dats$l    DATA_FATURAMENTO,
-              cisli940.t$date$l    DATA_EMISSAO,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone sessiontimezone) AS DATE)  
+                                   DATA_FATURAMENTO,
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone sessiontimezone) AS DATE)  
+                                   DATA_EMISSAO,
               cisli941.t$line$l    LINE_ITEM,
               tcibd001.t$citg      ID_DEPTO,
               tcmcs023.t$dsca      DESCR_DEPTO,

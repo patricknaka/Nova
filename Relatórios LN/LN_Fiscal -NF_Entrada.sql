@@ -21,8 +21,14 @@ select Q1.*
             tccom130.t$hono                     END_NUMERO,
             tccom130.t$namd                     END_COMPL,
             tccom130.t$cste                     UF,
-            tdrec940.t$adat$l                   DATA_RECEBIMENTO,
-            tdrec940.t$idat$l                   DT_EMISSAO,
+            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                                DATA_RECEBIMENTO,
+            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                                DT_EMISSAO,
             tdrec941.t$line$l                   LINE_ITEM,
             tcibd001.t$citg                     ID_DEPTO,
             tcmcs023.t$dsca                     DESCR_DEPTO,
