@@ -9,7 +9,7 @@ select
 	
     CASE WHEN sum(tfacp200t.t$balc) = 0 
            THEN ( select max(a.t$docd) 
-                    from ttfacp200201 a 
+                    from baandb.ttfacp200201 a 
                    where a.t$ttyp = tfacp200t.t$ttyp 
                      and a.t$ninv = tfacp200t.t$ninv )
          ELSE NULL END      liquidacao,
@@ -21,8 +21,8 @@ select
     tdrec940.t$rfdt$l       ID_Transacao,
 	
     ( SELECT l.t$desc DS_TIPO_OPERACAO
-        FROM tttadv401000 d,
-             tttadv140000 l
+        FROM baandb.tttadv401000 d,
+             baandb.tttadv140000 l
        WHERE d.t$cpac = 'td'        
          AND d.t$cdom = 'rec.trfd.l'       
          AND d.t$vers = 'B61U'
@@ -44,13 +44,13 @@ select
          ELSE 'Aberto' 
      END                    Situacao
       
-from ttfacr200201 tfacr200,
-     ttccom100201 tccom100,
-     ttccom130201 tccom130,
-     ttfacr201201 tfacr201,
-     ttfacp200201 tfacp200,
-     ttfacp200201 tfacp200t,
-     ttdrec940201 tdrec940
+from baandb.ttfacr200201 tfacr200,
+     baandb.ttccom100201 tccom100,
+     baandb.ttccom130201 tccom130,
+     baandb.ttfacr201201 tfacr201,
+     baandb.ttfacp200201 tfacp200,
+     baandb.ttfacp200201 tfacp200t,
+     baandb.ttdrec940201 tdrec940
 
 where tccom100.t$bpid = tfacr200.t$itbp
   and tccom130.t$cadr = tccom100.t$cadr

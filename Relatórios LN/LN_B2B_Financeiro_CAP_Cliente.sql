@@ -47,7 +47,8 @@ SELECT
 
 FROM      baandb.ttcemm030201  tcemm030,
           baandb.ttcemm124201  tcemm124,
-          baandb.ttfacr200201  tfacr200r  
+          baandb.ttfacr200201  tfacr200r 
+ 
 LEFT JOIN baandb.ttfacr200201  tfacr200p
        ON tfacr200p.t$ttyp = tfacr200r.t$ttyp
       AND tfacr200p.t$ninv = tfacr200r.t$ninv

@@ -15,13 +15,16 @@ SELECT
     tdrec940.t$logn$l         ID_USUARIO,
     ttaad200.t$name           DESC_USUARIO,
     tdrec940.t$cnfe$l         CHAVE_ACESSO, 
-    tdrec940.t$idat$l         DATA_RFISCAL,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                              DATA_RFISCAL,
     tdrec940.t$ptyp$l         TIPO_ORDEM,
     tdrec940.t$rfdt$l         CODE_TIPO_OPER,
   
     ( SELECT l.t$desc DS_TIPO_OPERACAO            
-        FROM BAANDB.tttadv401000 d,
-             BAANDB.tttadv140000 l      
+        FROM baandb.tttadv401000 d,
+             baandb.tttadv140000 l      
        WHERE d.t$cpac = 'td'               
          AND d.t$cdom = 'rec.trfd.l'          
          AND l.t$clan = 'p'            
@@ -47,23 +50,23 @@ SELECT
          AND d.t$cnst = tdrec940.t$rfdt$l )
                               DESCR_TIPO_OPERACAO
     
-FROM      BAANDB.ttdrec940301 tdrec940 
+FROM      baandb.ttdrec940301 tdrec940 
 
-LEFT JOIN BAANDB.tttaad200000 ttaad200
+LEFT JOIN baandb.tttaad200000 ttaad200
        ON ttaad200.t$user = tdrec940.t$logn$l,
  
-          BAANDB.ttdrec941301 tdrec941,
-          BAANDB.ttcemm030301 tcemm030,
-          BAANDB.ttcemm124301 tcemm124,
-          BAANDB.ttccom100301 tccom100
+          baandb.ttdrec941301 tdrec941,
+          baandb.ttcemm030301 tcemm030,
+          baandb.ttcemm124301 tcemm124,
+          baandb.ttccom100301 tccom100
 
-LEFT JOIN BAANDB.ttccom130301 tccom130
+LEFT JOIN baandb.ttccom130301 tccom130
        ON tccom130.t$cadr = tccom100.t$cadr,
    
         ( SELECT d.t$cnst CODE_STAT, 
                  l.t$desc DESC_STAT_RFISCAL
-            FROM BAANDB.tttadv401000 d, 
-                 BAANDB.tttadv140000 l 
+            FROM baandb.tttadv401000 d, 
+                 baandb.tttadv140000 l 
            WHERE d.t$cpac = 'td' 
              AND d.t$cdom = 'rec.stat.l'
              AND l.t$clan = 'p'
@@ -94,6 +97,8 @@ WHERE tccom100.t$bpid = tdrec940.t$bpid$l
   AND tcemm124.t$dtyp = 2 
   AND tcemm030.t$eunt = tcemm124.t$grid 
   
-  AND Trunc(tdrec940.t$idat$l) BETWEEN :RefFiscal_De AND :RefFiscal_Ate
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) BETWEEN :RefFiscal_De AND :RefFiscal_Ate
   AND ( (Trim(tccom130.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ IS NULL) )
   AND ( (Trim(tdrec941.t$item$l) Like '%' || :Item || '%') OR (:Item IS NULL) )
