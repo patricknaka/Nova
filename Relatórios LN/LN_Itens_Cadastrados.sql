@@ -68,8 +68,14 @@ SELECT  DISTINCT
                          and l1.t$cpac=l.t$cpac ) )
                             DESCR_TIPO_XD_NOVA,
   
-  tcibd001.t$dtcr$c         DATA_INCLUSAO,
-  tcibd001.t$lmdt           DATA_ALTRERACAO,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)  
+                            DATA_INCLUSAO,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)  
+                            DATA_ALTRERACAO,
   tcibd001.t$seab           CHAVE_DE_BUSCA_II,
   tcibd936.t$sour$l         ORIGEM,
   
@@ -209,8 +215,18 @@ LEFT JOIN baandb.twhwmd220201 whwmd210
         
 WHERE tcibd001.t$kitm = iTABLE.CODE_KITM
 
-  AND Trunc(tcibd001.t$dtcr$c) BETWEEN NVL(:DataInclusaoDe, tcibd001.t$dtcr$c) AND NVL(:DataInclusaoAte, tcibd001.t$dtcr$c)
-  AND Trunc(tcibd001.t$lmdt) BETWEEN NVL(:DataAlteracaoDe, tcibd001.t$lmdt) AND NVL(:DataAlteracaoAte, tcibd001.t$lmdt)
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)) 
+      BETWEEN NVL(:DataInclusaoDe, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+        AT time zone sessiontimezone) AS DATE)) 
+      AND NVL(:DataInclusaoAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE))
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)) 
+      BETWEEN NVL(:DataAlteracaoDe, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) 
+      AND NVL(:DataAlteracaoAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE))
   AND tcibd001.t$npcl$c IN (:TipoClasse)
   AND tcibd001.t$csig IN (:Situacao)
   AND tdipu001.t$ixdn$c IN (:TipoXD)

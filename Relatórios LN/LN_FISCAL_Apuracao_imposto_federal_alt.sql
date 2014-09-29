@@ -1,6 +1,8 @@
 SELECT DISTINCT 
-  tdrec940.t$idat$l                       DATA_EMISSAO,
-
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE) 
+                                          DATA_EMISSAO,
  ( select max(p.t$docd) 
      from baandb.ttfacp200301 p
     where tdrec940.t$ttyp$l = p.t$ttyp
@@ -80,4 +82,6 @@ LEFT JOIN BAANDB.ttccom130301 tccom130
        ON tccom130.t$cadr=tccom100.t$cadr
            
 WHERE Trim(tdrec940.t$opfc$l) in ('1933', '2933', '1300')  
-  AND Trunc(tdrec940.t$idat$l) Between :DataEmissaoDe AND :DataEmissaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)) Between :DataEmissaoDe AND :DataEmissaoAte

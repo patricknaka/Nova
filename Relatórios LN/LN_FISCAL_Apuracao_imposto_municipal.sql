@@ -6,12 +6,18 @@ SELECT DISTINCT
        AND tcemm030.t$eunt = tcemm124.t$grid
        AND tcemm124.t$loco = 201 AND rownum = 1 ) FILIAL,
   
-  tdrec940.t$date$l                               DT_NR,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE) 
+                                                  DT_NR,
   tdrec940.t$fire$l                               NR,
   tccom100.t$fovn                                 CNPJ_FORN,
   tccom100.t$nama                                 NOME_FORN,
   tdrec940.t$docn$l                               NOTA_FISCAL,
-  tdrec940.t$idat$l                               DATA_EMISSAO,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE) 
+                                                  DATA_EMISSAO,
   tdrec940.t$opfc$l                               CFOP,
   
   ( SELECT tdrec949.t$base$l
@@ -77,5 +83,6 @@ LEFT JOIN ( select a.t$ttyp,
 WHERE TRIM(tdrec940.t$opfc$l) IN ('1933', '2933', '1300')
   AND tccom100.t$bpid   = tdrec940.t$bpid$l
 
-  AND Trunc(tdrec940.t$idat$l) Between :DataEmissaoDe 
-  AND :DataEmissaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)) Between :DataEmissaoDe AND :DataEmissaoAte
