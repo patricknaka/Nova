@@ -3,7 +3,7 @@ SELECT
   tcemm030.t$euca            NUME_FILIAL,
   tcemm030.T$EUNT            CHAVE_FILIAL,
   whinr110.t$cwar            CODE_CWAR,
-  whinr110.t$item            CODE_ITEM,
+  Trim(whinr110.t$item)      CODE_ITEM,
   whinr110.t$seqn            SEQN_TRANS,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whinr110.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE) 
@@ -161,7 +161,8 @@ LEFT JOIN ( SELECT d.t$cnst CODE_ORDEM,
 
 WHERE whinr110.t$kost > 0
 
-  AND whinr110.t$trdt BETWEEN :DataMovDe AND :DataMovAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whinr110.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone sessiontimezone) AS DATE)) BETWEEN :DataMovDe AND :DataMovAte
   AND tcemm030.T$EUNT IN (:Filial)
   AND Trim(whinr110.t$item) = NVL(:CodItem, Trim(whinr110.t$item))
 
@@ -178,4 +179,4 @@ GROUP BY tcemm030.t$euca,
          KOOR.DESC_ORDEM,
          whinr110.t$kost, 
          cisli940.t$docn$l, 
-         tdrec940.t$docn$l;
+         tdrec940.t$docn$l
