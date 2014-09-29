@@ -3,8 +3,8 @@ SELECT
   znfmd630.t$etiq$c	NUME_ETIQUETA
 
 FROM
-  BAANDB.tznfmd630201  znfmd630,
-  BAANDB.tznmcs086201  znmcs086
+  baandb.tznfmd630201  znfmd630,
+  baandb.tznmcs086201  znmcs086
   
 WHERE
   znfmd630.t$cfrw$c = znmcs086.t$cfrw$c

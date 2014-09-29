@@ -78,7 +78,7 @@ FROM      baandb.ttdrec940301 tdrec940
 LEFT JOIN baandb.ttccom100301 tccom100 
        ON tccom100.t$bpid   = tdrec940.t$bpid$l
        
-LEFT JOIN BAANDB.ttccom130301 tccom130 
+LEFT JOIN baandb.ttccom130301 tccom130 
        ON tccom130.t$cadr=tccom100.t$cadr
            
 WHERE Trim(tdrec940.t$opfc$l) in ('1933', '2933', '1300')  

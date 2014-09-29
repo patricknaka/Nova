@@ -62,8 +62,8 @@ LEFT JOIN baandb.ttdrec940201   tdrec940
           baandb.ttcemm030201  tcemm030,
           baandb.ttcemm124201  tcemm124,
           baandb.twhwmd400201  whwmd400
-WHERE znnfe007.T$ORNO$C=tdpur401.t$orno
 
+WHERE znnfe007.T$ORNO$C=tdpur401.t$orno
   AND znnfe007.T$PONO$C=tdpur401.t$pono
   AND znnfe007.T$SEQN$C=tdpur401.T$SQNB
   AND znnfe007.T$OORG$C=80

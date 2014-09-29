@@ -1,18 +1,18 @@
 SELECT
   DISTINCT
-    tcmcs080.t$dsca		DESC_TRANSP, 
-    znfmd060.t$cdes$c   DESC_CONTRATO,
+    tcmcs080.t$dsca	DESC_TRANSP, 
+    znfmd060.t$cdes$c	DESC_CONTRATO,
     znsls401.t$entr$c	NUME_ENTREGA,
-    znfmd630.t$fili$c   NUME_FILIAL, 
+    znfmd630.t$fili$c	NUME_FILIAL, 
     cisli940.t$docn$l	NUME_NOTA,  
     cisli940.t$seri$l	NUME_SERIE,     
     cisli940.t$fdty$l	TIPO_ORDEM, DESC_TIPO_ORDEM,    
-    cisli940.t$gamt$l   VL_MERCADORIA,
-    znsls401.t$uneg$c   UNINEG,
+    cisli940.t$gamt$l	VL_MERCADORIA,
+    znsls401.t$uneg$c	UNINEG,
     ( SELECT  znfmd640.t$coct$c
-        FROM  BAANDB.tznfmd640201 znfmd640
+        FROM  baandb.tznfmd640201 znfmd640
        WHERE  znfmd640.t$date$c =  ( SELECT  MAX(znfmd640.t$date$c)	
-                                       FROM  BAANDB.tznfmd640201 znfmd640
+                                       FROM  baandb.tznfmd640201 znfmd640
                                       WHERE  znfmd640.t$fili$c = znfmd630.t$fili$c
                                         AND  znfmd640.t$etiq$c = znfmd630.t$etiq$c )
          AND ROWNUM = 1
@@ -21,10 +21,10 @@ SELECT
          AND znfmd640.t$etiq$c=znfmd630.t$etiq$c )
                         OCORRENCIA,   
     ( SELECT  znfmd040d.t$dotr$c
-        FROM  BAANDB.tznfmd640201 znfmd640d,
-              BAANDB.tznfmd040201 znfmd040d
+        FROM  baandb.tznfmd640201 znfmd640d,
+              baandb.tznfmd040201 znfmd040d
        WHERE  znfmd640d.t$date$c = ( SELECT  MAX(znfmd640x.t$date$c) 
-                                       FROM  BAANDB.tznfmd640201 znfmd640x
+                                       FROM  baandb.tznfmd640201 znfmd640x
                                       WHERE  znfmd640x.t$fili$c = znfmd630.t$fili$c                                        
                                         AND  znfmd640x.t$etiq$c = znfmd630.t$etiq$c
                                         AND  znfmd040d.t$octr$c = znfmd640d.t$coct$c )
@@ -32,17 +32,18 @@ SELECT
          AND znfmd640d.t$fili$c=znfmd630.t$fili$c
          AND znfmd640d.t$etiq$c=znfmd630.t$etiq$c )
                         DESCRICAO,
-    ( SELECT  znfmd640.t$date$c
-        FROM  BAANDB.tznfmd640201 znfmd640
-       WHERE  znfmd640.t$date$c =  ( SELECT  MAX(znfmd640.t$date$c)	
-                                       FROM  BAANDB.tznfmd640201 znfmd640
-                                      WHERE  znfmd640.t$fili$c = znfmd630.t$fili$c
-                                        AND  znfmd640.t$etiq$c = znfmd630.t$etiq$c) 
+    ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+        FROM  baandb.tznfmd640201 znfmd640
+        WHERE  znfmd640.t$date$c =  ( SELECT  MAX(znfmd640.t$date$c)	
+                                       FROM  baandb.tznfmd640201 znfmd640
+                                       WHERE  znfmd640.t$fili$c = znfmd630.t$fili$c
+                                       AND  znfmd640.t$etiq$c = znfmd630.t$etiq$c) 
          AND ROWNUM = 1
          AND znfmd640.t$fili$c=znfmd630.t$fili$c
          AND znfmd640.t$etiq$c=znfmd630.t$etiq$c )
                         DATA_OCORRENCIA,                       
-    znfmd630.t$stat$c   SITUACAO,
+    znfmd630.t$stat$c	SITUACAO,
     znsls401.t$cide$c	CIDADE,
     znsls401.t$cepe$c	CEP,  
     znsls401.t$ufen$c	UF,                      
@@ -51,18 +52,21 @@ SELECT
     cisli940.t$dats$l   DATA_EXPEDICAO,                      
     cisli940.t$dats$l-znsls401.t$pzcd$c
                         DATA_PREVISTA,
-	cisli940.t$amnt$l	VALOR
+    cisli940.t$amnt$l	VALOR
 	
-FROM BAANDB.tznsls401201  znsls401,
-     BAANDB.tznfmd630201  znfmd630
-LEFT JOIN  BAANDB. tznfmd060201  znfmd060
-       ON                        znfmd060.t$cfrw$c = znfmd630.t$cfrw$c 
-      AND                        znfmd060.t$cono$c = znfmd630.t$cono$c
-LEFT JOIN  BAANDB. ttcmcs080201	 tcmcs080
-       ON                        tcmcs080.t$cfrw = znfmd630.t$cfrw$c,
-     tcisli940201  cisli940,        
+FROM baandb.tznsls401201  znsls401,
+     baandb.tznfmd630201  znfmd630
+     
+LEFT JOIN  baandb.tznfmd060201  znfmd060
+       ON                       znfmd060.t$cfrw$c = znfmd630.t$cfrw$c 
+      AND                       znfmd060.t$cono$c = znfmd630.t$cono$c
+LEFT JOIN  baandb.ttcmcs080201	tcmcs080
+       ON                       tcmcs080.t$cfrw = znfmd630.t$cfrw$c,
+     
+     baandb.tcisli940201  cisli940, 
+     
     ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_ORDEM
-        FROM  tttadv401000 d, tttadv140000 l 
+        FROM  baandb.tttadv401000 d, baandb.tttadv140000 l 
        WHERE d.t$cpac='ci' 
          AND   d.t$cdom='sli.tdff.l'
          AND   d.t$vers='B61U'
@@ -83,7 +87,7 @@ WHERE znfmd630.t$orno$c=znsls401.t$orno$c
   AND cisli940.t$seri$l = znfmd630.t$seri$c         
   AND cisli940.t$fdty$l = FGET.CNST
   AND ( SELECT znfmd640.t$coci$c 
-          FROM BAANDB.tznfmd640201 znfmd640
+          FROM baandb.tznfmd640201 znfmd640
          WHERE znfmd640.t$coct$c='ETR'        	
            AND znfmd640.t$fili$c=znfmd630.t$fili$c
            AND znfmd640.t$etiq$c=znfmd630.t$etiq$c

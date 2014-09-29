@@ -31,6 +31,7 @@ SELECT
                        DESC_TIPO_DOCFIS
 					 
 FROM      baandb.ttdrec940301   tdrec940  
+
 LEFT JOIN baandb.twhinh300301  whinh300
        ON whinh300.t$fire$c = tdrec940.t$fire$l,
        
