@@ -23,7 +23,7 @@ LEFT JOIN ( select cisli245.t$slso,
       AND SITUA.t$pono = tdsls401.t$pono,   
    
           BAANDB.ttdsls400301 tdsls400,
-		  BAANDB.ttdsls094301 tdsls094,
+          BAANDB.ttdsls094301 tdsls094,
           BAANDB.ttcibd001301 tcibd001,
           BAANDB.ttcemm300301 tcemm300,
           ENTERPRISE.CODELKUP@DL_LN_WMS wmsCode
@@ -36,7 +36,8 @@ WHERE tdsls400.t$orno = tdsls401.t$orno
   AND tcemm300.t$type = 20
   AND tdsls094.t$reto=2
   AND UPPER(TRIM(wmsCode.DESCRIPTION)) = tcemm300.t$lctn
-  AND Trunc(tdsls400.t$odat) BETWEEN :DataDe AND :DataAte
+  AND Trunc(  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) ) BETWEEN :DataDe AND :DataAte
   AND ( (:Filial = 'AAA') OR (UPPER(wmsCODE.UDF1) = :Filial) )
   
 GROUP BY  wmsCODE.UDF2,
