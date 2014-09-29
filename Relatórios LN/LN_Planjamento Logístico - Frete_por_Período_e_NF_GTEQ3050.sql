@@ -1,7 +1,10 @@
 SELECT DISTINCT
   znfmd630.t$fili$c    FILIAL,
   tcmcs031.t$dsca      MARCA,  
-  znsls400.t$dtem$c    DATA_EXPEDICAO, 
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)      
+                       DATA_EXPEDICAO, 
   znfmd630.t$docn$c    NUME_NOTA,
   znfmd630.t$seri$c    NUME_SERIE,   
   cisli940.t$fdty$l    NUME_TIPO_DOCUMENTO, FGET.DESC_TIPO_DOCUMENTO,
@@ -23,7 +26,10 @@ SELECT DISTINCT
   znsls400.t$cepf$c    CEP,
   znsls400.t$cidf$c    CIDADE,
   znsls400.t$uffa$c    UF,
-  cisli245.t$ddat      DATA_ENTREGA,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli245.t$ddat, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)        
+                       DATA_ENTREGA,
   znsls400.t$idca$c    CANAL_VENDA,
   CASE WHEN znfmd630.t$stat$c = 'F' 
          THEN 'FECHADO' 
@@ -40,14 +46,22 @@ SELECT DISTINCT
             AND znfmd006.t$creg$c != 'BR'
             AND rownum=1 ),'BR' )
                       REGIAO,
-                      
-  znsls401.t$dtep$c   DATA_PROMETIDA,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)      
+                      DATA_PROMETIDA,
   znsls401.t$idpa$c   PERIODO,
-  znsls401.t$dtre$c   DATA_AJUSTADA,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtre$c, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)      
+                      DATA_AJUSTADA,
   znfmd630.t$cono$c   CONTRATO,
   znfmd640.t$coci$c   ULTIMA_OCORRENCIA,
   znfmd640.t$obsv$c   OCORRENCIA,
-  znfmd640.t$date$c   DATA_OCORRENCIA,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)      
+                      DATA_OCORRENCIA,
   znsls401.t$pzfo$c   PRAZO_ENTREGA,
   cisli941.t$dqua$l   QTDE_FATURADA,
   znfmd915.t$iqty$c   QTDE_ITEM,
