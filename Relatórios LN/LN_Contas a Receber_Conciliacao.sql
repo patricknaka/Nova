@@ -1,4 +1,4 @@
-SELECT Q1.*
+﻿SELECT Q1.*
   FROM ( SELECT 
              301                                               CIA,
              CASE WHEN nvl( ( select c.t$styp 
@@ -174,7 +174,10 @@ SELECT Q1.*
                  from baandb.tznmcs002301 znmcs002
                 where znmcs002.t$poco$c = znsls410.t$poco$c )   DESCR_ULT_PONTO, 
            
-             cisli940.t$date$l                                  DATA_EMISSAO_NF,
+            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)                                               
+                                                                DATA_EMISSAO_NF,
              cisli940.t$stat$l                                  SITUACAO_NF,
           
              ( SELECT l.t$desc DS_SITUACAO_NF
@@ -310,9 +313,9 @@ INNER JOIN baandb.ttccom130301 tccom130
                          ELSE NULL 
                      END DT_LIQ        -- data liquidação
     
-               from BAANDB.tznacr005301 znacr005, 
-                    BAANDB.ttfacr200301 t,
-                    BAANDB.ttfacr200301 m
+               from baandb.tznacr005301 znacr005, 
+                    baandb.ttfacr200301 t,
+                    baandb.ttfacr200301 m
               where t.t$ttyp = znacr005.t$ttyp$c
                 and t.t$ninv = znacr005.t$ninv$c
                 and m.t$ttyp = t.t$ttyp
