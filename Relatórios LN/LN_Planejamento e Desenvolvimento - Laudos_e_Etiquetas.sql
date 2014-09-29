@@ -2,8 +2,8 @@ SELECT znsls401.t$orno$c, znsls401.t$pono$c,
   CAST((FROM_TZ(CAST(TO_CHAR(znfmd640.t$date$c, 	'DD-MON-YYYY HH:MI:SS AM') AS 
                                                     TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE)        
                       DATA_OCORRENCIA, 
-	znsls401.t$lcat$c PROCESSO,
-	znsls401.t$lmot$c MOTIVO,
+	znsls401.t$lcat$c   PROCESSO,
+	znsls401.t$lmot$c   MOTIVO,
   znsls401.t$loge$c	  ENDERECO,
   znsls401.t$nume$c   NUMERO,
   znsls401.t$cepe$c	  CEP,
@@ -38,35 +38,38 @@ SELECT znsls401.t$orno$c, znsls401.t$pono$c,
   cisli245.t$shpm	    NUME_EXPEDICAO
   
 FROM
-              tznsls400201  znsls400,                
-              tznsls401201  znsls401
-  LEFT  JOIN  ttcibd001201  tcibd001 
-        ON                  tcibd001.t$item = znsls401.t$itml$c
-  LEFT  JOIN  tcisli245201  cisli245  
-        ON                  cisli245.t$slso = znsls401.t$orno$c
-        AND                 cisli245.t$pono = znsls401.t$pono$c
-        AND                 cisli245.t$item = znsls401.t$itml$c
-  LEFT  JOIN  tcisli941201  cisli941  
-        ON                  cisli941.t$fire$l = cisli245.t$fire$l
-        AND                 cisli941.t$line$l = cisli245.t$line$l
-  LEFT  JOIN  twhwmd400201  whwmd400
-        ON                  whwmd400.t$item = znsls401.t$itml$c,
-              BAANDB.tznfmd630201  znfmd630
-  LEFT  JOIN  tcisli940201  cisli940
-        ON                  cisli940.t$fire$l = znfmd630.t$fire$c 
-        AND                 cisli940.t$docn$l = znfmd630.t$docn$c 
-        AND                 cisli940.t$seri$l = znfmd630.t$seri$c         
+              baandb.tznsls400201  znsls400,                
+              baandb.tznsls401201  znsls401
+  LEFT  JOIN  baandb.ttcibd001201  tcibd001 
+        ON                         tcibd001.t$item = znsls401.t$itml$c
+  LEFT  JOIN  baandb.tcisli245201  cisli245  
+        ON                         cisli245.t$slso = znsls401.t$orno$c
+        AND                        cisli245.t$pono = znsls401.t$pono$c
+        AND                        cisli245.t$item = znsls401.t$itml$c
+  LEFT  JOIN  baandb.tcisli941201  cisli941  
+        ON                         cisli941.t$fire$l = cisli245.t$fire$l
+        AND                        cisli941.t$line$l = cisli245.t$line$l
+  LEFT  JOIN  baandb.twhwmd400201  whwmd400
+        ON                         whwmd400.t$item = znsls401.t$itml$c,
+        
+              baandb.tznfmd630201  znfmd630
+             
+  LEFT  JOIN  baandb.tcisli940201  cisli940
+        ON                         cisli940.t$fire$l = znfmd630.t$fire$c 
+        AND                        cisli940.t$docn$l = znfmd630.t$docn$c 
+        AND                        cisli940.t$seri$l = znfmd630.t$seri$c   
+        
   LEFT  JOIN  (select max(a.t$date$c) t$date$c,
                       a.t$fili$c,
                       a.t$etiq$c
-              from  BAANDB.tznfmd640201 a
+              from  baandb.tznfmd640201 a
               GROUP BY a.t$fili$c, a.t$etiq$c) znfmd640
         ON                  znfmd640.t$fili$c = znfmd630.t$fili$c 
         AND                 znfmd640.t$etiq$c = znfmd630.t$etiq$c,
     ( SELECT d.t$cnst CODE_STAT, l.t$desc DESC_TIPO_DOCUMENTO
-      FROM  tttadv401000 d, tttadv140000 l 
+      FROM  baandb.tttadv401000 d, baandb.tttadv140000 l 
       WHERE d.t$cpac='ci' 
-      AND d.t$cdom ='sli.tdff.l'
+      AND   d.t$cdom ='sli.tdff.l'
       AND   d.t$vers='B61U'
       AND   d.t$rele='a7'
       AND   d.t$cust='glo1'
@@ -74,7 +77,7 @@ FROM
       AND   l.t$clan='p'
       AND   l.t$cpac='ci'
       AND   l.t$vers=(  SELECT  max(l1.t$vers) 
-                        from    tttadv140000 l1 
+                        from    baandb.tttadv140000 l1 
                         WHERE   l1.t$clab=l.t$clab 
                         AND     l1.t$clan=l.t$clan 
                         AND     l1.t$cpac=l.t$cpac)) FGET

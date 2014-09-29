@@ -1,8 +1,14 @@
 SELECT  
-  tdpur400.t$odat          DATA_ORDEM,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)  
+                           DATA_ORDEM,
   tcemm030.t$euca          NUME_FILIAL,
   tdpur400.t$orno          CODE_ORDEM,
-  tdpur400.t$ddat          DATA_PLREC,  
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$ddat, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)  
+                           DATA_PLREC,  
   tccom130.t$fovn$l        CNPJ_FORN,
   tccom100.t$nama          DESC_FORN,  
   tcibd001.t$citg          GRUP_ITEM,    
@@ -74,6 +80,8 @@ WHERE znnfe007.T$ORNO$C=tdpur401.t$orno
   AND tccom130.t$cadr   = tdpur400.t$otad
   AND brnfe941.t$fire$l = brnfe940.t$fire$l
   
-  AND Trunc(tdpur400.t$ddat) BETWEEN :PreRecebimentoDe AND :PreRecebimentoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$ddat, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)) BETWEEN :PreRecebimentoDe AND :PreRecebimentoAte
   AND ( (Trim(tccom130.t$fovn$l) like '%' || Trim(:CNPJ) || '%') OR (Trim(:CNPJ) is null) )
   AND Trim(tcibd001.t$citg) IN (:GrupoItem)

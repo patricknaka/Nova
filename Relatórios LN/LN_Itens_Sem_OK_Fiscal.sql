@@ -35,8 +35,14 @@ SELECT
          AND ROWNUM = 1 )                DESCR_USUA,
          
     tccom100.t$okfi$c                    CODE_OKFI,
-    tcibd001.t$dtcr$c                    DATE_INCL,
-    tcibd001.t$lmdt                      DATA_ALTER       
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                                         DATE_INCL,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                                         DATA_ALTER       
 
 from      baandb.ttcibd001301    tcibd001
 
@@ -113,5 +119,7 @@ WHERE tcibd001.t$citg = tcmcs023.t$citg
   AND tcibd936.t$sour$l = DESC_DOMAIN_SOUR.COD_DOMAIN_SOUR
   AND tcibd001.T$OKFI$C != 1
   
-  AND Trunc(tcibd001.t$dtcr$c) BETWEEN :DataInclusaoDe AND :DataInclusaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) BETWEEN :DataInclusaoDe AND :DataInclusaoAte
   AND ( (tcibd001.t$citg = :Depto) or (:Depto = 0) )

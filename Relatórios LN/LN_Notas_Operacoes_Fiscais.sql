@@ -6,9 +6,13 @@ SELECT
         from baandb.ttccom130301 a 
        where a.t$cadr = tdrec940.t$sfra$l ) 
                        NUME_FILIAL,
-    tdrec940.t$date$l  DATA_APROV,  
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                       DATA_APROV,  
     tdrec940.t$fire$l  REFE_FISCAL,                 
-    tdrec940.t$stat$l  STAT_REFFISC,  DESC_DOMAIN_STAT.DESC_STAT,
+    tdrec940.t$stat$l  STAT_REFFISC,  
+                       DESC_DOMAIN_STAT.DESC_STAT,
     tdrec947.t$orno$l  TIPO_ORDEM,  
     tdrec940.t$fovn$l  CNPJ_FORN,
     tdrec940.t$fids$l  NOME_PARCE,
@@ -69,7 +73,9 @@ WHERE tdrec940.t$fire$l = tdrec941.t$fire$l
   AND tccom130.t$cadr = tdrec940.t$ifad$l
   AND tcemm122.t$bupa = tdrec940.t$sfra$l
 
-  AND Trunc(tdrec940.t$date$l) BETWEEN :DtAprovacaoDe AND :DtAprovacaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) BETWEEN :DtAprovacaoDe AND :DtAprovacaoAte
   AND tcemm122.T$grid IN (:Filial)
   AND tdrec940.t$stat$l IN (:StatusRefFiscal)
   AND tdrec940.t$opfc$l IN (:COD_CFOP)
