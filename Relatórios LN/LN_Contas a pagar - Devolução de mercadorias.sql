@@ -1,7 +1,13 @@
 ﻿SELECT 
   DISTINCT
-    cisli940.t$date$l            DT_EMISSAO_NFD,
-    cisli945.t$iutd$l            DT_VENCTO_NFD,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                                 DT_EMISSAO_NFD, 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli945.t$iutd$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                                 DT_VENCTO_NFD,
     cisli940.t$fire$l            REF_FISCAL_NFD,
     cisli940.t$fdtc$l            COD_TIPO_FISCAL,
     cisli940.t$ityp$l ||          
@@ -18,7 +24,7 @@
     cisli940.t$docn$l            NF,
     cisli940.t$seri$l            SERIE,
     cisli940.t$bpid$l            COD_PN,
-	tccom100.t$nama              NOME_PN,
+    tccom100.t$nama              NOME_PN,
 	
     CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
            THEN '00000000000000' 
@@ -71,8 +77,14 @@
     tdrec940.t$invn$l            TRANSACAO_ORIGEM,
     tdrec940.t$docn$l            NF_ORIGEM,
     tdrec940.t$seri$l            SERIE_ORIGEM,
-    tdrec940.t$idat$l            DT_EMISSAO_NF_ORIGEM,
-    tdrec943.t$icad$l            DT_VENCTO_NF_ORIGEM,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                                 DT_EMISSAO_NF_ORIGEM,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec943.t$icad$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                                 DT_VENCTO_NF_ORIGEM,
     tdrec940.t$stat$l            SITUACAO_NF_ORIGEM,
     
     ( SELECT l.t$desc DESCR
@@ -195,7 +207,9 @@ WHERE cisli940.t$fdty$l = 9
   AND tfacp200.t$ninv   = cisli940.t$idoc$l 
   AND tfacp200.t$lino   = 0
 
-  AND Trunc(cisli940.t$date$l) Between :DataEmissaoDe And :DataEmissaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) Between :DataEmissaoDe And :DataEmissaoAte
   AND ( SELECT tcemm030.t$eunt 
           FROM baandb.ttcemm124301 tcemm124, 
                baandb.ttcemm030301 tcemm030

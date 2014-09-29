@@ -11,14 +11,16 @@ SELECT
     tfacr200r.t$docd        DTA_EMISSAO_TITULO,  
     znsls400b.t$pecl$c      PEDIDO_CLIENTE,                      
     tccom130b.t$fovn$l	    CPF_CLIENTE,
-    znsls400b.t$dtem$c      DTA_EMISSAO_PEDIDO,  
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400b.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+	  AT time zone sessiontimezone) AS DATE) 
+                            DTA_EMISSAO_PEDIDO, 
     tccom130b.t$nama        NOME_CLIENTE,                      
     Trim(cisli941.t$item$l) ID_ITEM,
     cisli941.t$desc$l       DESC_ITEM,
     znsls401.t$qtve$c       QUANTIDADE,
     znsls401.t$vlun$c       VALOR_UNIT,
     znsls401.t$qtve$c*
-	znsls401.t$vlun$c       VLR_MERCADORIA,  
+	znsls401.t$vlun$c   VLR_MERCADORIA,  
     cisli941.t$tldm$l       VLR_DESC_INCL_TOTAL,
     cisli941.t$fght$l       VLR_TOTAL_FRETE,
     cisli941.t$iprt$l       VLR_TOTAL_ITEM,

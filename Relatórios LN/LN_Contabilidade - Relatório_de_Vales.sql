@@ -11,7 +11,10 @@ SELECT DISTINCT
   zngld006.t$type$c     TIPO_VALE, DESC_TIPO_VALE,
   ABS(tfacr201.t$amnt)  VALOR_ORIGINAL,
   tfacr201.t$dued$l     DTA_VENCIMENTO,
-  znsls402.t$dtra$c     DTA_UTILIZACAO,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 
+  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE) 
+                        DTA_UTILIZACAO, 
   znsls402.t$vlpg$c     VLR_UTILIZADO,
   ABS(tfacr201.t$balc)  VALE_SALDO,
   CASE
@@ -58,7 +61,9 @@ WHERE zngld006.t$type$c = DTYPE.CODE_STAT
   
   AND znacr200.t$date$c BETWEEN :DTA_CRIACAO_DE AND :DTA_CRIACAO_ATE
   AND Trunc(tfacr201.t$dued$l) BETWEEN :DTA_VENCIMENTO_DE AND :DTA_VENCIMENTO_ATE
-  AND Trunc(znsls402.t$dtra$c) BETWEEN :DTA_UTILIZACAO_DE AND :DTA_UTILIZACAO_ATE
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 
+  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone sessiontimezone) AS DATE)) BETWEEN :DTA_UTILIZACAO_DE AND :DTA_UTILIZACAO_ATE
   AND zngld006.t$type$c IN (:TipoVale)
 
   AND ( CASE WHEN tfacr201.t$dued$l < sysdate THEN 1  --'Expirado' 

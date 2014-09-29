@@ -1,7 +1,10 @@
 SELECT DISTINCT
     201                               NUM_CIA,
     tcemm030.t$euca                   NUM_FILIAL,
-    znsls402.t$dtra$c                 DTA_CRIACAO,  
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) 
+                                      DTA_CRIACAO, 
     znsls401.t$orno$c                 NUM_ORDEM,    
     znsls402.t$cccd$c                 NUM_BANDEIRA,
 	
@@ -43,7 +46,9 @@ WHERE znsls402.t$ncia$c = znsls400.t$ncia$c
   AND tcemm124.t$dtyp = 1 
   AND tcemm030.t$eunt=tcemm124.t$grid  
   
-  AND Trunc(znsls402.t$dtra$c) BETWEEN :CriacaoDe AND :CriacaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) BETWEEN :CriacaoDe AND :CriacaoAte
   AND znsls402.t$cccd$c in (:Bandeira)
   AND znsls402.t$idmp$c in (:MeioPagto)
   AND znsls402.t$idad$c = NVL (:Adquirinte, znsls402.t$idad$c)
