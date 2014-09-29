@@ -5,7 +5,10 @@
           tdrec940.t$cofc$l  DEPTO_FILIAL,
           tcmcs065.t$dsca    DESR_FILIAL,
           tdrec941.t$fire$l  REF_FIS_ENTR,    
-          tdrec940.t$adat$l  DT_APRV,    
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE) 
+                             DT_APRV,    
           tdrec940.t$docn$l  NR_NF,
           tdrec940.t$seri$l  SERIE_NF,
           tdrec940.t$fovn$l  CNPJ_FORNEC,
@@ -45,5 +48,7 @@ LEFT JOIN baandb.ttccom130301 tccom130
       AND tccom100.t$bpid   = tdrec940.t$bpid$l
      
       AND tdrec940.t$cofc$l IN (:Filial)
-      AND Trunc(tdrec940.t$adat$l) BETWEEN :DataAprovacaoDe AND :DataAprovacaoAte
+      AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataAprovacaoDe AND :DataAprovacaoAte
       AND ( (Trim(tdrec940.t$fovn$l) Like '%' || :CNPJ_FORN || '%') OR (:CNPJ_FORN IS NULL) )
