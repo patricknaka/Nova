@@ -8,7 +8,10 @@ SELECT
 --  Não tem no LN           JOGO_NF,
     tfacr200r.t$docn$l	    NF,
     tfacr200r.t$seri$l	    SERIE,  
-    tfacr200r.t$docd        DTA_EMISSAO_TITULO,  
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr200r.t$docd, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)           
+                            DTA_EMISSAO_TITULO,  
     znsls400b.t$pecl$c      PEDIDO_CLIENTE,                      
     tccom130b.t$fovn$l	    CPF_CLIENTE,
     znsls400b.t$dtem$c      DTA_EMISSAO_PEDIDO,  
@@ -91,5 +94,7 @@ LEFT JOIN baandb.ttccom130201  tccom130b
       AND tcemm124.t$dtyp = 1 
       AND tcemm030.t$eunt = tcemm124.t$grid
 
-      AND tfacr200r.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
+      AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr200r.t$docd, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) BETWEEN :EmissaoDe AND :EmissaoAte
       AND ((tccom130a.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null))
