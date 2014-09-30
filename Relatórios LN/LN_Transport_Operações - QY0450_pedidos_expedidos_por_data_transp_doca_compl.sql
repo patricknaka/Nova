@@ -2,8 +2,10 @@ SELECT
   DISTINCT
     znfmd630.t$fili$c         PLANTA,
     znfmd001.t$dsca$c         DESC_PLANTA,
-    znsls401.t$dtep$c -       
-    znsls401.t$pzcd$c         DATA_LIMITE,
+    (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) -       
+    znsls401.t$pzcd$c)         DATA_LIMITE,
     znfmd630.t$pecl$c         PEDIDO,
     znfmd630.t$orno$c         ORDEM_VENDA,
     Trim(znsls401.t$itml$c)   ITEM,  
@@ -13,14 +15,20 @@ SELECT
     znsls401.t$mgrt$c         MEGA_ROTA,  
     znsls401.t$cide$c         CIDADE,
     znsls401.t$ufen$c         ESTADO,
-    znfmd170.t$dten$c         DT_FECHA_GAIOLA,
-    znfmd170.t$dtsa$c         DT_LIQ,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dten$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                              DT_FECHA_GAIOLA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                              DT_LIQ,
     znfmd170.t$fovn$c         CNPJ_TRANSP,
     tcmcs080.t$dsca           TRANSP_NOME,
     whwmd400.t$hght           ALTURA,
     whwmd400.t$wdth           LARGURA,
     whwmd400.t$dpth           COMPRIMENTO,  
-    znsls401.t$qtve$c          QTDE,  
+    znsls401.t$qtve$c         QTDE,  
     znsls401.t$vlun$c *       
     znsls401.t$qtve$c         VALOR,
     znfmd630.t$ncar$c         CARGA,  
@@ -59,7 +67,9 @@ WHERE znsls401.t$orno$c = znfmd630.t$orno$c
   AND tcibd001.t$item = znsls401.t$itml$c
   
   AND znfmd630.t$fili$c = :Planta
-  AND Trunc(znfmd170.t$dtsa$c) BETWEEN :DataLiqDe AND :DataLiqAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) BETWEEN :DataLiqDe AND :DataLiqAte
   AND znsls401.t$mgrt$c in (:MegaRota)
   AND tcmcs080.t$cfrw in (:Transp)
   
