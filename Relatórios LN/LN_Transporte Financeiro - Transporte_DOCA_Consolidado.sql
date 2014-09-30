@@ -1,6 +1,9 @@
 select Q1.*
   from ( SELECT 
-           a.SCHEDULEDSHIPDATE             data_limite_exped,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                           data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
            a.INVOICENUMBER                 num_nota,
@@ -60,10 +63,12 @@ select Q1.*
                 ELSE   'Picking_Completo'
              END                           ult_evento_nome,
          
-           ( SELECT MIN(h.adddate) 
-               FROM WMWHSE1.ORDERSTATUSHISTORY h
-              WHERE h.orderkey = a.orderkey
-                AND h.status = a.status )  ult_evento_data,
+           ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( MIN(h.adddate), 
+                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone sessiontimezone) AS DATE)
+                FROM  WMWHSE1.ORDERSTATUSHISTORY h
+                WHERE h.orderkey = a.orderkey
+                  AND h.status = a.status )  ult_evento_data,
                    
            sq2.CAGEID                      carga,
            od.sku                          item_sku,
@@ -186,7 +191,10 @@ select Q1.*
          UNION
          -- *******************           WMWHSE2     *******************************************
          SELECT 
-           a.SCHEDULEDSHIPDATE             data_limite_exped,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                           data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
            a.INVOICENUMBER                 num_nota,
@@ -246,10 +254,12 @@ select Q1.*
                 ELSE   'Picking_Completo'
              END                           ult_evento_nome,
          
-           ( SELECT MIN(h.adddate) 
-               FROM WMWHSE2.ORDERSTATUSHISTORY h
-              WHERE h.orderkey = a.orderkey
-                AND h.status = a.status )  ult_evento_data,
+           ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( MIN(h.adddate), 
+                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone sessiontimezone) AS DATE)
+                FROM  WMWHSE1.ORDERSTATUSHISTORY h
+                WHERE h.orderkey = a.orderkey
+                  AND h.status = a.status )  ult_evento_data,
                    
            sq2.CAGEID                      carga,
            od.sku                          item_sku,
@@ -372,7 +382,10 @@ select Q1.*
          UNION
          -- *******************           WMWHSE3     *******************************************
          SELECT 
-           a.SCHEDULEDSHIPDATE             data_limite_exped,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                           data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
            a.INVOICENUMBER                 num_nota,
@@ -432,10 +445,12 @@ select Q1.*
                 ELSE   'Picking_Completo'
              END                           ult_evento_nome,
          
-           ( SELECT MIN(h.adddate) 
-               FROM WMWHSE3.ORDERSTATUSHISTORY h
-              WHERE h.orderkey = a.orderkey
-                AND h.status = a.status )  ult_evento_data,
+           ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( MIN(h.adddate), 
+                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone sessiontimezone) AS DATE)
+                FROM  WMWHSE1.ORDERSTATUSHISTORY h
+                WHERE h.orderkey = a.orderkey
+                  AND h.status = a.status )  ult_evento_data,
                    
            sq2.CAGEID                      carga,
            od.sku                          item_sku,
@@ -558,7 +573,10 @@ select Q1.*
          UNION
          -- *******************           WMWHSE4     *******************************************
          SELECT 
-           a.SCHEDULEDSHIPDATE             data_limite_exped,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                           data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
            a.INVOICENUMBER                 num_nota,
@@ -744,7 +762,10 @@ select Q1.*
          UNION
          -- *******************           WMWHSE5     *******************************************
          SELECT 
-           a.SCHEDULEDSHIPDATE             data_limite_exped,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                           data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
            a.INVOICENUMBER                 num_nota,
@@ -804,10 +825,12 @@ select Q1.*
                 ELSE   'Picking_Completo'
              END                           ult_evento_nome,
          
-           ( SELECT MIN(h.adddate) 
-               FROM WMWHSE5.ORDERSTATUSHISTORY h
-              WHERE h.orderkey = a.orderkey
-                AND h.status = a.status )  ult_evento_data,
+           ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( MIN(h.adddate), 
+                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone sessiontimezone) AS DATE)
+                FROM  WMWHSE1.ORDERSTATUSHISTORY h
+                WHERE h.orderkey = a.orderkey
+                  AND h.status = a.status )  ult_evento_data,
                    
            sq2.CAGEID                      carga,
            od.sku                          item_sku,
@@ -930,7 +953,10 @@ select Q1.*
          UNION
          -- *******************           WMWHSE6     *******************************************
          SELECT 
-           a.SCHEDULEDSHIPDATE             data_limite_exped,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                           data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
            a.INVOICENUMBER                 num_nota,
@@ -990,10 +1016,12 @@ select Q1.*
                 ELSE   'Picking_Completo'
              END                           ult_evento_nome,
          
-           ( SELECT MIN(h.adddate) 
-               FROM WMWHSE6.ORDERSTATUSHISTORY h
-              WHERE h.orderkey = a.orderkey
-                AND h.status = a.status )  ult_evento_data,
+           ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( MIN(h.adddate), 
+                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone sessiontimezone) AS DATE)
+                FROM  WMWHSE1.ORDERSTATUSHISTORY h
+                WHERE h.orderkey = a.orderkey
+                  AND h.status = a.status )  ult_evento_data,
                    
            sq2.CAGEID                      carga,
            od.sku                          item_sku,
@@ -1116,7 +1144,10 @@ select Q1.*
          UNION
          -- *******************           WMWHSE7     *******************************************
          SELECT 
-           a.SCHEDULEDSHIPDATE             data_limite_exped,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                           data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
            a.INVOICENUMBER                 num_nota,
@@ -1176,10 +1207,12 @@ select Q1.*
                 ELSE   'Picking_Completo'
              END                           ult_evento_nome,
          
-           ( SELECT MIN(h.adddate) 
-               FROM WMWHSE7.ORDERSTATUSHISTORY h
-              WHERE h.orderkey = a.orderkey
-                AND h.status = a.status )  ult_evento_data,
+           ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( MIN(h.adddate), 
+                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone sessiontimezone) AS DATE)
+                FROM  WMWHSE1.ORDERSTATUSHISTORY h
+                WHERE h.orderkey = a.orderkey
+                  AND h.status = a.status )  ult_evento_data,
                    
            sq2.CAGEID                      carga,
            od.sku                          item_sku,
@@ -1302,7 +1335,10 @@ select Q1.*
          UNION
          -- *******************           WMWHSE8     *******************************************
          SELECT 
-           a.SCHEDULEDSHIPDATE             data_limite_exped,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                           data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
            a.INVOICENUMBER                 num_nota,
@@ -1362,10 +1398,12 @@ select Q1.*
                 ELSE   'Picking_Completo'
              END                           ult_evento_nome,
          
-           ( SELECT MIN(h.adddate) 
-               FROM WMWHSE8.ORDERSTATUSHISTORY h
-              WHERE h.orderkey = a.orderkey
-                AND h.status = a.status )  ult_evento_data,
+           ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( MIN(h.adddate), 
+                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone sessiontimezone) AS DATE)
+                FROM  WMWHSE1.ORDERSTATUSHISTORY h
+                WHERE h.orderkey = a.orderkey
+                  AND h.status = a.status )  ult_evento_data,
                    
            sq2.CAGEID                      carga,
            od.sku                          item_sku,
@@ -1488,7 +1526,10 @@ select Q1.*
          UNION
          -- *******************           WMWHSE9     *******************************************
          SELECT 
-           a.SCHEDULEDSHIPDATE             data_limite_exped,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)  
+                                           data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
            a.INVOICENUMBER                 num_nota,
@@ -1548,10 +1589,12 @@ select Q1.*
                 ELSE   'Picking_Completo'
              END                           ult_evento_nome,
          
-           ( SELECT MIN(h.adddate) 
-               FROM WMWHSE9.ORDERSTATUSHISTORY h
-              WHERE h.orderkey = a.orderkey
-                AND h.status = a.status )  ult_evento_data,
+           ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( MIN(h.adddate), 
+                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone sessiontimezone) AS DATE)
+                FROM  WMWHSE1.ORDERSTATUSHISTORY h
+                WHERE h.orderkey = a.orderkey
+                  AND h.status = a.status )  ult_evento_data,
                    
            sq2.CAGEID                      carga,
            od.sku                          item_sku,
