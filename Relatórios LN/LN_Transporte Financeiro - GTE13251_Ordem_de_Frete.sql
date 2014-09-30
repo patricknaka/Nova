@@ -1,6 +1,9 @@
 SELECT 
   DISTINCT
-    znfmd630.t$date$c        DATA_EMISSAO, 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                             DATA_EMISSAO, 
     znfmd630.t$fili$c        FILIAL,
     znfmd630.t$pecl$c        ENTREGA,
     znfmd630.t$cono$c        CONTRATO,
@@ -33,7 +36,10 @@ SELECT
     tcmcs080.t$seak          APELIDO, 
     znfmd630.t$ncte$c        ID_CONHECIMENTO, 
     cisli940.t$fire$l        ID_NR,
-    cisli940.t$date$l        DATA_DEV_EMISS_NR, 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                             DATA_DEV_EMISS_NR, 
     tccom130.t$fovn$l        CPF_DESTINATARIO, 
     tccom130.t$pstc          CEP,
     tccom130.t$dsca          MUNICIPIO,
@@ -60,8 +66,10 @@ SELECT
          and znfmd640.t$etiq$c = znfmd630.t$etiq$c )       
                              ID_OCORRENCIA,
 							 
-    ( SELECT MAX(znfmd640.t$date$c)
-        FROM baandb.tznfmd640301 znfmd640
+    ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znfmd640.t$date$c), 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)
+       FROM baandb.tznfmd640301 znfmd640
        WHERE znfmd640.t$fili$c = znfmd630.t$fili$c
          AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )
                              DATA_OCORRENCIA,
@@ -162,6 +170,8 @@ LEFT JOIN BAANDB.ttccom130301 tccom130
 WHERE tcmcs080.t$cfrw = znfmd630.t$cfrw$c 
   AND znfmd630.T$STAT$C = 'F'
 
-  AND Trunc(znfmd630.t$date$c) BETWEEN :DataDe AND :DataAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte
   AND cisli940.t$doty$l IN (:TipoDoc) -- NF, NFS ou NFE
   AND ( (znfmd170.t$fovn$c like '%' || :CNPJ  || '%') OR (:CNPJ is null) )
