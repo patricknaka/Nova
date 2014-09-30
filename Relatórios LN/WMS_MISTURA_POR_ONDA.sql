@@ -10,7 +10,10 @@ SELECT
     SLS401.T$ENTR$C                     ID_ENTREGA,
     TASKDETAIL.SKU                      ID_ITEM,
     SKU.DESCR                           ID_ITEM_DESC,
-    TASKDETAIL.ENDTIME                  DT_LIQUID_ROM,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)                     
+                                        DT_LIQUID_ROM,
     TASKDETAIL.FROMLOC                  ID_LOCAL,
     LOC.PUTAWAYZONE                     ID_CLA_LOC,
     ORDERS.C_VAT                        ID_MEGA_ROTA
@@ -34,8 +37,9 @@ WHERE TASKDETAIL.STATUS = 9
   AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = TASKDETAIL.WHSEID 
   AND SLS401.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
   
-  AND Trunc(TASKDETAIL.ENDTIME) Between :DataFimPickingDe 
-  AND :DataFimPickingAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) Between :DataFimPickingDe AND :DataFimPickingAte
 
 
 "SELECT                                                                                " &
@@ -50,7 +54,10 @@ WHERE TASKDETAIL.STATUS = 9
 "    SLS401.T$ENTR$C                     ID_ENTREGA,                                   " &
 "    TASKDETAIL.SKU                      ID_ITEM,                                      " &
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
-"    TASKDETAIL.ENDTIME                  DT_LIQUID_ROM,                                " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
 "    ORDERS.C_VAT                        ID_MEGA_ROTA                                  " &
@@ -74,7 +81,9 @@ WHERE TASKDETAIL.STATUS = 9
 "  AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = TASKDETAIL.WHSEID                              " &
 "  AND SLS401.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                                      " &
 "                                                                                      " &
-"  AND Trunc(TASKDETAIL.ENDTIME) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
 "  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 
 -- Query com UNION ***********************************************************************
@@ -91,7 +100,10 @@ WHERE TASKDETAIL.STATUS = 9
 "    SLS401.T$ENTR$C                     ID_ENTREGA,                                   " &
 "    TASKDETAIL.SKU                      ID_ITEM,                                      " &
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
-"    TASKDETAIL.ENDTIME                  DT_LIQUID_ROM,                                " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
 "    ORDERS.C_VAT                        ID_MEGA_ROTA                                  " &
@@ -115,8 +127,10 @@ WHERE TASKDETAIL.STATUS = 9
 "  AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = TASKDETAIL.WHSEID                              " &
 "  AND SLS401.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                                      " &
 "                                                                                      " &
-"  AND Trunc(TASKDETAIL.ENDTIME) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
-"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
 "                                                                                      " &
@@ -132,7 +146,10 @@ WHERE TASKDETAIL.STATUS = 9
 "    SLS401.T$ENTR$C                     ID_ENTREGA,                                   " &
 "    TASKDETAIL.SKU                      ID_ITEM,                                      " &
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
-"    TASKDETAIL.ENDTIME                  DT_LIQUID_ROM,                                " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
 "    ORDERS.C_VAT                        ID_MEGA_ROTA                                  " &
@@ -156,8 +173,10 @@ WHERE TASKDETAIL.STATUS = 9
 "  AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = TASKDETAIL.WHSEID                              " &
 "  AND SLS401.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                                      " &
 "                                                                                      " &
-"  AND Trunc(TASKDETAIL.ENDTIME) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
-"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
 "                                                                                      " &
@@ -173,7 +192,10 @@ WHERE TASKDETAIL.STATUS = 9
 "    SLS401.T$ENTR$C                     ID_ENTREGA,                                   " &
 "    TASKDETAIL.SKU                      ID_ITEM,                                      " &
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
-"    TASKDETAIL.ENDTIME                  DT_LIQUID_ROM,                                " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
 "    ORDERS.C_VAT                        ID_MEGA_ROTA                                  " &
@@ -197,8 +219,10 @@ WHERE TASKDETAIL.STATUS = 9
 "  AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = TASKDETAIL.WHSEID                              " &
 "  AND SLS401.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                                      " &
 "                                                                                      " &
-"  AND Trunc(TASKDETAIL.ENDTIME) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
-"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
 "                                                                                      " &
@@ -214,7 +238,10 @@ WHERE TASKDETAIL.STATUS = 9
 "    SLS401.T$ENTR$C                     ID_ENTREGA,                                   " &
 "    TASKDETAIL.SKU                      ID_ITEM,                                      " &
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
-"    TASKDETAIL.ENDTIME                  DT_LIQUID_ROM,                                " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
 "    ORDERS.C_VAT                        ID_MEGA_ROTA                                  " &
@@ -238,8 +265,10 @@ WHERE TASKDETAIL.STATUS = 9
 "  AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = TASKDETAIL.WHSEID                              " &
 "  AND SLS401.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                                      " &
 "                                                                                      " &
-"  AND Trunc(TASKDETAIL.ENDTIME) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
-"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
 "                                                                                      " &
@@ -255,7 +284,10 @@ WHERE TASKDETAIL.STATUS = 9
 "    SLS401.T$ENTR$C                     ID_ENTREGA,                                   " &
 "    TASKDETAIL.SKU                      ID_ITEM,                                      " &
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
-"    TASKDETAIL.ENDTIME                  DT_LIQUID_ROM,                                " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
 "    ORDERS.C_VAT                        ID_MEGA_ROTA                                  " &
@@ -279,8 +311,10 @@ WHERE TASKDETAIL.STATUS = 9
 "  AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = TASKDETAIL.WHSEID                              " &
 "  AND SLS401.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                                      " &
 "                                                                                      " &
-"  AND Trunc(TASKDETAIL.ENDTIME) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
-"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
 "                                                                                      " &
@@ -296,7 +330,10 @@ WHERE TASKDETAIL.STATUS = 9
 "    SLS401.T$ENTR$C                     ID_ENTREGA,                                   " &
 "    TASKDETAIL.SKU                      ID_ITEM,                                      " &
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
-"    TASKDETAIL.ENDTIME                  DT_LIQUID_ROM,                                " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
 "    ORDERS.C_VAT                        ID_MEGA_ROTA                                  " &
@@ -320,8 +357,10 @@ WHERE TASKDETAIL.STATUS = 9
 "  AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = TASKDETAIL.WHSEID                              " &
 "  AND SLS401.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                                      " &
 "                                                                                      " &
-"  AND Trunc(TASKDETAIL.ENDTIME) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
-"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
 "                                                                                      " &
@@ -337,7 +376,10 @@ WHERE TASKDETAIL.STATUS = 9
 "    SLS401.T$ENTR$C                     ID_ENTREGA,                                   " &
 "    TASKDETAIL.SKU                      ID_ITEM,                                      " &
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
-"    TASKDETAIL.ENDTIME                  DT_LIQUID_ROM,                                " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
 "    ORDERS.C_VAT                        ID_MEGA_ROTA                                  " &
@@ -361,7 +403,9 @@ WHERE TASKDETAIL.STATUS = 9
 "  AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = TASKDETAIL.WHSEID                              " &
 "  AND SLS401.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                                      " &
 "                                                                                      " &
-"  AND Trunc(TASKDETAIL.ENDTIME) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
-"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "order by ID_PLANTA                                                                    "
