@@ -1,4 +1,4 @@
-select Q1.*
+select *
   from ( SELECT  NVL(TRIM(ID_ITEM), 0) AS  ID_ITEM,
                                            ID_CIA,
                                            ESTABELECIMENTO,
@@ -43,23 +43,27 @@ select Q1.*
                            and sls2.T$CWAR = est.T$CWAR
                            and sls4.t$REST$C = 1 )   AS QTDE,
                    
-                      TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS') AS ULTIMAATUAL
-             
-                 FROM BAANDB.TWHWMD215301 est
+                     -- TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS') AS ULTIMAATUAL
+                     
+                     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(est.t$rcd_utc, 
+                       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                         AT time zone sessiontimezone) AS DATE) AS ULTIMAATUAL
+    
+                 FROM baandb.TWHWMD215301 est
            
-           INNER JOIN BAANDB.TTCIBD001301 item  
+           INNER JOIN baandb.TTCIBD001301 item  
                    ON est.T$ITEM = item.T$item
-            LEFT JOIN BAANDB.TZNISA002301 clas1 
+            LEFT JOIN baandb.TZNISA002301 clas1 
                    ON item.T$NPCL$C = clas1.T$NPCL$C
-            LEFT JOIN BAANDB.TZNISA001301 clas2 
+            LEFT JOIN baandb.TZNISA001301 clas2 
                    ON clas1.T$NPTP$C = clas2.T$NPTP$C
-           INNER JOIN BAANDB.TTCMCS003301 mcs   
+           INNER JOIN baandb.TTCMCS003301 mcs   
                    ON est.T$CWAR = mcs.T$CWAR
-           INNER JOIN BAANDB.TZNINT001301 int1  
+           INNER JOIN baandb.TZNINT001301 int1  
                    ON mcs.T$COMP = int1.T$COMP$C
-           INNER JOIN BAANDB.TTCCOM130301 com   
+           INNER JOIN baandb.TTCCOM130301 com   
                    ON mcs.T$CADR = com.T$CADR
-           INNER JOIN BAANDB.TZNFMD001301 fmd   
+           INNER JOIN baandb.TZNFMD001301 fmd   
                    ON com.T$FOVN$L = fmd.T$FOVN$C
          
                 WHERE 1 = 1
@@ -117,22 +121,26 @@ select Q1.*
                       AND sls4.t$REST$C = 1
                       AND sls2.t$cdis$c = est.t$bloc )   AS QTDE,
              
-                      MAX(TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS')) AS ULTIMAATUAL
+                     --MAX(TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS')) AS ULTIMAATUAL
+                     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(est.t$rcd_utc), 
+                       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                         AT time zone sessiontimezone) AS DATE) AS ULTIMAATUAL
+
          			 
-                 FROM BAANDB.TWHWMD630301 est
-           INNER JOIN BAANDB.TTCIBD001301 item 
+                 FROM baandb.TWHWMD630301 est
+           INNER JOIN baandb.TTCIBD001301 item 
                    ON est.T$ITEM = item.T$item
-            LEFT JOIN BAANDB.TZNISA002301 clas1 
+            LEFT JOIN baandb.TZNISA002301 clas1 
                    ON item.T$NPCL$C = clas1.T$NPCL$C
-            LEFT JOIN BAANDB.TZNISA001301 clas2 
+            LEFT JOIN baandb.TZNISA001301 clas2 
                    ON clas1.T$NPTP$C = clas2.T$NPTP$C
-           INNER JOIN BAANDB.TTCMCS003301 mcs 
+           INNER JOIN baandb.TTCMCS003301 mcs 
                    ON est.T$CWAR = mcs.T$CWAR
-           INNER JOIN BAANDB.TZNINT001301 int1 
+           INNER JOIN baandb.TZNINT001301 int1 
                    ON mcs.T$COMP = int1.T$COMP$C
-           INNER JOIN BAANDB.TTCCOM130301 com 
+           INNER JOIN baandb.TTCCOM130301 com 
                    ON mcs.T$CADR = com.T$CADR
-           INNER JOIN BAANDB.TZNFMD001301 fmd 
+           INNER JOIN baandb.TZNFMD001301 fmd 
                    ON com.T$FOVN$L = fmd.T$FOVN$C
          		  
                 WHERE 1 = 1
