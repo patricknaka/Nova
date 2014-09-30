@@ -1,9 +1,15 @@
 SELECT  
   DISTINCT
     znsls402.t$maqu$c      ESTABELECIMENTO,
-    zncmg015.t$date$c      DATA_OCORRENCIA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$date$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                           DATA_OCORRENCIA,
     znsls402.t$ncam$c      CARTAO,
-    znsls400.t$dtin$c      DT_VENDA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                           DT_VENDA,
     znsls402.t$vlmr$c      VL_VENDA,
     zncmg015.t$slct$c      VL_CANCELAR,
     znsls402.t$auto$c      AUT,
@@ -23,10 +29,12 @@ SELECT
     znsls402.t$cpft$c      CPF_TITULAR_CARTAO,
     znsls402.t$nupa$c      NR_PARCELAS,
     
-    CASE WHEN zncmg015.t$rdat$c = '01/01/1970'
-           THEN NULL
-         ELSE zncmg015.t$rdat$c
-     END                   DT_RETORNO_REMESSA
+    CASE WHEN zncmg015.t$rdat$c = '01-JAN-1970'
+      THEN NULL 
+        ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$rdat$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone sessiontimezone) AS DATE) 
+    END                      DT_RETORNO_REMESSA
   
 FROM baandb.tznsls402201 znsls402
 
@@ -83,7 +91,9 @@ WHERE zncmg015.t$ncia$c = znsls402.t$ncia$c
   AND znsls400.T$IDPO$C = 'TD'
   AND znsls402.t$idmp$c = 1
   
-  AND Trunc(zncmg015.t$date$c) Between :DataOcorrenciaDe And :DataOcorrenciaAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$date$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) Between :DataOcorrenciaDe And :DataOcorrenciaAte
   AND znsls402.t$idad$c IN (:Adquirente)
   AND zncmg015.t$situ$c IN (:Situacao)
   AND ( (zncmg015.t$nrem$c IN (:Remessa)) OR (:RemessaTodos = 1) )
