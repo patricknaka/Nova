@@ -9,7 +9,10 @@ SELECT
   tcmcs013r.t$dsca       DESC_CONDICAO_PAGTO_NR,  
   tdrec940.t$fovn$l      CNPJ_FORNECEDOR,
   tdrec940.t$fids$l      NOME_FORNECEDOR,
-  tdrec940.t$date$l      DATA_FISCAL, 
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)      
+                         DATA_FISCAL, 
   tdrec940.t$opfc$l      NUME_CFOP,
   Trim(tdpur401.t$item)  NUME_ITEM,
   tcibd001.t$dsca        DESC_ITEM,  
@@ -19,8 +22,14 @@ SELECT
   tdpur401.t$cpay        CONDICAO_PAGTO_PEDIDO,
   tcmcs013p.t$dsca       DESC_CONDICAO_PAGTO_PEDIDO,    
   tdpur401.t$cdec        CONDICAO_ENTREGA_NR,
-  tdpur401.t$odat        DATA_ORDEM,   
-  tdpur401.t$ddta        DATA_PLANEJADA, 
+   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$odat, 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)        
+                         DATA_ORDEM,   
+   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$ddta, 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)        
+                         DATA_PLANEJADA, 
   tcibd001.t$csig        SINALIZACAO_ITEM,
   tdpur401.t$qidl        QTDE_RECEBIDA,
   tdpur401.t$qoor        QTDE_ORDENADA,
@@ -103,5 +112,7 @@ WHERE tccom130.t$cadr = tdrec940.t$sfra$l
   AND tcemm030.t$eunt = tcemm124.t$grid
   
   AND ((:CNPJ Is Null) OR (tdrec940.t$fovn$l like '%' || Trim(:CNPJ) || '%'))
-  AND Trunc(tdpur401.t$odat) BETWEEN :DtOrdemDe AND :DtOrdemAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$odat, 
+        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone sessiontimezone) AS DATE)) BETWEEN :DtOrdemDe AND :DtOrdemAte
   AND Trim(tcibd001.t$citg) IN (:GrupoItem)
