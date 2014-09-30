@@ -9,9 +9,18 @@ SELECT
    znsls400.t$pecl$c     NUME_PEDIDO,
    znsls401.t$ufen$c     UF,
    znsls401.t$idor$c     ORIGEM,
-   znsls401.t$dtap$c     DATA_APR, 
-   tdsls400.t$ddat       DATA_PLANENT,   
-   tdsls400.t$prdt       DATA_PLANREC,   
+   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtap$c, 
+     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE)
+                         DATA_APR, 
+   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
+     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE)
+                         DATA_PLANENT,   
+   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
+     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE)
+                         DATA_PLANREC,   
    
    CASE WHEN znsls401.t$tpes$c = 'X' THEN 'Crossdocking'
         WHEN znsls401.t$tpes$c = 'F' THEN 'Fingido'
@@ -19,7 +28,10 @@ SELECT
         ELSE 'NORMAL' 
       END                TIPO_ESTOQ,
     
-   znsls400.t$dtem$c     DATA_ORDEM,
+   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE)
+                         DATA_ORDEM,
    Trim(tdsls401.t$item) CODE_ITEM,
    tcibd001.t$dsca       DECR_ITEM,
    tdipu001.t$suti       TEMP_REPOS,
@@ -185,7 +197,17 @@ WHERE tcemm124.t$dtyp = 1
   AND whinp100.t$koor = 3 
   AND whinp100.t$kotr = 2 
   
-  AND Trunc(tdsls400.t$ddat) Between NVL(:DataEntregaDe, tdsls400.t$ddat) and  NVL(:DataEntregaAte, tdsls400.t$ddat)
-  AND Trunc(tdsls400.t$prdt) Between NVL(:DataRecebeDe, tdsls400.t$prdt) and  NVL(:DataRecebeAte, tdsls400.t$prdt)
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) 
+      Between NVL(:DataEntregaDe, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) 
+      and  NVL(:DataEntregaAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE))
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) 
+      Between NVL(:DataRecebeDe, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) 
+      and  NVL(:DataRecebeAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE))
   AND tcemm030.T$EUNT IN (:Filial)
   AND Trim(tcmcs023.t$citg) IN (:Depto)
