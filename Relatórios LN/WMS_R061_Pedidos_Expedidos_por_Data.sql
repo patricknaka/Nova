@@ -5,7 +5,10 @@ SELECT
     ORDERS.ORDERKEY                      PEDIDO,
     znsls401.t$uneg$c                    ID_UNINEG,
     ORDERS.SUSR4                         UNINEG,
-    znsls400.t$dtin$c                    DT_COMPRA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)                        
+                                         DT_COMPRA,
     ORDERS.ADDDATE                       DT_REGISTRO,
     subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',')-4 )  OPERADOR,
@@ -121,7 +124,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "    ORDERS.ORDERKEY                      PEDIDO,         " &
 "    znsls401.t$uneg$c                    ID_UNINEG,      " &
 "    ORDERS.SUSR4                         UNINEG,         " &
-"    znsls400.t$dtin$c                    DT_COMPRA,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, " &
+"     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
+"        AT time zone sessiontimezone) AS DATE)                  " &  
+"                                          DT_COMPRA,      " &
 "    ORDERS.ADDDATE                       DT_REGISTRO,    " &
 "    subStr( tu.usr_name,4,                               " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
@@ -237,7 +243,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "    ORDERS.ORDERKEY                      PEDIDO,         " &
 "    znsls401.t$uneg$c                    ID_UNINEG,      " &
 "    ORDERS.SUSR4                         UNINEG,         " &
-"    znsls400.t$dtin$c                    DT_COMPRA,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, " &
+"     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
+"        AT time zone sessiontimezone) AS DATE)                  " &  
+"                                         DT_COMPRA,      " &
 "    ORDERS.ADDDATE                       DT_REGISTRO,    " &
 "    subStr( tu.usr_name,4,                               " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
@@ -353,7 +362,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "    ORDERS.ORDERKEY                      PEDIDO,         " &
 "    znsls401.t$uneg$c                    ID_UNINEG,      " &
 "    ORDERS.SUSR4                         UNINEG,         " &
-"    znsls400.t$dtin$c                    DT_COMPRA,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, " &
+"     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
+"        AT time zone sessiontimezone) AS DATE)                  " &  
+"                                         DT_COMPRA,      " &
 "    ORDERS.ADDDATE                       DT_REGISTRO,    " &
 "    subStr( tu.usr_name,4,                               " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
@@ -469,7 +481,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "    ORDERS.ORDERKEY                      PEDIDO,         " &
 "    znsls401.t$uneg$c                    ID_UNINEG,      " &
 "    ORDERS.SUSR4                         UNINEG,         " &
-"    znsls400.t$dtin$c                    DT_COMPRA,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, " &
+"     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
+"        AT time zone sessiontimezone) AS DATE)                  " &  
+"                                         DT_COMPRA,      " &
 "    ORDERS.ADDDATE                       DT_REGISTRO,    " &
 "    subStr( tu.usr_name,4,                               " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
@@ -585,7 +600,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "    ORDERS.ORDERKEY                      PEDIDO,         " &
 "    znsls401.t$uneg$c                    ID_UNINEG,      " &
 "    ORDERS.SUSR4                         UNINEG,         " &
-"    znsls400.t$dtin$c                    DT_COMPRA,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, " &
+"     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
+"        AT time zone sessiontimezone) AS DATE)                  " &  
+"                                         DT_COMPRA,      " &
 "    ORDERS.ADDDATE                       DT_REGISTRO,    " &
 "    subStr( tu.usr_name,4,                               " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
@@ -701,7 +719,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "    ORDERS.ORDERKEY                      PEDIDO,         " &
 "    znsls401.t$uneg$c                    ID_UNINEG,      " &
 "    ORDERS.SUSR4                         UNINEG,         " &
-"    znsls400.t$dtin$c                    DT_COMPRA,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, " &
+"     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
+"        AT time zone sessiontimezone) AS DATE)                  " &  
+"                                         DT_COMPRA,      " &
 "    ORDERS.ADDDATE                       DT_REGISTRO,    " &
 "    subStr( tu.usr_name,4,                               " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
@@ -817,7 +838,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "    ORDERS.ORDERKEY                      PEDIDO,         " &
 "    znsls401.t$uneg$c                    ID_UNINEG,      " &
 "    ORDERS.SUSR4                         UNINEG,         " &
-"    znsls400.t$dtin$c                    DT_COMPRA,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, " &
+"     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
+"        AT time zone sessiontimezone) AS DATE)                  " &  
+"                                         DT_COMPRA,      " &
 "    ORDERS.ADDDATE                       DT_REGISTRO,    " &
 "    subStr( tu.usr_name,4,                               " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
@@ -933,7 +957,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "    ORDERS.ORDERKEY                      PEDIDO,         " &
 "    znsls401.t$uneg$c                    ID_UNINEG,      " &
 "    ORDERS.SUSR4                         UNINEG,         " &
-"    znsls400.t$dtin$c                    DT_COMPRA,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, " &
+"     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
+"        AT time zone sessiontimezone) AS DATE)                  " &  
+"                                         DT_COMPRA,      " &
 "    ORDERS.ADDDATE                       DT_REGISTRO,    " &
 "    subStr( tu.usr_name,4,                               " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
