@@ -24,14 +24,19 @@ Select Q1.* From
          tccom130ret.t$fovn$l         CNPJ_TRANSP_COLETA,
          tcmcs080ret.t$dsca           TRANSP_NOME_COLETA,
          znfmd630ret.t$cono$c         TRANSP_CONTRATO_COLETA,
-         znsls400ret.t$dtin$c         DT_OCORR,
+         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400ret.t$dtin$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone sessiontimezone) AS DATE)
+                                      DT_OCORR,
          
          CASE WHEN znfmd630ret.t$stat$c = 'F' 
                 THEN 'FECHADO' 
               ELSE   'ABERTO' 
          END                          SITUACAO,
          
-         ( SELECT  znfmd640.t$date$c
+         ( SELECT  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone sessiontimezone) AS DATE)
                FROM  baandb.tznfmd640201 znfmd640
               WHERE  znfmd640.t$fili$c = znfmd630ret.t$fili$c
                 AND  znfmd640.t$etiq$c = znfmd630ret.t$etiq$c
@@ -43,10 +48,16 @@ Select Q1.* From
      
          znsls401ret.t$pecl$c         PED_CLIENTE,
          znsls401ret.t$entr$c         ID_PEDIDO,
-         cisli940ori.t$date$l         DT_EMISSAO_NFS,
+         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940ori.t$date$l, 
+           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+             AT time zone sessiontimezone) AS DATE)
+                                      DT_EMISSAO_NFS,
          cisli940ori.t$docn$l         ID_NF_ORIG,
          cisli940ori.t$seri$l         SERIE_ORIG,
-         cisli940ret.t$date$l         DT_EMISSAO_NFE,
+         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940ret.t$date$l, 
+           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+             AT time zone sessiontimezone) AS DATE)
+                                      DT_EMISSAO_NFE,
          znfmd630ret.t$fili$c         FILI_NFE,
          cisli940ret.t$docn$l         NFE,
          cisli940ret.t$seri$l         SR_NFE,
@@ -69,7 +80,9 @@ Select Q1.* From
        
          znsls401gar.t$vlun$c         VL_GARANTIA,
          
-         ( SELECT MAX(znfmd640.t$date$c)
+         ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znfmd640.t$date$c), 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                      AT time zone sessiontimezone) AS DATE)
              FROM baandb.tznfmd640201 znfmd640
             WHERE znfmd640.t$fili$c = znfmd630ret.t$fili$c
               AND znfmd640.t$etiq$c = znfmd630ret.t$etiq$c
@@ -79,7 +92,10 @@ Select Q1.* From
                                            AND znfmd640.t$etiq$c = znfmd630ret.t$etiq$c ) 
               AND ROWNUM = 1 )        ULT_PONTO_ENTREGA,
        
-         znfmd630ret.t$udat$c         ULT_ALTERACAO,
+         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630ret.t$udat$c, 
+           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+             AT time zone sessiontimezone) AS DATE)
+                                      ULT_ALTERACAO,
          znsls401ret.t$cepe$c         CEP,
          znsls401ret.t$cide$c         MUNI_NOME,
          znsls401ret.t$ufen$c         MUNI_ESTADO,
@@ -106,7 +122,10 @@ Select Q1.* From
        
          znsls400ret.t$ncia$c         UNID_NEG,
          znfmd630ret.t$fili$c         FILIAL,
-         znfmd630ret.t$date$c         DT_REGISTRO,
+         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630ret.t$date$c, 
+           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+             AT time zone sessiontimezone) AS DATE)
+                                      DT_REGISTRO,
          znfmd001ret.t$dsca$c         NOME_FILIAL,
          znfmd001ret.t$fovn$c         CNPJ_FILIAL,
          ( select a.t$desc$c 
