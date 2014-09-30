@@ -1,32 +1,38 @@
 SELECT  
   DISTINCT
-    tcibd001.t$item    NUM_ITEM,
-    tcibd001.t$dsca    DESC_ITEM,
-    tdipu001.t$prip    PRECO_COMPRA,
-    tcibd001.t$citg    NUM_GRUPO_ITEM,
-    tcmcs023.t$dsca    DESC_GRUPO_ITEM,
-    tdipu001.t$otbp    NUM_FORNECEDOR,
-    tccom100.t$nama    DESC_FORNECEDOR,
-    tcibd001.t$cean    NUM_EAN,
-    tcibd001.t$csig    SITUACAO_ITEM,
-    tccom130.t$fovn$l  CNPJ_FORNECEDOR,
-    tccom130.t$nama    NOME_FORNECEDOR,
-    tcibd001.t$ceat$l  NUM_EAN_GTIN,
-    tcibd200.t$mioq    QTDE_MIN_ORDEM,
-    tcibd001.t$espe$c  TIPO_ITEM,
-    tcibd001.t$mdfb$c  MODELO_FABRICANTE,
-    tdipu001.t$suti    TEMPO_FORNECIMENTO,
-    whwmd210.t$cwar    ARMAZEM,
+    tcibd001.t$item     NUM_ITEM,
+    tcibd001.t$dsca     DESC_ITEM,
+    tdipu001.t$prip     PRECO_COMPRA,
+    tcibd001.t$citg     NUM_GRUPO_ITEM,
+    tcmcs023.t$dsca     DESC_GRUPO_ITEM,
+    tdipu001.t$otbp     NUM_FORNECEDOR,
+    tccom100.t$nama     DESC_FORNECEDOR,
+    tcibd001.t$cean     NUM_EAN,
+    tcibd001.t$csig     SITUACAO_ITEM,
+    tccom130.t$fovn$l   CNPJ_FORNECEDOR,
+    tccom130.t$nama     NOME_FORNECEDOR,
+    tcibd001.t$ceat$l   NUM_EAN_GTIN,
+    tcibd200.t$mioq     QTDE_MIN_ORDEM,
+    tcibd001.t$espe$c   TIPO_ITEM,
+    tcibd001.t$mdfb$c   MODELO_FABRICANTE,
+    tdipu001.t$suti     TEMPO_FORNECIMENTO,
+    whwmd210.t$cwar     ARMAZEM,
     CASE WHEN tdipu001.t$ixdn$c <> 3 THEN 1 
          ELSE 2 
-     END               ITEM_XD_NOVA,
-    tdipu001.t$ixdn$c  TIPO_XD_NOVA,
-    iTIPOXD.DESCR DECR_TIPO_XD_NOVA,
-    whwmd210.t$rcd_utc DT_ALTERCAO,
-    znwmd200.t$rcd_utc DT_ARQ,
-    znwmd200.T$qtdf$c  QT_ARQUIVO,
-    znwmd200.T$prit$c  TEMPO_REPOS_ARQ,
-    tcemm030.t$euca    ESTABELEC
+     END                ITEM_XD_NOVA,
+    tdipu001.t$ixdn$c   TIPO_XD_NOVA,
+    iTIPOXD.DESCR       DECR_TIPO_XD_NOVA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whwmd210.t$rcd_utc, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                        DT_ALTERCAO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znwmd200.t$rcd_utc, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)
+                        DT_ARQ,
+    znwmd200.T$qtdf$c   QT_ARQUIVO,
+    znwmd200.T$prit$c   TEMPO_REPOS_ARQ,
+    tcemm030.t$euca     ESTABELEC
 
 FROM       baandb.ttcibd001201  tcibd001
   
