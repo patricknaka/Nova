@@ -17,7 +17,10 @@ DISTINCT
   cisli940.t$seri$l  SER_NF_DEV,
   tdrec940.t$docn$l  NUM_NF_REC,
   tdrec940.t$seri$l  SER_NF_REC,
-  cisli940.t$date$l  DATA_FAT,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)
+                     DATA_FAT,
   cisli940.t$stat$l  SIT_NFE, DESC_STAT  ,
   cisli940.t$fire$l  REF_NFD,
   tdrec940.t$fire$l  REF_NFR,
@@ -27,35 +30,35 @@ DISTINCT
   cisli941.t$dqua$l  QUANT,
   cisli941.t$pric$l  PREC_ITEM,
   ( SELECT cisli943.t$amnt$l 
-      FROM tcisli943201 cisli943
+      FROM baandb.tcisli943201 cisli943
      WHERE cisli943.t$fire$l=cisli941.t$fire$l
        AND cisli943.t$line$l=cisli941.t$line$l
        AND cisli943.t$brty$l=3) 
                      VLR_IPI,   
 
   ( SELECT cisli943.t$amnt$l 
-      FROM tcisli943201 cisli943
+      FROM baandb.tcisli943201 cisli943
      WHERE cisli943.t$fire$l=cisli941.t$fire$l
        AND cisli943.t$line$l=cisli941.t$line$l
        AND cisli943.t$brty$l=1) 
                      VLR_ICMS,
 
   ( SELECT cisli943.t$amnt$l 
-      FROM tcisli943201 cisli943
+      FROM baandb.tcisli943201 cisli943
      WHERE cisli943.t$fire$l=cisli941.t$fire$l
        AND cisli943.t$line$l=cisli941.t$line$l
        AND cisli943.t$brty$l=2) 
                      VLR_ICMS_ST,
 
   ( SELECT cisli943.t$amnt$l 
-      FROM tcisli943201 cisli943
+      FROM baandb.tcisli943201 cisli943
      WHERE cisli943.t$fire$l=cisli941.t$fire$l
        AND cisli943.t$line$l=cisli941.t$line$l
        AND cisli943.t$brty$l=5) 
                      VLR_PIS,                  
 
   ( SELECT cisli943.t$amnt$l 
-      FROM tcisli943201 cisli943
+      FROM baandb.tcisli943201 cisli943
      WHERE cisli943.t$fire$l=cisli941.t$fire$l
        AND cisli943.t$line$l=cisli941.t$line$l
        AND cisli943.t$brty$l=6) 
@@ -63,11 +66,15 @@ DISTINCT
 
   cisli941.t$gamt$l  VLR_TOTAL_MERCADORIA,
   cisli941.t$amnt$l  VLR_TOTAL_NFISCAL,
-  cisli940.t$cnfe$l  CHAVE_ACESSO,                    
-  tdpur400.t$odat    DATA_ORDEM_DEVOLVIDA,
+  cisli940.t$cnfe$l  CHAVE_ACESSO, 
+  
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)    
+                     DATA_ORDEM_DEVOLVIDA,
 
   nvl( ( select Trim(tttxt010.t$text)
-           from ttttxt010201	tttxt010 
+           from baandb.ttttxt010201	tttxt010 
           where tttxt010.t$ctxt = cisli940.t$obse$l),' ') 
                      OBS_NF
                     
@@ -96,7 +103,7 @@ LEFT JOIN baandb.ttccom130201  tccom130
           baandb.ttcmcs065201  tcmcs065,
 
         ( SELECT d.t$cnst CODE_STAT, l.t$desc DESC_STAT
-            FROM  tttadv401000 d, tttadv140000 l 
+            FROM  baandb.tttadv401000 d, tttadv140000 l 
            WHERE d.t$cpac='ci' 
              AND d.t$cdom='sli.stat'
              AND d.t$vers='B61U'
@@ -106,7 +113,7 @@ LEFT JOIN baandb.ttccom130201  tccom130
              AND l.t$clan='p'
              AND l.t$cpac='ci'
              AND l.t$vers=( SELECT max(l1.t$vers) 
-                              from tttadv140000 l1 
+                              from baandb.tttadv140000 l1 
                              WHERE l1.t$clab=l.t$clab 
                                AND l1.t$clan=l.t$clan 
                                AND l1.t$cpac=l.t$cpac) ) DSTAT
@@ -121,8 +128,12 @@ WHERE cisli940.t$stat$l   = DSTAT.CODE_STAT
   AND tcmcs065.t$cwoc   = cisli940.t$cofc$l
   AND tccom100.t$bpid   = cisli940.t$bpid$l
 
-  AND Trunc(tdpur400.t$odat) BETWEEN NVL(:DtEmissaoDe,tdpur400.t$odat) 
-  AND NVL(:DtEmissaoAte,tdpur400.t$odat) 
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)) 
+        BETWEEN NVL(:DtEmissaoDe,CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)) 
+        AND NVL(:DtEmissaoAte,CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)) 
   AND tccom130.t$fovn$l Like NVL('%'  || (:CNPJ) || '%', tccom130.t$fovn$l)
   AND tcibd001.t$citg IN (:Depto)
   AND ( ((CASE WHEN cisli940.t$cofc$l is null THEN 'N/A' 
