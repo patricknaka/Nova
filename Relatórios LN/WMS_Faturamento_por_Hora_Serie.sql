@@ -2,8 +2,14 @@ SELECT
   DISTINCT
     ORDERS.WHSEID                           FILIAL,
     PL_DB.DB_ALIAS                          DSC_PLANTA,
-    TRUNC(ORDERS.ACTUALSHIPDATE, 'DD')      DT_EMISSAO,
-    TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24')  HR,
+    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE), 'DD')      
+                                            DT_EMISSAO,
+    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE), 'HH24')  
+                                            HR,
     ORDERS.LANE                             SERIE,
     count(distinct ORDERS.ORDERKEY)         QTD_PEDIDO,
     count(distinct ORDERS.INVOICENUMBER)    QTD_NOTA,
@@ -18,13 +24,18 @@ WHERE ORDERS.INVOICENUMBER != 0
   AND ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY
   AND UPPER(PL_DB.db_logid) = UPPER(ORDERS.WHSEID)
   AND ORDERS.STATUS >= 95
-  AND TRUNC(ORDERS.ACTUALSHIPDATE) BETWEEN :DataDe
-  AND :DataAte
+  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte
 	
 GROUP BY ORDERS.WHSEID, 
          PL_DB.DB_ALIAS,
-         TRUNC(ORDERS.ACTUALSHIPDATE, 'DD'), 
-         TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24'), 
+         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE), 'DD'), 
+         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE), 'HH24') , 
          ORDERS.LANE
 		 
 
@@ -34,8 +45,13 @@ GROUP BY ORDERS.WHSEID,
 "   DISTINCT                                                                       " &
 "     ORDERS.WHSEID                           FILIAL,                              " &
 "     PL_DB.DB_ALIAS                          DSC_PLANTA,                          " &
-"     TRUNC(ORDERS.ACTUALSHIPDATE, 'DD')      DT_EMISSAO,                          " &
-"     TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24')  HR,                                  " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,                " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD')                        " &      
+"                                            DT_EMISSAO,                            " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24')                      " &
 "     ORDERS.LANE                             SERIE,                               " &
 "     count(distinct ORDERS.ORDERKEY)         QTD_PEDIDO,                          " &
 "     count(distinct ORDERS.INVOICENUMBER)    QTD_NOTA,                            " &
@@ -50,13 +66,18 @@ GROUP BY ORDERS.WHSEID,
 "   AND ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY                                     " &
 "   AND UPPER(PL_DB.db_logid) = UPPER(ORDERS.WHSEID)                               " &
 "   AND ORDERS.STATUS >= 95                                                        " &
-"   AND TRUNC(ORDERS.ACTUALSHIPDATE) BETWEEN '" + Parameters!DataDe.Value + "'     " &
-"   AND '" + Parameters!DataAte.Value + "'                                         " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte " &
 "                                                                                  " &
 " GROUP BY ORDERS.WHSEID,                                                          " &
 "          PL_DB.DB_ALIAS,                                                         " &
-"          TRUNC(ORDERS.ACTUALSHIPDATE, 'DD'),                                     " &
-"          TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24'),                                 " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,           " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD'),                       " & 
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,         " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24') ,                    " &
 "          ORDERS.LANE                                                             "
 		 
 		 
@@ -67,8 +88,13 @@ GROUP BY ORDERS.WHSEID,
 "   DISTINCT                                                                       " &
 "     ORDERS.WHSEID                           FILIAL,                              " &
 "     PL_DB.DB_ALIAS                          DSC_PLANTA,                          " &
-"     TRUNC(ORDERS.ACTUALSHIPDATE, 'DD')      DT_EMISSAO,                          " &
-"     TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24')  HR,                                  " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,                " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD')                        " &      
+"                                            DT_EMISSAO,                            " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24')                      " &
 "     ORDERS.LANE                             SERIE,                               " &
 "     count(distinct ORDERS.ORDERKEY)         QTD_PEDIDO,                          " &
 "     count(distinct ORDERS.INVOICENUMBER)    QTD_NOTA,                            " &
@@ -83,13 +109,18 @@ GROUP BY ORDERS.WHSEID,
 "   AND ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY                                     " &
 "   AND UPPER(PL_DB.db_logid) = UPPER(ORDERS.WHSEID)                               " &
 "   AND ORDERS.STATUS >= 95                                                        " &
-"   AND TRUNC(ORDERS.ACTUALSHIPDATE) BETWEEN '" + Parameters!DataDe.Value + "'     " &
-"   AND '" + Parameters!DataAte.Value + "'                                         " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte " &
 "                                                                                  " &
 " GROUP BY ORDERS.WHSEID,                                                          " &
 "          PL_DB.DB_ALIAS,                                                         " &
-"          TRUNC(ORDERS.ACTUALSHIPDATE, 'DD'),                                     " &
-"          TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24'),                                 " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,           " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD'),                       " & 
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,         " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24') ,                    " &
 "          ORDERS.LANE                                                             " &
 "                                                                                  " &
 "Union                                                                             " &
@@ -98,8 +129,13 @@ GROUP BY ORDERS.WHSEID,
 "   DISTINCT                                                                       " &
 "     ORDERS.WHSEID                           FILIAL,                              " &
 "     PL_DB.DB_ALIAS                          DSC_PLANTA,                          " &
-"     TRUNC(ORDERS.ACTUALSHIPDATE, 'DD')      DT_EMISSAO,                          " &
-"     TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24')  HR,                                  " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,                " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD')                        " &      
+"                                            DT_EMISSAO,                            " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24')                      " &
 "     ORDERS.LANE                             SERIE,                               " &
 "     count(distinct ORDERS.ORDERKEY)         QTD_PEDIDO,                          " &
 "     count(distinct ORDERS.INVOICENUMBER)    QTD_NOTA,                            " &
@@ -114,13 +150,18 @@ GROUP BY ORDERS.WHSEID,
 "   AND ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY                                     " &
 "   AND UPPER(PL_DB.db_logid) = UPPER(ORDERS.WHSEID)                               " &
 "   AND ORDERS.STATUS >= 95                                                        " &
-"   AND TRUNC(ORDERS.ACTUALSHIPDATE) BETWEEN '" + Parameters!DataDe.Value + "'     " &
-"   AND '" + Parameters!DataAte.Value + "'                                         " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte " &
 "                                                                                  " &
 " GROUP BY ORDERS.WHSEID,                                                          " &
 "          PL_DB.DB_ALIAS,                                                         " &
-"          TRUNC(ORDERS.ACTUALSHIPDATE, 'DD'),                                     " &
-"          TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24'),                                 " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,           " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD'),                       " & 
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,         " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24') ,                    " &
 "          ORDERS.LANE                                                             " &
 "                                                                                  " &
 "Union                                                                             " &
@@ -129,8 +170,13 @@ GROUP BY ORDERS.WHSEID,
 "   DISTINCT                                                                       " &
 "     ORDERS.WHSEID                           FILIAL,                              " &
 "     PL_DB.DB_ALIAS                          DSC_PLANTA,                          " &
-"     TRUNC(ORDERS.ACTUALSHIPDATE, 'DD')      DT_EMISSAO,                          " &
-"     TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24')  HR,                                  " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,                " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD')                        " &      
+"                                            DT_EMISSAO,                            " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24')                      " &
 "     ORDERS.LANE                             SERIE,                               " &
 "     count(distinct ORDERS.ORDERKEY)         QTD_PEDIDO,                          " &
 "     count(distinct ORDERS.INVOICENUMBER)    QTD_NOTA,                            " &
@@ -145,13 +191,18 @@ GROUP BY ORDERS.WHSEID,
 "   AND ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY                                     " &
 "   AND UPPER(PL_DB.db_logid) = UPPER(ORDERS.WHSEID)                               " &
 "   AND ORDERS.STATUS >= 95                                                        " &
-"   AND TRUNC(ORDERS.ACTUALSHIPDATE) BETWEEN '" + Parameters!DataDe.Value + "'     " &
-"   AND '" + Parameters!DataAte.Value + "'                                         " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte " &
 "                                                                                  " &
 " GROUP BY ORDERS.WHSEID,                                                          " &
 "          PL_DB.DB_ALIAS,                                                         " &
-"          TRUNC(ORDERS.ACTUALSHIPDATE, 'DD'),                                     " &
-"          TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24'),                                 " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,           " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD'),                       " & 
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,         " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24') ,                    " &
 "          ORDERS.LANE                                                             " &
 "                                                                                  " &
 "Union                                                                             " &
@@ -160,8 +211,13 @@ GROUP BY ORDERS.WHSEID,
 "   DISTINCT                                                                       " &
 "     ORDERS.WHSEID                           FILIAL,                              " &
 "     PL_DB.DB_ALIAS                          DSC_PLANTA,                          " &
-"     TRUNC(ORDERS.ACTUALSHIPDATE, 'DD')      DT_EMISSAO,                          " &
-"     TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24')  HR,                                  " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,                " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD')                        " &      
+"                                            DT_EMISSAO,                            " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24')                      " &
 "     ORDERS.LANE                             SERIE,                               " &
 "     count(distinct ORDERS.ORDERKEY)         QTD_PEDIDO,                          " &
 "     count(distinct ORDERS.INVOICENUMBER)    QTD_NOTA,                            " &
@@ -176,13 +232,18 @@ GROUP BY ORDERS.WHSEID,
 "   AND ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY                                     " &
 "   AND UPPER(PL_DB.db_logid) = UPPER(ORDERS.WHSEID)                               " &
 "   AND ORDERS.STATUS >= 95                                                        " &
-"   AND TRUNC(ORDERS.ACTUALSHIPDATE) BETWEEN '" + Parameters!DataDe.Value + "'     " &
-"   AND '" + Parameters!DataAte.Value + "'                                         " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte " &
 "                                                                                  " &
 " GROUP BY ORDERS.WHSEID,                                                          " &
 "          PL_DB.DB_ALIAS,                                                         " &
-"          TRUNC(ORDERS.ACTUALSHIPDATE, 'DD'),                                     " &
-"          TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24'),                                 " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,           " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD'),                       " & 
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,         " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24') ,                    " &
 "          ORDERS.LANE                                                             " &
 "                                                                                  " &
 "Union                                                                             " &
@@ -191,8 +252,13 @@ GROUP BY ORDERS.WHSEID,
 "   DISTINCT                                                                       " &
 "     ORDERS.WHSEID                           FILIAL,                              " &
 "     PL_DB.DB_ALIAS                          DSC_PLANTA,                          " &
-"     TRUNC(ORDERS.ACTUALSHIPDATE, 'DD')      DT_EMISSAO,                          " &
-"     TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24')  HR,                                  " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,                " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD')                        " &      
+"                                            DT_EMISSAO,                            " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24')                      " &
 "     ORDERS.LANE                             SERIE,                               " &
 "     count(distinct ORDERS.ORDERKEY)         QTD_PEDIDO,                          " &
 "     count(distinct ORDERS.INVOICENUMBER)    QTD_NOTA,                            " &
@@ -207,13 +273,18 @@ GROUP BY ORDERS.WHSEID,
 "   AND ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY                                     " &
 "   AND UPPER(PL_DB.db_logid) = UPPER(ORDERS.WHSEID)                               " &
 "   AND ORDERS.STATUS >= 95                                                        " &
-"   AND TRUNC(ORDERS.ACTUALSHIPDATE) BETWEEN '" + Parameters!DataDe.Value + "'     " &
-"   AND '" + Parameters!DataAte.Value + "'                                         " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte " &
 "                                                                                  " &
 " GROUP BY ORDERS.WHSEID,                                                          " &
 "          PL_DB.DB_ALIAS,                                                         " &
-"          TRUNC(ORDERS.ACTUALSHIPDATE, 'DD'),                                     " &
-"          TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24'),                                 " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,           " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD'),                       " & 
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,         " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24') ,                    " &
 "          ORDERS.LANE                                                             " &
 "                                                                                  " &
 "Union                                                                             " &
@@ -222,8 +293,13 @@ GROUP BY ORDERS.WHSEID,
 "   DISTINCT                                                                       " &
 "     ORDERS.WHSEID                           FILIAL,                              " &
 "     PL_DB.DB_ALIAS                          DSC_PLANTA,                          " &
-"     TRUNC(ORDERS.ACTUALSHIPDATE, 'DD')      DT_EMISSAO,                          " &
-"     TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24')  HR,                                  " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,                " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD')                        " &      
+"                                            DT_EMISSAO,                            " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24')                      " &
 "     ORDERS.LANE                             SERIE,                               " &
 "     count(distinct ORDERS.ORDERKEY)         QTD_PEDIDO,                          " &
 "     count(distinct ORDERS.INVOICENUMBER)    QTD_NOTA,                            " &
@@ -238,13 +314,18 @@ GROUP BY ORDERS.WHSEID,
 "   AND ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY                                     " &
 "   AND UPPER(PL_DB.db_logid) = UPPER(ORDERS.WHSEID)                               " &
 "   AND ORDERS.STATUS >= 95                                                        " &
-"   AND TRUNC(ORDERS.ACTUALSHIPDATE) BETWEEN '" + Parameters!DataDe.Value + "'     " &
-"   AND '" + Parameters!DataAte.Value + "'                                         " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte " &
 "                                                                                  " &
 " GROUP BY ORDERS.WHSEID,                                                          " &
 "          PL_DB.DB_ALIAS,                                                         " &
-"          TRUNC(ORDERS.ACTUALSHIPDATE, 'DD'),                                     " &
-"          TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24'),                                 " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,           " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD'),                       " & 
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,         " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24') ,                    " &
 "          ORDERS.LANE                                                             " &
 "                                                                                  " &
 "Union                                                                             " &
@@ -253,8 +334,13 @@ GROUP BY ORDERS.WHSEID,
 "   DISTINCT                                                                       " &
 "     ORDERS.WHSEID                           FILIAL,                              " &
 "     PL_DB.DB_ALIAS                          DSC_PLANTA,                          " &
-"     TRUNC(ORDERS.ACTUALSHIPDATE, 'DD')      DT_EMISSAO,                          " &
-"     TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24')  HR,                                  " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,                " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD')                        " &      
+"                                            DT_EMISSAO,                            " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24')                      " &
 "     ORDERS.LANE                             SERIE,                               " &
 "     count(distinct ORDERS.ORDERKEY)         QTD_PEDIDO,                          " &
 "     count(distinct ORDERS.INVOICENUMBER)    QTD_NOTA,                            " &
@@ -269,12 +355,17 @@ GROUP BY ORDERS.WHSEID,
 "   AND ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY                                     " &
 "   AND UPPER(PL_DB.db_logid) = UPPER(ORDERS.WHSEID)                               " &
 "   AND ORDERS.STATUS >= 95                                                        " &
-"   AND TRUNC(ORDERS.ACTUALSHIPDATE) BETWEEN '" + Parameters!DataDe.Value + "'     " &
-"   AND '" + Parameters!DataAte.Value + "'                                         " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe AND :DataAte " &
 "                                                                                  " &
 " GROUP BY ORDERS.WHSEID,                                                          " &
 "          PL_DB.DB_ALIAS,                                                         " &
-"          TRUNC(ORDERS.ACTUALSHIPDATE, 'DD'),                                     " &
-"          TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH24'),                                 " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,           " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'DD'),                       " & 
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,         " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           " &
+"              AT time zone sessiontimezone) AS DATE), 'HH24') ,                    " &
 "          ORDERS.LANE                                                             " &
 "ORDER BY 2                                                                        "
