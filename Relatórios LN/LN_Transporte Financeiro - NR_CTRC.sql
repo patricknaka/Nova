@@ -4,11 +4,13 @@ SELECT
     tccom130.t$fovn$l                                CNPJ_FILIAL, 
     tdrec940.t$fire$l                                NUME_RFISCAL,
   
-    CASE WHEN tdrec940.t$date$l < '01/01/1980'
+    CASE WHEN tdrec940.t$date$l < '01/JAN/1980'
            THEN NULL
-         ELSE tdrec940.t$adat$l
-     END                                             DATA_NR,
-
+         ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone sessiontimezone) AS DATE)
+     END                                             
+                                                    DATA_NR,
     CASE WHEN tdrec947.t$oorg$l=1 
            THEN ( select distinct 
                          a.t$fdty$l 
@@ -76,7 +78,10 @@ SELECT
     tdrec940.t$fovn$l                                CNPJ_FORNECEDOR,  
     tdrec940.t$bpid$l                                DESC_FORNECEDOR,    
     tdrec940.t$opfc$l                                NUME_CCFO,  
-    TO_CHAR(tdrec940.t$idat$l, 'MM')                 MES_EMISSAO,  
+    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone sessiontimezone) AS DATE), 'MM')                 
+                                                     MES_EMISSAO,  
     tdrec940.t$docn$l                                NUME_NOTA,
     tdrec940.t$seri$l                                SERIE_NOTA,  
     ( SELECT tdrec949.t$amnt$l 
@@ -85,8 +90,14 @@ SELECT
          AND tdrec949.t$brty$l=1)                    VALOR_ICMS, 
     tdrec940.t$tfda$l                                VALOR_TOTAL,  
     tdrec940.t$lipl$l                                PLACA_CAMINHAO,  
-    tdrec940.t$idat$l                                DATA_EMISSAO,
-    tdrec940.t$odat$l                                DATA_REGISTRO
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone sessiontimezone) AS DATE)                                
+                                                     DATA_EMISSAO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)               
+                                                     DATA_REGISTRO
 
 FROM      baandb.ttdrec940201  tdrec940  
 
@@ -98,7 +109,7 @@ LEFT JOIN baandb.tttaad200000  ttaad200
           baandb.ttcemm124201  tcemm124,
           baandb.ttccom100201  tccom100
           
-LEFT JOIN ttccom130201         tccom130
+LEFT JOIN baandb.ttccom130201         tccom130
        ON tccom130.t$cadr = tccom100.t$cadr,
     
         ( SELECT d.t$cnst CODE_STAT, 
@@ -143,4 +154,6 @@ WHERE tccom100.t$bpid = tdrec940.t$bpid$l
   AND tdrec940.t$rfdt$l = 22 -- Conhec. Transp. Rodoviário
   AND tdrec940.t$fire$l = tdrec947.t$fire$l
 
-  AND Trunc(tdrec940.t$date$l) Between :DataEmissaoDe And :DataEmissaoAte  
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone sessiontimezone) AS DATE)) Between :DataEmissaoDe And :DataEmissaoAte  
