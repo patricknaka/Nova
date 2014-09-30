@@ -1,6 +1,9 @@
 SELECT
   FILIAL_WMS.UDF2                   FILIAL,
-  TRUNC(cisli940.t$date$l, 'DD')    DT_EMISSAO,
+  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE), 'DD')    
+                                    DT_EMISSAO,
   COUNT(DISTINCT tdsls401.t$orno)   QTD_PEDIDOS,
   tcibd001.t$citg                   ID_DEPTO,
   tcmcs023.t$dsca                   DEPARTAMENTO,
@@ -38,17 +41,22 @@ WHERE tdsls400.t$orno   = tdsls401.t$orno
   AND cisli245.t$koor   = 3  
   AND cisli940.t$fire$l = cisli245.t$fire$l 
   AND ( cisli940.t$fdty$l = 1 OR cisli940.t$fdty$l = 15 )
+ 
   AND ( (FILIAL_WMS.UDF1 = :Filial) OR (:Filial = 'AAA') )
   AND Trunc(cisli940.t$dats$l) Between :DataFaturamentoDe
   AND :DataFaturamentoAte
   
 GROUP BY FILIAL_WMS.UDF2,
-         TRUNC(cisli940.t$date$l, 'DD'), 
+         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE), 'DD'), 
          tcibd001.t$citg, 
          tcmcs023.t$dsca
 
 ORDER BY FILIAL_WMS.UDF2,
-         TRUNC(cisli940.t$date$l, 'DD'),
+         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE), 'DD'),
          tcmcs023.t$dsca
          
 
