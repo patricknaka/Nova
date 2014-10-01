@@ -80,7 +80,9 @@ SELECT
    znsls400.t$nomf$c     NOME_COBR,
    znsls400.t$emaf$c     EMAIL,
    znsls002.t$dsca$c     DECR_TIPO_ENTREGA,
-   iTIPOXD.DESCR         DESCR_XD
+   iTIPOXD.DESCR         DESCR_XD,
+   ULT_PONTO.t$poco$c	 COD_ULT_PONTO,
+   znmcs002.t$desc$c	 DESCR_ULT_PONTO
   
 FROM      baandb.tznsls400301 znsls400
 
@@ -92,7 +94,30 @@ INNER JOIN baandb.tznsls401301 znsls401
     
 INNER JOIN baandb.ttdsls400301 tdsls400 
         ON znsls401.t$orno$c = tdsls400.t$orno
+		
+LEFT JOIN(	select 	a.t$poco$c,
+					a.t$ncia$c,
+					a.t$uneg$c,
+					a.t$pecl$c,
+					a.t$sqpd$c,
+					a.t$entr$c
+			from BAANDB.tznsls410301 a
+			where a.t$dtoc$c = (select max(b.t$dtoc$c)
+								from BAANDB.tznsls410301 b
+								where	b.t$ncia$c=a.t$ncia$c
+								and     b.t$uneg$c=a.t$uneg$c
+								and     b.t$pecl$c=a.t$pecl$c
+								and     b.t$sqpd$c=a.t$sqpd$c
+								and     b.t$entr$c=a.t$entr$c)) ULT_PONTO
+		ON	ULT_PONTO.t$ncia$c = znsls401.t$ncia$c
+		AND ULT_PONTO.t$uneg$c = znsls401.t$uneg$c
+		AND ULT_PONTO.t$pecl$c = znsls401.t$pecl$c
+		AND ULT_PONTO.t$sqpd$c = znsls401.t$sqpd$c
+		AND ULT_PONTO.t$entr$c = znsls401.t$entr$c
 
+ LEFT JOIN	baandb.tznmcs002301 znmcs002
+		ON 	znmcs002.t$poco$c=ULT_PONTO.t$poco$c
+		
  LEFT JOIN baandb.ttttxt010301 tttxt010 
         ON tttxt010.t$ctxt = tdsls400.t$txta
        AND tttxt010.t$seqe = 1  
@@ -195,19 +220,20 @@ INNER JOIN baandb.tznsls002301 znsls002
     
 WHERE tcemm124.t$dtyp = 1 
   AND whinp100.t$koor = 3 
-  AND whinp100.t$kotr = 2 
+  AND whinp100.t$kotr = 2
+  AND ULT_PONTO.t$poco$c IN ('AES', 'PRD')  
   
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) 
-      Between NVL(:DataEntregaDe, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) 
-      and  NVL(:DataEntregaAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE))
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) 
-      Between NVL(:DataRecebeDe, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) 
-      and  NVL(:DataRecebeAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE))
-  AND tcemm030.T$EUNT IN (:Filial)
-  AND Trim(tcmcs023.t$citg) IN (:Depto)
+ AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE)) 
+     Between NVL(:DataEntregaDe, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE)) 
+     and  NVL(:DataEntregaAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE))
+ AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE)) 
+     Between NVL(:DataRecebeDe, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE)) 
+     and  NVL(:DataRecebeAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE))
+ AND tcemm030.T$EUNT IN (:Filial)
+ AND Trim(tcmcs023.t$citg) IN (:Depto)
