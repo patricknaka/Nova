@@ -1,11 +1,20 @@
-SELECT
+﻿SELECT
   DISTINCT
     WMSADMIN.PL_DB.DB_ALIAS               FILIAL,
-    ORDERS.SCHEDULEDSHIPDATE              DATA_LIMITE,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)                  
+                                          DATA_LIMITE,
     ORDERS.ORDERKEY                       PEDIDO,
-    ORDERS.ADDDATE                        DATA_REGISTRO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)                  
+                                          DATA_REGISTRO,
     ORDERSTATUSSETUP2.DESCRIPTION         EVENTO,
-    ORDERSTATUSHISTORY.ADDDATE            DATA_ULT_EVENTO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)                  
+                                          DATA_ULT_EVENTO,
     ORDERSTATUSHISTORY.ADDWHO             OPERADOR,
     ORDERDETAIL.SKU                       ITEM,
     SKU.DESCR                             NOME_ITEM,
@@ -43,22 +52,30 @@ SELECT
     ORDERDETAIL.SHIPPEDQTY                QUANTIDADE
     
 FROM       WMWHSE5.ORDERS
+
 INNER JOIN WMWHSE5.ORDERDETAIL 
         ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY
+        
 INNER JOIN WMWHSE5.SKU
         ON SKU.SKU = ORDERDETAIL.SKU 
+        
  LEFT JOIN WMWHSE5.WAVEDETAIL
-        ON WAVEDETAIL.ORDERKEY = ORDERDETAIL.ORDERKEY  
+        ON WAVEDETAIL.ORDERKEY = ORDERDETAIL.ORDERKEY 
+        
  LEFT JOIN WMWHSE5.CAGEIDDETAIL
         ON CAGEIDDETAIL.ORDERID = ORDERDETAIL.ORDERKEY 
  LEFT JOIN WMWHSE5.CAGEID
         ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID
+        
 INNER JOIN WMSADMIN.PL_DB
         ON UPPER(WMSADMIN.PL_DB.DB_LOGID) = ORDERS.WHSEID 
+        
  LEFT JOIN BAANDB.TZNSLS002301@pln01 SLS002
         ON UPPER(TRIM(SLS002.t$dsca$c)) = UPPER(TRIM(ORDERS.SUSR1)) 
+        
  LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
         ON TRIM(whwmd400.t$item) = TRIM(SKU.SKU)
+        
  LEFT JOIN ( SELECT a.ORDERKEY, 
                     a.ORDERLINENUMBER , 
                     max(a.STATUS) STATUS, 
@@ -73,14 +90,18 @@ INNER JOIN WMSADMIN.PL_DB
                     a.ORDERLINENUMBER ) ORDERSTATUSHISTORY
         ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY 
        AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER 
-       AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS            
+       AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS
+       
  LEFT JOIN WMWHSE5.ORDERSTATUSSETUP
         ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS
+        
  LEFT JOIN WMWHSE5.ORDERSTATUSSETUP ORDERSTATUSSETUP2
         ON ORDERSTATUSSETUP2.CODE = ORDERSTATUSHISTORY.STATUS   
+        
  LEFT JOIN WMWHSE5.TASKDETAIL
         ON TASKDETAIL.ORDERKEY = ORDERDETAIL.ORDERKEY 
-       AND TASKDETAIL.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER     
+       AND TASKDETAIL.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER   
+       
  LEFT JOIN ( select distinct 
                     q.T$IDCA$C, 
                     ZNSLS004.T$ORNO$C
@@ -93,7 +114,9 @@ INNER JOIN WMSADMIN.PL_DB
         ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
     
 WHERE SLS002.T$TPEN$C IN (:TipoEntrega)
-  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) Between :DataUltEventoDe 
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe 
   AND :DataUltEventoAte
   AND ORDERSTATUSSETUP.CODE IN (:ClasseEventos)
   AND ORDERS.C_VAT IN (:MegaRota)
@@ -126,11 +149,20 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "SELECT                                                     " &
 "  DISTINCT                                                 " &
 "    WMSADMIN.PL_DB.DB_ALIAS               FILIAL,          " &
-"    ORDERS.SCHEDULEDSHIPDATE              DATA_LIMITE,     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &    
+"                                          DATA_LIMITE,               " &
 "    ORDERS.ORDERKEY                       PEDIDO,          " &
-"    ORDERS.ADDDATE                        DATA_REGISTRO,   " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_REGISTRO,             " &
 "    ORDERSTATUSSETUP2.DESCRIPTION         EVENTO,          " &
-"    ORDERSTATUSHISTORY.ADDDATE            DATA_ULT_EVENTO, " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_ULT_EVENTO,           " &
 "    ORDERSTATUSHISTORY.ADDWHO             OPERADOR,        " &
 "    ORDERDETAIL.SKU                       ITEM,            " &
 "    SKU.DESCR                             NOME_ITEM,       " &
@@ -218,7 +250,9 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "        ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                 " &
 "                                                                      " &
 "WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")                           " &
-"  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,    " &       
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
 "  AND '" + Parameters!DataUltEventoAte.Value + "'                                                     " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ")                   " &
 "  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
@@ -238,11 +272,20 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "SELECT                                                     " &
 "  DISTINCT                                                 " &
 "    WMSADMIN.PL_DB.DB_ALIAS               FILIAL,          " &
-"    ORDERS.SCHEDULEDSHIPDATE              DATA_LIMITE,     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &    
+"                                          DATA_LIMITE,               " &
 "    ORDERS.ORDERKEY                       PEDIDO,          " &
-"    ORDERS.ADDDATE                        DATA_REGISTRO,   " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_REGISTRO,             " &
 "    ORDERSTATUSSETUP2.DESCRIPTION         EVENTO,          " &
-"    ORDERSTATUSHISTORY.ADDDATE            DATA_ULT_EVENTO, " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_ULT_EVENTO,           " &
 "    ORDERSTATUSHISTORY.ADDWHO             OPERADOR,        " &
 "    ORDERDETAIL.SKU                       ITEM,            " &
 "    SKU.DESCR                             NOME_ITEM,       " &
@@ -330,7 +373,9 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "        ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                " &
 "                                                                     " &
 "WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")                           " &
-"  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,    " &       
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
 "  AND '" + Parameters!DataUltEventoAte.Value + "'                                                     " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ")                   " &
 "  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
@@ -349,11 +394,20 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "SELECT                                                     " &
 "  DISTINCT                                                 " &
 "    WMSADMIN.PL_DB.DB_ALIAS               FILIAL,          " &
-"    ORDERS.SCHEDULEDSHIPDATE              DATA_LIMITE,     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &    
+"                                          DATA_LIMITE,               " &
 "    ORDERS.ORDERKEY                       PEDIDO,          " &
-"    ORDERS.ADDDATE                        DATA_REGISTRO,   " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_REGISTRO,             " &
 "    ORDERSTATUSSETUP2.DESCRIPTION         EVENTO,          " &
-"    ORDERSTATUSHISTORY.ADDDATE            DATA_ULT_EVENTO, " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_ULT_EVENTO,           " &
 "    ORDERSTATUSHISTORY.ADDWHO             OPERADOR,        " &
 "    ORDERDETAIL.SKU                       ITEM,            " &
 "    SKU.DESCR                             NOME_ITEM,       " &
@@ -441,7 +495,9 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "        ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                 " &
 "                                                                      " &
 "WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")                           " &
-"  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,    " &       
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
 "  AND '" + Parameters!DataUltEventoAte.Value + "'                                                     " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ")                   " &
 "  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
@@ -460,11 +516,20 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "SELECT                                                     " &
 "  DISTINCT                                                 " &
 "    WMSADMIN.PL_DB.DB_ALIAS               FILIAL,          " &
-"    ORDERS.SCHEDULEDSHIPDATE              DATA_LIMITE,     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &    
+"                                          DATA_LIMITE,               " &
 "    ORDERS.ORDERKEY                       PEDIDO,          " &
-"    ORDERS.ADDDATE                        DATA_REGISTRO,   " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_REGISTRO,             " &
 "    ORDERSTATUSSETUP2.DESCRIPTION         EVENTO,          " &
-"    ORDERSTATUSHISTORY.ADDDATE            DATA_ULT_EVENTO, " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_ULT_EVENTO,           " &
 "    ORDERSTATUSHISTORY.ADDWHO             OPERADOR,        " &
 "    ORDERDETAIL.SKU                       ITEM,            " &
 "    SKU.DESCR                             NOME_ITEM,       " &
@@ -552,7 +617,9 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "        ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                " &
 "                                                                     " &
 "WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")                           " &
-"  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,    " &       
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
 "  AND '" + Parameters!DataUltEventoAte.Value + "'                                                     " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ")                   " &
 "  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
@@ -571,11 +638,20 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "SELECT                                                     " &
 "  DISTINCT                                                 " &
 "    WMSADMIN.PL_DB.DB_ALIAS               FILIAL,          " &
-"    ORDERS.SCHEDULEDSHIPDATE              DATA_LIMITE,     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &    
+"                                          DATA_LIMITE,               " &
 "    ORDERS.ORDERKEY                       PEDIDO,          " &
-"    ORDERS.ADDDATE                        DATA_REGISTRO,   " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_REGISTRO,             " &
 "    ORDERSTATUSSETUP2.DESCRIPTION         EVENTO,          " &
-"    ORDERSTATUSHISTORY.ADDDATE            DATA_ULT_EVENTO, " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_ULT_EVENTO,           " &
 "    ORDERSTATUSHISTORY.ADDWHO             OPERADOR,        " &
 "    ORDERDETAIL.SKU                       ITEM,            " &
 "    SKU.DESCR                             NOME_ITEM,       " &
@@ -663,7 +739,9 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "        ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                " &
 "                                                                     " &
 "WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")                           " &
-"  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,    " &       
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
 "  AND '" + Parameters!DataUltEventoAte.Value + "'                                                     " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ")                   " &
 "  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
@@ -682,11 +760,20 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "SELECT                                                     " &
 "  DISTINCT                                                 " &
 "    WMSADMIN.PL_DB.DB_ALIAS               FILIAL,          " &
-"    ORDERS.SCHEDULEDSHIPDATE              DATA_LIMITE,     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &    
+"                                          DATA_LIMITE,               " &
 "    ORDERS.ORDERKEY                       PEDIDO,          " &
-"    ORDERS.ADDDATE                        DATA_REGISTRO,   " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_REGISTRO,             " &
 "    ORDERSTATUSSETUP2.DESCRIPTION         EVENTO,          " &
-"    ORDERSTATUSHISTORY.ADDDATE            DATA_ULT_EVENTO, " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_ULT_EVENTO,           " &
 "    ORDERSTATUSHISTORY.ADDWHO             OPERADOR,        " &
 "    ORDERDETAIL.SKU                       ITEM,            " &
 "    SKU.DESCR                             NOME_ITEM,       " &
@@ -774,7 +861,9 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "        ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT                " &
 "                                                                     " &
 "WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")                           " &
-"  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,    " &       
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
 "  AND '" + Parameters!DataUltEventoAte.Value + "'                                                     " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ")                   " &
 "  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
@@ -793,11 +882,20 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "SELECT                                                     " &
 "  DISTINCT                                                 " &
 "    WMSADMIN.PL_DB.DB_ALIAS               FILIAL,          " &
-"    ORDERS.SCHEDULEDSHIPDATE              DATA_LIMITE,     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &    
+"                                          DATA_LIMITE,               " &
 "    ORDERS.ORDERKEY                       PEDIDO,          " &
-"    ORDERS.ADDDATE                        DATA_REGISTRO,   " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_REGISTRO,             " &
 "    ORDERSTATUSSETUP2.DESCRIPTION         EVENTO,          " &
-"    ORDERSTATUSHISTORY.ADDDATE            DATA_ULT_EVENTO, " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_ULT_EVENTO,           " &
 "    ORDERSTATUSHISTORY.ADDWHO             OPERADOR,        " &
 "    ORDERDETAIL.SKU                       ITEM,            " &
 "    SKU.DESCR                             NOME_ITEM,       " &
@@ -885,7 +983,9 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "        ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT               " &
 "                                                                    " &
 "WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")                           " &
-"  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,    " &       
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
 "  AND '" + Parameters!DataUltEventoAte.Value + "'                                                     " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ")                   " &
 "  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
@@ -904,11 +1004,20 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "SELECT                                                     " &
 "  DISTINCT                                                 " &
 "    WMSADMIN.PL_DB.DB_ALIAS               FILIAL,          " &
-"    ORDERS.SCHEDULEDSHIPDATE              DATA_LIMITE,     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &    
+"                                          DATA_LIMITE,               " &
 "    ORDERS.ORDERKEY                       PEDIDO,          " &
-"    ORDERS.ADDDATE                        DATA_REGISTRO,   " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_REGISTRO,             " &
 "    ORDERSTATUSSETUP2.DESCRIPTION         EVENTO,          " &
-"    ORDERSTATUSHISTORY.ADDDATE            DATA_ULT_EVENTO, " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"        AT time zone sessiontimezone) AS DATE)                       " &
+"                                          DATA_ULT_EVENTO,           " &
 "    ORDERSTATUSHISTORY.ADDWHO             OPERADOR,        " &
 "    ORDERDETAIL.SKU                       ITEM,            " &
 "    SKU.DESCR                             NOME_ITEM,       " &
@@ -996,7 +1105,9 @@ UNION SELECT 'N7', 'Inclusao No Programa De Coleta' FROM Dual
 "        ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT               " &
 "                                                                    " &
 "WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")                           " &
-"  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,    " &       
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
+"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataUltEventoDe.Value + "'            " &
 "  AND '" + Parameters!DataUltEventoAte.Value + "'                                                     " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ")                   " &
 "  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
