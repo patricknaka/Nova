@@ -1,22 +1,43 @@
 SELECT  
   WMSADMIN.DB_ALIAS                                           PLANTA,
   RECEIPT.RECEIPTKEY                                          ASN,
-	SKU.SKU												      ITEM,
+	SKU.SKU												                              ITEM,
      CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                        
            THEN 'SIM'                                         
            ELSE 'NÃO'                                         
       END                                                     REDO_IN_MINUCIOSO,    
   CODELKUP.LONG_VALUE                                         NRCA_TP_NOTA,
   COUNT(Distinct RECEIPT.SUPPLIERCODE)                        NUM_FORNS,
-  MIN(RECEIPT.ADDDATE)                                        H_ENTRADA,
-  MIN(RSH.ADDDATE)                                            INICIO_EFETIVO,
-  numtodsinterval( MIN(RSH.ADDDATE)-                          
-                   MIN(RECEIPT.ADDDATE), 'DAY' )              TPREP,
-  MIN(RECEIPTDETAIL.DATERECEIVED)                             HL,
-  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-           
-                   MIN(RSH.ADDDATE), 'DAY' )                  TREC,
-  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-           
-                   MIN(RSH2.ADDDATE), 'DAY' )                 TTOT,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE), 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)                    H_ENTRADA,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE), 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)                    INICIO_EFETIVO,
+  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE), 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE) -                          
+                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE), 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE), 'DAY' )              
+                                                              TPREP,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED), 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)                    HL,
+  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED), 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE) -           
+                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE), 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE), 'DAY' )                  
+                                                              TREC,
+  numtodsinterval( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED), 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE)-           
+                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH2.ADDDATE), 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE), 'DAY' )                 
+                                                              TTOT,
   DEPARTSECTORSKU.DEPART_NAME                                 DPTO,
   DEPARTSECTORSKU.SECTOR_NAME                                 SETOR,
   COUNT(distinct RECEIPTDETAIL.TOID)                          GRUPOS,
@@ -59,10 +80,14 @@ WHERE RECEIPTDETAIL.RECEIPTKEY = RECEIPT.RECEIPTKEY
   AND TO_CHAR(DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)
   AND UPPER(WMSADMIN.DB_LOGID) = RECEIPT.WHSEID
   
-HAVING Trunc(MIN(RECEIPT.ADDDATE)) Between :DataEntradaDe
-   AND :DataEntradaAte
-   AND Trunc(MIN(RECEIPTDETAIL.DATERECEIVED)) Between :DataLiquidadoDe
-   AND :DataLiquidadoAte
+HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE), 
+        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone sessiontimezone) AS DATE)) 
+   Between :DataEntradaDe AND :DataEntradaAte
+   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED), 
+        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone sessiontimezone) AS DATE)) 
+   Between :DataLiquidadoDe AND :DataLiquidadoAte
   
 GROUP BY RECEIPT.RECEIPTKEY,
          SKU.SKU,
@@ -85,15 +110,36 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "      END                                                    REDO_IN_MINUCIOSO,                    " &
 "  CODELKUP.LONG_VALUE                                        NRCA_TP_NOTA,                         " &
 "  COUNT(Distinct RECEIPT.SUPPLIERCODE)                       NUM_FORNS,                            " &
-"  MIN(RECEIPT.ADDDATE)                                       H_ENTRADA,                            " &
-"  MIN(RSH.ADDDATE)                                           INICIO_EFETIVO,                       " &
-"  numtodsinterval( MIN(RSH.ADDDATE)-                                                               " &
-"                   MIN(RECEIPT.ADDDATE), 'DAY' )             TPREP,                                " &
-"  MIN(RECEIPTDETAIL.DATERECEIVED)                            HL,                                   " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH.ADDDATE), 'DAY' )                 TREC,                                 " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH2.ADDDATE), 'DAY' )                TTOT,                                 " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                                         " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    H_ENTRADA,                            " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                                             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    INICIO_EFETIVO,                       " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                         " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TPREP,                               " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                              " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    HL,                                   " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),              " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                            " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TREC,                                " &
+"  numtodsinterval( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE)-                                        " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH2.ADDDATE),                           " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TTOT,                                " &
 "  DEPARTSECTORSKU.DEPART_NAME                                DPTO,                                 " &
 "  DEPARTSECTORSKU.SECTOR_NAME                                SETOR,                                " &
 "  COUNT(distinct RECEIPTDETAIL.TOID)                         GRUPOS,                               " &
@@ -136,9 +182,15 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "  AND TO_CHAR(DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)                                   " &
 "  AND UPPER(WMSADMIN.DB_LOGID) = RECEIPT.WHSEID                                                    " &
 "                                                                                                   " &
-"HAVING Trunc(MIN(RECEIPT.ADDDATE)) Between '" + Parameters!DataEntradaDe.Value + "'                " &
+"HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                              " & 
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataEntradaDe.Value + "'                                                " &
 "   AND '" + Parameters!DataEntradaAte.Value + "'                                                   " &
-"   AND Trunc(MIN(RECEIPTDETAIL.DATERECEIVED)) Between '" + Parameters!DataLiquidadoDe.Value + "'   " &
+"   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                   " &
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataLiquidadoDe.Value + "'                                              " &
 "   AND '" + Parameters!DataLiquidadoAte.Value + "'                                                 " &
 "                                                                                                   " &
 "GROUP BY RECEIPT.RECEIPTKEY,                                                                       " &
@@ -164,15 +216,36 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "      END                                                    REDO_IN_MINUCIOSO,                    " &
 "  CODELKUP.LONG_VALUE                                        NRCA_TP_NOTA,                         " &
 "  COUNT(Distinct RECEIPT.SUPPLIERCODE)                       NUM_FORNS,                            " &
-"  MIN(RECEIPT.ADDDATE)                                       H_ENTRADA,                            " &
-"  MIN(RSH.ADDDATE)                                           INICIO_EFETIVO,                       " &
-"  numtodsinterval( MIN(RSH.ADDDATE)-                                                               " &
-"                   MIN(RECEIPT.ADDDATE), 'DAY' )             TPREP,                                " &
-"  MIN(RECEIPTDETAIL.DATERECEIVED)                            HL,                                   " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH.ADDDATE), 'DAY' )                 TREC,                                 " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH2.ADDDATE), 'DAY' )                TTOT,                                 " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                                         " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    H_ENTRADA,                            " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                                             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    INICIO_EFETIVO,                       " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                         " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TPREP,                               " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                              " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    HL,                                   " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),              " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                            " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TREC,                                " &
+"  numtodsinterval( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE)-                                        " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH2.ADDDATE),                           " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TTOT,                                " &
 "  DEPARTSECTORSKU.DEPART_NAME                                DPTO,                                 " &
 "  DEPARTSECTORSKU.SECTOR_NAME                                SETOR,                                " &
 "  COUNT(distinct RECEIPTDETAIL.TOID)                         GRUPOS,                               " &
@@ -215,10 +288,15 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "  AND TO_CHAR(DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)                                   " &
 "  AND UPPER(WMSADMIN.DB_LOGID) = RECEIPT.WHSEID                                                    " &
 "                                                                                                   " &
-"HAVING Trunc(MIN(RECEIPT.ADDDATE)) Between '" + Parameters!DataEntradaDe.Value + "'                " &
+"HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                              " & 
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataEntradaDe.Value + "'                                                " &
 "   AND '" + Parameters!DataEntradaAte.Value + "'                                                   " &
-"   AND Trunc(MIN(RECEIPTDETAIL.DATERECEIVED)) Between '" + Parameters!DataLiquidadoDe.Value + "'   " &
-"   AND '" + Parameters!DataLiquidadoAte.Value + "'                                                 " &
+"   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                   " &
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataLiquidadoDe.Value + "'                                              " &
 "                                                                                                   " &
 "GROUP BY RECEIPT.RECEIPTKEY,                                                                       " &
 "         SKU.SKU,                                                                                  " &
@@ -243,15 +321,36 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "      END                                                    REDO_IN_MINUCIOSO,                    " &
 "  CODELKUP.LONG_VALUE                                        NRCA_TP_NOTA,                         " &
 "  COUNT(Distinct RECEIPT.SUPPLIERCODE)                       NUM_FORNS,                            " &
-"  MIN(RECEIPT.ADDDATE)                                       H_ENTRADA,                            " &
-"  MIN(RSH.ADDDATE)                                           INICIO_EFETIVO,                       " &
-"  numtodsinterval( MIN(RSH.ADDDATE)-                                                               " &
-"                   MIN(RECEIPT.ADDDATE), 'DAY' )             TPREP,                                " &
-"  MIN(RECEIPTDETAIL.DATERECEIVED)                            HL,                                   " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH.ADDDATE), 'DAY' )                 TREC,                                 " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH2.ADDDATE), 'DAY' )                TTOT,                                 " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                                         " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    H_ENTRADA,                            " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                                             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    INICIO_EFETIVO,                       " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                         " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TPREP,                               " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                              " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    HL,                                   " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),              " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                            " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TREC,                                " &
+"  numtodsinterval( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE)-                                        " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH2.ADDDATE),                           " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TTOT,                                " &
 "  DEPARTSECTORSKU.DEPART_NAME                                DPTO,                                 " &
 "  DEPARTSECTORSKU.SECTOR_NAME                                SETOR,                                " &
 "  COUNT(distinct RECEIPTDETAIL.TOID)                         GRUPOS,                               " &
@@ -294,10 +393,15 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "  AND TO_CHAR(DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)                                   " &
 "  AND UPPER(WMSADMIN.DB_LOGID) = RECEIPT.WHSEID                                                    " &
 "                                                                                                   " &
-"HAVING Trunc(MIN(RECEIPT.ADDDATE)) Between '" + Parameters!DataEntradaDe.Value + "'                " &
+"HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                              " & 
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataEntradaDe.Value + "'                                                " &
 "   AND '" + Parameters!DataEntradaAte.Value + "'                                                   " &
-"   AND Trunc(MIN(RECEIPTDETAIL.DATERECEIVED)) Between '" + Parameters!DataLiquidadoDe.Value + "'   " &
-"   AND '" + Parameters!DataLiquidadoAte.Value + "'                                                 " &
+"   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                   " &
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataLiquidadoDe.Value + "'                                              " &
 "                                                                                                   " &
 "GROUP BY RECEIPT.RECEIPTKEY,                                                                       " &
 "         SKU.SKU,                                                                                  " &
@@ -322,15 +426,36 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "      END                                                    REDO_IN_MINUCIOSO,                    " &
 "  CODELKUP.LONG_VALUE                                        NRCA_TP_NOTA,                         " &
 "  COUNT(Distinct RECEIPT.SUPPLIERCODE)                       NUM_FORNS,                            " &
-"  MIN(RECEIPT.ADDDATE)                                       H_ENTRADA,                            " &
-"  MIN(RSH.ADDDATE)                                           INICIO_EFETIVO,                       " &
-"  numtodsinterval( MIN(RSH.ADDDATE)-                                                               " &
-"                   MIN(RECEIPT.ADDDATE), 'DAY' )             TPREP,                                " &
-"  MIN(RECEIPTDETAIL.DATERECEIVED)                            HL,                                   " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH.ADDDATE), 'DAY' )                 TREC,                                 " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH2.ADDDATE), 'DAY' )                TTOT,                                 " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                                         " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    H_ENTRADA,                            " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                                             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    INICIO_EFETIVO,                       " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                         " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TPREP,                               " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                              " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    HL,                                   " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),              " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                            " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TREC,                                " &
+"  numtodsinterval( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE)-                                        " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH2.ADDDATE),                           " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TTOT,                                " &
 "  DEPARTSECTORSKU.DEPART_NAME                                DPTO,                                 " &
 "  DEPARTSECTORSKU.SECTOR_NAME                                SETOR,                                " &
 "  COUNT(distinct RECEIPTDETAIL.TOID)                         GRUPOS,                               " &
@@ -373,10 +498,15 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "  AND TO_CHAR(DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)                                   " &
 "  AND UPPER(WMSADMIN.DB_LOGID) = RECEIPT.WHSEID                                                    " &
 "                                                                                                   " &
-"HAVING Trunc(MIN(RECEIPT.ADDDATE)) Between '" + Parameters!DataEntradaDe.Value + "'                " &
+"HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                              " & 
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataEntradaDe.Value + "'                                                " &
 "   AND '" + Parameters!DataEntradaAte.Value + "'                                                   " &
-"   AND Trunc(MIN(RECEIPTDETAIL.DATERECEIVED)) Between '" + Parameters!DataLiquidadoDe.Value + "'   " &
-"   AND '" + Parameters!DataLiquidadoAte.Value + "'                                                 " &
+"   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                   " &
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataLiquidadoDe.Value + "'                                              " &
 "                                                                                                   " &
 "GROUP BY RECEIPT.RECEIPTKEY,                                                                       " &
 "         SKU.SKU,                                                                                  " &
@@ -401,15 +531,36 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "      END                                                    REDO_IN_MINUCIOSO,                    " &
 "  CODELKUP.LONG_VALUE                                        NRCA_TP_NOTA,                         " &
 "  COUNT(Distinct RECEIPT.SUPPLIERCODE)                       NUM_FORNS,                            " &
-"  MIN(RECEIPT.ADDDATE)                                       H_ENTRADA,                            " &
-"  MIN(RSH.ADDDATE)                                           INICIO_EFETIVO,                       " &
-"  numtodsinterval( MIN(RSH.ADDDATE)-                                                               " &
-"                   MIN(RECEIPT.ADDDATE), 'DAY' )             TPREP,                                " &
-"  MIN(RECEIPTDETAIL.DATERECEIVED)                            HL,                                   " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH.ADDDATE), 'DAY' )                 TREC,                                 " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH2.ADDDATE), 'DAY' )                TTOT,                                 " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                                         " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    H_ENTRADA,                            " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                                             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    INICIO_EFETIVO,                       " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                         " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TPREP,                               " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                              " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    HL,                                   " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),              " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                            " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TREC,                                " &
+"  numtodsinterval( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE)-                                        " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH2.ADDDATE),                           " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TTOT,                                " &
 "  DEPARTSECTORSKU.DEPART_NAME                                DPTO,                                 " &
 "  DEPARTSECTORSKU.SECTOR_NAME                                SETOR,                                " &
 "  COUNT(distinct RECEIPTDETAIL.TOID)                         GRUPOS,                               " &
@@ -452,10 +603,15 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "  AND TO_CHAR(DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)                                   " &
 "  AND UPPER(WMSADMIN.DB_LOGID) = RECEIPT.WHSEID                                                    " &
 "                                                                                                   " &
-"HAVING Trunc(MIN(RECEIPT.ADDDATE)) Between '" + Parameters!DataEntradaDe.Value + "'                " &
+"HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                              " & 
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataEntradaDe.Value + "'                                                " &
 "   AND '" + Parameters!DataEntradaAte.Value + "'                                                   " &
-"   AND Trunc(MIN(RECEIPTDETAIL.DATERECEIVED)) Between '" + Parameters!DataLiquidadoDe.Value + "'   " &
-"   AND '" + Parameters!DataLiquidadoAte.Value + "'                                                 " &
+"   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                   " &
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataLiquidadoDe.Value + "'                                              " &
 "                                                                                                   " &
 "GROUP BY RECEIPT.RECEIPTKEY,                                                                       " &
 "         SKU.SKU,                                                                                  " &
@@ -480,15 +636,36 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "      END                                                    REDO_IN_MINUCIOSO,                    " &
 "  CODELKUP.LONG_VALUE                                        NRCA_TP_NOTA,                         " &
 "  COUNT(Distinct RECEIPT.SUPPLIERCODE)                       NUM_FORNS,                            " &
-"  MIN(RECEIPT.ADDDATE)                                       H_ENTRADA,                            " &
-"  MIN(RSH.ADDDATE)                                           INICIO_EFETIVO,                       " &
-"  numtodsinterval( MIN(RSH.ADDDATE)-                                                               " &
-"                   MIN(RECEIPT.ADDDATE), 'DAY' )             TPREP,                                " &
-"  MIN(RECEIPTDETAIL.DATERECEIVED)                            HL,                                   " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH.ADDDATE), 'DAY' )                 TREC,                                 " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH2.ADDDATE), 'DAY' )                TTOT,                                 " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                                         " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    H_ENTRADA,                            " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                                             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    INICIO_EFETIVO,                       " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                         " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TPREP,                               " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                              " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    HL,                                   " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),              " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                            " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TREC,                                " &
+"  numtodsinterval( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE)-                                        " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH2.ADDDATE),                           " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TTOT,                                " &
 "  DEPARTSECTORSKU.DEPART_NAME                                DPTO,                                 " &
 "  DEPARTSECTORSKU.SECTOR_NAME                                SETOR,                                " &
 "  COUNT(distinct RECEIPTDETAIL.TOID)                         GRUPOS,                               " &
@@ -531,10 +708,15 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "  AND TO_CHAR(DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)                                   " &
 "  AND UPPER(WMSADMIN.DB_LOGID) = RECEIPT.WHSEID                                                    " &
 "                                                                                                   " &
-"HAVING Trunc(MIN(RECEIPT.ADDDATE)) Between '" + Parameters!DataEntradaDe.Value + "'                " &
+"HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                              " & 
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataEntradaDe.Value + "'                                                " &
 "   AND '" + Parameters!DataEntradaAte.Value + "'                                                   " &
-"   AND Trunc(MIN(RECEIPTDETAIL.DATERECEIVED)) Between '" + Parameters!DataLiquidadoDe.Value + "'   " &
-"   AND '" + Parameters!DataLiquidadoAte.Value + "'                                                 " &
+"   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                   " &
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataLiquidadoDe.Value + "'                                              " &
 "                                                                                                   " &
 "GROUP BY RECEIPT.RECEIPTKEY,                                                                       " &
 "         SKU.SKU,                                                                                  " &
@@ -559,15 +741,36 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "      END                                                    REDO_IN_MINUCIOSO,                    " &
 "  CODELKUP.LONG_VALUE                                        NRCA_TP_NOTA,                         " &
 "  COUNT(Distinct RECEIPT.SUPPLIERCODE)                       NUM_FORNS,                            " &
-"  MIN(RECEIPT.ADDDATE)                                       H_ENTRADA,                            " &
-"  MIN(RSH.ADDDATE)                                           INICIO_EFETIVO,                       " &
-"  numtodsinterval( MIN(RSH.ADDDATE)-                                                               " &
-"                   MIN(RECEIPT.ADDDATE), 'DAY' )             TPREP,                                " &
-"  MIN(RECEIPTDETAIL.DATERECEIVED)                            HL,                                   " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH.ADDDATE), 'DAY' )                 TREC,                                 " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH2.ADDDATE), 'DAY' )                TTOT,                                 " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                                         " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    H_ENTRADA,                            " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                                             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    INICIO_EFETIVO,                       " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                         " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TPREP,                               " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                              " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    HL,                                   " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),              " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                            " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TREC,                                " &
+"  numtodsinterval( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE)-                                        " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH2.ADDDATE),                           " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TTOT,                                " &
 "  DEPARTSECTORSKU.DEPART_NAME                                DPTO,                                 " &
 "  DEPARTSECTORSKU.SECTOR_NAME                                SETOR,                                " &
 "  COUNT(distinct RECEIPTDETAIL.TOID)                         GRUPOS,                               " &
@@ -610,10 +813,15 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "  AND TO_CHAR(DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)                                   " &
 "  AND UPPER(WMSADMIN.DB_LOGID) = RECEIPT.WHSEID                                                    " &
 "                                                                                                   " &
-"HAVING Trunc(MIN(RECEIPT.ADDDATE)) Between '" + Parameters!DataEntradaDe.Value + "'                " &
+"HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                              " & 
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataEntradaDe.Value + "'                                                " &
 "   AND '" + Parameters!DataEntradaAte.Value + "'                                                   " &
-"   AND Trunc(MIN(RECEIPTDETAIL.DATERECEIVED)) Between '" + Parameters!DataLiquidadoDe.Value + "'   " &
-"   AND '" + Parameters!DataLiquidadoAte.Value + "'                                                 " &
+"   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                   " &
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataLiquidadoDe.Value + "'                                              " &
 "                                                                                                   " &
 "GROUP BY RECEIPT.RECEIPTKEY,                                                                       " &
 "         SKU.SKU,                                                                                  " &
@@ -638,15 +846,36 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "      END                                                    REDO_IN_MINUCIOSO,                    " &
 "  CODELKUP.LONG_VALUE                                        NRCA_TP_NOTA,                         " &
 "  COUNT(Distinct RECEIPT.SUPPLIERCODE)                       NUM_FORNS,                            " &
-"  MIN(RECEIPT.ADDDATE)                                       H_ENTRADA,                            " &
-"  MIN(RSH.ADDDATE)                                           INICIO_EFETIVO,                       " &
-"  numtodsinterval( MIN(RSH.ADDDATE)-                                                               " &
-"                   MIN(RECEIPT.ADDDATE), 'DAY' )             TPREP,                                " &
-"  MIN(RECEIPTDETAIL.DATERECEIVED)                            HL,                                   " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH.ADDDATE), 'DAY' )                 TREC,                                 " &
-"  numtodsinterval( MAX(RECEIPTDETAIL.DATERECEIVED)-                                                " &
-"                   MIN(RSH2.ADDDATE), 'DAY' )                TTOT,                                 " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                                         " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    H_ENTRADA,                            " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                                             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    INICIO_EFETIVO,                       " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                         " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TPREP,                               " &
+"  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                              " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                      " &
+"		AT time zone sessiontimezone) AS DATE)                    HL,                                   " &
+"  numtodsinterval(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),              " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE) -                                       " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH.ADDDATE),                            " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TREC,                                " &
+"  numtodsinterval( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(RECEIPTDETAIL.DATERECEIVED),             " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE)-                                        " &
+"                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RSH2.ADDDATE),                           " &
+"                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
+"                    AT time zone sessiontimezone) AS DATE), 'DAY' )                                " &
+"                                                              TTOT,                                " &
 "  DEPARTSECTORSKU.DEPART_NAME                                DPTO,                                 " &
 "  DEPARTSECTORSKU.SECTOR_NAME                                SETOR,                                " &
 "  COUNT(distinct RECEIPTDETAIL.TOID)                         GRUPOS,                               " &
@@ -689,10 +918,15 @@ GROUP BY RECEIPT.RECEIPTKEY,
 "  AND TO_CHAR(DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)                                   " &
 "  AND UPPER(WMSADMIN.DB_LOGID) = RECEIPT.WHSEID                                                    " &
 "                                                                                                   " &
-"HAVING Trunc(MIN(RECEIPT.ADDDATE)) Between '" + Parameters!DataEntradaDe.Value + "'                " &
+"HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPT.ADDDATE),                              " & 
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataEntradaDe.Value + "'                                                " &
 "   AND '" + Parameters!DataEntradaAte.Value + "'                                                   " &
-"   AND Trunc(MIN(RECEIPTDETAIL.DATERECEIVED)) Between '" + Parameters!DataLiquidadoDe.Value + "'   " &
-"   AND '" + Parameters!DataLiquidadoAte.Value + "'                                                 " &
+"   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(RECEIPTDETAIL.DATERECEIVED),                   " &
+"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                               " &
+"          AT time zone sessiontimezone) AS DATE))                                                  " & 
+"   Between '" + Parameters!DataLiquidadoDe.Value + "'                                              " &
 "                                                                                                   " &
 "GROUP BY RECEIPT.RECEIPTKEY,                                                                       " &
 "         SKU.SKU,                                                                                  " &
