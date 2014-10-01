@@ -5,11 +5,14 @@ SELECT
     ORDERS.ORDERKEY                      PEDIDO,
     znsls401.t$uneg$c                    ID_UNINEG,
     ORDERS.SUSR4                         UNINEG,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c , 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE)
                                          DT_COMPRA,
-    ORDERS.ADDDATE                       DT_REGISTRO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)                       
+                                         DT_REGISTRO,
     subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',')-4 )  OPERADOR,
     ORDERDETAIL.SKU                      ID_ITEM,
@@ -21,11 +24,16 @@ SELECT
     ORDERS.C_STATE                       ESTADO,
     TASKDETAIL.TASKDETAILKEY             PROGRAMA,
     WAVEDETAIL.WAVEKEY                   ONDA,
-    CAGEID.CLOSEDATE                     DT_FECHA_GAIOLA,
-    ORDERS.ACTUALSHIPDATE                DT_LIQUIDADO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)                     
+                                         DT_FECHA_GAIOLA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)                
+                                         DT_LIQUIDADO,
     ORDERS.CARRIERCODE                   ID_TRANSP,
     ORDERS.CARRIERNAME                   NOME_TRANSP,    
-  
     ( select o.T$COCT$C 
         from BAANDB.TZNFMD640301@pln01 o
        where o.T$date$c = ( select max(o1.T$date$c) 
@@ -34,7 +42,6 @@ SELECT
                                and o.T$ETIQ$C = znfmd630.T$ETIQ$C
                                and rownum = 1 )       
                                          OCORRENCIA,
-                
     ( select c.t$dsci$c
         from BAANDB.TZNFMD640301@pln01 o,
              BAANDB.TZNFMD030301@pln01 c
@@ -45,9 +52,11 @@ SELECT
                                and c.t$ocin$c = o.T$COCI$C
                                and rownum = 1)         
                                          NOME_OCOR,
-                  
     ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,
-    ORDERS.SCHEDULEDDELVDATE             DT_ENTREGA1,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)             
+                                         DT_ENTREGA1,
     ORDERS.INVOICENUMBER                 NR_NF,  
     ORDERS.LANE                          SERIE_NF,
     znsls400.t$idli$c                    ID_LISTA_CASAMENTO,
@@ -112,38 +121,49 @@ INNER JOIN WMSADMIN.PL_DB    WMSADMIN
  LEFT JOIN ENTERPRISE.DEPARTSECTORSKU
         ON TO_CHAR(ENTERPRISE.DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)
    
-WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
+WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) Between :DataRegistroDe
   AND :DataRegistroAte
 
   
 
-"SELECT                                                   " &
-"  DISTINCT                                               " &
-"    WMSADMIN.DB_ALIAS                    PLANTA,         " &
-"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,      " &
-"    ORDERS.ORDERKEY                      PEDIDO,         " &
-"    znsls401.t$uneg$c                    ID_UNINEG,      " &
-"    ORDERS.SUSR4                         UNINEG,         " &
-"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c , " &
-"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
-"        AT time zone sessiontimezone) AS DATE)           " &
-"                                         DT_COMPRA,      " &
-"    ORDERS.ADDDATE                       DT_REGISTRO,    " &
-"    subStr( tu.usr_name,4,                               " &
-"            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
-"    ORDERDETAIL.SKU                      ID_ITEM,        " &
-"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,   " &
-"    SKU.DESCR                            NOME,           " &
-"    znsls400.t$idca$c                    CANAL,          " &
-"    ORDERS.C_VAT                         MEGA_ROTA,      " &
-"    ORDERS.C_CITY                        CIDADE,         " &
-"    ORDERS.C_STATE                       ESTADO,         " &
-"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,       " &
-"    WAVEDETAIL.WAVEKEY                   ONDA,           " &
-"    CAGEID.CLOSEDATE                     DT_FECHA_GAIOLA," &
-"    ORDERS.ACTUALSHIPDATE                DT_LIQUIDADO,   " &
-"    ORDERS.CARRIERCODE                   ID_TRANSP,      " &
-"    ORDERS.CARRIERNAME                   NOME_TRANSP,    " &
+"SELECT                                                              " &
+"  DISTINCT                                                          " &
+"    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
+"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,                 " &
+"    ORDERS.ORDERKEY                      PEDIDO,                    " &
+"    znsls401.t$uneg$c                    ID_UNINEG,                 " &
+"    ORDERS.SUSR4                         UNINEG,                    " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c ,          " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &
+"                                         DT_COMPRA,                 " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                       
+"                                         DT_REGISTRO,               " &
+"    subStr( tu.usr_name,4,                                          " &
+"            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
+"    ORDERDETAIL.SKU                      ID_ITEM,                   " &
+"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,              " &
+"    SKU.DESCR                            NOME,                      " &
+"    znsls400.t$idca$c                    CANAL,                     " &
+"    ORDERS.C_VAT                         MEGA_ROTA,                 " &
+"    ORDERS.C_CITY                        CIDADE,                    " &
+"    ORDERS.C_STATE                       ESTADO,                    " &
+"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,                  " &
+"    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,            " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"                                         DT_FECHA_GAIOLA,           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                
+"                                         DT_LIQUIDADO,              " &
+"    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
+"    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
 "                                                                    " &
 "    ( select o.T$COCT$C                                             " &
 "        from BAANDB.TZNFMD640301@pln01 o                            " &
@@ -166,7 +186,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "                                         NOME_OCOR,                 " &
 "                                                                    " &
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
-"    ORDERS.SCHEDULEDDELVDATE             DT_ENTREGA1,               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,    " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &             
+"                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
 "    znsls400.t$idli$c                    ID_LISTA_CASAMENTO,        " &
@@ -231,38 +254,50 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 " LEFT JOIN ENTERPRISE.DEPARTSECTORSKU                                            " &
 "        ON TO_CHAR(ENTERPRISE.DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP) " &
 "                                                                                 " &
-"WHERE Trunc(ORDERS.ADDDATE) Between '" + Parameters!DataRegistroDe.Value + "'   " &
-"  AND '" + Parameters!DataRegistroAte.Value + "'                                "
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE))                     " &
+"  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
+"  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 
 -- Query com UNION ********************************************************************
 
-"SELECT                                                   " &
-"  DISTINCT                                               " &
-"    WMSADMIN.DB_ALIAS                    PLANTA,         " &
-"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,      " &
-"    ORDERS.ORDERKEY                      PEDIDO,         " &
-"    znsls401.t$uneg$c                    ID_UNINEG,      " &
-"    ORDERS.SUSR4                         UNINEG,         " &
-"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c , " &
-"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
-"        AT time zone sessiontimezone) AS DATE)           " &
-"                                         DT_COMPRA,      " &
-"    ORDERS.ADDDATE                       DT_REGISTRO,    " &
-"    subStr( tu.usr_name,4,                               " &
-"            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
-"    ORDERDETAIL.SKU                      ID_ITEM,        " &
-"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,   " &
-"    SKU.DESCR                            NOME,           " &
-"    znsls400.t$idca$c                    CANAL,          " &
-"    ORDERS.C_VAT                         MEGA_ROTA,      " &
-"    ORDERS.C_CITY                        CIDADE,         " &
-"    ORDERS.C_STATE                       ESTADO,         " &
-"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,       " &
-"    WAVEDETAIL.WAVEKEY                   ONDA,           " &
-"    CAGEID.CLOSEDATE                     DT_FECHA_GAIOLA," &
-"    ORDERS.ACTUALSHIPDATE                DT_LIQUIDADO,   " &
-"    ORDERS.CARRIERCODE                   ID_TRANSP,      " &
-"    ORDERS.CARRIERNAME                   NOME_TRANSP,    " &
+"SELECT                                                              " &
+"  DISTINCT                                                          " &
+"    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
+"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,                 " &
+"    ORDERS.ORDERKEY                      PEDIDO,                    " &
+"    znsls401.t$uneg$c                    ID_UNINEG,                 " &
+"    ORDERS.SUSR4                         UNINEG,                    " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c ,          " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &
+"                                         DT_COMPRA,                 " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                       
+"                                         DT_REGISTRO,               " &
+"    subStr( tu.usr_name,4,                                          " &
+"            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
+"    ORDERDETAIL.SKU                      ID_ITEM,                   " &
+"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,              " &
+"    SKU.DESCR                            NOME,                      " &
+"    znsls400.t$idca$c                    CANAL,                     " &
+"    ORDERS.C_VAT                         MEGA_ROTA,                 " &
+"    ORDERS.C_CITY                        CIDADE,                    " &
+"    ORDERS.C_STATE                       ESTADO,                    " &
+"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,                  " &
+"    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,            " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"                                         DT_FECHA_GAIOLA,           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                
+"                                         DT_LIQUIDADO,              " &
+"    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
+"    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
 "                                                                    " &
 "    ( select o.T$COCT$C                                             " &
 "        from BAANDB.TZNFMD640301@pln01 o                            " &
@@ -285,7 +320,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "                                         NOME_OCOR,                 " &
 "                                                                    " &
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
-"    ORDERS.SCHEDULEDDELVDATE             DT_ENTREGA1,               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,    " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &             
+"                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
 "    znsls400.t$idli$c                    ID_LISTA_CASAMENTO,        " &
@@ -350,38 +388,50 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 " LEFT JOIN ENTERPRISE.DEPARTSECTORSKU                                            " &
 "        ON TO_CHAR(ENTERPRISE.DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP) " &
 "                                                                                 " &
-"WHERE Trunc(ORDERS.ADDDATE) Between '" + Parameters!DataRegistroDe.Value + "'    " &
-"  AND '" + Parameters!DataRegistroAte.Value + "'                                 " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE))                     " &
+"  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
+"  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
 "Union               " &
 "                    " &
-"SELECT                                                   " &
-"  DISTINCT                                               " &
-"    WMSADMIN.DB_ALIAS                    PLANTA,         " &
-"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,      " &
-"    ORDERS.ORDERKEY                      PEDIDO,         " &
-"    znsls401.t$uneg$c                    ID_UNINEG,      " &
-"    ORDERS.SUSR4                         UNINEG,         " &
-"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c , " &
-"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
-"        AT time zone sessiontimezone) AS DATE)           " &
-"                                         DT_COMPRA,      " &
-"    ORDERS.ADDDATE                       DT_REGISTRO,    " &
-"    subStr( tu.usr_name,4,                               " &
-"            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
-"    ORDERDETAIL.SKU                      ID_ITEM,        " &
-"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,   " &
-"    SKU.DESCR                            NOME,           " &
-"    znsls400.t$idca$c                    CANAL,          " &
-"    ORDERS.C_VAT                         MEGA_ROTA,      " &
-"    ORDERS.C_CITY                        CIDADE,         " &
-"    ORDERS.C_STATE                       ESTADO,         " &
-"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,       " &
-"    WAVEDETAIL.WAVEKEY                   ONDA,           " &
-"    CAGEID.CLOSEDATE                     DT_FECHA_GAIOLA," &
-"    ORDERS.ACTUALSHIPDATE                DT_LIQUIDADO,   " &
-"    ORDERS.CARRIERCODE                   ID_TRANSP,      " &
-"    ORDERS.CARRIERNAME                   NOME_TRANSP,    " &
+"SELECT                                                              " &
+"  DISTINCT                                                          " &
+"    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
+"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,                 " &
+"    ORDERS.ORDERKEY                      PEDIDO,                    " &
+"    znsls401.t$uneg$c                    ID_UNINEG,                 " &
+"    ORDERS.SUSR4                         UNINEG,                    " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c ,          " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &
+"                                         DT_COMPRA,                 " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                       
+"                                         DT_REGISTRO,               " &
+"    subStr( tu.usr_name,4,                                          " &
+"            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
+"    ORDERDETAIL.SKU                      ID_ITEM,                   " &
+"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,              " &
+"    SKU.DESCR                            NOME,                      " &
+"    znsls400.t$idca$c                    CANAL,                     " &
+"    ORDERS.C_VAT                         MEGA_ROTA,                 " &
+"    ORDERS.C_CITY                        CIDADE,                    " &
+"    ORDERS.C_STATE                       ESTADO,                    " &
+"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,                  " &
+"    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,            " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"                                         DT_FECHA_GAIOLA,           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                
+"                                         DT_LIQUIDADO,              " &
+"    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
+"    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
 "                                                                    " &
 "    ( select o.T$COCT$C                                             " &
 "        from BAANDB.TZNFMD640301@pln01 o                            " &
@@ -404,7 +454,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "                                         NOME_OCOR,                 " &
 "                                                                    " &
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
-"    ORDERS.SCHEDULEDDELVDATE             DT_ENTREGA1,               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,    " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &             
+"                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
 "    znsls400.t$idli$c                    ID_LISTA_CASAMENTO,        " &
@@ -469,38 +522,50 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 " LEFT JOIN ENTERPRISE.DEPARTSECTORSKU                                            " &
 "        ON TO_CHAR(ENTERPRISE.DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP) " &
 "                                                                                 " &
-"WHERE Trunc(ORDERS.ADDDATE) Between '" + Parameters!DataRegistroDe.Value + "'    " &
-"  AND '" + Parameters!DataRegistroAte.Value + "'                                 " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE))                     " &
+"  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
+"  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
 "Union               " &
 "                    " &
-"SELECT                                                   " &
-"  DISTINCT                                               " &
-"    WMSADMIN.DB_ALIAS                    PLANTA,         " &
-"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,      " &
-"    ORDERS.ORDERKEY                      PEDIDO,         " &
-"    znsls401.t$uneg$c                    ID_UNINEG,      " &
-"    ORDERS.SUSR4                         UNINEG,         " &
-"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c , " &
-"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
-"        AT time zone sessiontimezone) AS DATE)           " &
-"                                         DT_COMPRA,      " &
-"    ORDERS.ADDDATE                       DT_REGISTRO,    " &
-"    subStr( tu.usr_name,4,                               " &
-"            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
-"    ORDERDETAIL.SKU                      ID_ITEM,        " &
-"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,   " &
-"    SKU.DESCR                            NOME,           " &
-"    znsls400.t$idca$c                    CANAL,          " &
-"    ORDERS.C_VAT                         MEGA_ROTA,      " &
-"    ORDERS.C_CITY                        CIDADE,         " &
-"    ORDERS.C_STATE                       ESTADO,         " &
-"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,       " &
-"    WAVEDETAIL.WAVEKEY                   ONDA,           " &
-"    CAGEID.CLOSEDATE                     DT_FECHA_GAIOLA," &
-"    ORDERS.ACTUALSHIPDATE                DT_LIQUIDADO,   " &
-"    ORDERS.CARRIERCODE                   ID_TRANSP,      " &
-"    ORDERS.CARRIERNAME                   NOME_TRANSP,    " &
+"SELECT                                                              " &
+"  DISTINCT                                                          " &
+"    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
+"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,                 " &
+"    ORDERS.ORDERKEY                      PEDIDO,                    " &
+"    znsls401.t$uneg$c                    ID_UNINEG,                 " &
+"    ORDERS.SUSR4                         UNINEG,                    " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c ,          " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &
+"                                         DT_COMPRA,                 " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                       
+"                                         DT_REGISTRO,               " &
+"    subStr( tu.usr_name,4,                                          " &
+"            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
+"    ORDERDETAIL.SKU                      ID_ITEM,                   " &
+"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,              " &
+"    SKU.DESCR                            NOME,                      " &
+"    znsls400.t$idca$c                    CANAL,                     " &
+"    ORDERS.C_VAT                         MEGA_ROTA,                 " &
+"    ORDERS.C_CITY                        CIDADE,                    " &
+"    ORDERS.C_STATE                       ESTADO,                    " &
+"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,                  " &
+"    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,            " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"                                         DT_FECHA_GAIOLA,           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                
+"                                         DT_LIQUIDADO,              " &
+"    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
+"    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
 "                                                                    " &
 "    ( select o.T$COCT$C                                             " &
 "        from BAANDB.TZNFMD640301@pln01 o                            " &
@@ -523,7 +588,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "                                         NOME_OCOR,                 " &
 "                                                                    " &
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
-"    ORDERS.SCHEDULEDDELVDATE             DT_ENTREGA1,               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,    " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &             
+"                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
 "    znsls400.t$idli$c                    ID_LISTA_CASAMENTO,        " &
@@ -588,38 +656,50 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 " LEFT JOIN ENTERPRISE.DEPARTSECTORSKU                                            " &
 "        ON TO_CHAR(ENTERPRISE.DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP) " &
 "                                                                                 " &
-"WHERE Trunc(ORDERS.ADDDATE) Between '" + Parameters!DataRegistroDe.Value + "'    " &
-"  AND '" + Parameters!DataRegistroAte.Value + "'                                 " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE))                     " &
+"  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
+"  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
 "Union               " &
 "                    " &
-"SELECT                                                   " &
-"  DISTINCT                                               " &
-"    WMSADMIN.DB_ALIAS                    PLANTA,         " &
-"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,      " &
-"    ORDERS.ORDERKEY                      PEDIDO,         " &
-"    znsls401.t$uneg$c                    ID_UNINEG,      " &
-"    ORDERS.SUSR4                         UNINEG,         " &
-"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c , " &
-"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
-"        AT time zone sessiontimezone) AS DATE)           " &
-"                                         DT_COMPRA,      " &
-"    ORDERS.ADDDATE                       DT_REGISTRO,    " &
-"    subStr( tu.usr_name,4,                               " &
-"            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
-"    ORDERDETAIL.SKU                      ID_ITEM,        " &
-"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,   " &
-"    SKU.DESCR                            NOME,           " &
-"    znsls400.t$idca$c                    CANAL,          " &
-"    ORDERS.C_VAT                         MEGA_ROTA,      " &
-"    ORDERS.C_CITY                        CIDADE,         " &
-"    ORDERS.C_STATE                       ESTADO,         " &
-"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,       " &
-"    WAVEDETAIL.WAVEKEY                   ONDA,           " &
-"    CAGEID.CLOSEDATE                     DT_FECHA_GAIOLA," &
-"    ORDERS.ACTUALSHIPDATE                DT_LIQUIDADO,   " &
-"    ORDERS.CARRIERCODE                   ID_TRANSP,      " &
-"    ORDERS.CARRIERNAME                   NOME_TRANSP,    " &
+"SELECT                                                              " &
+"  DISTINCT                                                          " &
+"    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
+"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,                 " &
+"    ORDERS.ORDERKEY                      PEDIDO,                    " &
+"    znsls401.t$uneg$c                    ID_UNINEG,                 " &
+"    ORDERS.SUSR4                         UNINEG,                    " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c ,          " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &
+"                                         DT_COMPRA,                 " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                       
+"                                         DT_REGISTRO,               " &
+"    subStr( tu.usr_name,4,                                          " &
+"            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
+"    ORDERDETAIL.SKU                      ID_ITEM,                   " &
+"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,              " &
+"    SKU.DESCR                            NOME,                      " &
+"    znsls400.t$idca$c                    CANAL,                     " &
+"    ORDERS.C_VAT                         MEGA_ROTA,                 " &
+"    ORDERS.C_CITY                        CIDADE,                    " &
+"    ORDERS.C_STATE                       ESTADO,                    " &
+"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,                  " &
+"    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,            " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"                                         DT_FECHA_GAIOLA,           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                
+"                                         DT_LIQUIDADO,              " &
+"    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
+"    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
 "                                                                    " &
 "    ( select o.T$COCT$C                                             " &
 "        from BAANDB.TZNFMD640301@pln01 o                            " &
@@ -642,7 +722,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "                                         NOME_OCOR,                 " &
 "                                                                    " &
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
-"    ORDERS.SCHEDULEDDELVDATE             DT_ENTREGA1,               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,    " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &             
+"                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
 "    znsls400.t$idli$c                    ID_LISTA_CASAMENTO,        " &
@@ -707,38 +790,50 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 " LEFT JOIN ENTERPRISE.DEPARTSECTORSKU                                            " &
 "        ON TO_CHAR(ENTERPRISE.DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP) " &
 "                                                                                 " &
-"WHERE Trunc(ORDERS.ADDDATE) Between '" + Parameters!DataRegistroDe.Value + "'    " &
-"  AND '" + Parameters!DataRegistroAte.Value + "'                                 " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE))                     " &
+"  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
+"  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
 "Union               " &
 "                    " &
-"SELECT                                                   " &
-"  DISTINCT                                               " &
-"    WMSADMIN.DB_ALIAS                    PLANTA,         " &
-"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,      " &
-"    ORDERS.ORDERKEY                      PEDIDO,         " &
-"    znsls401.t$uneg$c                    ID_UNINEG,      " &
-"    ORDERS.SUSR4                         UNINEG,         " &
-"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c , " &
-"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
-"        AT time zone sessiontimezone) AS DATE)           " &
-"                                         DT_COMPRA,      " &
-"    ORDERS.ADDDATE                       DT_REGISTRO,    " &
-"    subStr( tu.usr_name,4,                               " &
-"            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
-"    ORDERDETAIL.SKU                      ID_ITEM,        " &
-"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,   " &
-"    SKU.DESCR                            NOME,           " &
-"    znsls400.t$idca$c                    CANAL,          " &
-"    ORDERS.C_VAT                         MEGA_ROTA,      " &
-"    ORDERS.C_CITY                        CIDADE,         " &
-"    ORDERS.C_STATE                       ESTADO,         " &
-"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,       " &
-"    WAVEDETAIL.WAVEKEY                   ONDA,           " &
-"    CAGEID.CLOSEDATE                     DT_FECHA_GAIOLA," &
-"    ORDERS.ACTUALSHIPDATE                DT_LIQUIDADO,   " &
-"    ORDERS.CARRIERCODE                   ID_TRANSP,      " &
-"    ORDERS.CARRIERNAME                   NOME_TRANSP,    " &
+"SELECT                                                              " &
+"  DISTINCT                                                          " &
+"    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
+"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,                 " &
+"    ORDERS.ORDERKEY                      PEDIDO,                    " &
+"    znsls401.t$uneg$c                    ID_UNINEG,                 " &
+"    ORDERS.SUSR4                         UNINEG,                    " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c ,          " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &
+"                                         DT_COMPRA,                 " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                       
+"                                         DT_REGISTRO,               " &
+"    subStr( tu.usr_name,4,                                          " &
+"            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
+"    ORDERDETAIL.SKU                      ID_ITEM,                   " &
+"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,              " &
+"    SKU.DESCR                            NOME,                      " &
+"    znsls400.t$idca$c                    CANAL,                     " &
+"    ORDERS.C_VAT                         MEGA_ROTA,                 " &
+"    ORDERS.C_CITY                        CIDADE,                    " &
+"    ORDERS.C_STATE                       ESTADO,                    " &
+"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,                  " &
+"    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,            " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"                                         DT_FECHA_GAIOLA,           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                
+"                                         DT_LIQUIDADO,              " &
+"    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
+"    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
 "                                                                    " &
 "    ( select o.T$COCT$C                                             " &
 "        from BAANDB.TZNFMD640301@pln01 o                            " &
@@ -761,7 +856,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "                                         NOME_OCOR,                 " &
 "                                                                    " &
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
-"    ORDERS.SCHEDULEDDELVDATE             DT_ENTREGA1,               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,    " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &             
+"                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
 "    znsls400.t$idli$c                    ID_LISTA_CASAMENTO,        " &
@@ -826,38 +924,50 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 " LEFT JOIN ENTERPRISE.DEPARTSECTORSKU                                            " &
 "        ON TO_CHAR(ENTERPRISE.DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP) " &
 "                                                                                 " &
-"WHERE Trunc(ORDERS.ADDDATE) Between '" + Parameters!DataRegistroDe.Value + "'    " &
-"  AND '" + Parameters!DataRegistroAte.Value + "'                                 " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE))                     " &
+"  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
+"  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
 "Union               " &
 "                    " &
-"SELECT                                                   " &
-"  DISTINCT                                               " &
-"    WMSADMIN.DB_ALIAS                    PLANTA,         " &
-"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,      " &
-"    ORDERS.ORDERKEY                      PEDIDO,         " &
-"    znsls401.t$uneg$c                    ID_UNINEG,      " &
-"    ORDERS.SUSR4                         UNINEG,         " &
-"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c , " &
-"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
-"        AT time zone sessiontimezone) AS DATE)           " &
-"                                         DT_COMPRA,      " &
-"    ORDERS.ADDDATE                       DT_REGISTRO,    " &
-"    subStr( tu.usr_name,4,                               " &
-"            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
-"    ORDERDETAIL.SKU                      ID_ITEM,        " &
-"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,   " &
-"    SKU.DESCR                            NOME,           " &
-"    znsls400.t$idca$c                    CANAL,          " &
-"    ORDERS.C_VAT                         MEGA_ROTA,      " &
-"    ORDERS.C_CITY                        CIDADE,         " &
-"    ORDERS.C_STATE                       ESTADO,         " &
-"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,       " &
-"    WAVEDETAIL.WAVEKEY                   ONDA,           " &
-"    CAGEID.CLOSEDATE                     DT_FECHA_GAIOLA," &
-"    ORDERS.ACTUALSHIPDATE                DT_LIQUIDADO,   " &
-"    ORDERS.CARRIERCODE                   ID_TRANSP,      " &
-"    ORDERS.CARRIERNAME                   NOME_TRANSP,    " &
+"SELECT                                                              " &
+"  DISTINCT                                                          " &
+"    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
+"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,                 " &
+"    ORDERS.ORDERKEY                      PEDIDO,                    " &
+"    znsls401.t$uneg$c                    ID_UNINEG,                 " &
+"    ORDERS.SUSR4                         UNINEG,                    " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c ,          " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &
+"                                         DT_COMPRA,                 " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                       
+"                                         DT_REGISTRO,               " &
+"    subStr( tu.usr_name,4,                                          " &
+"            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
+"    ORDERDETAIL.SKU                      ID_ITEM,                   " &
+"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,              " &
+"    SKU.DESCR                            NOME,                      " &
+"    znsls400.t$idca$c                    CANAL,                     " &
+"    ORDERS.C_VAT                         MEGA_ROTA,                 " &
+"    ORDERS.C_CITY                        CIDADE,                    " &
+"    ORDERS.C_STATE                       ESTADO,                    " &
+"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,                  " &
+"    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,            " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"                                         DT_FECHA_GAIOLA,           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                
+"                                         DT_LIQUIDADO,              " &
+"    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
+"    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
 "                                                                    " &
 "    ( select o.T$COCT$C                                             " &
 "        from BAANDB.TZNFMD640301@pln01 o                            " &
@@ -880,7 +990,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "                                         NOME_OCOR,                 " &
 "                                                                    " &
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
-"    ORDERS.SCHEDULEDDELVDATE             DT_ENTREGA1,               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,    " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &             
+"                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
 "    znsls400.t$idli$c                    ID_LISTA_CASAMENTO,        " &
@@ -945,38 +1058,50 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 " LEFT JOIN ENTERPRISE.DEPARTSECTORSKU                                            " &
 "        ON TO_CHAR(ENTERPRISE.DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP) " &
 "                                                                                 " &
-"WHERE Trunc(ORDERS.ADDDATE) Between '" + Parameters!DataRegistroDe.Value + "'    " &
-"  AND '" + Parameters!DataRegistroAte.Value + "'                                 " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE))                     " &
+"  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
+"  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
 "Union               " &
 "                    " &
-"SELECT                                                   " &
-"  DISTINCT                                               " &
-"    WMSADMIN.DB_ALIAS                    PLANTA,         " &
-"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,      " &
-"    ORDERS.ORDERKEY                      PEDIDO,         " &
-"    znsls401.t$uneg$c                    ID_UNINEG,      " &
-"    ORDERS.SUSR4                         UNINEG,         " &
-"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c , " &
-"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
-"        AT time zone sessiontimezone) AS DATE)           " &
-"                                         DT_COMPRA,      " &
-"    ORDERS.ADDDATE                       DT_REGISTRO,    " &
-"    subStr( tu.usr_name,4,                               " &
-"            inStr(tu.usr_name, ',')-4 )  OPERADOR,       " &
-"    ORDERDETAIL.SKU                      ID_ITEM,        " &
-"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,   " &
-"    SKU.DESCR                            NOME,           " &
-"    znsls400.t$idca$c                    CANAL,          " &
-"    ORDERS.C_VAT                         MEGA_ROTA,      " &
-"    ORDERS.C_CITY                        CIDADE,         " &
-"    ORDERS.C_STATE                       ESTADO,         " &
-"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,       " &
-"    WAVEDETAIL.WAVEKEY                   ONDA,           " &
-"    CAGEID.CLOSEDATE                     DT_FECHA_GAIOLA," &
-"    ORDERS.ACTUALSHIPDATE                DT_LIQUIDADO,   " &
-"    ORDERS.CARRIERCODE                   ID_TRANSP,      " &
-"    ORDERS.CARRIERNAME                   NOME_TRANSP,    " &
+"SELECT                                                              " &
+"  DISTINCT                                                          " &
+"    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
+"    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,                 " &
+"    ORDERS.ORDERKEY                      PEDIDO,                    " &
+"    znsls401.t$uneg$c                    ID_UNINEG,                 " &
+"    ORDERS.SUSR4                         UNINEG,                    " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c ,          " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &
+"                                         DT_COMPRA,                 " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                       
+"                                         DT_REGISTRO,               " &
+"    subStr( tu.usr_name,4,                                          " &
+"            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
+"    ORDERDETAIL.SKU                      ID_ITEM,                   " &
+"    DEPARTSECTORSKU.DEPART_NAME          DEPARTAMENTO,              " &
+"    SKU.DESCR                            NOME,                      " &
+"    znsls400.t$idca$c                    CANAL,                     " &
+"    ORDERS.C_VAT                         MEGA_ROTA,                 " &
+"    ORDERS.C_CITY                        CIDADE,                    " &
+"    ORDERS.C_STATE                       ESTADO,                    " &
+"    TASKDETAIL.TASKDETAILKEY             PROGRAMA,                  " &
+"    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,            " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"                                         DT_FECHA_GAIOLA,           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &                
+"                                         DT_LIQUIDADO,              " &
+"    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
+"    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
 "                                                                    " &
 "    ( select o.T$COCT$C                                             " &
 "        from BAANDB.TZNFMD640301@pln01 o                            " &
@@ -999,7 +1124,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 "                                         NOME_OCOR,                 " &
 "                                                                    " &
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
-"    ORDERS.SCHEDULEDDELVDATE             DT_ENTREGA1,               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,    " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE)                      " &             
+"                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
 "    znsls400.t$idli$c                    ID_LISTA_CASAMENTO,        " &
@@ -1064,7 +1192,10 @@ WHERE Trunc(ORDERS.ADDDATE) Between :DataRegistroDe
 " LEFT JOIN ENTERPRISE.DEPARTSECTORSKU                                            " &
 "        ON TO_CHAR(ENTERPRISE.DEPARTSECTORSKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP) " &
 "                                                                                 " &
-"WHERE Trunc(ORDERS.ADDDATE) Between '" + Parameters!DataRegistroDe.Value + "'    " &
-"  AND '" + Parameters!DataRegistroAte.Value + "'                                 " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"        AT time zone sessiontimezone) AS DATE))                     " &
+"  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
+"  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                " &
 "ORDER BY PLANTA "
