@@ -1,7 +1,13 @@
 SELECT
   WMSADMIN.DB_ALIAS                       PLANTA,
-  TRUNC(TASKDETAIL.EDITDATE, 'DD')        DATA,
-  TO_CHAR(TASKDETAIL.EDITDATE, 'HH24')    HORA,
+  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE), 'DD')        
+                                          DATA,
+  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE), 'HH24')    
+                                          HORA,
   TASKDETAIL.EDITWHO                      OPERADOR,
   subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',')-4 )   NOME_OP,
@@ -20,12 +26,18 @@ LEFT JOIN WMWHSE4.taskmanageruser tu
   
 WHERE UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID
   AND LOC.LOC = TASKDETAIL.FROMLOC
-  AND Trunc(TASKDETAIL.EDITDATE) Between :DataDe 
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
+	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE)) Between :DataDe 
   AND :DataAte
 
 GROUP BY WMSADMIN.DB_ALIAS,
-         TRUNC(TASKDETAIL.EDITDATE, 'DD'),
-         TO_CHAR(TASKDETAIL.EDITDATE, 'HH24'),
+         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone sessiontimezone) AS DATE), 'DD')
+         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone sessiontimezone) AS DATE), 'HH24')
          TASKDETAIL.EDITWHO,
          subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),
          LOC.PUTAWAYZONE
@@ -34,8 +46,14 @@ GROUP BY WMSADMIN.DB_ALIAS,
 
 "SELECT                                                                        " &
 "  WMSADMIN.DB_ALIAS                       PLANTA,                             " &
-"  TRUNC(TASKDETAIL.EDITDATE, 'DD')        DATA,                               " &
-"  TO_CHAR(TASKDETAIL.EDITDATE, 'HH24')    HORA,                               " &
+"  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,               " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'DD')                              " &        
+"                                          DATA,                               " &
+"  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'HH24')                            " &    
+"                                          HORA,                               " &
 "  TASKDETAIL.EDITWHO                      OPERADOR,                           " &
 "  subStr( tu.usr_name,4,                                                      " &
 "            inStr(tu.usr_name, ',')-4 )   NOME_OP,                            " &
@@ -54,12 +72,19 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "WHERE UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                            " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                            " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataDe.Value + "'    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,           " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE))                                    " &
+"  Between '" + Parameters!DataDe.Value + "'                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                      " &
 "                                                                              " &
 "GROUP BY WMSADMIN.DB_ALIAS,                                                   " &
-"         TRUNC(TASKDETAIL.EDITDATE, 'DD'),                                    " &
-"         TO_CHAR(TASKDETAIL.EDITDATE, 'HH24'),                                " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,        " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'DD')                     " &
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,      " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'HH24')                   " &
 "         TASKDETAIL.EDITWHO,                                                  " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                  " &
 "         LOC.PUTAWAYZONE                                                      " &
@@ -69,8 +94,14 @@ GROUP BY WMSADMIN.DB_ALIAS,
 
 "SELECT                                                                        " &
 "  WMSADMIN.DB_ALIAS                       PLANTA,                             " &
-"  TRUNC(TASKDETAIL.EDITDATE, 'DD')        DATA,                               " &
-"  TO_CHAR(TASKDETAIL.EDITDATE, 'HH24')    HORA,                               " &
+"  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,               " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'DD')                              " &        
+"                                          DATA,                               " &
+"  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'HH24')                            " &    
+"                                          HORA,                               " &
 "  TASKDETAIL.EDITWHO                      OPERADOR,                           " &
 "  subStr( tu.usr_name,4,                                                      " &
 "            inStr(tu.usr_name, ',')-4 )   NOME_OP,                            " &
@@ -89,12 +120,19 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "WHERE UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                            " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                            " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataDe.Value + "'    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,           " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE))                                    " &
+"  Between '" + Parameters!DataDe.Value + "'                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                      " &
 "                                                                              " &
 "GROUP BY WMSADMIN.DB_ALIAS,                                                   " &
-"         TRUNC(TASKDETAIL.EDITDATE, 'DD'),                                    " &
-"         TO_CHAR(TASKDETAIL.EDITDATE, 'HH24'),                                " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,        " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'DD')                     " &
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,      " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'HH24')                   " &
 "         TASKDETAIL.EDITWHO,                                                  " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                  " &
 "         LOC.PUTAWAYZONE                                                      " &
@@ -103,8 +141,14 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "SELECT                                                                        " &
 "  WMSADMIN.DB_ALIAS                       PLANTA,                             " &
-"  TRUNC(TASKDETAIL.EDITDATE, 'DD')        DATA,                               " &
-"  TO_CHAR(TASKDETAIL.EDITDATE, 'HH24')    HORA,                               " &
+"  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,               " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'DD')                              " &        
+"                                          DATA,                               " &
+"  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'HH24')                            " &    
+"                                          HORA,                               " &
 "  TASKDETAIL.EDITWHO                      OPERADOR,                           " &
 "  subStr( tu.usr_name,4,                                                      " &
 "            inStr(tu.usr_name, ',')-4 )   NOME_OP,                            " &
@@ -123,12 +167,19 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "WHERE UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                            " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                            " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataDe.Value + "'    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,           " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE))                                    " &
+"  Between '" + Parameters!DataDe.Value + "'                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                      " &
 "                                                                              " &
 "GROUP BY WMSADMIN.DB_ALIAS,                                                   " &
-"         TRUNC(TASKDETAIL.EDITDATE, 'DD'),                                    " &
-"         TO_CHAR(TASKDETAIL.EDITDATE, 'HH24'),                                " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,        " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'DD')                     " &
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,      " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'HH24')                   " &
 "         TASKDETAIL.EDITWHO,                                                  " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                  " &
 "         LOC.PUTAWAYZONE                                                      " &
@@ -137,8 +188,14 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "SELECT                                                                        " &
 "  WMSADMIN.DB_ALIAS                       PLANTA,                             " &
-"  TRUNC(TASKDETAIL.EDITDATE, 'DD')        DATA,                               " &
-"  TO_CHAR(TASKDETAIL.EDITDATE, 'HH24')    HORA,                               " &
+"  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,               " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'DD')                              " &        
+"                                          DATA,                               " &
+"  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'HH24')                            " &    
+"                                          HORA,                               " &
 "  TASKDETAIL.EDITWHO                      OPERADOR,                           " &
 "  subStr( tu.usr_name,4,                                                      " &
 "            inStr(tu.usr_name, ',')-4 )   NOME_OP,                            " &
@@ -157,12 +214,19 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "WHERE UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                            " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                            " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataDe.Value + "'    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,           " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE))                                    " &
+"  Between '" + Parameters!DataDe.Value + "'                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                      " &
 "                                                                              " &
 "GROUP BY WMSADMIN.DB_ALIAS,                                                   " &
-"         TRUNC(TASKDETAIL.EDITDATE, 'DD'),                                    " &
-"         TO_CHAR(TASKDETAIL.EDITDATE, 'HH24'),                                " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,        " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'DD')                     " &
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,      " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'HH24')                   " &
 "         TASKDETAIL.EDITWHO,                                                  " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                  " &
 "         LOC.PUTAWAYZONE                                                      " &
@@ -171,8 +235,14 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "SELECT                                                                        " &
 "  WMSADMIN.DB_ALIAS                       PLANTA,                             " &
-"  TRUNC(TASKDETAIL.EDITDATE, 'DD')        DATA,                               " &
-"  TO_CHAR(TASKDETAIL.EDITDATE, 'HH24')    HORA,                               " &
+"  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,               " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'DD')                              " &        
+"                                          DATA,                               " &
+"  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'HH24')                            " &    
+"                                          HORA,                               " &
 "  TASKDETAIL.EDITWHO                      OPERADOR,                           " &
 "  subStr( tu.usr_name,4,                                                      " &
 "            inStr(tu.usr_name, ',')-4 )   NOME_OP,                            " &
@@ -191,12 +261,19 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "WHERE UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                            " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                            " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataDe.Value + "'    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,           " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE))                                    " &
+"  Between '" + Parameters!DataDe.Value + "'                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                      " &
 "                                                                              " &
 "GROUP BY WMSADMIN.DB_ALIAS,                                                   " &
-"         TRUNC(TASKDETAIL.EDITDATE, 'DD'),                                    " &
-"         TO_CHAR(TASKDETAIL.EDITDATE, 'HH24'),                                " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,        " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'DD')                     " &
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,      " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'HH24')                   " &
 "         TASKDETAIL.EDITWHO,                                                  " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                  " &
 "         LOC.PUTAWAYZONE                                                      " &
@@ -205,8 +282,14 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "SELECT                                                                        " &
 "  WMSADMIN.DB_ALIAS                       PLANTA,                             " &
-"  TRUNC(TASKDETAIL.EDITDATE, 'DD')        DATA,                               " &
-"  TO_CHAR(TASKDETAIL.EDITDATE, 'HH24')    HORA,                               " &
+"  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,               " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'DD')                              " &        
+"                                          DATA,                               " &
+"  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'HH24')                            " &    
+"                                          HORA,                               " &
 "  TASKDETAIL.EDITWHO                      OPERADOR,                           " &
 "  subStr( tu.usr_name,4,                                                      " &
 "            inStr(tu.usr_name, ',')-4 )   NOME_OP,                            " &
@@ -225,12 +308,19 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "WHERE UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                            " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                            " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataDe.Value + "'    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,           " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE))                                    " &
+"  Between '" + Parameters!DataDe.Value + "'                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                      " &
 "                                                                              " &
 "GROUP BY WMSADMIN.DB_ALIAS,                                                   " &
-"         TRUNC(TASKDETAIL.EDITDATE, 'DD'),                                    " &
-"         TO_CHAR(TASKDETAIL.EDITDATE, 'HH24'),                                " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,        " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'DD')                     " &
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,      " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'HH24')                   " &
 "         TASKDETAIL.EDITWHO,                                                  " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                  " &
 "         LOC.PUTAWAYZONE                                                      " &
@@ -239,8 +329,14 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "SELECT                                                                        " &
 "  WMSADMIN.DB_ALIAS                       PLANTA,                             " &
-"  TRUNC(TASKDETAIL.EDITDATE, 'DD')        DATA,                               " &
-"  TO_CHAR(TASKDETAIL.EDITDATE, 'HH24')    HORA,                               " &
+"  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,               " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'DD')                              " &        
+"                                          DATA,                               " &
+"  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'HH24')                            " &    
+"                                          HORA,                               " &
 "  TASKDETAIL.EDITWHO                      OPERADOR,                           " &
 "  subStr( tu.usr_name,4,                                                      " &
 "            inStr(tu.usr_name, ',')-4 )   NOME_OP,                            " &
@@ -259,12 +355,19 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "WHERE UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                            " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                            " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataDe.Value + "'    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,           " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE))                                    " &
+"  Between '" + Parameters!DataDe.Value + "'                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                      " &
 "                                                                              " &
 "GROUP BY WMSADMIN.DB_ALIAS,                                                   " &
-"         TRUNC(TASKDETAIL.EDITDATE, 'DD'),                                    " &
-"         TO_CHAR(TASKDETAIL.EDITDATE, 'HH24'),                                " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,        " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'DD')                     " &
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,      " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'HH24')                   " &
 "         TASKDETAIL.EDITWHO,                                                  " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                  " &
 "         LOC.PUTAWAYZONE                                                      " &
@@ -273,8 +376,14 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "SELECT                                                                        " &
 "  WMSADMIN.DB_ALIAS                       PLANTA,                             " &
-"  TRUNC(TASKDETAIL.EDITDATE, 'DD')        DATA,                               " &
-"  TO_CHAR(TASKDETAIL.EDITDATE, 'HH24')    HORA,                               " &
+"  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,               " &
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'DD')                              " &        
+"                                          DATA,                               " &
+"  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,             " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE), 'HH24')                            " &    
+"                                          HORA,                               " &
 "  TASKDETAIL.EDITWHO                      OPERADOR,                           " &
 "  subStr( tu.usr_name,4,                                                      " &
 "            inStr(tu.usr_name, ',')-4 )   NOME_OP,                            " &
@@ -293,12 +402,19 @@ GROUP BY WMSADMIN.DB_ALIAS,
 "                                                                              " &
 "WHERE UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                            " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                            " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataDe.Value + "'    " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,           " & 
+"	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"		AT time zone sessiontimezone) AS DATE))                                    " &
+"  Between '" + Parameters!DataDe.Value + "'                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                      " &
 "                                                                              " &
 "GROUP BY WMSADMIN.DB_ALIAS,                                                   " &
-"         TRUNC(TASKDETAIL.EDITDATE, 'DD'),                                    " &
-"         TO_CHAR(TASKDETAIL.EDITDATE, 'HH24'),                                " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,        " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'DD')                     " &
+"         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,      " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
+"            AT time zone sessiontimezone) AS DATE), 'HH24')                   " &
 "         TASKDETAIL.EDITWHO,                                                  " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                  " &
 "         LOC.PUTAWAYZONE                                                      " &
