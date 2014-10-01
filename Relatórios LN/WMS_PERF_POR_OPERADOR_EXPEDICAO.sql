@@ -3,8 +3,12 @@ SELECT
     ORDERS.WHSEID                                        ID_PLANTA,
     PL_DB.DB_ALIAS                                       DSC_PLANTA,
     ORDERS.ORDERKEY                                      PEDIDO,
-    min(ORDERSTATUSHISTORY.ADDDATE )                     DATA,
-    TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH')                 HORA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE), 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)           DATA,
+    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,
     ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,
     subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,
     sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,
@@ -33,7 +37,9 @@ WHERE ORDERS.STATUS > =  95
   AND ORDERSTATUSHISTORY.STATUS = 95
   AND SKU.SKU = ORDERDETAIL.SKU
   
-  AND TRUNC(ORDERSTATUSHISTORY.ADDDATE) BETWEEN :DataDe
+  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE), 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe
   AND :DataAte
   
 GROUP BY ORDERS.WHSEID,       
@@ -52,8 +58,12 @@ GROUP BY ORDERS.WHSEID,
 "    ORDERS.WHSEID                                        ID_PLANTA,                " &
 "    PL_DB.DB_ALIAS                                       DSC_PLANTA,               " &
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
-"    min(ORDERSTATUSHISTORY.ADDDATE )                     DATA,                     " &
-"    TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH')                 HORA,                     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -82,7 +92,10 @@ GROUP BY ORDERS.WHSEID,
 "  AND ORDERSTATUSHISTORY.STATUS = 95                                               " &
 "  AND SKU.SKU=ORDERDETAIL.SKU                                                      " &
 "                                                                                   " &
-"  AND TRUNC(ORDERSTATUSHISTORY.ADDDATE) BETWEEN '" + Parameters!DataDe.Value + "'  " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE))                                    " &
+"  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
 "GROUP BY ORDERS.WHSEID,                                                            " &
@@ -102,8 +115,12 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.WHSEID                                        ID_PLANTA,                " &
 "    PL_DB.DB_ALIAS                                       DSC_PLANTA,               " &
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
-"    min(ORDERSTATUSHISTORY.ADDDATE )                     DATA,                     " &
-"    TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH')                 HORA,                     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -132,7 +149,10 @@ QUERY COM UNION ****************************************************************
 "  AND ORDERSTATUSHISTORY.STATUS = 95                                               " &
 "  AND SKU.SKU=ORDERDETAIL.SKU                                                      " &
 "                                                                                   " &
-"  AND TRUNC(ORDERSTATUSHISTORY.ADDDATE) BETWEEN '" + Parameters!DataDe.Value + "'  " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE))                                    " &
+"  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
 "GROUP BY ORDERS.WHSEID,                                                            " &
@@ -182,7 +202,10 @@ QUERY COM UNION ****************************************************************
 "  AND ORDERSTATUSHISTORY.STATUS = 95                                               " &
 "  AND SKU.SKU=ORDERDETAIL.SKU                                                      " &
 "                                                                                   " &
-"  AND TRUNC(ORDERSTATUSHISTORY.ADDDATE) BETWEEN '" + Parameters!DataDe.Value + "'  " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE))                                    " &
+"  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
 "GROUP BY ORDERS.WHSEID,                                                            " &
@@ -202,8 +225,12 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.WHSEID                                        ID_PLANTA,                " &
 "    PL_DB.DB_ALIAS                                       DSC_PLANTA,               " &
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
-"    min(ORDERSTATUSHISTORY.ADDDATE )                     DATA,                     " &
-"    TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH')                 HORA,                     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -232,7 +259,10 @@ QUERY COM UNION ****************************************************************
 "  AND ORDERSTATUSHISTORY.STATUS = 95                                               " &
 "  AND SKU.SKU=ORDERDETAIL.SKU                                                      " &
 "                                                                                   " &
-"  AND TRUNC(ORDERSTATUSHISTORY.ADDDATE) BETWEEN '" + Parameters!DataDe.Value + "'  " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE))                                    " &
+"  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
 "GROUP BY ORDERS.WHSEID,                                                            " &
@@ -252,8 +282,12 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.WHSEID                                        ID_PLANTA,                " &
 "    PL_DB.DB_ALIAS                                       DSC_PLANTA,               " &
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
-"    min(ORDERSTATUSHISTORY.ADDDATE )                     DATA,                     " &
-"    TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH')                 HORA,                     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -282,7 +316,10 @@ QUERY COM UNION ****************************************************************
 "  AND ORDERSTATUSHISTORY.STATUS = 95                                               " &
 "  AND SKU.SKU=ORDERDETAIL.SKU                                                      " &
 "                                                                                   " &
-"  AND TRUNC(ORDERSTATUSHISTORY.ADDDATE) BETWEEN '" + Parameters!DataDe.Value + "'  " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE))                                    " &
+"  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
 "GROUP BY ORDERS.WHSEID,                                                            " &
@@ -302,8 +339,12 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.WHSEID                                        ID_PLANTA,                " &
 "    PL_DB.DB_ALIAS                                       DSC_PLANTA,               " &
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
-"    min(ORDERSTATUSHISTORY.ADDDATE )                     DATA,                     " &
-"    TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH')                 HORA,                     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -332,7 +373,10 @@ QUERY COM UNION ****************************************************************
 "  AND ORDERSTATUSHISTORY.STATUS = 95                                               " &
 "  AND SKU.SKU=ORDERDETAIL.SKU                                                      " &
 "                                                                                   " &
-"  AND TRUNC(ORDERSTATUSHISTORY.ADDDATE) BETWEEN '" + Parameters!DataDe.Value + "'  " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE))                                    " &
+"  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
 "GROUP BY ORDERS.WHSEID,                                                            " &
@@ -352,8 +396,12 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.WHSEID                                        ID_PLANTA,                " &
 "    PL_DB.DB_ALIAS                                       DSC_PLANTA,               " &
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
-"    min(ORDERSTATUSHISTORY.ADDDATE )                     DATA,                     " &
-"    TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH')                 HORA,                     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -382,7 +430,10 @@ QUERY COM UNION ****************************************************************
 "  AND ORDERSTATUSHISTORY.STATUS = 95                                               " &
 "  AND SKU.SKU=ORDERDETAIL.SKU                                                      " &
 "                                                                                   " &
-"  AND TRUNC(ORDERSTATUSHISTORY.ADDDATE) BETWEEN '" + Parameters!DataDe.Value + "'  " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE))                                    " &
+"  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
 "GROUP BY ORDERS.WHSEID,                                                            " &
@@ -402,8 +453,12 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.WHSEID                                        ID_PLANTA,                " &
 "    PL_DB.DB_ALIAS                                       DSC_PLANTA,               " &
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
-"    min(ORDERSTATUSHISTORY.ADDDATE )                     DATA,                     " &
-"    TO_CHAR(ORDERS.ACTUALSHIPDATE, 'HH')                 HORA,                     " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -432,7 +487,10 @@ QUERY COM UNION ****************************************************************
 "  AND ORDERSTATUSHISTORY.STATUS = 95                                               " &
 "  AND SKU.SKU=ORDERDETAIL.SKU                                                      " &
 "                                                                                   " &
-"  AND TRUNC(ORDERSTATUSHISTORY.ADDDATE) BETWEEN '" + Parameters!DataDe.Value + "'  " &
+"  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"        AT time zone sessiontimezone) AS DATE))                                    " &
+"  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
 "GROUP BY ORDERS.WHSEID,                                                            " &
