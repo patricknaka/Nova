@@ -17,7 +17,10 @@ SELECT
     aTOLOC.LOGICALLOCATION               DESC_LOC,
     aTOLOC.PUTAWAYZONE                   ID_CLA_LOC,
     CODELKUP.DESCRIPTION                 ID_SIT,
-    TASKDETAIL.EDITDATE                  DT_SIT
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)                 
+                                         DT_SIT
   
 FROM      WMWHSE4.LOC,
           WMWHSE4.SKU
@@ -43,7 +46,9 @@ WHERE SKU.SKU = TASKDETAIL.SKU
   AND UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID
   AND LOC.LOC = TASKDETAIL.FROMLOC
   AND TASKDETAIL.TASKTYPE = 'PA' 
-  AND Trunc(TASKDETAIL.EDITDATE) Between :DataSituacaoDe
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) Between :DataSituacaoDe
   AND :DataSituacaoAte
   
 "SELECT                                                                                    " &
@@ -65,7 +70,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    aTOLOC.LOGICALLOCATION               DESC_LOC,                                        " &
 "    aTOLOC.PUTAWAYZONE                   ID_CLA_LOC,                                      " &
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
-"    TASKDETAIL.EDITDATE                  DT_SIT                                           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      " + Parameters!Table.Value + ".LOC,                                             " &
 "          " + Parameters!Table.Value + ".SKU                                              " &
@@ -91,8 +99,11 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                                        " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                                        " &
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataSituacaoDe.Value + "'        " &
-"  AND '" + Parameters!DataSituacaoAte.Value + "'                                          "
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
+"  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 
 -- Query com UNION ***************************************************************************
 
@@ -115,7 +126,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    aTOLOC.LOGICALLOCATION               DESC_LOC,                                        " &
 "    aTOLOC.PUTAWAYZONE                   ID_CLA_LOC,                                      " &
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
-"    TASKDETAIL.EDITDATE                  DT_SIT                                           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE1.LOC,                                                                    " &
 "          WMWHSE1.SKU                                                                     " &
@@ -141,7 +155,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                                        " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                                        " &
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataSituacaoDe.Value + "'        " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
 "Union                                                                                     " &
@@ -165,7 +182,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    aTOLOC.LOGICALLOCATION               DESC_LOC,                                        " &
 "    aTOLOC.PUTAWAYZONE                   ID_CLA_LOC,                                      " &
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
-"    TASKDETAIL.EDITDATE                  DT_SIT                                           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE2.LOC,                                                                    " &
 "          WMWHSE2.SKU                                                                     " &
@@ -191,7 +211,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                                        " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                                        " &
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataSituacaoDe.Value + "'        " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
 "Union                                                                                     " &
@@ -215,7 +238,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    aTOLOC.LOGICALLOCATION               DESC_LOC,                                        " &
 "    aTOLOC.PUTAWAYZONE                   ID_CLA_LOC,                                      " &
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
-"    TASKDETAIL.EDITDATE                  DT_SIT                                           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE3.LOC,                                                                    " &
 "          WMWHSE3.SKU                                                                     " &
@@ -241,7 +267,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                                        " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                                        " &
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataSituacaoDe.Value + "'        " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
 "Union                                                                                     " &
@@ -265,7 +294,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    aTOLOC.LOGICALLOCATION               DESC_LOC,                                        " &
 "    aTOLOC.PUTAWAYZONE                   ID_CLA_LOC,                                      " &
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
-"    TASKDETAIL.EDITDATE                  DT_SIT                                           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE4.LOC,                                                                    " &
 "          WMWHSE4.SKU                                                                     " &
@@ -291,7 +323,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                                        " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                                        " &
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataSituacaoDe.Value + "'        " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
 "Union                                                                                     " &
@@ -315,7 +350,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    aTOLOC.LOGICALLOCATION               DESC_LOC,                                        " &
 "    aTOLOC.PUTAWAYZONE                   ID_CLA_LOC,                                      " &
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
-"    TASKDETAIL.EDITDATE                  DT_SIT                                           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE5.LOC,                                                                    " &
 "          WMWHSE5.SKU                                                                     " &
@@ -341,7 +379,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                                        " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                                        " &
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataSituacaoDe.Value + "'        " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
 "Union                                                                                     " &
@@ -365,7 +406,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    aTOLOC.LOGICALLOCATION               DESC_LOC,                                        " &
 "    aTOLOC.PUTAWAYZONE                   ID_CLA_LOC,                                      " &
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
-"    TASKDETAIL.EDITDATE                  DT_SIT                                           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE6.LOC,                                                                    " &
 "          WMWHSE6.SKU                                                                     " &
@@ -391,7 +435,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                                        " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                                        " &
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataSituacaoDe.Value + "'        " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
 "Union                                                                                     " &
@@ -415,7 +462,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    aTOLOC.LOGICALLOCATION               DESC_LOC,                                        " &
 "    aTOLOC.PUTAWAYZONE                   ID_CLA_LOC,                                      " &
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
-"    TASKDETAIL.EDITDATE                  DT_SIT                                           " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE7.LOC,                                                                    " &
 "          WMWHSE7.SKU                                                                     " &
@@ -441,7 +491,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND UPPER(WMSADMIN.DB_LOGID) = TASKDETAIL.WHSEID                                        " &
 "  AND LOC.LOC = TASKDETAIL.FROMLOC                                                        " &
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
-"  AND Trunc(TASKDETAIL.EDITDATE) Between '" + Parameters!DataSituacaoDe.Value + "'        " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
+"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
 "Order By PLANTA                                                                           "
