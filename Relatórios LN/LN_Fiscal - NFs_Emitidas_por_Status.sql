@@ -6,7 +6,7 @@ SELECT
     cisli940.t$seri$l                       NUME_SERIE,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone sessiontimezone) AS DATE) 
-                                          DATA_EMISSAO,
+                                            DATA_EMISSAO,
     tccom130.t$fovn$l                       CNPJ_FORNECEDOR,
     tccom130.t$nama                         NOME_FORNECEDOR,
     cisli940.t$doty$l                       TIPO_DOCTO, DESC_TIPO_DOCTO,
@@ -15,7 +15,7 @@ SELECT
     cisli940.t$stat$l                       STATUS_NF, DESC_TIPO_STATUS,
     To_Number(Trim(cisli940.t$cpay$l))      CONDICAO_PAGTO_NR,
     cisli940.t$amnt$l                       VALOR_TOTAL,
-    znnfe002.t$logn$c                       USUARIO,  
+    Usuario.t$logn$c                        USUARIO,  
     cisli940.t$cnfe$l                       CHAVE_ACESSO,
     cisli940.t$fire$l                       REF_FISCAL,
     cisli940.t$cofc$l                       CD_DEPART_FILIAL,
@@ -35,8 +35,13 @@ INNER JOIN baandb.ttcemm124301  tcemm124
 INNER JOIN baandb.ttcemm030301  tcemm030
         ON tcemm030.t$eunt = tcemm124.t$grid
 
- LEFT JOIN baandb.tznnfe002301  znnfe002 
-        ON znnfe002.t$fire$c = cisli940.t$fire$l
+ LEFT JOIN ( SELECT znnfe002. t$fire$c, 
+                    znnfe002.t$logn$c
+               FROM baandb.tznnfe002301 znnfe002 
+              WHERE znnfe002.t$datg$c = ( SELECT MAX(znnfe002A.t$datg$c)
+                                            FROM baandb.tznnfe002301 znnfe002A
+                                           WHERE znnfe002A.T$fire$c = znnfe002.T$fire$c ) ) Usuario
+        ON Usuario.t$fire$c = cisli940.t$fire$l
      
  LEFT JOIN ( SELECT d.t$cnst CNST, 
                     l.t$desc DESC_TIPO_DOCTO
