@@ -26,19 +26,35 @@ SELECT
                                    where B.CODE = ORDERS.STATUS ) ) 
                                     DESCRICAO,
                   
-    nvl( ( select A.ADDDATE
+    nvl( ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)
              from WMWHSE5.ORDERSTATUSHISTORY  A
             where A.ADDDATE = ( select max(A1.ADDDATE) 
                                   from WMWHSE5.ORDERSTATUSHISTORY  A1
                                  where A1.ORDERKEY = A.ORDERKEY )
               and A.ORDERKEY = ORDERS.ORDERKEY
-              and rownum = 1 ), ORDERS.EDITDATE ) 
+              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE, 
+                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                              AT time zone sessiontimezone) AS DATE)) 
                                     DT_ULT_EVENTO,
                   
-    ORDERS.ADDDATE                  DT_WMS,
-    CAGEID.CLOSEDATE                PETK_DT_FECHAMENTO_GAIOLA,  
-    ORDERS.SCHEDULEDSHIPDATE        DT_LIMITE,
-    ORDERS.SCHEDULEDDELVDATE        DT_PROMETIDA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+         AT time zone sessiontimezone) AS DATE)                  
+                                    DT_WMS,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+         AT time zone sessiontimezone) AS DATE)                 
+                                    PETK_DT_FECHAMENTO_GAIOLA,  
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+         AT time zone sessiontimezone) AS DATE)        
+                                    DT_LIMITE,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+         AT time zone sessiontimezone) AS DATE)        
+                                    DT_PROMETIDA,
     ORDERS.C_VAT                    MEGA_ROTA,
     znsls401.t$fovn$c               PEDV_ID_TRANSP,
     ORDERS.CARRIERNAME              TRASNPORTADORA
@@ -63,7 +79,9 @@ INNER JOIN WMSADMIN.PL_DB             WMSADMIN
  LEFT JOIN WMWHSE5.CAGEID             CAGEID
         ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID
 
-WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
+WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+         AT time zone sessiontimezone) AS DATE)) Between :DataLimiteDe
   AND :DataLimiteAte
   
 
@@ -95,19 +113,35 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 "                                   where B.CODE = ORDERS.STATUS ) )                          " &
 "                                    DESCRICAO,                                               " &
 "                                                                                             " &
-"    nvl( ( select A.ADDDATE                                                                  " &
+"    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
+"              AT time zone sessiontimezone) AS DATE)                                         " &
 "             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
 "                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
-"              and rownum = 1 ), ORDERS.EDITDATE )                                            " &
+"              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
+"                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"                              AT time zone sessiontimezone) AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
-"    ORDERS.ADDDATE                  DT_WMS,                                                  " &
-"    CAGEID.CLOSEDATE                PETK_DT_FECHAMENTO_GAIOLA,                               " &
-"    ORDERS.SCHEDULEDSHIPDATE        DT_LIMITE,                                               " &
-"    ORDERS.SCHEDULEDDELVDATE        DT_PROMETIDA,                                            " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"                                    DT_WMS,                                                  " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_LIMITE,                                               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
 "    ORDERS.CARRIERNAME              TRASNPORTADORA                                           " &
@@ -132,8 +166,11 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 " LEFT JOIN " + Parameters!Table.Value + ".CAGEID             CAGEID                          " &
 "        ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID                                               " &
 "                                                                                             " &
-"WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between '" + Parameters!DataLimiteDe.Value + "'        " &
-"  AND '" + Parameters!DataLimiteAte.Value + "'                                               "  
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
+"  AND '" + Parameters!DataLimiteAte.Value + "'                                               " & 
 
 -- Query com UNION ******************************************************************************
 
@@ -144,40 +181,56 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 "    ORDERS.STATUS                   SIT,                                                     " &
 "    ORDERSTATUSSETUP.DESCRIPTION    DESCR_SIT,                                               " &
 "    nvl( ( select A.STATUS                                                                   " &
-"             from WMWHSE1.ORDERSTATUSHISTORY  A                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE1.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), ORDERS.STATUS )                                              " &
 "                                    ULT_EVENTO,                                              " &
 "                                                                                             " &
 "    nvl( ( select B.DESCRIPTION                                                              " &
-"             from WMWHSE1.ORDERSTATUSHISTORY  A,                                             " &
-"                  WMWHSE1.ORDERSTATUSSETUP    B                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A,                      " &
+"                  " + Parameters!Table.Value + ".ORDERSTATUSSETUP    B                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE1.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and B.CODE = A.STATUS                                                          " &
 "              and rownum = 1 ), ( select B.DESCRIPTION                                       " &
-"                                    from WMWHSE1.ORDERSTATUSSETUP  B                         " &
+"                                    from " + Parameters!Table.Value + ".ORDERSTATUSSETUP  B  " &
 "                                   where B.CODE = ORDERS.STATUS ) )                          " &
 "                                    DESCRICAO,                                               " &
 "                                                                                             " &
-"    nvl( ( select A.ADDDATE                                                                  " &
-"             from WMWHSE1.ORDERSTATUSHISTORY  A                                              " &
+"    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
+"              AT time zone sessiontimezone) AS DATE)                                         " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE1.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
-"              and rownum = 1 ), ORDERS.EDITDATE )                                            " &
+"              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
+"                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"                              AT time zone sessiontimezone) AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
-"    ORDERS.ADDDATE                  DT_WMS,                                                  " &
-"    CAGEID.CLOSEDATE                PETK_DT_FECHAMENTO_GAIOLA,                               " &
-"    ORDERS.SCHEDULEDSHIPDATE        DT_LIMITE,                                               " &
-"    ORDERS.SCHEDULEDDELVDATE        DT_PROMETIDA,                                            " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"                                    DT_WMS,                                                  " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_LIMITE,                                               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
 "    ORDERS.CARRIERNAME              TRASNPORTADORA                                           " &
@@ -202,7 +255,10 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 " LEFT JOIN WMWHSE1.CAGEID             CAGEID                                                 " &
 "        ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID                                               " &
 "                                                                                             " &
-"WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between '" + Parameters!DataLimiteDe.Value + "'        " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
 "Union                                                                                        " &
@@ -214,40 +270,56 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 "    ORDERS.STATUS                   SIT,                                                     " &
 "    ORDERSTATUSSETUP.DESCRIPTION    DESCR_SIT,                                               " &
 "    nvl( ( select A.STATUS                                                                   " &
-"             from WMWHSE2.ORDERSTATUSHISTORY  A                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE2.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), ORDERS.STATUS )                                              " &
 "                                    ULT_EVENTO,                                              " &
 "                                                                                             " &
 "    nvl( ( select B.DESCRIPTION                                                              " &
-"             from WMWHSE2.ORDERSTATUSHISTORY  A,                                             " &
-"                  WMWHSE2.ORDERSTATUSSETUP    B                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A,                      " &
+"                  " + Parameters!Table.Value + ".ORDERSTATUSSETUP    B                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE2.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and B.CODE = A.STATUS                                                          " &
 "              and rownum = 1 ), ( select B.DESCRIPTION                                       " &
-"                                    from WMWHSE2.ORDERSTATUSSETUP  B                         " &
+"                                    from " + Parameters!Table.Value + ".ORDERSTATUSSETUP  B  " &
 "                                   where B.CODE = ORDERS.STATUS ) )                          " &
 "                                    DESCRICAO,                                               " &
 "                                                                                             " &
-"    nvl( ( select A.ADDDATE                                                                  " &
-"             from WMWHSE2.ORDERSTATUSHISTORY  A                                              " &
+"    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
+"              AT time zone sessiontimezone) AS DATE)                                         " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE2.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
-"              and rownum = 1 ), ORDERS.EDITDATE )                                            " &
+"              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
+"                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"                              AT time zone sessiontimezone) AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
-"    ORDERS.ADDDATE                  DT_WMS,                                                  " &
-"    CAGEID.CLOSEDATE                PETK_DT_FECHAMENTO_GAIOLA,                               " &
-"    ORDERS.SCHEDULEDSHIPDATE        DT_LIMITE,                                               " &
-"    ORDERS.SCHEDULEDDELVDATE        DT_PROMETIDA,                                            " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"                                    DT_WMS,                                                  " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_LIMITE,                                               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
 "    ORDERS.CARRIERNAME              TRASNPORTADORA                                           " &
@@ -272,7 +344,10 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 " LEFT JOIN WMWHSE2.CAGEID             CAGEID                                                 " &
 "        ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID                                               " &
 "                                                                                             " &
-"WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between '" + Parameters!DataLimiteDe.Value + "'        " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
 "Union                                                                                        " &
@@ -284,40 +359,56 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 "    ORDERS.STATUS                   SIT,                                                     " &
 "    ORDERSTATUSSETUP.DESCRIPTION    DESCR_SIT,                                               " &
 "    nvl( ( select A.STATUS                                                                   " &
-"             from WMWHSE3.ORDERSTATUSHISTORY  A                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE3.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), ORDERS.STATUS )                                              " &
 "                                    ULT_EVENTO,                                              " &
 "                                                                                             " &
 "    nvl( ( select B.DESCRIPTION                                                              " &
-"             from WMWHSE3.ORDERSTATUSHISTORY  A,                                             " &
-"                  WMWHSE3.ORDERSTATUSSETUP    B                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A,                      " &
+"                  " + Parameters!Table.Value + ".ORDERSTATUSSETUP    B                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE3.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and B.CODE = A.STATUS                                                          " &
 "              and rownum = 1 ), ( select B.DESCRIPTION                                       " &
-"                                    from WMWHSE3.ORDERSTATUSSETUP  B                         " &
+"                                    from " + Parameters!Table.Value + ".ORDERSTATUSSETUP  B  " &
 "                                   where B.CODE = ORDERS.STATUS ) )                          " &
 "                                    DESCRICAO,                                               " &
 "                                                                                             " &
-"    nvl( ( select A.ADDDATE                                                                  " &
-"             from WMWHSE3.ORDERSTATUSHISTORY  A                                              " &
+"    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
+"              AT time zone sessiontimezone) AS DATE)                                         " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE3.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
-"              and rownum = 1 ), ORDERS.EDITDATE )                                            " &
+"              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
+"                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"                              AT time zone sessiontimezone) AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
-"    ORDERS.ADDDATE                  DT_WMS,                                                  " &
-"    CAGEID.CLOSEDATE                PETK_DT_FECHAMENTO_GAIOLA,                               " &
-"    ORDERS.SCHEDULEDSHIPDATE        DT_LIMITE,                                               " &
-"    ORDERS.SCHEDULEDDELVDATE        DT_PROMETIDA,                                            " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"                                    DT_WMS,                                                  " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_LIMITE,                                               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
 "    ORDERS.CARRIERNAME              TRASNPORTADORA                                           " &
@@ -342,7 +433,10 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 " LEFT JOIN WMWHSE3.CAGEID             CAGEID                                                 " &
 "        ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID                                               " &
 "                                                                                             " &
-"WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between '" + Parameters!DataLimiteDe.Value + "'        " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
 "Union                                                                                        " &
@@ -354,40 +448,56 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 "    ORDERS.STATUS                   SIT,                                                     " &
 "    ORDERSTATUSSETUP.DESCRIPTION    DESCR_SIT,                                               " &
 "    nvl( ( select A.STATUS                                                                   " &
-"             from WMWHSE4.ORDERSTATUSHISTORY  A                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE4.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), ORDERS.STATUS )                                              " &
 "                                    ULT_EVENTO,                                              " &
 "                                                                                             " &
 "    nvl( ( select B.DESCRIPTION                                                              " &
-"             from WMWHSE4.ORDERSTATUSHISTORY  A,                                             " &
-"                  WMWHSE4.ORDERSTATUSSETUP    B                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A,                      " &
+"                  " + Parameters!Table.Value + ".ORDERSTATUSSETUP    B                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE4.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and B.CODE = A.STATUS                                                          " &
 "              and rownum = 1 ), ( select B.DESCRIPTION                                       " &
-"                                    from WMWHSE4.ORDERSTATUSSETUP  B                         " &
+"                                    from " + Parameters!Table.Value + ".ORDERSTATUSSETUP  B  " &
 "                                   where B.CODE = ORDERS.STATUS ) )                          " &
 "                                    DESCRICAO,                                               " &
 "                                                                                             " &
-"    nvl( ( select A.ADDDATE                                                                  " &
-"             from WMWHSE4.ORDERSTATUSHISTORY  A                                              " &
+"    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
+"              AT time zone sessiontimezone) AS DATE)                                         " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE4.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
-"              and rownum = 1 ), ORDERS.EDITDATE )                                            " &
+"              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
+"                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"                              AT time zone sessiontimezone) AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
-"    ORDERS.ADDDATE                  DT_WMS,                                                  " &
-"    CAGEID.CLOSEDATE                PETK_DT_FECHAMENTO_GAIOLA,                               " &
-"    ORDERS.SCHEDULEDSHIPDATE        DT_LIMITE,                                               " &
-"    ORDERS.SCHEDULEDDELVDATE        DT_PROMETIDA,                                            " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"                                    DT_WMS,                                                  " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_LIMITE,                                               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
 "    ORDERS.CARRIERNAME              TRASNPORTADORA                                           " &
@@ -412,7 +522,10 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 " LEFT JOIN WMWHSE4.CAGEID             CAGEID                                                 " &
 "        ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID                                               " &
 "                                                                                             " &
-"WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between '" + Parameters!DataLimiteDe.Value + "'        " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
 "Union                                                                                        " &
@@ -424,40 +537,56 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 "    ORDERS.STATUS                   SIT,                                                     " &
 "    ORDERSTATUSSETUP.DESCRIPTION    DESCR_SIT,                                               " &
 "    nvl( ( select A.STATUS                                                                   " &
-"             from WMWHSE5.ORDERSTATUSHISTORY  A                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE5.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), ORDERS.STATUS )                                              " &
 "                                    ULT_EVENTO,                                              " &
 "                                                                                             " &
 "    nvl( ( select B.DESCRIPTION                                                              " &
-"             from WMWHSE5.ORDERSTATUSHISTORY  A,                                             " &
-"                  WMWHSE5.ORDERSTATUSSETUP    B                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A,                      " &
+"                  " + Parameters!Table.Value + ".ORDERSTATUSSETUP    B                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE5.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and B.CODE = A.STATUS                                                          " &
 "              and rownum = 1 ), ( select B.DESCRIPTION                                       " &
-"                                    from WMWHSE5.ORDERSTATUSSETUP  B                         " &
+"                                    from " + Parameters!Table.Value + ".ORDERSTATUSSETUP  B  " &
 "                                   where B.CODE = ORDERS.STATUS ) )                          " &
 "                                    DESCRICAO,                                               " &
 "                                                                                             " &
-"    nvl( ( select A.ADDDATE                                                                  " &
-"             from WMWHSE5.ORDERSTATUSHISTORY  A                                              " &
+"    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
+"              AT time zone sessiontimezone) AS DATE)                                         " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE5.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
-"              and rownum = 1 ), ORDERS.EDITDATE )                                            " &
+"              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
+"                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"                              AT time zone sessiontimezone) AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
-"    ORDERS.ADDDATE                  DT_WMS,                                                  " &
-"    CAGEID.CLOSEDATE                PETK_DT_FECHAMENTO_GAIOLA,                               " &
-"    ORDERS.SCHEDULEDSHIPDATE        DT_LIMITE,                                               " &
-"    ORDERS.SCHEDULEDDELVDATE        DT_PROMETIDA,                                            " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"                                    DT_WMS,                                                  " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_LIMITE,                                               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
 "    ORDERS.CARRIERNAME              TRASNPORTADORA                                           " &
@@ -482,7 +611,10 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 " LEFT JOIN WMWHSE5.CAGEID             CAGEID                                                 " &
 "        ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID                                               " &
 "                                                                                             " &
-"WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between '" + Parameters!DataLimiteDe.Value + "'        " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
 "Union                                                                                        " &
@@ -494,40 +626,56 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 "    ORDERS.STATUS                   SIT,                                                     " &
 "    ORDERSTATUSSETUP.DESCRIPTION    DESCR_SIT,                                               " &
 "    nvl( ( select A.STATUS                                                                   " &
-"             from WMWHSE6.ORDERSTATUSHISTORY  A                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE6.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), ORDERS.STATUS )                                              " &
 "                                    ULT_EVENTO,                                              " &
 "                                                                                             " &
 "    nvl( ( select B.DESCRIPTION                                                              " &
-"             from WMWHSE6.ORDERSTATUSHISTORY  A,                                             " &
-"                  WMWHSE6.ORDERSTATUSSETUP    B                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A,                      " &
+"                  " + Parameters!Table.Value + ".ORDERSTATUSSETUP    B                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE6.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and B.CODE = A.STATUS                                                          " &
 "              and rownum = 1 ), ( select B.DESCRIPTION                                       " &
-"                                    from WMWHSE6.ORDERSTATUSSETUP  B                         " &
+"                                    from " + Parameters!Table.Value + ".ORDERSTATUSSETUP  B  " &
 "                                   where B.CODE = ORDERS.STATUS ) )                          " &
 "                                    DESCRICAO,                                               " &
 "                                                                                             " &
-"    nvl( ( select A.ADDDATE                                                                  " &
-"             from WMWHSE6.ORDERSTATUSHISTORY  A                                              " &
+"    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
+"              AT time zone sessiontimezone) AS DATE)                                         " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE6.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
-"              and rownum = 1 ), ORDERS.EDITDATE )                                            " &
+"              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
+"                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"                              AT time zone sessiontimezone) AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
-"    ORDERS.ADDDATE                  DT_WMS,                                                  " &
-"    CAGEID.CLOSEDATE                PETK_DT_FECHAMENTO_GAIOLA,                               " &
-"    ORDERS.SCHEDULEDSHIPDATE        DT_LIMITE,                                               " &
-"    ORDERS.SCHEDULEDDELVDATE        DT_PROMETIDA,                                            " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"                                    DT_WMS,                                                  " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_LIMITE,                                               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
 "    ORDERS.CARRIERNAME              TRASNPORTADORA                                           " &
@@ -552,7 +700,10 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 " LEFT JOIN WMWHSE6.CAGEID             CAGEID                                                 " &
 "        ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID                                               " &
 "                                                                                             " &
-"WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between '" + Parameters!DataLimiteDe.Value + "'        " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
 "Union                                                                                        " &
@@ -564,40 +715,56 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 "    ORDERS.STATUS                   SIT,                                                     " &
 "    ORDERSTATUSSETUP.DESCRIPTION    DESCR_SIT,                                               " &
 "    nvl( ( select A.STATUS                                                                   " &
-"             from WMWHSE7.ORDERSTATUSHISTORY  A                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE7.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), ORDERS.STATUS )                                              " &
 "                                    ULT_EVENTO,                                              " &
 "                                                                                             " &
 "    nvl( ( select B.DESCRIPTION                                                              " &
-"             from WMWHSE7.ORDERSTATUSHISTORY  A,                                             " &
-"                  WMWHSE7.ORDERSTATUSSETUP    B                                              " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A,                      " &
+"                  " + Parameters!Table.Value + ".ORDERSTATUSSETUP    B                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE7.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and B.CODE = A.STATUS                                                          " &
 "              and rownum = 1 ), ( select B.DESCRIPTION                                       " &
-"                                    from WMWHSE7.ORDERSTATUSSETUP  B                         " &
+"                                    from " + Parameters!Table.Value + ".ORDERSTATUSSETUP  B  " &
 "                                   where B.CODE = ORDERS.STATUS ) )                          " &
 "                                    DESCRICAO,                                               " &
 "                                                                                             " &
-"    nvl( ( select A.ADDDATE                                                                  " &
-"             from WMWHSE7.ORDERSTATUSHISTORY  A                                              " &
+"    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
+"              AT time zone sessiontimezone) AS DATE)                                         " &
+"             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
-"                                  from WMWHSE7.ORDERSTATUSHISTORY  A1                        " &
+"                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
 "                                 where A1.ORDERKEY = A.ORDERKEY )                            " &
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
-"              and rownum = 1 ), ORDERS.EDITDATE )                                            " &
+"              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
+"                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"                              AT time zone sessiontimezone) AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
-"    ORDERS.ADDDATE                  DT_WMS,                                                  " &
-"    CAGEID.CLOSEDATE                PETK_DT_FECHAMENTO_GAIOLA,                               " &
-"    ORDERS.SCHEDULEDSHIPDATE        DT_LIMITE,                                               " &
-"    ORDERS.SCHEDULEDDELVDATE        DT_PROMETIDA,                                            " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"                                    DT_WMS,                                                  " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_LIMITE,                                               " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
 "    ORDERS.CARRIERNAME              TRASNPORTADORA                                           " &
@@ -622,7 +789,10 @@ WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between :DataLimiteDe
 " LEFT JOIN WMWHSE7.CAGEID             CAGEID                                                 " &
 "        ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID                                               " &
 "                                                                                             " &
-"WHERE Trunc(ORDERS.SCHEDULEDDELVDATE) Between '" + Parameters!DataLimiteDe.Value + "'        " &
+"WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
+"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
 "ORDER BY PLANTA                                                                              "
