@@ -13,7 +13,10 @@ SELECT
        where a.code = TASKDETAIL.STATUS       
          and a.listname = 'TMSTATUS' )    DESC_STI_ROM,
    
-    TASKDETAIL.EDITDATE                   DT_SIT_ROM,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone sessiontimezone) AS DATE)                   
+                                          DT_SIT_ROM,
     TASKDETAIL.TOLOC                      ID_LOCAL_DEST,
     LOC.LOGICALLOCATION                   ENDERECO
   
@@ -46,7 +49,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "       where a.code = TASKDETAIL.STATUS                    " &
 "         and a.listname = 'TMSTATUS' )    DESC_STI_ROM,    " &
 "                                                           " &
-"    TASKDETAIL.EDITDATE                   DT_SIT_ROM,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,  " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
+"      AT time zone sessiontimezone) AS DATE)               " &                   
+"                                          DT_SIT_ROM,      " &
 "    TASKDETAIL.TOLOC                      ID_LOCAL_DEST,   " &
 "    LOC.LOGICALLOCATION                   ENDERECO         " &
 "                                                           " &
@@ -81,7 +87,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "       where a.code = TASKDETAIL.STATUS                    " &
 "         and a.listname = 'TMSTATUS' )    DESC_STI_ROM,    " &
 "                                                           " &
-"    TASKDETAIL.EDITDATE                   DT_SIT_ROM,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,  " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
+"      AT time zone sessiontimezone) AS DATE)               " &                   
+"                                          DT_SIT_ROM,      " &
 "    TASKDETAIL.TOLOC                      ID_LOCAL_DEST,   " &
 "    LOC.LOGICALLOCATION                   ENDERECO         " &
 "                                                           " &
@@ -116,7 +125,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "       where a.code = TASKDETAIL.STATUS                    " &
 "         and a.listname = 'TMSTATUS' )    DESC_STI_ROM,    " &
 "                                                           " &
-"    TASKDETAIL.EDITDATE                   DT_SIT_ROM,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,  " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
+"      AT time zone sessiontimezone) AS DATE)               " &                   
+"                                          DT_SIT_ROM,      " &
 "    TASKDETAIL.TOLOC                      ID_LOCAL_DEST,   " &
 "    LOC.LOGICALLOCATION                   ENDERECO         " &
 "                                                           " &
@@ -151,7 +163,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "       where a.code = TASKDETAIL.STATUS                    " &
 "         and a.listname = 'TMSTATUS' )    DESC_STI_ROM,    " &
 "                                                           " &
-"    TASKDETAIL.EDITDATE                   DT_SIT_ROM,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,  " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
+"      AT time zone sessiontimezone) AS DATE)               " &                   
+"                                          DT_SIT_ROM,      " &
 "    TASKDETAIL.TOLOC                      ID_LOCAL_DEST,   " &
 "    LOC.LOGICALLOCATION                   ENDERECO         " &
 "                                                           " &
@@ -186,7 +201,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "       where a.code = TASKDETAIL.STATUS                    " &
 "         and a.listname = 'TMSTATUS' )    DESC_STI_ROM,    " &
 "                                                           " &
-"    TASKDETAIL.EDITDATE                   DT_SIT_ROM,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,  " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
+"      AT time zone sessiontimezone) AS DATE)               " &                   
+"                                          DT_SIT_ROM,      " &
 "    TASKDETAIL.TOLOC                      ID_LOCAL_DEST,   " &
 "    LOC.LOGICALLOCATION                   ENDERECO         " &
 "                                                           " &
@@ -221,7 +239,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "       where a.code = TASKDETAIL.STATUS                    " &
 "         and a.listname = 'TMSTATUS' )    DESC_STI_ROM,    " &
 "                                                           " &
-"    TASKDETAIL.EDITDATE                   DT_SIT_ROM,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,  " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
+"      AT time zone sessiontimezone) AS DATE)               " &                   
+"                                          DT_SIT_ROM,      " &
 "    TASKDETAIL.TOLOC                      ID_LOCAL_DEST,   " &
 "    LOC.LOGICALLOCATION                   ENDERECO         " &
 "                                                           " &
@@ -256,7 +277,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "       where a.code = TASKDETAIL.STATUS                    " &
 "         and a.listname = 'TMSTATUS' )    DESC_STI_ROM,    " &
 "                                                           " &
-"    TASKDETAIL.EDITDATE                   DT_SIT_ROM,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,  " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
+"      AT time zone sessiontimezone) AS DATE)               " &                   
+"                                          DT_SIT_ROM,      " &
 "    TASKDETAIL.TOLOC                      ID_LOCAL_DEST,   " &
 "    LOC.LOGICALLOCATION                   ENDERECO         " &
 "                                                           " &
@@ -291,7 +315,10 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "       where a.code = TASKDETAIL.STATUS                    " &
 "         and a.listname = 'TMSTATUS' )    DESC_STI_ROM,    " &
 "                                                           " &
-"    TASKDETAIL.EDITDATE                   DT_SIT_ROM,      " &
+"    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,  " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
+"      AT time zone sessiontimezone) AS DATE)               " &                   
+"                                          DT_SIT_ROM,      " &
 "    TASKDETAIL.TOLOC                      ID_LOCAL_DEST,   " &
 "    LOC.LOGICALLOCATION                   ENDERECO         " &
 "                                                           " &
