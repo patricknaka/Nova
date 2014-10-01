@@ -13,8 +13,7 @@
 -- #FAF.213.1 - 08-jul-2014, Fabio Ferreira, 	Correção NR_TITULO_REFERENCIA	
 -- #FAF.213.2 - 11-jul-2014, Fabio Ferreira, 	Correção campo CD_TIPO_MOVIMENTO	
 -- #FAF.259 - 	05-aug-2014, Fabio Ferreira, 	Correção titulo referencia	
--- #FAF.274 - 	08-aug-2014, Fabio Ferreira, 	Correção data de atualização	
--- 21/08/2014   Atualização do timezone		
+-- #FAF.274 - 	08-aug-2014, Fabio Ferreira, 	Correção data de atualização			
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
 	201 CD_CIA,
@@ -22,7 +21,7 @@ SELECT DISTINCT
 					where c.t$styp='BL ATC'
 					AND c.T$ITYP=tfacr200.t$ttyp
 					AND c.t$idoc=tfacr200.t$ninv
-					AND rownum=1),0)=0 THEN 2 ELSE 3 END CD_FILIAL,
+					AND rownum=1),' ')=' ' THEN 2 ELSE 3 END CD_FILIAL,
 --	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.o
 	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.n
 --	tfacr200.t$lino NR_MOVIMENTO,
@@ -67,9 +66,9 @@ SELECT DISTINCT
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),																							
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg001.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+    AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg409.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY'))) DT_ULT_ATUALIZACAO,
+    AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY'))) DT_ULT_ATUALIZACAO,
 	
 	(Select u.t$eunt From baandb.ttcemm030201 u
 	 where u.t$euca!=' '
