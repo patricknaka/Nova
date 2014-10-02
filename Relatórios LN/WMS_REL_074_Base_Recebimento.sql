@@ -1,7 +1,10 @@
-SELECT  
+﻿SELECT  
   DISTINCT
     WMSADMIN.PL_DB.DB_ALIAS                          FILIAL, 
-    TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')          DATA,
+    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE), 'DD')
+                                                     DATA,
     count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,
     count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,
     count(RECEIPTDETAIL.SKU)                         NU_ITENS,
@@ -30,11 +33,15 @@ WHERE RECEIPTDETAIL.STATUS >= 9
   AND RECEIPTDETAIL.RECEIPTKEY = RECEIPT.RECEIPTKEY 
   AND SKU.SKU = RECEIPTDETAIL.SKU
   AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = RECEIPT.WHSEID
-  AND Trunc(RECEIPTDETAIL.DATERECEIVED) Between :DataRectoDe
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)) Between :DataRectoDe
   AND :DataRectoAte
 
 GROUP BY PL_DB.DB_ALIAS,
-         TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD'), 
+         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE), 'DD'), 
          CODELKUP.LONG_VALUE,
          CASE WHEN SKU.SUSR8 = 'MINUCIOSO' 
                 THEN 'SIM' 
@@ -46,17 +53,20 @@ ORDER BY TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')
 
 "SELECT                                                                                   " &
 "  DISTINCT                                                                               " &
-"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			      " &
-"    TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')          DATA,                               " &
+"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			            " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,                 " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
+"        AT time zone sessiontimezone) AS DATE), 'DD')                                    " &
+"                                                     DATA,                               " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,                         " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,                         " &
 "    count(RECEIPTDETAIL.SKU)                         NU_ITENS,                           " &
 "    sum(RECEIPTDETAIL.QTYRECEIVED)                   QTDE,                               " &
-"    Round( ( count(RECEIPTDETAIL.SKU) /                             			          " &
-"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			          " &
-"                                                     ITENS_P_RECBTO,    			      " &
-"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			          " &
-"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			      " &
+"    Round( ( count(RECEIPTDETAIL.SKU) /                             			                " &
+"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			                " &
+"                                                     ITENS_P_RECBTO,    			            " &
+"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			                " &
+"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			            " &
 "    CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                                    " &
 "           THEN 'SIM'                                                                    " &
 "         ELSE   'NÃO'                                                                    " &
@@ -75,11 +85,16 @@ ORDER BY TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')
 "  AND RECEIPTDETAIL.RECEIPTKEY = RECEIPT.RECEIPTKEY                                      " &
 "  AND SKU.SKU = RECEIPTDETAIL.SKU                                                        " &
 "  AND UPPER(WMSADMIN.PL_DB.DB_LOGID) = RECEIPT.WHSEID                                    " &
-"  AND Trunc(RECEIPTDETAIL.DATERECEIVED) Between '" + Parameters!DataRectoDe.Value + "'   " &
+"  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,               " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
+"        AT time zone sessiontimezone) AS DATE))                                          " & 
+"  Between '" + Parameters!DataRectoDe.Value + "'                                         " &
 "  AND '" + Parameters!DataRectoAte.Value + "'                                            " &
 "                                                                                         " &
 "GROUP BY PL_DB.DB_ALIAS,                                                                 " &
-"         TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD'),                                        " &
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,            " & 
+"            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
+"              AT time zone sessiontimezone) AS DATE), 'DD'),                             " &
 "         CODELKUP.LONG_VALUE,                                                            " &
 "         CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                               " &
 "                THEN 'SIM'                                                               " &
@@ -92,17 +107,20 @@ ORDER BY TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')
 
 "SELECT                                                                                   " &
 "  DISTINCT                                                                               " &
-"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			      " &
-"    TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')          DATA,                               " &
+"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			            " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,                 " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
+"        AT time zone sessiontimezone) AS DATE), 'DD')                                    " &
+"                                                     DATA,                               " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,                         " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,                         " &
 "    count(RECEIPTDETAIL.SKU)                         NU_ITENS,                           " &
 "    sum(RECEIPTDETAIL.QTYRECEIVED)                   QTDE,                               " &
-"    Round( ( count(RECEIPTDETAIL.SKU) /                             			          " &
-"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			          " &
-"                                                     ITENS_P_RECBTO,    			      " &
-"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			          " &
-"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			      " &
+"    Round( ( count(RECEIPTDETAIL.SKU) /                             			                " &
+"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			                " &
+"                                                     ITENS_P_RECBTO,    			            " &
+"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			                " &
+"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			            " &
 "    CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                                    " &
 "           THEN 'SIM'                                                                    " &
 "         ELSE   'NÃO'                                                                    " &
@@ -136,17 +154,20 @@ ORDER BY TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')
 "                                                                                         " &
 "SELECT                                                                                   " &
 "  DISTINCT                                                                               " &
-"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			      " &
-"    TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')          DATA,                               " &
+"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			            " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,                 " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
+"        AT time zone sessiontimezone) AS DATE), 'DD')                                    " &
+"                                                     DATA,                               " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,                         " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,                         " &
 "    count(RECEIPTDETAIL.SKU)                         NU_ITENS,                           " &
 "    sum(RECEIPTDETAIL.QTYRECEIVED)                   QTDE,                               " &
-"    Round( ( count(RECEIPTDETAIL.SKU) /                             			          " &
-"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			          " &
-"                                                     ITENS_P_RECBTO,    			      " &
-"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			          " &
-"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			      " &
+"    Round( ( count(RECEIPTDETAIL.SKU) /                             			                " &
+"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			                " &
+"                                                     ITENS_P_RECBTO,    			            " &
+"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			                " &
+"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			            " &
 "    CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                                    " &
 "           THEN 'SIM'                                                                    " &
 "         ELSE   'NÃO'                                                                    " &
@@ -180,17 +201,20 @@ ORDER BY TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')
 "                                                                                         " &
 "SELECT                                                                                   " &
 "  DISTINCT                                                                               " &
-"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			      " &
-"    TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')          DATA,                               " &
+"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			            " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,                 " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
+"        AT time zone sessiontimezone) AS DATE), 'DD')                                    " &
+"                                                     DATA,                               " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,                         " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,                         " &
 "    count(RECEIPTDETAIL.SKU)                         NU_ITENS,                           " &
 "    sum(RECEIPTDETAIL.QTYRECEIVED)                   QTDE,                               " &
-"    Round( ( count(RECEIPTDETAIL.SKU) /                             			          " &
-"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			          " &
-"                                                     ITENS_P_RECBTO,    			      " &
-"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			          " &
-"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			      " &
+"    Round( ( count(RECEIPTDETAIL.SKU) /                             			                " &
+"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			                " &
+"                                                     ITENS_P_RECBTO,    			            " &
+"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			                " &
+"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			            " &
 "    CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                                    " &
 "           THEN 'SIM'                                                                    " &
 "         ELSE   'NÃO'                                                                    " &
@@ -224,17 +248,20 @@ ORDER BY TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')
 "                                                                                         " &
 "SELECT                                                                                   " &
 "  DISTINCT                                                                               " &
-"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			      " &
-"    TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')          DATA,                               " &
+"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			            " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,                 " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
+"        AT time zone sessiontimezone) AS DATE), 'DD')                                    " &
+"                                                     DATA,                               " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,                         " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,                         " &
 "    count(RECEIPTDETAIL.SKU)                         NU_ITENS,                           " &
 "    sum(RECEIPTDETAIL.QTYRECEIVED)                   QTDE,                               " &
-"    Round( ( count(RECEIPTDETAIL.SKU) /                             			          " &
-"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			          " &
-"                                                     ITENS_P_RECBTO,    			      " &
-"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			          " &
-"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			      " &
+"    Round( ( count(RECEIPTDETAIL.SKU) /                             			                " &
+"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			                " &
+"                                                     ITENS_P_RECBTO,    			            " &
+"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			                " &
+"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			            " &
 "    CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                                    " &
 "           THEN 'SIM'                                                                    " &
 "         ELSE   'NÃO'                                                                    " &
@@ -268,17 +295,20 @@ ORDER BY TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')
 "                                                                                         " &
 "SELECT                                                                                   " &
 "  DISTINCT                                                                               " &
-"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			      " &
-"    TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')          DATA,                               " &
+"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			            " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,                 " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
+"        AT time zone sessiontimezone) AS DATE), 'DD')                                    " &
+"                                                     DATA,                               " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,                         " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,                         " &
 "    count(RECEIPTDETAIL.SKU)                         NU_ITENS,                           " &
 "    sum(RECEIPTDETAIL.QTYRECEIVED)                   QTDE,                               " &
-"    Round( ( count(RECEIPTDETAIL.SKU) /                             			          " &
-"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			          " &
-"                                                     ITENS_P_RECBTO,    			      " &
-"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			          " &
-"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			      " &
+"    Round( ( count(RECEIPTDETAIL.SKU) /                             			                " &
+"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			                " &
+"                                                     ITENS_P_RECBTO,    			            " &
+"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			                " &
+"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			            " &
 "    CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                                    " &
 "           THEN 'SIM'                                                                    " &
 "         ELSE   'NÃO'                                                                    " &
@@ -312,17 +342,20 @@ ORDER BY TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')
 "                                                                                         " &
 "SELECT                                                                                   " &
 "  DISTINCT                                                                               " &
-"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			      " &
-"    TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')          DATA,                               " &
+"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			            " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,                 " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
+"        AT time zone sessiontimezone) AS DATE), 'DD')                                    " &
+"                                                     DATA,                               " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,                         " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,                         " &
 "    count(RECEIPTDETAIL.SKU)                         NU_ITENS,                           " &
 "    sum(RECEIPTDETAIL.QTYRECEIVED)                   QTDE,                               " &
-"    Round( ( count(RECEIPTDETAIL.SKU) /                             			          " &
-"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			          " &
-"                                                     ITENS_P_RECBTO,    			      " &
-"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			          " &
-"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			      " &
+"    Round( ( count(RECEIPTDETAIL.SKU) /                             			                " &
+"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			                " &
+"                                                     ITENS_P_RECBTO,    			            " &
+"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			                " &
+"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			            " &
 "    CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                                    " &
 "           THEN 'SIM'                                                                    " &
 "         ELSE   'NÃO'                                                                    " &
@@ -356,17 +389,20 @@ ORDER BY TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')
 "                                                                                         " &
 "SELECT                                                                                   " &
 "  DISTINCT                                                                               " &
-"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			      " &
-"    TRUNC(RECEIPTDETAIL.DATERECEIVED, 'DD')          DATA,                               " &
+"    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,            			            " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,                 " & 
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
+"        AT time zone sessiontimezone) AS DATE), 'DD')                                    " &
+"                                                     DATA,                               " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,                         " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,                         " &
 "    count(RECEIPTDETAIL.SKU)                         NU_ITENS,                           " &
 "    sum(RECEIPTDETAIL.QTYRECEIVED)                   QTDE,                               " &
-"    Round( ( count(RECEIPTDETAIL.SKU) /                             			          " &
-"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			          " &
-"                                                     ITENS_P_RECBTO,    			      " &
-"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			          " &
-"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			      " &
+"    Round( ( count(RECEIPTDETAIL.SKU) /                             			                " &
+"             count(distinct RECEIPTDETAIL.RECEIPTKEY) ), 4 )        			                " &
+"                                                     ITENS_P_RECBTO,    			            " &
+"    Round( ( sum(RECEIPTDETAIL.QTYRECEIVED) /                       			                " &
+"             count(RECEIPTDETAIL.SKU) ), 4 )         QTDE_P_ITEM,       			            " &
 "    CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                                    " &
 "           THEN 'SIM'                                                                    " &
 "         ELSE   'NÃO'                                                                    " &
