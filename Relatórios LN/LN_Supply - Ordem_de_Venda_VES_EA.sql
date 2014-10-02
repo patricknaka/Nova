@@ -40,13 +40,17 @@ SELECT
    tcibd001.t$dsca       DECR_ITEM,
    tdipu001.t$suti       TEMP_REPOS,
    znsls401.t$qtve$c     QUAN_ORD,
-   whinp200.t$qoqu       QUAN_ALOC,
    
-   CASE WHEN whinp200.t$qoqu - (tcibd100.t$blck+tcibd100.t$allo) - tcibd100.t$stoc < =  0 THEN 0
-        ELSE whinp200.t$qoqu - (tcibd100.t$blck+tcibd100.t$allo) - tcibd100.t$stoc 
-      END                QUAN_FALT,
-    
-   tcibd100.t$ordr       QUAN_EMPED,
+   CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0))<znsls401.t$qtve$c THEN	
+      (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) 
+   ELSE znsls401.t$qtve$c END QUAN_ALOC,
+
+   CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0))<znsls401.t$qtve$c THEN
+    znsls401.t$qtve$c - (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0))
+   ELSE 0 END QUAN_FALT,
+   
+   nvl(tdpur401.oqua,0) QUAN_EMPED,
+   
    tttxt010.t$text       TEXT_ORD,
    tccom130.t$fovn$l     CNPJ_FORN,
    tccom130.t$nama       NOME_FORNEC,
@@ -67,7 +71,7 @@ SELECT
             baandb.ttcemm112301 tcemm112,
             baandb.twhwmd215301 whwmd215
       where tcemm112.t$waid = a.t$cwar
-        AND tcemm112.t$loco = 201
+        AND tcemm112.t$loco = 301
         AND whwmd215.t$cwar = a.t$cwar
         AND whwmd215.t$item = a.t$item
         AND a.t$item = tdsls401.t$item
@@ -130,18 +134,30 @@ INNER JOIN baandb.ttdsls401301 tdsls401
         ON znsls401.t$orno$c = tdsls401.t$orno 
        AND znsls401.t$pono$c = tdsls401.t$pono
 
- LEFT JOIN baandb.tznwmd200301 znwmd200
-        ON znwmd200.t$item$c = tdsls401.t$item
-       AND znwmd200.t$cwar$c = tdsls401.t$cwar          
-       AND znwmd200.t$supl$c = tdsls401.T$ofbp
-      
- LEFT JOIN baandb.twhinp200301 whinp200
-        ON whinp200.t$oorg = 3
-       AND whinp200.t$orno = tdsls401.t$orno
-       AND whinp200.t$pono = tdsls401.t$pono
-       AND whinp200.t$serb = tdsls401.t$sqnb
-       AND whinp200.t$item = tdsls401.t$item
+	   
+LEFT JOIN baandb.twhwmd215301 whwmd215	ON	whwmd215.t$cwar = tdsls401.t$cwar
+										AND	whwmd215.t$item = tdsls401.t$item
 
+LEFT JOIN ( SELECT whwmd630.t$item, whwmd630.t$cwar, sum(whwmd630.t$qbls) bloc
+			 FROM baandb.twhwmd630301 whwmd630
+			WHERE NOT EXISTS (SELECT * FROM baandb.ttcmcs095301 tcmcs095
+						   WHERE  tcmcs095.t$modu = 'BOD' 
+						   AND    tcmcs095.t$sumd = 0 
+						   AND    tcmcs095.t$prcd = 9999
+						   AND    tcmcs095.t$koda = whwmd630.t$bloc)
+						   group by whwmd630.t$item, whwmd630.t$cwar) q2 
+										ON q2.t$item = whwmd215.t$item AND q2.t$cwar = whwmd215.t$cwar
+
+LEFT JOIN (	SELECT 	sum(pur401.t$qoor-pur401.t$qidl) oqua,
+					pur401.t$item,
+					pur401.t$cwar
+			from baandb.ttdpur401301 pur401
+			where pur401.t$fire=2
+			group by pur401.t$item,
+			         pur401.t$cwar) tdpur401	ON	tdpur401.t$item = tdsls401.t$item
+												AND	tdpur401.t$cwar = tdsls401.t$cwar
+			
+	   
 INNER JOIN baandb.ttcibd001301 tcibd001
         ON tcibd001.t$item = tdsls401.t$item
 
@@ -151,9 +167,6 @@ INNER JOIN baandb.ttcibd001301 tcibd001
  LEFT JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tdipu001.t$otbp
        
-INNER JOIN baandb.ttcibd100301 tcibd100
-        ON tcibd100.t$item = tcibd001.t$item
-
 INNER JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
 
@@ -226,16 +239,16 @@ WHERE tcemm124.t$dtyp = 1
   AND whinp100.t$koor = 3 
   AND whinp100.t$kotr = 2
 
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE)) Between NVL(:DataEntregaDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                             AT time zone sessiontimezone) AS DATE)) 
-                                                              And NVL(:DataEntregaAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                             AT time zone sessiontimezone) AS DATE))
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE)) Between NVL(:DataRecebeDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+ AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone sessiontimezone) AS DATE)) Between NVL(:DataEntregaDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                                                                                             AT time zone sessiontimezone) AS DATE)) 
-                                                              And NVL(:DataRecebeAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                                             And NVL(:DataEntregaAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                                                                                             AT time zone sessiontimezone) AS DATE))
-  AND tcemm030.T$EUNT IN (:Filial)
-  AND Trim(tcmcs023.t$citg) IN (:Depto)
+ AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone sessiontimezone) AS DATE)) Between NVL(:DataRecebeDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                                                                           AT time zone sessiontimezone) AS DATE)) 
+                                                             And NVL(:DataRecebeAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                                                                           AT time zone sessiontimezone) AS DATE))
+ AND tcemm030.T$EUNT IN (:Filial)
+ AND Trim(tcmcs023.t$citg) IN (:Depto)
   AND ULT_PONTO.t$poco$c IN (:Status)  
