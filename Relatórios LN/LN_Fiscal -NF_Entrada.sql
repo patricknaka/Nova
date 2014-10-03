@@ -227,7 +227,7 @@ select Q1.*
             AND znmcs030.t$citg$c = tcibd001.t$citg
             AND znmcs030.t$seto$c = tcibd001.t$seto$c
             AND tccom100.t$bpid = tdrec940.t$bpid$l 
-            AND tccom130.t$cadr = tdrec940.t$sfra$l
+            AND tccom130.t$cadr = tdrec940.t$sfad$l
             AND tcemm124.t$cwoc = tdrec940.t$cofc$l 
             AND tcemm124.t$dtyp = 2 
             AND tcemm030.t$eunt = tcemm124.t$grid

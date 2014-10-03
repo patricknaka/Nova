@@ -58,7 +58,8 @@
          ELSE 'NORMAL' 
       END                                 TIPO_ESTOQ,
    
-    RESTRICAO.description                 RESTRICAO,
+    CASE WHEN TO_CHAR(LL.HOLDREASON)=' ' THEN 'OK'
+	ELSE nvl(TO_CHAR(LL.HOLDREASON), 'OK') END     RESTRICAO,
    
     maucLN.mauc                           VALOR_CUSTO_CMV,
     ORDERS.C_ADDRESS1                     DESTINATARIO
@@ -74,6 +75,8 @@ INNER JOIN WMWHSE5.SKU
  LEFT JOIN ENTERPRISE.CODELKUP cl  
         ON UPPER(cl.UDF1) = UPPER(ORDERS.WHSEID)
        AND cl.listname = 'SCHEMA'
+	   
+
       
  LEFT JOIN ( select trim(whina113.t$item) item,
                     whina113.t$cwar cwar,
@@ -134,7 +137,11 @@ INNER JOIN WMSADMIN.PL_DB
  LEFT JOIN WMWHSE5.TASKDETAIL
         ON TASKDETAIL.ORDERKEY = ORDERDETAIL.ORDERKEY 
        AND TASKDETAIL.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER  
-       
+	   
+LEFT JOIN WMWHSE5.LOTXLOC LL 	ON	LL.LOT = TASKDETAIL.LOT
+								AND	LL.LOC = TASKDETAIL.FROMLOC
+								AND LL.SKU = TASKDETAIL.SKU
+								       
  LEFT JOIN ( select q.T$IDCA$C, 
                     ZNSLS004.T$ORNO$C,
                     znsls401.t$item$c,
@@ -168,12 +175,6 @@ INNER JOIN WMSADMIN.PL_DB
                from WMWHSE5.codelkup clkp
               where clkp.listname = 'INCOTERMS' ) REDESPACHO
         ON REDESPACHO.code = orders.INCOTERM
-   
- LEFT JOIN ( select clkp.description,
-                    clkp.code
-               from WMWHSE5.codelkup clkp
-              where clkp.listname = 'SHORTRSNS' ) RESTRICAO
-        ON RESTRICAO.code = ORDERDETAIL.SHORTSHIPREASON
 
 	   
 WHERE SLS002.T$TPEN$C IN (:TipoEntrega)

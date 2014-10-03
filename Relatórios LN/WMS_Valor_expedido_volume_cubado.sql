@@ -1,7 +1,10 @@
 SELECT  
   DISTINCT
     WMSADMIN.PL_DB.DB_ALIAS                          FILIAL, 
-    TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')              MES,
+    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE), 'MON')              
+                                                     MES,
     sum(ORDERDETAIL.SHIPPEDQTY)                      QTDE_PECAS,
     sum(SLS401.T$VLUN$C * ORDERDETAIL.SHIPPEDQTY)    VALOR_EXPEDIDO,
     sum(SKU.STDCUBE * ORDERDETAIL.SHIPPEDQTY)        VOLUME_CUBADO
@@ -22,16 +25,24 @@ INNER JOIN WMSADMIN.PL_DB
      
 WHERE ORDERS.STATUS >= 95
   AND ORDERS.ACTUALSHIPDATE IS NOT NULL
---  AND (  ( (ORDERS.ACTUALSHIPDATE) Between ('01/' || :ExpedidoDe) 
+--  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+--      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--        AT time zone sessiontimezone) AS DATE)) Between ('01/' || :ExpedidoDe) 
 --                                     And ( To_Char(LAST_DAY('01/' || :ExpedidoAte), 'dd/MM/yyyy') )  )
 --        OR :ExpedidoDe Is Null OR :ExpedidoAte Is Null )
   
-GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
+GROUP BY WMSADMIN.PL_DB.DB_ALIAS, 
+         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE), 'MON')
 
 "SELECT                                                                   " &
 "  DISTINCT                                                               " &
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,             " &
-"    TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')              MES,                " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,      " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE), 'MON')                   " &
+"                                                     MES,                " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                      QTDE_PECAS,         " &
 "    sum(SLS401.T$VLUN$C * ORDERDETAIL.SHIPPEDQTY)    VALOR_EXPEDIDO,     " &
 "    sum(SKU.STDCUBE * ORDERDETAIL.SHIPPEDQTY)        VOLUME_CUBADO       " &
@@ -52,13 +63,18 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
 "                                                                         " &
 "WHERE ORDERS.STATUS >= 95                                                " &
 "  AND ORDERS.ACTUALSHIPDATE IS NOT NULL                                  " &
-"  AND (  ( (ORDERS.ACTUALSHIPDATE) Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')                                       " &
-"                                     And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )  " &
-"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null )                      " &
+"  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE))                          " & 
+"         Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')        " &
+"         And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )         " &
+"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null ) " &
 "                                                                         " &
-"GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    " &
-"                                                                         " &
-"ORDER BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    "
+"GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                        " & 
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, " & 
+"           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"             AT time zone sessiontimezone) AS DATE), 'MON')              " &
+"                                                                         " 
 
 -- Query com UNION *******************************************************************************
 
@@ -66,7 +82,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
 "SELECT                                                                   " &
 "  DISTINCT                                                               " &
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,             " &
-"    TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')              MES,                " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,      " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE), 'MON')                   " &
+"                                                     MES,                " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                      QTDE_PECAS,         " &
 "    sum(SLS401.T$VLUN$C * ORDERDETAIL.SHIPPEDQTY)    VALOR_EXPEDIDO,     " &
 "    sum(SKU.STDCUBE * ORDERDETAIL.SHIPPEDQTY)        VOLUME_CUBADO       " &
@@ -87,18 +106,28 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
 "                                                                         " &
 "WHERE ORDERS.STATUS >= 95                                                " &
 "  AND ORDERS.ACTUALSHIPDATE IS NOT NULL                                  " &
-"  AND (  ( (ORDERS.ACTUALSHIPDATE) Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')                                       " &
-"                                     And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )  " &
-"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null )                      " &
+"  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE))                          " & 
+"         Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')        " &
+"         And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )         " &
+"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null ) " &
 "                                                                         " &
-"GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    " &
+"GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                        " & 
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, " & 
+"           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"             AT time zone sessiontimezone) AS DATE), 'MON')              " &
+"                                                                         " &
 "                                                                         " &
 "Union                                                                    " &
 "                                                                         " &
 "SELECT                                                                   " &
 "  DISTINCT                                                               " &
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,             " &
-"    TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')              MES,                " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,      " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE), 'MON')                   " &
+"                                                     MES,                " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                      QTDE_PECAS,         " &
 "    sum(SLS401.T$VLUN$C * ORDERDETAIL.SHIPPEDQTY)    VALOR_EXPEDIDO,     " &
 "    sum(SKU.STDCUBE * ORDERDETAIL.SHIPPEDQTY)        VOLUME_CUBADO       " &
@@ -119,18 +148,28 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
 "                                                                         " &
 "WHERE ORDERS.STATUS >= 95                                                " &
 "  AND ORDERS.ACTUALSHIPDATE IS NOT NULL                                  " &
-"  AND (  ( (ORDERS.ACTUALSHIPDATE) Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')                                       " &
-"                                     And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )  " &
-"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null )                      " &
+"  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE))                          " & 
+"         Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')        " &
+"         And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )         " &
+"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null ) " &
 "                                                                         " &
-"GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    " &
+"GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                        " & 
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, " & 
+"           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"             AT time zone sessiontimezone) AS DATE), 'MON')              " &
+"                                                                         " &
 "                                                                         " &
 "Union                                                                    " &
 "                                                                         " &
 "SELECT                                                                   " &
 "  DISTINCT                                                               " &
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,             " &
-"    TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')              MES,                " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,      " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE), 'MON')                   " &
+"                                                     MES,                " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                      QTDE_PECAS,         " &
 "    sum(SLS401.T$VLUN$C * ORDERDETAIL.SHIPPEDQTY)    VALOR_EXPEDIDO,     " &
 "    sum(SKU.STDCUBE * ORDERDETAIL.SHIPPEDQTY)        VOLUME_CUBADO       " &
@@ -151,18 +190,28 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
 "                                                                         " &
 "WHERE ORDERS.STATUS >= 95                                                " &
 "  AND ORDERS.ACTUALSHIPDATE IS NOT NULL                                  " &
-"  AND (  ( (ORDERS.ACTUALSHIPDATE) Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')                                       " &
-"                                     And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )  " &
-"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null )                      " &
+"  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE))                          " & 
+"         Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')        " &
+"         And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )         " &
+"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null ) " &
 "                                                                         " &
-"GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    " &
+"GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                        " & 
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, " & 
+"           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"             AT time zone sessiontimezone) AS DATE), 'MON')              " &
+"                                                                         " &
 "                                                                         " &
 "Union                                                                    " &
 "                                                                         " &
 "SELECT                                                                   " &
 "  DISTINCT                                                               " &
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,             " &
-"    TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')              MES,                " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,      " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE), 'MON')                   " &
+"                                                     MES,                " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                      QTDE_PECAS,         " &
 "    sum(SLS401.T$VLUN$C * ORDERDETAIL.SHIPPEDQTY)    VALOR_EXPEDIDO,     " &
 "    sum(SKU.STDCUBE * ORDERDETAIL.SHIPPEDQTY)        VOLUME_CUBADO       " &
@@ -183,18 +232,28 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
 "                                                                         " &
 "WHERE ORDERS.STATUS >= 95                                                " &
 "  AND ORDERS.ACTUALSHIPDATE IS NOT NULL                                  " &
-"  AND (  ( (ORDERS.ACTUALSHIPDATE) Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')                                       " &
-"                                     And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )  " &
-"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null )                      " &
+"  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE))                          " & 
+"         Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')        " &
+"         And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )         " &
+"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null ) " &
 "                                                                         " &
-"GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    " &
+"GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                        " & 
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, " & 
+"           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"             AT time zone sessiontimezone) AS DATE), 'MON')              " &
+"                                                                         " &
 "                                                                         " &
 "Union                                                                    " &
 "                                                                         " &
 "SELECT                                                                   " &
 "  DISTINCT                                                               " &
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,             " &
-"    TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')              MES,                " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,      " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE), 'MON')                   " &
+"                                                     MES,                " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                      QTDE_PECAS,         " &
 "    sum(SLS401.T$VLUN$C * ORDERDETAIL.SHIPPEDQTY)    VALOR_EXPEDIDO,     " &
 "    sum(SKU.STDCUBE * ORDERDETAIL.SHIPPEDQTY)        VOLUME_CUBADO       " &
@@ -215,18 +274,27 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
 "                                                                         " &
 "WHERE ORDERS.STATUS >= 95                                                " &
 "  AND ORDERS.ACTUALSHIPDATE IS NOT NULL                                  " &
-"  AND (  ( (ORDERS.ACTUALSHIPDATE) Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')                                       " &
-"                                     And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )  " &
-"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null )                      " &
+"  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE))                          " & 
+"         Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')        " &
+"         And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )         " &
+"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null ) " &
 "                                                                         " &
-"GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    " &
+"GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                        " & 
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, " & 
+"           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"             AT time zone sessiontimezone) AS DATE), 'MON')              " &
 "                                                                         " &
 "Union                                                                    " &
 "                                                                         " &
 "SELECT                                                                   " &
 "  DISTINCT                                                               " &
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,             " &
-"    TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')              MES,                " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,      " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE), 'MON')                   " &
+"                                                     MES,                " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                      QTDE_PECAS,         " &
 "    sum(SLS401.T$VLUN$C * ORDERDETAIL.SHIPPEDQTY)    VALOR_EXPEDIDO,     " &
 "    sum(SKU.STDCUBE * ORDERDETAIL.SHIPPEDQTY)        VOLUME_CUBADO       " &
@@ -247,18 +315,28 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
 "                                                                         " &
 "WHERE ORDERS.STATUS >= 95                                                " &
 "  AND ORDERS.ACTUALSHIPDATE IS NOT NULL                                  " &
-"  AND (  ( (ORDERS.ACTUALSHIPDATE) Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')                                       " &
-"                                     And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )  " &
-"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null )                      " &
+"  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE))                          " & 
+"         Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')        " &
+"         And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )         " &
+"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null ) " &
 "                                                                         " &
-"GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    " &
+"GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                        " & 
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, " & 
+"           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"             AT time zone sessiontimezone) AS DATE), 'MON')              " &
+"                                                                         " &
 "                                                                         " &
 "Union                                                                    " &
 "                                                                         " &
 "SELECT                                                                   " &
 "  DISTINCT                                                               " &
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,             " &
-"    TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')              MES,                " &
+"    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,      " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE), 'MON')                   " &
+"                                                     MES,                " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                      QTDE_PECAS,         " &
 "    sum(SLS401.T$VLUN$C * ORDERDETAIL.SHIPPEDQTY)    VALOR_EXPEDIDO,     " &
 "    sum(SKU.STDCUBE * ORDERDETAIL.SHIPPEDQTY)        VOLUME_CUBADO       " &
@@ -279,10 +357,16 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')
 "                                                                         " &
 "WHERE ORDERS.STATUS >= 95                                                " &
 "  AND ORDERS.ACTUALSHIPDATE IS NOT NULL                                  " &
-"  AND (  ( (ORDERS.ACTUALSHIPDATE) Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')                                       " &
-"                                     And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )  " &
-"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null )                      " &
+"  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,    " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
+"        AT time zone sessiontimezone) AS DATE))                          " & 
+"         Between ('01/' || '" + Parameters!ExpedidoDe.Value + "')        " &
+"         And ( To_Char(LAST_DAY('01/' || '" + Parameters!ExpedidoAte.Value + "'), 'dd/MM/yyyy') )  )         " &
+"        OR '" + Parameters!ExpedidoDe.Value + "' Is Null OR '" + Parameters!ExpedidoAte.Value + "' Is Null ) " &
 "                                                                         " &
-"GROUP BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    " &
+"GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                        " & 
+"         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, " & 
+"           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"             AT time zone sessiontimezone) AS DATE), 'MON')              " &
 "                                                                         " &
-"ORDER BY FILIAL, MES                                                     "
+"ORDER BY WMSADMIN.PL_DB.DB_ALIAS, TRUNC(ORDERS.ACTUALSHIPDATE, 'MON')    "

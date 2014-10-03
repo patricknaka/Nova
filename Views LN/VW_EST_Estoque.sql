@@ -17,8 +17,8 @@ FROM    baandb.twhwmd215201 whwmd215
         LEFT JOIN ( SELECT 
 					 whwmd217.t$item,
 					 whwmd217.t$cwar,
-					 case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd))=0 then 0
-					 else round(sum(whwmd217.t$mauc$1)/(max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)),4) 
+					 case when (max(whwmd215.t$qhnd))=0 then 0
+					 else round(sum(whwmd217.t$mauc$1)/(max(whwmd215.t$qhnd)),4) 
 					 end mauc
 					 FROM baandb.twhwmd217201 whwmd217, baandb.twhwmd215201 whwmd215
 					 WHERE whwmd215.t$cwar=whwmd217.t$cwar
@@ -30,7 +30,7 @@ FROM    baandb.twhwmd215201 whwmd215
 					 FROM baandb.twhwmd630201 whwmd630, baandb.twhwmd215201 whwmd215
 					 WHERE whwmd215.t$cwar = whwmd630.t$cwar
 					 AND   whwmd215.t$item = whwmd630.t$item
-           AND NOT EXISTS (SELECT * FROM baandb.ttcmcs095201 tcmcs095
+					 AND NOT EXISTS (SELECT * FROM baandb.ttcmcs095201 tcmcs095
                            WHERE  tcmcs095.t$modu = 'BOD' 
                            AND    tcmcs095.t$sumd = 0 
                            AND    tcmcs095.t$prcd = 9999
@@ -80,12 +80,7 @@ FROM    baandb.twhwmd630201 whwmd630
 					 WHERE whwmd215.t$cwar=whwmd217.t$cwar
 					 AND whwmd215.t$item=whwmd217.t$item
 					 group by  whwmd217.t$item, whwmd217.t$cwar) q1 
-        ON q1.t$item = whwmd630.t$item AND q1.t$cwar = whwmd630.t$cwar
-        AND NOT EXISTS (SELECT * FROM baandb.ttcmcs095201 tcmcs095
-                 WHERE  tcmcs095.t$modu = 'BOD' 
-                 AND    tcmcs095.t$sumd = 0 
-                 AND    tcmcs095.t$prcd = 9999
-                 AND    tcmcs095.t$koda = whwmd630.t$bloc),
+        ON q1.t$item = whwmd630.t$item AND q1.t$cwar = whwmd630.t$cwar,
         baandb.ttcemm112201 tcemm112,
         baandb.ttcemm030201 tcemm030,
         baandb.ttcmcs003201 tcmcs003
@@ -93,4 +88,8 @@ WHERE   tcemm112.t$loco = 201
 AND     tcemm112.t$waid = whwmd630.t$cwar
 AND 	  tcemm030.t$eunt=tcemm112.t$grid
 AND     tcmcs003.t$cwar = whwmd630.t$cwar
-
+AND	 NOT EXISTS (SELECT * FROM baandb.ttcmcs095201 tcmcs095
+                 WHERE  tcmcs095.t$modu = 'BOD' 
+                 AND    tcmcs095.t$sumd = 0 
+                 AND    tcmcs095.t$prcd = 9999
+                 AND    tcmcs095.t$koda = whwmd630.t$bloc)

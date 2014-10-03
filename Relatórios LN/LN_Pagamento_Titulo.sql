@@ -2,7 +2,7 @@ SELECT
     tfcmg101.t$btno         NUME_LOTE,
  
     ( SELECT SUM(t.t$amnt) 
-        FROM baandb.ttfcmg101301 t
+        FROM baandb.ttfcmg101201 t
        WHERE t.t$ninv = tfcmg101.t$ninv
          AND t.t$ttyp = tfcmg101.t$ttyp
          AND t.t$btno = tfcmg101.t$btno ) 
@@ -63,35 +63,40 @@ SELECT
                             CODE_STAT_PRG,
        
     iPrgStat.DESCR          DESCR_STAT_PRG,
-    tflcb230.t$stat$d       CODE_STAT_ARQ,
-    iStatArq.DESCR          DESCR_STAT_ARQ
+    CASE WHEN tflcb230.t$send$d = 0 THEN
+      tflcb230.t$stat$d
+    ELSE tflcb230.t$send$d END  CODE_STAT_ARQ, 
+    
+    CASE WHEN tflcb230.t$send$d = 0 THEN
+      iStatArq.DESCR
+    ELSE iStatArq2.DESCR END    DESCR_STAT_ARQ
  
-FROM      baandb.ttccom100301  tccom100
+FROM      baandb.ttccom100201  tccom100
 
-INNER JOIN baandb.ttccom130301  tccom130
+INNER JOIN baandb.ttccom130201  tccom130
         ON tccom130.t$cadr   = tccom100.t$cadr
 
-INNER JOIN baandb.ttfcmg101301  tfcmg101  
+INNER JOIN baandb.ttfcmg101201  tfcmg101  
         ON tccom100.T$BPID   = tfcmg101.t$ifbp
     
-INNER JOIN baandb.ttfcmg109301  tfcmg109
+INNER JOIN baandb.ttfcmg109201  tfcmg109
         ON tfcmg109.t$btno   = tfcmg101.t$btno
 
-INNER JOIN baandb.ttfcmg003301  tfcmg003
+INNER JOIN baandb.ttfcmg003201  tfcmg003
         ON tfcmg003.t$paym   = tfcmg101.t$paym
     
- LEFT JOIN baandb.ttfcmg001301 tfcmg001 
+ LEFT JOIN baandb.ttfcmg001201 tfcmg001 
         ON tfcmg001.t$bank = tfcmg101.t$bank
      
- LEFT JOIN baandb.ttfcmg011301 tfcmg011 
+ LEFT JOIN baandb.ttfcmg011201 tfcmg011 
         ON tfcmg011.t$bank = tfcmg001.t$brch
      
- LEFT JOIN baandb.ttfacp201301 tfacp201 
+ LEFT JOIN baandb.ttfacp201201 tfacp201 
         ON tfacp201.t$ttyp = tfcmg101.t$ttyp
        AND tfacp201.t$ninv = tfcmg101.t$ninv
        AND tfacp201.t$schn = tfcmg101.t$schn
      
- LEFT JOIN baandb.ttfcmg104301 tfcmg104 
+ LEFT JOIN baandb.ttfcmg104201 tfcmg104 
         ON tfcmg104.t$orno = tfcmg101.t$ninv
        AND tfcmg104.t$ifbp = tfcmg101.t$ifbp
     
@@ -156,10 +161,11 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
                     a.t$ninv$d, 
                     a.t$ptyp$d, 
                     a.t$docn$d,
-                    max(a.t$stat$d) t$stat$d
-               FROM baandb.ttflcb230301 a
+                    max(a.t$stat$d) t$stat$d,
+                    max(a.t$send$d) t$send$d
+               FROM baandb.ttflcb230201 a
               WHERE a.t$sern$d = ( select max(b.t$sern$d)
-                                     from baandb.ttflcb230301 b
+                                     from baandb.ttflcb230201 b
                                     where b.t$ttyp$d = a.t$ttyp$d
                                       and b.t$ninv$d = a.t$ninv$d
                                       and b.t$ptyp$d = a.t$ptyp$d
@@ -202,8 +208,43 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
                                           where l1.t$clab = l.t$clab 
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iStatArq 
-        ON iStatArq.CODE = NVL(tflcb230.t$stat$d, 0),
-     
+        ON iStatArq.CODE = NVL(tflcb230.t$stat$d, 0)  
+        
+         LEFT JOIN ( SELECT 0                         CODE,
+                    'Não vinculado'   DESCR
+               FROM Dual
+             
+              UNION
+			  
+             SELECT d.t$cnst CODE,
+                    l.t$desc DESCR
+               FROM baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              WHERE d.t$cpac = 'tf'
+                AND d.t$cdom = 'cmg.stat.l'
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'tf'
+                AND l.t$clab = d.t$za_clab
+                AND rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) iStatArq2 
+        ON iStatArq2.CODE = NVL(tflcb230.t$send$d, 0),     
+        
+        
            ( SELECT iDOMAIN.t$cnst CODE_MODAL, 
                     iLABEL.t$desc DESC_MODAL  
                FROM baandb.tttadv401000 iDOMAIN, 
