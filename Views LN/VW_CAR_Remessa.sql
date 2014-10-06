@@ -1,11 +1,13 @@
---21/08/2014  Atualização do timezone
--- 	#FAF.300 - 25-aug-2014, Fabio Ferreira, 	Inclusão dos campos do LN que fazem parte da chave da tabela tfcmg948
+--21/08/2014  AtualizaÃ§Ã£o do timezone
+-- 	#FAF.300 - 25-aug-2014, Fabio Ferreira, 	InclusÃ£o dos campos do LN que fazem parte da chave da tabela tfcmg948
+-- 	#MAR.332 - 06-out-2014, Marcia A. R. Torres, Buscar a agÃªncia da tabela tfcmg948.
 --====================================================================================================================
 SELECT DISTINCT
 	tfcmg948.t$bank$l CD_BANCO,
 	tfcmg948.t$btno$l NR_REMESSA,
 	tfcmg948.t$docd$l DT_REMESSA,
-	tfcmg011.t$agcd$l NR_AGENCIA,
+--	tfcmg011.t$agcd$l NR_AGENCIA,         --#MAR.332.o
+	tfcmg948.t$baof$l NR_AGENCIA,           --#MAR.332.n
 	tfcmg948.t$acco$l NR_CONTA,
     201 CD_CIA,
 	tfcmg948.t$stat$l CD_STATUS_ARQUIVO,
@@ -24,7 +26,7 @@ SELECT DISTINCT
   CONCAT(tfcmg948.t$ttyp$l, TO_CHAR(tfcmg948.t$ninv$l)) CD_CHAVE_PRIMARIA
 FROM
 	baandb.ttfcmg948201 tfcmg948
-	LEFT JOIN baandb.ttfcmg001201 tfcmg001
-	ON  tfcmg001.t$bank=tfcmg948.t$bank$l
-	LEFT JOIN baandb.ttfcmg011201 tfcmg011
-	ON  tfcmg011.t$bank=tfcmg001.t$brch
+--	LEFT JOIN baandb.ttfcmg001201 tfcmg001      --#MAR.332.so
+--	ON  tfcmg001.t$bank=tfcmg948.t$bank$l
+--	LEFT JOIN baandb.ttfcmg011201 tfcmg011
+--	ON  tfcmg011.t$bank=tfcmg001.t$brch         --#MAR.332.eo
