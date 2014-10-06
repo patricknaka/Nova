@@ -1,12 +1,12 @@
--- #FAF.221, 19-aug-2014, Fabio Ferreira, 	Correção sinal da transação
--- 21/08/2014    Atualização do timezone
+-- #FAF.221, 19-aug-2014, Fabio Ferreira, 	CorreÃ§Ã£o sinal da transaÃ§Ã£o
+-- 21/08/2014    AtualizaÃ§Ã£o do timezone
 --*********************************************************************************************************************************************
 SELECT  
         201                               CD_CIA,
         tcemm030.t$euca                   CD_FILIAL,
         tcemm112.t$grid                   CD_UNIDADE_EMPRESARIAL,
         ltrim(rtrim(whwmd215.t$item))     CD_ITEM,
-        sum(whwmd215.t$qhnd - whwmd215.t$qblk)+ sum(nvl(whinr110.t$qstk,0)) QT_FISICA,
+        sum(whwmd215.t$qhnd - nvl(q2.bloc,0))+ sum(nvl(whinr110.t$qstk,0)) QT_FISICA,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whwmd215.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
         (SELECT sum(whina113.t$mauc$1)  VL_CMV
@@ -64,6 +64,19 @@ SELECT
 FROM    baandb.twhwmd215201 whwmd215
 
 --		LEFT JOIN ( SELECT  sum(whinr110q.t$qstk * case when whinr110q.t$kost IN (5, 102) then -1 else 1 end)  t$qstk, 			--#FAF.221.o
+    LEFT JOIN ( SELECT whwmd630.t$item, whwmd630.t$cwar, sum(whwmd630.t$qbls) bloc
+                 FROM baandb.twhwmd630201 whwmd630, baandb.twhwmd215201 whwmd215
+                 WHERE whwmd215.t$cwar = whwmd630.t$cwar
+                 AND   whwmd215.t$item = whwmd630.t$item
+                 AND NOT EXISTS (SELECT * FROM baandb.ttcmcs095201 tcmcs095
+                                 WHERE  tcmcs095.t$modu = 'BOD' 
+                                 AND    tcmcs095.t$sumd = 0 
+                                 AND    tcmcs095.t$prcd = 9999
+                                 AND    tcmcs095.t$koda = whwmd630.t$bloc)
+                 group by whwmd630.t$item, whwmd630.t$cwar) q2 
+                 ON q2.t$item = whwmd215.t$item AND q2.t$cwar = whwmd215.t$cwar
+          
+
 		LEFT JOIN ( SELECT  sum(whinr110q.t$qstk * case when whinr110q.t$kost IN (5, 102) then 1 else -1 end)  t$qstk, 			--#FAF.221.n
 							whinr110q.t$cwar,
 							whinr110q.t$item,
@@ -71,6 +84,7 @@ FROM    baandb.twhwmd215201 whwmd215
 								AT time zone sessiontimezone) AS DATE)t$trdt
 					FROM 	baandb.twhinr110201 whinr110q
 					WHERE	whinr110q.t$trdt >= TRUNC(sysdate, 'DD')
+          
 GROUP BY 	    			whinr110q.t$cwar,
 							whinr110q.t$item) 		whinr110
 		ON     	whinr110.t$cwar = whwmd215.t$cwar
