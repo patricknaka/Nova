@@ -9,11 +9,15 @@ SELECT
     regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
                                                 CNPJ_FORN,
     tccom100.t$nama                             NOME_FORN,
-    tfacp200.t$docd                             DATA_EMISSAO,
+	
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$docd, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)  DATA_EMISSAO,
+		
     tfacp200.t$dued                             DATA_VENCTO,
     tfacp200.t$amnt                             VALO_TITULO,  
     tfacp200.t$balc                             SALD_TITULO,
-    '201'                                       CODE_CIA,             
+    '301'                                       CODE_CIA,             
 
     CASE  WHEN (tfacp200.t$balc - tfacp200.t$bala) = 0 THEN 1 
           ELSE 2 
@@ -27,18 +31,12 @@ SELECT
           ELSE 'Sim' 
      END                                        DESC_SITUA2,
 
-    ( select a.t$plan 
-        from baandb.ttfcmg101301 a
-       where a.t$ttyp = tfacp200.t$ttyp
-         and a.t$ninv = tfacp200.t$ninv )       DATA_PLAN_PAGTO,  --Preencher se status = Selecionado (3)
+    PAGTO_PLANEJADO.                            DATA_PLAN_PAGTO,  --Preencher se status = Selecionado (3)
          
     tfacp200.t$bloc                             STATUS_BLOQUEIO,
     
-    ( select case when ((m.t$desc = ' ' ) OR (m.t$desc is null))  then 'Sem bloqueio'
-                  else m.t$desc
-              end
-        from baandb.ttfacp002301 m
-       where m.t$bloc = tfacp200.t$bloc)        DESC_STATUS_BLOQUEIO,
+    NVL(BLOQUEIO.DSC_STATUS_BLOQUEIO, 'Sem bloqueio') 
+                                                DESC_STATUS_BLOQUEIO,
     
     tfacp201.t$balc                             VALOR_APAGAR,
     tfacp201.t$brel                             NUM_REL_BANCARIA, 
@@ -62,10 +60,7 @@ SELECT
                    tccom125.t$bano || '-' || 
                    tccom125.t$dacc$d )          CONTA_PN,
                    
-    ( select max(a.t$btno) 
-        from baandb.ttfcmg101301 a
-       where a.t$ttyp = tfacp200.t$ttyp
-         and a.t$ninv = tfacp200.t$ninv)        LOTE_PAGTO,
+    LOTE_PAGTO.                                 LOTE_PAGTO,
     
     tdrec940.t$fire$l                           NUM_RFISCAL,
     tdrec940.t$rfdt$l                           NUM_CFISCAL, 
@@ -75,105 +70,28 @@ SELECT
     tdrec947.t$orno$l                           NUM_ORDEM,
     tfacp201.t$mopa$d                           CODE_MODAL_PGTO,
     
-    ( SELECT l.t$desc DESCR
-        FROM baandb.tttadv401000 d,
-             baandb.tttadv140000 l
-       WHERE d.t$cpac = 'tf'
-         AND d.t$cdom = 'cmg.mopa.d'
-         AND l.t$clan = 'p'
-         AND l.t$cpac = 'tf'
-         AND l.t$clab = d.t$za_clab
-         AND rpad(d.t$vers,4) ||
-             rpad(d.t$rele,2) ||
-             rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv401000 l1 
-                                   where l1.t$cpac = d.t$cpac 
-                                     and l1.t$cdom = d.t$cdom )
-         AND rpad(l.t$vers,4) ||
-             rpad(l.t$rele,2) ||
-             rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv140000 l1 
-                                   where l1.t$clab = l.t$clab 
-                                     and l1.t$clan = l.t$clan 
-                                     and l1.t$cpac = l.t$cpac )
-         AND d.t$cnst = tfacp201.t$mopa$d )     DESC_MODAL_PGTO,
-    
-    ( SELECT tflcb231a.t$ocr1$d 
-        FROM baandb.ttflcb231301  tflcb231a
-       WHERE tflcb231a.t$ttyp$d = tfacp200.t$ttyp
-         AND tflcb231a.t$ninv$d = tfacp200.t$ninv  
-         AND tflcb231a.t$dare$d = ( SELECT MAX(tflcb231b.t$dare$d)
-                                      FROM baandb.ttflcb231301  tflcb231b
-                                     WHERE tflcb231b.t$ttyp$d = tfacp200.t$ttyp
-                                       AND tflcb231b.t$ninv$d = tfacp200.t$ninv) AND rownum = 1 ) 
-                                                OCORRENCIA1,
-              
-    ( SELECT tflcb231a.t$ocr2$d 
-        FROM baandb.ttflcb231301  tflcb231a
-       WHERE tflcb231a.t$ttyp$d = tfacp200.t$ttyp
-         AND tflcb231a.t$ninv$d = tfacp200.t$ninv  
-         AND tflcb231a.t$dare$d = ( SELECT MAX(tflcb231b.t$dare$d)
-                                      FROM baandb.ttflcb231301  tflcb231b
-                                     WHERE tflcb231b.t$ttyp$d = tfacp200.t$ttyp
-                                       AND tflcb231b.t$ninv$d = tfacp200.t$ninv) AND rownum = 1 ) 
-                                                OCORRENCIA2,
-              
-    ( SELECT tflcb231a.t$ocr3$d 
-        FROM baandb.ttflcb231301  tflcb231a
-       WHERE tflcb231a.t$ttyp$d = tfacp200.t$ttyp
-         AND tflcb231a.t$ninv$d = tfacp200.t$ninv  
-         AND tflcb231a.t$dare$d = ( SELECT MAX(tflcb231b.t$dare$d)
-                                      FROM baandb.ttflcb231301  tflcb231b
-                                     WHERE baandb.tflcb231b.t$ttyp$d = tfacp200.t$ttyp
-                                       AND baandb.tflcb231b.t$ninv$d = tfacp200.t$ninv) AND rownum = 1 )
-                                                OCORRENCIA3,
-              
-    ( SELECT tflcb231a.t$ocr4$d 
-        FROM baandb.ttflcb231301  tflcb231a
-       WHERE tflcb231a.t$ttyp$d = tfacp200.t$ttyp
-         AND tflcb231a.t$ninv$d = tfacp200.t$ninv  
-         AND tflcb231a.t$dare$d = ( SELECT MAX(tflcb231b.t$dare$d)
-                                      FROM baandb.ttflcb231301  tflcb231b
-                                     WHERE tflcb231b.t$ttyp$d = tfacp200.t$ttyp
-                                       AND tflcb231b.t$ninv$d = tfacp200.t$ninv) AND rownum = 1 )
-                                                OCORRENCIA4,
+    DESC_MODAL_PGTO.                            DESC_MODAL_PGTO,
+    OCORRENCIA.                                 OCORRENCIA1,
+    OCORRENCIA.                                 OCORRENCIA2,
+    OCORRENCIA.                                 OCORRENCIA3,
+    OCORRENCIA.                                 OCORRENCIA4,
               
     tfacp200.t$ifbp                             CODE_PN,
     tccom100.t$nama                             DESC_PN,
 
-    Concat(Concat(tfacp200.t$ifbp, ' - '), tccom100.t$nama) 
-                                                COD_DESC_PEN,
+    Concat(Concat(tfacp200.t$ifbp, ' - '), 
+           tccom100.t$nama)                     COD_DESC_PEN,
     nvl(tfacp201.t$pyst$l, 1)                   STAT_PRG,
     iSTAT.DESCR                                 DESCR_STAT_PRG,
  
     znsls412.t$uneg$c                           UNID_NEG,
     NVL(znint002.t$desc$c, 'Reembolso Manual')  NM_UNID_NEG,
     znsls401.t$orno$c                           ORDEM_VENDA,
-  
-    ( SELECT znint002.t$desc$c NM_UNIDADE_NEGOCIO
-        FROM baandb.tznint002301 znint002
-       WHERE znint002.t$uneg$c = znsls412.t$uneg$c
-         AND znint002.t$ncia$c = znsls412.t$ncia$c ) 
-                                                DESCR_UNID_NEG,
- 
     znsls412.t$pecl$c                           PEDIDO,
     znsls402.t$idmp$c                           MEIO_PGTO,
-
-    ( select a.t$desc$c DS_MEIO
-        from baandb.tzncmg007301 a
-       where a.T$MPGS$C = znsls402.t$idmp$c )   DESCR_MEIO_PGTO,
- 
-    znsls400.t$idca$c CANAL_VENDAS,
- 
-    ( SELECT tcmcs066.t$dsca DS_CANAL_VENDA
-        FROM baandb.ttcmcs066301 tcmcs066
-       WHERE tcmcs066.t$chan = znsls400.t$idca$c ) 
-                                                DESCR_CANAL_VENDA,
-                                                
+    MEIO_PAGTO.                                 DESCR_MEIO_PGTO,
+    znsls400.t$idca$c                           CANAL_VENDAS,
+    CANAL_VENDA.                                DESCR_CANAL_VENDA,
     znsls402.t$bopg$c                           BOLETO_PARA_PGTO,           
     znsls402.t$idad$c                           ID_ADQUIRENTE,
     znsls402.t$cccd$c                           COD_CARTAO_CREDITO_DEBITO,
@@ -184,54 +102,83 @@ SELECT
 
 FROM       baandb.ttfacp200301  tfacp200  
 
+INNER JOIN baandb.ttfacp201301  tfacp201   
+        ON tfacp201.t$ttyp = tfacp200.t$ttyp
+       AND tfacp201.t$ninv = tfacp200.t$ninv
+
 INNER JOIN baandb.ttccom100301 tccom100
         ON tccom100.t$bpid = tfacp200.t$ifbp
     
 INNER JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
+    
+ LEFT JOIN ( select max(a.t$btno) LOTE_PAGTO, 
+                    a.t$ttyp, 
+                    a.t$ninv
+               from baandb.ttfcmg101301 a
+           group by a.t$ttyp, a.t$ninv ) LOTE_PAGTO
+        ON LOTE_PAGTO.t$ttyp = tfacp200.t$ttyp
+       AND LOTE_PAGTO.t$ninv = tfacp200.t$ninv
+       
+ LEFT JOIN ( select m.t$bloc COD_STATUS_BLOQUEIO,
+                    m.t$desc DSC_STATUS_BLOQUEIO
+               from baandb.ttfacp002301 m ) BLOQUEIO
+        ON BLOQUEIO.COD_STATUS_BLOQUEIO = tfacp200.t$bloc
 
-LEFT JOIN ( SELECT a.t$ttyp$d, 
-                   a.t$ninv$d,
-                   a.t$lach$d,
-                   max(a.t$stat$d) t$stat$d
-              FROM baandb.ttflcb230301 a
-             WHERE a.t$sern$d = ( select max(b.t$sern$d)
-                                    from baandb.ttflcb230301 b
-                                   where b.t$ttyp$d = a.t$ttyp$d
-                                     and b.t$ninv$d = a.t$ninv$d )
-          GROUP BY a.t$ttyp$d, 
-                   a.t$ninv$d, 
-                   a.t$lach$d ) tflcb230
-       ON  tflcb230.t$ttyp$d = tfacp200.t$ttyp
-      AND  tflcb230.t$ninv$d = tfacp200.t$ninv
+ LEFT JOIN ( select MIN(a.t$plan) DATA_PLAN_PAGTO,
+                    a.t$ttyp,
+                    a.t$ninv,
+                    a.t$schn
+               from baandb.ttfcmg101301 a 
+           group by a.t$ttyp,
+                    a.t$ninv,
+                    a.t$schn ) PAGTO_PLANEJADO
+        ON PAGTO_PLANEJADO.t$ttyp = tfacp200.t$ttyp
+       AND PAGTO_PLANEJADO.t$ninv = tfacp200.t$ninv 
+       AND PAGTO_PLANEJADO.t$schn = tfacp201.t$schn
+
+ LEFT JOIN ( SELECT a.t$ttyp$d, 
+                    a.t$ninv$d,
+                    a.t$lach$d,
+                    max(a.t$stat$d) t$stat$d
+               FROM baandb.ttflcb230301 a
+              WHERE a.t$sern$d = ( select max(b.t$sern$d)
+                                     from baandb.ttflcb230301 b
+                                    where b.t$ttyp$d = a.t$ttyp$d
+                                      and b.t$ninv$d = a.t$ninv$d )
+           GROUP BY a.t$ttyp$d, 
+                    a.t$ninv$d, 
+                    a.t$lach$d ) tflcb230
+        ON  tflcb230.t$ttyp$d = tfacp200.t$ttyp
+       AND  tflcb230.t$ninv$d = tfacp200.t$ninv
    
-LEFT JOIN ( SELECT d.t$cnst CODE,
-                   l.t$desc DESCR
-              FROM baandb.tttadv401000 d,
-                   baandb.tttadv140000 l
-             WHERE d.t$cpac = 'tf'
-               AND d.t$cdom = 'cmg.stat.l'
-               AND l.t$clab = d.t$za_clab
-               AND l.t$clan = 'p'
-               AND l.t$cpac = 'tf'
-               AND rpad(d.t$vers,4) ||
-                   rpad(d.t$rele,2) ||
-                   rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                   rpad(l1.t$rele,2) ||
-                                                   rpad(l1.t$cust,4)) 
-                                          from baandb.tttadv401000 l1 
-                                         where l1.t$cpac = d.t$cpac 
-                                           and l1.t$cdom = d.t$cdom )
-               AND rpad(l.t$vers,4) ||
-                   rpad(l.t$rele,2) ||
-                   rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                   rpad(l1.t$rele,2) ||
-                                                   rpad(l1.t$cust,4)) 
-                                          from baandb.tttadv140000 l1 
-                                         where l1.t$clab = l.t$clab 
-                                           and l1.t$clan = l.t$clan 
-                                           and l1.t$cpac = l.t$cpac ) ) iStatArq 
-       ON iStatArq.CODE = tflcb230.t$stat$d  
+ LEFT JOIN ( SELECT d.t$cnst CODE,
+                    l.t$desc DESCR
+               FROM baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              WHERE d.t$cpac = 'tf'
+                AND d.t$cdom = 'cmg.stat.l'
+                AND l.t$clab = d.t$za_clab
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'tf'
+                AND rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) iStatArq 
+        ON iStatArq.CODE = tflcb230.t$stat$d  
     
           
  LEFT JOIN baandb.ttdrec940301  tdrec940
@@ -243,9 +190,9 @@ LEFT JOIN ( SELECT d.t$cnst CODE,
                     baandb.tttadv140000 iLABEL 
               WHERE iDOMAIN.t$cpac = 'td'
                 AND iDOMAIN.t$cdom = 'rec.trfiDOMAIN.l'
-                AND iLABEL.t$clab = iDOMAIN.t$za_clab
                 AND iLABEL.t$clan = 'p'
                 AND iLABEL.t$cpac = 'td'
+                AND iLABEL.t$clab = iDOMAIN.t$za_clab
                 AND rpad(iDOMAIN.t$vers,4) ||
                     rpad(iDOMAIN.t$rele,2) ||
                     rpad(iDOMAIN.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
@@ -290,6 +237,11 @@ LEFT JOIN ( SELECT d.t$cnst CODE,
        AND znsls402.t$pecl$c = znsls412.t$pecl$c
        AND znsls402.t$sqpd$c = znsls412.t$sqpd$c
        AND znsls402.t$sequ$c = znsls412.t$sequ$c
+
+ LEFT JOIN ( select a.t$desc$c DESCR_MEIO_PGTO,
+                    a.T$MPGS$C
+               from baandb.tzncmg007301 a ) MEIO_PAGTO
+        ON MEIO_PAGTO.T$MPGS$C = znsls402.t$idmp$c
  
  LEFT JOIN baandb.tznsls400301 znsls400
         ON znsls400.t$ncia$c = znsls412.t$ncia$c
@@ -297,14 +249,17 @@ LEFT JOIN ( SELECT d.t$cnst CODE,
        AND znsls400.t$pecl$c = znsls412.t$pecl$c
        AND znsls400.t$sqpd$c = znsls412.t$sqpd$c
      
+ LEFT JOIN ( select tcmcs066.t$dsca  DESCR_CANAL_VENDA,
+                    tcmcs066.t$chan
+               from baandb.ttcmcs066301 tcmcs066 ) CANAL_VENDA
+        ON CANAL_VENDA.t$chan = znsls400.t$idca$c
+   
  LEFT JOIN baandb.tznsls401301 znsls401
         ON znsls401.t$ncia$c = znsls412.t$ncia$c
        AND znsls401.t$uneg$c = znsls412.t$uneg$c
        AND znsls401.t$pecl$c = znsls412.t$pecl$c
        AND znsls401.t$sqpd$c = znsls412.t$sqpd$c
-       AND znsls401.t$qtve$c < 0,        
-    
-           baandb.ttfacp201301  tfacp201   
+       AND znsls401.t$qtve$c < 0
                  
  LEFT JOIN baandb.ttfcmg001301  tfcmg001
         ON tfcmg001.t$bank = tfacp201.t$brel
@@ -314,41 +269,86 @@ LEFT JOIN ( SELECT d.t$cnst CODE,
        AND tccom125.t$cban = tfacp201.t$bank
 
  LEFT JOIN baandb.ttfcmg011301  tfcmg011
-        ON tfcmg011.t$bank = tccom125.t$brch,
+        ON tfcmg011.t$bank = tccom125.t$brch
 
-         ( SELECT d.t$cnst CODE,
-                  l.t$desc DESCR
-             FROM baandb.tttadv401000 d,
-                  baandb.tttadv140000 l
-            WHERE d.t$cpac = 'tf'
-              AND d.t$cdom = 'acp.pyst.l'
-              AND l.t$clan = 'p'
-              AND l.t$cpac = 'tf'
-              AND l.t$clab = d.t$za_clab
-              AND rpad(d.t$vers,4) ||
-                  rpad(d.t$rele,2) ||
-                  rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                  rpad(l1.t$rele,2) ||
-                                                  rpad(l1.t$cust,4)) 
-                                         from baandb.tttadv401000 l1 
-                                        where l1.t$cpac = d.t$cpac 
-                                          and l1.t$cdom = d.t$cdom )
-              AND rpad(l.t$vers,4) ||
-                  rpad(l.t$rele,2) ||
-                  rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                  rpad(l1.t$rele,2) ||
-                                                  rpad(l1.t$cust,4)) 
-                                         from baandb.tttadv140000 l1 
-                                        where l1.t$clab = l.t$clab 
-                                          and l1.t$clan = l.t$clan 
-                                          and l1.t$cpac = l.t$cpac ) ) iSTAT
-WHERE tfacp201.t$ttyp = tfacp200.t$ttyp
-  AND tfacp201.t$ninv = tfacp200.t$ninv
-  AND tfacp200.t$docn = 0 
-  AND iSTAT.CODE = NVL(tfacp201.t$pyst$l, 1)
+ LEFT JOIN ( SELECT tflcb231a.t$ocr1$d OCORRENCIA1,
+                    tflcb231a.t$ocr2$d OCORRENCIA2,
+                    tflcb231a.t$ocr3$d OCORRENCIA3,
+                    tflcb231a.t$ocr4$d OCORRENCIA4,
+                    tflcb231a.t$ttyp$d,
+                    tflcb231a.t$ninv$d
+               FROM baandb.ttflcb231301  tflcb231a
+              WHERE tflcb231a.t$dare$d = ( SELECT MAX(tflcb231b.t$dare$d)
+                                             FROM baandb.ttflcb231301  tflcb231b
+                                            WHERE tflcb231b.t$ttyp$d = tflcb231a.t$ttyp$d
+                                              AND tflcb231b.t$ninv$d = tflcb231a.t$ninv$d ) ) OCORRENCIA
+        ON OCORRENCIA.t$ttyp$d = tfacp200.t$ttyp
+       AND OCORRENCIA.t$ninv$d = tfacp200.t$ninv
+
+ LEFT JOIN ( SELECT d.t$cnst CODE,
+                    l.t$desc DESCR
+               FROM baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              WHERE d.t$cpac = 'tf'
+                AND d.t$cdom = 'acp.pyst.l'
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'tf'
+                AND l.t$clab = d.t$za_clab
+                AND rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) iSTAT
+        ON iSTAT.CODE = NVL(tfacp201.t$pyst$l, 1)
+        
+ LEFT JOIN ( SELECT l.t$desc DESC_MODAL_PGTO,
+                    d.t$cnst COD_MODAL_PGTO
+               FROM baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              WHERE d.t$cpac = 'tf'
+                AND d.t$cdom = 'cmg.mopa.d'
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'tf'
+                AND l.t$clab = d.t$za_clab
+                AND rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) )  DESC_MODAL_PGTO
+        ON DESC_MODAL_PGTO.COD_MODAL_PGTO = tfacp201.t$mopa$d 
+    
+WHERE tfacp200.t$docn = 0 
   AND tfacp200.t$ttyp in ('PKB','PKC','PKD','PKE','PKF','PRB','PRW')
 
-  AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$docd, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE))
+      BETWEEN :EmissaoDe 
+          AND :EmissaoAte
   AND NVL(znsls412.t$uneg$c, 0) IN (:UniNegocio)
   AND NVL(tfacp201.t$pyst$l, 1) IN (:Situacao)
   AND NVL(tflcb230.t$stat$d, 0) IN (:StatusArquivo)  
