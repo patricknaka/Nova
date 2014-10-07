@@ -1,7 +1,7 @@
 -- Entrada
 select Q1.* 
   from  ( SELECT
-            301                                 CIA,
+            201                                 CIA,
             tcemm030.t$euca                     NUME_FILIAL,
             tcemm030.T$EUNT                     CHAVE_FILIAL,
             tdrec940.t$docn$l                   NUME_NF,
@@ -50,63 +50,137 @@ select Q1.*
             tdrec941.t$gexp$l                   VL_DESPESA,
             tdrec941.t$addc$l                   VL_DESCONTO,
             tdrec941.t$fght$l                   VL_FRETE,
+            
             (SELECT tdrec942.t$fbtx$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=1)        BASE_ICMS,
-          
+                
+           (SELECT tdrec942.t$rate$l 
+               FROM baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=1)        PERC_ICMS,
+                
             (SELECT tdrec942.t$amnt$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=1)        VL_ICMS,
           
+            (SELECT tdrec942.t$txsc$l 
+               FROM baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=1)        CST_ICMS,
+
+           (SELECT tcmcs938.t$txds$l 
+               FROM baandb.ttcmcs938201 tcmcs938,
+                    baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=1
+                AND tcmcs938.t$txsc$l=tdrec942.t$txsc$l)        DESC_CST_ICMS,          
+          
             (SELECT tdrec942.t$fbam$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=1)        VL_ICMS_DEST,
           
             (SELECT tdrec942.t$sbas$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=2)        BASE_ICMS_ST,
           
             (SELECT tdrec942.t$amnt$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=2)        VL_ICMS_ST,
           
             (SELECT tdrec942.t$fbam$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=2)        VL_ICMS_ST_DEST,        
           
+           (SELECT tdrec942.t$fbtx$l 
+               FROM baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=5)        BASE_PIS,
+
+           (SELECT tdrec942.t$rate$l 
+               FROM baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=5)        PERC_PIS,
+                
             (SELECT tdrec942.t$amnt$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=5)        VL_PIS,
-          
+
+           (SELECT tdrec942.t$txsc$l 
+               FROM baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=5)        CST_PIS,
+
+           (SELECT tcmcs938.t$txds$l 
+               FROM baandb.ttcmcs938201 tcmcs938,
+                    baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=5
+                AND tcmcs938.t$txsc$l=tdrec942.t$txsc$l)        DESC_CST_PIS,
+
+            (SELECT tdrec942.t$fbtx$l 
+               FROM baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=6)        BASE_COFINS,
+
+            (SELECT tdrec942.t$rate$l 
+               FROM baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=6)        PERC_COFINS,
+                          
             (SELECT tdrec942.t$amnt$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=6)        VL_COFINS,
           
+            (SELECT tdrec942.t$txsc$l 
+               FROM baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=6)        CST_COFINS,
+          
+               
+            (SELECT tcmcs938.t$txds$l 
+               FROM baandb.ttcmcs938201 tcmcs938,
+                    baandb.ttdrec942201 tdrec942
+              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+                AND tdrec942.t$line$l=tdrec941.t$line$l
+                AND tdrec942.t$brty$l=6
+                AND tcmcs938.t$txsc$l=tdrec942.t$txsc$l)        DESC_CST_COFINS,          
+          
             (SELECT tdrec942.t$fbam$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=2)        VL_IPI_DEST,
             
             (SELECT tdrec942.t$sbas$l 
-               FROM baandb.ttdrec942301 tdrec942, 
-                    baandb.ttdrec949301 tdrec949
+               FROM baandb.ttdrec942201 tdrec942, 
+                    baandb.ttdrec949201 tdrec949
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
                 AND tdrec949.t$fire$l=tdrec941.t$fire$l
                 AND tdrec949.t$brty$l=2
@@ -115,8 +189,8 @@ select Q1.*
                 AND tdrec942.t$brty$l=2)        BASE_ICMS_ST_SCONV,
           
             (SELECT tdrec942.t$rate$l 
-               FROM baandb.ttdrec942301 tdrec942, 
-                    baandb.ttdrec949301 tdrec949
+               FROM baandb.ttdrec942201 tdrec942, 
+                    baandb.ttdrec949201 tdrec949
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
                 AND tdrec949.t$fire$l=tdrec941.t$fire$l
                 AND tdrec949.t$brty$l=2
@@ -129,67 +203,43 @@ select Q1.*
             tccom130.t$namc                     DESC_RUA,
             tdrec941.t$gamt$l                   VL_MERC,
           
-            (SELECT tdrec942.t$rate$l 
-               FROM baandb.ttdrec942301 tdrec942
-              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
-                AND tdrec942.t$line$l=tdrec941.t$line$l
-                AND tdrec942.t$brty$l=1)        PERC_ICMS,
-          
             (SELECT tdrec942.t$amnt$l 
-               FROM baandb.ttdrec942301 tdrec942
+               FROM baandb.ttdrec942201 tdrec942
               WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
                 AND tdrec942.t$line$l=tdrec941.t$line$l
                 AND tdrec942.t$brty$l=3)        VL_IPI,
           
             tdrec940.t$rfdt$l                   TIPO_DOCFIS,
             iTIPO_DOCFIS.DESCR                  DESCR_TIPO_DOCFIS,
-            tdrec940.t$fids$l                   RAZAO_SOCIAL,
+            tdrec940.t$fids$l                   RAZAO_SOCIAL
           
-            (SELECT tdrec942.t$txsc$l 
-               FROM baandb.ttdrec942301 tdrec942
-              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
-                AND tdrec942.t$line$l=tdrec941.t$line$l
-                AND tdrec942.t$brty$l=5)        CST_PIS,
-          
-            (SELECT tdrec942.t$txsc$l 
-               FROM baandb.ttdrec942301 tdrec942
-              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
-                AND tdrec942.t$line$l=tdrec941.t$line$l
-                AND tdrec942.t$brty$l=6)        CST_COFINS,
-          
-            (SELECT tdrec942.t$txsc$l 
-               FROM baandb.ttdrec942301 tdrec942
-              WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
-                AND tdrec942.t$line$l=tdrec941.t$line$l
-                AND tdrec942.t$brty$l=1)        CST_ICMS
-          
-          FROM baandb.ttdrec940301              tdrec940 
+          FROM baandb.ttdrec940201              tdrec940 
            
-          LEFT JOIN   baandb.ttccom110301       tccom110
+          LEFT JOIN   baandb.ttccom110201       tccom110
                  ON   tccom110.T$ofbp = tdrec940.t$bpid$l,
                  
-                      baandb.ttdrec941301       tdrec941
+                      baandb.ttdrec941201       tdrec941
                       
-          LEFT JOIN   baandb.ttcmcs940301       tcmcs940
+          LEFT JOIN   baandb.ttcmcs940201       tcmcs940
                  ON   tcmcs940.T$OFSO$L= tdrec941.t$opfc$l
                  
-          LEFT JOIN   baandb.ttdrec947301       tdrec947
+          LEFT JOIN   baandb.ttdrec947201       tdrec947
                  ON   tdrec941.t$fire$l = tdrec947.t$fire$l 
                 AND   tdrec941.t$line$l = tdrec947.T$LINE$L,
                 
-                      baandb.ttcibd001301       tcibd001
+                      baandb.ttcibd001201       tcibd001
                       
-          LEFT JOIN   baandb.ttcibd936301       tcibd936
+          LEFT JOIN   baandb.ttcibd936201       tcibd936
                  ON   tcibd936.t$ifgc$l = tcibd001.t$ifgc$l
           
-          LEFT JOIN   baandb.ttdipu001301       tdipu001
+          LEFT JOIN   baandb.ttdipu001201       tdipu001
                  ON   tdipu001.t$item = tcibd001.t$item,
           
-                      baandb.tznmcs030301       znmcs030,            
-                      baandb.ttccom100301       tccom100,      
-                      baandb.ttccom130301       tccom130,
-                      baandb.ttcemm124301       tcemm124,
-                      baandb.ttcemm030301       tcemm030,
+                      baandb.tznmcs030201       znmcs030,            
+                      baandb.ttccom100201       tccom100,      
+                      baandb.ttccom130201       tccom130,
+                      baandb.ttcemm124201       tcemm124,
+                      baandb.ttcemm030201       tcemm030,
                       
           ( SELECT d.t$cnst CODE,
                    l.t$desc DESCR
@@ -218,9 +268,9 @@ select Q1.*
                                            and l1.t$clan = l.t$clan 
                                            and l1.t$cpac = l.t$cpac ) ) iTIPO_DOCFIS,
           
-                      baandb.ttcmcs023301 tcmcs023,
-                      baandb.tznmcs031301 znmcs031,
-                      baandb.tznmcs032301 znmcs032
+                      baandb.ttcmcs023201 tcmcs023,
+                      baandb.tznmcs031201 znmcs031,
+                      baandb.tznmcs032201 znmcs032
           
           WHERE tdrec940.t$fire$l = tdrec941.t$fire$l
             AND tcibd001.t$item = tdrec941.t$item$l
