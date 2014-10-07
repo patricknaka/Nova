@@ -1,8 +1,8 @@
-﻿--Saída
+--Saída
 select Q1.* 
   from  ( SELECT
             DISTINCT
-              301                  CIA,
+              201                  CIA,
               tcemm030.t$euca      NUME_FILIAL,  
               tcemm030.T$EUNT      CHAVE_FILIAL,
               cisli940.t$docn$l    NUME_NF,
@@ -52,71 +52,129 @@ select Q1.*
               cisli941.t$ldam$l    VL_DESCONTO,
               cisli941.t$fght$l    VL_FRETE,
               ( SELECT cisli943.t$fbtx$l 
-                  FROM baandb.tcisli943301  cisli943
+                  FROM baandb.tcisli943201  cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=1) 
                                    BASE_ICMS,
             
               ( SELECT cisli943.t$amnt$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=1) 
                                    VL_ICMS,
           
               ( SELECT cisli943.t$fbam$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=1) 
                                    VL_ICMS_DEST,
           
               ( SELECT cisli943.t$sbas$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=2) 
                                    BASE_ICMS_ST,
           
               ( SELECT cisli943.t$amnt$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=2) 
                                    VL_ICMS_ST,
           
               ( SELECT cisli943.t$fbam$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=2) 
                                    VL_ICMS_ST_DEST,      
-          
+
+            ( SELECT cisli943.t$fbtx$l 
+                  FROM baandb.tcisli943201 cisli943
+                 WHERE cisli943.t$fire$l=cisli941.t$fire$l
+                   AND cisli943.t$line$l=cisli941.t$line$l
+                   AND cisli943.t$brty$l=5) 
+                                   BASE_PIS,
+            
+            ( SELECT cisli943.t$rate$l 
+                  FROM baandb.tcisli943201 cisli943
+                 WHERE cisli943.t$fire$l=cisli941.t$fire$l
+                   AND cisli943.t$line$l=cisli941.t$line$l
+                   AND cisli943.t$brty$l=5) 
+                                   PERC_PIS,
+                
               ( SELECT cisli943.t$amnt$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=5) 
                                    VL_PIS,
-          
+                                   
+             ( SELECT cisli943.t$txsc$l 
+                  FROM baandb.tcisli943201 cisli943
+                 WHERE cisli943.t$fire$l=cisli941.t$fire$l
+                   AND cisli943.t$line$l=cisli941.t$line$l
+                   AND cisli943.t$brty$l=5) 
+                                   CST_PIS,
+                                   
+            ( SELECT tcmcs938.t$txds$l 
+               FROM baandb.ttcmcs938201 tcmcs938,
+                    baandb.tcisli943201 cisli943
+              WHERE cisli943.t$fire$l=cisli941.t$fire$l
+                AND cisli943.t$line$l=cisli941.t$line$l
+                AND cisli943.t$brty$l=5
+                AND tcmcs938.t$txsc$l=cisli943.t$txsc$l)        DESC_CST_PIS,
+                
+            ( SELECT cisli943.t$fbtx$l 
+                  FROM baandb.tcisli943201 cisli943
+                 WHERE cisli943.t$fire$l=cisli941.t$fire$l
+                   AND cisli943.t$line$l=cisli941.t$line$l
+                   AND cisli943.t$brty$l=6) 
+                                   BASE_COFINS,
+                                   
+            ( SELECT cisli943.t$rate$l 
+                  FROM baandb.tcisli943201 cisli943
+                 WHERE cisli943.t$fire$l=cisli941.t$fire$l
+                   AND cisli943.t$line$l=cisli941.t$line$l
+                   AND cisli943.t$brty$l=6) 
+                                   PERC_COFINS,
+                                   
               ( SELECT cisli943.t$amnt$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=6) 
                                    VL_COFINS,
-          
+                                   
+            ( SELECT cisli943.t$txsc$l 
+                  FROM baandb.tcisli943201 cisli943
+                 WHERE cisli943.t$fire$l=cisli941.t$fire$l
+                   AND cisli943.t$line$l=cisli941.t$line$l
+                   AND cisli943.t$brty$l=6) 
+                                   CST_COFINS,
+ 
+             ( SELECT tcmcs938.t$txds$l 
+               FROM baandb.ttcmcs938201 tcmcs938,
+                    baandb.tcisli943201 cisli943
+              WHERE cisli943.t$fire$l=cisli941.t$fire$l
+                AND cisli943.t$line$l=cisli941.t$line$l
+                AND cisli943.t$brty$l=6
+                AND tcmcs938.t$txsc$l=cisli943.t$txsc$l)        DESC_CST_COFINS,
+                
               ( SELECT cisli943.t$fbam$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=2) 
                                    VL_IPI_DEST,
           
               ( SELECT cisli943.t$sbas$l 
-                  FROM baandb.tcisli943301 cisli943, 
-                       baandb.ttdrec949301 tdrec949
+                  FROM baandb.tcisli943201 cisli943, 
+                       baandb.ttdrec949201 tdrec949
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l 
                    AND tdrec949.t$fire$l=cisli941.t$fire$l
                    AND tdrec949.t$brty$l=2
@@ -126,8 +184,8 @@ select Q1.*
                                    BASE_ICMS_ST_SCONV,
           
               ( SELECT cisli943.t$rate$l 
-                  FROM baandb.tcisli943301 cisli943, 
-                       baandb.ttdrec949301 tdrec949
+                  FROM baandb.tcisli943201 cisli943, 
+                       baandb.ttdrec949201 tdrec949
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l 
                    AND tdrec949.t$fire$l=cisli941.t$fire$l
                    AND tdrec949.t$brty$l=2
@@ -142,14 +200,14 @@ select Q1.*
               cisli941.t$gamt$l    VL_MERC,
           
               ( SELECT cisli943.t$rate$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=1) 
                                    PERC_ICMS,
           
               ( SELECT cisli943.t$amnt$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=3) 
@@ -160,7 +218,7 @@ select Q1.*
               cisli940.t$fids$l    RAZAO_SOCIAL,
           
               ( select cisli943.t$cnre$l
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$cnre$l!=' '
@@ -175,36 +233,22 @@ select Q1.*
               COD_SEFAZ.DESCR      DESC_SEFAZ,
           
               ( SELECT cisli943.t$txsc$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$brty$l=1) 
                                    CST_ICMS,
           
-              ( SELECT cisli943.t$txsc$l 
-                  FROM baandb.tcisli943301 cisli943
-                 WHERE cisli943.t$fire$l=cisli941.t$fire$l
-                   AND cisli943.t$line$l=cisli941.t$line$l
-                   AND cisli943.t$brty$l=5) 
-                                   CST_PIS,
-          
-              ( SELECT cisli943.t$txsc$l 
-                  FROM baandb.tcisli943301 cisli943
-                 WHERE cisli943.t$fire$l=cisli941.t$fire$l
-                   AND cisli943.t$line$l=cisli941.t$line$l
-                   AND cisli943.t$brty$l=6) 
-                                   CST_COFINS,
-          
               ( SELECT cisli943.t$cnre$l 
-                  FROM baandb.tcisli943301 cisli943
+                  FROM baandb.tcisli943201 cisli943
                  WHERE cisli943.t$fire$l=cisli941.t$fire$l
                    AND cisli943.t$line$l=cisli941.t$line$l
                    AND cisli943.t$cnre$l!=' '
                    AND rownum=1)   CODE_RECEITA
            
-          FROM      baandb.tcisli940301  cisli940  
+          FROM      baandb.tcisli940201  cisli940  
 		  
-          LEFT JOIN baandb.ttccom110301  tccom110
+          LEFT JOIN baandb.ttccom110201  tccom110
                  ON tccom110.T$ofbp = cisli940.t$bpid$l,
           
           ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_DOCTO
@@ -233,30 +277,30 @@ select Q1.*
                                            and l1.t$clan = l.t$clan 
                                            and l1.t$cpac = l.t$cpac ) ) FGET,                               
           
-                    baandb.tcisli941301  cisli941
-          LEFT JOIN baandb.ttcmcs940301  tcmcs940
+                    baandb.tcisli941201  cisli941
+          LEFT JOIN baandb.ttcmcs940201  tcmcs940
                  ON tcmcs940.T$OFSO$L = cisli941.t$ccfo$l, 
 
-                    baandb.ttcibd001301  tcibd001  
+                    baandb.ttcibd001201  tcibd001  
                
-          LEFT JOIN baandb.ttcibd936301  tcibd936
+          LEFT JOIN baandb.ttcibd936201  tcibd936
                  ON tcibd936.t$ifgc$l = tcibd001.t$ifgc$l
                
-          LEFT JOIN baandb.ttdipu001301  tdipu001
+          LEFT JOIN baandb.ttdipu001201  tdipu001
                  ON tdipu001.t$item = tcibd001.t$item,
           
-                    baandb.tznmcs030301  znmcs030,            
-                    baandb.ttccom100301  tccom100,      
-                    baandb.ttccom130301  tccom130  
+                    baandb.tznmcs030201  znmcs030,            
+                    baandb.ttccom100201  tccom100,      
+                    baandb.ttccom130201  tccom130  
                
-          LEFT JOIN baandb.ttccom966301  tccom966
+          LEFT JOIN baandb.ttccom966201  tccom966
                  ON baandb.tccom966.t$comp$d = tccom130.t$fovn$l,
                
-                    baandb.ttcemm124301  tcemm124,
-                    baandb.ttcemm030301  tcemm030,
-                    baandb.ttcmcs023301  tcmcs023,
-                    baandb.tznmcs031301  znmcs031,
-                    baandb.tznmcs032301  znmcs032,
+                    baandb.ttcemm124201  tcemm124,
+                    baandb.ttcemm030201  tcemm030,
+                    baandb.ttcmcs023201  tcmcs023,
+                    baandb.tznmcs031201  znmcs031,
+                    baandb.tznmcs032201  znmcs032,
                 
           ( SELECT d.t$cnst COD,
                    l.t$desc DESCR
