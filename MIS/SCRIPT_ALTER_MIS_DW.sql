@@ -68,6 +68,10 @@ ALTER COLUMN ds_modalidade VARCHAR(40)
 --DE NUMERIC(13) para NUMERIC(15)
 ALTER TABLE dbo.aux_produto_dw
 alter column ds_ean numeric(15)
+
+--DE NUMERIC(3) para NUMERIC(2)
+alter table mis_dw.dbo.stg_estoque_ln
+alter column id_cia numeric(2)
 ----------------------------------------------------------------------------------------------------------------
 
 --ALTERAÇÃO ATRIBUTO ID_CONTA TABELA ODS_DESPESA_CONTAS

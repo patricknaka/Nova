@@ -392,3 +392,23 @@ GO
 
 SET ANSI_PADDING OFF
 GO
+
+--===========================================================
+
+USE [MIS_STAGING]
+GO
+/****** Object:  StoredProcedure [loja].[sp_ultimo_id_compra_boleto_prazo]    Script Date: 10/07/2014 14:38:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+create proc [loja].[sp_ultimo_id_compra_boleto_prazo] as
+ 
+select
+ MAX(nr_id_compra) nr_id_compra
+from
+ mis_ods.loja.ods_compra_boleto_prazo
+
+
+--===========================================================
