@@ -22,11 +22,10 @@ SELECT
   Trim(pz.DESCR)                       CLAL,
   ll.loc                               LOCA,
   nvl(max(maucLN.mauc),0)              PRECO,
-
-  CASE WHEN TO_CHAR(ll.holdreason)=' ' 
-  THEN 'OK'
-  ELSE  TO_CHAR(ll.holdreason) END     WARR,
-  
+  CASE WHEN TO_CHAR(ll.holdreason) = ' ' 
+         THEN 'OK'
+       ELSE  TO_CHAR(ll.holdreason) 
+   END                                 WARR,
   sum(llid.qty)                        QTD_EST,
   nvl(max(maucLN.mauc),0)*
       sum(llid.qty)                    VALOR,
@@ -121,7 +120,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "  Trim(pz.DESCR)                       CLAL,              " &
 "  ll.loc                               LOCA,              " &
 "  nvl(max(maucLN.mauc),0)              PRECO,             " &
-"  ll.holdreason                        WARR,              " &
+"  CASE WHEN TO_CHAR(ll.holdreason) = ' '                  " &
+"         THEN 'OK'                                        " &
+"       ELSE  TO_CHAR(ll.holdreason)                       " &
+"   END                                 WARR,              " &
 "  sum(llid.qty)                        QTD_EST,           " &
 "  nvl(max(maucLN.mauc),0)*                                " &
 "      sum(llid.qty)                    VALOR,             " &
@@ -219,7 +221,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "  Trim(pz.DESCR)                       CLAL,              " &
 "  ll.loc                               LOCA,              " &
 "  nvl(max(maucLN.mauc),0)              PRECO,             " &
-"  ll.holdreason                        WARR,              " &
+"  CASE WHEN TO_CHAR(ll.holdreason) = ' '                  " &
+"         THEN 'OK'                                        " &
+"       ELSE  TO_CHAR(ll.holdreason)                       " &
+"   END                                 WARR,              " &
 "  sum(llid.qty)                        QTD_EST,           " &
 "  nvl(max(maucLN.mauc),0)*                                " &
 "      sum(llid.qty)                    VALOR,             " &
@@ -317,7 +322,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "  Trim(pz.DESCR)                       CLAL,              " &
 "  ll.loc                               LOCA,              " &
 "  nvl(max(maucLN.mauc),0)              PRECO,             " &
-"  ll.holdreason                        WARR,              " &
+"  CASE WHEN TO_CHAR(ll.holdreason) = ' '                  " &
+"         THEN 'OK'                                        " &
+"       ELSE  TO_CHAR(ll.holdreason)                       " &
+"   END                                 WARR,              " &
 "  sum(llid.qty)                        QTD_EST,           " &
 "  nvl(max(maucLN.mauc),0)*                                " &
 "      sum(llid.qty)                    VALOR,             " &
@@ -415,7 +423,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "  Trim(pz.DESCR)                       CLAL,              " &
 "  ll.loc                               LOCA,              " &
 "  nvl(max(maucLN.mauc),0)              PRECO,             " &
-"  ll.holdreason                        WARR,              " &
+"  CASE WHEN TO_CHAR(ll.holdreason) = ' '                  " &
+"         THEN 'OK'                                        " &
+"       ELSE  TO_CHAR(ll.holdreason)                       " &
+"   END                                 WARR,              " &
 "  sum(llid.qty)                        QTD_EST,           " &
 "  nvl(max(maucLN.mauc),0)*                                " &
 "      sum(llid.qty)                    VALOR,             " &
@@ -513,7 +524,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "  Trim(pz.DESCR)                       CLAL,              " &
 "  ll.loc                               LOCA,              " &
 "  nvl(max(maucLN.mauc),0)              PRECO,             " &
-"  ll.holdreason                        WARR,              " &
+"  CASE WHEN TO_CHAR(ll.holdreason) = ' '                  " &
+"         THEN 'OK'                                        " &
+"       ELSE  TO_CHAR(ll.holdreason)                       " &
+"   END                                 WARR,              " &
 "  sum(llid.qty)                        QTD_EST,           " &
 "  nvl(max(maucLN.mauc),0)*                                " &
 "      sum(llid.qty)                    VALOR,             " &
@@ -611,7 +625,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "  Trim(pz.DESCR)                       CLAL,              " &
 "  ll.loc                               LOCA,              " &
 "  nvl(max(maucLN.mauc),0)              PRECO,             " &
-"  ll.holdreason                        WARR,              " &
+"  CASE WHEN TO_CHAR(ll.holdreason) = ' '                  " &
+"         THEN 'OK'                                        " &
+"       ELSE  TO_CHAR(ll.holdreason)                       " &
+"   END                                 WARR,              " &
 "  sum(llid.qty)                        QTD_EST,           " &
 "  nvl(max(maucLN.mauc),0)*                                " &
 "      sum(llid.qty)                    VALOR,             " &
@@ -709,7 +726,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "  Trim(pz.DESCR)                       CLAL,              " &
 "  ll.loc                               LOCA,              " &
 "  nvl(max(maucLN.mauc),0)              PRECO,             " &
-"  ll.holdreason                        WARR,              " &
+"  CASE WHEN TO_CHAR(ll.holdreason) = ' '                  " &
+"         THEN 'OK'                                        " &
+"       ELSE  TO_CHAR(ll.holdreason)                       " &
+"   END                                 WARR,              " &
 "  sum(llid.qty)                        QTD_EST,           " &
 "  nvl(max(maucLN.mauc),0)*                                " &
 "      sum(llid.qty)                    VALOR,             " &
@@ -807,7 +827,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "  Trim(pz.DESCR)                       CLAL,              " &
 "  ll.loc                               LOCA,              " &
 "  nvl(max(maucLN.mauc),0)              PRECO,             " &
-"  ll.holdreason                        WARR,              " &
+"  CASE WHEN TO_CHAR(ll.holdreason) = ' '                  " &
+"         THEN 'OK'                                        " &
+"       ELSE  TO_CHAR(ll.holdreason)                       " &
+"   END                                 WARR,              " &
 "  sum(llid.qty)                        QTD_EST,           " &
 "  nvl(max(maucLN.mauc),0)*                                " &
 "      sum(llid.qty)                    VALOR,             " &
