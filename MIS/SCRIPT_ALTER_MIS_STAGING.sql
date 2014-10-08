@@ -84,12 +84,6 @@ ALTER COLUMN MOCO_ID_TRANSACAO numeric(3)
 ALTER TABLE MIS_STAGING.fin.stg_sige_titulo_pagamento
 ALTER COLUMN TIPA_ID_TRANSACAO numeric(3)
 
-
---------------------------------------------------------------------
---DE NUMERIC(2) para NUMERIC(3)
-ALTER TABLE MIS_STAGING.FIN.STG_SIGE_TITULO_PAGAMENTO
-ALTER COLUMN TIPA_ID_TRANSACAO NUMERIC(3)
-
 --------------------------------------------------------------------
 --DE varchar(30) para varchar(35)
 ALTER TABLE MIS_STAGING.FIN.STG_SIGE_FORNECEDOR_CONTATO

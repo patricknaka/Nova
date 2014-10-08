@@ -1,6 +1,5 @@
-﻿
-GO
-
+﻿use mis_dw
+go
 
 ---ALTERAÇÕES NA BASE DE DADOS MIS_DW/MIS_DW
 
@@ -335,10 +334,23 @@ ADD nr_id_unidade_negocio int
 
 
 --------------------------------------------------------------------
---INCLUSÃO DE ATRIBUTO DE REFERENCIA FISCAL
+--INCLUSÃO DE ATRIBUTO DE REFERENCIA FISCAL, in_flagprepagto E STATUS_TITULO
 
 ALTER TABLE DBO.STG_SIGE_TITULO
 ADD ID_REF_FISCAL varchar(40)
+
+ALTER TABLE dbo.ods_sige_titulo
+ADD in_flagprepagto BIT NULL,
+	NR_STATUS_TITULO SMALLINT NULL,
+	in_ativo bit null
+
+alter table dbo.aux_ods_sige_titulo
+add in_flagprepagto bit null,
+	status_titulo smallint null
+
+--INCLUSÃO DS_MATRICULA
+alter table dbo.ods_vendedor
+add ds_matricula varchar(100) null
 
 --------------------------------------------------------------------
 --DE NUMERIC(12) PARA NUMERIC(40)
@@ -441,7 +453,13 @@ id_tipo_bloqueio varchar(10),
 ds_tipo_bloqueio varchar(50)
 )
 
-
+CREATE TABLE [dbo].[aux_ods_vendedor]
+(
+	nr_id_unidade_negocio int NOT NULL,
+	nr_vendedor int NOT NULL,
+	ds_vendedor varchar(100) NULL,
+	ds_vendedor_afiliado varchar(100) NULL
+) 
 
 ---------------------------------------------------------------------------------------------------
 --DE NUMERIC(2) para NUMERIC(3)
@@ -1158,14 +1176,15 @@ add in_ativo bit default 0
 alter table ods_sige_titulo
 add in_ativo bit default 0
 
-
 alter table dbo.ods_financiamento_pedido_aberto
 alter column nr_cia numeric(3)
-
-
 
 alter table aux_produto_dw
 alter column ds_procedencia varchar(60)
 
 alter table ods_product
 alter column ds_procedencia varchar(60)
+
+alter table dbo.stg_sige_titulo_movimento
+add nr_tipo_movimento smallint null,
+	nr_sq_movimento smallint null

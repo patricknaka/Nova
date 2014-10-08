@@ -601,3 +601,116 @@ GO
 
 alter table fin.ods_sige_titulo_receber
 add in_ativo bit default 0
+
+
+--================================================================
+
+--procedure [ln].[pr_parcela_adquirente]
+
+USE [MIS_ODS]
+GO
+/****** Object:  StoredProcedure [ln].[pr_parcela_adquirente]    Script Date: 10/08/2014 13:31:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+create proc [ln].[pr_parcela_adquirente]
+as
+begin
+
+IF OBJECT_ID('tempdb..#new') IS NOT NULL DROP TABLE #new
+IF OBJECT_ID('tempdb..#teste') IS NOT NULL DROP TABLE #teste
+
+CREATE TABLE #new(
+	[de] [int] NOT NULL,
+	[ate] [int] NOT NULL,
+	[CD_ADQUIRENTE_LN] [nvarchar](9) collate Latin1_General_CI_AS NULL,
+	[CD_ADQUIRENTE_FRONT] smallint NULL,
+	[CD_BANDEIRA] [smallint] NULL,
+	[CD_CIA] [smallint] NULL,
+	[PARCELAS] [smallint] NULL,
+	[dt_ini_vig] datetime NULL,
+) 
+
+select a.cd_adquirente_ln as CD_ADQUIRENTE_LN, 
+a.cd_adquirente_front as CD_ADQUIRENTE_FRONT, 
+a.cd_bandeira as CD_BANDEIRA, 
+a.dt_ini_vig as dt_ini_vig,
+a.cd_cia CD_CIA, COUNT(1) as qtde into #teste
+from mis_ods.ln.ods_cartao_adquirente a
+where a.nr_de is null
+group by CD_ADQUIRENTE_LN, CD_ADQUIRENTE_FRONT, a.cd_bandeira, CD_CIA,dt_ini_vig
+
+
+DECLARE @CD_ADQUIRENTE_LN	nvarchar(18)
+DECLARE @CD_ADQUIRENTE_FRONT	nvarchar(40)
+DECLARE @CD_BANDEIRA	smallint
+DECLARE @CD_CIA	smallint
+DECLARE @PARCELAS	smallint
+DECLARE @qtde int
+DECLARE @dt_ini_vig datetime
+declare @parcelas_new int
+
+DECLARE db_cursor CURSOR FOR  
+select a.CD_ADQUIRENTE_LN, a.CD_ADQUIRENTE_FRONT, a.CD_BANDEIRA, a.CD_CIA, a.nr_parcela as  PARCELAS, a.dt_ini_vig , qtde
+from mis_ods.ln.ods_cartao_adquirente a
+	inner join #teste b
+	on a.CD_ADQUIRENTE_FRONT = b.CD_ADQUIRENTE_FRONT
+	and a.CD_ADQUIRENTE_LN = b.CD_ADQUIRENTE_LN
+	and a.CD_BANDEIRA = b.CD_BANDEIRA
+	and a.CD_CIA = b.CD_CIA
+order by CD_ADQUIRENTE_LN, CD_ADQUIRENTE_FRONT, CD_BANDEIRA, CD_CIA,a.dt_ini_vig , a.nr_parcela
+
+OPEN db_cursor   
+FETCH NEXT FROM db_cursor INTO @CD_ADQUIRENTE_LN,   @CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig,@qtde
+
+WHILE @@FETCH_STATUS = 0   
+BEGIN   
+	   if @qtde = 1 
+	   begin
+			insert into #new
+			select 1 as de, @PARCELAS as ate , @CD_ADQUIRENTE_LN,@CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig
+	   end
+	   else
+	   begin
+			if @PARCELAS = 1 
+			begin
+				insert into #new
+				select 1 as de, @PARCELAS as ate , @CD_ADQUIRENTE_LN,@CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig
+				set @parcelas_new = 0
+			end
+			else
+			begin
+				select @parcelas_new = MAX(ate) from #new 
+				where CD_ADQUIRENTE_LN =@CD_ADQUIRENTE_LN
+				and   CD_ADQUIRENTE_FRONT=@CD_ADQUIRENTE_FRONT
+				and   CD_BANDEIRA= @CD_BANDEIRA
+				and   CD_CIA = @CD_CIA
+				and   dt_ini_vig = @dt_ini_vig
+				
+				insert into #new
+				select @parcelas_new+1 as de, @PARCELAS as ate , @CD_ADQUIRENTE_LN,@CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig				
+				
+			end
+	   end
+       FETCH NEXT FROM db_cursor INTO  @CD_ADQUIRENTE_LN,   @CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig,@qtde   
+END   
+
+CLOSE db_cursor   
+DEALLOCATE db_cursor	
+
+update a
+set a.nr_de = b.de,
+	a.nr_ate = b.ate
+from mis_ods.ln.ods_cartao_adquirente a
+	inner join #new b
+	on a.cd_adquirente_front = b.CD_ADQUIRENTE_FRONT
+	and a.cd_adquirente_ln = b.CD_ADQUIRENTE_LN 
+	and a.cd_bandeira = b.CD_BANDEIRA
+	and a.cd_cia = b.CD_CIA
+	and a.nr_parcela = b.PARCELAS
+	and a.dt_ini_vig = b.dt_ini_vig
+	
+end	
+

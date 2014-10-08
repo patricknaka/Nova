@@ -28,6 +28,33 @@ CREATE TABLE [dbo].[stg_cap_titulo_lancamento](
 
 GO
 
+--============================================================
+
+--criando tabela stg_trp_analitico_atualiza
+
+USE [MIS_LN]
+GO
+
+/****** Object:  Table [dbo].[stg_trp_analitico_atualiza]    Script Date: 10/08/2014 09:18:56 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[stg_trp_analitico_atualiza](
+	[NR_ENTREGA] [nvarchar](30) NULL,
+	[DT_ENTREGA_REALIZADA] [datetime] NULL,
+	[NM_TIPO_ESTAGIO] [nvarchar](30) NULL,
+	[CD_OCORRENCIA_INTERNA] [nvarchar](30) NULL,
+	[DS_OCORRENCIA_INTERNA] [nvarchar](30) NULL,
+	[DT_OCORRENCIA] [datetime] NULL
+) ON [PRIMARY]
+
+GO
+
+
+
 --=====================================
 --inserindo colunas na tabela stg_car_titulo_parcelamento
 
