@@ -15,6 +15,7 @@ SELECT
     tccom100.t$nama         NOME_FORN,
     tfcmg101.t$amnt-
     tfcmg101.t$ramn$l       VALO_PAGA,
+    tfcmg101.t$amnt$l       VALO_BRUTO,
     tfcmg101.t$post         CODE_LIQUID, 
     tfcmg101.t$paym         CODE_METPGTO,
  
