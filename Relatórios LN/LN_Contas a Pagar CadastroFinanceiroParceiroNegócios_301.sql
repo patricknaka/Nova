@@ -1,6 +1,7 @@
+
 SELECT 
   DISTINCT
-    301                                     COMPANHIA,
+    201                                     COMPANHIA,
     tccom130.t$fovn$l                       ENTIDADE_FISCAL,
     CONCAT(CONCAT(tccom100.t$bpid, '  '),  
              tccom100.t$nama)               PARCEIRO_NEGOCIOS,
@@ -31,7 +32,7 @@ SELECT
              iPRST.PrstDesc)                STATUS,       
     CASE WHEN tccom100.t$btbv = 1 
            THEN 'Sim' 
-         ELSE 'Não' 
+         ELSE 'NÃ£o' 
      END                                    A_SER_VERIFICADO,
     tccom100.t$prbp                         PARCEIRO_NEGOCIOS_PAI,  
     tccom130.t$ftyp$l                       TIPO_IDENTIFICADOR_FISCAL,
@@ -42,24 +43,24 @@ SELECT
         AT time zone sessiontimezone) AS DATE) 
                                             DATA_CRIACAO
           
-FROM       baandb.ttccom100301  tccom100
+FROM       baandb.ttccom100201  tccom100
 
-INNER JOIN baandb.ttccom125301  tccom125
+LEFT JOIN baandb.ttccom125201  tccom125
         ON tccom100.t$bpid = tccom125.t$ptbp
 
- LEFT JOIN baandb.ttccom122301 tccom122
+ LEFT JOIN baandb.ttccom122201 tccom122
         ON tccom122.t$ifbp = tccom125.t$ptbp
 
- LEFT JOIN baandb.ttfcmg003301 tfcmg003
+ LEFT JOIN baandb.ttfcmg003201 tfcmg003
         ON tfcmg003.t$paym = tccom122.t$paym
 	   
-INNER JOIN baandb.ttccom130301 tccom130
+LEFT JOIN baandb.ttccom130201 tccom130
         ON tccom100.t$cadr = tccom130.t$cadr
   
- LEFT JOIN baandb.ttcmcs010301 tcmcs010
+ LEFT JOIN baandb.ttcmcs010201 tcmcs010
         ON tcmcs010.t$ccty = tccom130.t$ccty
 	   
-INNER JOIN baandb.ttfcmg011301 tfcmg011
+LEFT JOIN baandb.ttfcmg011201 tfcmg011
         ON tfcmg011.t$bank = tccom125.t$brch
   
  LEFT JOIN ( SELECT d.t$cnst  ToacCode, 
