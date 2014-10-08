@@ -22,6 +22,7 @@ select Q1.*
               tccom130.t$hono      END_NUMERO,
               tccom130.t$namd      END_COMPL,
               tccom130.t$cste      UF,
+              tccom139.t$ibge$l    COD_IBGE,
               CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                   AT time zone sessiontimezone) AS DATE)  
@@ -294,8 +295,13 @@ select Q1.*
                     baandb.ttccom130201  tccom130  
                
           LEFT JOIN baandb.ttccom966201  tccom966
-                 ON baandb.tccom966.t$comp$d = tccom130.t$fovn$l,
-               
+                 ON baandb.tccom966.t$comp$d = tccom130.t$fovn$l
+                    
+          LEFT  JOIN  baandb.ttccom139201 tccom139
+                ON    tccom139.t$ccty = tccom130.t$ccty
+                AND   tccom139.t$cste = tccom130.t$cste
+                AND   tccom139.t$city = tccom130.t$ccit,
+                
                     baandb.ttcemm124201  tcemm124,
                     baandb.ttcemm030201  tcemm030,
                     baandb.ttcmcs023201  tcmcs023,
