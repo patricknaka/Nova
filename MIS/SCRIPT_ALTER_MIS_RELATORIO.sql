@@ -7,6 +7,21 @@ ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
 ALTER TABLE fin.ods_cap_reembolso
 ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
 
+ALTER TABLE ods_sige_extranet_fornecedores
+ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
+
+ALTER TABLE ods_sige_titulo_relatorio
+ALTER COLUMN id_nr VARCHAR(30)
+
+ALTER TABLE ods_sige_titulo_relatorio
+ALTER COLUMN id_documento VARCHAR(3)
+
+ALTER TABLE ods_sige_titulo_relatorio
+ADD nr_id_titulo_sk BIGINT NULL,
+    nr_id_nr_sk BIGINT NULL
+
+ALTER TABLE ods_sige_extranet_fornecedores_liquidado
+ALTER COLUMN id_documento VARCHAR(3)
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[fin].[ods_cap_reembolso]') AND name = N'PK_id_titulo')
@@ -31,6 +46,9 @@ GO
 ALTER TABLE stg_sige_extranet_fornecedores_liquidado
 ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
 
+
+ALTER TABLE stg_sige_extranet_fornecedores
+ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 ALTER TABLE stg_tb_planilhao

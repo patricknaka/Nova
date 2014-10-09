@@ -714,3 +714,189 @@ from mis_ods.ln.ods_cartao_adquirente a
 	
 end	
 
+--============================================================
+ALTER TABLE ln.ods_car_titulo_remessa
+ADD CD_STATUS_ARQUIVO INT NULL,
+	CD_STATUS_ENVIO INT NULL,
+	NR_CONTA NVARCHAR(40) NULL
+
+ALTER TABLE ln.ods_car_titulo_parcelamento
+ADD DT_VENCTO_ORIGINAL datetime NULL,
+	VL_RECEBIDO numeric(38,4) NULL,
+	VL_SALDO numeric(38,4) NULL
+
+--=============================================================
+--conflito de collation na procedure
+
+USE [MIS_ODS]
+GO
+/****** Object:  StoredProcedure [ln].[pr_parcela_adquirente]    Script Date: 10/09/2014 10:40:44 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER proc [ln].[pr_parcela_adquirente]
+as
+begin
+
+IF OBJECT_ID('tempdb..#new') IS NOT NULL DROP TABLE #new
+IF OBJECT_ID('tempdb..#teste') IS NOT NULL DROP TABLE #teste
+
+CREATE TABLE #new(
+	[de] [int] NOT NULL,
+	[ate] [int] NOT NULL,
+	[CD_ADQUIRENTE_LN] [nvarchar](9) NULL,
+	[CD_ADQUIRENTE_FRONT] smallint NULL,
+	[CD_BANDEIRA] [smallint] NULL,
+	[CD_CIA] [smallint] NULL,
+	[PARCELAS] [smallint] NULL,
+	[dt_ini_vig] datetime NULL,
+) 
+
+select a.cd_adquirente_ln as CD_ADQUIRENTE_LN, 
+a.cd_adquirente_front as CD_ADQUIRENTE_FRONT, 
+a.cd_bandeira as CD_BANDEIRA, 
+a.dt_ini_vig as dt_ini_vig,
+a.cd_cia CD_CIA, COUNT(1) as qtde into #teste
+from mis_ods.ln.ods_cartao_adquirente a
+where a.nr_de is null
+group by CD_ADQUIRENTE_LN, CD_ADQUIRENTE_FRONT, a.cd_bandeira, CD_CIA,dt_ini_vig
+
+
+DECLARE @CD_ADQUIRENTE_LN	nvarchar(18)
+DECLARE @CD_ADQUIRENTE_FRONT	nvarchar(40)
+DECLARE @CD_BANDEIRA	smallint
+DECLARE @CD_CIA	smallint
+DECLARE @PARCELAS	smallint
+DECLARE @qtde int
+DECLARE @dt_ini_vig datetime
+declare @parcelas_new int
+
+DECLARE db_cursor CURSOR FOR  
+select a.CD_ADQUIRENTE_LN, a.CD_ADQUIRENTE_FRONT, a.CD_BANDEIRA, a.CD_CIA, a.nr_parcela as  PARCELAS, a.dt_ini_vig , qtde
+from mis_ods.ln.ods_cartao_adquirente a
+	inner join #teste b 
+	on a.CD_ADQUIRENTE_FRONT = b.CD_ADQUIRENTE_FRONT
+	and a.CD_ADQUIRENTE_LN = b.CD_ADQUIRENTE_LN 
+	and a.CD_BANDEIRA = b.CD_BANDEIRA
+	and a.CD_CIA = b.CD_CIA
+order by CD_ADQUIRENTE_LN, CD_ADQUIRENTE_FRONT, CD_BANDEIRA, CD_CIA,a.dt_ini_vig , a.nr_parcela
+
+OPEN db_cursor   
+FETCH NEXT FROM db_cursor INTO @CD_ADQUIRENTE_LN,   @CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig,@qtde
+
+WHILE @@FETCH_STATUS = 0   
+BEGIN   
+	   if @qtde = 1 
+	   begin
+			insert into #new
+			select 1 as de, @PARCELAS as ate , @CD_ADQUIRENTE_LN,@CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig
+	   end
+	   else
+	   begin
+			if @PARCELAS = 1 
+			begin
+				insert into #new
+				select 1 as de, @PARCELAS as ate , @CD_ADQUIRENTE_LN,@CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig
+				set @parcelas_new = 0
+			end
+			else
+			begin
+				select @parcelas_new = MAX(ate) from #new 
+				where CD_ADQUIRENTE_LN =@CD_ADQUIRENTE_LN
+				and   CD_ADQUIRENTE_FRONT=@CD_ADQUIRENTE_FRONT
+				and   CD_BANDEIRA= @CD_BANDEIRA
+				and   CD_CIA = @CD_CIA
+				and   dt_ini_vig = @dt_ini_vig
+				
+				insert into #new
+				select @parcelas_new+1 as de, @PARCELAS as ate , @CD_ADQUIRENTE_LN,@CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig				
+				
+			end
+	   end
+       FETCH NEXT FROM db_cursor INTO  @CD_ADQUIRENTE_LN,   @CD_ADQUIRENTE_FRONT,@CD_BANDEIRA,@CD_CIA,@PARCELAS,@dt_ini_vig,@qtde   
+END   
+
+CLOSE db_cursor   
+DEALLOCATE db_cursor	
+
+update a
+set a.nr_de = b.de,
+	a.nr_ate = b.ate
+from mis_ods.ln.ods_cartao_adquirente a
+	inner join #new b
+	on a.cd_adquirente_front = b.CD_ADQUIRENTE_FRONT
+	and a.cd_adquirente_ln = b.CD_ADQUIRENTE_LN collate Latin1_General_CI_AS
+	and a.cd_bandeira = b.CD_BANDEIRA
+	and a.cd_cia = b.CD_CIA
+	and a.nr_parcela = b.PARCELAS
+	and a.dt_ini_vig = b.dt_ini_vig
+	
+end	
+
+--===============================================================
+
+USE [mis_ods]
+GO
+
+/****** Object:  Table [ln].[ods_dump_nfv_cab]    Script Date: 10/09/2014 11:13:45 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [ln].[ods_dump_nfv_cab](
+	[CD_CIA] [int] NOT NULL,
+	[CD_FILIAL] [nvarchar](6) NULL,
+	[NR_NF] [int] NULL,
+	[NR_SERIE_NF] [nvarchar](8) NULL,
+	[CD_NATUREZA_OPERACAO] [nvarchar](10) NULL,
+	[SQ_NATUREZA_OPERACAO] [nvarchar](6) NULL,
+	[CD_TIPO_NF] [int] NULL,
+	[DT_EMISSAO_NF] [datetime] NULL,
+	[HR_EMISSAO_NF] [datetime] NULL,
+	[CD_CLIENTE_FATURA] [nvarchar](9) NULL,
+	[CD_CLIENTE_ENTREGA] [nvarchar](9) NULL,
+	[NR_PEDIDO] [nvarchar](20) NULL,
+	[NR_ENTREGA] [nvarchar](10) NULL,
+	[NR_ORDEM] [nvarchar](9) NULL,
+	[VL_ICMS] [numeric](38, 4) NULL,
+	[VL_ICMS_ST] [numeric](38, 4) NULL,
+	[VL_IPI] [numeric](38, 4) NULL,
+	[VL_PRODUTO] [numeric](38, 4) NULL,
+	[VL_FRETE] [numeric](38, 4) NULL,
+	[VL_SEGURO] [numeric](38, 4) NULL,
+	[VL_DESPESA] [numeric](38, 4) NULL,
+	[VL_IMPOSTO_IMPORTACAO] [numeric](38, 4) NULL,
+	[VL_DESCONTO] [numeric](38, 4) NULL,
+	[VL_TOTAL_NF] [numeric](38, 4) NULL,
+	[NR_NF_FATURA] [nvarchar](10) NULL,
+	[NR_SERIE_NF_FATURA] [nvarchar](10) NULL,
+	[NR_NF_REMESSA] [nvarchar](10) NULL,
+	[NR_SERIE_NF_REMESSA] [nvarchar](10) NULL,
+	[DT_SITUACAO_NF] [datetime] NULL,
+	[CD_SITUACAO_NF] [int] NULL,
+	[VL_DESPESA_FINANCEIRA] [numeric](38, 4) NULL,
+	[VL_PIS] [numeric](38, 4) NULL,
+	[VL_COFINS] [numeric](38, 4) NULL,
+	[VL_CSLL] [numeric](38, 4) NULL,
+	[VL_DESCONTO_INCONDICIONAL] [numeric](38, 4) NULL,
+	[VL_DESPESA_ADUANEIRA] [numeric](38, 4) NULL,
+	[VL_ADICIONAL_IMPORTACAO] [numeric](38, 4) NULL,
+	[VL_PIS_IMPORTACAO] [numeric](38, 4) NULL,
+	[VL_COFINS_IMPORTACAO] [numeric](38, 4) NULL,
+	[VL_CIF_IMPORTACAO] [numeric](38, 4) NULL,
+	[DT_ULT_ATUALIZACAO] [datetime] NULL,
+	[CD_UNIDADE_EMPRESARIAL] [nvarchar](10) NULL,
+	[CD_UNIDADE_NEGOCIO] [int] NULL,
+	[NR_REFERENCIA_FISCAL] [nvarchar](15) NOT NULL,
+	[CD_TIPO_DOCUMENTO_FISCAL] [nvarchar](10) NULL,
+	[CD_STATUS_SEFAZ] [numeric](5, 0) NULL,
+	[CD_TIPO_ORDEM_VENDA] [nvarchar](10) NULL
+) ON [PRIMARY]
+
+GO
+
+
+--===============================================================

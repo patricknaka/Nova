@@ -30,6 +30,12 @@ VALUES ('loja corp hom',
 '\Package.Connections[loja_corp_hom].Properties[ConnectionString]',
 'String')
 
+--MIS RELATORIO
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('mis relatorio', 
+'Data Source=JUVENTUS-SQL\HSQLBI01;User ID=user_bi_hlg;PWD=biprd)(*123;Initial Catalog=mis_relatorio;Provider=SQLNCLI10.1;Auto Translate=False;',
+'\Package.Connections[mis_relatorio].Properties[ConnectionString]',
+'String')
 
 --loja ata hom
 INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
@@ -37,6 +43,49 @@ VALUES ('loja ata hom',
 'Data Source=10.128.132.18,1145;User ID=us_webstore_bi;PWD=intwebbi!@#;Initial Catalog=DB_HOM_ATACADO_NPC;Provider=SQLNCLI10.1;Auto Translate=False;',
 '\Package.Connections[loja_ata_hom].Properties[ConnectionString]',
 'String')
+
+--FILE_SHARED_DIM
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_SHARED_DIM', 
+'W:\Operacional\SharedDimensionStaging_LN\SharedDimensionStaging_LN\',
+'\Package.Variables[User::gstrFolderSD].Properties[Value]',
+'String')
+
+--FILE_STG_LN
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_STG_LN', 
+'W:\Operacional\Processo de Carga LN\Processo de Carga LN\',
+'\Package.Variables[User::gstrFolderLn].Properties[Value]',
+'String')
+
+--FILE_ADQUIRENTE
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_ADQUIRENTE', 
+'W:\Operacional\Processo Adquirente\SSIS_ADQUIRENTE\',
+'\Package.Variables[User::gstrFolderAdq].Properties[Value]',
+'String')
+
+--FILE_CAP_DEPTO
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_CAP_DEPTO', 
+'W:\Operacional\CAP Departamento_LN\',
+'\Package.Variables[User::gstrFolderCapDepto].Properties[Value]',
+'String')
+
+--FILE_LOJA
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_LOJA', 
+'W:\Operacional\Processo de Carga LN\Processo de Carga LN\',
+'\Package.Variables[User::gstrFolderLoja].Properties[Value]',
+'String')
+
+--FILE_CAP_LN
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_CAP_LN', 
+'W:\Operacional\Contas a Pagar_LN\',
+'\Package.Variables[User::gstrFolderCapLn].Properties[Value]',
+'String')
+
 
 --=================================================
 --inserção de colunas

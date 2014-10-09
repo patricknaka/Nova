@@ -71,6 +71,19 @@ alter column ds_ean numeric(15)
 --DE NUMERIC(3) para NUMERIC(2)
 alter table mis_dw.dbo.stg_estoque_ln
 alter column id_cia numeric(2)
+
+--DE NUMERIC(8) para VARCHAR(30)
+ALTER TABLE ods_sige_titulo_agrupado
+ALTER COLUMN ID_TITULO VARCHAR(30)
+
+--DE NUMERIC(8) para VARCHAR(30)
+ALTER TABLE ods_sige_titulo_agrupado
+ALTER COLUMN ID_TITULO_REF VARCHAR(30)
+
+ALTER TABLE ods_sige_titulo_agrupado
+ADD nr_id_titulo_sk BIGINT NULL,
+    nr_id_titulo_ref_sk BIGINT NULL
+
 ----------------------------------------------------------------------------------------------------------------
 
 --ALTERAÇÃO ATRIBUTO ID_CONTA TABELA ODS_DESPESA_CONTAS
@@ -803,8 +816,16 @@ ALTER COLUMN ID_MODULO VARCHAR(3)
 ALTER TABLE AUX_ODS_SIGE_TITULO_MOVIMENTO
 ALTER COLUMN ID_DOCUMENTO VARCHAR(3)
 
+
 ALTER TABLE AUX_ODS_SIGE_TITULO_MOVIMENTO
 ALTER COLUMN ID_MODULO_REF VARCHAR(3)
+
+ALTER TABLE AUX_ODS_SIGE_TITULO_MOVIMENTO
+ALTER COLUMN ID_TRANSACAO VARCHAR(3)
+
+ALTER TABLE AUX_ODS_SIGE_TITULO_MOVIMENTO
+ADD nr_tipo_movimento SMALLINT NULL,
+	nr_sq_movimento SMALLINT NULL
 ---------------------------------------------------------------------------------------------------
 
 ALTER TABLE stg_sige_titulo_abatimento
@@ -1187,4 +1208,5 @@ alter column ds_procedencia varchar(60)
 
 alter table dbo.stg_sige_titulo_movimento
 add nr_tipo_movimento smallint null,
-	nr_sq_movimento smallint null
+    nr_sq_movimento smallint null,
+    in_invalido bit null
