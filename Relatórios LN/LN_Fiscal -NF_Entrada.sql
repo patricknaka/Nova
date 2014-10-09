@@ -55,7 +55,7 @@ select Q1.*
                  IMPOSTO_1.                          PERC_ICMS,
                  IMPOSTO_1.                          VL_ICMS,
                  IMPOSTO_1.                          CST_ICMS,
-                 IMPOSTO_1.                          ORIG_MERC_CST_ICMS,      
+                 IMPOSTO_1.                          ORIG_CST_ICMS,      
                  IMPOSTO_1.                          TRIBUT_CST_ICMS,
                  IMPOSTO_1.                          VL_ICMS_DEST, 
                  
@@ -67,14 +67,14 @@ select Q1.*
                  IMPOSTO_5.                          PERC_PIS,
                  IMPOSTO_5.                          VL_PIS,
                  IMPOSTO_5.                          CST_PIS,
-                 IMPOSTO_5.                          ORIG_MERC_CST_PIS,      
+                 IMPOSTO_5.                          ORIG_CST_PIS,      
                  IMPOSTO_5.                          TRIBUT_CST_PIS,
                  
                  IMPOSTO_6.                          BASE_COFINS,
                  IMPOSTO_6.                          PERC_COFINS,
                  IMPOSTO_6.                          VL_COFINS,
                  IMPOSTO_6.                          CST_COFINS,
-                 IMPOSTO_6.                          ORIG_MERC_CST_COFINS,      
+                 IMPOSTO_6.                          ORIG_CST_COFINS,      
                  IMPOSTO_6.                          TRIBUT_CST_COFINS,                      
                  
                  IMPOSTO_3.                          VL_IPI_DEST,
@@ -187,7 +187,7 @@ select Q1.*
                           tdrec942.t$rate$l         PERC_ICMS,
                           tdrec942.t$amnt$l         VL_ICMS,
                           tdrec942.t$txsc$l         CST_ICMS,
-                          tcmcs938.t$gdog$l         ORIG_MERC_CST_ICMS,      
+                          tcmcs938.t$gdog$l         ORIG_CST_ICMS,      
                           tcmcs938.t$icmd$l         TRIBUT_CST_ICMS,
                           tdrec942.t$fbam$l         VL_ICMS_DEST
                      FROM baandb.ttcmcs938201 tcmcs938
@@ -220,8 +220,7 @@ select Q1.*
                           tdrec942.t$rate$l         PERC_PIS, 
                           tdrec942.t$amnt$l         VL_PIS, 
                           tdrec942.t$txsc$l         CST_PIS,
-                          tcmcs938.t$txds$l         DESC_CST_PIS,
-                          tcmcs938.t$gdog$l         ORIG_MERC_CST_PIS,      
+                          tcmcs938.t$gdog$l         ORIG_CST_PIS,      
                           tcmcs938.t$icmd$l         TRIBUT_CST_PIS,                          
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l
@@ -236,8 +235,7 @@ select Q1.*
                           tdrec942.t$rate$l         PERC_COFINS,
                           tdrec942.t$amnt$l         VL_COFINS, 
                           tdrec942.t$txsc$l         CST_COFINS,
-                          tcmcs938.t$txds$l         DESC_CST_COFINS,
-                          tcmcs938.t$gdog$l         ORIG_MERC_CST_COFINS,      
+                          tcmcs938.t$gdog$l         ORIG_CST_COFINS,      
                           tcmcs938.t$icmd$l         TRIBUT_CST_COFINS,
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l
