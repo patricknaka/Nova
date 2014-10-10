@@ -9,11 +9,11 @@ SELECT
     regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
                                                 CNPJ_FORN,
     tccom100.t$nama                             NOME_FORN,
-	
+ 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$docd, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE)  DATA_EMISSAO,
-		
+  
     tfacp200.t$dued                             DATA_VENCTO,
     tfacp200.t$amnt                             VALO_TITULO,  
     tfacp200.t$balc                             SALD_TITULO,
@@ -37,9 +37,10 @@ SELECT
     
     NVL(BLOQUEIO.DSC_STATUS_BLOQUEIO, 'Sem bloqueio') 
                                                 DESC_STATUS_BLOQUEIO,
-    CASE WHEN tfacp201.t$pyst$l = 5 THEN
-            tfacp201.t$amnt
-    ELSE    tfacp201.t$balc END                 VALOR_APAGAR,
+    CASE WHEN tfacp201.t$pyst$l = 5 
+           THEN tfacp201.t$amnt
+         ELSE   tfacp201.t$balc 
+     END                                        VALOR_APAGAR,
     tfacp201.t$brel                             NUM_REL_BANCARIA, 
     tfcmg001.t$desc                             DESC_REL_BANCARIA,
 
@@ -97,47 +98,48 @@ SELECT
     znsls402.t$idad$c                           ID_ADQUIRENTE,
     znsls402.t$cccd$c                           COD_CARTAO_CREDITO_DEBITO,
 
---    tflcb230.t$stat$d                           CODE_STAT_ARQ,
-    CASE WHEN tflcb230.t$send$d = 0 THEN
-          tflcb230.t$stat$d
-    ELSE  tflcb230.t$send$d   END               CODE_STAT_ARQ,
+    CASE WHEN tflcb230.t$send$d = 0 
+           THEN tflcb230.t$stat$d
+         ELSE   tflcb230.t$send$d
+     END                                        CODE_STAT_ARQ,
     
-    CASE WHEN tflcb230.t$send$d = 0 THEN    
-          NVL(iStatArq.DESCR, 'Arquivo não vinculado')
-    ELSE  NVL(iSendArq.DESCR, 'Arquivo não vinculado') END DESCR_STAT_ARQ,
+    CASE WHEN tflcb230.t$send$d = 0
+           THEN NVL(iStatArq.DESCR, 'Arquivo não vinculado')
+         ELSE   NVL(iSendArq.DESCR, 'Arquivo não vinculado')
+     END                                        DESCR_STAT_ARQ,
           
     tflcb230.t$lach$d                           DATA_STAT_ARQ
 
-FROM       baandb.ttfacp200201  tfacp200  
+FROM       baandb.ttfacp200301  tfacp200  
 
-INNER JOIN baandb.ttfacp201201  tfacp201   
+INNER JOIN baandb.ttfacp201301  tfacp201
         ON tfacp201.t$ttyp = tfacp200.t$ttyp
        AND tfacp201.t$ninv = tfacp200.t$ninv
 
-INNER JOIN baandb.ttccom100201 tccom100
+INNER JOIN baandb.ttccom100301 tccom100
         ON tccom100.t$bpid = tfacp200.t$ifbp
     
-INNER JOIN baandb.ttccom130201 tccom130
+INNER JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
     
  LEFT JOIN ( select max(a.t$btno) LOTE_PAGTO, 
                     a.t$ttyp, 
                     a.t$ninv
-               from baandb.ttfcmg101201 a
+               from baandb.ttfcmg101301 a
            group by a.t$ttyp, a.t$ninv ) LOTE_PAGTO
         ON LOTE_PAGTO.t$ttyp = tfacp200.t$ttyp
        AND LOTE_PAGTO.t$ninv = tfacp200.t$ninv
        
  LEFT JOIN ( select m.t$bloc COD_STATUS_BLOQUEIO,
                     m.t$desc DSC_STATUS_BLOQUEIO
-               from baandb.ttfacp002201 m ) BLOQUEIO
+               from baandb.ttfacp002301 m ) BLOQUEIO
         ON BLOQUEIO.COD_STATUS_BLOQUEIO = tfacp200.t$bloc
 
  LEFT JOIN ( select MIN(a.t$plan) DATA_PLAN_PAGTO,
                     a.t$ttyp,
                     a.t$ninv,
                     a.t$schn
-               from baandb.ttfcmg101201 a 
+               from baandb.ttfcmg101301 a 
            group by a.t$ttyp,
                     a.t$ninv,
                     a.t$schn ) PAGTO_PLANEJADO
@@ -150,9 +152,9 @@ INNER JOIN baandb.ttccom130201 tccom130
                     a.t$lach$d,
                     max(a.t$stat$d) t$stat$d,
                     max(a.t$send$d) t$send$d
-               FROM baandb.ttflcb230201 a
+               FROM baandb.ttflcb230301 a
               WHERE a.t$sern$d = ( select max(b.t$sern$d)
-                                     from baandb.ttflcb230201 b
+                                     from baandb.ttflcb230301 b
                                     where b.t$ttyp$d = a.t$ttyp$d
                                       and b.t$ninv$d = a.t$ninv$d )
            GROUP BY a.t$ttyp$d, 
@@ -167,9 +169,9 @@ INNER JOIN baandb.ttccom130201 tccom130
                     baandb.tttadv140000 l
               WHERE d.t$cpac = 'tf'
                 AND d.t$cdom = 'cmg.stat.l'
-                AND l.t$clab = d.t$za_clab
                 AND l.t$clan = 'p'
                 AND l.t$cpac = 'tf'
+                AND l.t$clab = d.t$za_clab
                 AND rpad(d.t$vers,4) ||
                     rpad(d.t$rele,2) ||
                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
@@ -189,15 +191,15 @@ INNER JOIN baandb.ttccom130201 tccom130
                                             and l1.t$cpac = l.t$cpac ) ) iStatArq 
         ON iStatArq.CODE = tflcb230.t$stat$d  
     
-LEFT JOIN ( SELECT d.t$cnst CODE,
+ LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
                FROM baandb.tttadv401000 d,
                     baandb.tttadv140000 l
               WHERE d.t$cpac = 'tf'
                 AND d.t$cdom = 'cmg.stat.l'
-                AND l.t$clab = d.t$za_clab
                 AND l.t$clan = 'p'
                 AND l.t$cpac = 'tf'
+                AND l.t$clab = d.t$za_clab
                 AND rpad(d.t$vers,4) ||
                     rpad(d.t$rele,2) ||
                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
@@ -217,7 +219,7 @@ LEFT JOIN ( SELECT d.t$cnst CODE,
                                             and l1.t$cpac = l.t$cpac ) ) iSendArq 
         ON iSendArq.CODE = tflcb230.t$send$d  
         
- LEFT JOIN baandb.ttdrec940201  tdrec940
+ LEFT JOIN baandb.ttdrec940301  tdrec940
         ON tdrec940.t$ttyp$l = tfacp200.t$ttyp
        AND tdrec940.t$invn$l = tfacp200.t$ninv
         
@@ -248,26 +250,26 @@ LEFT JOIN ( SELECT d.t$cnst CODE,
                                                  and l1.t$cpac = iLABEL.t$cpac ) ) DTRFD
         ON tdrec940.t$rfdt$l = DTRFD.iCODE 
   
- LEFT JOIN baandb.ttdrec947201  tdrec947
+ LEFT JOIN baandb.ttdrec947301  tdrec947
         ON tdrec947.t$fire$l = tdrec940.t$fire$l
        
- LEFT JOIN baandb.ttcmcs966201  tcmcs966
+ LEFT JOIN baandb.ttcmcs966301  tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
    
  LEFT JOIN ( select distinct zncmg011.t$typd$c
-               from baandb.tzncmg011201 zncmg011
+               from baandb.tzncmg011301 zncmg011
               where zncmg011.t$typd$c! = ' ' ) tipoDEV
         ON tipoDEV.t$typd$c = tfacp200.t$ttyp
  
- LEFT JOIN baandb.tznsls412201 znsls412
+ LEFT JOIN baandb.tznsls412301 znsls412
         ON znsls412.t$ttyp$c = tipoDEV.t$typd$c
        AND znsls412.t$ninv$c = tfacp200.t$ninv
        AND znsls412.t$type$c = 3
 
- LEFT JOIN baandb.tznint002201 znint002
+ LEFT JOIN baandb.tznint002301 znint002
         ON znint002.t$uneg$c = znsls412.t$uneg$c
     
- LEFT JOIN baandb.tznsls402201 znsls402
+ LEFT JOIN baandb.tznsls402301 znsls402
         ON znsls402.t$ncia$c = znsls412.t$ncia$c
        AND znsls402.t$uneg$c = znsls412.t$uneg$c
        AND znsls402.t$pecl$c = znsls412.t$pecl$c
@@ -276,10 +278,10 @@ LEFT JOIN ( SELECT d.t$cnst CODE,
 
  LEFT JOIN ( select a.t$desc$c DESCR_MEIO_PGTO,
                     a.T$MPGS$C
-               from baandb.tzncmg007201 a ) MEIO_PAGTO
+               from baandb.tzncmg007301 a ) MEIO_PAGTO
         ON MEIO_PAGTO.T$MPGS$C = znsls402.t$idmp$c
  
- LEFT JOIN baandb.tznsls400201 znsls400
+ LEFT JOIN baandb.tznsls400301 znsls400
         ON znsls400.t$ncia$c = znsls412.t$ncia$c
        AND znsls400.t$uneg$c = znsls412.t$uneg$c
        AND znsls400.t$pecl$c = znsls412.t$pecl$c
@@ -287,24 +289,24 @@ LEFT JOIN ( SELECT d.t$cnst CODE,
      
  LEFT JOIN ( select tcmcs066.t$dsca  DESCR_CANAL_VENDA,
                     tcmcs066.t$chan
-               from baandb.ttcmcs066201 tcmcs066 ) CANAL_VENDA
+               from baandb.ttcmcs066301 tcmcs066 ) CANAL_VENDA
         ON CANAL_VENDA.t$chan = znsls400.t$idca$c
    
- LEFT JOIN baandb.tznsls401201 znsls401
+ LEFT JOIN baandb.tznsls401301 znsls401
         ON znsls401.t$ncia$c = znsls412.t$ncia$c
        AND znsls401.t$uneg$c = znsls412.t$uneg$c
        AND znsls401.t$pecl$c = znsls412.t$pecl$c
        AND znsls401.t$sqpd$c = znsls412.t$sqpd$c
        AND znsls401.t$qtve$c < 0
                  
- LEFT JOIN baandb.ttfcmg001201  tfcmg001
+ LEFT JOIN baandb.ttfcmg001301  tfcmg001
         ON tfcmg001.t$bank = tfacp201.t$brel
 
- LEFT JOIN baandb.ttccom125201  tccom125
+ LEFT JOIN baandb.ttccom125301  tccom125
         ON tccom125.t$ptbp = tfacp201.t$ifbp
        AND tccom125.t$cban = tfacp201.t$bank
 
- LEFT JOIN baandb.ttfcmg011201  tfcmg011
+ LEFT JOIN baandb.ttfcmg011301  tfcmg011
         ON tfcmg011.t$bank = tccom125.t$brch
 
  LEFT JOIN ( SELECT tflcb231a.t$ocr1$d OCORRENCIA1,
@@ -313,9 +315,9 @@ LEFT JOIN ( SELECT d.t$cnst CODE,
                     tflcb231a.t$ocr4$d OCORRENCIA4,
                     tflcb231a.t$ttyp$d,
                     tflcb231a.t$ninv$d
-               FROM baandb.ttflcb231201  tflcb231a
+               FROM baandb.ttflcb231301  tflcb231a
               WHERE tflcb231a.t$dare$d = ( SELECT MAX(tflcb231b.t$dare$d)
-                                             FROM baandb.ttflcb231201  tflcb231b
+                                             FROM baandb.ttflcb231301  tflcb231b
                                             WHERE tflcb231b.t$ttyp$d = tflcb231a.t$ttyp$d
                                               AND tflcb231b.t$ninv$d = tflcb231a.t$ninv$d ) ) OCORRENCIA
         ON OCORRENCIA.t$ttyp$d = tfacp200.t$ttyp
@@ -387,6 +389,9 @@ AND   tfacp200.t$ttyp in ('PKB','PKC','PKD','PKE','PKF','PRB','PRW')
           AND :EmissaoAte
   AND NVL(znsls412.t$uneg$c, 0) IN (:UniNegocio)
   AND NVL(tfacp201.t$pyst$l, 1) IN (:Situacao)
-  AND NVL(tflcb230.t$stat$d, 0) IN (:StatusArquivo)  
+  AND NVL( CASE WHEN tflcb230.t$send$d = 0 
+                  THEN tflcb230.t$stat$d
+                ELSE   tflcb230.t$send$d
+            END, 0 ) IN (:StatusArquivo)  
   AND ( (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(:CNPJ)) OR (:CNPJ is null) )
   AND ( (znsls412.t$pecl$c IN (:Pedido)) OR (:Todos = 1) )
