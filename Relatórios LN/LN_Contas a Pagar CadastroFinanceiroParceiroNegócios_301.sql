@@ -1,7 +1,6 @@
-
 SELECT 
   DISTINCT
-    201                                     COMPANHIA,
+    301                                     COMPANHIA,
     tccom130.t$fovn$l                       ENTIDADE_FISCAL,
     CONCAT(CONCAT(tccom100.t$bpid, '  '),  
              tccom100.t$nama)               PARCEIRO_NEGOCIOS,
@@ -37,30 +36,30 @@ SELECT
     tccom100.t$prbp                         PARCEIRO_NEGOCIOS_PAI,  
     tccom130.t$ftyp$l                       TIPO_IDENTIFICADOR_FISCAL,
     tccom100.t$seak                         CHAVE_BUSCA,
-	
+ 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE) 
                                             DATA_CRIACAO
           
-FROM       baandb.ttccom100201  tccom100
+FROM       baandb.ttccom100301  tccom100
 
-LEFT JOIN baandb.ttccom125201  tccom125
+ LEFT JOIN baandb.ttccom125301  tccom125
         ON tccom100.t$bpid = tccom125.t$ptbp
 
- LEFT JOIN baandb.ttccom122201 tccom122
+ LEFT JOIN baandb.ttccom122301 tccom122
         ON tccom122.t$ifbp = tccom125.t$ptbp
 
- LEFT JOIN baandb.ttfcmg003201 tfcmg003
+ LEFT JOIN baandb.ttfcmg003301 tfcmg003
         ON tfcmg003.t$paym = tccom122.t$paym
-	   
-LEFT JOIN baandb.ttccom130201 tccom130
+    
+ LEFT JOIN baandb.ttccom130301 tccom130
         ON tccom100.t$cadr = tccom130.t$cadr
   
- LEFT JOIN baandb.ttcmcs010201 tcmcs010
+ LEFT JOIN baandb.ttcmcs010301 tcmcs010
         ON tcmcs010.t$ccty = tccom130.t$ccty
-	   
-LEFT JOIN baandb.ttfcmg011201 tfcmg011
+    
+ LEFT JOIN baandb.ttfcmg011301 tfcmg011
         ON tfcmg011.t$bank = tccom125.t$brch
   
  LEFT JOIN ( SELECT d.t$cnst  ToacCode, 
@@ -174,7 +173,11 @@ LEFT JOIN baandb.ttfcmg011201 tfcmg011
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iPRST
         ON tccom100.t$prst = iPRST.PrstCode
-			
-WHERE tccom122.t$paym IN (:MetodoPagto)
-  AND tccom122.t$mopa$d IN (:ModalidadePagto)			 
-  AND ( (Trim(:CNPJ) is null) OR (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(regexp_replace(:CNPJ, '[^0-9]', ''))) )
+   
+WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)) 
+      Between :DataEmissaoDe 
+          And :DataEmissaoAte
+  AND tccom130.t$ftyp$l IN (:IdentificadorFiscal)
+  AND ( (:CNPJTodos = 0) OR (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IN (:CNPJ) AND (:CNPJTodos = 1)) )
