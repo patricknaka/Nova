@@ -61,14 +61,6 @@ SELECT
 		(SELECT sum(cisli941.t$ldam$l) FROM baandb.tcisli941201 cisli941
 		WHERE cisli941.t$fire$l=cisli940.t$fire$l) VL_DESCONTO,
 		cisli940.t$amnt$l VL_TOTAL_NF,
-		
-        CASE WHEN cisli940.t$fdty$l=15 then
-          (select a.t$fire$l from baandb.tcisli940201 a, baandb.tcisli941201 b
-          where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l) else NULL
-       end  NR_REFERENCIA_FISCAL_FATURA ,
-		
-		
         CASE WHEN cisli940.t$fdty$l=15 then
           (select a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
