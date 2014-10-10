@@ -9,11 +9,7 @@ SELECT
     regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
                                                 CNPJ_FORN,
     tccom100.t$nama                             NOME_FORN,
- 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$docd, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)  DATA_EMISSAO,
-  
+    tfacp200.t$docd                             DATA_EMISSAO,
     tfacp200.t$dued                             DATA_VENCTO,
     tfacp200.t$amnt                             VALO_TITULO,  
     tfacp200.t$balc                             SALD_TITULO,
@@ -380,18 +376,14 @@ INNER JOIN baandb.ttccom130301 tccom130
         ON DESC_MODAL_PGTO.COD_MODAL_PGTO = tfacp201.t$mopa$d 
     
 WHERE tfacp200.t$docn = 0 
-AND   tfacp200.t$ttyp in ('PKB','PKC','PKD','PKE','PKF','PRB','PRW')
+AND   tfacp200.t$ttyp in ('PKB','PKC','PKD','PKE','PKF','PRB','PRW','PKG')
 
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$docd, 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE))
-      BETWEEN :EmissaoDe 
-          AND :EmissaoAte
+  AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND NVL(znsls412.t$uneg$c, 0) IN (:UniNegocio)
   AND NVL(tfacp201.t$pyst$l, 1) IN (:Situacao)
   AND NVL( CASE WHEN tflcb230.t$send$d = 0 
                   THEN tflcb230.t$stat$d
                 ELSE   tflcb230.t$send$d
             END, 0 ) IN (:StatusArquivo)  
-  AND ( (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(:CNPJ)) OR (:CNPJ is null) )
-  AND ( (znsls412.t$pecl$c IN (:Pedido)) OR (:Todos = 1) )
+  AND ( (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(:CNPJ)) OR (Trim(:CNPJ) is null) )
+  AND ( (znsls412.t$pecl$c IN (Trim(:Pedido))) OR (:Todos = 1) )
