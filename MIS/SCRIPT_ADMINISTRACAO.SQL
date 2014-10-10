@@ -82,10 +82,51 @@ VALUES ('FILE_LOJA',
 --FILE_CAP_LN
 INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
 VALUES ('FILE_CAP_LN', 
-'W:\Operacional\Contas a Pagar_LN\',
+'W:\Operacional\Contas a Pagar_LN\Contas a Pagar_LN\',
 '\Package.Variables[User::gstrFolderCapLn].Properties[Value]',
 'String')
 
+--FILE_COCKORC
+insert into adm.ssis_conexoes
+values ('FILE_COCKORC',
+'W:\Operacional\Cockpit Orçamento_LN\Cockpit Orçamento_LN\',
+'\Package.Variables[User::gstrFolderCockOrc].Properties[Value]',
+'String')
+
+--MIS_OLAP
+insert into adm.ssis_conexoes
+values ('MIS_OLAP',
+'Data Source=CRICIUMA01\DOLAPBI01;Initial Catalog=MIS_OLAP;Provider=MSOLAP.4;Integrated Security=SSPI;Impersonation Level=Impersonate;',
+'\Package.Connections[MIS_OLAP].Properties[ConnectionString]',
+'String')
+
+--MIS
+insert into adm.ssis_conexoes
+values ('MIS',
+'Data Source=CRICIUMA01\DOLAPBI01;Initial Catalog=MIS;Provider=MSOLAP.4;Integrated Security=SSPI;Impersonation Level=Impersonate;',
+'\Package.Connections[MIS].Properties[ConnectionString]',
+'String')
+
+--FILE_INVSUPL
+insert into adm.ssis_conexoes
+values ('FILE_INVSUPL',
+'W:\Operacional\Inventory Supplier_LN\Inventory Supplier_LN\',
+'\Package.Variables[User::gstrFolderInvSupl].Properties[Value]',
+'String')
+
+--B2B_INTERNO
+insert into adm.ssis_conexoes
+values ('B2B_INTERNO',
+'Data Source=10.128.132.18,1145;User ID=us_webstore_bi;PWD=intwebbi!@#;Initial Catalog=db_hom_pontofrio_b2b_interno;Provider=SQLNCLI10.1;Auto Translate=False;',
+'\Package.Connections[db_hom_pontofrio_b2b_interno].Properties[ConnectionString]',
+'String')
+
+--FILE_PLANILHAO
+insert into adm.ssis_conexoes
+values ('FILE_PLANILHAO',
+'W:\Operacional\Planilhao_LN\Planilhao_LN\',
+'\Package.Variables[User::gstrFolderPlanilhao].Properties[Value]',
+'String')
 
 --=================================================
 --inserção de colunas

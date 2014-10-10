@@ -294,6 +294,11 @@ ALTER COLUMN DS_MODALIDADE VARCHAR(40)
 ALTER TABLE DBO.ods_purchase_full
 ALTER COLUMN NR_CIA NUMERIC(3) not null
 
+ALTER TABLE DBO.ods_purchase_full
+add nr_qtt_fisica int null,
+	nr_id_pedido_compra bigint null
+
+
 --------------------------------------------------------------------
 --DE NUMERIC(12) PARA NUMERIC(40)
 ALTER TABLE DBO.ODS_SIGE_CMV_HIST
@@ -1210,3 +1215,28 @@ alter table dbo.stg_sige_titulo_movimento
 add nr_tipo_movimento smallint null,
     nr_sq_movimento smallint null,
     in_invalido bit null
+
+-==============================================================
+alter table stg_financiamento_estoque
+alter column nr_titulo varchar(10)
+
+alter table stg_financiamento_estoque
+alter column nr_id_cia numeric(3)
+
+alter table aux_inventory_abatimento
+alter column nr_titulo varchar(10)
+
+alter table aux_inventory_saldo
+alter column nr_titulo varchar(10)
+
+alter table aux_inventory_cmd
+alter column nr_titulo varchar(10)
+
+alter table aux_inventory_regra
+alter column nr_titulo varchar(10)
+
+alter table fact_financiamento_estoque
+alter column nr_titulo varchar(10)
+
+alter table fact_financiamento_estoque
+alter column nr_id_cia numeric(3)
