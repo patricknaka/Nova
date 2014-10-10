@@ -1,7 +1,7 @@
 --Saída
 select Q1.* 
   from  ( SELECT DISTINCT
-                 201                        CIA,
+                 301                        CIA,
                  tcemm030.t$euca            NUME_FILIAL,  
                  tcemm030.T$EUNT            CHAVE_FILIAL,
                  cisli940.t$docn$l          NUME_NF,
@@ -42,9 +42,9 @@ select Q1.*
                  znmcs030.t$seto$c          COD_SETOR,
                  znmcs030.t$dsca$c          DSC_SETOR,
                  tcibd001.t$fami$c          CATEGORIA,
-                 znmcs031.t$dsca$c          DESCR_CATORIA,
-                 znmcs032.t$dsca$c          DESCR_SUEGORIA,
-                 tcibd001.t$subf$c          SUBCATEGBCATEGORIA,
+                 znmcs031.t$dsca$c          DESCR_CATEGORIA,
+                 znmcs032.t$dsca$c          DESCR_SUBCATEGORIA,
+                 tcibd001.t$subf$c          SUBCATEGORIA,
                  tdipu001.t$manu$c          MARCA,
                  tcibd936.t$frat$l          NBM,
                  cisli941.t$pric$l          PRECO_UNITARIO,
@@ -103,9 +103,9 @@ select Q1.*
                  COD_SEFAZ.DESCR            DESC_SEFAZ,
                  RECEITA.                   CODE_RECEITA
            
-            FROM baandb.tcisli940201  cisli940  
+            FROM baandb.tcisli940301  cisli940  
     
-       LEFT JOIN baandb.ttccom110201  tccom110 
+       LEFT JOIN baandb.ttccom110301  tccom110 
               ON tccom110.T$ofbp = cisli940.t$bpid$l
        
        LEFT JOIN ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_DOCTO
@@ -135,54 +135,54 @@ select Q1.*
                                                   and l1.t$cpac = l.t$cpac ) ) FGET
               ON cisli940.t$fdty$l = FGET.CNST
                  
-      INNER JOIN baandb.tcisli941201  cisli941
+      INNER JOIN baandb.tcisli941301  cisli941
               ON cisli940.t$fire$l = cisli941.t$fire$l
   
-       LEFT JOIN baandb.ttcmcs940201  tcmcs940
+       LEFT JOIN baandb.ttcmcs940301  tcmcs940
               ON tcmcs940.T$OFSO$L = cisli941.t$ccfo$l
 
-      INNER JOIN baandb.ttcibd001201  tcibd001
+      INNER JOIN baandb.ttcibd001301  tcibd001
               ON tcibd001.t$item = cisli941.t$item$l  
             
-       LEFT JOIN baandb.ttcibd936201  tcibd936
+       LEFT JOIN baandb.ttcibd936301  tcibd936
               ON tcibd936.t$ifgc$l = tcibd001.t$ifgc$l
             
-       LEFT JOIN baandb.ttdipu001201  tdipu001
+       LEFT JOIN baandb.ttdipu001301  tdipu001
               ON tdipu001.t$item = tcibd001.t$item
        
-      INNER JOIN baandb.tznmcs030201  znmcs030
+      INNER JOIN baandb.tznmcs030301  znmcs030
               ON znmcs030.t$citg$c = tcibd001.t$citg
              AND znmcs030.t$seto$c = tcibd001.t$seto$c
  
-      INNER JOIN baandb.ttccom100201  tccom100 
+      INNER JOIN baandb.ttccom100301  tccom100 
               ON tccom100.t$bpid = cisli940.t$bpid$l   
 
-      INNER JOIN baandb.ttccom130201  tccom130
+      INNER JOIN baandb.ttccom130301  tccom130
               ON tccom130.t$cadr   = cisli940.t$stoa$l
             
-       LEFT JOIN baandb.ttccom966201  tccom966
+       LEFT JOIN baandb.ttccom966301  tccom966
               ON baandb.tccom966.t$comp$d = tccom130.t$fovn$l
                  
-       LEFT JOIN baandb.ttccom139201 tccom139
+       LEFT JOIN baandb.ttccom139301 tccom139
               ON tccom139.t$ccty = tccom130.t$ccty
              AND tccom139.t$cste = tccom130.t$cste
              AND tccom139.t$city = tccom130.t$ccit
              
-      INNER JOIN baandb.ttcemm124201  tcemm124
+      INNER JOIN baandb.ttcemm124301  tcemm124
               ON tcemm124.t$cwoc  = cisli940.t$cofc$l 
 
-      INNER JOIN baandb.ttcemm030201  tcemm030
+      INNER JOIN baandb.ttcemm030301  tcemm030
               ON tcemm030.t$eunt = tcemm124.t$grid
   
-      INNER JOIN baandb.ttcmcs023201  tcmcs023
+      INNER JOIN baandb.ttcmcs023301  tcmcs023
               ON tcmcs023.t$citg = tcibd001.t$citg
   
-      INNER JOIN baandb.tznmcs031201  znmcs031
+      INNER JOIN baandb.tznmcs031301  znmcs031
               ON znmcs031.t$citg$c = tcibd001.t$citg 
              AND znmcs031.t$seto$c = tcibd001.t$seto$c 
              AND znmcs031.t$fami$c = tcibd001.t$fami$c
  
-      INNER JOIN baandb.tznmcs032201  znmcs032
+      INNER JOIN baandb.tznmcs032301  znmcs032
               ON znmcs032.t$citg$c = tcibd001.t$citg 
              AND znmcs032.t$seto$c = tcibd001.t$seto$c 
              AND znmcs032.t$fami$c = tcibd001.t$fami$c
@@ -225,8 +225,8 @@ select Q1.*
                           tcmcs938.t$icmd$l    TRIBUT_CST_ICMS,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
-                     from baandb.ttcmcs938201 tcmcs938
-               inner join baandb.tcisli943201 cisli943
+                     from baandb.ttcmcs938301 tcmcs938
+               inner join baandb.tcisli943301 cisli943
                        on tcmcs938.t$txsc$l = cisli943.t$txsc$l
                     where cisli943.t$brty$l = 1 ) IMPOSTO_1
               ON IMPOSTO_1.t$fire$l = cisli941.t$fire$l
@@ -237,7 +237,7 @@ select Q1.*
                           cisli943.t$fbam$l VL_ICMS_ST_DEST,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
-                     from baandb.tcisli943201 cisli943
+                     from baandb.tcisli943301 cisli943
                     where cisli943.t$brty$l = 2 ) IMPOSTO_2
               ON IMPOSTO_2.t$fire$l = cisli941.t$fire$l
              AND IMPOSTO_2.t$line$l = cisli941.t$line$l
@@ -246,7 +246,7 @@ select Q1.*
                           cisli943.t$amnt$l VL_IPI,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
-                     from baandb.tcisli943201 cisli943
+                     from baandb.tcisli943301 cisli943
                     where cisli943.t$brty$l = 3) IMPOSTO_3
               ON IMPOSTO_3.t$fire$l = cisli941.t$fire$l
              AND IMPOSTO_3.t$line$l = cisli941.t$line$l
@@ -259,8 +259,8 @@ select Q1.*
                           tcmcs938.t$icmd$l TRIBUT_CST_PIS,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
-                    from baandb.ttcmcs938201 tcmcs938
-               inner join baandb.tcisli943201 cisli943
+                    from baandb.ttcmcs938301 tcmcs938
+               inner join baandb.tcisli943301 cisli943
                        on tcmcs938.t$txsc$l = cisli943.t$txsc$l
                     where cisli943.t$brty$l = 5 ) IMPOSTO_5
                ON IMPOSTO_5.t$fire$l = cisli941.t$fire$l
@@ -274,8 +274,8 @@ select Q1.*
                           tcmcs938.t$icmd$l TRIBUT_CST_COFINS,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
-                     from baandb.ttcmcs938201 tcmcs938
-               inner join baandb.tcisli943201 cisli943
+                     from baandb.ttcmcs938301 tcmcs938
+               inner join baandb.tcisli943301 cisli943
                        on tcmcs938.t$txsc$l = cisli943.t$txsc$l
                     where cisli943.t$brty$l = 6 ) IMPOSTO_6
               ON IMPOSTO_6.t$fire$l = cisli941.t$fire$l
@@ -285,8 +285,8 @@ select Q1.*
                           cisli943.t$rate$l PERC_ICMS_ST_SCONV,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
-                     from baandb.tcisli943201 cisli943 
-               inner join baandb.ttdrec949201 tdrec949
+                     from baandb.tcisli943301 cisli943 
+               inner join baandb.ttdrec949301 tdrec949
                        on tdrec949.t$fire$l = cisli943.t$fire$l 
                     where tdrec949.t$isco$c = 1
                       and tdrec949.t$brty$l = 2
@@ -297,7 +297,7 @@ select Q1.*
        LEFT JOIN ( select cisli943.t$cnre$l CODE_RECEITA,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
-                     from baandb.tcisli943201 cisli943
+                     from baandb.tcisli943301 cisli943
                     where cisli943.t$cnre$l != ' ' ) RECEITA
               ON RECEITA.t$fire$l = cisli941.t$fire$l
              AND RECEITA.t$line$l = cisli941.t$line$l
