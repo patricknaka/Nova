@@ -1,6 +1,6 @@
 -- Entrada
 select Q1.* 
-  from  ( SELECT 201                                 CIA,
+  from  ( SELECT 301                                 CIA,
                  tcemm030.t$euca                     NUME_FILIAL,
                  tcemm030.T$EUNT                     CHAVE_FILIAL,
                  tdrec940.t$docn$l                   NUME_NF,
@@ -58,6 +58,8 @@ select Q1.*
                  IMPOSTO_1.                          ORIG_CST_ICMS,      
                  IMPOSTO_1.                          TRIBUT_CST_ICMS,
                  IMPOSTO_1.                          VL_ICMS_DEST, 
+                 IMPOSTO_1.ORIG_CST_ICMS ||
+                 IMPOSTO_1.TRIBUT_CST_ICMS           ORIGEM_TRIBUTARIO_CST_ICMS,
                  
                  IMPOSTO_2.                          BASE_ICMS_ST,
                  IMPOSTO_2.                          VL_ICMS_ST,
@@ -81,6 +83,7 @@ select Q1.*
                  
                  IMPOSTO_ST_SCONV.                   BASE_ICMS_ST_SCONV,
                  IMPOSTO_ST_SCONV.                   PERC_ICMS_ST_SCONV,
+                 IMPOSTO_ST_SCONV.                   VL_ICMS_ST_SCONV,
                    
                  tdrec941.t$tamt$l                   VALO_TOTAL,
                  tdrec940.t$fovn$l                   CNPJ_FORN,
@@ -93,50 +96,50 @@ select Q1.*
                  iTIPO_DOCFIS.DESCR                  DESCR_TIPO_DOCFIS,
                  tdrec940.t$fids$l                   RAZAO_SOCIAL
           
-            FROM baandb.ttdrec940201       tdrec940 
+            FROM baandb.ttdrec940301       tdrec940 
        
-       LEFT JOIN baandb.ttccom110201       tccom110
+       LEFT JOIN baandb.ttccom110301       tccom110
               ON tccom110.T$ofbp = tdrec940.t$bpid$l
               
-      INNER JOIN baandb.ttdrec941201       tdrec941
+      INNER JOIN baandb.ttdrec941301       tdrec941
               ON tdrec940.t$fire$l = tdrec941.t$fire$l
                  
-       LEFT JOIN baandb.ttcmcs940201       tcmcs940
+       LEFT JOIN baandb.ttcmcs940301       tcmcs940
               ON tcmcs940.T$OFSO$L = tdrec941.t$opfc$l
               
-       LEFT JOIN baandb.ttdrec947201       tdrec947
+       LEFT JOIN baandb.ttdrec947301       tdrec947
               ON tdrec941.t$fire$l = tdrec947.t$fire$l 
              AND tdrec941.t$line$l = tdrec947.T$LINE$L
             
-      INNER JOIN baandb.ttcibd001201       tcibd001
+      INNER JOIN baandb.ttcibd001301       tcibd001
               ON tcibd001.t$item = tdrec941.t$item$l
                   
-       LEFT JOIN baandb.ttcibd936201       tcibd936
+       LEFT JOIN baandb.ttcibd936301       tcibd936
               ON tcibd936.t$ifgc$l = tcibd001.t$ifgc$l
              
-       LEFT JOIN baandb.ttdipu001201       tdipu001
+       LEFT JOIN baandb.ttdipu001301       tdipu001
               ON tdipu001.t$item = tcibd001.t$item
       
-      INNER JOIN baandb.tznmcs030201       znmcs030
+      INNER JOIN baandb.tznmcs030301       znmcs030
               ON znmcs030.t$citg$c = tcibd001.t$citg
              AND znmcs030.t$seto$c = tcibd001.t$seto$c
  
-      INNER JOIN baandb.ttccom100201       tccom100
+      INNER JOIN baandb.ttccom100301       tccom100
               ON tccom100.t$bpid = tdrec940.t$bpid$l
   
-      INNER JOIN baandb.ttccom130201       tccom130
+      INNER JOIN baandb.ttccom130301       tccom130
               ON tccom130.t$cadr = tdrec940.t$sfad$l
                   
-       LEFT JOIN baandb.ttccom139201       tccom139
+       LEFT JOIN baandb.ttccom139301       tccom139
               ON tccom139.t$ccty = tccom130.t$ccty
              AND tccom139.t$cste = tccom130.t$cste
              AND tccom139.t$city = tccom130.t$ccit
             
-      INNER JOIN baandb.ttcemm124201       tcemm124
+      INNER JOIN baandb.ttcemm124301       tcemm124
               ON tcemm124.t$cwoc = tdrec940.t$cofc$l 
              AND tcemm124.t$dtyp = 2
  
-      INNER JOIN baandb.ttcemm030201       tcemm030
+      INNER JOIN baandb.ttcemm030301       tcemm030
               ON tcemm030.t$eunt = tcemm124.t$grid
             
        LEFT JOIN ( SELECT d.t$cnst CODE,
@@ -167,15 +170,15 @@ select Q1.*
                                                   and l1.t$cpac = l.t$cpac ) ) iTIPO_DOCFIS
               ON iTIPO_DOCFIS.CODE = tdrec940.t$rfdt$l
       
-      INNER JOIN baandb.ttcmcs023201 tcmcs023
+      INNER JOIN baandb.ttcmcs023301 tcmcs023
               ON tcmcs023.t$citg = tcibd001.t$citg
   
-      INNER JOIN baandb.tznmcs031201 znmcs031
+      INNER JOIN baandb.tznmcs031301 znmcs031
               ON znmcs031.t$citg$c = tcibd001.t$citg
              AND znmcs031.t$seto$c = tcibd001.t$seto$c
              AND znmcs031.t$fami$c = tcibd001.t$fami$c
   
-      INNER JOIN baandb.tznmcs032201 znmcs032
+      INNER JOIN baandb.tznmcs032301 znmcs032
               ON znmcs032.t$citg$c = tcibd001.t$citg
              AND znmcs032.t$seto$c = tcibd001.t$seto$c
              AND znmcs032.t$fami$c = tcibd001.t$fami$c
@@ -190,8 +193,8 @@ select Q1.*
                           tcmcs938.t$gdog$l         ORIG_CST_ICMS,      
                           tcmcs938.t$icmd$l         TRIBUT_CST_ICMS,
                           tdrec942.t$fbam$l         VL_ICMS_DEST
-                     FROM baandb.ttcmcs938201 tcmcs938
-               INNER JOIN baandb.ttdrec942201 tdrec942
+                     FROM baandb.ttcmcs938301 tcmcs938
+               INNER JOIN baandb.ttdrec942301 tdrec942
                        ON tcmcs938.t$txsc$l = tdrec942.t$txsc$l
                     WHERE tdrec942.t$brty$l = 1 ) IMPOSTO_1
               ON IMPOSTO_1.t$fire$l = tdrec941.t$fire$l
@@ -202,7 +205,7 @@ select Q1.*
                           tdrec942.t$fbam$l         VL_ICMS_ST_DEST,
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l
-                     FROM baandb.ttdrec942201 tdrec942
+                     FROM baandb.ttdrec942301 tdrec942
                     WHERE tdrec942.t$brty$l = 2) IMPOSTO_2
               ON IMPOSTO_2.t$fire$l = tdrec941.t$fire$l
              AND IMPOSTO_2.t$line$l = tdrec941.t$line$l
@@ -211,7 +214,7 @@ select Q1.*
                           tdrec942.t$amnt$l         VL_IPI,
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l
-                     FROM baandb.ttdrec942201 tdrec942
+                     FROM baandb.ttdrec942301 tdrec942
                     WHERE tdrec942.t$brty$l = 3 ) IMPOSTO_3
               ON IMPOSTO_3.t$fire$l = tdrec941.t$fire$l
              AND IMPOSTO_3.t$line$l = tdrec941.t$line$l
@@ -224,8 +227,8 @@ select Q1.*
                           tcmcs938.t$icmd$l         TRIBUT_CST_PIS,                          
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l
-                     FROM baandb.ttcmcs938201 tcmcs938
-               INNER JOIN baandb.ttdrec942201 tdrec942
+                     FROM baandb.ttcmcs938301 tcmcs938
+               INNER JOIN baandb.ttdrec942301 tdrec942
                        ON tcmcs938.t$txsc$l = tdrec942.t$txsc$l
                     WHERE tdrec942.t$brty$l = 5 ) IMPOSTO_5
               ON IMPOSTO_5.t$fire$l=tdrec941.t$fire$l
@@ -239,8 +242,8 @@ select Q1.*
                           tcmcs938.t$icmd$l         TRIBUT_CST_COFINS,
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l
-                     FROM baandb.ttcmcs938201 tcmcs938
-               INNER JOIN baandb.ttdrec942201 tdrec942
+                     FROM baandb.ttcmcs938301 tcmcs938
+               INNER JOIN baandb.ttdrec942301 tdrec942
                        ON tcmcs938.t$txsc$l = tdrec942.t$txsc$l
                     WHERE tdrec942.t$brty$l = 6 ) IMPOSTO_6
               ON IMPOSTO_6.t$fire$l = tdrec941.t$fire$l
@@ -248,10 +251,11 @@ select Q1.*
 
        LEFT JOIN ( SELECT tdrec942.t$sbas$l         BASE_ICMS_ST_SCONV,
                           tdrec942.t$rate$l         PERC_ICMS_ST_SCONV,
+                          tdrec942.t$amnt$l         VL_ICMS_ST_SCONV,
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l
-                     FROM baandb.ttdrec942201 tdrec942
-               INNER JOIN baandb.ttdrec949201 tdrec949
+                     FROM baandb.ttdrec942301 tdrec942
+               INNER JOIN baandb.ttdrec949301 tdrec949
                        ON tdrec942.t$fire$l = tdrec949.t$fire$l
                     WHERE tdrec942.t$brty$l = 2
                       AND tdrec949.t$brty$l = 2
