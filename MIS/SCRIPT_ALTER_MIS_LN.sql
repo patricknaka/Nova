@@ -73,3 +73,6 @@ add CD_STATUS_ARQUIVO int null,
 
 --=====================================
 
+--inserindo coluna na tabela stg_nfv_cab
+alter table stg_nfv_cab
+add NR_REFERENCIA_FISCAL_FATURA nvarchar(15) null

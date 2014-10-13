@@ -290,25 +290,11 @@ ALTER TABLE DBO.DIM_ESTOQUE_MODALIDADE
 ALTER COLUMN DS_MODALIDADE VARCHAR(40)
 
 --------------------------------------------------------------------
---DE NUMERIC(2) para NUMERIC(3) --PROBLEMAS COM PK (DROPAR INDICE E PK)
-ALTER TABLE DBO.ods_purchase_full
-ALTER COLUMN NR_CIA NUMERIC(3) not null
 
-ALTER TABLE DBO.ods_purchase_full
-add nr_qtt_fisica int null,
-	nr_id_pedido_compra bigint null
-
-
---------------------------------------------------------------------
 --DE NUMERIC(12) PARA NUMERIC(40)
 ALTER TABLE DBO.ODS_SIGE_CMV_HIST
 ALTER COLUMN ID_ITEM NUMERIC(32)
 
-
---------------------------------------------------------------------
---DE NUMERIC(12) PARA NUMERIC(40)
-ALTER TABLE DBO.aux_ods_sige_cmv_hist
-ALTER COLUMN ID_ITEM NUMERIC(32)
 
 --------------------------------------------------------------------
 
@@ -336,13 +322,6 @@ ADD FILI_ID_CIA_LN NUMERIC(3)
 --INCLUSAO DE COLUNA DE FILIAL DO LN
 ALTER TABLE DBO.STG_SIGE_ESTABELECIMENTO
 ADD FILI_ID_FILIAL_LN NUMERIC(3)
-
---ODS
-ALTER TABLE DBO.ODS_ESTABELECIMENTO
-ADD nr_id_cia_ln NUMERIC(3)
-
-ALTER TABLE DBO.ODS_ESTABELECIMENTO
-ADD nr_id_filial_ln NUMERIC(3)
 
 
 --------------------------------------------------------------------
@@ -566,7 +545,7 @@ ALTER TABLE DBO.stg_sige_estabelecimento
 ALTER COLUMN FILI_ID_CIA NUMERIC(3)		
 
 
---altera objeto referencia
+--elimina a PK
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_estabelecimento]') AND name = N'PK_ods_estabelecimento')
 ALTER TABLE [dbo].[ods_estabelecimento] DROP CONSTRAINT [PK_ods_estabelecimento]
 
@@ -574,12 +553,15 @@ ALTER TABLE [dbo].[ods_estabelecimento] DROP CONSTRAINT [PK_ods_estabelecimento]
 ALTER TABLE DBO.ods_estabelecimento
 ALTER COLUMN NR_ID_CIA NUMERIC(3)	NOT NULL
 
---Recria objeto referencia
+ALTER TABLE DBO.ODS_ESTABELECIMENTO
+ADD nr_id_filial_ln NUMERIC(3)
+
+--recria a PK
 ALTER TABLE [dbo].[ods_estabelecimento] ADD  CONSTRAINT [PK_ods_estabelecimento] PRIMARY KEY CLUSTERED 
 (
 	[nr_id_filial] ASC,
 	[nr_id_cia] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 
 --delete objeto referencia
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[dim_estabelecimento]') AND name = N'PK_dim_estabelecimento')
@@ -726,9 +708,9 @@ ALTER TABLE .ods_estoque_sige
 ALTER COLUMN ID_TIPO_BLOQUEIO VARCHAR(10)
 
 ---------------------------------------------------------------------------------------------------
---De varchar(10) para Varchar(20)
+--De varchar(10) para nVarchar(20)
 alter table stg_sige_fornecedor
-alter column CLIE_APELIDO varchar(20)
+alter column CLIE_APELIDO nvarchar(20)
 
 
 alter table stg_cfop
@@ -842,15 +824,24 @@ ALTER COLUMN ID_MODULO_ABATIMENTO VARCHAR(3)
 ---------------------------------------------------------------------------------------------------
 
 --DELETA OBJETO DEPENDENTE
+--elimina a PK
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_purchase]') AND name = N'PK_ods_purchase')
 ALTER TABLE [dbo].[ods_purchase] DROP CONSTRAINT [PK_ods_purchase]
 
---ALTERA DATA TYPE
-ALTER TABLE ODS_PURCHASE
-ALTER COLUMN NR_CIA NUMERIC(3) NOT NULL
+--altera os atributos
+alter table [dbo].[ods_purchase]
+alter column nr_cia numeric(3) not null
 
+alter table [dbo].[ods_purchase]
+alter column ds_stts_ped varchar(2)
 
---RECRIA OBJETO DEPENDENTE
+alter table [dbo].[ods_purchase]
+alter column nr_seq numeric(5)
+
+alter table [dbo].[ods_purchase]
+add ds_tipo_propriedade char(1)
+
+--recria a PK
 ALTER TABLE [dbo].[ods_purchase] ADD  CONSTRAINT [PK_ods_purchase] PRIMARY KEY CLUSTERED 
 (
 	[nr_cia] ASC,
@@ -859,7 +850,8 @@ ALTER TABLE [dbo].[ods_purchase] ADD  CONSTRAINT [PK_ods_purchase] PRIMARY KEY C
 	[nr_item_ordem] ASC,
 	[nr_item_sku] ASC,
 	[nr_product_sku] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
 
 ---------------------------------------------------------------------------------------------------
 
@@ -879,8 +871,8 @@ alter column nr_cia numeric(3)
 
 ---------------------------------------------------------------------------------------------------
 
-ALTER TABLE dim_purchase_status
-ALTER COLUMN DS_CD_STATUS VARCHAR(2)
+alter table dim_purchase_status
+alter column ds_cd_status char(3)
 
 ---------------------------------------------------------------------------------------------------
 --ATUALIZAÇÃO DE ADEQUAÇÃO AO DOMINIO LN
@@ -890,13 +882,30 @@ UPDATE ODS_PURCHASE
 				     WHEN 'L' THEN '98'
 				     WHEN 'C' THEN '30' END
 ---------------------------------------------------------------------------------------------------
-
+--elimina a PK
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_purchase_full]') AND name = N'PK_ods_purchase_full')
 ALTER TABLE [dbo].[ods_purchase_full] DROP CONSTRAINT [PK_ods_purchase_full]
-  
+
+--altera os atributos  
 alter table ods_purchase_full
 alter column nr_cia numeric(3) not null
 
+alter table ods_purchase_full
+alter column ds_stts char(3)
+
+alter table ods_purchase_full
+alter column nr_cfop_seq numeric(5)
+
+ALTER TABLE ods_purchase_full
+ADD nr_qtt_fisica int
+
+ALTER TABLE ods_purchase_full
+ADD nr_id_pedido_compra bigint
+
+alter table ods_purchase_full
+alter column ds_serie_ref varchar(4)
+
+--recria a PK
 ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRIMARY KEY CLUSTERED 
 (
 	[nr_cia] ASC,
@@ -905,7 +914,8 @@ ALTER TABLE [dbo].[ods_purchase_full] ADD  CONSTRAINT [PK_ods_purchase_full] PRI
 	[nr_item_sku] ASC,
 	[nr_product_sku] ASC,
 	[nr_item_ordem] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
 
 --------------------------------------------------------------
 --DE CHAR(1) PARA CHAR(2) - ADAPTAÇÃO LN
@@ -952,13 +962,6 @@ ALTER TABLE stg_cfop
 ALTER COLUMN nr_cfop_seq NUMERIC(5)
 ---------------------------------------------------------------------------------------------------
 
-
-ALTER TABLE ods_cfop
-ALTER COLUMN nr_cfop_seq NUMERIC(5)
-
----------------------------------------------------------------------------------------------------
-
-
 ALTER TABLE dim_cfop
 ALTER COLUMN nr_cfop_seq NUMERIC(5)
 
@@ -996,11 +999,6 @@ alter column ds_stts_item varchar(1)
 
 ---------------------------------------------------------------------------------------------------
 
-alter table ods_purchase_full
-alter column ds_stts char(3)
-
-alter table ods_purchase_full
-alter column nr_cfop_seq numeric(5)
 
 ---------------------------------------------------------------------------------------------------
 
@@ -1024,7 +1022,7 @@ alter table aux_ods_purchase
 alter column ds_stts_ped char(2)
 
 alter table aux_ods_purchase
-alter column ds_stts_item char(1)
+alter column ds_stts_item char(2)
 
 alter table aux_ods_purchase
 alter column nr_seq numeric(5)
@@ -1039,16 +1037,10 @@ alter column nr_cfop numeric(5)
 
 alter table ods_purchase
 alter column nr_seq numeric(5)
----------------------------------------------------------------------------------------------------
-
-alter table dim_purchase_status alter column ds_cd_status varchar(3)
-
-alter table dim_purchase_status
-alter column ds_cd_status char(3)
 
 -----------------------------------------------------------------
 alter table stg_cfop
-alter column ds_nome varchar(45)
+alter column ds_nome varchar(50)
 
 alter table stg_sige_purchase
 add [ds_tipo_propriedade] [char](1) NULL
@@ -1058,10 +1050,6 @@ alter column CLIE_APELIDO nvarchar(20)
 
 alter table stg_sige_fornecedor
 alter column MUNI_ID_ESTADO nvarchar(3)
-
-alter table ods_cfop
-alter column ds_nome varchar(50)
-
 
 ----------------------------------
 --VERIFICAR
@@ -1140,17 +1128,14 @@ ALTER COLUMN NR_ID_CIA int
 ALTER TABLE stg_sige_purchase_full
 ADD nr_qtt_fisica int
 
-ALTER TABLE ods_purchase_full
-ADD nr_qtt_fisica int
-
 ALTER TABLE aux_ods_purchase_full
 ADD nr_qtt_fisica int
 
 ALTER TABLE stg_sige_purchase_full
 ADD nr_id_pedido_compra bigint
 
-ALTER TABLE ods_purchase_full
-ADD nr_id_pedido_compra bigint
+ALTER TABLE stg_sige_purchase_full
+alter column ds_serie_ref varchar(4)
 
 ALTER TABLE aux_ods_purchase_full
 ADD nr_id_pedido_compra bigint

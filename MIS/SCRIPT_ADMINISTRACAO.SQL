@@ -128,6 +128,21 @@ values ('FILE_PLANILHAO',
 '\Package.Variables[User::gstrFolderPlanilhao].Properties[Value]',
 'String')
 
+--FILE_PURCHASE
+insert into adm.ssis_conexoes
+values ('FILE_PURCHASE',
+'W:\Operacional\Purchase\Purchase\',
+'\Package.Variables[User::gstrFolderPur].Properties[Value]',
+'String')
+
+--FILE_EST_LN
+insert into adm.ssis_conexoes
+values ('FILE_EST_LN',
+'W:\Operacional\Estoque_LN\Estoque_LN\',
+'\Package.Variables[User::gstrFolderEstLN].Properties[Value]',
+'String')
+
+
 --=================================================
 --inserção de colunas
 --=================================================
