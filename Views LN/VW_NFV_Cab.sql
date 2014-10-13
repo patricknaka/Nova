@@ -60,16 +60,8 @@ SELECT
 		AND cisli942.t$brty$l=16) VL_IMPOSTO_IMPORTACAO,
 		(SELECT sum(cisli941.t$ldam$l) FROM baandb.tcisli941201 cisli941
 		WHERE cisli941.t$fire$l=cisli940.t$fire$l) VL_DESCONTO,
-		cisli940.t$amnt$l VL_TOTAL_NF,
-		
-		
-        CASE WHEN cisli940.t$fdty$l=15 then
-          (select distinct a.t$fire$l from baandb.tcisli940201 a, baandb.tcisli941201 b
-          where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l) else NULL
-       end  NR_REFERENCIA_FISCAL_FATURA ,
-		
-        CASE WHEN cisli940.t$fdty$l=15 then
+		cisli940.t$amnt$l VL_TOTAL_NF,        
+    CASE WHEN cisli940.t$fdty$l=15 then
           (select a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
           and a.t$fire$l=b.t$refr$l
@@ -154,8 +146,13 @@ SELECT
   (SELECT tdsls400.t$sotp                                        --#MAT.308.sn
    FROM baandb.ttdsls400201 tdsls400            
    WHERE tdsls400.t$orno=entr.t$orno$c
-   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA        --#MAT.308.en 
+   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA,        --#MAT.308.en 
 
+    CASE WHEN cisli940.t$fdty$l=15 then
+      (select distinct a.t$fire$l from baandb.tcisli940201 a, baandb.tcisli941201 b
+      where b.t$fire$l=cisli940.t$fire$l
+      and a.t$fire$l=b.t$refr$l) else NULL
+   end  NR_REFERENCIA_FISCAL_FATURA
 FROM
 		baandb.tcisli940201 cisli940
 		LEFT JOIN (SELECT 	znsls401.t$entr$c, 
