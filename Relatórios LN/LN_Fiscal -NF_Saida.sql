@@ -61,6 +61,8 @@ select Q1.*
                  IMPOSTO_1.                 CST_ICMS,
                  IMPOSTO_1.                 ORIG_CST_ICMS,      
                  IMPOSTO_1.                 TRIBUT_CST_ICMS,
+                 IMPOSTO_1.ORIG_CST_ICMS ||
+                 IMPOSTO_1.TRIBUT_CST_ICMS  ORIGEM_TRIBUTARIO_CST_ICMS,
 
                  IMPOSTO_2.                 BASE_ICMS_ST,
                  IMPOSTO_2.                 VL_ICMS_ST,
