@@ -24,8 +24,9 @@ SELECT
               and wmd.t$item = sli.t$item$l
               and znmcs.t$cfrw$c = znfmd630.t$cfrw$c ), 0 ) 
                              VOLUME_M3,
-                             
-    znfmd630.t$vlmr$c        VLR_TOTAL_NF, 
+	cisli940.t$amnt$l		VLR_TOTAL_NF,
+	znfmd630.t$vlfr$c		VLR_FRETE_CLIENTE,
+--    znfmd630.t$vlmr$c        VLR_TOTAL_NF, 
     cisli942.T$RATE$L        ALIQUOTA, 
     znfmd630.t$vlfc$c        PESO_VOLUME,
     znfmd068.t$adva$c        AD_VALOREM,
