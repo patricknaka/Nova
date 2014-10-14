@@ -309,7 +309,9 @@ select Q1.*
 			 
         ORDER BY cisli940.t$fire$l ) Q1
 			
-where Q1.CHAVE_FILIAL IN (:Filial)
+where Trunc(DATA_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DATA_EMISSAO) AND NVL(:DataEmissaoAte, DATA_EMISSAO)
+  and Trunc(DATA_FATURAMENTO) BETWEEN NVL(:DataFaturamentoDe, DATA_FATURAMENTO) AND NVL(:DataFaturamentoAte, DATA_FATURAMENTO)
+  and Q1.CHAVE_FILIAL IN (:Filial)
   and ( (Q1.ID_DEPTO IN (:Depto)) OR (:Depto = '000'))
   and ( (Q1.COD_SETOR IN (:Setor)) OR (:Setor = '000'))
   and ( (Q1.CATEGORIA IN (:Categoria)) OR (:Categoria = '000'))
