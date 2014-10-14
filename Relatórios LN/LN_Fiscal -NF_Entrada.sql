@@ -263,7 +263,7 @@ select Q1.*
               ON IMPOSTO_ST_SCONV.t$fire$l = tdrec941.t$fire$l 
              AND IMPOSTO_ST_SCONV.t$line$l = tdrec941.t$line$l
  
-           WHERE tdrec940.t$stat$l IN (4,5,6) 
+           WHERE tdrec940.t$stat$l = 4
         ORDER BY tdrec940.t$fire$l ) Q1
 
  WHERE Q1.CHAVE_FILIAL IN (:Filial)
