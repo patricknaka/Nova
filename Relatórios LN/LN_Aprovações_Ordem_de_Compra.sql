@@ -16,7 +16,9 @@ SELECT
           AT time zone sessiontimezone) AS DATE)
                              DATA_ORDEM,
                            
-    ORDEM.                   STATUS_ORDEM,
+    NVL(TRIM(ORDEM.STATUS_ORDEM), 'Não definido')
+                             STATUS_ORDEM,
+  
     apr.t$logn               APROVADOR,
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(apr.dapr, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -25,7 +27,10 @@ SELECT
   
     unid_empr.DEPTO_COMPRAS  DEPTO_COMPRAS,
     unid_empr.DESC_FILIAL    FILIAL,
-    APROVACAO_FIS.           STATUS_APROVACAO_FIS, 
+  
+    NVL(TRIM(APROVACAO_FIS.STATUS_APROVACAO_FIS), 'Não definido')
+                             STATUS_APROVACAO_FIS,
+        
     tdrec940.t$logn$l        LOGIN_USUARIO,
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -38,13 +43,15 @@ SELECT
                             
     tdrec940.t$fire$l        REF_FISCAL, 
     
-	CASE
-		WHEN CONTABIL.STATUS_APROVACAO_CONTABIL = 'Sim' THEN 'Aprovado'
-		WHEN CONTABIL.STATUS_APROVACAO_CONTABIL = 'N�o' THEN 'N�o aprovado'
-		ELSE NULL END AS STATUS_APROVACAO_CONTABIL,
-		              
+    CASE
+    WHEN NVL(CONTABIL.t$cnst, 0) = 0 THEN 'Não definido'
+    WHEN CONTABIL.STATUS_APROVACAO_CONTABIL = 'Sim' THEN 'Aprovado'
+    WHEN CONTABIL.STATUS_APROVACAO_CONTABIL = 'Não' THEN 'Não aprovado'
+    ELSE NULL END AS     STATUS_APROVACAO_CONTABIL,
+                
     tfgld018.t$dcdt          DATA_DOCTO,
-    TRIM(tdrec940.t$ttyp$l)  TRANSACAO_CAP,    
+    NVL(TRIM(tdrec940.t$ttyp$l), 'N/A')  
+	                         TRANSACAO_CAP,    
     tdrec940.t$docn$l        NUM_NF,
     tdrec940.t$seri$l        SERI_NF,
     
