@@ -11,15 +11,17 @@ SELECT
     TRIM(tdpur401.t$item)    ITEM,
     tcibd001.t$dsca          DESC_ITEM,
     crd.t$logn               LOGIN,
+    nome_crd.t$name          NOME_LOGIN,
    
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone sessiontimezone) AS DATE)
                              DATA_ORDEM,
                            
-    NVL(TRIM(ORDEM.STATUS_ORDEM), 'Não definido')
+    NVL(TRIM(ORDEM.STATUS_ORDEM), 'NÃ£o definido')
                              STATUS_ORDEM,
   
     apr.t$logn               APROVADOR,
+    nome_apr.t$NAME          NOME_APROV_ORDEM,
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(apr.dapr, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone sessiontimezone) AS DATE)
@@ -28,11 +30,15 @@ SELECT
     unid_empr.DEPTO_COMPRAS  DEPTO_COMPRAS,
     unid_empr.DESC_FILIAL    FILIAL,
   
-    NVL(TRIM(APROVACAO_FIS.STATUS_APROVACAO_FIS), 'Não definido')
+    NVL(TRIM(APROVACAO_FIS.STATUS_APROVACAO_FIS), 'NÃ£o definido')
                              STATUS_APROVACAO_FIS,
         
     tdrec940.t$logn$l        LOGIN_USUARIO,
-    
+    nome_aprov.t$name        NOME_APROV_REC,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone sessiontimezone) AS DATE)
+                             DATA_HORA_EMISSAO,
+                             
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone sessiontimezone) AS DATE)
                              DATA_HORA_APROVACAO,
@@ -44,9 +50,9 @@ SELECT
     tdrec940.t$fire$l        REF_FISCAL, 
     
     CASE
-    WHEN NVL(CONTABIL.t$cnst, 0) = 0 THEN 'Não definido'
+    WHEN NVL(CONTABIL.t$cnst, 0) = 0 THEN 'NÃ£o definido'
     WHEN CONTABIL.STATUS_APROVACAO_CONTABIL = 'Sim' THEN 'Aprovado'
-    WHEN CONTABIL.STATUS_APROVACAO_CONTABIL = 'Não' THEN 'Não aprovado'
+    WHEN CONTABIL.STATUS_APROVACAO_CONTABIL = 'NÃ£o' THEN 'NÃ£o aprovado'
     ELSE NULL END AS     STATUS_APROVACAO_CONTABIL,
                 
     tfgld018.t$dcdt          DATA_DOCTO,
@@ -57,7 +63,7 @@ SELECT
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone sessiontimezone) AS DATE)
-                             DATA_EMISSAO,    
+                             DATA_FISCAL,    
                             
     tfacp201.t$payd          DATA_VENCTO,
     SITUACAO_PAGTO.          DSC_SITUACAO_PAGTO,
@@ -92,7 +98,7 @@ INNER JOIN  baandb.ttdpur401201 tdpur401
  
  LEFT JOIN  (select b.t$orno, 
                     min(b.t$trdt) dapr, 
-                    b.t$logn 
+                    b.t$logn
                from baandb.ttdpur450201 b
               where b.t$hdst=10
                 and b.t$trdt = 
@@ -100,10 +106,14 @@ INNER JOIN  baandb.ttdpur401201 tdpur401
                     ( SELECT MIN(c.t$trdt) 
                         FROM baandb.ttdpur450201 c 
                        WHERE c.t$hdst=10 AND c.t$orno=b.t$orno)
-           
              group by b.t$orno, b.t$logn) apr
         ON apr.t$orno=tdpur400.t$orno
- 
+
+  LEFT JOIN  (select  ttaad200.t$user,
+                      ttaad200.t$name
+              from    baandb.tttaad200000 ttaad200) nome_apr
+        ON    nome_apr.t$user=apr.t$logn
+               
  LEFT JOIN  (select h.t$orno, 
                     min(h.t$trdt) dapr, 
                     h.t$logn 
@@ -117,7 +127,12 @@ INNER JOIN  baandb.ttdpur401201 tdpur401
          
              group by h.t$orno, h.t$logn) crd
         ON crd.t$orno=tdpur400.t$orno
-       
+
+  LEFT JOIN  (select  ttaad200.t$user,
+                      ttaad200.t$name
+              from    baandb.tttaad200000 ttaad200) nome_crd
+        ON    nome_crd.t$user=crd.t$logn
+        
  LEFT JOIN  baandb.ttfgld018201 tfgld018
         ON  tfgld018.t$ttyp = tdrec940.t$ttyp$l
       AND   tfgld018.t$docn = tdrec940.t$invn$l
@@ -255,6 +270,11 @@ INNER JOIN  baandb.ttdpur401201 tdpur401
                 AND  tcemm124.t$loco=201 ) unid_empr
         ON unid_empr.t$cwoc=tdpur400.t$cofc
  
+ LEFT JOIN  (select  ttaad200.t$user,
+                      ttaad200.t$name
+              from    baandb.tttaad200000 ttaad200) nome_aprov
+        ON    nome_aprov.t$user=tdrec940.t$logn$l
+        
   WHERE tdpur401.t$oltp IN (2,4)
         
       AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
