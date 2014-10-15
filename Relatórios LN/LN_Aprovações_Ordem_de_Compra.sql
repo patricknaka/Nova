@@ -59,12 +59,7 @@ SELECT
     NVL(TRIM(tdrec940.t$ttyp$l), 'N/A')  
 	                         TRANSACAO_CAP,    
     tdrec940.t$docn$l        NUM_NF,
-    tdrec940.t$seri$l        SERI_NF,
-    
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
-                             DATA_FISCAL,    
-                            
+    tdrec940.t$seri$l        SERI_NF,                          
     tfacp201.t$payd          DATA_VENCTO,
     SITUACAO_PAGTO.          DSC_SITUACAO_PAGTO,
     tfcmg101.t$plan          DATA_PLAN_PAGTO
