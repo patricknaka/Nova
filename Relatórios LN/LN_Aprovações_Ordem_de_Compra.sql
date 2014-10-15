@@ -2,7 +2,8 @@ SELECT
   DISTINCT
     201                      Companhia,
     tdpur400.t$otbp          COD_PN,
-    tccom130.t$fovn$l        CNPJ,
+	regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
+	                         CNPJ,
     tccom100.t$nama          DESC_PN,
     tdpur400.t$orno          ORDEM_COMPRA,
     tdpur401.t$oamt          VALOR,
@@ -281,7 +282,9 @@ INNER JOIN  baandb.ttdpur401201 tdpur401
       AND NVL(ORDEM.t$cnst, 0) IN (:STATUS_ORDEM)
       AND NVL(APROVACAO_FIS.t$cnst, 0) IN (:STATUS_APR_FISCAL)
       AND NVL(CONTABIL.t$cnst, 0) IN (:STATUS_APR_CONTABIL)
-      AND NVL(TRIM(tdrec940.t$ttyp$l), 'N/A') IN (:TipoTransacao)
+	  AND tdpur400.t$cotp IN (:TIPO_ORDEM)
+	  AND ((regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(regexp_replace(:CNPJ, '[^0-9]', ''))) OR (Trim(:CNPJ) is null))
       AND ( (Trim(:OrdemCompra) is null) or (UPPER(Trim(tdpur400.t$orno)) like '%' || UPPER(Trim(:OrdemCompra) || '%')) )
       AND ( (Trim(:ReferenciaFiscal) is null) or (UPPER(Trim(tdrec940.t$fire$l)) like '%' || UPPER(Trim(:ReferenciaFiscal) || '%')) )
+	  AND ( (:UsuarioSolicTodos = 0) OR (crd.t$logn in (:UsuarioSolic) AND (:UsuarioSolicTodos = 1)) )
 ORDER BY DATA_ORDEM, STATUS_ORDEM, ORDEM_COMPRA
