@@ -20,7 +20,8 @@ SELECT
 
     CASE  WHEN tfacp201.t$pyst$l ! =  3 THEN 2 
           ELSE 1 
-     END                                        CODE_SITUA2,
+    END                                        CODE_SITUA2,
+    
 
     CASE  WHEN tfacp201.t$pyst$l ! =  3 THEN 'Não' 
           ELSE 'Sim' 
@@ -76,8 +77,15 @@ SELECT
 
     Concat(Concat(tfacp200.t$ifbp, ' - '), tccom100.t$nama) 
                                                 COD_DESC_PEN,
-    NVL(tfacp201.t$pyst$l, 1)                   STAT_PRG,
-    iSTAT.DESCR                                 DESCR_STAT_PRG,
+                                                
+    CASE  WHEN  znacp005.t$canc$c != 1 THEN
+        NVL(tfacp201.t$pyst$l, 1)
+    ELSE  99  END                               STAT_PRG,
+    
+    CASE  WHEN  znacp005.t$canc$c != 1 THEN
+        iSTAT.DESCR
+    ELSE  'Cancelado'   END                     DESCR_STAT_PRG,
+    
     tdpur400.t$cotp                             COD_TIPO_ORDEM,          --tipo de ordem de compra
     tdpur094.t$dsca                             DECR_TIPO_ORDEM,         --descrição tipo ordem de compra
     tfacp200.t$leac                             COD_CONTA_CONTROLE,
@@ -339,8 +347,13 @@ INNER JOIN baandb.ttfacp201301  tfacp201
         ON OCORRENCIA.t$ttyp$d = tfacp200.t$ttyp
        AND OCORRENCIA.t$ninv$d = tfacp200.t$ninv
 
-WHERE tfacp200.t$docn = 0 
-  
+LEFT  JOIN  baandb.tznacp005301 znacp005
+      ON    znacp005.t$bpid$c=tfacp201.t$ifbp
+      AND   znacp005.t$ttyp$c=tfacp201.t$ttyp
+      AND   znacp005.t$ninv$c=tfacp201.t$ninv
+      
+WHERE tfacp200.t$docn = 0
+
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND tfacp200.t$dued between :VencimentoDe AND :VencimentoAte
   AND tfacp200.t$ttyp IN (:TipoTransacao)
