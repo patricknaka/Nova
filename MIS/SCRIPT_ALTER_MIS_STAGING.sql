@@ -1,6 +1,6 @@
 ﻿--Banco MIS_STAGING
 ------------------------------------------------------------------------------------------------------------------------
---Script Altera��o Data Type
+--Script Alteracao Data Type
 
 --DE VARCHAR(30) PARA VARCHAR(60)
 ALTER TABLE MIS_STAGING.SIGE.STG_DEPT
@@ -51,33 +51,55 @@ ALTER COLUMN DS_EAN NUMERIC(15)
 ALTER TABLE MIS_STAGING.SIGE.STG_ITEM
 ALTER COLUMN NR_NBM NUMERIC(15)
 
-
 --DE INT para NUMERIC(15)
 ALTER TABLE MIS_STAGING.SIGE.STG_ITEM
 ALTER COLUMN NR_SKU_ITEM_VINCULADO NUMERIC(15)
 
---------------------------------------------------------------------
---DE NUMERIC(2) para NUMERIC(3)
-ALTER TABLE MIS_STAGING.FIN.stg_sige_titulo_receber_movimento
-ALTER COLUMN MOCO_ID_TRANSACAO NUMERIC(3)
+alter table fin.stg_sige_fin_documento
+alter column DOFI_ID_MODULO varchar(3)
 
---------------------------------------------------------------------
---DE NUMERIC(1) PARA NUMERIC(2)
-ALTER TABLE MIS_STAGING.FIN.stg_sige_titulo_receber_movimento
-ALTER COLUMN MOCO_SINAL NUMERIC(2)
+alter table fin.stg_sige_fin_documento
+alter column DOFI_ID_DOCUMENTO varchar(3)
 
---------------------------------------------------------------------
---DE NUMERIC(7) para NUMERIC(9)
-
-ALTER TABLE MIS_STAGING.FIN.stg_sige_titulo_receber
+-------------------------------------------------------------------
+ALTER TABLE FIN.stg_sige_titulo_receber
 ALTER COLUMN TITC_ID_CENTRO_CUSTO NUMERIC(9)
 
---------------------------------------------------------------------
---DE NUMERIC(2) para NUMERIC(3)
+ALTER TABLE FIN.stg_sige_titulo_receber
+ALTER COLUMN TITC_ID_MODULO VARCHAR(3)
 
-ALTER TABLE MIS_STAGING.fin.stg_sige_titulo_receber_movimento
-ALTER COLUMN MOCO_ID_TRANSACAO numeric(3)
+ALTER TABLE FIN.stg_sige_titulo_receber
+ALTER COLUMN TITC_ID_CIA NUMERIC(3)
 
+ALTER TABLE FIN.stg_sige_titulo_receber
+ALTER COLUMN TITC_ID_CARTEIRA VARCHAR(3)
+
+ALTER TABLE FIN.stg_sige_titulo_receber
+ALTER COLUMN TITC_ID_DOCUMENTO VARCHAR(3)
+
+ALTER TABLE FIN.stg_sige_titulo_receber
+ALTER COLUMN TITC_ID_CENTRO_CUSTO VARCHAR(20)
+
+---------------------------------------------------------------------------
+ALTER TABLE FIN.stg_sige_titulo_receber_movimento
+ALTER COLUMN MOCO_ID_CIA numeric(3)
+
+alter table FIN.stg_sige_titulo_receber_movimento
+alter column MOCO_ID_MODULO varchar(3)
+
+ALTER TABLE FIN.stg_sige_titulo_receber_movimento
+ALTER COLUMN MOCO_ID_TRANSACAO varchar(3)
+
+ALTER TABLE FIN.stg_sige_titulo_receber_movimento
+ALTER COLUMN MOCO_SINAL NUMERIC(2)
+
+ALTER TABLE FIN.stg_sige_titulo_receber_movimento
+ALTER COLUMN MOCO_ID_MODULO_REF varchar(3)
+
+ALTER TABLE FIN.stg_sige_titulo_receber_movimento
+add MOCO_SQ_MOVIMENTO int, 
+	CD_TIPO_MOVIMENTO smallint,
+	NR_PARCELA smallint
 
 --------------------------------------------------------------------
 --DE NUMERIC(2) para NUMERIC(3)
@@ -194,26 +216,6 @@ CREATE TABLE ln.stg_titulo_car_ref (
 ALTER TABLE fin.stg_sige_centro_custo
 ALTER COLUMN CCUS_ID_CENTROCUSTOS numeric(10)
 
---de numeric(2) para numeric(3)
-ALTER TABLE FIN.stg_sige_titulo_receber_movimento
-ALTER COLUMN MOCO_ID_CIA numeric(3)
-
---de numeric(3) para varchar(3)
-ALTER TABLE FIN.stg_sige_titulo_receber_movimento
-ALTER COLUMN MOCO_ID_TRANSACAO varchar(3)
-
---DE VARCHAR(2) PARA VARCHAR(3)
-ALTER TABLE FIN.stg_sige_titulo_receber
-ALTER COLUMN TITC_ID_MODULO VARCHAR(3)
-
---DE NUMERIC(2) PARA NUMERIC(3)
-ALTER TABLE FIN.stg_sige_titulo_receber
-ALTER COLUMN TITC_ID_CIA NUMERIC(3)
-
---DE VARCHAR(2) PARA VARCHAR(3)
-ALTER TABLE FIN.stg_sige_titulo_receber
-ALTER COLUMN TITC_ID_CARTEIRA VARCHAR(3)
-
 --DE NUMERIC(2) PARA NUMERIC(3)
 ALTER TABLE FIN.stg_sige_titulo_complemento_nf
 ALTER COLUMN NFCA_ID_CIA NUMERIC(3)
@@ -222,10 +224,20 @@ ALTER COLUMN NFCA_ID_CIA NUMERIC(3)
 ALTER TABLE FIN.stg_sige_contas_receber_campanha
 ALTER COLUMN PEDC_ID_CIA NUMERIC(3)
 
---DE VARCHAR(2) PARA VARCHAR(3)
+-----------------------------------------------------------------------
+ALTER TABLE fin.aux_ods_sige_titulo_receber
+ALTER COLUMN nr_id_cia numeric(3)
+
 ALTER TABLE fin.aux_ods_sige_titulo_receber
 ALTER COLUMN DS_ID_MODULO VARCHAR(3)
 
+ALTER TABLE fin.aux_ods_sige_titulo_receber
+ALTER COLUMN DS_ID_documento VARCHAR(3)
+
+ALTER TABLE fin.aux_ods_sige_titulo_receber
+ALTER COLUMN nr_id_centro_custo VARCHAR(20)
+
+------------------------------------------------------------------------
 --DE NUMERIC(2) PARA NUMERIC(3)
 ALTER TABLE FIN.aux_ods_sige_titulo_receber_complemento
 ALTER COLUMN NR_ID_CIA NUMERIC(3)
@@ -325,16 +337,7 @@ CREATE TABLE [com].[stg_estoque_samsung](
 GO
 
 
---------------------------------
-alter table fin.stg_sige_titulo_receber_movimento
-alter column MOCO_ID_MODULO varchar(3)
-
 ----------------------------------------
-
-ALTER TABLE fin.stg_sige_titulo_receber_movimento
-add MOCO_SQ_MOVIMENTO int null
-
----------------------------------------
 
 alter table fin.aux_contas_receber_transacao
 alter column ds_id_documento varchar(3)
@@ -406,3 +409,10 @@ from
 
 
 --===========================================================
+
+--gestão icms
+alter table com.stg_gestao_icms_endereco_ent
+alter column nfca_situacao nvarchar(3)
+
+alter table com.stg_gestao_icms_endereco_ent
+alter column nfca_serie nvarchar(8)

@@ -84,6 +84,30 @@ ALTER TABLE ods_sige_titulo_agrupado
 ADD nr_id_titulo_sk BIGINT NULL,
     nr_id_titulo_ref_sk BIGINT NULL
 
+alter table dbo.stg_cap_depto
+alter column id_item bigint
+
+alter table dbo.stg_cap_depto
+alter column id_nr varchar(18)
+
+alter table dbo.stg_cap_depto
+alter column ds_documento char(3)
+
+alter table dbo.ods_titulo_documento
+alter column id_documento varchar(3)
+
+alter table dbo.ods_cap_depto
+alter column nr_id_cia numeric(3)
+
+alter table dbo.ods_cap_depto
+alter column id_nr varchar(18)
+
+alter table dbo.ods_cap_depto
+alter column ds_documento char(3)
+
+alter table dim_vendedor
+alter column ds_vendedor_afiliado varchar(100)
+
 ----------------------------------------------------------------------------------------------------------------
 
 --ALTERAÇÃO ATRIBUTO ID_CONTA TABELA ODS_DESPESA_CONTAS
@@ -379,10 +403,6 @@ alter column nr_cia numeric(3)
 
 
 --------------------------------------------------------------------
---Inclusão do flag kit
-ALTER TABLE dbo.stg_sige_detalhe_pedido 
-ADD NR_KIT int NULL
-
 --------------------------------------------------------------------
 --DROP OBJETO DEPENDENCIA
 
@@ -1061,10 +1081,24 @@ alter column MUNI_ID_ESTADO nvarchar(3)
 
 
 --Criar coluna
-ALTER TABLE stg_sige_detalhe_pedido ADD NR_KIT int NULL
+ALTER TABLE stg_sige_detalhe_pedido ADD NR_KIT bit NULL
 ALTER TABLE stg_sige_detalhe_pedido ADD NR_ID_PRODUTO int NULL
-ALTER TABLE stg_sige_detalhe_pedido ADD NR_STATUS_PEDIDO_LN int NULL
-ALTER TABLE stg_sige_detalhe_pedido ADD NR_STATUS_NF_LN int NULL
+
+ALTER TABLE dbo.stg_sige_detalhe_pedido 
+ALTER COLUMN NR_ID_UNIDADE_NEGOCIO INT NOT NULL
+
+ALTER TABLE dbo.stg_sige_detalhe_pedido 
+ALTER COLUMN NR_ID_CIA NUMERIC(3) NOT NULL
+
+ALTER TABLE dbo.stg_sige_detalhe_pedido 
+ALTER COLUMN NR_ID_ENTREGA NUMERIC(12) NOT NULL
+
+ALTER TABLE dbo.stg_sige_detalhe_pedido 
+ALTER COLUMN DS_STATUS_PEDIDO VARCHAR(2)
+
+ALTER TABLE dbo.stg_sige_detalhe_pedido 
+ALTER COLUMN nr_id_filial int
+
 ALTER TABLE ods_sige_detalhe_pedido ADD nr_id_produto int NULL
 ALTER TABLE aux_ods_sige_detalhe_pedido ADD nr_id_produto int NULL
 ALTER TABLE ods_sige_faturamento ADD nr_id_produto int NULL
@@ -1116,7 +1150,7 @@ ALTER COLUMN NR_ID_CIA int
 
 
 ALTER TABLE ods_sige_pagamento_pedido	
-ALTER COLUMN NR_ID_CIA int
+ALTER COLUMN NR_ID_CIA numeric(3)
 
 ALTER TABLE stg_sige_detalhe_pedido	
 ALTER COLUMN NR_ID_CIA int

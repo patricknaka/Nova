@@ -23,6 +23,8 @@ ADD nr_id_titulo_sk BIGINT NULL,
 ALTER TABLE ods_sige_extranet_fornecedores_liquidado
 ALTER COLUMN id_documento VARCHAR(3)
 
+ALTER TABLE fin.ods_relatorio_car_conciliacao
+ALTER COLUMN ds_id_documento VARCHAR(3)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[fin].[ods_cap_reembolso]') AND name = N'PK_id_titulo')
 ALTER TABLE [fin].[ods_cap_reembolso] DROP CONSTRAINT [PK_id_titulo]
@@ -38,6 +40,24 @@ ALTER TABLE [fin].[ods_cap_reembolso] ADD  CONSTRAINT [PK_id_titulo] PRIMARY KEY
 	[id_titulo] ASC,
 	[id_filial] ASC,
 	[id_documento] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[dim_condicao_pagamento]') AND name = N'PK_dim_condicao_pagamento')
+ALTER TABLE [dbo].[dim_condicao_pagamento] DROP CONSTRAINT [PK_dim_condicao_pagamento]
+GO
+
+ALTER TABLE [dbo].[dim_condicao_pagamento]
+ALTER COLUMN nr_cia numeric(3) not null
+GO
+
+/****** Object:  Index [PK_id_titulo]    Script Date: 06/10/2014 14:09:00 ******/
+ALTER TABLE [dbo].[dim_condicao_pagamento] ADD  CONSTRAINT [PK_dim_condicao_pagamento] PRIMARY KEY NONCLUSTERED 
+(
+	[nr_cia] ASC,
+	[cd_pagamento] ASC
+	
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
 

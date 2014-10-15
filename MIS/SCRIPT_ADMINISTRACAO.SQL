@@ -142,6 +142,13 @@ values ('FILE_EST_LN',
 '\Package.Variables[User::gstrFolderEstLN].Properties[Value]',
 'String')
 
+--FILE_CAR_LN
+insert into adm.ssis_conexoes
+values ('FILE_CAR_LN',
+'W:\Operacional\Contas a Receber_LN\Contas a Receber_LN\',
+'\Package.Variables[User::gstrFolderCarLn].Properties[Value]',
+'String')
+
 
 --=================================================
 --inserção de colunas

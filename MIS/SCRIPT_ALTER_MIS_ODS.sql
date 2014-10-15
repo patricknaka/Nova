@@ -22,6 +22,9 @@ ALTER COLUMN DS_NOME VARCHAR(35)
 ALTER TABLE FIN.ods_sige_titulo_receber
 ALTER COLUMN DS_ID_MODULO VARCHAR(3)
 
+--DE numeric(2) para numeric(3)
+alter table fin.ods_sige_titulo_receber_transacao
+alter column nr_id_cia numeric(3)
 -------------------------------------------------------------------------------------------------------------------------------------
 
 
