@@ -13,9 +13,8 @@ select *
                       est.T$ITEM AS        ID_ITEM,
                       int1.T$NCIA$C AS     ID_CIA,
                       fmd.T$FILI$C AS      ESTABELECIMENTO,
-                      est.T$QHND,
-                      - 
-                      (   select nvl(sum(whwmd630.t$qbls), 0)
+                      est.T$QHND-
+                      nvl((   select nvl(sum(whwmd630.t$qbls), 0)
                           from baandb.twhwmd630201    whwmd630
                           where whwmd630.t$item = est.T$ITEM
                           and whwmd630.t$cwar = est.T$CWAR
@@ -26,9 +25,9 @@ select *
                                           and     tcmcs095.t$sumd = 0
                                           and     tcmcs095.t$prcd = 9999
                                           and     tcmcs095.t$parm in ('tbex', 'tbin')
-                                          and     trim(tcmcs095.t$koda) = trim(whwmd630.t$bloc)))
+                                          and     trim(tcmcs095.t$koda) = trim(whwmd630.t$bloc))),0)
                       - 
-                      ( select NVL(SUM(whinp100.t$qana),0)
+                      nvl(( select NVL(SUM(whinp100.t$qana),0)
                           from baandb.twhinp100201 whinp100
                     inner join baandb.ttdsls401201 tdsls401
                             on tdsls401.t$orno = whinp100.t$orno
@@ -40,9 +39,9 @@ select *
                            and whinp100.t$cwar = est.T$CWAR
                            and whinp100.t$koor = 3        -- Ordem de venda
                            and whinp100.t$kotr = 2        -- Baixa
-                           and whinp100.t$cdis$c = ' ' )  -- Sem restriç?o
+                           and whinp100.t$cdis$c = ' ' ),0)  -- Sem restriç?o
                       - 
-                      ( select NVL(SUM(sls2.T$QOOR * sls2.T$CVQS),0)
+                      nvl(( select NVL(SUM(sls2.T$QOOR * sls2.T$CVQS),0)
                           from baandb.TTDSLS401201 sls2
                     inner join baandb.TTDSLS420201 sls3
                             on sls2.T$ORNO = sls3.T$ORNO
@@ -50,7 +49,7 @@ select *
                             on sls3.T$HREA = sls4.T$HREA
                          where sls2.T$ITEM = est.T$ITEM
                            and sls2.T$CWAR = est.T$CWAR
-                           and sls4.t$REST$C = 1 )   AS QTDE,
+                           and sls4.t$REST$C = 1 ),0)   AS QTDE,
                    
                      -- TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS') AS ULTIMAATUAL
                      
@@ -121,7 +120,7 @@ select *
                      EST.T$BLOC AS     RESTRICAO,
                      ( Sum(est.T$QBLS)
                        - 
-                       ( SELECT NVL(SUM(sls.T$QOOR * sls.T$CVQS),0) AS qtdeReservado
+                       nvl(( SELECT NVL(SUM(sls.T$QOOR * sls.T$CVQS),0) AS qtdeReservado
                            FROM baandb.TWHINH220201 inh
                      INNER JOIN baandb.TTDSLS401201 sls
                              ON sls.T$ORNO = inh.T$ORNO
@@ -130,9 +129,9 @@ select *
                           WHERE inh.T$OORG = 1
                             AND inh.T$LSTA <> 30
                             AND inh.T$ITEM = est.T$ITEM
-                            AND sls.t$cdis$c = est.t$bloc ) ),
+                            AND sls.t$cdis$c = est.t$bloc ),0) )
                  -
-                 ( SELECT NVL(SUM(sls2.T$QOOR * sls2.T$CVQS),0)
+                 nvl(( SELECT NVL(SUM(sls2.T$QOOR * sls2.T$CVQS),0)
                      FROM baandb.TTDSLS401201 sls2
                INNER JOIN baandb.TTDSLS420201 sls3
                        ON sls2.T$ORNO = sls3.T$ORNO
@@ -142,7 +141,7 @@ select *
                        ON sls3.T$HREA = sls4.T$HREA
                     WHERE sls2.T$ITEM = est.T$ITEM
                       AND sls4.t$REST$C = 1
-                      AND sls2.t$cdis$c = est.t$bloc )   AS QTDE,
+                      AND sls2.t$cdis$c = est.t$bloc ),0)   AS QTDE,
              
                      --MAX(TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS')) AS ULTIMAATUAL
                      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(est.t$rcd_utc), 
