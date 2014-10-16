@@ -37,12 +37,13 @@ SELECT
     tdrec940.t$logn$l        LOGIN_USUARIO,
     nome_aprov.t$name        NOME_APROV_REC,
     
---    CASE WHEN NVL(tdrec940.t$idat$l, 0) = 0 THEN
-    NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE),
-        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE))
-                             DATA_HORA_EMISSAO,
+    CASE WHEN NVL(tdrec940.t$idat$l, to_date('01-01-1980','DD-MM-YYYY')) >  to_date('01-01-1980','DD-MM-YYYY') THEN
+             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)
+    WHEN tdpur401.t$date$c <=  to_date('01-01-1980','DD-MM-YYYY') THEN NULL
+    ELSE
+            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE) END    DATA_HORA_EMISSAO,
                              
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone sessiontimezone) AS DATE)
