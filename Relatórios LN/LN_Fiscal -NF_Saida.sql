@@ -13,8 +13,9 @@ select Q1.*
                  tccom110.t$cbtp            COD_TIPO,
                  tccom966.t$stin$d          INSC_ESTADUAL,
                  tccom966.t$ctin$d          INSC_MUNICIPAL,
-                 CASE  WHEN cisli940.t$itoa$l = cisli940.t$stoa$l THEN 'Fatura' 
-                     ELSE 'Entrega' 
+                 CASE WHEN cisli940.t$itoa$l = cisli940.t$stoa$l 
+                        THEN 'Fatura' 
+                      ELSE   'Entrega' 
                  END                        TIPO_ENDER, 
                  cisli940.t$stoa$l          SEQ_ENDER,
                  tccom130.t$dist$l          END_BAIRRO,
@@ -97,8 +98,9 @@ select Q1.*
                                             DESC_TIPO_DOCTO,
                  cisli940.t$fids$l          RAZAO_SOCIAL,
              
-                 CASE WHEN cisli940.t$stat$l = 2 THEN 'CANCELADA'
-                      ELSE 'ATIVA' 
+                 CASE WHEN cisli940.t$stat$l = 2
+                        THEN 'CANCELADA'
+                      ELSE   'ATIVA' 
                   END                       SITUACAO,
                                             
                  cisli940.t$nfes$l          COD_STATUS_SEFAZ,
@@ -261,12 +263,12 @@ select Q1.*
                           tcmcs938.t$icmd$l TRIBUT_CST_PIS,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
-                    from baandb.ttcmcs938301 tcmcs938
+                     from baandb.ttcmcs938301 tcmcs938
                inner join baandb.tcisli943301 cisli943
                        on tcmcs938.t$txsc$l = cisli943.t$txsc$l
                     where cisli943.t$brty$l = 5 ) IMPOSTO_5
-               ON IMPOSTO_5.t$fire$l = cisli941.t$fire$l
-              AND IMPOSTO_5.t$line$l = cisli941.t$line$l
+              ON IMPOSTO_5.t$fire$l = cisli941.t$fire$l
+             AND IMPOSTO_5.t$line$l = cisli941.t$line$l
 
        LEFT JOIN ( select cisli943.t$fbtx$l BASE_COFINS,
                           cisli943.t$rate$l PERC_COFINS,
@@ -300,28 +302,29 @@ select Q1.*
                           cisli943.t$fire$l,
                           cisli943.t$line$l
                      from baandb.tcisli943301 cisli943
-                    where cisli943.t$cnre$l != ' ' ) RECEITA
+                    where cisli943.t$cnre$l !=  ' ' ) RECEITA
               ON RECEITA.t$fire$l = cisli941.t$fire$l
              AND RECEITA.t$line$l = cisli941.t$line$l
-	
+ 
            WHERE cisli940.t$stat$l = 6
              AND tcemm124.t$dtyp = 1 
-
-			AND cisli941.t$item$l NOT IN
-			        (select a.t$itjl$c
-						from baandb.tznsls000301 a
-						where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000301 b)
-					UNION ALL
-					select a.t$itmd$c
-					from baandb.tznsls000301 a
-					where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000301 b)
-					UNION ALL
-					select a.t$itmf$c
-					from baandb.tznsls000301 a
-					where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000301 b))			 
+             AND cisli941.t$item$l NOT IN ( select a.t$itjl$c
+                                              from baandb.tznsls000301 a
+                                             where a.t$indt$c = ( select min(b.t$indt$c) 
+                                                                    from baandb.tznsls000301 b )
+                                         UNION ALL
+                                            select a.t$itmd$c
+                                              from baandb.tznsls000301 a
+                                             where a.t$indt$c = ( select min(b.t$indt$c) 
+                                                                    from baandb.tznsls000301 b )
+                                         UNION ALL
+                                            select a.t$itmf$c
+                                              from baandb.tznsls000301 a
+                                             where a.t$indt$c = ( select min(b.t$indt$c) 
+                                                                    from baandb.tznsls000301 b ) )    
 
         ORDER BY cisli940.t$fire$l ) Q1
-			
+   
 where Trunc(DATA_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DATA_EMISSAO) AND NVL(:DataEmissaoAte, DATA_EMISSAO)
   and Trunc(DATA_FATURAMENTO) BETWEEN NVL(:DataFaturamentoDe, DATA_FATURAMENTO) AND NVL(:DataFaturamentoAte, DATA_FATURAMENTO)
   and Q1.CHAVE_FILIAL IN (:Filial)
