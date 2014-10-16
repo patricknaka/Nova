@@ -14,17 +14,20 @@ SELECT
     tfacp200.t$balc                             SALD_TITULO,
     '201'                                       CODE_CIA,             
 
-    CASE  WHEN (tfacp200.t$balc - tfacp200.t$bala) = 0 THEN 1 
-          ELSE 2 
+    CASE WHEN (tfacp200.t$balc - tfacp200.t$bala) = 0 
+           THEN 1
+         ELSE   2 
      END                                        DESC_SITUA1,
 
-    CASE  WHEN tfacp201.t$pyst$l ! =  3 THEN 2 
-          ELSE 1 
-    END                                        CODE_SITUA2,
+    CASE WHEN tfacp201.t$pyst$l != 3 
+           THEN 2
+         ELSE   1 
+     END                                        CODE_SITUA2,
     
 
-    CASE  WHEN tfacp201.t$pyst$l ! =  3 THEN 'Não' 
-          ELSE 'Sim' 
+    CASE WHEN tfacp201.t$pyst$l != 3
+           THEN 'Não' 
+         ELSE 'Sim' 
      END                                        DESC_SITUA2,
 
     tfcmg101.t$plan                             DATA_PLAN_PAGTO,
@@ -48,7 +51,7 @@ SELECT
     tfcmg011.t$desc                             DESC_AGENCIA,
     tccom125.t$bano                             NUME_CONTA,
     tccom125.t$dacc$d                           DIGI_CONTA,
-	
+ 
     Trim(tfcmg011.t$desc  || ' ' ||
           'AG ' || tfcmg011.t$agcd$l || '-' || 
                    tfcmg011.t$agdg$l || '   ' || 'CC ' || 
@@ -78,13 +81,15 @@ SELECT
     Concat(Concat(tfacp200.t$ifbp, ' - '), tccom100.t$nama) 
                                                 COD_DESC_PEN,
                                                 
-    CASE  WHEN  znacp005.t$canc$c = 1 THEN
-        99
-    ELSE NVL(tfacp201.t$pyst$l, 1)    END       STAT_PRG,
+    CASE WHEN znacp005.t$canc$c = 1 
+           THEN 99
+         ELSE NVL(tfacp201.t$pyst$l, 1)
+     END                                        STAT_PRG,
     
-    CASE  WHEN  znacp005.t$canc$c = 1 THEN
-        'Cancelado'
-    ELSE iSTAT.DESCR    END                     DESCR_STAT_PRG,
+    CASE WHEN znacp005.t$canc$c = 1 
+           THEN 'Cancelado'
+         ELSE   iSTAT.DESCR
+     END                                        DESCR_STAT_PRG,
     
     tdpur400.t$cotp                             COD_TIPO_ORDEM,          --tipo de ordem de compra
     tdpur094.t$dsca                             DECR_TIPO_ORDEM,         --descrição tipo ordem de compra
@@ -93,14 +98,14 @@ SELECT
     tdrec952.t$leac$l                           COD_CONTA_DESTINO,
   
     DESCR_CONTA_DESTINO.                        DESCR_CONTA_DESTINO,
-	   
+    
     CASE WHEN tflcb230.t$send$d = 0 
            THEN tflcb230.t$stat$d
          ELSE tflcb230.t$send$d 
      END                                        CODE_STAT_ARQ,
-	 
+  
     tflcb230.t$lach$d                           DATA_STAT_ARQ,
-	
+ 
     CASE WHEN tflcb230.t$send$d = 0 
            THEN NVL(iStatArq.DESCR,  'Arquivo não vinculado') 
          ELSE   NVL(iStatArq2.DESCR, 'Arquivo não vinculado') 
@@ -170,8 +175,8 @@ FROM       baandb.ttfacp200301  tfacp200
                                           where l1.t$clab = l.t$clab 
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iStatArq
- 	    ON iStatArq.CODE = tflcb230.t$stat$d
-	   
+      ON iStatArq.CODE = tflcb230.t$stat$d
+    
  LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
                FROM baandb.tttadv401000 d,
@@ -347,10 +352,10 @@ INNER JOIN baandb.ttfacp201301  tfacp201
         ON OCORRENCIA.t$ttyp$d = tfacp200.t$ttyp
        AND OCORRENCIA.t$ninv$d = tfacp200.t$ninv
 
-LEFT  JOIN  baandb.tznacp005301 znacp005
-      ON    znacp005.t$bpid$c=tfacp201.t$ifbp
-      AND   znacp005.t$ttyp$c=tfacp201.t$ttyp
-      AND   znacp005.t$ninv$c=tfacp201.t$ninv
+ LEFT JOIN baandb.tznacp005301 znacp005
+        ON znacp005.t$bpid$c = tfacp201.t$ifbp
+       AND znacp005.t$ttyp$c = tfacp201.t$ttyp
+       AND znacp005.t$ninv$c = tfacp201.t$ninv
       
 WHERE tfacp200.t$docn = 0
 
@@ -361,7 +366,10 @@ WHERE tfacp200.t$docn = 0
   AND tfacp200.t$ifbp IN (:ParceiroNegocio)
   AND ((tfacp200.t$afpy ! =  2 and :PrepPagto = 1)or(tfacp200.t$afpy = 2 and :PrepPagto = 2)or(:PrepPagto = 0))
   AND NVL(TRIM(tfacp200.t$paym), 'N/A') IN (:MetodoPagto)
-  AND NVL(tfacp201.t$pyst$l, 1) IN (:Situacao)
+  AND (CASE WHEN znacp005.t$canc$c = 1 
+              THEN 99
+            ELSE NVL(tfacp201.t$pyst$l, 1)
+       END) IN (:Situacao)
   AND NVL(CASE WHEN tflcb230.t$send$d = 0 
                  THEN tflcb230.t$stat$d
                ELSE tflcb230.t$send$d 
