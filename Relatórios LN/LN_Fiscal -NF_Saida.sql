@@ -306,7 +306,20 @@ select Q1.*
 	
            WHERE cisli940.t$stat$l = 6
              AND tcemm124.t$dtyp = 1 
-			 
+
+			AND cisli941.t$item$l NOT IN
+			        (select a.t$itjl$c
+						from baandb.tznsls000301 a
+						where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000301 b)
+					UNION ALL
+					select a.t$itmd$c
+					from baandb.tznsls000301 a
+					where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000301 b)
+					UNION ALL
+					select a.t$itmf$c
+					from baandb.tznsls000301 a
+					where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000301 b))			 
+
         ORDER BY cisli940.t$fire$l ) Q1
 			
 where Trunc(DATA_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DATA_EMISSAO) AND NVL(:DataEmissaoAte, DATA_EMISSAO)
