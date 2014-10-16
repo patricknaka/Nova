@@ -1,43 +1,70 @@
 SELECT 
-DISTINCT
-  znfmd630.t$cfrw$c	    TRANSPORTADORA,   
-  ( SELECT  COUNT(znfmd630c.t$cfrw$c) 
-      FROM  baandb.tznfmd630201 znfmd630c,
-            baandb.tcisli940201 cisli940c
-      WHERE znfmd630c.t$cfrw$c = znfmd630.t$cfrw$c
-        AND znfmd630c.t$fili$c = znfmd630.t$fili$c
-        AND znfmd630c.t$fire$c = cisli940c.t$fire$l
-        AND cisli940c.t$fdty$l = cisli940.t$fdty$l ) 	  
-                        QTDE_ENTREGAS,
-  ( SELECT  SUM(znfmd630s.t$vlfr$c) 
-      FROM  baandb.tznfmd630201 znfmd630s,
-            baandb.tcisli940201 cisli940s 
-      WHERE znfmd630s.t$cfrw$c = znfmd630.t$cfrw$c
-        AND znfmd630s.t$fili$c = znfmd630.t$fili$c    
-        AND znfmd630s.t$fire$c = cisli940s.t$fire$l
-        AND cisli940s.t$fdty$l = cisli940.t$fdty$l) 	  
-                        FRETE_APAGAR,
-  cisli940.t$fdty$l	    TIPO_DOCTO, 
-                        DESC_TIPO_DOCTO,
-  znfmd630.t$fili$c	    FILIAL
+    znfmd630.t$cfrw$c           CODI_TRANS,
+    Trim(tcmcs080.t$dsca)       DESC_TRANS,
+    znfmd630.t$cfrw$c ||
+    ' - '             ||
+    Trim(tcmcs080.t$dsca)       COD_DESC_TRANS,
+    COUNT(znfmd630.t$cfrw$c)    QTDE_ENTREGAS,
+    SUM(znfmd630.t$vlfC$c)      FRETE_APAGAR,
+    cisli940.t$doty$l           TIPO_DOCTO, 
+    FGET.                       DESC_TIPO_DOCTO,
+    znfmd630.t$fili$c           FILIAL,
+	
+    Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone sessiontimezone) AS DATE))
+                                DATA
 
-FROM    baandb.tznfmd630201  znfmd630, 
-        baandb.tcisli940201  cisli940,
-        
-      ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_DOCTO
-        FROM  baandb.tttadv401000 d, baandb.tttadv140000 l 
-        WHERE d.t$cpac='ci' 
-          AND d.t$cdom='sli.tdff.l'
-          AND d.t$vers='B61U'
-          AND d.t$rele='a7'
-          AND l.t$clab=d.t$za_clab
-          AND l.t$clan='p'
-          AND l.t$cpac='ci'
-          AND l.t$vers = (  SELECT  max(l1.t$vers) 
-                          FROM  tttadv140000 l1 
-                          WHERE l1.t$clab=l.t$clab 
-                            AND l1.t$clan=l.t$clan 
-                            AND l1.t$cpac=l.t$cpac)) FGET        
-                   
-WHERE   znfmd630.t$fire$c = cisli940.t$fire$l 
-  AND   cisli940.t$fdty$l = FGET.CNST  
+FROM       BAANDB.tznfmd630301  znfmd630
+
+INNER JOIN BAANDB.tcisli940301  cisli940
+        ON znfmd630.t$fire$c = cisli940.t$fire$l
+
+ LEFT JOIN ( SELECT d.t$cnst CNST,
+                    l.t$desc DESC_TIPO_DOCTO
+               FROM BAANDB. tttadv401000 d,
+                    BAANDB. tttadv140000 l
+              WHERE d.t$cpac = 'tc'
+                AND d.t$cdom = 'doty.l'
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'tc'
+                AND l.t$clab = d.t$za_clab
+                AND rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) || 
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) FGET
+        ON cisli940.t$doty$l = FGET.CNST
+		  
+INNER JOIN baandb.ttcmcs080301  tcmcs080
+        ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
+		
+WHERE cisli940.t$doty$l IN (:TipoDocto)
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)) 
+      BETWEEN :DataDe 
+          AND :DataAte
+
+GROUP BY znfmd630.t$cfrw$c,
+         Trim(tcmcs080.t$dsca),
+         cisli940.t$doty$l,
+         FGET.DESC_TIPO_DOCTO,
+         znfmd630.t$fili$c,
+         Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone sessiontimezone) AS DATE))
+  
+ORDER BY 9, 8, 2
