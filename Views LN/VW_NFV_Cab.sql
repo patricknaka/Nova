@@ -1,16 +1,4 @@
-﻿-- #FAF.087 - 29-mai-2014, Fabio Ferreira, 	Correções de informações que estavam pendente do fiscal
--- #FAF.098 - 02-jun-2014, Fabio Ferreira, 	Alterações
--- #FAF.109 - 07-jun-2014, Fabio Ferreira, 	Inclusão do campo ref.fiscal
--- #FAF.248 - 29-jul-2014, Fabio Ferreira, 	Inclusão do tipo doc fiscal
--- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO_NF
--- #FAF.286 - 29-jul-2014, Fabio Ferreira, 	Ajuste do campo DT_ATUALIZACAO_NF
--- #MAT.308 - 28-ago-2014, Marcia A. Torres, Inclusão do campo TIPO_ORDEM_VENDA.
--- #FAF.314 - 01-sep-2014, Fabio Ferreira, 	Correção impostos importação
--- #FAF.322 - 11-sep-2014, Fabio Ferreira, 	Correção relacionamento
--- #FAF.328 - 22-sep-2014, Fabio Ferreira, 	Correção relacionamento com a ordem de venda
--- #FAF.328 - 25-sep-2014, Fabio Ferreira, 	Correção relacionamento com a ordem de venda
---**********************************************************************************************************************************************************
-SELECT
+﻿SELECT
     201 CD_CIA,
     case when (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
@@ -60,13 +48,8 @@ SELECT
 		AND cisli942.t$brty$l=16) VL_IMPOSTO_IMPORTACAO,
 		(SELECT sum(cisli941.t$ldam$l) FROM baandb.tcisli941201 cisli941
 		WHERE cisli941.t$fire$l=cisli940.t$fire$l) VL_DESCONTO,
-<<<<<<< HEAD
-		cisli940.t$amnt$l VL_TOTAL_NF,        
-    CASE WHEN cisli940.t$fdty$l=15 then
-=======
 		cisli940.t$amnt$l VL_TOTAL_NF,
         CASE WHEN cisli940.t$fdty$l=15 then
->>>>>>> parent of 1dcdbcf... #336 VW_NFV_CAB Ajuste
           (select a.t$docn$l from baandb.tcisli940201 a, baandb.tcisli941201 b
           where b.t$fire$l=cisli940.t$fire$l
           and a.t$fire$l=b.t$refr$l
@@ -151,13 +134,8 @@ SELECT
   (SELECT tdsls400.t$sotp                                        --#MAT.308.sn
    FROM baandb.ttdsls400201 tdsls400            
    WHERE tdsls400.t$orno=entr.t$orno$c
-   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA,        --#MAT.308.en 
+   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA        --#MAT.308.en 
 
-    CASE WHEN cisli940.t$fdty$l=15 then
-      (select distinct a.t$fire$l from baandb.tcisli940201 a, baandb.tcisli941201 b
-      where b.t$fire$l=cisli940.t$fire$l
-      and a.t$fire$l=b.t$refr$l) else NULL
-   end  NR_REFERENCIA_FISCAL_FATURA
 FROM
 		baandb.tcisli940201 cisli940
 		LEFT JOIN (SELECT 	znsls401.t$entr$c, 
@@ -176,13 +154,13 @@ FROM
 										r.t$sequ$c,
 										r.t$orno$c,
 										r.t$pono$c
-								 from baandb.tznsls004301  r
+								 from baandb.tznsls004201  r
 								 where r.t$entr$c=( select  r0.t$entr$c 
-                                    from baandb.tznsls004301  r0
+                                    from baandb.tznsls004201  r0
                                     where r0.t$orno$c=r.t$orno$c
                                     and rownum=1
                                     and r0.t$date$c=  (select max(r1.t$date$c)
-                                                         from baandb.tznsls004301  r1
+                                                         from baandb.tznsls004201  r1
                                                          where r1.t$orno$c=r0.t$orno$c))) znsls004 
 															ON	znsls004.t$orno$c=cisli245.t$slso
 					                                        AND znsls004.t$pono$c=cisli245.t$pono
@@ -203,4 +181,4 @@ FROM
 WHERE tcemm124.t$loco=201
 AND   tcemm124.t$dtyp=1
 AND   tcemm124.t$cwoc=cisli940.t$cofc$l
-AND   tcemm030.t$eunt=tcemm124.t$grid;
+AND   tcemm030.t$eunt=tcemm124.t$grid
