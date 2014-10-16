@@ -78,13 +78,13 @@ SELECT
     Concat(Concat(tfacp200.t$ifbp, ' - '), tccom100.t$nama) 
                                                 COD_DESC_PEN,
                                                 
-    CASE  WHEN  znacp005.t$canc$c != 1 THEN
-        NVL(tfacp201.t$pyst$l, 1)
-    ELSE  99  END                               STAT_PRG,
+    CASE  WHEN  znacp005.t$canc$c = 1 THEN
+        99
+    ELSE NVL(tfacp201.t$pyst$l, 1)    END       STAT_PRG,
     
-    CASE  WHEN  znacp005.t$canc$c != 1 THEN
-        iSTAT.DESCR
-    ELSE  'Cancelado'   END                     DESCR_STAT_PRG,
+    CASE  WHEN  znacp005.t$canc$c = 1 THEN
+        'Cancelado'
+    ELSE iSTAT.DESCR    END                     DESCR_STAT_PRG,
     
     tdpur400.t$cotp                             COD_TIPO_ORDEM,          --tipo de ordem de compra
     tdpur094.t$dsca                             DECR_TIPO_ORDEM,         --descrição tipo ordem de compra
