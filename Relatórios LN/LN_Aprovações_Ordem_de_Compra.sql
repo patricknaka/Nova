@@ -36,8 +36,12 @@ SELECT
         
     tdrec940.t$logn$l        LOGIN_USUARIO,
     nome_aprov.t$name        NOME_APROV_REC,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+    
+--    CASE WHEN NVL(tdrec940.t$idat$l, 0) = 0 THEN
+    NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE),
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE))
                              DATA_HORA_EMISSAO,
                              
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -58,9 +62,11 @@ SELECT
                 
     tfgld018.t$dcdt          DATA_DOCTO,
     NVL(TRIM(tdrec940.t$ttyp$l), 'N/A')  
-	                         TRANSACAO_CAP,    
-    tdrec940.t$docn$l        NUM_NF,
-    tdrec940.t$seri$l        SERI_NF,                          
+	                         TRANSACAO_CAP,
+    NVL(tdrec940.t$docn$l, tdpur401.t$docn$c)   NUM_NF,
+    
+    NVL(tdrec940.t$seri$l, tdpur401.t$seri$c)   SERI_NF,
+    
     tfacp201.t$payd          DATA_VENCTO,
     SITUACAO_PAGTO.          DSC_SITUACAO_PAGTO,
     tfcmg101.t$plan          DATA_PLAN_PAGTO
