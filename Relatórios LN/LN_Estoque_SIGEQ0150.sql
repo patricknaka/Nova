@@ -33,7 +33,6 @@ SELECT Q1.*
                   
             FROM baandb.ttcibd001301 tcibd001
           
-<<<<<<< HEAD
            LEFT JOIN baandb.ttdipu001301 tdipu001 
                   ON tdipu001.t$item = tcibd001.t$item
                
@@ -76,7 +75,7 @@ SELECT Q1.*
                       group by  whwmd217.t$item, b.t$cadr) Q1 
                   ON Q1.t$item = whwmd215.t$item 
                  AND Q1.t$cadr = tcmcs003.t$cadr
-=======
+
        LEFT JOIN baandb.ttdipu001301 tdipu001 
               ON tdipu001.t$item = tcibd001.t$item
            
@@ -110,7 +109,6 @@ SELECT Q1.*
                  group by a.t$item, c.t$grid ) Q1 
               ON Q1.item = whwmd215.t$item 
              AND Q1.grid = tcemm112.t$grid
->>>>>>> origin/master
                      
        LEFT JOIN ( select whwmd630.t$item, 
                           whwmd630.t$cwar, 
@@ -195,7 +193,7 @@ UNION
                  sum(whwmd630.t$qbls)              QT_FISICA,
                  0                                 QT_ROMANEADA,
                  0                                 QT_RESERVADA,
-                 0                                 QT_SALDO,
+                 sum(whwmd630.t$qbls)              QT_SALDO,
                  Round(sum(Q1.mauc), 4)            VL_UNITARIO,
                  CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
                         THEN '00000000000000' 
@@ -206,7 +204,6 @@ UNION
                  tccom100.t$nama                   FORN_NOME,
                  tccom100.t$seak                   FORN_APELIDO
                   
-<<<<<<< HEAD
           FROM       baandb.ttcibd001301 tcibd001
           
            LEFT JOIN baandb.ttdipu001301 tdipu001 
@@ -251,7 +248,7 @@ UNION
                       group by  whwmd217.t$item, b.t$cadr) Q1 
                   ON Q1.t$item = whwmd630.t$item 
                  AND Q1.t$cadr = tcmcs003.t$cadr
-=======
+
             FROM baandb.ttcibd001301 tcibd001
           
        LEFT JOIN baandb.ttdipu001301 tdipu001 
@@ -287,7 +284,6 @@ UNION
                  group by a.t$item, c.t$grid ) Q1 
               ON Q1.item = whwmd630.t$item 
              AND Q1.grid = tcemm112.t$grid
->>>>>>> origin/master
                    
       INNER JOIN baandb.ttcmcs023301 tcmcs023
               ON tcmcs023.t$citg   = tcibd001.t$citg
