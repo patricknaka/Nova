@@ -2,8 +2,8 @@ SELECT
   DISTINCT
     201                      Companhia,
     tdpur400.t$otbp          COD_PN,
-	regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
-	                         CNPJ,
+ regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
+                             CNPJ,
     tccom100.t$nama          DESC_PN,
     tdpur400.t$orno          ORDEM_COMPRA,
     tdpur401.t$oamt          VALOR,
@@ -37,11 +37,13 @@ SELECT
     tdrec940.t$logn$l        LOGIN_USUARIO,
     nome_aprov.t$name        NOME_APROV_REC,
     
---    CASE WHEN NVL(tdrec940.t$idat$l, 0) = 0 THEN
-    NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE),
-        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE))
+    CASE WHEN NVL(tdrec940.t$idat$l, to_date('01-01-1980','DD-MM-YYYY')) >  to_date('01-01-1980','DD-MM-YYYY') THEN
+             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)
+    WHEN tdpur401.t$date$c <=  to_date('01-01-1980','DD-MM-YYYY') THEN NULL
+    ELSE
+            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE) END    
                              DATA_HORA_EMISSAO,
                              
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -58,14 +60,16 @@ SELECT
     WHEN NVL(CONTABIL.t$cnst, 0) = 0 THEN 'Não definido'
     WHEN CONTABIL.STATUS_APROVACAO_CONTABIL = 'Sim' THEN 'Aprovado'
     WHEN CONTABIL.STATUS_APROVACAO_CONTABIL = 'Não' THEN 'Não aprovado'
-    ELSE NULL END AS     STATUS_APROVACAO_CONTABIL,
+    ELSE NULL END AS         STATUS_APROVACAO_CONTABIL,
                 
     tfgld018.t$dcdt          DATA_DOCTO,
     NVL(TRIM(tdrec940.t$ttyp$l), 'N/A')  
-	                         TRANSACAO_CAP,
-    NVL(tdrec940.t$docn$l, tdpur401.t$docn$c)   NUM_NF,
+                             TRANSACAO_CAP,
+    NVL(tdrec940.t$docn$l, tdpur401.t$docn$c)
+                             NUM_NF,
     
-    NVL(tdrec940.t$seri$l, tdpur401.t$seri$c)   SERI_NF,
+    NVL(tdrec940.t$seri$l, tdpur401.t$seri$c)   
+                             SERI_NF,
     
     tfacp201.t$payd          DATA_VENCTO,
     SITUACAO_PAGTO.          DSC_SITUACAO_PAGTO,
@@ -288,9 +292,9 @@ INNER JOIN  baandb.ttdpur401201 tdpur401
       AND NVL(ORDEM.t$cnst, 0) IN (:STATUS_ORDEM)
       AND NVL(APROVACAO_FIS.t$cnst, 0) IN (:STATUS_APR_FISCAL)
       AND NVL(CONTABIL.t$cnst, 0) IN (:STATUS_APR_CONTABIL)
-	  AND tdpur400.t$cotp IN (:TIPO_ORDEM)
-	  AND ((regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(regexp_replace(:CNPJ, '[^0-9]', ''))) OR (Trim(:CNPJ) is null))
+      AND tdpur400.t$cotp IN (:TIPO_ORDEM)
+      AND ((regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(regexp_replace(:CNPJ, '[^0-9]', ''))) OR (Trim(:CNPJ) is null))
       AND ( (Trim(:OrdemCompra) is null) or (UPPER(Trim(tdpur400.t$orno)) like '%' || UPPER(Trim(:OrdemCompra) || '%')) )
       AND ( (Trim(:ReferenciaFiscal) is null) or (UPPER(Trim(tdrec940.t$fire$l)) like '%' || UPPER(Trim(:ReferenciaFiscal) || '%')) )
-	  AND ( (:UsuarioSolicTodos = 0) OR (crd.t$logn in (:UsuarioSolic) AND (:UsuarioSolicTodos = 1)) )
+      AND ( (:UsuarioSolicTodos = 0) OR (crd.t$logn in (:UsuarioSolic) AND (:UsuarioSolicTodos = 1)) )
 ORDER BY DATA_ORDEM, STATUS_ORDEM, ORDEM_COMPRA
