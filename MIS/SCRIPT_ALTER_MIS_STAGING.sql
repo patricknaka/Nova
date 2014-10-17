@@ -416,3 +416,9 @@ alter column nfca_situacao nvarchar(3)
 
 alter table com.stg_gestao_icms_endereco_ent
 alter column nfca_serie nvarchar(8)
+
+alter table com.stg_sige_devolucao_fornecedor
+alter column fat_nr_cia int
+
+alter table com.stg_sige_devolucao_fornecedor
+alter column fat_nr_ITEM NVARCHAR(47)
