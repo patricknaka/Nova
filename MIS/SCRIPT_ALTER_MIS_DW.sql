@@ -1259,3 +1259,39 @@ alter column nr_titulo varchar(10)
 
 alter table fact_financiamento_estoque
 alter column nr_id_cia numeric(3)
+
+--------------------------------------------------------
+-- garantia estendida
+---------------------------------------------------------
+
+--de numeric(12) para nvarchar(20)
+alter table dbo.stg_sige_garantia_estendida
+alter column nr_certificado nvarchar(20)
+
+--de varchar(4) para nvarchar(3)
+alter table dbo.stg_sige_garantia_estendida
+alter column ds_canal_venda nvarchar(3)
+
+--de char(1) para int
+alter table dbo.stg_sige_garantia_estendida
+alter column ds_status_pedido int
+
+--de numeric(9) para nvarchar(10)
+alter table dbo.stg_sige_garantia_estendida
+alter column nr_id_entrega_pai nvarchar(10)
+
+--de bigint para nvarchar(10)
+alter table dbo.stg_sige_garantia_estendida
+alter column nr_orders nvarchar(10)
+
+--de bigint para nvarchar(47)
+alter table dbo.stg_sige_garantia_estendida
+alter column nr_product_sku nvarchar(47)
+
+--de bigint para nvarchar(47)
+alter table dbo.stg_sige_garantia_estendida
+alter column nr_item_sku nvarchar(47)
+
+--de int para nvarchar(10)
+alter table dbo.stg_sige_garantia_estendida
+alter column nr_id_tp_cliente nvarchar(10)
