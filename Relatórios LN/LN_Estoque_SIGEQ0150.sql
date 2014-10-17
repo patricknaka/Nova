@@ -51,18 +51,31 @@ SELECT Q1.*
           
           INNER JOIN baandb.ttcemm030301 tcemm030
                   ON tcemm030.t$eunt   = tcemm112.t$grid
+				  
+		  INNER JOIN baandb.ttcmcs003301 tcmcs003
+				  ON tcmcs003.t$cwar = whwmd215.t$cwar
+				  
+          INNER JOIN baandb.TTCCOM130301 tccom130w   
+                   ON tccom130w.T$CADR = tcmcs003.T$CADR
+				   
+          INNER JOIN baandb.TZNFMD001301 znfmd001   
+                   ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l		   
           
-           LEFT JOIN ( 	SELECT a.t$item ITEM, c.t$grid GRID, sum(a.t$mauc$1*b.t$qstk)/sum(b.t$qstk) MAUC
-						FROM baandb.twhina113301 a, baandb.twhina112301 b, baandb.ttcemm112301 c
-						WHERE a.t$item=b.t$item
-						AND   a.t$cwar=b.t$cwar
-						AND   a.t$trdt=b.t$trdt
-						AND   a.t$seqn=b.t$seqn
-						AND   a.t$inwp=b.t$inwp
-						AND   c.t$waid=a.t$cwar
-						GROUP BY a.t$item, c.t$grid) Q1 
-                  ON Q1.item = whwmd215.t$item 
-                 AND Q1.grid = tcemm112.t$grid
+           LEFT JOIN ( 	select whwmd217.t$item,
+                               b.t$cadr,
+                               case when sum(a.t$qhnd) = 0 
+                                      then 0
+                                    else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4) 
+                                end mauc
+                          from baandb.twhwmd217301 whwmd217, 
+                               baandb.twhwmd215301 a,
+                               baandb.ttcmcs003301 b
+                         where a.t$cwar = whwmd217.t$cwar
+                           and a.t$item = whwmd217.t$item
+                           and b.t$cwar = a.t$cwar                          
+                      group by  whwmd217.t$item, b.t$cadr) Q1 
+                  ON Q1.t$item = whwmd215.t$item 
+                 AND Q1.t$cadr = tcmcs003.t$cadr
                      
            LEFT JOIN ( SELECT whwmd630.t$item, 
                               whwmd630.t$cwar, 
@@ -178,18 +191,31 @@ SELECT Q1.*
           
           INNER JOIN baandb.ttcemm030301 tcemm030
                   ON tcemm030.t$eunt   = tcemm112.t$grid
+				  
+		  INNER JOIN baandb.ttcmcs003301 tcmcs003
+				  ON tcmcs003.t$cwar = whwmd630.t$cwar
+				  
+          INNER JOIN baandb.TTCCOM130301 tccom130w   
+                   ON tccom130w.T$CADR = tcmcs003.T$CADR
+				   
+          INNER JOIN baandb.TZNFMD001301 znfmd001   
+                   ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l	
             
-           LEFT JOIN ( 	SELECT a.t$item ITEM, c.t$grid GRID, sum(a.t$mauc$1*b.t$qstk)/sum(b.t$qstk) MAUC
-						FROM baandb.twhina113301 a, baandb.twhina112301 b, baandb.ttcemm112301 c
-						WHERE a.t$item=b.t$item
-						AND   a.t$cwar=b.t$cwar
-						AND   a.t$trdt=b.t$trdt
-						AND   a.t$seqn=b.t$seqn
-						AND   a.t$inwp=b.t$inwp
-						AND   c.t$waid=a.t$cwar
-						GROUP BY a.t$item, c.t$grid ) Q1 
-                  ON Q1.item = whwmd630.t$item 
-                 AND Q1.grid = tcemm112.t$grid
+           LEFT JOIN ( 	select whwmd217.t$item,
+                               b.t$cadr,
+                               case when sum(a.t$qhnd) = 0 
+                                      then 0
+                                    else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4) 
+                                end mauc
+                          from baandb.twhwmd217301 whwmd217, 
+                               baandb.twhwmd215301 a,
+                               baandb.ttcmcs003301 b
+                         where a.t$cwar = whwmd217.t$cwar
+                           and a.t$item = whwmd217.t$item
+                           and b.t$cwar = a.t$cwar                          
+                      group by  whwmd217.t$item, b.t$cadr) Q1 
+                  ON Q1.t$item = whwmd630.t$item 
+                 AND Q1.t$cadr = tcmcs003.t$cadr
                    
           INNER JOIN baandb.ttcmcs023301 tcmcs023
                   ON tcmcs023.t$citg   = tcibd001.t$citg
