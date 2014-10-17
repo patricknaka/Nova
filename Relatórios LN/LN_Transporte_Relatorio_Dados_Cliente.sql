@@ -7,7 +7,11 @@ SELECT
     tcmcs023.t$dsca          DEPARTAMENTO_DESC,
     Trim(znsls401.t$itml$c)  NUM_ITEM,
     tcibd001.t$dsca          ITEM_DESC,
-    znsls401.t$dtep$c        DATA_PROMETIDA,
+
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone sessiontimezone) AS DATE)
+                             DATA_PROMETIDA,
+        
     znsls401.t$ufen$c        UF,
     znsls401.t$nome$c        NOME_CLIENTE,
     znsls401.t$emae$c        E_MAIL,
