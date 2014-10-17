@@ -14,12 +14,12 @@ SELECT Q1.*
             tcemm030.t$euca                   ID_FILIAL, 
             tcemm030.T$EUNT                   CHAVE_FILIAL, 
             'WN'                              TIPDEP, 
-            sum(whwmd215.t$qhnd -  
+            sum(whinr140.t$qhnd -  
                 nvl(Q2.bloc,0))               QT_FISICA, 
             sum(nvl(Q3.roma,0))               QT_ROMANEADA, 
-            sum(whwmd215.t$qall)              QT_RESERVADA, 
-            sum(whwmd215.t$qhnd -  
-                whwmd215.t$qall -  
+            sum(whinr140.t$qlal)              QT_RESERVADA, 
+            sum(whinr140.t$qhnd -  
+                whinr140.t$qlal -  
                 nvl(Q2.bloc,0))               QT_SALDO, 
             max(Q1.mauc)                      VL_UNITARIO, 
              
@@ -34,8 +34,8 @@ SELECT Q1.*
                    
           FROM       baandb.ttcibd001301 tcibd001
           
-          INNER JOIN baandb.twhwmd215301 whwmd215 
-                  ON whwmd215.t$item   = tcibd001.t$item 
+          INNER JOIN baandb.twhinr140301 whinr140 
+                  ON whinr140.t$item   = tcibd001.t$item 
            
            LEFT JOIN baandb.ttdipu001301 tdipu001  
                   ON tdipu001.t$item = tcibd001.t$item 
@@ -47,13 +47,13 @@ SELECT Q1.*
                   ON tccom130.t$cadr = tccom100.t$cadr 
 				   
           INNER JOIN baandb.ttcemm112301 tcemm112 
-                  ON tcemm112.t$waid   = whwmd215.t$cwar 
+                  ON tcemm112.t$waid   = whinr140.t$cwar 
            
           INNER JOIN baandb.ttcemm030301 tcemm030 
                   ON tcemm030.t$eunt   = tcemm112.t$grid 
 				   
 		  INNER JOIN baandb.ttcmcs003301 tcmcs003 
-				  ON tcmcs003.t$cwar = whwmd215.t$cwar 
+				  ON tcmcs003.t$cwar = whinr140.t$cwar 
 				   
           INNER JOIN baandb.TTCCOM130301 tccom130w    
                    ON tccom130w.T$CADR = tcmcs003.T$CADR 
@@ -68,11 +68,11 @@ SELECT Q1.*
                                     else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
                                 end mauc 
                           from baandb.twhwmd217301 whwmd217  
-                          INNER JOIN baandb.twhwmd215301 a ON a.t$cwar = whwmd217.t$cwar AND a.t$item = whwmd217.t$item
+                          INNER JOIN baandb.twhinr140301 a ON a.t$cwar = whwmd217.t$cwar AND a.t$item = whwmd217.t$item
                           INNER JOIN     baandb.ttcmcs003301 b ON b.t$cwar = a.t$cwar 
                           WHERE whwmd217.t$mauc$1!=0
                       group by  whwmd217.t$item, b.t$cadr) Q1  
-                  ON Q1.t$item = whwmd215.t$item  
+                  ON Q1.t$item = whinr140.t$item  
                  AND Q1.t$cadr = tcmcs003.t$cadr 
                       
            LEFT JOIN ( SELECT whwmd630.t$item,  
@@ -87,8 +87,8 @@ SELECT Q1.*
                                               AND tcmcs095.t$koda = whwmd630.t$bloc ) 
                      GROUP BY whwmd630.t$item,  
                               whwmd630.t$cwar ) Q2  
-                  ON Q2.t$item = whwmd215.t$item  
-                 AND Q2.t$cwar = whwmd215.t$cwar 
+                  ON Q2.t$item = whinr140.t$item  
+                 AND Q2.t$cwar = whinr140.t$cwar 
             
            LEFT JOIN ( SELECT whinh220.t$item,  
                               whinh220.t$cwar,  
@@ -97,8 +97,8 @@ SELECT Q1.*
                        WHERE whinh220.t$wmss = 40 
                     GROUP BY whinh220.t$item,  
                              whinh220.t$cwar ) Q3  
-                  ON Q3.t$item = whwmd215.t$item  
-                 AND Q3.t$cwar = whwmd215.t$cwar 
+                  ON Q3.t$item = whinr140.t$item  
+                 AND Q3.t$cwar = whinr140.t$cwar 
            
           INNER JOIN baandb.ttcmcs023301 tcmcs023 
                   ON tcmcs023.t$citg   = tcibd001.t$citg 
@@ -121,7 +121,7 @@ SELECT Q1.*
           WHERE tcemm112.t$loco = 301  
           
 		   
-         HAVING sum(whwmd215.t$qhnd - nvl(Q2.bloc,0)) > 0 
+         HAVING sum(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0 
            
           GROUP BY Trim(tcibd001.t$item),  
                    tcibd001.t$dsca,  
@@ -207,7 +207,7 @@ SELECT Q1.*
                                     else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
                                 end mauc 
                           from baandb.twhwmd217301 whwmd217  
-                          INNER JOIN baandb.twhwmd215301 a ON a.t$cwar = whwmd217.t$cwar AND a.t$item = whwmd217.t$item
+                          INNER JOIN baandb.twhinr140301 a ON a.t$cwar = whwmd217.t$cwar AND a.t$item = whwmd217.t$item
                           INNER JOIN     baandb.ttcmcs003301 b ON b.t$cwar = a.t$cwar 
                           WHERE whwmd217.t$mauc$1!=0
                       group by  whwmd217.t$item, b.t$cadr) Q1    
