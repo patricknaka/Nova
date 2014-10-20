@@ -1,0 +1,295 @@
+  select Q1.* 
+  from  ( SELECT 201                                  CIA,
+                 tcemm030.t$euca                      FILIAL,
+                 tcemm030.t$dsca                      DESC_FILIAL,
+                 tdrec940.t$docn$l                    NUME_NF,
+                 tdrec940.t$seri$l                    SERI_NF,
+                 tdrec940.t$fire$l                    NR,
+                 tdrec940.t$fovn$l                    CNPJ_FORN,
+                 tdrec940.t$bpid$l                    COD_PART,
+                 tdrec940.t$ftyp$l                    COD_TIPO,
+                 tdrec940.t$stpn$l                    INS_EST,
+                 tccom100.t$nama                      NOME_FORN,
+                 tccom139.t$ibge$l                    COD_IBGE,
+                 tccom130.t$ccit                      ID_MUNIC,
+                 CASE tdrec940.t$sfad$l WHEN 
+                      tdrec940.t$ifad$l THEN 'Fatura' 
+                                        ELSE 'Entrega' 
+                  END                                 TIPO_ENDER,
+                 tdrec940.t$sfad$l                    SEQ_ENDER,
+                 tccom130.t$namc                      END_RUA,
+                 tccom130.t$dist$l                    END_BAIRRO,
+                 tccom130.t$hono                      END_NUMERO,
+                 tccom130.t$namd                      END_COMPL,
+                 tccom130.t$cste                      UF,
+                 
+                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone sessiontimezone) AS DATE)  
+                                                      DATA_RECEBIMENTO,
+                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone sessiontimezone) AS DATE)  
+                                                      DT_EMISSAO,
+                 tdrec940.t$opfc$l                    CFO,
+                 tdrec941.t$line$l                    LINE_ITEM,
+                 tcibd001.t$citg                      ID_DEPTO,
+                 tcmcs023.t$dsca                      DESCR_DEPTO,
+                 Trim(tcibd001.t$item)                ID_ITEM,
+                 tcibd001.t$dsca                      DESC_ITEM,
+                 brmcs958.t$scod$l                    COD_SERV,
+                 tcibd936.t$sour$l                    ID_PROC,
+                 tcibd001.t$ceat$l                    COD_EAN,
+                 tcibd001.t$dsca                      DESCRICAO,
+                 znmcs030.t$seto$c                    COD_SETOR,
+                 znmcs030.t$dsca$c                    DSC_SETOR,
+                 tcibd001.t$fami$c                    FAMILIA,
+                 znmcs031.t$dsca$c                    DESCR_FAMILIA,
+                 tcibd001.t$subf$c                    SUBFAMILIA,
+                 znmcs032.t$dsca$c                    DESCR_SUBFAMILIA,
+                 tdipu001.t$manu$c                    MARCA,
+                 tdrec941.t$tamt$l                    VL_TOTAL,
+                 tdrec941.t$addc$l                    VL_DESCONTO,
+                 IMPOSTO_11.VL_PIS_RETIDO             VL_PIS_RETIDO,
+                 IMPOSTO_12.VL_COFINS_RETIDO          VL_COFINS_RETIDO,
+                 tfacp200.t$leac                      COD_CTA,
+                 tfacp200.t$dim1                      COD_CCUSTO,
+                 tfgld010.t$desc                      NOME_CCUSTO,
+                 0.00                                 VL_REDUTOR_BASE,
+                 tcibd001.t$citg                      DEPTO,
+                 tcmcs023.t$dsca                      DESC_DEPTO,
+                  CASE WHEN tfacp200.t$balh$1=0 THEN
+                  (select
+                        max(p.t$docd) from baandb.ttfacp200201 p where p.t$ttyp=tfacp200.t$ttyp
+                        and p.t$ninv=tfacp200.t$ninv) 
+                  ELSE NULL
+                  END													        DT_LIQUIDACAO_TITULO,
+                 CONCAT(tdrec940.t$ttyp$l,
+                        tdrec940.t$invn$l)            TITULO,
+                 IMPOSTO_7.VL_ISS                     VL_ISS,
+                 IMPOSTO_14.VL_ISS_RETIDO             VL_ISS_RETIDO,
+                 IMPOSTO_9.VL_IRRF_PJ                 VL_IRRF_PJ,
+                 IMPOSTO_10.VL_IRRF_PF                VL_IRRF_PF,
+                 IMPOSTO_8.VL_INSS                    VL_INSS,
+                 IMPOSTO_15.VL_INSS_RET_PJ            VL_INSS_RET_PJ,
+                 IMPOSTO_17.VL_INSS_RET_PF            VL_INSS_RET_PF,
+                 IMPOSTO_5.VL_PIS                     VL_PIS,
+                 IMPOSTO_6.VL_COFINS                  VL_COFINS,
+                 IMPOSTO_13.VL_CSLL_RETIDO            VL_CSLL_RETIDO
+          
+            FROM baandb.ttdrec940201       tdrec940 
+       
+       LEFT JOIN baandb.ttccom110201       tccom110
+              ON tccom110.T$ofbp = tdrec940.t$bpid$l
+              
+      INNER JOIN baandb.ttdrec941201       tdrec941
+              ON tdrec940.t$fire$l = tdrec941.t$fire$l
+                 
+      LEFT JOIN baandb.tbrmcs958201   brmcs958
+            ON  brmcs958.t$tror$l=1
+            AND brmcs958.t$item$l=tdrec941.t$item$l
+            
+       LEFT JOIN baandb.ttcmcs940201       tcmcs940
+              ON tcmcs940.T$OFSO$L = tdrec941.t$opfc$l
+              
+       LEFT JOIN baandb.ttdrec947201       tdrec947
+              ON tdrec941.t$fire$l = tdrec947.t$fire$l 
+             AND tdrec941.t$line$l = tdrec947.T$LINE$L
+            
+      INNER JOIN baandb.ttcibd001201       tcibd001
+              ON tcibd001.t$item = tdrec941.t$item$l
+         
+     INNER JOIN baandb.ttcibd001201       tcibd001
+              ON tcibd001.t$item = tdrec941.t$item$l
+              
+      INNER JOIN  baandb.ttcmcs023201  tcmcs023
+            ON    tcmcs023.t$citg=tcibd001.t$citg
+            
+       LEFT JOIN baandb.ttcibd936201       tcibd936
+              ON tcibd936.t$ifgc$l = tcibd001.t$ifgc$l
+             
+       LEFT JOIN baandb.ttdipu001201       tdipu001
+              ON tdipu001.t$item = tcibd001.t$item
+      
+      INNER JOIN baandb.tznmcs030201       znmcs030
+              ON znmcs030.t$citg$c = tcibd001.t$citg
+             AND znmcs030.t$seto$c = tcibd001.t$seto$c
+ 
+      INNER JOIN baandb.ttccom100201       tccom100
+              ON tccom100.t$bpid = tdrec940.t$bpid$l
+  
+      INNER JOIN baandb.ttccom130201       tccom130
+              ON tccom130.t$cadr = tdrec940.t$sfad$l
+                  
+       LEFT JOIN baandb.ttccom139201       tccom139
+              ON tccom139.t$ccty = tccom130.t$ccty
+             AND tccom139.t$cste = tccom130.t$cste
+             AND tccom139.t$city = tccom130.t$ccit
+            
+      INNER JOIN baandb.ttcemm124201       tcemm124
+              ON tcemm124.t$cwoc = tdrec940.t$cofc$l 
+             AND tcemm124.t$dtyp = 2
+ 
+      INNER JOIN baandb.ttcemm030201       tcemm030
+              ON tcemm030.t$eunt = tcemm124.t$grid
+            
+       LEFT JOIN ( SELECT d.t$cnst CODE,
+                          l.t$desc DESCR
+                     FROM baandb.tttadv401000 d,
+                          baandb.tttadv140000 l
+                    WHERE d.t$cpac = 'td'                          
+                      AND d.t$cdom = 'rec.trfd.l'                      
+                      AND l.t$clan = 'p'
+                      AND l.t$cpac = 'td'                
+                      AND l.t$clab = d.t$za_clab
+                      AND rpad(d.t$vers,4) ||
+                          rpad(d.t$rele,2) ||
+                          rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                          rpad(l1.t$rele,2) ||
+                                                          rpad(l1.t$cust,4)) 
+                                                 from baandb.tttadv401000 l1 
+                                                where l1.t$cpac = d.t$cpac 
+                                                  and l1.t$cdom = d.t$cdom )
+                      AND rpad(l.t$vers,4) ||
+                          rpad(l.t$rele,2) ||
+                          rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                          rpad(l1.t$rele,2) || 
+                                                          rpad(l1.t$cust,4)) 
+                                                 from baandb.tttadv140000 l1 
+                                                where l1.t$clab = l.t$clab 
+                                                  and l1.t$clan = l.t$clan 
+                                                  and l1.t$cpac = l.t$cpac ) ) iTIPO_DOCFIS
+              ON iTIPO_DOCFIS.CODE = tdrec940.t$rfdt$l
+      
+      INNER JOIN baandb.ttcmcs023201 tcmcs023
+              ON tcmcs023.t$citg = tcibd001.t$citg
+  
+      INNER JOIN baandb.tznmcs031201 znmcs031
+              ON znmcs031.t$citg$c = tcibd001.t$citg
+             AND znmcs031.t$seto$c = tcibd001.t$seto$c
+             AND znmcs031.t$fami$c = tcibd001.t$fami$c
+  
+      INNER JOIN baandb.tznmcs032201 znmcs032
+              ON znmcs032.t$citg$c = tcibd001.t$citg
+             AND znmcs032.t$seto$c = tcibd001.t$seto$c
+             AND znmcs032.t$fami$c = tcibd001.t$fami$c
+             AND znmcs032.t$subf$c = tcibd001.t$subf$c
+
+      LEFT  JOIN  baandb.ttfacp200201 tfacp200
+            ON    tfacp200.t$ttyp = tdrec940.t$ttyp$l
+            AND   tfacp200.t$ninv = tdrec940.t$invn$l
+            AND   tfacp200.t$leac != ' '
+  
+      LEFT  JOIN  baandb.ttfgld010201 tfgld010
+            ON    tfgld010.t$dtyp = 1
+            AND   tfgld010.t$dimx = tfacp200.t$dim1
+            
+       LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_PIS,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 5 ) IMPOSTO_5
+              ON IMPOSTO_5.t$fire$l=tdrec941.t$fire$l
+             AND IMPOSTO_5.t$line$l=tdrec941.t$line$l
+  
+       LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_COFINS,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 6 ) IMPOSTO_6
+              ON IMPOSTO_6.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_6.t$line$l = tdrec941.t$line$l
+ 
+       LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_ISS,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 7 ) IMPOSTO_7
+              ON IMPOSTO_7.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_7.t$line$l = tdrec941.t$line$l
+             
+      LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_INSS,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 8 ) IMPOSTO_8
+              ON IMPOSTO_8.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_8.t$line$l = tdrec941.t$line$l
+           
+      LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_IRRF_PJ,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 9 ) IMPOSTO_9
+              ON IMPOSTO_9.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_9.t$line$l = tdrec941.t$line$l
+
+      LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_IRRF_PF,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 10 ) IMPOSTO_10
+              ON IMPOSTO_10.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_10.t$line$l = tdrec941.t$line$l
+   
+      LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_PIS_RETIDO,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 11 ) IMPOSTO_11
+              ON IMPOSTO_11.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_11.t$line$l = tdrec941.t$line$l
+
+      LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_COFINS_RETIDO,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 12 ) IMPOSTO_12
+              ON IMPOSTO_12.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_12.t$line$l = tdrec941.t$line$l
+
+      LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_CSLL_RETIDO,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 13 ) IMPOSTO_13
+              ON IMPOSTO_13.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_13.t$line$l = tdrec941.t$line$l
+
+      LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_ISS_RETIDO,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 14 ) IMPOSTO_14
+              ON IMPOSTO_14.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_14.t$line$l = tdrec941.t$line$l
+
+      LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_INSS_RET_PJ,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 15 ) IMPOSTO_15
+              ON IMPOSTO_15.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_15.t$line$l = tdrec941.t$line$l
+             
+      LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_INSS_RET_PF,
+                          tdrec942.t$fire$l,
+                          tdrec942.t$line$l
+                     FROM baandb.ttdrec942201 tdrec942
+                    WHERE tdrec942.t$brty$l = 17 ) IMPOSTO_17
+              ON IMPOSTO_17.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_17.t$line$l = tdrec941.t$line$l
+             
+WHERE tdrec940.t$stat$l IN (4,5,6)
+AND   tdrec940.t$rfdt$l IN(3)
+
+ORDER BY tdrec940.t$fire$l ) Q1
+
+-- WHERE Q1.CHAVE_FILIAL IN (:Filial)
+--   AND ( (Q1.ID_DEPTO IN (:Depto)) OR (:Depto = '000'))
+--   AND ( (Q1.COD_SETOR IN (:Setor)) OR (:Setor = '000'))
+--   AND ( (Q1.CATEGORIA IN (:Categoria)) OR (:Categoria = '000'))
+--   AND Q1.UF IN (:UF)
+--   AND Q1.NUME_CFOP IN (:CFOP)
+--   AND ( (Q1.NBM in (:NBM) and :TodosNBM = 1  ) or (:TodosNBM = 0) )
+--   AND ( (Q1.PERC_ICMS  = :Aliquota) OR (:Aliquota is null) )
