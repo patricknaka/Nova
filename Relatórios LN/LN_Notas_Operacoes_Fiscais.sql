@@ -12,7 +12,6 @@ SELECT
     tdrec940.t$fire$l  REFE_FISCAL,                  
     tdrec940.t$stat$l  STAT_REFFISC,   
     DESC_DOMAIN_STAT.  DESC_STAT, 
-    tdrec947.t$orno$l  TIPO_ORDEM,   
     tdrec940.t$fovn$l  CNPJ_FORN, 
     tdrec940.t$fids$l  NOME_PARCE, 
     tdrec940.t$opfc$l  NUME_CFOP, 
@@ -30,10 +29,6 @@ FROM       baandb.ttdrec940301   tdrec940
  
 INNER JOIN baandb.ttdrec941301  tdrec941
         ON tdrec941.T$FIRE$L = tdrec940.T$FIRE$L
-
- LEFT JOIN baandb.ttdrec947301  tdrec947
-        ON tdrec947.t$fire$l = tdrec941.t$fire$l
-       AND tdrec947.t$line$l = tdrec941.t$line$l
 
  LEFT JOIN baandb.twhinh300301  whinh300 
         ON whinh300.t$fire$c = tdrec940.t$fire$l
