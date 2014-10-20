@@ -64,7 +64,7 @@ SELECT Q1.*
                    -- ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l		    
            
            LEFT JOIN ( 	select whwmd217.t$item, 
-                               c.t$grid, 
+                               b.t$cadr, 
                                case when sum(a.t$qhnd) = 0  
                                       then 0 
                                     else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
@@ -72,12 +72,10 @@ SELECT Q1.*
                           from baandb.twhwmd217301 whwmd217  
                           INNER JOIN baandb.twhinr140301 a ON a.t$cwar = whwmd217.t$cwar AND a.t$item = whwmd217.t$item
                           INNER JOIN     baandb.ttcmcs003301 b ON b.t$cwar = a.t$cwar 
-						  INNER JOIN baandb.ttcemm112301 c ON c.t$waid = b.t$cwar 
                           WHERE whwmd217.t$mauc$1!=0
-						  AND b.t$tpar$l!=2
-                      group by  whwmd217.t$item, c.t$grid) Q1  
-                  ON Q1.t$item = whinr140.t$item  
-                 AND Q1.t$grid = tcemm112.t$grid 
+                      group by  whwmd217.t$item, b.t$cadr) Q1    
+                  ON Q1.t$item = whinr140.t$item 
+                 AND Q1.t$cadr = tcmcs003.t$cadr 
                       
            LEFT JOIN ( SELECT whwmd630.t$item,  
                               whwmd630.t$cwar,  
