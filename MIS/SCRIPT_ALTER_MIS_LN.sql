@@ -1,6 +1,6 @@
 --NUMERIC(3) para NUMERIC(2)
 alter table mis_ln..stg_est_estoque 
-alter column cd_cia numeric(2)
+alter column cd_cia int
 
 --=====================================
 --criando tabela stg_cap_titulo_lancamento
