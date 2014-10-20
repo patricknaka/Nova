@@ -1,5 +1,6 @@
 SELECT Q1.* 
-   FROM ( SELECT   
+   FROM ( SELECT
+			--znfmd001.T$FOVN$c,
             Trim(tcibd001.t$item)             ID_ITEM, 
             tcibd001.t$dsca                   NOME, 
             tcibd001.t$csig                   ITEG_SITUACAO, 
@@ -13,7 +14,8 @@ SELECT Q1.*
             znmcs032.t$dsca$c                 SUB, 
             tcemm030.t$euca                   ID_FILIAL, 
             tcemm030.T$EUNT                   CHAVE_FILIAL, 
-            'WN'                              TIPDEP, 
+			CASE WHEN tcmcs003.t$tpar$l=2 THEN 'AT' ELSE
+            'WN' END                          TIPDEP, 
             sum(whinr140.t$qhnd -  
                 nvl(Q2.bloc,0))               QT_FISICA, 
             sum(nvl(Q3.roma,0))               QT_ROMANEADA, 
@@ -55,14 +57,14 @@ SELECT Q1.*
 		  INNER JOIN baandb.ttcmcs003301 tcmcs003 
 				  ON tcmcs003.t$cwar = whinr140.t$cwar 
 				   
-          INNER JOIN baandb.TTCCOM130301 tccom130w    
-                   ON tccom130w.T$CADR = tcmcs003.T$CADR 
+          -- INNER JOIN baandb.TTCCOM130301 tccom130w    
+                   -- ON tccom130w.T$CADR = tcmcs003.T$CADR 
 				    
-          INNER JOIN baandb.TZNFMD001301 znfmd001    
-                   ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l		    
+          -- LEFT JOIN baandb.TZNFMD001301 znfmd001    
+                   -- ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l		    
            
            LEFT JOIN ( 	select whwmd217.t$item, 
-                               b.t$cadr, 
+                               c.t$grid, 
                                case when sum(a.t$qhnd) = 0  
                                       then 0 
                                     else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
@@ -70,10 +72,12 @@ SELECT Q1.*
                           from baandb.twhwmd217301 whwmd217  
                           INNER JOIN baandb.twhinr140301 a ON a.t$cwar = whwmd217.t$cwar AND a.t$item = whwmd217.t$item
                           INNER JOIN     baandb.ttcmcs003301 b ON b.t$cwar = a.t$cwar 
+						  INNER JOIN baandb.ttcemm112301 c ON c.t$waid = b.t$cwar 
                           WHERE whwmd217.t$mauc$1!=0
-                      group by  whwmd217.t$item, b.t$cadr) Q1  
+						  AND b.t$tpar$l!=2
+                      group by  whwmd217.t$item, c.t$grid) Q1  
                   ON Q1.t$item = whinr140.t$item  
-                 AND Q1.t$cadr = tcmcs003.t$cadr 
+                 AND Q1.t$grid = tcemm112.t$grid 
                       
            LEFT JOIN ( SELECT whwmd630.t$item,  
                               whwmd630.t$cwar,  
@@ -119,11 +123,13 @@ SELECT Q1.*
                  AND znmcs032.t$subf$c = tcibd001.t$subf$c 
                      
           WHERE tcemm112.t$loco = 301  
-          
+          --and Trim(tcibd001.t$item)='100118'--'2063317'
 		   
          HAVING sum(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0 
            
-          GROUP BY Trim(tcibd001.t$item),  
+          GROUP BY CASE WHEN tcmcs003.t$tpar$l=2 THEN 'AT' ELSE
+					'WN' END,
+				   Trim(tcibd001.t$item),  
                    tcibd001.t$dsca,  
                    tcibd001.t$csig,  
                    tcibd001.t$citg, 
@@ -138,7 +144,7 @@ SELECT Q1.*
                    tcemm030.T$EUNT, 
                    tccom130.t$fovn$l,  
                    tccom100.t$nama,  
-                   tccom100.t$seak 
+                   tccom100.t$seak
            
           UNION 
            
@@ -194,11 +200,11 @@ SELECT Q1.*
 		  INNER JOIN baandb.ttcmcs003301 tcmcs003 
 				  ON tcmcs003.t$cwar = whwmd630.t$cwar 
 				   
-          INNER JOIN baandb.TTCCOM130301 tccom130w    
-                   ON tccom130w.T$CADR = tcmcs003.T$CADR 
+          -- INNER JOIN baandb.TTCCOM130301 tccom130w    
+                   -- ON tccom130w.T$CADR = tcmcs003.T$CADR 
 				    
-          INNER JOIN baandb.TZNFMD001301 znfmd001    
-                   ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l
+          -- INNER JOIN baandb.TZNFMD001301 znfmd001    
+                   -- ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l
              
            LEFT JOIN ( 	select whwmd217.t$item, 
                                b.t$cadr, 
@@ -240,7 +246,8 @@ SELECT Q1.*
                                 AND tcmcs095.t$sumd = 0  
                                 AND tcmcs095.t$prcd = 9999 
                                 AND tcmcs095.t$koda = whwmd630.t$bloc ) 
-           
+         --  and Trim(tcibd001.t$item)='100118'--'2063317'
+		   
           GROUP BY Trim(tcibd001.t$item),  
                    tcibd001.t$dsca,  
                    tcibd001.t$csig,  
@@ -262,3 +269,32 @@ SELECT Q1.*
 WHERE CHAVE_FILIAL IN (:Filial)
   AND COD_DEPTO IN (:Depto)
   AND TIPDEP IN (:TipRestricao)
+--  AND tcmcs003.t$tpar$l=() - Tipo de armazem alterar para o WHERE das duas queries acima
+
+--DOMINIO:
+
+
+-- SELECT d.t$cnst COD,
+       -- l.t$desc DESCR
+-- FROM baandb.tttadv401000 d,
+     -- baandb.tttadv140000 l
+-- WHERE d.t$cpac='tc'
+-- AND d.t$cdom='mcs.tpar.l'
+-- AND rpad(d.t$vers,4) || rpad(d.t$rele,2) || rpad(d.t$cust,4)=
+                                     -- (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele, 2) || rpad(l1.t$cust,4) ) 
+                                      -- from baandb.tttadv401000 l1 
+                                      -- where l1.t$cpac=d.t$cpac 
+                                      -- AND l1.t$cdom=d.t$cdom)
+-- AND l.t$clab=d.t$za_clab
+-- AND l.t$clan='p'
+-- AND l.t$cpac='tc'
+-- AND rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
+                                    -- (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele,2) || rpad(l1.t$cust,4) ) 
+                                      -- from baandb.tttadv140000 l1 
+                                      -- where l1.t$clab=l.t$clab 
+                                      -- AND l1.t$clan=l.t$clan 
+                                      -- AND l1.t$cpac=l.t$cpac)
+-- UNION SELECT 0, 'Próprio' from dual
+
+
+
