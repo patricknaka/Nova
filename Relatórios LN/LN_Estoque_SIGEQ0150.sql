@@ -45,23 +45,23 @@ SELECT Q1.*
                 
            LEFT JOIN baandb.ttccom130301 tccom130  
                   ON tccom130.t$cadr = tccom100.t$cadr 
-				   
+       
           INNER JOIN baandb.ttcemm112301 tcemm112 
                   ON tcemm112.t$waid   = whinr140.t$cwar 
            
           INNER JOIN baandb.ttcemm030301 tcemm030 
                   ON tcemm030.t$eunt   = tcemm112.t$grid 
-				   
-		  INNER JOIN baandb.ttcmcs003301 tcmcs003 
-				  ON tcmcs003.t$cwar = whinr140.t$cwar 
-				   
+       
+          INNER JOIN baandb.ttcmcs003301 tcmcs003 
+                  ON tcmcs003.t$cwar = whinr140.t$cwar 
+       
           INNER JOIN baandb.TTCCOM130301 tccom130w    
-                   ON tccom130w.T$CADR = tcmcs003.T$CADR 
-				    
+                  ON tccom130w.T$CADR = tcmcs003.T$CADR 
+        
           INNER JOIN baandb.TZNFMD001301 znfmd001    
-                   ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l		    
+                  ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l      
            
-           LEFT JOIN ( 	select whwmd217.t$item, 
+           LEFT JOIN (  select whwmd217.t$item, 
                                b.t$cadr, 
                                case when sum(a.t$qhnd) = 0  
                                       then 0 
@@ -120,7 +120,7 @@ SELECT Q1.*
                      
           WHERE tcemm112.t$loco = 301  
           
-		   
+     
          HAVING sum(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0 
            
           GROUP BY Trim(tcibd001.t$item),  
@@ -184,23 +184,23 @@ SELECT Q1.*
              
           INNER JOIN baandb.twhwmd630301 whwmd630 
                   ON whwmd630.t$item   = tcibd001.t$item 
-				   
+       
           INNER JOIN baandb.ttcemm112301 tcemm112 
                   ON tcemm112.t$waid   = whwmd630.t$cwar 
            
           INNER JOIN baandb.ttcemm030301 tcemm030 
                   ON tcemm030.t$eunt   = tcemm112.t$grid 
-				  
-		  INNER JOIN baandb.ttcmcs003301 tcmcs003 
-				  ON tcmcs003.t$cwar = whwmd630.t$cwar 
-				   
+      
+          INNER JOIN baandb.ttcmcs003301 tcmcs003 
+                  ON tcmcs003.t$cwar = whwmd630.t$cwar 
+       
           INNER JOIN baandb.TTCCOM130301 tccom130w    
-                   ON tccom130w.T$CADR = tcmcs003.T$CADR 
-				    
+                  ON tccom130w.T$CADR = tcmcs003.T$CADR 
+        
           INNER JOIN baandb.TZNFMD001301 znfmd001    
-                   ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l
+                  ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l
              
-           LEFT JOIN ( 	select whwmd217.t$item, 
+           LEFT JOIN (  select whwmd217.t$item, 
                                b.t$cadr, 
                                case when sum(a.t$qhnd) = 0  
                                       then 0 
