@@ -25,14 +25,14 @@
     ORDERDETAIL.SKU                       ITEM,
     SKU.DESCR                             NOME_ITEM,
     SLS400.T$IDCA$C                       CANAL,
-    ORDERS.C_VAT                          MEGA_ROTA,
+    NVL(ORDERS.C_VAT, 'N/A')              MEGA_ROTA,
     ORDERSTATUSSETUP.DESCRIPTION          SITUACAO,
     TASKDETAIL.TASKDETAILKEY              PROGRAMA,
     WAVEDETAIL.WAVEKEY                    ONDA,
     ORDERS.CARRIERCODE                    ID_TRANSPORTADORA,
     ORDERS.CARRIERNAME                    TRANSPORTADORA,
     SLS002.T$TPEN$C                       TIPO_ENTREGA,
-    ORDERS.SUSR1                          NOME_TP_ENT,
+    NVL(ORDERS.SUSR1, 'Não aplicável')    NOME_TP_ENT,
     ORDERS.INVOICENUMBER                  NOTA,
     ORDERS.LANE                           SERIE,
     CAGEIDDETAIL.CAGEID                   CARGA,
@@ -151,14 +151,14 @@ INNER JOIN WMSADMIN.PL_DB
                           znsls401.t$vldi$c +
                           znsls401.t$vlfr$c + 
                           znsls401.t$vlde$c ) VALOR
-               from BAANDB.TZNSLS004301@pln01 ZNSLS004, 
-                    BAANDB.TZNSLS400301@pln01 q,
-                    BAANDB.TZNSLS401301@pln01 ZNSLS401
-              where ZNSLS004.T$NCIA$C = q.T$NCIA$C
+               from BAANDB.TZNSLS004301@pln01 ZNSLS004
+         inner join BAANDB.TZNSLS400301@pln01 q
+                 on ZNSLS004.T$NCIA$C = q.T$NCIA$C
                 and ZNSLS004.T$UNEG$C = q.T$UNEG$C
                 and ZNSLS004.T$PECL$C = q.T$PECL$C
                 and ZNSLS004.T$SQPD$C = q.T$SQPD$C
-                and znsls401.T$NCIA$C = znsls004.T$NCIA$C
+         inner join BAANDB.TZNSLS401301@pln01 ZNSLS401
+                 on znsls401.T$NCIA$C = znsls004.T$NCIA$C
                 and znsls401.T$UNEG$C = znsls004.T$UNEG$C
                 and znsls401.T$PECL$C = znsls004.T$PECL$C
                 and znsls401.T$SQPD$C = znsls004.T$SQPD$C
@@ -178,14 +178,14 @@ INNER JOIN WMSADMIN.PL_DB
         ON REDESPACHO.code = orders.INCOTERM
 
     
-WHERE SLS002.T$TPEN$C IN (:TipoEntrega)
+WHERE NVL(SLS002.T$TPEN$C, 0) IN (:TipoEntrega)
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone sessiontimezone) AS DATE)) 
       Between :DataUltEventoDe 
           And :DataUltEventoAte
   AND ORDERSTATUSSETUP.CODE IN (:ClasseEventos)
-  AND ORDERS.C_VAT IN (:MegaRota)
+  AND NVL(ORDERS.C_VAT, 'N/A') IN (:MegaRota)
   
 ORDER BY ORDERS.ORDERKEY
 
@@ -213,14 +213,14 @@ ORDER BY ORDERS.ORDERKEY
 "  ORDERDETAIL.SKU ITEM, " &
 "  SKU.DESCR NOME_ITEM, " &
 "  SLS400.T$IDCA$C CANAL, " &
-"  ORDERS.C_VAT  MEGA_ROTA, " &
+"  NVL(ORDERS.C_VAT, 'N/A') MEGA_ROTA, " &
 "  ORDERSTATUSSETUP.DESCRIPTION  SITUACAO, " &
 "  TASKDETAIL.TASKDETAILKEY  PROGRAMA, " &
 "  WAVEDETAIL.WAVEKEY  ONDA, " &
 "  ORDERS.CARRIERCODE  ID_TRANSPORTADORA, " &
 "  ORDERS.CARRIERNAME  TRANSPORTADORA, " &
 "  SLS002.T$TPEN$C TIPO_ENTREGA, " &
-"  ORDERS.SUSR1  NOME_TP_ENT, " &
+"  NVL(ORDERS.SUSR1, 'Não aplicável') NOME_TP_ENT, " &
 "  ORDERS.INVOICENUMBER  NOTA, " &
 "  ORDERS.LANE SERIE, " &
 "  CAGEIDDETAIL.CAGEID CARGA, " &
@@ -319,14 +319,14 @@ ORDER BY ORDERS.ORDERKEY
 "  znsls401.t$vldi$c + " &
 "  znsls401.t$vlfr$c + " &
 "  znsls401.t$vlde$c ) VALOR " &
-" from BAANDB.TZNSLS004301@pln01 ZNSLS004, " &
-"  BAANDB.TZNSLS400301@pln01 q, " &
-"  BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
-"  where ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
+"from BAANDB.TZNSLS004301@pln01 ZNSLS004 " &
+" inner join BAANDB.TZNSLS400301@pln01 q " &
+"   on ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
 "  and ZNSLS004.T$UNEG$C = q.T$UNEG$C " &
 "  and ZNSLS004.T$PECL$C = q.T$PECL$C " &
 "  and ZNSLS004.T$SQPD$C = q.T$SQPD$C " &
-"  and znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
+" inner join BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
+"   on znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
 "  and znsls401.T$UNEG$C = znsls004.T$UNEG$C " &
 "  and znsls401.T$PECL$C = znsls004.T$PECL$C " &
 "  and znsls401.T$SQPD$C = znsls004.T$SQPD$C " &
@@ -343,12 +343,12 @@ ORDER BY ORDERS.ORDERKEY
 " from " + Parameters!Table.Value + ".codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
-"WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
+"WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
 "  And '" + Parameters!DataUltEventoAte.Value + "' " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ") " &
-"  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
+"  AND NVL(ORDERS.C_VAT, 'N/A') IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
 "ORDER BY ORDERS.ORDERKEY  "
 
 -- Query com Union *****************************************************************************************
@@ -374,14 +374,14 @@ ORDER BY ORDERS.ORDERKEY
 "  ORDERDETAIL.SKU ITEM, " &
 "  SKU.DESCR NOME_ITEM, " &
 "  SLS400.T$IDCA$C CANAL, " &
-"  ORDERS.C_VAT  MEGA_ROTA, " &
+"  NVL(ORDERS.C_VAT, 'N/A') MEGA_ROTA, " &
 "  ORDERSTATUSSETUP.DESCRIPTION  SITUACAO, " &
 "  TASKDETAIL.TASKDETAILKEY  PROGRAMA, " &
 "  WAVEDETAIL.WAVEKEY  ONDA, " &
 "  ORDERS.CARRIERCODE  ID_TRANSPORTADORA, " &
 "  ORDERS.CARRIERNAME  TRANSPORTADORA, " &
 "  SLS002.T$TPEN$C TIPO_ENTREGA, " &
-"  ORDERS.SUSR1  NOME_TP_ENT, " &
+"  NVL(ORDERS.SUSR1, 'Não aplicável') NOME_TP_ENT, " &
 "  ORDERS.INVOICENUMBER  NOTA, " &
 "  ORDERS.LANE SERIE, " &
 "  CAGEIDDETAIL.CAGEID CARGA, " &
@@ -480,14 +480,14 @@ ORDER BY ORDERS.ORDERKEY
 "  znsls401.t$vldi$c + " &
 "  znsls401.t$vlfr$c + " &
 "  znsls401.t$vlde$c ) VALOR " &
-" from BAANDB.TZNSLS004301@pln01 ZNSLS004, " &
-"  BAANDB.TZNSLS400301@pln01 q, " &
-"  BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
-"  where ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
+"from BAANDB.TZNSLS004301@pln01 ZNSLS004 " &
+" inner join BAANDB.TZNSLS400301@pln01 q " &
+"   on ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
 "  and ZNSLS004.T$UNEG$C = q.T$UNEG$C " &
 "  and ZNSLS004.T$PECL$C = q.T$PECL$C " &
 "  and ZNSLS004.T$SQPD$C = q.T$SQPD$C " &
-"  and znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
+" inner join BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
+"   on znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
 "  and znsls401.T$UNEG$C = znsls004.T$UNEG$C " &
 "  and znsls401.T$PECL$C = znsls004.T$PECL$C " &
 "  and znsls401.T$SQPD$C = znsls004.T$SQPD$C " &
@@ -504,12 +504,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE1.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
-"WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
+"WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
 "  And '" + Parameters!DataUltEventoAte.Value + "' " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ") " &
-"  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
+"  AND NVL(ORDERS.C_VAT, 'N/A') IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
 "Union " &
 "SELECT " &
 "  DISTINCT " &
@@ -532,14 +532,14 @@ ORDER BY ORDERS.ORDERKEY
 "  ORDERDETAIL.SKU ITEM, " &
 "  SKU.DESCR NOME_ITEM, " &
 "  SLS400.T$IDCA$C CANAL, " &
-"  ORDERS.C_VAT  MEGA_ROTA, " &
+"  NVL(ORDERS.C_VAT, 'N/A') MEGA_ROTA, " &
 "  ORDERSTATUSSETUP.DESCRIPTION  SITUACAO, " &
 "  TASKDETAIL.TASKDETAILKEY  PROGRAMA, " &
 "  WAVEDETAIL.WAVEKEY  ONDA, " &
 "  ORDERS.CARRIERCODE  ID_TRANSPORTADORA, " &
 "  ORDERS.CARRIERNAME  TRANSPORTADORA, " &
 "  SLS002.T$TPEN$C TIPO_ENTREGA, " &
-"  ORDERS.SUSR1  NOME_TP_ENT, " &
+"  NVL(ORDERS.SUSR1, 'Não aplicável') NOME_TP_ENT, " &
 "  ORDERS.INVOICENUMBER  NOTA, " &
 "  ORDERS.LANE SERIE, " &
 "  CAGEIDDETAIL.CAGEID CARGA, " &
@@ -638,14 +638,14 @@ ORDER BY ORDERS.ORDERKEY
 "  znsls401.t$vldi$c + " &
 "  znsls401.t$vlfr$c + " &
 "  znsls401.t$vlde$c ) VALOR " &
-" from BAANDB.TZNSLS004301@pln01 ZNSLS004, " &
-"  BAANDB.TZNSLS400301@pln01 q, " &
-"  BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
-"  where ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
+"from BAANDB.TZNSLS004301@pln01 ZNSLS004 " &
+" inner join BAANDB.TZNSLS400301@pln01 q " &
+"   on ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
 "  and ZNSLS004.T$UNEG$C = q.T$UNEG$C " &
 "  and ZNSLS004.T$PECL$C = q.T$PECL$C " &
 "  and ZNSLS004.T$SQPD$C = q.T$SQPD$C " &
-"  and znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
+" inner join BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
+"   on znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
 "  and znsls401.T$UNEG$C = znsls004.T$UNEG$C " &
 "  and znsls401.T$PECL$C = znsls004.T$PECL$C " &
 "  and znsls401.T$SQPD$C = znsls004.T$SQPD$C " &
@@ -662,12 +662,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE2.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
-"WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
+"WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
 "  And '" + Parameters!DataUltEventoAte.Value + "' " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ") " &
-"  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
+"  AND NVL(ORDERS.C_VAT, 'N/A') IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
 "Union " &
 "SELECT " &
 "  DISTINCT " &
@@ -690,14 +690,14 @@ ORDER BY ORDERS.ORDERKEY
 "  ORDERDETAIL.SKU ITEM, " &
 "  SKU.DESCR NOME_ITEM, " &
 "  SLS400.T$IDCA$C CANAL, " &
-"  ORDERS.C_VAT  MEGA_ROTA, " &
+"  NVL(ORDERS.C_VAT, 'N/A') MEGA_ROTA, " &
 "  ORDERSTATUSSETUP.DESCRIPTION  SITUACAO, " &
 "  TASKDETAIL.TASKDETAILKEY  PROGRAMA, " &
 "  WAVEDETAIL.WAVEKEY  ONDA, " &
 "  ORDERS.CARRIERCODE  ID_TRANSPORTADORA, " &
 "  ORDERS.CARRIERNAME  TRANSPORTADORA, " &
 "  SLS002.T$TPEN$C TIPO_ENTREGA, " &
-"  ORDERS.SUSR1  NOME_TP_ENT, " &
+"  NVL(ORDERS.SUSR1, 'Não aplicável') NOME_TP_ENT, " &
 "  ORDERS.INVOICENUMBER  NOTA, " &
 "  ORDERS.LANE SERIE, " &
 "  CAGEIDDETAIL.CAGEID CARGA, " &
@@ -796,14 +796,14 @@ ORDER BY ORDERS.ORDERKEY
 "  znsls401.t$vldi$c + " &
 "  znsls401.t$vlfr$c + " &
 "  znsls401.t$vlde$c ) VALOR " &
-" from BAANDB.TZNSLS004301@pln01 ZNSLS004, " &
-"  BAANDB.TZNSLS400301@pln01 q, " &
-"  BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
-"  where ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
+"from BAANDB.TZNSLS004301@pln01 ZNSLS004 " &
+" inner join BAANDB.TZNSLS400301@pln01 q " &
+"   on ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
 "  and ZNSLS004.T$UNEG$C = q.T$UNEG$C " &
 "  and ZNSLS004.T$PECL$C = q.T$PECL$C " &
 "  and ZNSLS004.T$SQPD$C = q.T$SQPD$C " &
-"  and znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
+" inner join BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
+"   on znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
 "  and znsls401.T$UNEG$C = znsls004.T$UNEG$C " &
 "  and znsls401.T$PECL$C = znsls004.T$PECL$C " &
 "  and znsls401.T$SQPD$C = znsls004.T$SQPD$C " &
@@ -820,12 +820,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE3.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
-"WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
+"WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
 "  And '" + Parameters!DataUltEventoAte.Value + "' " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ") " &
-"  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
+"  AND NVL(ORDERS.C_VAT, 'N/A') IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
 "Union " &
 "SELECT " &
 "  DISTINCT " &
@@ -848,14 +848,14 @@ ORDER BY ORDERS.ORDERKEY
 "  ORDERDETAIL.SKU ITEM, " &
 "  SKU.DESCR NOME_ITEM, " &
 "  SLS400.T$IDCA$C CANAL, " &
-"  ORDERS.C_VAT  MEGA_ROTA, " &
+"  NVL(ORDERS.C_VAT, 'N/A') MEGA_ROTA, " &
 "  ORDERSTATUSSETUP.DESCRIPTION  SITUACAO, " &
 "  TASKDETAIL.TASKDETAILKEY  PROGRAMA, " &
 "  WAVEDETAIL.WAVEKEY  ONDA, " &
 "  ORDERS.CARRIERCODE  ID_TRANSPORTADORA, " &
 "  ORDERS.CARRIERNAME  TRANSPORTADORA, " &
 "  SLS002.T$TPEN$C TIPO_ENTREGA, " &
-"  ORDERS.SUSR1  NOME_TP_ENT, " &
+"  NVL(ORDERS.SUSR1, 'Não aplicável') NOME_TP_ENT, " &
 "  ORDERS.INVOICENUMBER  NOTA, " &
 "  ORDERS.LANE SERIE, " &
 "  CAGEIDDETAIL.CAGEID CARGA, " &
@@ -954,14 +954,14 @@ ORDER BY ORDERS.ORDERKEY
 "  znsls401.t$vldi$c + " &
 "  znsls401.t$vlfr$c + " &
 "  znsls401.t$vlde$c ) VALOR " &
-" from BAANDB.TZNSLS004301@pln01 ZNSLS004, " &
-"  BAANDB.TZNSLS400301@pln01 q, " &
-"  BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
-"  where ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
+"from BAANDB.TZNSLS004301@pln01 ZNSLS004 " &
+" inner join BAANDB.TZNSLS400301@pln01 q " &
+"   on ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
 "  and ZNSLS004.T$UNEG$C = q.T$UNEG$C " &
 "  and ZNSLS004.T$PECL$C = q.T$PECL$C " &
 "  and ZNSLS004.T$SQPD$C = q.T$SQPD$C " &
-"  and znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
+" inner join BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
+"   on znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
 "  and znsls401.T$UNEG$C = znsls004.T$UNEG$C " &
 "  and znsls401.T$PECL$C = znsls004.T$PECL$C " &
 "  and znsls401.T$SQPD$C = znsls004.T$SQPD$C " &
@@ -978,12 +978,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE4.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
-"WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
+"WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
 "  And '" + Parameters!DataUltEventoAte.Value + "' " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ") " &
-"  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
+"  AND NVL(ORDERS.C_VAT, 'N/A') IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
 "Union " &
 "SELECT " &
 "  DISTINCT " &
@@ -1006,14 +1006,14 @@ ORDER BY ORDERS.ORDERKEY
 "  ORDERDETAIL.SKU ITEM, " &
 "  SKU.DESCR NOME_ITEM, " &
 "  SLS400.T$IDCA$C CANAL, " &
-"  ORDERS.C_VAT  MEGA_ROTA, " &
+"  NVL(ORDERS.C_VAT, 'N/A') MEGA_ROTA, " &
 "  ORDERSTATUSSETUP.DESCRIPTION  SITUACAO, " &
 "  TASKDETAIL.TASKDETAILKEY  PROGRAMA, " &
 "  WAVEDETAIL.WAVEKEY  ONDA, " &
 "  ORDERS.CARRIERCODE  ID_TRANSPORTADORA, " &
 "  ORDERS.CARRIERNAME  TRANSPORTADORA, " &
 "  SLS002.T$TPEN$C TIPO_ENTREGA, " &
-"  ORDERS.SUSR1  NOME_TP_ENT, " &
+"  NVL(ORDERS.SUSR1, 'Não aplicável') NOME_TP_ENT, " &
 "  ORDERS.INVOICENUMBER  NOTA, " &
 "  ORDERS.LANE SERIE, " &
 "  CAGEIDDETAIL.CAGEID CARGA, " &
@@ -1112,14 +1112,14 @@ ORDER BY ORDERS.ORDERKEY
 "  znsls401.t$vldi$c + " &
 "  znsls401.t$vlfr$c + " &
 "  znsls401.t$vlde$c ) VALOR " &
-" from BAANDB.TZNSLS004301@pln01 ZNSLS004, " &
-"  BAANDB.TZNSLS400301@pln01 q, " &
-"  BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
-"  where ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
+"from BAANDB.TZNSLS004301@pln01 ZNSLS004 " &
+" inner join BAANDB.TZNSLS400301@pln01 q " &
+"   on ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
 "  and ZNSLS004.T$UNEG$C = q.T$UNEG$C " &
 "  and ZNSLS004.T$PECL$C = q.T$PECL$C " &
 "  and ZNSLS004.T$SQPD$C = q.T$SQPD$C " &
-"  and znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
+" inner join BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
+"   on znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
 "  and znsls401.T$UNEG$C = znsls004.T$UNEG$C " &
 "  and znsls401.T$PECL$C = znsls004.T$PECL$C " &
 "  and znsls401.T$SQPD$C = znsls004.T$SQPD$C " &
@@ -1136,12 +1136,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE5.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
-"WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
+"WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
 "  And '" + Parameters!DataUltEventoAte.Value + "' " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ") " &
-"  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
+"  AND NVL(ORDERS.C_VAT, 'N/A') IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
 "Union " &
 "SELECT " &
 "  DISTINCT " &
@@ -1164,14 +1164,14 @@ ORDER BY ORDERS.ORDERKEY
 "  ORDERDETAIL.SKU ITEM, " &
 "  SKU.DESCR NOME_ITEM, " &
 "  SLS400.T$IDCA$C CANAL, " &
-"  ORDERS.C_VAT  MEGA_ROTA, " &
+"  NVL(ORDERS.C_VAT, 'N/A') MEGA_ROTA, " &
 "  ORDERSTATUSSETUP.DESCRIPTION  SITUACAO, " &
 "  TASKDETAIL.TASKDETAILKEY  PROGRAMA, " &
 "  WAVEDETAIL.WAVEKEY  ONDA, " &
 "  ORDERS.CARRIERCODE  ID_TRANSPORTADORA, " &
 "  ORDERS.CARRIERNAME  TRANSPORTADORA, " &
 "  SLS002.T$TPEN$C TIPO_ENTREGA, " &
-"  ORDERS.SUSR1  NOME_TP_ENT, " &
+"  NVL(ORDERS.SUSR1, 'Não aplicável') NOME_TP_ENT, " &
 "  ORDERS.INVOICENUMBER  NOTA, " &
 "  ORDERS.LANE SERIE, " &
 "  CAGEIDDETAIL.CAGEID CARGA, " &
@@ -1270,14 +1270,14 @@ ORDER BY ORDERS.ORDERKEY
 "  znsls401.t$vldi$c + " &
 "  znsls401.t$vlfr$c + " &
 "  znsls401.t$vlde$c ) VALOR " &
-" from BAANDB.TZNSLS004301@pln01 ZNSLS004, " &
-"  BAANDB.TZNSLS400301@pln01 q, " &
-"  BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
-"  where ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
+"from BAANDB.TZNSLS004301@pln01 ZNSLS004 " &
+" inner join BAANDB.TZNSLS400301@pln01 q " &
+"   on ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
 "  and ZNSLS004.T$UNEG$C = q.T$UNEG$C " &
 "  and ZNSLS004.T$PECL$C = q.T$PECL$C " &
 "  and ZNSLS004.T$SQPD$C = q.T$SQPD$C " &
-"  and znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
+" inner join BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
+"   on znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
 "  and znsls401.T$UNEG$C = znsls004.T$UNEG$C " &
 "  and znsls401.T$PECL$C = znsls004.T$PECL$C " &
 "  and znsls401.T$SQPD$C = znsls004.T$SQPD$C " &
@@ -1294,12 +1294,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE6.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
-"WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
+"WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
 "  And '" + Parameters!DataUltEventoAte.Value + "' " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ") " &
-"  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
+"  AND NVL(ORDERS.C_VAT, 'N/A') IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
 "Union " &
 "SELECT " &
 "  DISTINCT " &
@@ -1322,14 +1322,14 @@ ORDER BY ORDERS.ORDERKEY
 "  ORDERDETAIL.SKU ITEM, " &
 "  SKU.DESCR NOME_ITEM, " &
 "  SLS400.T$IDCA$C CANAL, " &
-"  ORDERS.C_VAT  MEGA_ROTA, " &
+"  NVL(ORDERS.C_VAT, 'N/A') MEGA_ROTA, " &
 "  ORDERSTATUSSETUP.DESCRIPTION  SITUACAO, " &
 "  TASKDETAIL.TASKDETAILKEY  PROGRAMA, " &
 "  WAVEDETAIL.WAVEKEY  ONDA, " &
 "  ORDERS.CARRIERCODE  ID_TRANSPORTADORA, " &
 "  ORDERS.CARRIERNAME  TRANSPORTADORA, " &
 "  SLS002.T$TPEN$C TIPO_ENTREGA, " &
-"  ORDERS.SUSR1  NOME_TP_ENT, " &
+"  NVL(ORDERS.SUSR1, 'Não aplicável') NOME_TP_ENT, " &
 "  ORDERS.INVOICENUMBER  NOTA, " &
 "  ORDERS.LANE SERIE, " &
 "  CAGEIDDETAIL.CAGEID CARGA, " &
@@ -1428,14 +1428,14 @@ ORDER BY ORDERS.ORDERKEY
 "  znsls401.t$vldi$c + " &
 "  znsls401.t$vlfr$c + " &
 "  znsls401.t$vlde$c ) VALOR " &
-" from BAANDB.TZNSLS004301@pln01 ZNSLS004, " &
-"  BAANDB.TZNSLS400301@pln01 q, " &
-"  BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
-"  where ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
+"from BAANDB.TZNSLS004301@pln01 ZNSLS004 " &
+" inner join BAANDB.TZNSLS400301@pln01 q " &
+"   on ZNSLS004.T$NCIA$C = q.T$NCIA$C " &
 "  and ZNSLS004.T$UNEG$C = q.T$UNEG$C " &
 "  and ZNSLS004.T$PECL$C = q.T$PECL$C " &
 "  and ZNSLS004.T$SQPD$C = q.T$SQPD$C " &
-"  and znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
+" inner join BAANDB.TZNSLS401301@pln01 ZNSLS401 " &
+"   on znsls401.T$NCIA$C = znsls004.T$NCIA$C " &
 "  and znsls401.T$UNEG$C = znsls004.T$UNEG$C " &
 "  and znsls401.T$PECL$C = znsls004.T$PECL$C " &
 "  and znsls401.T$SQPD$C = znsls004.T$SQPD$C " &
@@ -1452,10 +1452,10 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE7.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
-"WHERE SLS002.T$TPEN$C IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
+"WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
 "  And '" + Parameters!DataUltEventoAte.Value + "' " &
 "  AND ORDERSTATUSSETUP.CODE IN (" + JOIN(Parameters!ClasseEventos.Value, ", ") + ") " &
-"  AND ORDERS.C_VAT IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
+"  AND NVL(ORDERS.C_VAT, 'N/A') IN (" + Replace(("'" + JOIN(Parameters!MegaRota.Value, "',") + "'"),",",",'") + ") " &
 "ORDER BY DSC_PLANTA, PEDIDO "
