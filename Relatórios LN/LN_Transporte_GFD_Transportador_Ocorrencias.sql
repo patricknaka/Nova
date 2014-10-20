@@ -29,7 +29,8 @@ SELECT DISTINCT
   DOMSIT.DESCR             DESC_SITUACAO, 
   znfmd040.t$pzeh$c        PZ_ENVIO,
   znfmd040.t$logn$c        USUARIO_ULT_ALT,
-  znfmd040.t$date$c        DATA_ULT_ALT
+  znfmd040.t$date$c        DATA_ULT_ALT,
+  tccom130.t$fovn$l		   CNPJ_TRANSPORTADORA
 
 FROM       BAANDB.tznfmd040201 znfmd040
     
@@ -41,6 +42,9 @@ INNER JOIN BAANDB.tznfmd067201 znfmd067
   
 INNER JOIN BAANDB.ttcmcs080201 tcmcs080
         ON tcmcs080.t$cfrw = znfmd040.t$cfrw$c
+		
+INNER JOIN	BAANDB.ttccom130201 tccom130
+		ON	tccom130.t$cadr = tcmcs080.t$cadr$l
 
 INNER JOIN BAANDB.tznfmd001201  znfmd001
         ON znfmd001.t$fili$c = znfmd067.t$fili$c
