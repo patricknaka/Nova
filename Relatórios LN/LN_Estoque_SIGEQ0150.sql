@@ -47,13 +47,12 @@ SELECT Q1.*
                 
            LEFT JOIN baandb.ttccom130301 tccom130  
                   ON tccom130.t$cadr = tccom100.t$cadr 
-       
+				   
           INNER JOIN baandb.ttcemm112301 tcemm112 
                   ON tcemm112.t$waid   = whinr140.t$cwar 
            
           INNER JOIN baandb.ttcemm030301 tcemm030 
                   ON tcemm030.t$eunt   = tcemm112.t$grid 
-<<<<<<< HEAD
 				   
 		  INNER JOIN baandb.ttcmcs003301 tcmcs003 
 				  ON tcmcs003.t$cwar = whinr140.t$cwar 
@@ -66,20 +65,6 @@ SELECT Q1.*
            
            LEFT JOIN ( 	select whwmd217.t$item, 
                                c.t$grid, 
-=======
-       
-          INNER JOIN baandb.ttcmcs003301 tcmcs003 
-                  ON tcmcs003.t$cwar = whinr140.t$cwar 
-       
-          INNER JOIN baandb.TTCCOM130301 tccom130w    
-                  ON tccom130w.T$CADR = tcmcs003.T$CADR 
-        
-          INNER JOIN baandb.TZNFMD001301 znfmd001    
-                  ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l      
-           
-           LEFT JOIN (  select whwmd217.t$item, 
-                               b.t$cadr, 
->>>>>>> origin/master
                                case when sum(a.t$qhnd) = 0  
                                       then 0 
                                     else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
@@ -138,13 +123,8 @@ SELECT Q1.*
                  AND znmcs032.t$subf$c = tcibd001.t$subf$c 
                      
           WHERE tcemm112.t$loco = 301  
-<<<<<<< HEAD
           --and Trim(tcibd001.t$item)='100118'--'2063317'
 		   
-=======
-          
-     
->>>>>>> origin/master
          HAVING sum(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0 
            
           GROUP BY CASE WHEN tcmcs003.t$tpar$l=2 THEN 'AT' ELSE
@@ -210,13 +190,12 @@ SELECT Q1.*
              
           INNER JOIN baandb.twhwmd630301 whwmd630 
                   ON whwmd630.t$item   = tcibd001.t$item 
-       
+				   
           INNER JOIN baandb.ttcemm112301 tcemm112 
                   ON tcemm112.t$waid   = whwmd630.t$cwar 
            
           INNER JOIN baandb.ttcemm030301 tcemm030 
                   ON tcemm030.t$eunt   = tcemm112.t$grid 
-<<<<<<< HEAD
 				  
 		  INNER JOIN baandb.ttcmcs003301 tcmcs003 
 				  ON tcmcs003.t$cwar = whwmd630.t$cwar 
@@ -226,19 +205,8 @@ SELECT Q1.*
 				    
           -- INNER JOIN baandb.TZNFMD001301 znfmd001    
                    -- ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l
-=======
-      
-          INNER JOIN baandb.ttcmcs003301 tcmcs003 
-                  ON tcmcs003.t$cwar = whwmd630.t$cwar 
-       
-          INNER JOIN baandb.TTCCOM130301 tccom130w    
-                  ON tccom130w.T$CADR = tcmcs003.T$CADR 
-        
-          INNER JOIN baandb.TZNFMD001301 znfmd001    
-                  ON znfmd001.T$FOVN$c = tccom130w.T$FOVN$l
->>>>>>> origin/master
              
-           LEFT JOIN (  select whwmd217.t$item, 
+           LEFT JOIN ( 	select whwmd217.t$item, 
                                b.t$cadr, 
                                case when sum(a.t$qhnd) = 0  
                                       then 0 
@@ -297,10 +265,6 @@ SELECT Q1.*
                    tccom130.t$fovn$l,  
                    tccom100.t$nama,  
                    tccom100.t$seak ) Q1
-   
-WHERE CHAVE_FILIAL IN (:Filial)
-  AND COD_DEPTO IN (:Depto)
-  AND TIPDEP IN (:TipRestricao)
 --  AND tcmcs003.t$tpar$l=() - Tipo de armazem alterar para o WHERE das duas queries acima
 
 --DOMINIO:
