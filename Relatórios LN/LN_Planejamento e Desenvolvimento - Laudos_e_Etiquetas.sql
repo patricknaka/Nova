@@ -47,7 +47,7 @@ SELECT
 FROM       baandb.tznfmd630201 znfmd630
            
 INNER JOIN baandb.tznsls401201 znsls401
-        ON znsls401.t$entr$c = znfmd630.t$pecl$c
+        ON TO_CHAR(znsls401.t$entr$c) = znfmd630.t$pecl$c
        AND znsls401.t$orno$c = znfmd630.T$ORNO$C
     
 INNER JOIN baandb.tznsls400201 znsls400
