@@ -3,14 +3,14 @@ SELECT
     znsls401.t$entr$c   ENTREGA,
  
     ( select znfmd640.t$coci$c 
-        from BAANDB.tznfmd640201 znfmd640
+        from BAANDB.tznfmd640301 znfmd640
        where znfmd640.t$date$c = ( SELECT max(znfmd640b.t$date$c) 
-                                     FROM BAANDB.tznfmd640201 znfmd640b
+                                     FROM BAANDB.tznfmd640301 znfmd640b
                                     WHERE znfmd640b.t$fili$c = znfmd640.t$fili$c 
                                       AND znfmd640b.t$etiq$c = znfmd640.t$etiq$c )
          and znfmd640.t$fili$c = znfmd630.t$fili$c 
          and znfmd640.t$etiq$c = znfmd630.t$etiq$c) 
-                        INSTÂNCIA, 
+                        INSTANCIA, 
    
     cisli940v.t$docn$l  NFS,
     cisli940v.t$seri$l  SERIE_NFS,
@@ -23,39 +23,42 @@ SELECT
     cisli940d.t$stat$l  DEV_SITUACAO, DESC_STAT,
  
     ( select max(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640b.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 
-	    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)) 
-        from BAANDB.tznfmd640201 znfmd640b
+     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)) 
+        from BAANDB.tznfmd640301 znfmd640b
        where znfmd640b.t$fili$c = znfmd630.t$fili$c 
          and znfmd640b.t$etiq$c = znfmd630.t$etiq$c )
                         DATA_SITUACAO
-		
-FROM       baandb.tcisli940201  cisli940v
+  
+FROM       baandb.tcisli940301  cisli940v
 
-INNER JOIN baandb.tcisli245201  cisli245v
+INNER JOIN baandb.tcisli245301  cisli245v
         ON cisli940v.t$fire$l = cisli245v.t$fire$l
 
- LEFT JOIN BAANDB.tznfmd630201  znfmd630
+ LEFT JOIN BAANDB.tznfmd630301  znfmd630
         ON znfmd630.t$fire$c = cisli940v.t$fire$l 
 
- LEFT JOIN baandb.ttcmcs080201  tcmcs080
+ LEFT JOIN baandb.ttcmcs080301  tcmcs080
         ON tcmcs080.t$cfrw = cisli940v.T$cfrw$l
 
-INNER JOIN baandb.ttdsls401201  tdsls401
+INNER JOIN baandb.ttdsls401301  tdsls401
         ON tdsls401.t$orno = cisli245v.t$slso
        AND tdsls401.t$pono = cisli245v.t$pono
-	   
-INNER JOIN baandb.tcisli245201  cisli245d  
-        ON cisli245d.t$fire$l = tdsls401.t$fire$l
-       AND cisli245d.t$line$l = tdsls401.t$line$l
+       
+INNER JOIN BAANDB.ttdsls401301 tdsls401d
+        ON  tdsls401d.t$fire$l=cisli940v.t$fire$l
+    
+INNER JOIN baandb.tcisli245301  cisli245d  
+        ON cisli245d.t$slso = tdsls401d.t$orno
+       AND cisli245d.t$pono = tdsls401d.t$pono
  
-INNER JOIN baandb.tcisli940201  cisli940d
+INNER JOIN baandb.tcisli940301  cisli940d
         ON cisli940d.t$fire$l = cisli245d.t$fire$l
 
- LEFT JOIN baandb.tznsls401201  znsls401
+ LEFT JOIN baandb.tznsls401301  znsls401
         ON tdsls401.t$orno = znsls401.t$orno$c
        AND tdsls401.t$pono = znsls401.t$pono$c
     
-INNER JOIN ( SELECT d.t$cnst CODE_STAT, 
+ LEFT JOIN ( SELECT d.t$cnst CODE_STAT, 
                     l.t$desc DESC_STAT
                FROM baandb.tttadv401000 d, 
                     baandb.tttadv140000 l 
@@ -83,6 +86,6 @@ INNER JOIN ( SELECT d.t$cnst CODE_STAT,
                                             and l1.t$cpac = l.t$cpac ) ) iTABLE
         ON cisli940d.t$stat$l = iTABLE.CODE_STAT
   
-WHERE cisli940v.t$fdty$l = 14
+WHERE cisli940d.t$fdty$l = 14
 
   AND znsls401.t$entr$c in (:NumEntrega)
