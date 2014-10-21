@@ -92,7 +92,7 @@ INNER JOIN baandb.tznsls400201 znsls400
                 AND l.t$clan = 'p'
                 AND l.t$cpac = 'ci'
                 AND l.t$clab = d.t$za_clab
-    AND rpad(d.t$vers,4) ||
+                AND rpad(d.t$vers,4) ||
                     rpad(d.t$rele,2) ||
                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
                                                     rpad(l1.t$rele,2) ||
