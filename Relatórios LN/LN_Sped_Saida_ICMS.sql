@@ -1,82 +1,84 @@
 --Saída
 select Q1.* 
-  from  ( SELECT DISTINCT
-                 301                       CIA,
-                 tcemm030.t$euca           FILIAL,
-                 ' '                       ID_NFE,
-                 cisli940.t$docn$l         NF,
-                 cisli940.t$seri$l         SERIE,
-                 cisli940.t$cnfe$l         ID_CHAVE,
-                 
-                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
-                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,
+  from ( SELECT DISTINCT
+                301                                   CIA,
+                tcemm030.T$EUNT                       FILIAL,
+                ' '                                   ID_NFE,
+                cisli940.t$docn$l                     NF,
+                cisli940.t$seri$l                     SERIE,
+                cisli940.t$cnfe$l                     ID_CHAVE,
+                
+                CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE)
+                                                      DATA_EMISSAO,
                      
                 CASE WHEN cisli940.t$stat$l = 2 THEN 'CANCELADA'
                       ELSE 'ATIVA' 
-                END                        SITUACAO,
-                ' '                        ID_MOTIVO,
-                tccom130.t$cste            UF,
-                cisli941.t$ccfo$l          CFO,
-                ' '                        SEQ_CFO,
-                tcmcs940.t$dsca$l          NOME_CFO,                 
-                ' '                        MODULO_BASE_GER,
-                cisli940.t$bpid$l          COD_PART,          
-                tccom110.t$cbtp            COD_TIPO,
-                ' '                        ID_CLIENTE,
-                tccom966.t$stin$d          IE_CLIENTE,
-                tccom100.t$nama            NOME_CLIENTE,
-                tccom130.t$ccit            ID_MUNIC,
-                CASE  WHEN cisli940.t$itoa$l = cisli940.t$stoa$l THEN 'Fatura' 
-                     ELSE 'Entrega' 
-                END                        TIPO_ENDER, 
-                cisli940.t$stoa$l          SEQ_ENDER,
-                tccom130.t$namc            END_RUA,
-                tccom130.t$dist$l          END_BAIRRO,
-                tccom130.t$hono            END_NUMERO,
-                tccom130.t$namd            END_COMPL,
-                cisli941.t$line$l          LINE_ITEM,
-                tcibd001.t$citg            ID_DEPTO,
-                Trim(tcibd001.t$item)      ID_ITEM,
-                tcibd936.t$sour$l          ID_PROC,
-                tcibd936.t$frat$l          NBM,
-                ' '                        SEQ_NBM,
-                tcibd001.t$dsca            NOME_ITEM,
-                tcibd001.t$ceat$l          COD_EAN,
-                tcibd001.t$fami$c          CATEGORIA,
-                tcibd001.t$subf$c          SUBCATEGORIA,
-                tcmcs060.t$dsca            MARCA,
-                cisli941.t$pric$l          PR_UNITARIO,
-                cisli941.t$dqua$l          QTD_FATURADA,
-                cisli941.t$gamt$l          VL_MERCADORIA,
-                cisli941.t$fght$l          VL_FRETE,
-                cisli941.t$insr$l          VL_SEGURO,
-                DESPESA.TOTAL              VL_DESPESA,          
-                JUROS.TOTAL                VL_DESPESA_FINANC,
-                cisli941.t$ldam$l          VL_DESCONTO,                        
-                NULL                       VL_DESC_INC,
-                NULL                       VL_DESC_COND,
-                IMPOSTO_1.                 BASE_ICMS,
-                IMPOSTO_1.                 PERC_ICMS,
-                IMPOSTO_1.                 VL_ICMS,
-                IMPOSTO_1.                 VL_ICMS_DEST,
-                IMPOSTO_2.                 BASE_ICMS_ST,
-                IMPOSTO_2.                 VL_ICMS_ST,
-                IMPOSTO_2.                 VL_ICMS_ST_DESTAQUE,      
-                IMPOSTO_3.                 VL_IPI_DESTAQUE,
-                IMPOSTO_5.                 VL_PIS, 
-                IMPOSTO_6.                 VL_COFINS,
-                cisli941.t$amnt$l          VL_TOTAL_ITEM,
-                COD_SEFAZ.DESCR            STATUS_SEFAZ,
-                ' '                        STATUS_SEFAZ_CANC,
+                 END                                  SITUACAO,
+                ' '                                   ID_MOTIVO,
+                tccom130.t$cste                       UF,
+                cisli941.t$ccfo$l                     CFO,
+                ' '                                   SEQ_CFO,
+                tcmcs940.t$dsca$l                     NOME_CFO,                 
+                ' '                                   MODULO_BASE_GER,
+                cisli940.t$bpid$l                     COD_PART,          
+                tccom110.t$cbtp                       COD_TIPO,
+                ' '                                   ID_CLIENTE,
+                tccom966.t$stin$d                     IE_CLIENTE,
+                tccom100.t$nama                       NOME_CLIENTE,
+                tccom130.t$ccit                       ID_MUNIC,
+                CASE WHEN cisli940.t$itoa$l = cisli940.t$stoa$l 
+                       THEN 'Fatura' 
+                     ELSE   'Entrega' 
+                 END                                  TIPO_ENDER, 
+                cisli940.t$stoa$l                     SEQ_ENDER,
+                tccom130.t$namc                       END_RUA,
+                tccom130.t$dist$l                     END_BAIRRO,
+                tccom130.t$hono                       END_NUMERO,
+                tccom130.t$namd                       END_COMPL,
+                cisli941.t$line$l                     LINE_ITEM,
+                tcibd001.t$citg                       ID_DEPTO,
+                Trim(tcibd001.t$item)                 ID_ITEM,
+                tcibd936.t$sour$l                     ID_PROC,
+                tcibd936.t$frat$l                     NBM,
+                ' '                                   SEQ_NBM,
+                tcibd001.t$dsca                       NOME_ITEM,
+                tcibd001.t$ceat$l                     COD_EAN,
+                tcibd001.t$fami$c                     CATEGORIA,
+                tcibd001.t$subf$c                     SUBCATEGORIA,
+                tcmcs060.t$dsca                       MARCA,
+                cisli941.t$pric$l                     PR_UNITARIO,
+                cisli941.t$dqua$l                     QTD_FATURADA,
+                cisli941.t$gamt$l                     VL_MERCADORIA,
+                cisli941.t$fght$l                     VL_FRETE,
+                cisli941.t$insr$l                     VL_SEGURO,
+                DESPESA.TOTAL                         VL_DESPESA,          
+                JUROS.TOTAL                           VL_DESPESA_FINANC,
+                cisli941.t$ldam$l                     VL_DESCONTO,                        
+                NULL                                  VL_DESC_INC,
+                NULL                                  VL_DESC_COND,
+                IMPOSTO_1.                            BASE_ICMS,
+                IMPOSTO_1.                            PERC_ICMS,
+                IMPOSTO_1.                            VL_ICMS,
+                IMPOSTO_1.                            VL_ICMS_DEST,
+                IMPOSTO_2.                            BASE_ICMS_ST,
+                IMPOSTO_2.                            VL_ICMS_ST,
+                IMPOSTO_2.                            VL_ICMS_ST_DESTAQUE,      
+                IMPOSTO_3.                            VL_IPI_DESTAQUE,
+                IMPOSTO_5.                            VL_PIS, 
+                IMPOSTO_6.                            VL_COFINS,
+                cisli941.t$amnt$l                     VL_TOTAL_ITEM,
+                COD_SEFAZ.DESCR                       STATUS_SEFAZ,
+                ' '                                   STATUS_SEFAZ_CANC,
                 CONCAT(IMPOSTO_1.ORIG_CST_ICMS, 
-                       IMPOSTO_1.TRIBUT_CST_ICMS)   CST_ICMS,
+                       IMPOSTO_1.TRIBUT_CST_ICMS)     CST_ICMS,
                 CONCAT(IMPOSTO_5.ORIG_CST_PIS, 
-                       IMPOSTO_5.TRIBUT_CST_PIS)    CST_PIS,
+                       IMPOSTO_5.TRIBUT_CST_PIS)      CST_PIS,
                 CONCAT(IMPOSTO_6.ORIG_CST_COFINS,      
-                       IMPOSTO_6.TRIBUT_CST_COFINS) CST_COFINS,                
-                ' '                                 CONS_IE,
-                ' '                                 MODELO
+                       IMPOSTO_6.TRIBUT_CST_COFINS)   CST_COFINS,                
+                ' '                                   CONS_IE,
+                ' '                                   MODELO
                 
             FROM baandb.tcisli940301  cisli940  
     
@@ -228,43 +230,34 @@ select Q1.*
                     where cisli943.t$brty$l = 6 ) IMPOSTO_6
               ON IMPOSTO_6.t$fire$l = cisli941.t$fire$l
              AND IMPOSTO_6.t$line$l = cisli941.t$line$l
-	
-        LEFT JOIN   ( Select  znsls000.t$indt$c,
-                              znsls000.t$itmf$c IT_FRETE,
-                              znsls000.t$itmd$c IT_DESP,
-                              znsls000.t$itjl$c IT_JUROS
-                      from    baandb.tznsls000301   znsls000
-                      where   rownum = 1)    PARAM
-              ON    PARAM.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+ 
+       LEFT JOIN ( Select znsls000.t$indt$c,
+                          znsls000.t$itmf$c IT_FRETE,
+                          znsls000.t$itmd$c IT_DESP,
+                          znsls000.t$itjl$c IT_JUROS
+                     from baandb.tznsls000301   znsls000
+                    where rownum = 1 )    PARAM
+              ON PARAM.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
               
-        LEFT  JOIN  ( SELECT  cisli941.t$fire$l,
-                              cisli941.t$item$l,
-                              cisli941.t$amnt$l TOTAL
-                      FROM    baandb.tcisli941301   cisli941) DESPESA
-              ON    DESPESA.t$fire$l=cisli940.t$fire$l
-              AND   TRIM(DESPESA.t$item$l)=TRIM(PARAM.IT_DESP)
+       LEFT JOIN ( SELECT cisli941.t$fire$l,
+                          cisli941.t$item$l,
+                          cisli941.t$amnt$l TOTAL
+                     FROM baandb.tcisli941301   cisli941 ) DESPESA
+              ON DESPESA.t$fire$l = cisli940.t$fire$l
+             AND TRIM(DESPESA.t$item$l) = TRIM(PARAM.IT_DESP)
         
-        LEFT  JOIN  ( SELECT  cisli941.t$fire$l,
-                              cisli941.t$item$l,
-                              cisli941.t$amnt$l TOTAL
-                      FROM    baandb.tcisli941301   cisli941 ) JUROS
-              ON    JUROS.t$fire$l=cisli940.t$fire$l
-              AND   TRIM(JUROS.t$item$l)=TRIM(PARAM.IT_JUROS) 
+       LEFT JOIN ( SELECT cisli941.t$fire$l,
+                          cisli941.t$item$l,
+                          cisli941.t$amnt$l TOTAL
+                     FROM baandb.tcisli941301   cisli941 ) JUROS
+              ON JUROS.t$fire$l = cisli940.t$fire$l
+             AND TRIM(JUROS.t$item$l) = TRIM(PARAM.IT_JUROS) 
               
         WHERE cisli940.t$stat$l = 6
-        AND   tcemm124.t$dtyp = 1 
-        AND   TRIM(cisli941.t$item$l) != TRIM(PARAM.IT_FRETE)
-        AND   TRIM(cisli941.t$item$l) != TRIM(PARAM.IT_DESP)
-        AND   TRIM(cisli941.t$item$l) != TRIM(PARAM.IT_JUROS)) Q1;
-             
+          AND tcemm124.t$dtyp = 1 
+          AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_FRETE)
+          AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_DESP)
+          AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_JUROS) ) Q1
 
---        ORDER BY cisli940.t$fire$l ) Q1;
-			
---where Q1.CHAVE_FILIAL IN (:Filial)
---  and ( (Q1.ID_DEPTO IN (:Depto)) OR (:Depto = '000'))
---  and ( (Q1.COD_SETOR IN (:Setor)) OR (:Setor = '000'))
---  and ( (Q1.CATEGORIA IN (:Categoria)) OR (:Categoria = '000'))
---  and Q1.UF IN (:UF)
---  and Q1.NUME_CFOP IN (:CFOP)
---  and ( (Q1.NBM in (:NBM) and :TodosNBM = 1  ) or (:TodosNBM = 0) )
---  and ( (Q1.PERC_ICMS  = :Aliquota) OR (:Aliquota is null) )
+ WHERE Trunc(DATA_EMISSAO) BETWEEN (:DataEmissaoDe) AND (:DataEmissaoAte)
+   AND Q1.FILIAL IN (:Filial)
