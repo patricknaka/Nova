@@ -1,7 +1,7 @@
 -- Entrada
 select Q1.* 
   from  ( SELECT 301                                CIA,
-                tcemm030.t$euca                     FILIAL,
+                tcemm030.T$EUNT                     FILIAL,
                 tdrec940.t$docn$l                   NF_FORN,
                 tdrec940.t$seri$l                   SERIE,   
                 tdrec940.t$cnfe$l                   ID_CHAVE,
@@ -14,9 +14,10 @@ select Q1.*
                 tdrec940.t$stpn$l                   INS_EST,
                 tccom100.t$nama                     NOME_FORN,
                 tccom130.t$ccit                     ID_MUNIC,
-                CASE tdrec940.t$sfad$l WHEN tdrec940.t$ifad$l THEN  'Fatura' 
-                ELSE                                                'Entrega' 
-                END                                 TIPO_ENDER, 
+                CASE tdrec940.t$sfad$l WHEN tdrec940.t$ifad$l 
+                                         THEN 'Fatura' 
+                                       ELSE   'Entrega' 
+                 END                                TIPO_ENDER, 
                 tdrec940.t$sfad$l                   SEQ_ENDER,
                 tccom130.t$namc                     END_RUA,
                 tccom130.t$dist$l                   END_BAIRRO,
@@ -72,8 +73,11 @@ select Q1.*
                 IMPOSTO_ST_SCONV.                    VL_ICMS_ST_SCONV, 
                 tdrec941.t$tamt$l                    VALO_TOTAL,
                 ' '                                  CONS_IE,
-                CONCAT(IMPOSTO_5.ORIG_CST_PIS, IMPOSTO_5.TRIBUT_CST_PIS)  NODE_CST_PIS,
-                CONCAT(IMPOSTO_6.ORIG_CST_COFINS, IMPOSTO_6.TRIBUT_CST_COFINS) NODE_CST_COFINS         
+                CONCAT(IMPOSTO_5.ORIG_CST_PIS, 
+                       IMPOSTO_5.TRIBUT_CST_PIS)     NODE_CST_PIS,
+                CONCAT(IMPOSTO_6.ORIG_CST_COFINS, 
+                       IMPOSTO_6.TRIBUT_CST_COFINS)  NODE_CST_COFINS
+        
             FROM baandb.ttdrec940301       tdrec940 
        
        LEFT JOIN baandb.ttccom110301       tccom110
@@ -239,13 +243,5 @@ select Q1.*
            
         ORDER BY tdrec940.t$fire$l ) Q1
 
--- WHERE Trunc(DT_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DT_EMISSAO) AND NVL(:DataEmissaoAte, DT_EMISSAO)
---   AND Trunc(DATA_RECEBIMENTO) BETWEEN NVL(:DataRecebimentoDe, DATA_RECEBIMENTO) AND NVL(:DataRecebimentooAte, DATA_RECEBIMENTO)
---   AND Q1.CHAVE_FILIAL IN (:Filial)
---   AND ( (Q1.ID_DEPTO IN (:Depto)) OR (:Depto = '000'))
---   AND ( (Q1.COD_SETOR IN (:Setor)) OR (:Setor = '000'))
---   AND ( (Q1.CATEGORIA IN (:Categoria)) OR (:Categoria = '000'))
---   AND Q1.UF IN (:UF)
---   AND Q1.NUME_CFOP IN (:CFOP)
---   AND ( (Q1.NBM in (:NBM) and :TodosNBM = 1  ) or (:TodosNBM = 0) )
---   AND ( (Q1.PERC_ICMS  = :Aliquota) OR (:Aliquota is null) )
+ WHERE Trunc(DT_EMISSAO) BETWEEN (:DataEmissaoDe) AND (:DataEmissaoAte)
+   AND Q1.FILIAL IN (:Filial)
