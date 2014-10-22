@@ -51,7 +51,10 @@ SELECT
     tccom130.t$cste          UF,
     tccom130.t$telp          TEL1,
     tccom130.t$telx          TEL2,
-    tccom130.t$enfs$l        EMAIL
+    tccom130.t$enfs$l        EMAIL,
+	cisli940.t$fdtc$l		 ID_TIPO_DOC_FIS,
+	(select a.t$dsca$l from baandb.ttcmcs966301 a
+	 where a.t$fdtc$l=cisli940.t$fdtc$l)	DESCR_TIPO_DOC_FIS
     
 FROM       baandb.tcisli940301 cisli940
 
