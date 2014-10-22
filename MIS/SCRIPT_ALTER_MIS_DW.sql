@@ -1296,11 +1296,11 @@ alter column nr_item_sku nvarchar(47)
 alter table dbo.stg_sige_garantia_estendida
 alter column nr_id_tp_cliente nvarchar(10)
 
-------------------------------------------------------------------------
---alterações ods_garantia_estendida
---ALTERAÇÃO ATRIBUTO ID_CONTA TABELA ODS_DESPESA_CONTAS
 
---eliminando as PK 
+--======================================================================================================================================================
+--alteração de tabelas garantia estendida
+--======================================================================================================================================================
+--eliminando as FK 
 --ods_unidade_negocio
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_unidade_negocio]'))
 	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_unidade_negocio1]
@@ -1348,61 +1348,9 @@ IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_este
 		ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_booleano1]
 	end
 
-
---=======================================================================
---alteraçõpes garantia estendida
---eliminando as FK 
---ods_unidade_negocio
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_unidade_negocio]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_unidade_negocio1]
-
-----ods_product
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_product]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_product]
-
---ods_date
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_date]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_date]
-
-----ods_orders_status
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_orders_status]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_orders_status]
-
---ods_canalvenda
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_canalvenda]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_canalvenda]
-
---ods_parceiro
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_parceiro]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_parceiro]
-
---ods_midia
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_midia]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_midia]
-
---ods_campanha
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_campanha]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_campanha]
-
-----ods_plano_garantech
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_plano_garantech]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_plano_garantech]
-
-----ods_vendedor
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_vendedor]'))
-	ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_vendedor]
-
---ods_booleano
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE name like 'FK_ods_garantia_estendida%' AND referenced_object_id = OBJECT_ID(N'[dbo].[ods_booleano]'))
-	begin
-		ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_booleano]
-		ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [FK_ods_garantia_estendida_ods_booleano1]
-	end
-
-
---=======================================================================
-
---eliminando a PK
+	
+--=================================================================================
+--eliminando a PK ods_garantia_estendida
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_garantia_estendida]') AND name = N'PK_ods_garantia_estendida')
 ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [PK_ods_garantia_estendida]
 
@@ -1410,7 +1358,7 @@ ALTER TABLE [dbo].[ods_garantia_estendida] DROP CONSTRAINT [PK_ods_garantia_este
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_orders_status]') AND name = N'PK_ods_orders_status')
 ALTER TABLE [dbo].[ods_orders_status] DROP CONSTRAINT [PK_ods_orders_status]
 
---EFETIVA ALTERAÇÃO
+--EFETIVA ALTERAÇÃO ods_garantia_estendida
 --de varchar(1) para varchar(2)
 ALTER TABLE DBO.ods_garantia_estendida
 ALTER COLUMN ds_status_pedido varchar(2) NOT NULL
@@ -1419,10 +1367,12 @@ ALTER COLUMN ds_status_pedido varchar(2) NOT NULL
 alter table ods_garantia_estendida
 alter column nr_id_tp_cliente varchar(2)
 
+--EFETIVA ALTERAÇÃO ods_orders_status
 --de varchar(1) para varchar(2)
 ALTER TABLE DBO.ods_orders_status
 ALTER COLUMN ds_cd_status varchar(2) NOT NULL
 
+--EFETIVA ALTERAÇÃO aux_ods_garantia_estendida
 --de varchar(1) para varchar(2)
 ALTER TABLE DBO.aux_ods_garantia_estendida
 ALTER COLUMN ds_status_pedido varchar(2) 
@@ -1435,7 +1385,16 @@ ALTER COLUMN nr_id_unidade_negocio int
 alter table aux_ods_garantia_estendida
 alter column nr_id_tp_cliente varchar(2)
 
---RECRIA PK
+--EFETIVA ALTERAÇÃO dump_garantia_estendida
+--de tinyint para int
+ALTER TABLE DBO.dump_ods_garantia_estendida
+ALTER COLUMN nr_id_unidade_negocio int
+
+--de varchar(1) para varchar(2)
+ALTER TABLE DBO.dump_ods_garantia_estendida
+ALTER COLUMN ds_status_pedido varchar(2) 
+
+--RECRIA PK ods_garantia_estendida
 ALTER TABLE [dbo].[ods_garantia_estendida] ADD  CONSTRAINT [PK_ods_garantia_estendida] PRIMARY KEY CLUSTERED 
 (
 	[nr_id_unidade_negocio] ASC,
@@ -1540,3 +1499,5 @@ REFERENCES [dbo].[ods_booleano] ([id_booleano])
 GO
 ALTER TABLE [dbo].[ods_garantia_estendida] CHECK CONSTRAINT [FK_ods_garantia_estendida_ods_booleano1]
 GO
+
+

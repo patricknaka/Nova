@@ -6,6 +6,12 @@
 ALTER TABLE MIS_ODS.fin.ods_sige_titulo_receber_movimento
 ALTER COLUMN nr_id_transacao numeric(3)
 
+--DE BIGINT para nvarchar(47)
+alter table com.ods_devolucao_fornecedor
+alter column nr_item_sku nvarchar(47)
+
+alter table com.ods_devolucao_fornecedor
+alter column nr_product_sku nvarchar(47)
 
 --------------------------------------------------------------------
 --DE numeric(2) para numeric(3)
