@@ -71,7 +71,7 @@ INNER JOIN BAANDB.ttccom100301 tccom100
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iTABLE
         ON tdrec940.t$stat$l = iTABLE.CODE_STAT
- 										 
+            
  LEFT JOIN ( SELECT l.t$desc DSC_TIPO_OPERACAO,
                     d.t$cnst COD_TIPO_OPERACAO
                FROM BAANDB.tttadv401000 d,
@@ -100,7 +100,13 @@ INNER JOIN BAANDB.ttccom100301 tccom100
                                             and l1.t$cpac = l.t$cpac ) ) TIPO_OPERACAO
         ON tdrec940.t$rfdt$l = TIPO_OPERACAO.COD_TIPO_OPERACAO
          
---WHERE tcemm124.t$dtyp = 2 
+ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone sessiontimezone) AS DATE)) 
+       BETWEEN :RefFiscal_De 
+           AND :RefFiscal_Ate
+   AND ( (Trim(tccom130.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ IS NULL) )
+   AND ( (Trim(tdrec941.t$item$l) Like '%' || :Item || '%') OR (:Item IS NULL) )
 
 UNION
 
@@ -174,7 +180,7 @@ INNER JOIN BAANDB.ttccom100301 tccom100
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iTABLE
         ON cisli940.t$stat$l = iTABLE.CODE_STAT
- 										 
+            
  LEFT JOIN ( SELECT l.t$desc DSC_TIPO_OPERACAO,
                     d.t$cnst COD_TIPO_OPERACAO
                FROM BAANDB.tttadv401000 d,
@@ -203,14 +209,10 @@ INNER JOIN BAANDB.ttccom100301 tccom100
                                             and l1.t$cpac = l.t$cpac ) ) TIPO_OPERACAO
         ON cisli940.t$fdty$l = TIPO_OPERACAO.COD_TIPO_OPERACAO
 
-
-
-
-
-  -- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,
-              -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                -- AT time zone sessiontimezone) AS DATE)) 
-      -- BETWEEN :RefFiscal_De 
-          -- AND :RefFiscal_Ate
-  -- AND ( (Trim(tccom130.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ IS NULL) )
-  -- AND ( (Trim(tdrec941.t$item$l) Like '%' || :Item || '%') OR (:Item IS NULL) )
+ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l,
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone sessiontimezone) AS DATE)) 
+       BETWEEN :RefFiscal_De 
+           AND :RefFiscal_Ate
+   AND ( (Trim(tccom130.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ IS NULL) )
+   AND ( (Trim(cisli941.t$item$l) Like '%' || :Item || '%') OR (:Item IS NULL) )
