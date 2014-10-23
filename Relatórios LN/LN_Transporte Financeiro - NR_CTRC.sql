@@ -70,7 +70,7 @@ INNER JOIN baandb.ttdrec949201 tdrec949
  LEFT JOIN baandb.ttccom130201 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
     
- LEFT JOIN ( SELECT d.t$cnst CODE_STAT, 
+INNER JOIN ( SELECT d.t$cnst CODE_STAT, 
                     l.t$desc DESC_STAT_RFISCAL
                FROM baandb.tttadv401000 d, 
                     baandb.tttadv140000 l 
