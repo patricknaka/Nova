@@ -70,14 +70,14 @@ select Q1.*
                 cisli941.t$amnt$l                     VL_TOTAL_ITEM,
                 COD_SEFAZ.DESCR                       STATUS_SEFAZ,
                 ' '                                   STATUS_SEFAZ_CANC,
-                TO_NUMBER(CONCAT(IMPOSTO_1.ORIG_CST_ICMS, 
-                       IMPOSTO_1.TRIBUT_CST_ICMS))     CST_ICMS,
-                TO_NUMBER(CONCAT(IMPOSTO_5.ORIG_CST_PIS, 
-                       IMPOSTO_5.TRIBUT_CST_PIS))      CST_PIS,
-                TO_NUMBER(CONCAT(IMPOSTO_6.ORIG_CST_COFINS,      
-                       IMPOSTO_6.TRIBUT_CST_COFINS))   CST_COFINS,                
-                ' '                                    CONS_IE,
-                ' '                                    MODELO
+                CONCAT(IMPOSTO_1.ORIG_CST_ICMS, 
+                       IMPOSTO_1.TRIBUT_CST_ICMS)     CST_ICMS,
+                CONCAT(IMPOSTO_5.ORIG_CST_PIS, 
+                       IMPOSTO_5.TRIBUT_CST_PIS)      CST_PIS,
+                CONCAT(IMPOSTO_6.ORIG_CST_COFINS,      
+                       IMPOSTO_6.TRIBUT_CST_COFINS)   CST_COFINS,
+                ' '                                   CONS_IE,
+                ' '                                   MODELO
                 
             FROM baandb.tcisli940301  cisli940  
     
