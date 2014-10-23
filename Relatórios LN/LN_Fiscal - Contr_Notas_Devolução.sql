@@ -57,11 +57,12 @@ INNER JOIN baandb.ttdsls401301  tdsls401
         ON tdsls401.t$orno   = cisli245.t$slso
        AND tdsls401.t$pono   = cisli245.t$pono
  
-INNER JOIN baandb.tcisli245301  cisli245d
+LEFT JOIN baandb.tcisli245301  cisli245d
         ON cisli245d.t$fire$l = tdsls401.t$fire$l
-       AND cisli245d.t$line$l = tdsls401.t$line$l  
+       AND cisli245d.t$line$l = tdsls401.t$line$l
+       AND cisli245d.t$fire$l!=' '
 
-INNER JOIN baandb.tcisli940301  cisli940d
+LEFT JOIN baandb.tcisli940301  cisli940d
         ON cisli940d.t$fire$l = cisli245d.t$fire$l
      
 INNER JOIN baandb.ttdsls400301  tdsls400
@@ -205,8 +206,3 @@ WHERE cisli940.t$fdty$l = 14
   AND tcemm124.t$dtyp = 1 
   AND tdrec947.t$oorg$l = 1 --Venda
 
-  AND tcemm030.T$EUNT IN (:Filial)
-  AND tdrec940.t$stat$l IN(:StatusRefFiscal)
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE)) BETWEEN :EmissaoDE AND :EmissaoATE
-  AND tdrec940.t$opfc$l IN (:COD_CFOP)
