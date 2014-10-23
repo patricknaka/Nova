@@ -64,8 +64,8 @@
      END                                  RESTRICAO,
    
     maucLN.mauc                           VALOR_CUSTO_CMV,
-    ORDERS.C_ADDRESS1                     DESTINATARIO
- 
+    ORDERS.C_ADDRESS1                     DESTINATARIO,
+	OprFis.t$fdtc$l						  COD_OPER_FIS
 FROM       WMWHSE5.ORDERS
 
 INNER JOIN WMWHSE5.ORDERDETAIL 
@@ -176,6 +176,13 @@ INNER JOIN WMSADMIN.PL_DB
                from WMWHSE5.codelkup clkp
               where clkp.listname = 'INCOTERMS' ) REDESPACHO
         ON REDESPACHO.code = orders.INCOTERM
+		
+LEFT JOIN (	select b.t$slso, a.t$fdtc$l
+			from BAANDB.TCISLI940301@pln01 a
+			INNER JOIN BAANDB.TCISLI245301@pln01 b ON b.t$fire$l=a.t$fire$l
+			group by b.t$slso, a.t$fdtc$l) OprFis ON OprFis.t$slso=orders.REFERENCEDOCUMENT
+
+
 
     
 WHERE NVL(SLS002.T$TPEN$C, 0) IN (:TipoEntrega)
