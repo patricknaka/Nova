@@ -909,3 +909,31 @@ GO
 
 
 --===============================================================
+--Insert Manual
+USE [MIS_ODS]
+GO
+/****** Object:  Table [ln].[ods_agrupamento_orcamento]    Script Date: 10/23/2014 10:35:11 ******/
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (1, 1, 1)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (2, 1, 19)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (4, 1, 8)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (5, 1, 5)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (6, 1, 15)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (7, 1, 12)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (8, 1, 9)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (9, 1, 17)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (11, 1, 21)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (12, 1, 24)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (13, 1, 26)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (1, 2, 2)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (2, 2, 20)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (4, 2, 7)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (5, 2, 6)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (6, 2, 16)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (7, 2, 13)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (8, 2, 10)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (9, 2, 18)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (11, 2, 22)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (12, 2, 23)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (13, 2, 25)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (14, 1, 28)
+INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (14, 2, 27)
