@@ -37,7 +37,7 @@ INNER JOIN baandb.ttcmcs080201 tcmcs080
 LEFT JOIN baandb.ttccom130201 tccom130
        ON tccom130.t$cadr = tcmcs080.t$cadr$l
     
-LEFT JOIN ( SELECT d.t$cnst CNST, 
+INNER JOIN ( SELECT d.t$cnst CNST, 
                    l.t$desc DESC_ATIV_TMS
               FROM baandb.tttadv401000 d, 
                    baandb.tttadv140000 l 
