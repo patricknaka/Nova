@@ -61,7 +61,6 @@ select Q1.*
                 IMPOSTO_1.                            BASE_ICMS,
                 IMPOSTO_1.                            PERC_ICMS,
                 IMPOSTO_1.                            VL_ICMS,
-                IMPOSTO_1.                            VL_ICMS_DEST,
                 IMPOSTO_2.                            BASE_ICMS_ST,
                 IMPOSTO_2.                            VL_ICMS_ST,
                 IMPOSTO_2.                            VL_ICMS_ST_DESTAQUE,      
@@ -71,14 +70,14 @@ select Q1.*
                 cisli941.t$amnt$l                     VL_TOTAL_ITEM,
                 COD_SEFAZ.DESCR                       STATUS_SEFAZ,
                 ' '                                   STATUS_SEFAZ_CANC,
-                CONCAT(IMPOSTO_1.ORIG_CST_ICMS, 
-                       IMPOSTO_1.TRIBUT_CST_ICMS)     CST_ICMS,
-                CONCAT(IMPOSTO_5.ORIG_CST_PIS, 
-                       IMPOSTO_5.TRIBUT_CST_PIS)      CST_PIS,
-                CONCAT(IMPOSTO_6.ORIG_CST_COFINS,      
-                       IMPOSTO_6.TRIBUT_CST_COFINS)   CST_COFINS,                
-                ' '                                   CONS_IE,
-                ' '                                   MODELO
+                TO_NUMBER(CONCAT(IMPOSTO_1.ORIG_CST_ICMS, 
+                       IMPOSTO_1.TRIBUT_CST_ICMS))     CST_ICMS,
+                TO_NUMBER(CONCAT(IMPOSTO_5.ORIG_CST_PIS, 
+                       IMPOSTO_5.TRIBUT_CST_PIS))      CST_PIS,
+                TO_NUMBER(CONCAT(IMPOSTO_6.ORIG_CST_COFINS,      
+                       IMPOSTO_6.TRIBUT_CST_COFINS))   CST_COFINS,                
+                ' '                                    CONS_IE,
+                ' '                                    MODELO
                 
             FROM baandb.tcisli940301  cisli940  
     
@@ -175,7 +174,6 @@ select Q1.*
                 
        LEFT JOIN ( select cisli943.t$fbtx$l    BASE_ICMS,
                           cisli943.t$amnt$l    VL_ICMS,
-                          cisli943.t$fbam$l    VL_ICMS_DEST,
                           cisli943.t$rate$l    PERC_ICMS,
                           tcmcs938.t$gdog$l    ORIG_CST_ICMS,      
                           tcmcs938.t$icmd$l    TRIBUT_CST_ICMS,
