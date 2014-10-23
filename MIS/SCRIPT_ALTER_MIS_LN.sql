@@ -76,3 +76,21 @@ add CD_STATUS_ARQUIVO int null,
 --inserindo coluna na tabela stg_nfv_cab
 alter table stg_nfv_cab
 add NR_REFERENCIA_FISCAL_FATURA nvarchar(15) null
+
+
+----------------------------------------------------------------------------------------------
+
+
+ALTER TABLE dbo.stg_sku_cmv
+ALTER COLUMN CD_ITEM NVARCHAR(47)
+COLLATE Latin1_General_CI_AS NULL
+
+ALTER TABLE dbo.stg_sku_cmv
+ALTER COLUMN CD_FILIAL NVARCHAR(6)
+COLLATE Latin1_General_CI_AS NULL
+
+
+ALTER TABLE dbo.stg_sku_cmv
+ALTER COLUMN CD_UNIDADE_EMPRESARIAL NVARCHAR(10)
+COLLATE Latin1_General_CI_AS NULL
+
