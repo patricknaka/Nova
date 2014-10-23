@@ -85,7 +85,7 @@ INNER JOIN baandb.tcisli940301 cisli940
        AND cisli940.t$docn$l = znfmd630.t$docn$c 
        AND cisli940.t$seri$l = znfmd630.t$seri$c         
   
- LEFT JOIN (SELECT d.t$cnst CNST, 
+INNER JOIN (SELECT d.t$cnst CNST, 
                    l.t$desc DESC_TIPO_ORDEM
               FROM baandb.tttadv401000 d, baandb.tttadv140000 l 
              WHERE d.t$cpac='ci' 
