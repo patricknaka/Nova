@@ -84,7 +84,7 @@ INNER JOIN baandb.tznsls400201 znsls400
         ON znfmd640.t$fili$c = znfmd630.t$fili$c 
        AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
     
- LEFT JOIN ( SELECT d.t$cnst CODE_STAT, 
+INNER JOIN ( SELECT d.t$cnst CODE_STAT, 
                     l.t$desc DESC_TIPO_DOCUMENTO
                FROM baandb.tttadv401000 d, baandb.tttadv140000 l 
               WHERE d.t$cpac = 'ci' 
