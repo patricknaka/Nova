@@ -17,6 +17,7 @@ select *
                       nvl(( select nvl(sum(whwmd630.t$qbls), 0)
                               from baandb.twhwmd630301    whwmd630
                              where whwmd630.t$item = est.T$ITEM
+                               and whwmd630.t$loca = ' '
                                and whwmd630.t$cwar = est.T$CWAR
                                and not exists( select  tcmcs095.t$parm
                                            from baandb.ttcmcs095301 tcmcs095
