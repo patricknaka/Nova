@@ -1,9 +1,7 @@
 SELECT 
   DISTINCT
     301                                     CODE_CIA,
-    ( select a.t$fovn$l                     
-        from baandb.ttccom130301 a          
-       where a.t$cadr=cisli940.t$sfra$l)    NUME_FILIAL,
+    tccom130b.t$fovn$l                      NUME_FILIAL,
     cisli940.t$docn$l                       NUME_NF,
     cisli940.t$seri$l                       SERI_NF,
     
@@ -48,7 +46,7 @@ SELECT
     cisli940d.t$stat$l                      STATUS_NFD,
     DESCR_STATUS_NFD.DS_SITUACAO_NF         DESCR_STATUS_NFD
   
-FROM      baandb.tcisli940301  cisli940 
+FROM       baandb.tcisli940301  cisli940 
 
 INNER JOIN baandb.tcisli245301  cisli245
         ON cisli940.t$fire$l = cisli245.t$fire$l
@@ -57,12 +55,11 @@ INNER JOIN baandb.ttdsls401301  tdsls401
         ON tdsls401.t$orno   = cisli245.t$slso
        AND tdsls401.t$pono   = cisli245.t$pono
  
-LEFT JOIN baandb.tcisli245301  cisli245d
+ LEFT JOIN baandb.tcisli245301  cisli245d
         ON cisli245d.t$fire$l = tdsls401.t$fire$l
        AND cisli245d.t$line$l = tdsls401.t$line$l
-       AND cisli245d.t$fire$l!=' '
 
-LEFT JOIN baandb.tcisli940301  cisli940d
+ LEFT JOIN baandb.tcisli940301  cisli940d
         ON cisli940d.t$fire$l = cisli245d.t$fire$l
      
 INNER JOIN baandb.ttdsls400301  tdsls400
@@ -201,8 +198,17 @@ INNER JOIN baandb.ttccom130301  tccom130
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) DESCR_STATUS_NFD
         ON DESCR_STATUS_NFD.t$cnst = cisli940d.t$stat$l
+        
+INNER JOIN baandb.ttccom130301 tccom130B
+        ON tccom130B.t$cadr = cisli940.t$sfra$l
  
 WHERE cisli940.t$fdty$l = 14
   AND tcemm124.t$dtyp = 1 
   AND tdrec947.t$oorg$l = 1 --Venda
+  AND cisli245d.t$fire$l != ' '
 
+  AND tcemm030.T$EUNT IN (:Filial)
+  AND tdrec940.t$stat$l IN(:StatusRefFiscal)
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone sessiontimezone) AS DATE)) BETWEEN :EmissaoDE AND :EmissaoATE
+  AND tdrec940.t$opfc$l IN (:COD_CFOP)
