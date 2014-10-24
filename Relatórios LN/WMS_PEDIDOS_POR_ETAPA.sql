@@ -65,7 +65,7 @@
    
     maucLN.mauc                           VALOR_CUSTO_CMV,
     ORDERS.C_ADDRESS1                     DESTINATARIO,
-	OprFis.t$fdtc$l						  COD_OPER_FIS
+    OprFis.t$fdtc$l                       COD_OPER_FIS
 FROM       WMWHSE5.ORDERS
 
 INNER JOIN WMWHSE5.ORDERDETAIL 
@@ -176,15 +176,14 @@ INNER JOIN WMSADMIN.PL_DB
                from WMWHSE5.codelkup clkp
               where clkp.listname = 'INCOTERMS' ) REDESPACHO
         ON REDESPACHO.code = orders.INCOTERM
-		
-LEFT JOIN (	select b.t$slso, a.t$fdtc$l
-			from BAANDB.TCISLI940301@pln01 a
-			INNER JOIN BAANDB.TCISLI245301@pln01 b ON b.t$fire$l=a.t$fire$l
-			group by b.t$slso, a.t$fdtc$l) OprFis ON OprFis.t$slso=orders.REFERENCEDOCUMENT
+  
+ LEFT JOIN ( select b.t$slso, a.t$fdtc$l
+               from BAANDB.TCISLI940301@pln01 a
+         inner join BAANDB.TCISLI245301@pln01 b 
+                 on b.t$fire$l=a.t$fire$l
+           group by b.t$slso, a.t$fdtc$l ) OprFis 
+        ON OprFis.t$slso=orders.REFERENCEDOCUMENT
 
-
-
-    
 WHERE NVL(SLS002.T$TPEN$C, 0) IN (:TipoEntrega)
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -255,7 +254,8 @@ ORDER BY ORDERS.ORDERKEY
 " ELSE nvl(TO_CHAR(LL.HOLDREASON), 'OK') " &
 " END  RESTRICAO, " &
 "  maucLN.mauc VALOR_CUSTO_CMV, " &
-"  ORDERS.C_ADDRESS1 DESTINATARIO " &
+"  ORDERS.C_ADDRESS1 DESTINATARIO, " &
+"  OprFis.t$fdtc$l COD_OPER_FIS " &
 "FROM " + Parameters!Table.Value + ".ORDERS " &
 "INNER JOIN " + Parameters!Table.Value + ".ORDERDETAIL " &
 "  ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -350,6 +350,12 @@ ORDER BY ORDERS.ORDERKEY
 " from " + Parameters!Table.Value + ".codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
+" LEFT JOIN ( select b.t$slso, a.t$fdtc$l " &
+"               from BAANDB.TCISLI940301@pln01 a " &
+"         inner join BAANDB.TCISLI245301@pln01 b " & 
+"                 on b.t$fire$l=a.t$fire$l " &
+"           group by b.t$slso, a.t$fdtc$l ) OprFis " & 
+"        ON OprFis.t$slso=orders.REFERENCEDOCUMENT " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
@@ -416,7 +422,8 @@ ORDER BY ORDERS.ORDERKEY
 " ELSE nvl(TO_CHAR(LL.HOLDREASON), 'OK') " &
 " END  RESTRICAO, " &
 "  maucLN.mauc VALOR_CUSTO_CMV, " &
-"  ORDERS.C_ADDRESS1 DESTINATARIO " &
+"  ORDERS.C_ADDRESS1 DESTINATARIO, " &
+"  OprFis.t$fdtc$l COD_OPER_FIS " &
 "FROM WMWHSE1.ORDERS " &
 "INNER JOIN WMWHSE1.ORDERDETAIL " &
 "  ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -511,6 +518,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE1.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
+" LEFT JOIN ( select b.t$slso, a.t$fdtc$l " &
+"               from BAANDB.TCISLI940301@pln01 a " &
+"         inner join BAANDB.TCISLI245301@pln01 b " & 
+"                 on b.t$fire$l=a.t$fire$l " &
+"           group by b.t$slso, a.t$fdtc$l ) OprFis " & 
+"        ON OprFis.t$slso=orders.REFERENCEDOCUMENT " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
@@ -574,7 +587,8 @@ ORDER BY ORDERS.ORDERKEY
 " ELSE nvl(TO_CHAR(LL.HOLDREASON), 'OK') " &
 " END  RESTRICAO, " &
 "  maucLN.mauc VALOR_CUSTO_CMV, " &
-"  ORDERS.C_ADDRESS1 DESTINATARIO " &
+"  ORDERS.C_ADDRESS1 DESTINATARIO, " &
+"  OprFis.t$fdtc$l COD_OPER_FIS " &
 "FROM WMWHSE2.ORDERS " &
 "INNER JOIN WMWHSE2.ORDERDETAIL " &
 "  ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -669,6 +683,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE2.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
+" LEFT JOIN ( select b.t$slso, a.t$fdtc$l " &
+"               from BAANDB.TCISLI940301@pln01 a " &
+"         inner join BAANDB.TCISLI245301@pln01 b " & 
+"                 on b.t$fire$l=a.t$fire$l " &
+"           group by b.t$slso, a.t$fdtc$l ) OprFis " & 
+"        ON OprFis.t$slso=orders.REFERENCEDOCUMENT " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
@@ -732,7 +752,8 @@ ORDER BY ORDERS.ORDERKEY
 " ELSE nvl(TO_CHAR(LL.HOLDREASON), 'OK') " &
 " END  RESTRICAO, " &
 "  maucLN.mauc VALOR_CUSTO_CMV, " &
-"  ORDERS.C_ADDRESS1 DESTINATARIO " &
+"  ORDERS.C_ADDRESS1 DESTINATARIO, " &
+"  OprFis.t$fdtc$l COD_OPER_FIS " &
 "FROM WMWHSE3.ORDERS " &
 "INNER JOIN WMWHSE3.ORDERDETAIL " &
 "  ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -827,6 +848,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE3.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
+" LEFT JOIN ( select b.t$slso, a.t$fdtc$l " &
+"               from BAANDB.TCISLI940301@pln01 a " &
+"         inner join BAANDB.TCISLI245301@pln01 b " & 
+"                 on b.t$fire$l=a.t$fire$l " &
+"           group by b.t$slso, a.t$fdtc$l ) OprFis " & 
+"        ON OprFis.t$slso=orders.REFERENCEDOCUMENT " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
@@ -890,7 +917,8 @@ ORDER BY ORDERS.ORDERKEY
 " ELSE nvl(TO_CHAR(LL.HOLDREASON), 'OK') " &
 " END  RESTRICAO, " &
 "  maucLN.mauc VALOR_CUSTO_CMV, " &
-"  ORDERS.C_ADDRESS1 DESTINATARIO " &
+"  ORDERS.C_ADDRESS1 DESTINATARIO, " &
+"  OprFis.t$fdtc$l COD_OPER_FIS " &
 "FROM WMWHSE4.ORDERS " &
 "INNER JOIN WMWHSE4.ORDERDETAIL " &
 "  ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -985,6 +1013,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE4.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
+" LEFT JOIN ( select b.t$slso, a.t$fdtc$l " &
+"               from BAANDB.TCISLI940301@pln01 a " &
+"         inner join BAANDB.TCISLI245301@pln01 b " & 
+"                 on b.t$fire$l=a.t$fire$l " &
+"           group by b.t$slso, a.t$fdtc$l ) OprFis " & 
+"        ON OprFis.t$slso=orders.REFERENCEDOCUMENT " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
@@ -1048,7 +1082,8 @@ ORDER BY ORDERS.ORDERKEY
 " ELSE nvl(TO_CHAR(LL.HOLDREASON), 'OK') " &
 " END  RESTRICAO, " &
 "  maucLN.mauc VALOR_CUSTO_CMV, " &
-"  ORDERS.C_ADDRESS1 DESTINATARIO " &
+"  ORDERS.C_ADDRESS1 DESTINATARIO, " &
+"  OprFis.t$fdtc$l COD_OPER_FIS " &
 "FROM WMWHSE5.ORDERS " &
 "INNER JOIN WMWHSE5.ORDERDETAIL " &
 "  ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -1143,6 +1178,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE5.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
+" LEFT JOIN ( select b.t$slso, a.t$fdtc$l " &
+"               from BAANDB.TCISLI940301@pln01 a " &
+"         inner join BAANDB.TCISLI245301@pln01 b " & 
+"                 on b.t$fire$l=a.t$fire$l " &
+"           group by b.t$slso, a.t$fdtc$l ) OprFis " & 
+"        ON OprFis.t$slso=orders.REFERENCEDOCUMENT " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
@@ -1206,7 +1247,8 @@ ORDER BY ORDERS.ORDERKEY
 " ELSE nvl(TO_CHAR(LL.HOLDREASON), 'OK') " &
 " END  RESTRICAO, " &
 "  maucLN.mauc VALOR_CUSTO_CMV, " &
-"  ORDERS.C_ADDRESS1 DESTINATARIO " &
+"  ORDERS.C_ADDRESS1 DESTINATARIO, " &
+"  OprFis.t$fdtc$l COD_OPER_FIS " &
 "FROM WMWHSE6.ORDERS " &
 "INNER JOIN WMWHSE6.ORDERDETAIL " &
 "  ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -1301,6 +1343,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE6.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
+" LEFT JOIN ( select b.t$slso, a.t$fdtc$l " &
+"               from BAANDB.TCISLI940301@pln01 a " &
+"         inner join BAANDB.TCISLI245301@pln01 b " & 
+"                 on b.t$fire$l=a.t$fire$l " &
+"           group by b.t$slso, a.t$fdtc$l ) OprFis " & 
+"        ON OprFis.t$slso=orders.REFERENCEDOCUMENT " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
@@ -1364,7 +1412,8 @@ ORDER BY ORDERS.ORDERKEY
 " ELSE nvl(TO_CHAR(LL.HOLDREASON), 'OK') " &
 " END  RESTRICAO, " &
 "  maucLN.mauc VALOR_CUSTO_CMV, " &
-"  ORDERS.C_ADDRESS1 DESTINATARIO " &
+"  ORDERS.C_ADDRESS1 DESTINATARIO, " &
+"  OprFis.t$fdtc$l COD_OPER_FIS " &
 "FROM WMWHSE7.ORDERS " &
 "INNER JOIN WMWHSE7.ORDERDETAIL " &
 "  ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -1459,6 +1508,12 @@ ORDER BY ORDERS.ORDERKEY
 " from WMWHSE7.codelkup clkp " &
 "  where clkp.listname = 'INCOTERMS' ) REDESPACHO " &
 "  ON REDESPACHO.code = orders.INCOTERM " &
+" LEFT JOIN ( select b.t$slso, a.t$fdtc$l " &
+"               from BAANDB.TCISLI940301@pln01 a " &
+"         inner join BAANDB.TCISLI245301@pln01 b " & 
+"                 on b.t$fire$l=a.t$fire$l " &
+"           group by b.t$slso, a.t$fdtc$l ) OprFis " & 
+"        ON OprFis.t$slso=orders.REFERENCEDOCUMENT " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
 "  AND Trunc(ORDERSTATUSHISTORY.ADDDATE) " &
 "  Between '" + Parameters!DataUltEventoDe.Value + "' " &
