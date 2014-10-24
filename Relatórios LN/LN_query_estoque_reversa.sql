@@ -19,13 +19,13 @@ select *
                              where whwmd630.t$item = est.T$ITEM
                                and whwmd630.t$loca = ' '
                                and whwmd630.t$cwar = est.T$CWAR
-                               and not exists( select  tcmcs095.t$parm
-                                           from baandb.ttcmcs095301 tcmcs095
-                                          where tcmcs095.t$modu = 'BOD'
-                                            and tcmcs095.t$sumd = 0
-                                            and tcmcs095.t$prcd = 9999
-                                            and tcmcs095.t$parm in ('tbex', 'tbin')
-                                            and trim(tcmcs095.t$koda) = trim(whwmd630.t$bloc)) ), 0)
+                               and not exists( select tcmcs095.t$parm
+                                                 from baandb.ttcmcs095301 tcmcs095
+                                                where tcmcs095.t$modu = 'BOD'
+                                                  and tcmcs095.t$sumd = 0
+                                                  and tcmcs095.t$prcd = 9999
+                                                  and tcmcs095.t$parm in ('tbex', 'tbin')
+                                                  and trim(tcmcs095.t$koda) = trim(whwmd630.t$bloc)) ), 0)
                       - 
                       nvl(( select NVL(SUM(whinp100.t$qana), 0)
                               from baandb.twhinp100301 whinp100
@@ -63,9 +63,9 @@ select *
                                       then 0
                                     else round(sum(whwmd217.t$mauc$1) / (max(whwmd215.t$qhnd)), 4) 
                                 end mauc
-                          from baandb.twhwmd217301 whwmd217, 
-                               baandb.twhwmd215301 whwmd215
-                         where whwmd215.t$cwar = whwmd217.t$cwar
+                          from baandb.twhwmd217301 whwmd217
+                    inner join baandb.twhwmd215301 whwmd215
+                            on whwmd215.t$cwar = whwmd217.t$cwar
                            and whwmd215.t$item = whwmd217.t$item
                       group by  whwmd217.t$item, whwmd217.t$cwar) Q1 
                    ON Q1.t$item = est.t$item 
@@ -73,22 +73,22 @@ select *
               
            INNER JOIN baandb.TTCIBD001301 item  
                    ON est.T$ITEM = item.T$item
-				   
+       
             LEFT JOIN baandb.TZNISA002301 clas1 
                    ON item.T$NPCL$C = clas1.T$NPCL$C
-				   
+       
             LEFT JOIN baandb.TZNISA001301 clas2 
                    ON clas1.T$NPTP$C = clas2.T$NPTP$C
-				   
+       
            INNER JOIN baandb.TTCMCS003301 mcs   
                    ON est.T$CWAR = mcs.T$CWAR
-				   
+       
            INNER JOIN baandb.TZNINT001301 int1  
                    ON mcs.T$COMP = int1.T$COMP$C
-				   
+       
            INNER JOIN baandb.TTCCOM130301 com   
                    ON mcs.T$CADR = com.T$CADR
-				   
+       
            INNER JOIN baandb.TZNFMD001301 fmd   
                    ON com.T$FOVN$L = fmd.T$FOVN$C
  
@@ -160,9 +160,9 @@ select *
                                           then 0
                                    else round(sum(whwmd217.t$mauc$1)/(max(whwmd215.t$qhnd)), 4) 
                                     end mauc
-                              from baandb.twhwmd217301 whwmd217, 
-                                   baandb.twhwmd215301 whwmd215
-                             where whwmd215.t$cwar = whwmd217.t$cwar
+                              from baandb.twhwmd217301 whwmd217
+                        inner join baandb.twhwmd215301 whwmd215
+                                on whwmd215.t$cwar = whwmd217.t$cwar
                                and whwmd215.t$item = whwmd217.t$item
                           group by whwmd217.t$item, whwmd217.t$cwar) Q1 
                        ON Q1.t$item = est.t$item 
@@ -170,22 +170,22 @@ select *
                  
                INNER JOIN baandb.TTCIBD001301 item 
                        ON est.T$ITEM = item.T$item
-					   
+        
                 LEFT JOIN baandb.TZNISA002301 clas1 
                        ON item.T$NPCL$C = clas1.T$NPCL$C
-					   
+        
                 LEFT JOIN baandb.TZNISA001301 clas2 
                        ON clas1.T$NPTP$C = clas2.T$NPTP$C
-					   
+        
                INNER JOIN baandb.TTCMCS003301 mcs 
                        ON est.T$CWAR = mcs.T$CWAR
-					   
+        
                INNER JOIN baandb.TZNINT001301 int1 
                        ON mcs.T$COMP = int1.T$COMP$C
-					   
+        
                INNER JOIN baandb.TTCCOM130301 com 
                        ON mcs.T$CADR = com.T$CADR
-					   
+        
                INNER JOIN baandb.TZNFMD001301 fmd 
                        ON com.T$FOVN$L = fmd.T$FOVN$C
              
