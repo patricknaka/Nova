@@ -5,7 +5,11 @@
                  tdrec940.t$docn$l                    NUME_NF,                 -- 4
                  tdrec940.t$seri$l                    SERI_NF,                 -- 5
                  tdrec940.t$fire$l                    NR,                      -- 6
-                 tdrec940.t$fovn$l                    CNPJ_FORN,               -- 7
+                 CASE WHEN regexp_replace(tdrec940.t$fovn$l, '[^0-9]', '') IS NULL
+                 THEN '00000000000000' 
+                 WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
+                 THEN '00000000000000'
+                 ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') END  CNPJ_FORN,      -- 7
                  tdrec940.t$bpid$l                    COD_PART,                -- 8
                  tdrec940.t$ftyp$l                    COD_TIPO,                -- 9
                  tdrec940.t$stpn$l                    INS_EST,                 -- 10
@@ -36,21 +40,20 @@
                  tcibd001.t$citg                      ID_DEPTO,                -- 25
                  tcmcs023.t$dsca                      DESCR_DEPTO,             -- 26
                  Trim(tcibd001.t$item)                ID_ITEM,                 -- 27
-                 tcibd001.t$dsca                      DESC_ITEM,               -- 28
+                  tcibd001.t$dsca                     DESCR_ITEM,              -- 28
                  brmcs958.t$scod$l                    COD_SERV,                -- 29
                  tcibd936.t$sour$l                    ID_PROC,                 -- 30
                  tcibd001.t$ceat$l                    COD_EAN,                 -- 31
-                 znmcs030.t$seto$c                    COD_SETOR,               -- 32
-                 znmcs030.t$dsca$c                    DSC_SETOR,               -- 33
-                 tcibd001.t$fami$c                    FAMILIA,                 -- 34
-                 znmcs031.t$dsca$c                    DESCR_FAMILIA,           -- 35
-                 tcibd001.t$subf$c                    SUBFAMILIA,              -- 36
-                 znmcs032.t$dsca$c                    DESCR_SUBFAMILIA,        -- 37
-                 tdipu001.t$manu$c                    MARCA,                   -- 38
+                 znmcs030.t$seto$c                    SETOR_ITEM,              -- 33
+                 znmcs030.t$dsca$c                    DESCR_SETOR,             -- 34
+                 tcibd001.t$fami$c                    FAMILIA_ITEM,            -- 35
+                 znmcs031.t$dsca$c                    DESCR_FAMILIA,           -- 36
+                 tcibd001.t$subf$c                    SUB_FAMILIA,             -- 37
+                 znmcs032.t$dsca$c                    DESCR_SUB_FAMILIA,       -- 38
                  tdrec941.t$tamt$l                    VL_TOTAL,                -- 39
-                 tdrec941.t$addc$l                    VL_DESCONTO,             -- 40
-                 IMPOSTO_11.VL_PIS_RETIDO             VL_PIS_RETIDO,           -- 41
-                 IMPOSTO_12.VL_COFINS_RETIDO          VL_COFINS_RETIDO,        -- 42
+                 nvl(tdrec941.t$addc$l,0)             VL_DESCONTO,             -- 40
+                 nvl(IMPOSTO_11.VL_PIS_RETIDO,0)      VL_PIS_RETIDO,           -- 41
+                 nvl(IMPOSTO_12.VL_COFINS_RETIDO,0)   VL_COFINS_RETIDO,        -- 42
                  tfacp200.t$leac                      COD_CTA,                 -- 43
                  tfacp200.t$dim1                      COD_CCUSTO,              -- 44
                  tfgld010.t$desc                      NOME_CCUSTO,             -- 45
@@ -66,16 +69,16 @@
 				   
                  CONCAT(tdrec940.t$ttyp$l,
                         tdrec940.t$invn$l)            TITULO,                  -- 48
-                 IMPOSTO_7.VL_ISS                     VL_ISS,                  -- 49
-                 IMPOSTO_14.VL_ISS_RETIDO             VL_ISS_RETIDO,           -- 50
-                 IMPOSTO_9.VL_IRRF_PJ                 VL_IRRF_PJ,              -- 51
-                 IMPOSTO_10.VL_IRRF_PF                VL_IRRF_PF,              -- 52
-                 IMPOSTO_8.VL_INSS                    VL_INSS,                 -- 53
-                 IMPOSTO_15.VL_INSS_RET_PJ            VL_INSS_RET_PJ,          -- 54
-                 IMPOSTO_17.VL_INSS_RET_PF            VL_INSS_RET_PF,          -- 55
-                 IMPOSTO_5.VL_PIS                     VL_PIS,                  -- 56
-                 IMPOSTO_6.VL_COFINS                  VL_COFINS,               -- 57
-                 IMPOSTO_13.VL_CSLL_RETIDO            VL_CSLL_RETIDO           -- 58
+                 nvl(IMPOSTO_7.VL_ISS,0)              VL_ISS,                  -- 49
+                 nvl(IMPOSTO_14.VL_ISS_RETIDO,0)      VL_ISS_RETIDO,           -- 50
+                 nvl(IMPOSTO_9.VL_IRRF_PJ,0)          VL_IRRF_PJ,              -- 51
+                 nvl(IMPOSTO_10.VL_IRRF_PF,0)         VL_IRRF_PF,              -- 52
+                 nvl(IMPOSTO_8.VL_INSS,0)             VL_INSS,                 -- 53
+                 nvl(IMPOSTO_15.VL_INSS_RET_PJ,0)     VL_INSS_RET_PJ,          -- 54
+                 nvl(IMPOSTO_17.VL_INSS_RET_PF,0)     VL_INSS_RET_PF,          -- 55
+                 nvl(IMPOSTO_5.VL_PIS,0)              VL_PIS,                  -- 56
+                 nvl(IMPOSTO_6.VL_COFINS,0)           VL_COFINS,               -- 57
+                 nvl(IMPOSTO_13.VL_CSLL_RETIDO,0)     VL_CSLL_RETIDO           -- 58
 
             FROM baandb.ttdrec940301       tdrec940 
        
