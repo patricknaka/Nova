@@ -5,11 +5,8 @@
                  tdrec940.t$docn$l                    NUME_NF,                 -- 4
                  tdrec940.t$seri$l                    SERI_NF,                 -- 5
                  tdrec940.t$fire$l                    NR,                      -- 6
-                 CASE WHEN regexp_replace(tdrec940.t$fovn$l, '[^0-9]', '') IS NULL
-                 THEN '00000000000000' 
-                 WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
-                 THEN '00000000000000'
-                 ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') END  CNPJ_FORN,      -- 7
+                 regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') 
+                                                      CNPJ_FORN,               -- 7
                  tdrec940.t$bpid$l                    COD_PART,                -- 8
                  tdrec940.t$ftyp$l                    COD_TIPO,                -- 9
                  tdrec940.t$stpn$l                    INS_EST,                 -- 10
@@ -40,45 +37,45 @@
                  tcibd001.t$citg                      ID_DEPTO,                -- 25
                  tcmcs023.t$dsca                      DESCR_DEPTO,             -- 26
                  Trim(tcibd001.t$item)                ID_ITEM,                 -- 27
-                  tcibd001.t$dsca                     DESCR_ITEM,              -- 28
+                 tcibd001.t$dsca                      DESC_ITEM,               -- 28
                  brmcs958.t$scod$l                    COD_SERV,                -- 29
                  tcibd936.t$sour$l                    ID_PROC,                 -- 30
                  tcibd001.t$ceat$l                    COD_EAN,                 -- 31
-                 znmcs030.t$seto$c                    SETOR_ITEM,              -- 33
-                 znmcs030.t$dsca$c                    DESCR_SETOR,             -- 34
-                 tcibd001.t$fami$c                    FAMILIA_ITEM,            -- 35
-                 znmcs031.t$dsca$c                    DESCR_FAMILIA,           -- 36
-                 tcibd001.t$subf$c                    SUB_FAMILIA,             -- 37
-                 znmcs032.t$dsca$c                    DESCR_SUB_FAMILIA,       -- 38
-                 tdrec941.t$tamt$l                    VL_TOTAL,                -- 39
-                 nvl(tdrec941.t$addc$l,0)             VL_DESCONTO,             -- 40
-                 nvl(IMPOSTO_11.VL_PIS_RETIDO,0)      VL_PIS_RETIDO,           -- 41
-                 nvl(IMPOSTO_12.VL_COFINS_RETIDO,0)   VL_COFINS_RETIDO,        -- 42
-                 tfacp200.t$leac                      COD_CTA,                 -- 43
-                 tfacp200.t$dim1                      COD_CCUSTO,              -- 44
-                 tfgld010.t$desc                      NOME_CCUSTO,             -- 45
-                 0.00                                 VL_REDUTOR_BASE,         -- 46
-
+                 znmcs030.t$seto$c                    SETOR_ITEM,              -- 32
+                 znmcs030.t$dsca$c                    DESCR_SETOR,             -- 33
+                 tcibd001.t$fami$c                    FAMILIA_ITEM,            -- 34
+                 znmcs031.t$dsca$c                    DESCR_FAMILIA,           -- 35
+                 tcibd001.t$subf$c                    SUB_FAMILIA,             -- 36
+                 znmcs032.t$dsca$c                    DESCR_SUB_FAMILIA,       -- 37
+                 tdrec941.t$tamt$l                    VL_TOTAL,                -- 38
+                 nvl(tdrec941.t$addc$l, 0)            VL_DESCONTO,             -- 49
+                 nvl(IMPOSTO_11.VL_PIS_RETIDO, 0)     VL_PIS_RETIDO,           -- 40
+                 nvl(IMPOSTO_12.VL_COFINS_RETIDO, 0)  VL_COFINS_RETIDO,        -- 41
+                 tfacp200.t$leac                      COD_CTA,                 -- 42
+                 tfacp200.t$dim1                      COD_CCUSTO,              -- 43
+                 tfgld010.t$desc                      NOME_CCUSTO,             -- 44
+                 0.00                                 VL_REDUTOR_BASE,         -- 45
+                                                                                   
                   CASE WHEN tfacp200.t$balh$1 = 0 
                          THEN ( select max(p.t$docd) 
                                   from baandb.ttfacp200301 p 
                                  where p.t$ttyp = tfacp200.t$ttyp
                                    and p.t$ninv = tfacp200.t$ninv )
                        ELSE NULL
-                   END                                DT_LIQUIDACAO_TITULO,    -- 47
-				   
+                   END                                DT_LIQUIDACAO_TITULO,    -- 46
+       
                  CONCAT(tdrec940.t$ttyp$l,
-                        tdrec940.t$invn$l)            TITULO,                  -- 48
-                 nvl(IMPOSTO_7.VL_ISS,0)              VL_ISS,                  -- 49
-                 nvl(IMPOSTO_14.VL_ISS_RETIDO,0)      VL_ISS_RETIDO,           -- 50
-                 nvl(IMPOSTO_9.VL_IRRF_PJ,0)          VL_IRRF_PJ,              -- 51
-                 nvl(IMPOSTO_10.VL_IRRF_PF,0)         VL_IRRF_PF,              -- 52
-                 nvl(IMPOSTO_8.VL_INSS,0)             VL_INSS,                 -- 53
-                 nvl(IMPOSTO_15.VL_INSS_RET_PJ,0)     VL_INSS_RET_PJ,          -- 54
-                 nvl(IMPOSTO_17.VL_INSS_RET_PF,0)     VL_INSS_RET_PF,          -- 55
-                 nvl(IMPOSTO_5.VL_PIS,0)              VL_PIS,                  -- 56
-                 nvl(IMPOSTO_6.VL_COFINS,0)           VL_COFINS,               -- 57
-                 nvl(IMPOSTO_13.VL_CSLL_RETIDO,0)     VL_CSLL_RETIDO           -- 58
+                        tdrec940.t$invn$l)            TITULO,                  -- 47
+                 nvl(IMPOSTO_7.VL_ISS, 0)             VL_ISS,                  -- 48
+                 nvl(IMPOSTO_14.VL_ISS_RETIDO, 0)     VL_ISS_RETIDO,           -- 49
+                 nvl(IMPOSTO_9.VL_IRRF_PJ, 0)         VL_IRRF_PJ,              -- 50
+                 nvl(IMPOSTO_10.VL_IRRF_PF, 0)        VL_IRRF_PF,              -- 51
+                 nvl(IMPOSTO_8.VL_INSS, 0)            VL_INSS,                 -- 52
+                 nvl(IMPOSTO_15.VL_INSS_RET_PJ, 0)    VL_INSS_RET_PJ,          -- 53
+                 nvl(IMPOSTO_17.VL_INSS_RET_PF, 0)    VL_INSS_RET_PF,          -- 54
+                 nvl(IMPOSTO_5.VL_PIS, 0)             VL_PIS,                  -- 55
+                 nvl(IMPOSTO_6.VL_COFINS, 0)          VL_COFINS,               -- 56
+                 nvl(IMPOSTO_13.VL_CSLL_RETIDO, 0)    VL_CSLL_RETIDO           -- 57
 
             FROM baandb.ttdrec940301       tdrec940 
        
@@ -88,9 +85,9 @@
       INNER JOIN baandb.ttdrec941301       tdrec941
               ON tdrec940.t$fire$l = tdrec941.t$fire$l
                  
-      LEFT JOIN baandb.tbrmcs958301   brmcs958
-            ON  brmcs958.t$tror$l = 1
-            AND brmcs958.t$item$l = tdrec941.t$item$l
+       LEFT JOIN baandb.tbrmcs958301   brmcs958
+              ON brmcs958.t$tror$l = 1
+             AND brmcs958.t$item$l = tdrec941.t$item$l
             
        LEFT JOIN baandb.ttcmcs940301       tcmcs940
               ON tcmcs940.T$OFSO$L = tdrec941.t$opfc$l
@@ -102,11 +99,11 @@
       INNER JOIN baandb.ttcibd001301       tcibd001
               ON tcibd001.t$item = tdrec941.t$item$l
          
-     INNER JOIN baandb.ttcibd001301       tcibd001
+      INNER JOIN baandb.ttcibd001301       tcibd001
               ON tcibd001.t$item = tdrec941.t$item$l
-              
-      INNER JOIN  baandb.ttcmcs023301  tcmcs023
-            ON    tcmcs023.t$citg = tcibd001.t$citg
+
+      INNER JOIN baandb.ttcmcs023301  tcmcs023
+              ON tcmcs023.t$citg = tcibd001.t$citg
             
        LEFT JOIN baandb.ttcibd936301       tcibd936
               ON tcibd936.t$ifgc$l = tcibd001.t$ifgc$l
