@@ -53,10 +53,10 @@
                  nvl(IMPOSTO_12.VL_COFINS_RETIDO, 0)  VL_COFINS_RETIDO,        -- 41
                  tfacp200.t$leac                      COD_CTA,                 -- 42
                  tfacp200.t$dim1                      COD_CCUSTO,              -- 43
-                 CASE WHEN tfacp200.t$dim1=' ' THEN
-                 ' '
-                 ELSE
-                 tfgld010.t$desc END                  NOME_CCUSTO,             -- 44
+                 CASE WHEN tfacp200.t$dim1 = ' ' 
+                        THEN ' '
+                      ELSE   tfgld010.t$desc 
+                  END                                 NOME_CCUSTO,             -- 44
                  0.00                                 VL_REDUTOR_BASE,         -- 45
                                                                                    
                   CASE WHEN tfacp200.t$balh$1 = 0 
@@ -184,8 +184,7 @@
              AND tfacp200.t$leac !=  ' '
   
        LEFT JOIN baandb.ttfgld010301 tfgld010
-              ON tfgld010.t$dtyp = 1
-             AND tfgld010.t$dimx = tfacp200.t$dim1
+              ON tfgld010.t$dimx = tfacp200.t$dim1
             
        LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_PIS,
                           tdrec942.t$fire$l,
@@ -285,7 +284,7 @@
              
 WHERE tdrec940.t$stat$l IN (4,5,6)
   AND tdrec940.t$rfdt$l IN (3)
-
+  AND tfgld010.t$dtyp = 1
 ORDER BY 2,6,21,28,24 ) Q1
 
  WHERE Q1.FILIAL IN (:Filial)
