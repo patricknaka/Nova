@@ -113,7 +113,9 @@ INNER JOIN WMWHSE5.CODELKUP CL
   
 WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE), 'DAY') < TRUNC (SYSDATE,'DAY')
+          AT time zone sessiontimezone) AS DATE), 'DAY') 
+      Between :DataDe
+          And :DataAte
 
 		  
 " SELECT CL.UDF2                           FILIAL,                        " &
@@ -213,11 +215,14 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "               where e.t$coct$c = 'ETR'                                  " &
 "            group by a.t$orno$c ) dtETR                                  " &
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
-" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,            " & 
-"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                " &
-"           AT time zone sessiontimezone) AS DATE), 'DAY') < TRUNC (SYSDATE,'DAY')    "
+" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
+"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
+"           AT time zone sessiontimezone) AS DATE))                       " &
+"       Between '"+ Parameters!DataDe.Value + "'                          " &
+"           And '"+ Parameters!DataAte.Value + "'                         " &
+"ORDER BY FILIAL, ORDEM_WMS, DT_LIMITE                                    "
 		  
--- Query com UNION **********************************************************************
+-- Query com UNION **********************************************************
 		  
 " SELECT CL.UDF2                           FILIAL,                        " &
 "        PEDIDO.T$PECL$C                   ID_PEDIDO,                     " &
@@ -316,10 +321,12 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "               where e.t$coct$c = 'ETR'                                  " &
 "            group by a.t$orno$c ) dtETR                                  " &
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
-" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,            " & 
-"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                " &
-"           AT time zone sessiontimezone) AS DATE), 'DAY') < TRUNC (SYSDATE,'DAY')    " &
-"Union                                                                                " &
+" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
+"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
+"           AT time zone sessiontimezone) AS DATE))                       " &
+"       Between '"+ Parameters!DataDe.Value + "'                          " &
+"           And '"+ Parameters!DataAte.Value + "'                         " &
+"Union                                                                    " &
 " SELECT CL.UDF2                           FILIAL,                        " &
 "        PEDIDO.T$PECL$C                   ID_PEDIDO,                     " &
 "        ORDERS.ORDERKEY                   ORDEM_WMS,                     " &
@@ -417,10 +424,12 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "               where e.t$coct$c = 'ETR'                                  " &
 "            group by a.t$orno$c ) dtETR                                  " &
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
-" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,            " & 
-"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                " &
-"           AT time zone sessiontimezone) AS DATE), 'DAY') < TRUNC (SYSDATE,'DAY')    " &
-"Union                                                                                " &
+" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
+"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
+"           AT time zone sessiontimezone) AS DATE))                       " &
+"       Between '"+ Parameters!DataDe.Value + "'                          " &
+"           And '"+ Parameters!DataAte.Value + "'                         " &
+"Union                                                                    " &
 " SELECT CL.UDF2                           FILIAL,                        " &
 "        PEDIDO.T$PECL$C                   ID_PEDIDO,                     " &
 "        ORDERS.ORDERKEY                   ORDEM_WMS,                     " &
@@ -518,10 +527,12 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "               where e.t$coct$c = 'ETR'                                  " &
 "            group by a.t$orno$c ) dtETR                                  " &
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
-" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,            " & 
-"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                " &
-"           AT time zone sessiontimezone) AS DATE), 'DAY') < TRUNC (SYSDATE,'DAY')    " &
-"Union                                                                                " &
+" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
+"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
+"           AT time zone sessiontimezone) AS DATE))                       " &
+"       Between '"+ Parameters!DataDe.Value + "'                          " &
+"           And '"+ Parameters!DataAte.Value + "'                         " &
+"Union                                                                    " &
 " SELECT CL.UDF2                           FILIAL,                        " &
 "        PEDIDO.T$PECL$C                   ID_PEDIDO,                     " &
 "        ORDERS.ORDERKEY                   ORDEM_WMS,                     " &
@@ -619,10 +630,12 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "               where e.t$coct$c = 'ETR'                                  " &
 "            group by a.t$orno$c ) dtETR                                  " &
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
-" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,            " & 
-"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                " &
-"           AT time zone sessiontimezone) AS DATE), 'DAY') < TRUNC (SYSDATE,'DAY')    " &
-"Union                                                                                " &
+" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
+"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
+"           AT time zone sessiontimezone) AS DATE))                       " &
+"       Between '"+ Parameters!DataDe.Value + "'                          " &
+"           And '"+ Parameters!DataAte.Value + "'                         " &
+"Union                                                                    " &
 " SELECT CL.UDF2                           FILIAL,                        " &
 "        PEDIDO.T$PECL$C                   ID_PEDIDO,                     " &
 "        ORDERS.ORDERKEY                   ORDEM_WMS,                     " &
@@ -720,10 +733,12 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "               where e.t$coct$c = 'ETR'                                  " &
 "            group by a.t$orno$c ) dtETR                                  " &
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
-" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,            " & 
-"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                " &
-"           AT time zone sessiontimezone) AS DATE), 'DAY') < TRUNC (SYSDATE,'DAY')    " &
-"Union                                                                                " &
+" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
+"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
+"           AT time zone sessiontimezone) AS DATE))                       " &
+"       Between '"+ Parameters!DataDe.Value + "'                          " &
+"           And '"+ Parameters!DataAte.Value + "'                         " &
+"Union                                                                    " &
 " SELECT CL.UDF2                           FILIAL,                        " &
 "        PEDIDO.T$PECL$C                   ID_PEDIDO,                     " &
 "        ORDERS.ORDERKEY                   ORDEM_WMS,                     " &
@@ -821,10 +836,12 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "               where e.t$coct$c = 'ETR'                                  " &
 "            group by a.t$orno$c ) dtETR                                  " &
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
-" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,            " & 
-"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                " &
-"           AT time zone sessiontimezone) AS DATE), 'DAY') < TRUNC (SYSDATE,'DAY')    " &
-"Union                                                                                " &
+" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
+"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
+"           AT time zone sessiontimezone) AS DATE))                       " &
+"       Between '"+ Parameters!DataDe.Value + "'                          " &
+"           And '"+ Parameters!DataAte.Value + "'                         " &
+"Union                                                                    " &
 " SELECT CL.UDF2                           FILIAL,                        " &
 "        PEDIDO.T$PECL$C                   ID_PEDIDO,                     " &
 "        ORDERS.ORDERKEY                   ORDEM_WMS,                     " &
@@ -922,7 +939,9 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "               where e.t$coct$c = 'ETR'                                  " &
 "            group by a.t$orno$c ) dtETR                                  " &
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
-" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,            " & 
-"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                " &
-"           AT time zone sessiontimezone) AS DATE), 'DAY') < TRUNC (SYSDATE,'DAY')    " &
-"ORDER BY FILIAL                                                                      "
+" WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
+"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
+"           AT time zone sessiontimezone) AS DATE))                       " &
+"       Between '"+ Parameters!DataDe.Value + "'                          " &
+"           And '"+ Parameters!DataAte.Value + "'                         " &
+"ORDER BY FILIAL, ORDEM_WMS, DT_LIMITE                                    "
