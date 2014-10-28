@@ -53,7 +53,10 @@
                  nvl(IMPOSTO_12.VL_COFINS_RETIDO, 0)  VL_COFINS_RETIDO,        -- 41
                  tfacp200.t$leac                      COD_CTA,                 -- 42
                  tfacp200.t$dim1                      COD_CCUSTO,              -- 43
-                 tfgld010.t$desc                      NOME_CCUSTO,             -- 44
+                 CASE WHEN tfacp200.t$dim1=' ' THEN
+                 ' '
+                 ELSE
+                 tfgld010.t$desc END                  NOME_CCUSTO,             -- 44
                  0.00                                 VL_REDUTOR_BASE,         -- 45
                                                                                    
                   CASE WHEN tfacp200.t$balh$1 = 0 
