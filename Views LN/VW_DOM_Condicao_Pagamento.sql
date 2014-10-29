@@ -1,7 +1,7 @@
 -- FAF.099 - Fabio Ferreira, 02-jun-2014, Fabio Ferreira, 	Inclusão do tipo de período e o maior número de períodos
 --************************************************************************************************************************************************************
 SELECT
- 201 AS CD_CIA,
+  1 AS CD_CIA,
   tcmcs013.t$cpay CD_CONDICAO_PAGAMENTO,
   tcmcs013.t$dsca DS_CONDICAO_PAGAMENTO,
   CASE WHEN tcmcs220.t$ptyp=1 THEN 'DIAS' ELSE 'MESES' END CD_TIPO_PERIODO,				--#FAF.099.sn

@@ -2,7 +2,8 @@
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ						
 --*************************************************************************************************************************************************************
 SELECT  tcemm030.t$euca CD_FILIAL,
-        tcemm030.t$lcmp CD_CIA,
+        --tcemm030.t$lcmp CD_CIA,
+	1 CD_CIA,
         tcemm030.t$dsca NM_FILIAL,
 		
         CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
