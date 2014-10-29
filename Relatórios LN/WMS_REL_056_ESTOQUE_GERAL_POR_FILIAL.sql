@@ -1,907 +1,162 @@
 SELECT
-  DISTINCT
-    SKUXLOC.SKU                             ID_ITEM,
-    SKU.DESCR                               NOME,
-    SKU.ACTIVE                              ITEG_SITUACAO,
-    ENT_SKU.ID_DEPART                       COD_DEPTO,
-    ENT_SKU.DEPART_NAME                     DEPTO,
-    ENT_SKU.ID_SECTOR                       COD_SETOR,
-    ENT_SKU.SECTOR_NAME                     SETOR,
-    LN_ITEM.T$FAMI$C                        COD_FAMILIA,
-    LN_ITEM.DS_FAMI                         FAMILIA,
-    LN_ITEM.T$SUBF$C                        COD_SUB,
-    LN_ITEM.DS_SUBF                         SUB,
-    cl.UDF2                                 ID_FILIAL,
-    SUM(SKUXLOC.QTY)                        QT_FISICA,
-    NVL(ROMANEADA.QT_ROMANEADA, 0)          QT_ROMANEADA,
-    SUM(SKUXLOC.QTYALLOCATED)               QT_RESERVADA,
-    SUM(SKUXLOC.QTY - SKUXLOC.QTYALLOCATED) QT_SALDO,
-    NVL(max(maucLN.mauc),0)                 VL_UNITARIO,
-    SKU.SUSR5                               ID_FORNECEDOR,
-    STORER.COMPANY                          FORN_NOME
-
-FROM       WMWHSE5.SKU
-
-INNER JOIN ENTERPRISE.CODELKUP cl
-        ON UPPER(cl.UDF1) = sku.WHSEID
-    
-INNER JOIN WMWHSE5.SKUXLOC
-        ON SKUXLOC.SKU = SKU.SKU
-       AND SKUXLOC.WHSEID = SKU.WHSEID
-
- LEFT JOIN ( SELECT IBD001.T$ITEM, 
-                    IBD001.T$FAMI$C, 
-                    IBD001.T$SUBF$C, 
-                    MCS031.T$DSCA$C DS_FAMI, 
-                    MCS032.T$DSCA$C DS_SUBF             
-               FROM BAANDB.TTCIBD001301@pln01 IBD001
-          LEFT JOIN BAANDB.TZNMCS031301@pln01 MCS031
-                 ON MCS031.T$FAMI$C = IBD001.T$FAMI$C
-                AND MCS031.T$CITG$C = IBD001.T$CITG
-                AND MCS031.T$SETO$C = IBD001.T$SETO$C
-          LEFT JOIN BAANDB.TZNMCS032301@pln01 MCS032
-                 ON MCS032.T$SUBF$C = IBD001.T$SUBF$C
-                AND MCS032.T$CITG$C = IBD001.T$CITG
-                AND MCS032.T$SETO$C = IBD001.T$SETO$C
-                AND MCS032.T$FAMI$C = IBD001.T$FAMI$C ) LN_ITEM
-        ON TRIM(LN_ITEM.T$ITEM) = SKU.SKU
-
- LEFT JOIN ( select whwmd217.t$item,
-                    whwmd217.t$cwar,
-                    case when sum(a.t$qhnd) = 0
-                           then 0
-                         else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)
-                     end mauc 
-               from baandb.twhwmd217301@pln01 whwmd217  
-         inner join baandb.twhinr140301@pln01 a 
-                 on a.t$cwar = whwmd217.t$cwar 
-                and a.t$item = whwmd217.t$item
-              where whwmd217.t$mauc$1 != 0
-           group by whwmd217.t$item, 
-                    whwmd217.t$cwar ) maucLN   
-        ON maucLN.t$cwar = subStr(cl.DESCRIPTION,3,6)
-       AND trim(maucLN.t$item) = sku.sku
-    
- LEFT JOIN ENTERPRISE.DEPARTSECTORSKU ENT_SKU
-        ON TO_CHAR(ENT_SKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)
-       AND TO_CHAR(ENT_SKU.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)
-
- LEFT JOIN WMWHSE5.STORER
-        ON STORER.STORERKEY = SKU.SUSR5
-       AND STORER.WHSEID = SKU.WHSEID
-       
- LEFT JOIN ( SELECT SUM(OD.QTYALLOCATED) QT_ROMANEADA,
-                    OD.SKU
-               FROM WMWHSE5.orderdetail OD
-              WHERE OD.STATUS BETWEEN '29' AND '94' 
-           GROUP BY OD.SKU ) ROMANEADA
-        ON ROMANEADA.SKU = SKUXLOC.SKU
-       
-WHERE STORER.TYPE = 5
-  AND cl.LISTNAME = 'SCHEMA'
-  AND SKUXLOC.QTY > 0
-
-GROUP BY SKUXLOC.SKU,
-         SKU.DESCR,
-         SKU.ACTIVE,
-         ENT_SKU.ID_DEPART,
-         ENT_SKU.DEPART_NAME,
-         ENT_SKU.ID_SECTOR,
-         ENT_SKU.SECTOR_NAME,
-         LN_ITEM.T$FAMI$C,
-         LN_ITEM.DS_FAMI,
-         LN_ITEM.T$SUBF$C,
-         LN_ITEM.DS_SUBF,
-         cl.UDF2,
-         ROMANEADA.QT_ROMANEADA,
-         SKU.SUSR5,
-         STORER.COMPANY
-
-
-"SELECT                                                            " &
-"  DISTINCT                                                        " &
-"    SKUXLOC.SKU                             ID_ITEM,              " &
-"    SKU.DESCR                               NOME,                 " &
-"    SKU.ACTIVE                              ITEG_SITUACAO,        " &
-"    ENT_SKU.ID_DEPART                       COD_DEPTO,            " &
-"    ENT_SKU.DEPART_NAME                     DEPTO,                " &
-"    ENT_SKU.ID_SECTOR                       COD_SETOR,            " &
-"    ENT_SKU.SECTOR_NAME                     SETOR,                " &
-"    LN_ITEM.T$FAMI$C                        COD_FAMILIA,          " &
-"    LN_ITEM.DS_FAMI                         FAMILIA,              " &
-"    LN_ITEM.T$SUBF$C                        COD_SUB,              " &
-"    LN_ITEM.DS_SUBF                         SUB,                  " &
-"    cl.UDF2                                 ID_FILIAL,            " &
-"    SUM(SKUXLOC.QTY)                        QT_FISICA,            " &
-"    NVL(ROMANEADA.QT_ROMANEADA, 0)          QT_ROMANEADA,         " &
-"    SUM(SKUXLOC.QTYALLOCATED)               QT_RESERVADA,         " &
-"    SUM(SKUXLOC.QTY - SKUXLOC.QTYALLOCATED) QT_SALDO,             " &
-"    NVL(max(maucLN.mauc),0)                 VL_UNITARIO,          " &
-"    SKU.SUSR5                               ID_FORNECEDOR,        " &
-"    STORER.COMPANY                          FORN_NOME             " &
-"                                                                  " &
-"FROM       " + Parameters!Table.Value + ".SKU                     " &
-"                                                                  " &
-"INNER JOIN ENTERPRISE.CODELKUP cl                                 " &
-"        ON UPPER(cl.UDF1) = sku.WHSEID                            " &
-"                                                                  " &
-"INNER JOIN " + Parameters!Table.Value + ".SKUXLOC                 " &
-"        ON SKUXLOC.SKU = SKU.SKU                                  " &
-"       AND SKUXLOC.WHSEID = SKU.WHSEID                            " &
-"                                                                  " &
-" LEFT JOIN ( SELECT IBD001.T$ITEM,                                " &
-"                    IBD001.T$FAMI$C,                              " &
-"                    IBD001.T$SUBF$C,                              " &
-"                    MCS031.T$DSCA$C DS_FAMI,                      " &
-"                    MCS032.T$DSCA$C DS_SUBF                       " &
-"               FROM BAANDB.TTCIBD001301@pln01 IBD001              " &
-"          LEFT JOIN BAANDB.TZNMCS031301@pln01 MCS031              " &
-"                 ON MCS031.T$FAMI$C = IBD001.T$FAMI$C             " &
-"                AND MCS031.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS031.T$SETO$C = IBD001.T$SETO$C             " &
-"          LEFT JOIN BAANDB.TZNMCS032301@pln01 MCS032              " &
-"                 ON MCS032.T$SUBF$C = IBD001.T$SUBF$C             " &
-"                AND MCS032.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS032.T$SETO$C = IBD001.T$SETO$C             " &
-"                AND MCS032.T$FAMI$C = IBD001.T$FAMI$C ) LN_ITEM   " &
-"        ON TRIM(LN_ITEM.T$ITEM) = SKU.SKU                         " &
-"                                                                  " &
-" LEFT JOIN ( select whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar,                              " &
-"                    case when sum(a.t$qhnd) = 0                   " &
-"                           then 0                                 " &
-"                         else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  " &
-"                     end mauc                                     " &
-"               from baandb.twhwmd217301@pln01 whwmd217            " &
-"         inner join baandb.twhinr140301@pln01 a                   " &
-"                 on a.t$cwar = whwmd217.t$cwar                    " &
-"                and a.t$item = whwmd217.t$item                    " &
-"              where whwmd217.t$mauc$1 != 0                        " &
-"           group by whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar ) maucLN                      " &
-"        ON maucLN.t$cwar = subStr(cl.DESCRIPTION,3,6)             " &
-"       AND trim(maucLN.t$item) = sku.sku                          " &
-"                                                                  " &
-" LEFT JOIN ENTERPRISE.DEPARTSECTORSKU ENT_SKU                     " &
-"        ON TO_CHAR(ENT_SKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)     " &
-"       AND TO_CHAR(ENT_SKU.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)    " &
-"                                                                  " &
-" LEFT JOIN " + Parameters!Table.Value + ".STORER                  " &
-"        ON STORER.STORERKEY = SKU.SUSR5                           " &
-"       AND STORER.WHSEID = SKU.WHSEID                             " &
-"                                                                  " &
-" LEFT JOIN ( SELECT SUM(OD.QTYALLOCATED) QT_ROMANEADA,            " &
-"                    OD.SKU                                        " &
-"               FROM " + Parameters!Table.Value + ".orderdetail OD " &
-"              WHERE OD.STATUS BETWEEN '29' AND '94'               " &
-"           GROUP BY OD.SKU ) ROMANEADA                            " &
-"        ON ROMANEADA.SKU = SKUXLOC.SKU                            " &
-"                                                                  " &
-"WHERE STORER.TYPE = 5                                             " &
-"  AND cl.LISTNAME = 'SCHEMA'                                      " &
-"  AND SKUXLOC.QTY > 0                                             " &
-"                                                                  " &
-"GROUP BY SKUXLOC.SKU,                                             " &
-"         SKU.DESCR,                                               " &
-"         SKU.ACTIVE,                                              " &
-"         ENT_SKU.ID_DEPART,                                       " &
-"         ENT_SKU.DEPART_NAME,                                     " &
-"         ENT_SKU.ID_SECTOR,                                       " &
-"         ENT_SKU.SECTOR_NAME,                                     " &
-"         LN_ITEM.T$FAMI$C,                                        " &
-"         LN_ITEM.DS_FAMI,                                         " &
-"         LN_ITEM.T$SUBF$C,                                        " &
-"         LN_ITEM.DS_SUBF,                                         " &
-"         cl.UDF2,                                                 " &
-"         ROMANEADA.QT_ROMANEADA,                                  " &
-"         SKU.SUSR5,                                               " &
-"         STORER.COMPANY                                           "		 
-		 
--- Query com UNION ****************************************************
-		 
-"SELECT                                                            " &
-"  DISTINCT                                                        " &
-"    SKUXLOC.SKU                             ID_ITEM,              " &
-"    SKU.DESCR                               NOME,                 " &
-"    SKU.ACTIVE                              ITEG_SITUACAO,        " &
-"    ENT_SKU.ID_DEPART                       COD_DEPTO,            " &
-"    ENT_SKU.DEPART_NAME                     DEPTO,                " &
-"    ENT_SKU.ID_SECTOR                       COD_SETOR,            " &
-"    ENT_SKU.SECTOR_NAME                     SETOR,                " &
-"    LN_ITEM.T$FAMI$C                        COD_FAMILIA,          " &
-"    LN_ITEM.DS_FAMI                         FAMILIA,              " &
-"    LN_ITEM.T$SUBF$C                        COD_SUB,              " &
-"    LN_ITEM.DS_SUBF                         SUB,                  " &
-"    cl.UDF2                                 ID_FILIAL,            " &
-"    SUM(SKUXLOC.QTY)                        QT_FISICA,            " &
-"    NVL(ROMANEADA.QT_ROMANEADA, 0)          QT_ROMANEADA,         " &
-"    SUM(SKUXLOC.QTYALLOCATED)               QT_RESERVADA,         " &
-"    SUM(SKUXLOC.QTY - SKUXLOC.QTYALLOCATED) QT_SALDO,             " &
-"    NVL(max(maucLN.mauc),0)                 VL_UNITARIO,          " &
-"    SKU.SUSR5                               ID_FORNECEDOR,        " &
-"    STORER.COMPANY                          FORN_NOME             " &
-"                                                                  " &
-"FROM       WMWHSE1.SKU                                            " &
-"                                                                  " &
-"INNER JOIN ENTERPRISE.CODELKUP cl                                 " &
-"        ON UPPER(cl.UDF1) = sku.WHSEID                            " &
-"                                                                  " &
-"INNER JOIN WMWHSE1.SKUXLOC                                        " &
-"        ON SKUXLOC.SKU = SKU.SKU                                  " &
-"       AND SKUXLOC.WHSEID = SKU.WHSEID                            " &
-"                                                                  " &
-" LEFT JOIN ( SELECT IBD001.T$ITEM,                                " &
-"                    IBD001.T$FAMI$C,                              " &
-"                    IBD001.T$SUBF$C,                              " &
-"                    MCS031.T$DSCA$C DS_FAMI,                      " &
-"                    MCS032.T$DSCA$C DS_SUBF                       " &
-"               FROM BAANDB.TTCIBD001301@pln01 IBD001              " &
-"          LEFT JOIN BAANDB.TZNMCS031301@pln01 MCS031              " &
-"                 ON MCS031.T$FAMI$C = IBD001.T$FAMI$C             " &
-"                AND MCS031.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS031.T$SETO$C = IBD001.T$SETO$C             " &
-"          LEFT JOIN BAANDB.TZNMCS032301@pln01 MCS032              " &
-"                 ON MCS032.T$SUBF$C = IBD001.T$SUBF$C             " &
-"                AND MCS032.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS032.T$SETO$C = IBD001.T$SETO$C             " &
-"                AND MCS032.T$FAMI$C = IBD001.T$FAMI$C ) LN_ITEM   " &
-"        ON TRIM(LN_ITEM.T$ITEM) = SKU.SKU                         " &
-"                                                                  " &
-" LEFT JOIN ( select whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar,                              " &
-"                    case when sum(a.t$qhnd) = 0                   " &
-"                           then 0                                 " &
-"                         else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  " &
-"                     end mauc                                     " &
-"               from baandb.twhwmd217301@pln01 whwmd217            " &
-"         inner join baandb.twhinr140301@pln01 a                   " &
-"                 on a.t$cwar = whwmd217.t$cwar                    " &
-"                and a.t$item = whwmd217.t$item                    " &
-"              where whwmd217.t$mauc$1 != 0                        " &
-"           group by whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar ) maucLN                      " &
-"        ON maucLN.t$cwar = subStr(cl.DESCRIPTION,3,6)             " &
-"       AND trim(maucLN.t$item) = sku.sku                          " &
-"                                                                  " &
-" LEFT JOIN ENTERPRISE.DEPARTSECTORSKU ENT_SKU                     " &
-"        ON TO_CHAR(ENT_SKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)     " &
-"       AND TO_CHAR(ENT_SKU.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)    " &
-"                                                                  " &
-" LEFT JOIN WMWHSE1.STORER                                         " &
-"        ON STORER.STORERKEY = SKU.SUSR5                           " &
-"       AND STORER.WHSEID = SKU.WHSEID                             " &
-"                                                                  " &
-" LEFT JOIN ( SELECT SUM(OD.QTYALLOCATED) QT_ROMANEADA,            " &
-"                    OD.SKU                                        " &
-"               FROM WMWHSE1.orderdetail OD                        " &
-"              WHERE OD.STATUS BETWEEN '29' AND '94'               " &
-"           GROUP BY OD.SKU ) ROMANEADA                            " &
-"        ON ROMANEADA.SKU = SKUXLOC.SKU                            " &
-"                                                                  " &
-"WHERE STORER.TYPE = 5                                             " &
-"  AND cl.LISTNAME = 'SCHEMA'                                      " &
-"  AND SKUXLOC.QTY > 0                                             " &
-"                                                                  " &
-"GROUP BY SKUXLOC.SKU,                                             " &
-"         SKU.DESCR,                                               " &
-"         SKU.ACTIVE,                                              " &
-"         ENT_SKU.ID_DEPART,                                       " &
-"         ENT_SKU.DEPART_NAME,                                     " &
-"         ENT_SKU.ID_SECTOR,                                       " &
-"         ENT_SKU.SECTOR_NAME,                                     " &
-"         LN_ITEM.T$FAMI$C,                                        " &
-"         LN_ITEM.DS_FAMI,                                         " &
-"         LN_ITEM.T$SUBF$C,                                        " &
-"         LN_ITEM.DS_SUBF,                                         " &
-"         cl.UDF2,                                                 " &
-"         ROMANEADA.QT_ROMANEADA,                                  " &
-"         SKU.SUSR5,                                               " &
-"         STORER.COMPANY                                           " &
-"                                                                  " &
-"Union                                                             " &
-"                                                                  " &
-"SELECT                                                            " &
-"  DISTINCT                                                        " &
-"    SKUXLOC.SKU                             ID_ITEM,              " &
-"    SKU.DESCR                               NOME,                 " &
-"    SKU.ACTIVE                              ITEG_SITUACAO,        " &
-"    ENT_SKU.ID_DEPART                       COD_DEPTO,            " &
-"    ENT_SKU.DEPART_NAME                     DEPTO,                " &
-"    ENT_SKU.ID_SECTOR                       COD_SETOR,            " &
-"    ENT_SKU.SECTOR_NAME                     SETOR,                " &
-"    LN_ITEM.T$FAMI$C                        COD_FAMILIA,          " &
-"    LN_ITEM.DS_FAMI                         FAMILIA,              " &
-"    LN_ITEM.T$SUBF$C                        COD_SUB,              " &
-"    LN_ITEM.DS_SUBF                         SUB,                  " &
-"    cl.UDF2                                 ID_FILIAL,            " &
-"    SUM(SKUXLOC.QTY)                        QT_FISICA,            " &
-"    NVL(ROMANEADA.QT_ROMANEADA, 0)          QT_ROMANEADA,         " &
-"    SUM(SKUXLOC.QTYALLOCATED)               QT_RESERVADA,         " &
-"    SUM(SKUXLOC.QTY - SKUXLOC.QTYALLOCATED) QT_SALDO,             " &
-"    NVL(max(maucLN.mauc),0)                 VL_UNITARIO,          " &
-"    SKU.SUSR5                               ID_FORNECEDOR,        " &
-"    STORER.COMPANY                          FORN_NOME             " &
-"                                                                  " &
-"FROM       WMWHSE2.SKU                                            " &
-"                                                                  " &
-"INNER JOIN ENTERPRISE.CODELKUP cl                                 " &
-"        ON UPPER(cl.UDF1) = sku.WHSEID                            " &
-"                                                                  " &
-"INNER JOIN WMWHSE2.SKUXLOC                                        " &
-"        ON SKUXLOC.SKU = SKU.SKU                                  " &
-"       AND SKUXLOC.WHSEID = SKU.WHSEID                            " &
-"                                                                  " &
-" LEFT JOIN ( SELECT IBD001.T$ITEM,                                " &
-"                    IBD001.T$FAMI$C,                              " &
-"                    IBD001.T$SUBF$C,                              " &
-"                    MCS031.T$DSCA$C DS_FAMI,                      " &
-"                    MCS032.T$DSCA$C DS_SUBF                       " &
-"               FROM BAANDB.TTCIBD001301@pln01 IBD001              " &
-"          LEFT JOIN BAANDB.TZNMCS031301@pln01 MCS031              " &
-"                 ON MCS031.T$FAMI$C = IBD001.T$FAMI$C             " &
-"                AND MCS031.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS031.T$SETO$C = IBD001.T$SETO$C             " &
-"          LEFT JOIN BAANDB.TZNMCS032301@pln01 MCS032              " &
-"                 ON MCS032.T$SUBF$C = IBD001.T$SUBF$C             " &
-"                AND MCS032.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS032.T$SETO$C = IBD001.T$SETO$C             " &
-"                AND MCS032.T$FAMI$C = IBD001.T$FAMI$C ) LN_ITEM   " &
-"        ON TRIM(LN_ITEM.T$ITEM) = SKU.SKU                         " &
-"                                                                  " &
-" LEFT JOIN ( select whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar,                              " &
-"                    case when sum(a.t$qhnd) = 0                   " &
-"                           then 0                                 " &
-"                         else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  " &
-"                     end mauc                                     " &
-"               from baandb.twhwmd217301@pln01 whwmd217            " &
-"         inner join baandb.twhinr140301@pln01 a                   " &
-"                 on a.t$cwar = whwmd217.t$cwar                    " &
-"                and a.t$item = whwmd217.t$item                    " &
-"              where whwmd217.t$mauc$1 != 0                        " &
-"           group by whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar ) maucLN                      " &
-"        ON maucLN.t$cwar = subStr(cl.DESCRIPTION,3,6)             " &
-"       AND trim(maucLN.t$item) = sku.sku                          " &
-"                                                                  " &
-" LEFT JOIN ENTERPRISE.DEPARTSECTORSKU ENT_SKU                     " &
-"        ON TO_CHAR(ENT_SKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)     " &
-"       AND TO_CHAR(ENT_SKU.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)    " &
-"                                                                  " &
-" LEFT JOIN WMWHSE2.STORER                                         " &
-"        ON STORER.STORERKEY = SKU.SUSR5                           " &
-"       AND STORER.WHSEID = SKU.WHSEID                             " &
-"                                                                  " &
-" LEFT JOIN ( SELECT SUM(OD.QTYALLOCATED) QT_ROMANEADA,            " &
-"                    OD.SKU                                        " &
-"               FROM WMWHSE2.orderdetail OD                        " &
-"              WHERE OD.STATUS BETWEEN '29' AND '94'               " &
-"           GROUP BY OD.SKU ) ROMANEADA                            " &
-"        ON ROMANEADA.SKU = SKUXLOC.SKU                            " &
-"                                                                  " &
-"WHERE STORER.TYPE = 5                                             " &
-"  AND cl.LISTNAME = 'SCHEMA'                                      " &
-"  AND SKUXLOC.QTY > 0                                             " &
-"                                                                  " &
-"GROUP BY SKUXLOC.SKU,                                             " &
-"         SKU.DESCR,                                               " &
-"         SKU.ACTIVE,                                              " &
-"         ENT_SKU.ID_DEPART,                                       " &
-"         ENT_SKU.DEPART_NAME,                                     " &
-"         ENT_SKU.ID_SECTOR,                                       " &
-"         ENT_SKU.SECTOR_NAME,                                     " &
-"         LN_ITEM.T$FAMI$C,                                        " &
-"         LN_ITEM.DS_FAMI,                                         " &
-"         LN_ITEM.T$SUBF$C,                                        " &
-"         LN_ITEM.DS_SUBF,                                         " &
-"         cl.UDF2,                                                 " &
-"         ROMANEADA.QT_ROMANEADA,                                  " &
-"         SKU.SUSR5,                                               " &
-"         STORER.COMPANY                                           " &
-"                                                                  " &
-"Union                                                             " &
-"                                                                  " &
-"SELECT                                                            " &
-"  DISTINCT                                                        " &
-"    SKUXLOC.SKU                             ID_ITEM,              " &
-"    SKU.DESCR                               NOME,                 " &
-"    SKU.ACTIVE                              ITEG_SITUACAO,        " &
-"    ENT_SKU.ID_DEPART                       COD_DEPTO,            " &
-"    ENT_SKU.DEPART_NAME                     DEPTO,                " &
-"    ENT_SKU.ID_SECTOR                       COD_SETOR,            " &
-"    ENT_SKU.SECTOR_NAME                     SETOR,                " &
-"    LN_ITEM.T$FAMI$C                        COD_FAMILIA,          " &
-"    LN_ITEM.DS_FAMI                         FAMILIA,              " &
-"    LN_ITEM.T$SUBF$C                        COD_SUB,              " &
-"    LN_ITEM.DS_SUBF                         SUB,                  " &
-"    cl.UDF2                                 ID_FILIAL,            " &
-"    SUM(SKUXLOC.QTY)                        QT_FISICA,            " &
-"    NVL(ROMANEADA.QT_ROMANEADA, 0)          QT_ROMANEADA,         " &
-"    SUM(SKUXLOC.QTYALLOCATED)               QT_RESERVADA,         " &
-"    SUM(SKUXLOC.QTY - SKUXLOC.QTYALLOCATED) QT_SALDO,             " &
-"    NVL(max(maucLN.mauc),0)                 VL_UNITARIO,          " &
-"    SKU.SUSR5                               ID_FORNECEDOR,        " &
-"    STORER.COMPANY                          FORN_NOME             " &
-"                                                                  " &
-"FROM       WMWHSE3.SKU                                            " &
-"                                                                  " &
-"INNER JOIN ENTERPRISE.CODELKUP cl                                 " &
-"        ON UPPER(cl.UDF1) = sku.WHSEID                            " &
-"                                                                  " &
-"INNER JOIN WMWHSE3.SKUXLOC                                        " &
-"        ON SKUXLOC.SKU = SKU.SKU                                  " &
-"       AND SKUXLOC.WHSEID = SKU.WHSEID                            " &
-"                                                                  " &
-" LEFT JOIN ( SELECT IBD001.T$ITEM,                                " &
-"                    IBD001.T$FAMI$C,                              " &
-"                    IBD001.T$SUBF$C,                              " &
-"                    MCS031.T$DSCA$C DS_FAMI,                      " &
-"                    MCS032.T$DSCA$C DS_SUBF                       " &
-"               FROM BAANDB.TTCIBD001301@pln01 IBD001              " &
-"          LEFT JOIN BAANDB.TZNMCS031301@pln01 MCS031              " &
-"                 ON MCS031.T$FAMI$C = IBD001.T$FAMI$C             " &
-"                AND MCS031.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS031.T$SETO$C = IBD001.T$SETO$C             " &
-"          LEFT JOIN BAANDB.TZNMCS032301@pln01 MCS032              " &
-"                 ON MCS032.T$SUBF$C = IBD001.T$SUBF$C             " &
-"                AND MCS032.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS032.T$SETO$C = IBD001.T$SETO$C             " &
-"                AND MCS032.T$FAMI$C = IBD001.T$FAMI$C ) LN_ITEM   " &
-"        ON TRIM(LN_ITEM.T$ITEM) = SKU.SKU                         " &
-"                                                                  " &
-" LEFT JOIN ( select whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar,                              " &
-"                    case when sum(a.t$qhnd) = 0                   " &
-"                           then 0                                 " &
-"                         else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  " &
-"                     end mauc                                     " &
-"               from baandb.twhwmd217301@pln01 whwmd217            " &
-"         inner join baandb.twhinr140301@pln01 a                   " &
-"                 on a.t$cwar = whwmd217.t$cwar                    " &
-"                and a.t$item = whwmd217.t$item                    " &
-"              where whwmd217.t$mauc$1 != 0                        " &
-"           group by whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar ) maucLN                      " &
-"        ON maucLN.t$cwar = subStr(cl.DESCRIPTION,3,6)             " &
-"       AND trim(maucLN.t$item) = sku.sku                          " &
-"                                                                  " &
-" LEFT JOIN ENTERPRISE.DEPARTSECTORSKU ENT_SKU                     " &
-"        ON TO_CHAR(ENT_SKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)     " &
-"       AND TO_CHAR(ENT_SKU.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)    " &
-"                                                                  " &
-" LEFT JOIN WMWHSE3.STORER                                         " &
-"        ON STORER.STORERKEY = SKU.SUSR5                           " &
-"       AND STORER.WHSEID = SKU.WHSEID                             " &
-"                                                                  " &
-" LEFT JOIN ( SELECT SUM(OD.QTYALLOCATED) QT_ROMANEADA,            " &
-"                    OD.SKU                                        " &
-"               FROM WMWHSE3.orderdetail OD                        " &
-"              WHERE OD.STATUS BETWEEN '29' AND '94'               " &
-"           GROUP BY OD.SKU ) ROMANEADA                            " &
-"        ON ROMANEADA.SKU = SKUXLOC.SKU                            " &
-"                                                                  " &
-"WHERE STORER.TYPE = 5                                             " &
-"  AND cl.LISTNAME = 'SCHEMA'                                      " &
-"  AND SKUXLOC.QTY > 0                                             " &
-"                                                                  " &
-"GROUP BY SKUXLOC.SKU,                                             " &
-"         SKU.DESCR,                                               " &
-"         SKU.ACTIVE,                                              " &
-"         ENT_SKU.ID_DEPART,                                       " &
-"         ENT_SKU.DEPART_NAME,                                     " &
-"         ENT_SKU.ID_SECTOR,                                       " &
-"         ENT_SKU.SECTOR_NAME,                                     " &
-"         LN_ITEM.T$FAMI$C,                                        " &
-"         LN_ITEM.DS_FAMI,                                         " &
-"         LN_ITEM.T$SUBF$C,                                        " &
-"         LN_ITEM.DS_SUBF,                                         " &
-"         cl.UDF2,                                                 " &
-"         ROMANEADA.QT_ROMANEADA,                                  " &
-"         SKU.SUSR5,                                               " &
-"         STORER.COMPANY                                           " &
-"                                                                  " &
-"Union                                                             " &
-"                                                                  " &
-"SELECT                                                            " &
-"  DISTINCT                                                        " &
-"    SKUXLOC.SKU                             ID_ITEM,              " &
-"    SKU.DESCR                               NOME,                 " &
-"    SKU.ACTIVE                              ITEG_SITUACAO,        " &
-"    ENT_SKU.ID_DEPART                       COD_DEPTO,            " &
-"    ENT_SKU.DEPART_NAME                     DEPTO,                " &
-"    ENT_SKU.ID_SECTOR                       COD_SETOR,            " &
-"    ENT_SKU.SECTOR_NAME                     SETOR,                " &
-"    LN_ITEM.T$FAMI$C                        COD_FAMILIA,          " &
-"    LN_ITEM.DS_FAMI                         FAMILIA,              " &
-"    LN_ITEM.T$SUBF$C                        COD_SUB,              " &
-"    LN_ITEM.DS_SUBF                         SUB,                  " &
-"    cl.UDF2                                 ID_FILIAL,            " &
-"    SUM(SKUXLOC.QTY)                        QT_FISICA,            " &
-"    NVL(ROMANEADA.QT_ROMANEADA, 0)          QT_ROMANEADA,         " &
-"    SUM(SKUXLOC.QTYALLOCATED)               QT_RESERVADA,         " &
-"    SUM(SKUXLOC.QTY - SKUXLOC.QTYALLOCATED) QT_SALDO,             " &
-"    NVL(max(maucLN.mauc),0)                 VL_UNITARIO,          " &
-"    SKU.SUSR5                               ID_FORNECEDOR,        " &
-"    STORER.COMPANY                          FORN_NOME             " &
-"                                                                  " &
-"FROM       WMWHSE4.SKU                                            " &
-"                                                                  " &
-"INNER JOIN ENTERPRISE.CODELKUP cl                                 " &
-"        ON UPPER(cl.UDF1) = sku.WHSEID                            " &
-"                                                                  " &
-"INNER JOIN WMWHSE4.SKUXLOC                                        " &
-"        ON SKUXLOC.SKU = SKU.SKU                                  " &
-"       AND SKUXLOC.WHSEID = SKU.WHSEID                            " &
-"                                                                  " &
-" LEFT JOIN ( SELECT IBD001.T$ITEM,                                " &
-"                    IBD001.T$FAMI$C,                              " &
-"                    IBD001.T$SUBF$C,                              " &
-"                    MCS031.T$DSCA$C DS_FAMI,                      " &
-"                    MCS032.T$DSCA$C DS_SUBF                       " &
-"               FROM BAANDB.TTCIBD001301@pln01 IBD001              " &
-"          LEFT JOIN BAANDB.TZNMCS031301@pln01 MCS031              " &
-"                 ON MCS031.T$FAMI$C = IBD001.T$FAMI$C             " &
-"                AND MCS031.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS031.T$SETO$C = IBD001.T$SETO$C             " &
-"          LEFT JOIN BAANDB.TZNMCS032301@pln01 MCS032              " &
-"                 ON MCS032.T$SUBF$C = IBD001.T$SUBF$C             " &
-"                AND MCS032.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS032.T$SETO$C = IBD001.T$SETO$C             " &
-"                AND MCS032.T$FAMI$C = IBD001.T$FAMI$C ) LN_ITEM   " &
-"        ON TRIM(LN_ITEM.T$ITEM) = SKU.SKU                         " &
-"                                                                  " &
-" LEFT JOIN ( select whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar,                              " &
-"                    case when sum(a.t$qhnd) = 0                   " &
-"                           then 0                                 " &
-"                         else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  " &
-"                     end mauc                                     " &
-"               from baandb.twhwmd217301@pln01 whwmd217            " &
-"         inner join baandb.twhinr140301@pln01 a                   " &
-"                 on a.t$cwar = whwmd217.t$cwar                    " &
-"                and a.t$item = whwmd217.t$item                    " &
-"              where whwmd217.t$mauc$1 != 0                        " &
-"           group by whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar ) maucLN                      " &
-"        ON maucLN.t$cwar = subStr(cl.DESCRIPTION,3,6)             " &
-"       AND trim(maucLN.t$item) = sku.sku                          " &
-"                                                                  " &
-" LEFT JOIN ENTERPRISE.DEPARTSECTORSKU ENT_SKU                     " &
-"        ON TO_CHAR(ENT_SKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)     " &
-"       AND TO_CHAR(ENT_SKU.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)    " &
-"                                                                  " &
-" LEFT JOIN WMWHSE4.STORER                                         " &
-"        ON STORER.STORERKEY = SKU.SUSR5                           " &
-"       AND STORER.WHSEID = SKU.WHSEID                             " &
-"                                                                  " &
-" LEFT JOIN ( SELECT SUM(OD.QTYALLOCATED) QT_ROMANEADA,            " &
-"                    OD.SKU                                        " &
-"               FROM WMWHSE4.orderdetail OD                        " &
-"              WHERE OD.STATUS BETWEEN '29' AND '94'               " &
-"           GROUP BY OD.SKU ) ROMANEADA                            " &
-"        ON ROMANEADA.SKU = SKUXLOC.SKU                            " &
-"                                                                  " &
-"WHERE STORER.TYPE = 5                                             " &
-"  AND cl.LISTNAME = 'SCHEMA'                                      " &
-"  AND SKUXLOC.QTY > 0                                             " &
-"                                                                  " &
-"GROUP BY SKUXLOC.SKU,                                             " &
-"         SKU.DESCR,                                               " &
-"         SKU.ACTIVE,                                              " &
-"         ENT_SKU.ID_DEPART,                                       " &
-"         ENT_SKU.DEPART_NAME,                                     " &
-"         ENT_SKU.ID_SECTOR,                                       " &
-"         ENT_SKU.SECTOR_NAME,                                     " &
-"         LN_ITEM.T$FAMI$C,                                        " &
-"         LN_ITEM.DS_FAMI,                                         " &
-"         LN_ITEM.T$SUBF$C,                                        " &
-"         LN_ITEM.DS_SUBF,                                         " &
-"         cl.UDF2,                                                 " &
-"         ROMANEADA.QT_ROMANEADA,                                  " &
-"         SKU.SUSR5,                                               " &
-"         STORER.COMPANY                                           " &
-"                                                                  " &
-"Union                                                             " &
-"                                                                  " &
-"SELECT                                                            " &
-"  DISTINCT                                                        " &
-"    SKUXLOC.SKU                             ID_ITEM,              " &
-"    SKU.DESCR                               NOME,                 " &
-"    SKU.ACTIVE                              ITEG_SITUACAO,        " &
-"    ENT_SKU.ID_DEPART                       COD_DEPTO,            " &
-"    ENT_SKU.DEPART_NAME                     DEPTO,                " &
-"    ENT_SKU.ID_SECTOR                       COD_SETOR,            " &
-"    ENT_SKU.SECTOR_NAME                     SETOR,                " &
-"    LN_ITEM.T$FAMI$C                        COD_FAMILIA,          " &
-"    LN_ITEM.DS_FAMI                         FAMILIA,              " &
-"    LN_ITEM.T$SUBF$C                        COD_SUB,              " &
-"    LN_ITEM.DS_SUBF                         SUB,                  " &
-"    cl.UDF2                                 ID_FILIAL,            " &
-"    SUM(SKUXLOC.QTY)                        QT_FISICA,            " &
-"    NVL(ROMANEADA.QT_ROMANEADA, 0)          QT_ROMANEADA,         " &
-"    SUM(SKUXLOC.QTYALLOCATED)               QT_RESERVADA,         " &
-"    SUM(SKUXLOC.QTY - SKUXLOC.QTYALLOCATED) QT_SALDO,             " &
-"    NVL(max(maucLN.mauc),0)                 VL_UNITARIO,          " &
-"    SKU.SUSR5                               ID_FORNECEDOR,        " &
-"    STORER.COMPANY                          FORN_NOME             " &
-"                                                                  " &
-"FROM       WMWHSE5.SKU                                            " &
-"                                                                  " &
-"INNER JOIN ENTERPRISE.CODELKUP cl                                 " &
-"        ON UPPER(cl.UDF1) = sku.WHSEID                            " &
-"                                                                  " &
-"INNER JOIN WMWHSE5.SKUXLOC                                        " &
-"        ON SKUXLOC.SKU = SKU.SKU                                  " &
-"       AND SKUXLOC.WHSEID = SKU.WHSEID                            " &
-"                                                                  " &
-" LEFT JOIN ( SELECT IBD001.T$ITEM,                                " &
-"                    IBD001.T$FAMI$C,                              " &
-"                    IBD001.T$SUBF$C,                              " &
-"                    MCS031.T$DSCA$C DS_FAMI,                      " &
-"                    MCS032.T$DSCA$C DS_SUBF                       " &
-"               FROM BAANDB.TTCIBD001301@pln01 IBD001              " &
-"          LEFT JOIN BAANDB.TZNMCS031301@pln01 MCS031              " &
-"                 ON MCS031.T$FAMI$C = IBD001.T$FAMI$C             " &
-"                AND MCS031.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS031.T$SETO$C = IBD001.T$SETO$C             " &
-"          LEFT JOIN BAANDB.TZNMCS032301@pln01 MCS032              " &
-"                 ON MCS032.T$SUBF$C = IBD001.T$SUBF$C             " &
-"                AND MCS032.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS032.T$SETO$C = IBD001.T$SETO$C             " &
-"                AND MCS032.T$FAMI$C = IBD001.T$FAMI$C ) LN_ITEM   " &
-"        ON TRIM(LN_ITEM.T$ITEM) = SKU.SKU                         " &
-"                                                                  " &
-" LEFT JOIN ( select whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar,                              " &
-"                    case when sum(a.t$qhnd) = 0                   " &
-"                           then 0                                 " &
-"                         else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  " &
-"                     end mauc                                     " &
-"               from baandb.twhwmd217301@pln01 whwmd217            " &
-"         inner join baandb.twhinr140301@pln01 a                   " &
-"                 on a.t$cwar = whwmd217.t$cwar                    " &
-"                and a.t$item = whwmd217.t$item                    " &
-"              where whwmd217.t$mauc$1 != 0                        " &
-"           group by whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar ) maucLN                      " &
-"        ON maucLN.t$cwar = subStr(cl.DESCRIPTION,3,6)             " &
-"       AND trim(maucLN.t$item) = sku.sku                          " &
-"                                                                  " &
-" LEFT JOIN ENTERPRISE.DEPARTSECTORSKU ENT_SKU                     " &
-"        ON TO_CHAR(ENT_SKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)     " &
-"       AND TO_CHAR(ENT_SKU.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)    " &
-"                                                                  " &
-" LEFT JOIN WMWHSE5.STORER                                         " &
-"        ON STORER.STORERKEY = SKU.SUSR5                           " &
-"       AND STORER.WHSEID = SKU.WHSEID                             " &
-"                                                                  " &
-" LEFT JOIN ( SELECT SUM(OD.QTYALLOCATED) QT_ROMANEADA,            " &
-"                    OD.SKU                                        " &
-"               FROM WMWHSE5.orderdetail OD                        " &
-"              WHERE OD.STATUS BETWEEN '29' AND '94'               " &
-"           GROUP BY OD.SKU ) ROMANEADA                            " &
-"        ON ROMANEADA.SKU = SKUXLOC.SKU                            " &
-"                                                                  " &
-"WHERE STORER.TYPE = 5                                             " &
-"  AND cl.LISTNAME = 'SCHEMA'                                      " &
-"  AND SKUXLOC.QTY > 0                                             " &
-"                                                                  " &
-"GROUP BY SKUXLOC.SKU,                                             " &
-"         SKU.DESCR,                                               " &
-"         SKU.ACTIVE,                                              " &
-"         ENT_SKU.ID_DEPART,                                       " &
-"         ENT_SKU.DEPART_NAME,                                     " &
-"         ENT_SKU.ID_SECTOR,                                       " &
-"         ENT_SKU.SECTOR_NAME,                                     " &
-"         LN_ITEM.T$FAMI$C,                                        " &
-"         LN_ITEM.DS_FAMI,                                         " &
-"         LN_ITEM.T$SUBF$C,                                        " &
-"         LN_ITEM.DS_SUBF,                                         " &
-"         cl.UDF2,                                                 " &
-"         ROMANEADA.QT_ROMANEADA,                                  " &
-"         SKU.SUSR5,                                               " &
-"         STORER.COMPANY                                           " &
-"                                                                  " &
-"Union                                                             " &
-"                                                                  " &
-"SELECT                                                            " &
-"  DISTINCT                                                        " &
-"    SKUXLOC.SKU                             ID_ITEM,              " &
-"    SKU.DESCR                               NOME,                 " &
-"    SKU.ACTIVE                              ITEG_SITUACAO,        " &
-"    ENT_SKU.ID_DEPART                       COD_DEPTO,            " &
-"    ENT_SKU.DEPART_NAME                     DEPTO,                " &
-"    ENT_SKU.ID_SECTOR                       COD_SETOR,            " &
-"    ENT_SKU.SECTOR_NAME                     SETOR,                " &
-"    LN_ITEM.T$FAMI$C                        COD_FAMILIA,          " &
-"    LN_ITEM.DS_FAMI                         FAMILIA,              " &
-"    LN_ITEM.T$SUBF$C                        COD_SUB,              " &
-"    LN_ITEM.DS_SUBF                         SUB,                  " &
-"    cl.UDF2                                 ID_FILIAL,            " &
-"    SUM(SKUXLOC.QTY)                        QT_FISICA,            " &
-"    NVL(ROMANEADA.QT_ROMANEADA, 0)          QT_ROMANEADA,         " &
-"    SUM(SKUXLOC.QTYALLOCATED)               QT_RESERVADA,         " &
-"    SUM(SKUXLOC.QTY - SKUXLOC.QTYALLOCATED) QT_SALDO,             " &
-"    NVL(max(maucLN.mauc),0)                 VL_UNITARIO,          " &
-"    SKU.SUSR5                               ID_FORNECEDOR,        " &
-"    STORER.COMPANY                          FORN_NOME             " &
-"                                                                  " &
-"FROM       WMWHSE6.SKU                                            " &
-"                                                                  " &
-"INNER JOIN ENTERPRISE.CODELKUP cl                                 " &
-"        ON UPPER(cl.UDF1) = sku.WHSEID                            " &
-"                                                                  " &
-"INNER JOIN WMWHSE6.SKUXLOC                                        " &
-"        ON SKUXLOC.SKU = SKU.SKU                                  " &
-"       AND SKUXLOC.WHSEID = SKU.WHSEID                            " &
-"                                                                  " &
-" LEFT JOIN ( SELECT IBD001.T$ITEM,                                " &
-"                    IBD001.T$FAMI$C,                              " &
-"                    IBD001.T$SUBF$C,                              " &
-"                    MCS031.T$DSCA$C DS_FAMI,                      " &
-"                    MCS032.T$DSCA$C DS_SUBF                       " &
-"               FROM BAANDB.TTCIBD001301@pln01 IBD001              " &
-"          LEFT JOIN BAANDB.TZNMCS031301@pln01 MCS031              " &
-"                 ON MCS031.T$FAMI$C = IBD001.T$FAMI$C             " &
-"                AND MCS031.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS031.T$SETO$C = IBD001.T$SETO$C             " &
-"          LEFT JOIN BAANDB.TZNMCS032301@pln01 MCS032              " &
-"                 ON MCS032.T$SUBF$C = IBD001.T$SUBF$C             " &
-"                AND MCS032.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS032.T$SETO$C = IBD001.T$SETO$C             " &
-"                AND MCS032.T$FAMI$C = IBD001.T$FAMI$C ) LN_ITEM   " &
-"        ON TRIM(LN_ITEM.T$ITEM) = SKU.SKU                         " &
-"                                                                  " &
-" LEFT JOIN ( select whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar,                              " &
-"                    case when sum(a.t$qhnd) = 0                   " &
-"                           then 0                                 " &
-"                         else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  " &
-"                     end mauc                                     " &
-"               from baandb.twhwmd217301@pln01 whwmd217            " &
-"         inner join baandb.twhinr140301@pln01 a                   " &
-"                 on a.t$cwar = whwmd217.t$cwar                    " &
-"                and a.t$item = whwmd217.t$item                    " &
-"              where whwmd217.t$mauc$1 != 0                        " &
-"           group by whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar ) maucLN                      " &
-"        ON maucLN.t$cwar = subStr(cl.DESCRIPTION,3,6)             " &
-"       AND trim(maucLN.t$item) = sku.sku                          " &
-"                                                                  " &
-" LEFT JOIN ENTERPRISE.DEPARTSECTORSKU ENT_SKU                     " &
-"        ON TO_CHAR(ENT_SKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)     " &
-"       AND TO_CHAR(ENT_SKU.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)    " &
-"                                                                  " &
-" LEFT JOIN WMWHSE6.STORER                                         " &
-"        ON STORER.STORERKEY = SKU.SUSR5                           " &
-"       AND STORER.WHSEID = SKU.WHSEID                             " &
-"                                                                  " &
-" LEFT JOIN ( SELECT SUM(OD.QTYALLOCATED) QT_ROMANEADA,            " &
-"                    OD.SKU                                        " &
-"               FROM WMWHSE6.orderdetail OD                        " &
-"              WHERE OD.STATUS BETWEEN '29' AND '94'               " &
-"           GROUP BY OD.SKU ) ROMANEADA                            " &
-"        ON ROMANEADA.SKU = SKUXLOC.SKU                            " &
-"                                                                  " &
-"WHERE STORER.TYPE = 5                                             " &
-"  AND cl.LISTNAME = 'SCHEMA'                                      " &
-"  AND SKUXLOC.QTY > 0                                             " &
-"                                                                  " &
-"GROUP BY SKUXLOC.SKU,                                             " &
-"         SKU.DESCR,                                               " &
-"         SKU.ACTIVE,                                              " &
-"         ENT_SKU.ID_DEPART,                                       " &
-"         ENT_SKU.DEPART_NAME,                                     " &
-"         ENT_SKU.ID_SECTOR,                                       " &
-"         ENT_SKU.SECTOR_NAME,                                     " &
-"         LN_ITEM.T$FAMI$C,                                        " &
-"         LN_ITEM.DS_FAMI,                                         " &
-"         LN_ITEM.T$SUBF$C,                                        " &
-"         LN_ITEM.DS_SUBF,                                         " &
-"         cl.UDF2,                                                 " &
-"         ROMANEADA.QT_ROMANEADA,                                  " &
-"         SKU.SUSR5,                                               " &
-"         STORER.COMPANY                                           " &
-"                                                                  " &
-"Union                                                             " &
-"                                                                  " &
-"SELECT                                                            " &
-"  DISTINCT                                                        " &
-"    SKUXLOC.SKU                             ID_ITEM,              " &
-"    SKU.DESCR                               NOME,                 " &
-"    SKU.ACTIVE                              ITEG_SITUACAO,        " &
-"    ENT_SKU.ID_DEPART                       COD_DEPTO,            " &
-"    ENT_SKU.DEPART_NAME                     DEPTO,                " &
-"    ENT_SKU.ID_SECTOR                       COD_SETOR,            " &
-"    ENT_SKU.SECTOR_NAME                     SETOR,                " &
-"    LN_ITEM.T$FAMI$C                        COD_FAMILIA,          " &
-"    LN_ITEM.DS_FAMI                         FAMILIA,              " &
-"    LN_ITEM.T$SUBF$C                        COD_SUB,              " &
-"    LN_ITEM.DS_SUBF                         SUB,                  " &
-"    cl.UDF2                                 ID_FILIAL,            " &
-"    SUM(SKUXLOC.QTY)                        QT_FISICA,            " &
-"    NVL(ROMANEADA.QT_ROMANEADA, 0)          QT_ROMANEADA,         " &
-"    SUM(SKUXLOC.QTYALLOCATED)               QT_RESERVADA,         " &
-"    SUM(SKUXLOC.QTY - SKUXLOC.QTYALLOCATED) QT_SALDO,             " &
-"    NVL(max(maucLN.mauc),0)                 VL_UNITARIO,          " &
-"    SKU.SUSR5                               ID_FORNECEDOR,        " &
-"    STORER.COMPANY                          FORN_NOME             " &
-"                                                                  " &
-"FROM       WMWHSE7.SKU                                            " &
-"                                                                  " &
-"INNER JOIN ENTERPRISE.CODELKUP cl                                 " &
-"        ON UPPER(cl.UDF1) = sku.WHSEID                            " &
-"                                                                  " &
-"INNER JOIN WMWHSE7.SKUXLOC                                        " &
-"        ON SKUXLOC.SKU = SKU.SKU                                  " &
-"       AND SKUXLOC.WHSEID = SKU.WHSEID                            " &
-"                                                                  " &
-" LEFT JOIN ( SELECT IBD001.T$ITEM,                                " &
-"                    IBD001.T$FAMI$C,                              " &
-"                    IBD001.T$SUBF$C,                              " &
-"                    MCS031.T$DSCA$C DS_FAMI,                      " &
-"                    MCS032.T$DSCA$C DS_SUBF                       " &
-"               FROM BAANDB.TTCIBD001301@pln01 IBD001              " &
-"          LEFT JOIN BAANDB.TZNMCS031301@pln01 MCS031              " &
-"                 ON MCS031.T$FAMI$C = IBD001.T$FAMI$C             " &
-"                AND MCS031.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS031.T$SETO$C = IBD001.T$SETO$C             " &
-"          LEFT JOIN BAANDB.TZNMCS032301@pln01 MCS032              " &
-"                 ON MCS032.T$SUBF$C = IBD001.T$SUBF$C             " &
-"                AND MCS032.T$CITG$C = IBD001.T$CITG               " &
-"                AND MCS032.T$SETO$C = IBD001.T$SETO$C             " &
-"                AND MCS032.T$FAMI$C = IBD001.T$FAMI$C ) LN_ITEM   " &
-"        ON TRIM(LN_ITEM.T$ITEM) = SKU.SKU                         " &
-"                                                                  " &
-" LEFT JOIN ( select whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar,                              " &
-"                    case when sum(a.t$qhnd) = 0                   " &
-"                           then 0                                 " &
-"                         else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  " &
-"                     end mauc                                     " &
-"               from baandb.twhwmd217301@pln01 whwmd217            " &
-"         inner join baandb.twhinr140301@pln01 a                   " &
-"                 on a.t$cwar = whwmd217.t$cwar                    " &
-"                and a.t$item = whwmd217.t$item                    " &
-"              where whwmd217.t$mauc$1 != 0                        " &
-"           group by whwmd217.t$item,                              " &
-"                    whwmd217.t$cwar ) maucLN                      " &
-"        ON maucLN.t$cwar = subStr(cl.DESCRIPTION,3,6)             " &
-"       AND trim(maucLN.t$item) = sku.sku                          " &
-"                                                                  " &
-" LEFT JOIN ENTERPRISE.DEPARTSECTORSKU ENT_SKU                     " &
-"        ON TO_CHAR(ENT_SKU.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)     " &
-"       AND TO_CHAR(ENT_SKU.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)    " &
-"                                                                  " &
-" LEFT JOIN WMWHSE7.STORER                                         " &
-"        ON STORER.STORERKEY = SKU.SUSR5                           " &
-"       AND STORER.WHSEID = SKU.WHSEID                             " &
-"                                                                  " &
-" LEFT JOIN ( SELECT SUM(OD.QTYALLOCATED) QT_ROMANEADA,            " &
-"                    OD.SKU                                        " &
-"               FROM WMWHSE7.orderdetail OD                        " &
-"              WHERE OD.STATUS BETWEEN '29' AND '94'               " &
-"           GROUP BY OD.SKU ) ROMANEADA                            " &
-"        ON ROMANEADA.SKU = SKUXLOC.SKU                            " &
-"                                                                  " &
-"WHERE STORER.TYPE = 5                                             " &
-"  AND cl.LISTNAME = 'SCHEMA'                                      " &
-"  AND SKUXLOC.QTY > 0                                             " &
-"                                                                  " &
-"GROUP BY SKUXLOC.SKU,                                             " &
-"         SKU.DESCR,                                               " &
-"         SKU.ACTIVE,                                              " &
-"         ENT_SKU.ID_DEPART,                                       " &
-"         ENT_SKU.DEPART_NAME,                                     " &
-"         ENT_SKU.ID_SECTOR,                                       " &
-"         ENT_SKU.SECTOR_NAME,                                     " &
-"         LN_ITEM.T$FAMI$C,                                        " &
-"         LN_ITEM.DS_FAMI,                                         " &
-"         LN_ITEM.T$SUBF$C,                                        " &
-"         LN_ITEM.DS_SUBF,                                         " &
-"         cl.UDF2,                                                 " &
-"         ROMANEADA.QT_ROMANEADA,                                  " &
-"         SKU.SUSR5,                                               " &
-"         STORER.COMPANY                                           " &
-"                                                                  " &
-"ORDER BY ID_FILIAL                                                "
+			--znfmd001.T$FOVN$c,
+            Trim(tcibd001.t$item)             ID_ITEM, 
+            tcibd001.t$dsca                   NOME, 
+            CASE WHEN tcibd001.t$csig=' ' THEN 'ATIVO'
+             ELSE 'INATIVO' END               ITEG_SITUACAO, 
+            tcibd001.t$citg                   COD_DEPTO, 
+            tcmcs023.t$dsca                   DEPTO, 
+            tcibd001.t$seto$c                 COD_SETOR, 
+            znmcs030.t$dsca$c                 SETOR, 
+            tcibd001.t$fami$c                 COD_FAMILIA, 
+            znmcs031.t$dsca$c                 FAMILIA, 
+            tcibd001.t$subf$c                 COD_SUB, 
+            znmcs032.t$dsca$c                 SUB, 
+            WHSE.WHSEID                       ID_FILIAL, 
+            WHSE.UDF2                         FILIAL,
+            sum(whinr140.t$qhnd)               QT_FISICA,
+            sum (nvl(Q2.bloc,0)+
+                 nvl(ats.qty,0))              QT_RESTR,
+            sum(nvl(Q3.roma,0))               QT_ROMANEADA, 
+            sum(whinr140.t$qlal)              QT_RESERVADA, 
+            sum(whinr140.t$qhnd -  
+                whinr140.t$qlal -  
+                (nvl(Q2.bloc,0)+
+                 nvl(ats.qty,0)))             QT_SALDO, 
+            max(Q1.mauc)                      VL_UNITARIO, 
+             
+            CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL 
+                   THEN '00000000000000'  
+                 WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')) < 11 
+                   THEN '00000000000000' 
+                 ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')  
+             END                              ID_FORNECEDOR, 
+            tccom100.t$nama                   FORN_NOME, 
+            tccom100.t$seak                   FORN_APELIDO 
+                   
+          FROM       baandb.ttcibd001301 tcibd001
+          
+          INNER JOIN baandb.twhinr140301 whinr140 
+                  ON whinr140.t$item   = tcibd001.t$item 
+           
+           LEFT JOIN baandb.ttdipu001301 tdipu001  
+                  ON tdipu001.t$item = tcibd001.t$item 
+                
+           LEFT JOIN baandb.ttccom100301 tccom100  
+                  ON tccom100.t$bpid = tdipu001.t$otbp 
+                
+           LEFT JOIN baandb.ttccom130301 tccom130  
+                  ON tccom130.t$cadr = tccom100.t$cadr 
+				   
+          INNER JOIN baandb.ttcemm112301 tcemm112 
+                  ON tcemm112.t$waid   = whinr140.t$cwar 
+           
+          INNER JOIN baandb.ttcemm030301 tcemm030 
+                  ON tcemm030.t$eunt   = tcemm112.t$grid 
+				   
+		  INNER JOIN baandb.ttcmcs003301 tcmcs003 
+				  ON tcmcs003.t$cwar = whinr140.t$cwar 
+	    
+           
+           LEFT JOIN ( 	select whwmd217.t$item, 
+                               b.t$grid, 
+                               case when sum(a.t$qhnd) = 0  
+                                      then 0 
+                                    else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
+                                end mauc 
+                          from baandb.twhwmd217301 whwmd217  
+                          INNER JOIN baandb.twhinr140301 a ON a.t$cwar = whwmd217.t$cwar AND a.t$item = whwmd217.t$item
+                          INNER JOIN     baandb.ttcemm112301 b ON b.t$waid = a.t$cwar 
+                          WHERE whwmd217.t$mauc$1!=0
+                      group by  whwmd217.t$item, b.t$grid) Q1    
+                  ON Q1.t$item = whinr140.t$item 
+                 AND Q1.t$grid = tcemm112.t$grid 
+                      
+           LEFT JOIN ( SELECT whwmd630.t$item,
+                              whwmd630.t$loca,
+                              whwmd630.t$cwar,  
+                              sum(whwmd630.t$qbls) bloc 
+                         FROM baandb.twhwmd630301 whwmd630 
+                        WHERE NOT EXISTS ( SELECT *  
+                                             FROM baandb.ttcmcs095301 tcmcs095 
+                                            WHERE tcmcs095.t$modu = 'BOD'  
+                                              AND tcmcs095.t$sumd = 0  
+                                              AND tcmcs095.t$prcd = 9999 
+                                              AND tcmcs095.t$koda = whwmd630.t$bloc ) 
+                     GROUP BY whwmd630.t$item,
+                              whwmd630.t$loca,
+                              whwmd630.t$cwar ) Q2  
+                  ON Q2.t$item = whinr140.t$item
+                 AND Q2.t$loca = whinr140.t$loca 
+                 AND Q2.t$cwar = whinr140.t$cwar 
+            
+           LEFT JOIN ( SELECT whinh220.t$item,  
+                              whinh220.t$cwar,  
+                              sum(whinh220.t$qord) roma 
+                        FROM baandb.twhinh220301 whinh220 
+                       WHERE whinh220.t$wmss > 40 
+                       AND   whinh220.t$lsta<30
+                    GROUP BY whinh220.t$item,  
+                             whinh220.t$cwar ) Q3  
+                  ON Q3.t$item = whinr140.t$item  
+                 AND Q3.t$cwar = whinr140.t$cwar 
+          LEFT JOIN (select ats1.t$item, ats1.t$cwar, ats3.t$grid, sum(ats1.t$qhnd) qty
+                      from baandb.twhinr140301 ats1
+                      inner join baandb.ttcmcs003301 ats2 ON ats2.t$cwar = ats1.t$cwar
+                      inner join baandb.ttcemm112301 ats3 ON ats3.t$waid = ats1.t$cwar 
+                      where ats2.t$tpar$l=2
+                      group by ats1.t$item, ats1.t$cwar, ats3.t$grid) ats
+                        ON ats.t$item = whinr140.t$item
+                        AND ats.t$cwar = whinr140.t$cwar
+                        AND ats.t$grid = tcemm112.t$grid
+                      
+           
+          INNER JOIN baandb.ttcmcs023301 tcmcs023 
+                  ON tcmcs023.t$citg   = tcibd001.t$citg 
+           
+          INNER JOIN baandb.tznmcs030301 znmcs030 
+                  ON znmcs030.t$citg$c = tcibd001.t$citg  
+                 AND znmcs030.t$seto$c = tcibd001.t$seto$c 
+           
+          INNER JOIN baandb.tznmcs031301 znmcs031 
+                  ON znmcs031.t$citg$c = tcibd001.t$citg  
+                 AND znmcs031.t$seto$c = tcibd001.t$seto$c  
+                 AND znmcs031.t$fami$c = tcibd001.t$fami$c 
+           
+          INNER JOIN baandb.tznmcs032301 znmcs032 
+                  ON znmcs032.t$citg$c = tcibd001.t$citg  
+                 AND znmcs032.t$seto$c = tcibd001.t$seto$c  
+                 AND znmcs032.t$fami$c = tcibd001.t$fami$c 
+                 AND znmcs032.t$subf$c = tcibd001.t$subf$c 
+           
+           INNER JOIN (SELECT ue.t$grid, UPPER(cl.UDF1) WHSEID, cl.UDF2 
+                       FROM baandb.ttcemm300301 wr
+                       INNER JOIN ENTERPRISE.CODELKUP@DL_LN_WMS cl ON cl.DESCRIPTION = wr.t$LCTN
+                                                                  AND cl.listname='SCHEMA'
+                       INNER JOIN baandb.ttcemm112301 ue ON ue.t$waid = wr.t$CODE
+                       GROUP BY ue.t$grid, UPPER(cl.UDF1), cl.UDF2) WHSE ON WHSE.t$grid=tcemm112.t$grid
+           
+          WHERE tcemm112.t$loco = 301  
+          --and Trim(tcibd001.t$item)='2220'--'2063317'
+		   
+         HAVING sum(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0 
+           
+          GROUP BY 
+				   Trim(tcibd001.t$item),  
+                   tcibd001.t$dsca,  
+                   CASE WHEN tcibd001.t$csig=' ' THEN 'ATIVO'
+                     ELSE 'INATIVO' END ,  
+                   tcibd001.t$citg, 
+                   tcmcs023.t$dsca, 
+                   tcibd001.t$seto$c,  
+                   znmcs030.t$dsca$c,  
+                   tcibd001.t$fami$c,   
+                   znmcs031.t$dsca$c,  
+                   tcibd001.t$subf$c,  
+                   znmcs032.t$dsca$c,  
+                   tcemm030.t$euca, 
+                   WHSE.WHSEID,
+                   WHSE.UDF2,
+                   tccom130.t$fovn$l,  
+                   tccom100.t$nama,  
+                   tccom100.t$seak
