@@ -47,7 +47,7 @@
     SKU.STDGROSSWGT                       PESO_BRUTO,
     ORDERS.C_CITY                         MUNICIPIO,
     ORDERS.C_STATE                        ESTADO,
-    ORDERDETAIL.ORIGINALQTY               QUANTIDADE,
+    ORDERDETAIL.SHIPPEDQTY                QUANTIDADE,
     sls400.                               VALOR,
  
     REDESPACHO.description                REDESPACHO,
@@ -64,7 +64,7 @@
      END                                  RESTRICAO,
    
     maucLN.mauc                           VALOR_CUSTO_CMV,
-    ORDERS.C_COMPANY                      DESTINATARIO,
+    ORDERS.C_ADDRESS1                     DESTINATARIO,
     ORDERS.type                           COD_TIPO_PEDIDO,
     TIPO_PEDIDO.                          DSC_TIPO_PEDIDO
  
