@@ -12,7 +12,7 @@ SELECT
     tfacp200.t$dued                             DATA_VENCTO,
     tfacp200.t$amnt                             VALO_TITULO,  
     tfacp200.t$balc                             SALD_TITULO,
-    '201'                                       CODE_CIA,             
+    '301'                                       CODE_CIA,             
 
     CASE WHEN (tfacp200.t$balc - tfacp200.t$bala) = 0 
            THEN 1
@@ -58,8 +58,7 @@ SELECT
                    tccom125.t$bano || '-' || 
                    tccom125.t$dacc$d )          CONTA_PN,
                    
-    LOTE_PAGTO.                                 LOTE_PAGTO,
-    
+    tfcmg101.t$btno                             LOTE_PAGTO,
     tdrec940.t$fire$l                           NUM_RFISCAL,
     tdrec940.t$rfdt$l                           NUM_CFISCAL, 
     DTRFD.DESC_CODIGO_FISCAL                    DESC_CODIGO_FISCAL,        
@@ -80,17 +79,31 @@ SELECT
 
     Concat(Concat(tfacp200.t$ifbp, ' - '), tccom100.t$nama) 
                                                 COD_DESC_PEN,
-                                                
-    CASE WHEN znacp005.t$canc$c = 1 
-           THEN 99
-         ELSE NVL(tfacp201.t$pyst$l, 1)
-     END                                        STAT_PRG,
+                                                                                            
+    CASE WHEN znacp005.t$canc$c = 1 THEN 
+      99
+    ELSE
+        CASE WHEN znacp005.t$canc$c=2 THEN
+          98
+        ELSE
+          NVL(tfacp201.t$pyst$l, 1)
+        END
+    END                                         STAT_PRG,
     
-    CASE WHEN znacp005.t$canc$c = 1 
-           THEN 'Cancelado'
-         ELSE   iSTAT.DESCR
+    CASE WHEN znacp005.t$canc$c = 1 THEN 
+      'Cancelado'
+    ELSE   
+        CASE WHEN znacp005.t$canc$c = 2 THEN
+          'Agrupado'
+        ELSE
+            CASE WHEN (tfacp200.t$asst$l = 2 and tfacp201.t$pyst$l is null ) THEN
+              'Associado'
+            ELSE
+              iSTAT.DESCR
+            END
+        END
      END                                        DESCR_STAT_PRG,
-    
+    CONCAT(znacp005.t$ttyp$c,znacp005.t$ninv$c) TITULO_AGRUPADOR,
     tdpur400.t$cotp                             COD_TIPO_ORDEM,          --tipo de ordem de compra
     tdpur094.t$dsca                             DECR_TIPO_ORDEM,         --descrição tipo ordem de compra
     tfacp200.t$leac                             COD_CONTA_CONTROLE,
@@ -113,14 +126,6 @@ SELECT
   
 FROM       baandb.ttfacp200301  tfacp200  
 
- LEFT JOIN ( select max(a.t$btno) LOTE_PAGTO, 
-                    a.t$ttyp, 
-                    a.t$ninv
-               from baandb.ttfcmg101301 a
-           group by a.t$ttyp, a.t$ninv ) LOTE_PAGTO
-        ON LOTE_PAGTO.t$ttyp = tfacp200.t$ttyp
-       AND LOTE_PAGTO.t$ninv = tfacp200.t$ninv
-       
  LEFT JOIN ( select m.t$bloc COD_STATUS_BLOQUEIO,
                     m.t$desc DSC_STATUS_BLOQUEIO
                from baandb.ttfacp002301 m ) BLOQUEIO
@@ -129,7 +134,9 @@ FROM       baandb.ttfacp200301  tfacp200
  LEFT JOIN baandb.ttfgld008301 tfgld008
         ON tfgld008.t$leac = tfacp200.t$leac
    
- LEFT JOIN ( SELECT a.t$ttyp$d, 
+ LEFT JOIN ( SELECT a.t$ptyp$d,
+                    a.t$docn$d,
+                    a.t$ttyp$d, 
                     a.t$ninv$d,
                     a.t$lach$d,
                     max(a.t$stat$d) t$stat$d,
@@ -139,7 +146,10 @@ FROM       baandb.ttfacp200301  tfacp200
                                    from baandb.ttflcb230301 b
                                   where b.t$ttyp$d = a.t$ttyp$d
                                     and b.t$ninv$d = a.t$ninv$d )
-           GROUP BY a.t$ttyp$d, 
+           GROUP BY 
+                    a.t$ptyp$d,
+                    a.t$docn$d,
+                    a.t$ttyp$d, 
                     a.t$ninv$d, 
                     a.t$lach$d ) tflcb230
         ON tflcb230.t$ttyp$d = tfacp200.t$ttyp
@@ -148,6 +158,8 @@ FROM       baandb.ttfacp200301  tfacp200
  LEFT JOIN baandb.ttfcmg101301 tfcmg101
         ON tfcmg101.t$ttyp = tfacp200.t$ttyp
        AND tfcmg101.t$ninv = tfacp200.t$ninv
+       AND tfcmg101.t$ptyp = tflcb230.t$ptyp$d
+       AND tfcmg101.t$pdoc = tflcb230.t$docn$d
     
  LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
@@ -205,10 +217,12 @@ FROM       baandb.ttfacp200301  tfacp200
                                             and l1.t$cpac = l.t$cpac ) ) iStatArq2
         ON iStatArq2.CODE = tflcb230.t$send$d
 
-INNER JOIN baandb.ttccom100301 tccom100
+--INNER JOIN baandb.ttccom100301 tccom100
+  LEFT JOIN baandb.ttccom100301 tccom100
         ON tccom100.t$bpid = tfacp200.t$ifbp
     
-INNER JOIN baandb.ttccom130301 tccom130
+--INNER JOIN baandb.ttccom130301 tccom130
+  LEFT JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
           
  LEFT JOIN baandb.ttdrec940301  tdrec940
@@ -263,7 +277,8 @@ INNER JOIN baandb.ttccom130301 tccom130
  LEFT JOIN baandb.ttcmcs966301  tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
            
-INNER JOIN baandb.ttfacp201301  tfacp201
+--INNER JOIN baandb.ttfacp201301  tfacp201
+  LEFT JOIN baandb.ttfacp201301  tfacp201
         ON tfacp201.t$ttyp = tfacp200.t$ttyp
        AND tfacp201.t$ninv = tfacp200.t$ninv
                   
@@ -352,14 +367,19 @@ INNER JOIN baandb.ttfacp201301  tfacp201
         ON OCORRENCIA.t$ttyp$d = tfacp200.t$ttyp
        AND OCORRENCIA.t$ninv$d = tfacp200.t$ninv
 
- LEFT JOIN baandb.tznacp005301 znacp005
-        ON znacp005.t$bpid$c = tfacp201.t$ifbp
-       AND znacp005.t$ttyp$c = tfacp201.t$ttyp
-       AND znacp005.t$ninv$c = tfacp201.t$ninv
+      LEFT JOIN baandb.tznacp004301 znacp004
+      ON        znacp004.t$bpid$c=tfacp200.t$ifbp
+      AND       znacp004.t$tty1$c=tfacp200.t$ttyp
+      AND       znacp004.t$nin1$c=tfacp200.t$ninv
+      
+      LEFT  JOIN baandb.tznacp005301 znacp005
+      ON    znacp005.t$bpid$c = tfacp200.t$ifbp
+      AND   znacp005.t$ttyp$c = znacp004.t$ttyp$c
+      AND   znacp005.t$ninv$c = znacp004.t$ninv$c
       
 WHERE tfacp200.t$docn = 0
 
-  AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
+  AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte1272716
   AND tfacp200.t$dued between :VencimentoDe AND :VencimentoAte
   AND tfacp200.t$ttyp IN (:TipoTransacao)
   AND NVL(Trim(tfacp200.t$bloc), '000') IN (:Bloqueado)
