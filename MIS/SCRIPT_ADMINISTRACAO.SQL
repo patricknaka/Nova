@@ -150,6 +150,21 @@ values ('FILE_CAR_LN',
 'String')
 
 
+--FILE_RUPTURA
+insert into adm.ssis_conexoes
+values ('FILE_RUPTURA',
+'W:\Operacional\Ruptura Vitrine\Ruptura Vitrine\',
+'\Package.Variables[User::gstrFolderRuptura].Properties[Value]',
+'String')
+
+--FILE_GESTAO_ICMS
+insert into adm.ssis_conexoes
+values ('FILE_GESTAO_ICMS',
+'W:\Operacional\Gestão ICMS Atacado\Gestão ICMS Atacado\',
+'\Package.Variables[User::gstrFolderGestaoICMS].Properties[Value]',
+'String')
+
+
 --=================================================
 --inserção de colunas
 --=================================================

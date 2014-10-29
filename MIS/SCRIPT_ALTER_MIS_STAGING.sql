@@ -422,3 +422,21 @@ alter column fat_nr_cia int
 
 alter table com.stg_sige_devolucao_fornecedor
 alter column fat_nr_ITEM NVARCHAR(47)
+
+--de bigint para nvarchar(47)
+alter table com.ods_devolucao_fornecedor
+alter column nr_item_sku nvarchar(47)
+
+--de bigint para nvarchar(47)
+alter table com.ods_devolucao_fornecedor
+alter column nr_product_sku nvarchar(47)
+
+--alteracao collation
+Alter TAble sige.stg_sector
+Alter Column ds_sector VarChar(30) Collate Latin1_General_CI_AS
+ 
+alter table sige.stg_family
+alter column ds_family varchar(80) Collate Latin1_General_CI_AS
+ 
+alter table sige.stg_sige_sub_familia
+alter column ds_sub_familia varchar(80) Collate Latin1_General_CI_AS

@@ -1071,3 +1071,10 @@ alter column PEAP_NSU_AUTORIZADORA numeric(10,0)
 
 alter table dbo.ods_sige_arquivo_vendas
 alter column NSU_HOST numeric(10,0)
+
+
+alter table dbo.stg_sige_preco_tabela
+alter column ITEM_NR_ITEM numeric(15)
+
+alter table dbo.ods_tb_planilhao
+alter column Ean numeric (15)

@@ -140,3 +140,6 @@ alter column ds_procedencia varchar(60)
 
 alter table ods_product
 alter column ds_procedencia varchar(60)
+
+alter table aux.aux_ods_produto_sige
+alter column ds_ean numeric(15)
