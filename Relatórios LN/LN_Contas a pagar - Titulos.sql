@@ -19,13 +19,12 @@ SELECT
          ELSE   2 
      END                                        DESC_SITUA1,
 
-    CASE WHEN tfacp201.t$pyst$l != 3 
+    CASE WHEN tfacp201.t$pyst$l !=  3 
            THEN 2
          ELSE   1 
      END                                        CODE_SITUA2,
-    
 
-    CASE WHEN tfacp201.t$pyst$l != 3
+    CASE WHEN tfacp201.t$pyst$l !=  3
            THEN 'Não' 
          ELSE 'Sim' 
      END                                        DESC_SITUA2,
@@ -63,7 +62,7 @@ SELECT
     tdrec940.t$rfdt$l                           NUM_CFISCAL, 
     DTRFD.DESC_CODIGO_FISCAL                    DESC_CODIGO_FISCAL,        
     tdrec940.t$fdtc$l                           COD_TIPO_DOC_FISCAL,             -- antes TIPO_ORDEM,
-    tcmcs966.t$dsca$l                           DESC_TIPO_DOC_FISCAL,             -- antes DESC_TIPO_ORDEM,       
+    tcmcs966.t$dsca$l                           DESC_TIPO_DOC_FISCAL,            -- antes DESC_TIPO_ORDEM,       
     tdrec947.t$orno$l                           NUM_ORDEM,
     tfacp201.t$mopa$d                           CODE_MODAL_PGTO,
     
@@ -77,32 +76,27 @@ SELECT
     tfacp200.t$ifbp                             CODE_PN,
     tccom100.t$nama                             DESC_PN,
 
-    Concat(Concat(tfacp200.t$ifbp, ' - '), tccom100.t$nama) 
-                                                COD_DESC_PEN,
+    Concat(Concat(tfacp200.t$ifbp, ' - '), 
+           tccom100.t$nama)                     COD_DESC_PEN,
                                                                                             
-    CASE WHEN znacp005.t$canc$c = 1 THEN 
-      99
-    ELSE
-        CASE WHEN znacp005.t$canc$c=2 THEN
-          98
-        ELSE
-          NVL(tfacp201.t$pyst$l, 1)
-        END
-    END                                         STAT_PRG,
+    CASE WHEN znacp005.t$canc$c = 1 
+           THEN 99
+         WHEN znacp005.t$canc$c = 2 
+           THEN 98
+         WHEN (tfacp200.t$asst$l = 2 AND tfacp201.t$pyst$l IS NULL) 
+           THEN 97
+         ELSE   NVL(tfacp201.t$pyst$l, 1)
+     END                                        STAT_PRG,
     
-    CASE WHEN znacp005.t$canc$c = 1 THEN 
-      'Cancelado'
-    ELSE   
-        CASE WHEN znacp005.t$canc$c = 2 THEN
-          'Agrupado'
-        ELSE
-            CASE WHEN (tfacp200.t$asst$l = 2 and tfacp201.t$pyst$l is null ) THEN
-              'Associado'
-            ELSE
-              iSTAT.DESCR
-            END
-        END
+    CASE WHEN znacp005.t$canc$c = 1 
+           THEN 'Cancelado'
+         WHEN znacp005.t$canc$c = 2 
+           THEN 'Agrupado'
+         WHEN (tfacp200.t$asst$l = 2 AND tfacp201.t$pyst$l IS NULL) 
+           THEN 'Associado'
+         ELSE   iSTAT.DESCR
      END                                        DESCR_STAT_PRG,
+	 
     CONCAT(znacp005.t$ttyp$c,znacp005.t$ninv$c) TITULO_AGRUPADOR,
     tdpur400.t$cotp                             COD_TIPO_ORDEM,          --tipo de ordem de compra
     tdpur094.t$dsca                             DECR_TIPO_ORDEM,         --descrição tipo ordem de compra
@@ -143,11 +137,10 @@ FROM       baandb.ttfacp200301  tfacp200
                     max(a.t$send$d) t$send$d
                FROM baandb.ttflcb230301 a
               WHERE a.t$sern$d = ( select max(b.t$sern$d)
-                                   from baandb.ttflcb230301 b
-                                  where b.t$ttyp$d = a.t$ttyp$d
-                                    and b.t$ninv$d = a.t$ninv$d )
-           GROUP BY 
-                    a.t$ptyp$d,
+                                     from baandb.ttflcb230301 b
+                                    where b.t$ttyp$d = a.t$ttyp$d
+                                      and b.t$ninv$d = a.t$ninv$d )
+           GROUP BY a.t$ptyp$d,
                     a.t$docn$d,
                     a.t$ttyp$d, 
                     a.t$ninv$d, 
@@ -217,12 +210,10 @@ FROM       baandb.ttfacp200301  tfacp200
                                             and l1.t$cpac = l.t$cpac ) ) iStatArq2
         ON iStatArq2.CODE = tflcb230.t$send$d
 
---INNER JOIN baandb.ttccom100301 tccom100
   LEFT JOIN baandb.ttccom100301 tccom100
-        ON tccom100.t$bpid = tfacp200.t$ifbp
+         ON tccom100.t$bpid = tfacp200.t$ifbp
     
---INNER JOIN baandb.ttccom130301 tccom130
-  LEFT JOIN baandb.ttccom130301 tccom130
+ LEFT JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
           
  LEFT JOIN baandb.ttdrec940301  tdrec940
@@ -233,9 +224,6 @@ FROM       baandb.ttfacp200301  tfacp200
         ON tdrec952.t$ttyp$l = tfacp200.t$ttyp
        AND tdrec952.t$invn$l = tfacp200.t$ninv
        AND tdrec952.t$fire$l = tdrec940.t$fire$l
-       AND tdrec952.t$dbcr$l = 1
-       AND tdrec952.t$trtp$l = 2
-       AND tdrec952.t$brty$l = 0 
     
  LEFT JOIN ( SELECT iDOMAIN.t$cnst iCODE, iLABEL.t$desc DESC_CODIGO_FISCAL 
                FROM baandb.tttadv401000 iDOMAIN, 
@@ -269,19 +257,18 @@ FROM       baandb.ttfacp200301  tfacp200
         ON tdrec947.t$fire$l = tdrec940.t$fire$l
  
  LEFT JOIN baandb.ttdpur400301  tdpur400
-        ON  tdpur400.t$orno = tdrec947.t$orno$l
+        ON tdpur400.t$orno = tdrec947.t$orno$l
      
  LEFT JOIN baandb.ttdpur094301  tdpur094
-        ON  tdpur094.t$potp = tdpur400.t$cotp
+        ON tdpur094.t$potp = tdpur400.t$cotp
         
  LEFT JOIN baandb.ttcmcs966301  tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
            
---INNER JOIN baandb.ttfacp201301  tfacp201
-  LEFT JOIN baandb.ttfacp201301  tfacp201
+ LEFT JOIN baandb.ttfacp201301  tfacp201
         ON tfacp201.t$ttyp = tfacp200.t$ttyp
        AND tfacp201.t$ninv = tfacp200.t$ninv
-                  
+
  LEFT JOIN baandb.ttfcmg001301  tfcmg001
         ON tfcmg001.t$bank = tfacp201.t$brel
  
@@ -318,7 +305,7 @@ FROM       baandb.ttfacp200301  tfacp200
                                           where l1.t$clab = l.t$clab 
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iSTAT
-        ON iSTAT.CODE = tfacp201.t$pyst$l
+        ON iSTAT.CODE = NVL(tfacp201.t$pyst$l, 1)
                                             
  LEFT JOIN ( SELECT l.t$desc DESC_MODAL_PGTO,
                     d.t$cnst COD_MODAL_PGTO
@@ -367,29 +354,36 @@ FROM       baandb.ttfacp200301  tfacp200
         ON OCORRENCIA.t$ttyp$d = tfacp200.t$ttyp
        AND OCORRENCIA.t$ninv$d = tfacp200.t$ninv
 
-      LEFT JOIN baandb.tznacp004301 znacp004
-      ON        znacp004.t$bpid$c=tfacp200.t$ifbp
-      AND       znacp004.t$tty1$c=tfacp200.t$ttyp
-      AND       znacp004.t$nin1$c=tfacp200.t$ninv
+ LEFT JOIN baandb.tznacp004301 znacp004
+        ON znacp004.t$bpid$c = tfacp200.t$ifbp
+       AND znacp004.t$tty1$c = tfacp200.t$ttyp
+       AND znacp004.t$nin1$c = tfacp200.t$ninv
       
-      LEFT  JOIN baandb.tznacp005301 znacp005
-      ON    znacp005.t$bpid$c = tfacp200.t$ifbp
-      AND   znacp005.t$ttyp$c = znacp004.t$ttyp$c
-      AND   znacp005.t$ninv$c = znacp004.t$ninv$c
+ LEFT JOIN baandb.tznacp005301 znacp005
+        ON znacp005.t$bpid$c = tfacp200.t$ifbp
+       AND znacp005.t$ttyp$c = znacp004.t$ttyp$c
+       AND znacp005.t$ninv$c = znacp004.t$ninv$c
       
 WHERE tfacp200.t$docn = 0
+  AND tdrec952.t$dbcr$l = 1
+  AND tdrec952.t$trtp$l = 2
+  AND tdrec952.t$brty$l = 0
 
-  AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte1272716
+  AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND tfacp200.t$dued between :VencimentoDe AND :VencimentoAte
   AND tfacp200.t$ttyp IN (:TipoTransacao)
   AND NVL(Trim(tfacp200.t$bloc), '000') IN (:Bloqueado)
   AND tfacp200.t$ifbp IN (:ParceiroNegocio)
-  AND ((tfacp200.t$afpy ! =  2 and :PrepPagto = 1)or(tfacp200.t$afpy = 2 and :PrepPagto = 2)or(:PrepPagto = 0))
+  AND ((tfacp200.t$afpy !=  2 and :PrepPagto = 1)or(tfacp200.t$afpy = 2 and :PrepPagto = 2)or(:PrepPagto = 0))
   AND NVL(TRIM(tfacp200.t$paym), 'N/A') IN (:MetodoPagto)
   AND (CASE WHEN znacp005.t$canc$c = 1 
               THEN 99
-            ELSE NVL(tfacp201.t$pyst$l, 1)
-       END) IN (:Situacao)
+            WHEN znacp005.t$canc$c = 2 
+              THEN 98
+            WHEN (tfacp200.t$asst$l = 2 AND tfacp201.t$pyst$l IS NULL) 
+              THEN 97
+            ELSE   NVL(tfacp201.t$pyst$l, 1)
+        END) IN (:Situacao)
   AND NVL(CASE WHEN tflcb230.t$send$d = 0 
                  THEN tflcb230.t$stat$d
                ELSE tflcb230.t$send$d 
@@ -397,3 +391,5 @@ WHERE tfacp200.t$docn = 0
   AND ((UPPER(tdrec947.t$orno$l) like '%' || UPPER(:OrdemCompra) || '%') OR (:OrdemCompra is null))
   AND ((tdrec940.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null))
   AND ((Upper(Concat(Trim(tfacp200.t$ttyp), tfacp200.t$ninv)) =  Upper(Trim(:Transacao))) OR (:Transacao is null))
+
+ORDER BY DATA_EMISSAO, NUME_TITULO
