@@ -163,6 +163,46 @@ CREATE CLUSTERED INDEX IDX_0 ON ln.ods_agrupamento_transacao
 ID_AGRUPAMENTO ASC,
 CD_TRANSACAO ASC
 )
+
+/*
+--utilizado em homologação. Copia do criciuma
+
+insert into mis_ods.ln.ods_agrupamento
+values  
+('2','Abatimento DEV'),
+('3','Abt. Concil. Frete'),
+('4','Ante Pagto. Serviço'),
+('5','Ante Pagto. Produto'),
+('6','Abt. Marketplace'),
+('7','Abt. Fornecedor'),
+('8','Rel Titulo Aberto'),
+('9','Encontro Contas'),
+('10','Abatimento VPC'),
+('11','Juros')
+
+insert into mis_ods.ln.ods_agrupamento_transacao
+values ('2','NCC','CAP')
+,('2','PDA','CAP')
+,('2','PNA','CAP')
+,('2','PXA','CAP')
+,('3','PAH','CAP')
+,('4','PAO','CAP')
+,('5','PAT','CAP')
+,('6','PKL','CAP')
+,('7','PAF','CAP')
+,('7','PIP','CAP')
+,('8','PFA','CAP')
+,('8','PFS','CAP')
+,('8','PFT','CAP')
+,('8','PGA','CAP')
+,('9','ENC','CAP')
+,('10','RVA','CAR')
+,('10','RVB','CAR')
+,('10','RVF','CAR')
+,('10','RVT','CAR')
+,('11','COR','CAP')
+,('11','PJD','CAP')
+*/
 -------------------------------------------------------------------------------------------------------------------------------------------------
 
 --TABELAS DE CHAVE PARA PROCESSO DE EXTRAÇÃO DO ORÇAMENTO
@@ -937,3 +977,32 @@ INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcament
 INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (13, 2, 25)
 INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (14, 1, 28)
 INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (14, 2, 27)
+
+
+--copiei os dados do criciuma, pois não achei onde essa tabela é gerada
+/*
+alter table fin.aux_unineg_documento_titulo
+alter column ds_id_documento varchar(3)
+
+alter table fin.aux_unineg_documento_titulo
+alter column ds_id_modulo varchar(3)
+
+insert into mis_ods.fin.aux_unineg_documento_titulo
+values
+('1','RB3','CAR'),
+('1','RBN','CAR'),
+('1','RPG','CAR'),
+('2','RE1','CAR'),
+('2','RE4','CAR'),
+('2','RWC','CAR'),
+('4','RWA','CAR'),
+('4','RWG','CAR'),
+('5','RVA','CAR'),
+('5','RVB','CAR'),
+('5','RVF','CAR'),
+('5','RVT','CAR'),
+('8','RIH','CAR'),
+('12','RPA','CAR'),
+('18','RCD','CAR'),
+('19','RCK','CAR')
+*/

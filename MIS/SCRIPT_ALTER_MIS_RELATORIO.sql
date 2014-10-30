@@ -20,6 +20,9 @@ ALTER TABLE ods_sige_titulo_relatorio
 ADD nr_id_titulo_sk BIGINT NULL,
     nr_id_nr_sk BIGINT NULL
 
+alter table dbo.ods_sige_titulo_relatorio
+alter column id_titulo varchar(30)
+
 ALTER TABLE ods_sige_extranet_fornecedores_liquidado
 ALTER COLUMN id_documento VARCHAR(3)
 
