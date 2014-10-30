@@ -53,10 +53,10 @@
                  nvl(IMPOSTO_12.VL_COFINS_RETIDO, 0)  VL_COFINS_RETIDO,        -- 41
                  tfacp200.t$leac                      COD_CTA,                 -- 42
                  tfacp200.t$dim1                      COD_CCUSTO,              -- 43
-                 CASE WHEN tfacp200.t$dim1 = ' ' 
-                        THEN ' '
-                      ELSE   tfgld010.t$desc 
-                  END                                 NOME_CCUSTO,             -- 44
+                 CASE WHEN tfacp200.t$dim1=' ' THEN
+                 ' '
+                 ELSE
+                 tfgld010.t$desc END                  NOME_CCUSTO,             -- 44
                  0.00                                 VL_REDUTOR_BASE,         -- 45
                                                                                    
                   CASE WHEN tfacp200.t$balh$1 = 0 
@@ -72,14 +72,24 @@
                  nvl(IMPOSTO_7.VL_ISS, 0)             VL_ISS,                  -- 48
                  nvl(IMPOSTO_14.VL_ISS_RETIDO, 0)     VL_ISS_RETIDO,           -- 49
                  nvl(IMPOSTO_9.VL_IRRF_PJ, 0)         VL_IRRF_PJ,              -- 50
-                 nvl(IMPOSTO_10.VL_IRRF_PF, 0)        VL_IRRF_PF,              -- 51
-                 nvl(IMPOSTO_8.VL_INSS, 0)            VL_INSS,                 -- 52
+                 --nvl(IMPOSTO_10.VL_IRRF_PF, 0)        VL_IRRF_PF,              -- 51
+                 --nvl(IMPOSTO_8.VL_INSS, 0)            VL_INSS,                 -- 52
                  nvl(IMPOSTO_15.VL_INSS_RET_PJ, 0)    VL_INSS_RET_PJ,          -- 53
-                 nvl(IMPOSTO_17.VL_INSS_RET_PF, 0)    VL_INSS_RET_PF,          -- 54
+                 --nvl(IMPOSTO_17.VL_INSS_RET_PF, 0)    VL_INSS_RET_PF,          -- 54
                  nvl(IMPOSTO_5.VL_PIS, 0)             VL_PIS,                  -- 55
                  nvl(IMPOSTO_6.VL_COFINS, 0)          VL_COFINS,               -- 56
-                 nvl(IMPOSTO_13.VL_CSLL_RETIDO, 0)    VL_CSLL_RETIDO           -- 57
-
+                 nvl(IMPOSTO_13.VL_CSLL_RETIDO, 0)    VL_CSLL_RETIDO,          -- 57
+                
+                tdrec940.t$mtpn$l                     INSC_MUNIC,              -- 58 
+                tdrec940.t$opfc$l                     ID_CFOP,                 -- 59
+                tcmcs940.t$dsca$l                     DESC_CFOP,               -- 60
+                tdrec941.t$qnty$l                     QTDE,                    -- 61
+                tdrec941.t$pric$l                     VL_UNIT,                 -- 62
+                CONCAT( IMPOSTO_5.ORIG_CST_PIS,
+                        IMPOSTO_5.TRIBUT_CST_PIS)     CST_PIS,                 -- 63
+                CONCAT( IMPOSTO_6.ORIG_CST_COFINS,
+                        IMPOSTO_6.TRIBUT_CST_COFINS)  CST_COFINS               -- 64
+                        
             FROM baandb.ttdrec940301       tdrec940 
        
        LEFT JOIN baandb.ttccom110301       tccom110
@@ -184,20 +194,29 @@
              AND tfacp200.t$leac !=  ' '
   
        LEFT JOIN baandb.ttfgld010301 tfgld010
-              ON tfgld010.t$dimx = tfacp200.t$dim1
+              ON tfgld010.t$dtyp = 1
+             AND tfgld010.t$dimx = tfacp200.t$dim1
             
        LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_PIS,
                           tdrec942.t$fire$l,
-                          tdrec942.t$line$l
-                     FROM baandb.ttdrec942301 tdrec942
-                    WHERE tdrec942.t$brty$l = 5 ) IMPOSTO_5
+                          tdrec942.t$line$l,
+                          tcmcs938.t$gdog$l   ORIG_CST_PIS,      
+                          tcmcs938.t$icmd$l   TRIBUT_CST_PIS                        
+                     FROM baandb.ttcmcs938301 tcmcs938
+               INNER JOIN baandb.ttdrec942301 tdrec942
+                       ON tcmcs938.t$txsc$l = tdrec942.t$txsc$l                    
+                     WHERE tdrec942.t$brty$l = 5 ) IMPOSTO_5
               ON IMPOSTO_5.t$fire$l = tdrec941.t$fire$l
              AND IMPOSTO_5.t$line$l = tdrec941.t$line$l
   
        LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_COFINS,
                           tdrec942.t$fire$l,
-                          tdrec942.t$line$l
-                     FROM baandb.ttdrec942301 tdrec942
+                          tdrec942.t$line$l,
+                          tcmcs938.t$gdog$l   ORIG_CST_COFINS,      
+                          tcmcs938.t$icmd$l   TRIBUT_CST_COFINS
+                     FROM baandb.ttcmcs938301 tcmcs938
+               INNER JOIN baandb.ttdrec942301 tdrec942
+                       ON tcmcs938.t$txsc$l = tdrec942.t$txsc$l
                     WHERE tdrec942.t$brty$l = 6 ) IMPOSTO_6
               ON IMPOSTO_6.t$fire$l = tdrec941.t$fire$l
              AND IMPOSTO_6.t$line$l = tdrec941.t$line$l
@@ -205,18 +224,18 @@
        LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_ISS,
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l
-                     FROM baandb.ttdrec942301 tdrec942
+                    FROM baandb.ttdrec942301 tdrec942
                     WHERE tdrec942.t$brty$l = 7 ) IMPOSTO_7
               ON IMPOSTO_7.t$fire$l = tdrec941.t$fire$l
              AND IMPOSTO_7.t$line$l = tdrec941.t$line$l
              
-       LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_INSS,
-                          tdrec942.t$fire$l,
-                          tdrec942.t$line$l
-                     FROM baandb.ttdrec942301 tdrec942
-                    WHERE tdrec942.t$brty$l = 8 ) IMPOSTO_8
-              ON IMPOSTO_8.t$fire$l = tdrec941.t$fire$l
-             AND IMPOSTO_8.t$line$l = tdrec941.t$line$l
+--       LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_INSS,
+--                          tdrec942.t$fire$l,
+--                          tdrec942.t$line$l
+--                     FROM baandb.ttdrec942301 tdrec942
+--                    WHERE tdrec942.t$brty$l = 8 ) IMPOSTO_8
+--              ON IMPOSTO_8.t$fire$l = tdrec941.t$fire$l
+--             AND IMPOSTO_8.t$line$l = tdrec941.t$line$l
            
        LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_IRRF_PJ,
                           tdrec942.t$fire$l,
@@ -226,13 +245,13 @@
               ON IMPOSTO_9.t$fire$l = tdrec941.t$fire$l
              AND IMPOSTO_9.t$line$l = tdrec941.t$line$l
 
-       LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_IRRF_PF,
-                          tdrec942.t$fire$l,
-                          tdrec942.t$line$l
-                     FROM baandb.ttdrec942301 tdrec942
-                    WHERE tdrec942.t$brty$l = 10 ) IMPOSTO_10
-              ON IMPOSTO_10.t$fire$l = tdrec941.t$fire$l
-             AND IMPOSTO_10.t$line$l = tdrec941.t$line$l
+--       LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_IRRF_PF,
+--                          tdrec942.t$fire$l,
+--                          tdrec942.t$line$l
+--                     FROM baandb.ttdrec942301 tdrec942
+--                    WHERE tdrec942.t$brty$l = 10 ) IMPOSTO_10
+--              ON IMPOSTO_10.t$fire$l = tdrec941.t$fire$l
+--             AND IMPOSTO_10.t$line$l = tdrec941.t$line$l
    
        LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_PIS_RETIDO,
                           tdrec942.t$fire$l,
@@ -274,20 +293,20 @@
               ON IMPOSTO_15.t$fire$l = tdrec941.t$fire$l
              AND IMPOSTO_15.t$line$l = tdrec941.t$line$l
              
-       LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_INSS_RET_PF,
-                          tdrec942.t$fire$l,
-                          tdrec942.t$line$l
-                     FROM baandb.ttdrec942301 tdrec942
-                    WHERE tdrec942.t$brty$l = 17 ) IMPOSTO_17
-              ON IMPOSTO_17.t$fire$l = tdrec941.t$fire$l
-             AND IMPOSTO_17.t$line$l = tdrec941.t$line$l
+--       LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_INSS_RET_PF,
+--                          tdrec942.t$fire$l,
+--                          tdrec942.t$line$l
+--                     FROM baandb.ttdrec942301 tdrec942
+--                    WHERE tdrec942.t$brty$l = 17 ) IMPOSTO_17
+--              ON IMPOSTO_17.t$fire$l = tdrec941.t$fire$l
+--             AND IMPOSTO_17.t$line$l = tdrec941.t$line$l
              
 WHERE tdrec940.t$stat$l IN (4,5,6)
   AND tdrec940.t$rfdt$l IN (3)
-  AND tfgld010.t$dtyp = 1
+
 ORDER BY 2,6,21,28,24 ) Q1
 
- WHERE Q1.FILIAL IN (:Filial)
-   AND Trunc(Q1.DATA_REFFISCAL)
-       Between :DataFiscalDe
-           And :DataFiscalAte
+-- WHERE Q1.FILIAL IN (:Filial)
+--   AND Trunc(Q1.DATA_REFFISCAL)
+--       Between :DataFiscalDe
+--           And :DataFiscalAte
