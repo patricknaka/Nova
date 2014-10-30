@@ -5,7 +5,7 @@
         AT time zone sessiontimezone) AS DATE)
                                            DT_LIMITE,
 
-    ORDERS.ORDERKEY                        PEDIDO,
+    ORDERS.ORDERKEY                        PEDIDO, ORDERDETAIL.ORDERLINENUMBER ,
     ORDERS.SUSR4                           UNINEG,
 	
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
@@ -13,14 +13,19 @@
         AT time zone sessiontimezone) AS DATE) 
                                            DT_REGISTRO,
 										   
-    ORDERSTATUSSETUP2.DESCRIPTION          EVENTO,
+    nvl(ORDERSTATUSSETUP2.DESCRIPTION,
+        ORDERSTATUSSETUP.DESCRIPTION )     EVENTO,
 	
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
+    nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
+        AT time zone sessiontimezone) AS DATE),
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE))        
                                            DT_ULT_EVENTO,
 
-    ORDERSTATUSHISTORY.ADDWHO              OPERADOR,
+    nvl(ORDERSTATUSHISTORY.ADDWHO,
+        ORDERS.EDITWHO)                    OPERADOR,
     ORDERDETAIL.SKU                        ITEM,
     SKU.ACTIVE                             ST_ITEM,
     SKU.DESCR                              NOME_ST_ITEM,
@@ -56,8 +61,12 @@
     SLS400.t$fovn$c                        CNPJ,       
     ORDERS.C_COMPANY                       NOME,
     ORDERDETAIL.ORIGINALQTY                QTDE_TOTAL,
-    sls400.VALOR                           VL
- 
+    sls400.VALOR                           VL,
+
+	ORDERS.type                           COD_TIPO_PEDIDO,
+    TIPO_PEDIDO.                          DSC_TIPO_PEDIDO
+
+	
 FROM       WMWHSE5.ORDERS
 
 INNER JOIN WMWHSE5.ORDERDETAIL 
@@ -107,7 +116,7 @@ INNER JOIN WMSADMIN.PL_DB
                     a.ORDERLINENUMBER ) ORDERSTATUSHISTORY
         ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY 
        AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER 
-       AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  
+       --AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  
        
  LEFT JOIN WMWHSE5.ORDERSTATUSSETUP
         ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS
@@ -166,10 +175,20 @@ INNER JOIN WMSADMIN.PL_DB
  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130 
         ON TCCOM130.t$CADR = TCCOM100.T$CADR
 
+ LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO, 
+                    trans.description DSC_TIPO_PEDIDO
+               from WMWHSE5.codelkup clkp
+         inner join WMWHSE5.translationlist trans 
+                 on trans.code = clkp.code
+                and trans.joinkey1 = clkp.listname
+              where clkp.listname = 'ORDERTYPE'
+                and trans.locale = 'pt'
+                and trans.tblname = 'CODELKUP' 
+                and Trim(clkp.code) is not null ) TIPO_PEDIDO
+        ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type  
+
 WHERE cl.listname = 'SCHEMA'
   AND STORER.TYPE = 5
-  
-  
   
 = IIF(Parameters!Table.Value <> "AAA",
 
