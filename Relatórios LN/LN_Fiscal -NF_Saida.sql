@@ -91,7 +91,8 @@ select Q1.*
                           
                  cisli941.t$amnt$l          VL_TOTAL,
                  tccom130.t$fovn$l          CNPJ_CLIENTE,
-                 tccom130.t$namc            DESC_RUA,
+                 Trim(REPLACE(tccom130.t$namc,';',' '))
+                                                     DESC_RUA,
                  cisli941.t$gamt$l          VL_MERC,
                                             
                  cisli940.t$fdty$l          TIPO_DOCTO, 
