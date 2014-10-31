@@ -88,7 +88,9 @@
                 CONCAT( IMPOSTO_5.ORIG_CST_PIS,
                         IMPOSTO_5.TRIBUT_CST_PIS)     CST_PIS,                 -- 63
                 CONCAT( IMPOSTO_6.ORIG_CST_COFINS,
-                        IMPOSTO_6.TRIBUT_CST_COFINS)  CST_COFINS               -- 64
+                        IMPOSTO_6.TRIBUT_CST_COFINS)  CST_COFINS,               -- 64
+                nvl(IMPOSTO_5.BASE_PIS, 0)            BASE_PIS,                -- 65
+                nvl(IMPOSTO_6.BASE_COFINS, 0)         BASE_COFINS             -- 66
                         
             FROM baandb.ttdrec940301       tdrec940 
        
@@ -198,6 +200,7 @@
              AND tfgld010.t$dimx = tfacp200.t$dim1
             
        LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_PIS,
+                          tdrec942.t$fbtx$l   BASE_PIS,
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l,
                           tcmcs938.t$gdog$l   ORIG_CST_PIS,      
@@ -210,6 +213,7 @@
              AND IMPOSTO_5.t$line$l = tdrec941.t$line$l
   
        LEFT JOIN ( SELECT tdrec942.t$amnt$l   VL_COFINS,
+                          tdrec942.t$fbtx$l   BASE_COFINS,
                           tdrec942.t$fire$l,
                           tdrec942.t$line$l,
                           tcmcs938.t$gdog$l   ORIG_CST_COFINS,      
@@ -306,7 +310,7 @@ WHERE tdrec940.t$stat$l IN (4,5,6)
 
 ORDER BY 2,6,21,28,24 ) Q1
 
--- WHERE Q1.FILIAL IN (:Filial)
---   AND Trunc(Q1.DATA_REFFISCAL)
---       Between :DataFiscalDe
---           And :DataFiscalAte
+ WHERE Q1.FILIAL IN (:Filial)
+   AND Trunc(Q1.DATA_REFFISCAL)
+       Between :DataFiscalDe
+           And :DataFiscalAte
