@@ -51,9 +51,9 @@
                  nvl(tdrec941.t$addc$l, 0)            VL_DESCONTO,             -- 49
                  nvl(IMPOSTO_11.VL_PIS_RETIDO, 0)     VL_PIS_RETIDO,           -- 40
                  nvl(IMPOSTO_12.VL_COFINS_RETIDO, 0)  VL_COFINS_RETIDO,        -- 41
-                 tfacp200.t$leac                      COD_CTA,                 -- 42
-                 tfacp200.t$dim1                      COD_CCUSTO,              -- 43
-                 CASE WHEN tfacp200.t$dim1=' ' THEN
+                 tfgld945.t$leac$l                    COD_CTA,                 -- 42
+                 tfgld945.t$dim1$l                    COD_CCUSTO,              -- 43
+                 CASE WHEN tfgld945.t$dim1$l=' ' THEN
                  ' '
                  ELSE
                  tfgld010.t$desc END                  NOME_CCUSTO,             -- 44
@@ -288,7 +288,9 @@
             AND brmcs959.t$stto$l = tccom130d.t$cste 
             AND brmcs959.t$cito$l = tccom130d.t$ccit 
 	  
-             
+      LEFT  JOIN  baandb.ttfgld945301     tfgld945
+              ON  tfgld945.t$citg$l=tcibd001.t$citg
+              
 WHERE tdrec940.t$stat$l IN (4,5,6)
   AND tdrec940.t$rfdt$l = 3
   AND brmcs959.t$tror$l = 1
