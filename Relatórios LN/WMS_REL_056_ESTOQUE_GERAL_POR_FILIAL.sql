@@ -18,7 +18,8 @@ SELECT Trim(tcibd001.t$item)             ID_ITEM,
        sum (nvl(Q2.bloc,0)+
             nvl(ats.qty,0))              QT_BLOQUEADA,
        sum(nvl(Q3.roma,0))               QT_ROMANEADA, 
-       sum(whinr140.t$qlal)              QT_RESERVADA, 
+       sum(whinr140.t$qlal-
+           nvl(Q3.roma,0))               QT_RESERVADA, 
        sum(whinr140.t$qhnd -  
            whinr140.t$qlal -  
            (nvl(Q2.bloc,0)+
@@ -96,9 +97,11 @@ INNER JOIN baandb.ttcmcs003301 tcmcs003
  LEFT JOIN ( select whinh220.t$item,  
                     whinh220.t$cwar,  
                     sum(whinh220.t$qord) roma 
-              from baandb.twhinh220301 whinh220 
-             where whinh220.t$wmss > 40 
+              from baandb.twhinh220301 whinh220
+              inner join baandb.ttcmcs003301 wt on wt.t$cwar = whinh220.t$cwar
+             where whinh220.t$wmss in (40, 50) 
                and whinh220.t$lsta < 30
+               and wt.t$tpar$l != 2
           group by whinh220.t$item,  
                    whinh220.t$cwar ) Q3  
         ON Q3.t$item = whinr140.t$item  
@@ -156,7 +159,7 @@ INNER JOIN ( select ue.t$grid,
  
 WHERE tcemm112.t$loco = 301
   AND ( (:Filial = 'AAA') OR (WHSE.WHSEID = :Filial) )
-
+--and Trim(tcibd001.t$item) in ('2220','2198089')
 HAVING sum(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0 
      
 GROUP BY Trim(tcibd001.t$item),  
