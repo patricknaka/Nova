@@ -7,15 +7,15 @@
 
     ORDERS.ORDERKEY                        PEDIDO, ORDERDETAIL.ORDERLINENUMBER ,
     ORDERS.SUSR4                           UNINEG,
-	
+ 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE) 
                                            DT_REGISTRO,
-										   
+             
     nvl(ORDERSTATUSSETUP2.DESCRIPTION,
         ORDERSTATUSSETUP.DESCRIPTION )     EVENTO,
-	
+ 
     nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE),
@@ -56,17 +56,15 @@
          ELSE 'LEVE' 
      END                                   TP_TRANSPORTE,
   
-  
     ORDERS.C_ZIP                           CEP,
     SLS400.t$fovn$c                        CNPJ,       
     ORDERS.C_COMPANY                       NOME,
     ORDERDETAIL.ORIGINALQTY                QTDE_TOTAL,
     sls400.VALOR                           VL,
+    ORDERS.type                            COD_TIPO_PEDIDO,
+    TIPO_PEDIDO.                           DSC_TIPO_PEDIDO
 
-	ORDERS.type                           COD_TIPO_PEDIDO,
-    TIPO_PEDIDO.                          DSC_TIPO_PEDIDO
-
-	
+ 
 FROM       WMWHSE5.ORDERS
 
 INNER JOIN WMWHSE5.ORDERDETAIL 
@@ -116,7 +114,6 @@ INNER JOIN WMSADMIN.PL_DB
                     a.ORDERLINENUMBER ) ORDERSTATUSHISTORY
         ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY 
        AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER 
-       --AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  
        
  LEFT JOIN WMWHSE5.ORDERSTATUSSETUP
         ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS
@@ -162,16 +159,16 @@ INNER JOIN WMSADMIN.PL_DB
         ON CISLI940.T$DOCN$L = ORDERS.INVOICENUMBER
        AND CISLI940.T$SERI$L = ORDERS.LANE
        AND CISLI940.T$BPID$L = ORDERS.CONSIGNEEKEY
-	   
+    
  LEFT JOIN BAANDB.ttcibd001301@pln01 TCIBD001 
         ON TRIM(TCIBD001.T$ITEM) = SKU.SKU
-		
+  
  LEFT JOIN BAANDB.ttcmcs060301@pln01 TCMCS060 
         ON TCMCS060.T$CMNF = TCIBD001.T$CMNF
-		
+  
  LEFT JOIN BAANDB.ttccom100301@pln01 TCCOM100 
         ON TCCOM100.T$BPID = STORER.STORERKEY
-		
+  
  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130 
         ON TCCOM130.t$CADR = TCCOM100.T$CADR
 
@@ -189,7 +186,16 @@ INNER JOIN WMSADMIN.PL_DB
 
 WHERE cl.listname = 'SCHEMA'
   AND STORER.TYPE = 5
-  
+
+  AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone sessiontimezone) AS DATE),
+                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE, 
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone sessiontimezone) AS DATE))) 
+      Between :DataUltimoEventoDe
+          And :DataUltimoEventoAte
+		  
 = IIF(Parameters!Table.Value <> "AAA",
 
 " SELECT   " &
@@ -240,7 +246,9 @@ WHERE cl.listname = 'SCHEMA'
 "   SLS400.t$fovn$c   CNPJ,   " &
 "   ORDERS.C_COMPANY  NOME,   " &
 "   ORDERDETAIL.ORIGINALQTY  QTDE_TOTAL,   " &
-"   sls400.VALOR   VL   " &
+"   sls400.VALOR   VL,   " &
+"   ORDERS.type COD_TIPO_PEDIDO,   " &
+"   TIPO_PEDIDO.DSC_TIPO_PEDIDO   " &
 " FROM  "+ Parameters!Table.Value + ".ORDERS  " &
 " INNER JOIN "+ Parameters!Table.Value + ".ORDERDETAIL   " &
 "   ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY  " &
@@ -278,7 +286,6 @@ WHERE cl.listname = 'SCHEMA'
 "   a.ORDERLINENUMBER ) ORDERSTATUSHISTORY   " &
 "   ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY   " &
 "   AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER " &
-"   AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  " &
 "  LEFT JOIN "+ Parameters!Table.Value + ".ORDERSTATUSSETUP   " &
 "   ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS  " &
 "  LEFT JOIN "+ Parameters!Table.Value + ".ORDERSTATUSSETUP ORDERSTATUSSETUP2   " &
@@ -327,8 +334,27 @@ WHERE cl.listname = 'SCHEMA'
 "   ON TCCOM100.T$BPID = STORER.STORERKEY   " &
 "  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130   " &
 "   ON TCCOM130.t$CADR = TCCOM100.T$CADR  " &
+" LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO,   " &
+"                    trans.description DSC_TIPO_PEDIDO   " &
+"               from WMWHSE5.codelkup clkp   " &
+"         inner join WMWHSE5.translationlist trans   " &
+"                 on trans.code = clkp.code   " &
+"                and trans.joinkey1 = clkp.listname   " &
+"              where clkp.listname = 'ORDERTYPE'   " &
+"                and trans.locale = 'pt'   " &
+"                and trans.tblname = 'CODELKUP'   " &
+"                and Trim(clkp.code) is not null ) TIPO_PEDIDO   " &
+"        ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type   " &
 " WHERE cl.listname = 'SCHEMA'   " &
 "   AND STORER.TYPE = 5   " &
+"   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE),   " &
+"                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE)))   " &
+"       Between '"+ Parameters!DataUltEventoDe.Value + "'   " &
+"           And '"+ Parameters!DataUltEventoAte.Value + "'   " &
 "ORDER BY PLANTA, PEDIDO, DT_REGISTRO "
   
 ,
@@ -381,7 +407,9 @@ WHERE cl.listname = 'SCHEMA'
 "   SLS400.t$fovn$c   CNPJ,   " &
 "   ORDERS.C_COMPANY  NOME,   " &
 "   ORDERDETAIL.ORIGINALQTY  QTDE_TOTAL,   " &
-"   sls400.VALOR   VL   " &
+"   sls400.VALOR   VL,   " &
+"   ORDERS.type COD_TIPO_PEDIDO,   " &
+"   TIPO_PEDIDO.DSC_TIPO_PEDIDO   " &
 " FROM  WMWHSE1.ORDERS  " &
 " INNER JOIN WMWHSE1.ORDERDETAIL   " &
 "   ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY  " &
@@ -419,7 +447,6 @@ WHERE cl.listname = 'SCHEMA'
 "   a.ORDERLINENUMBER ) ORDERSTATUSHISTORY   " &
 "   ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY   " &
 "   AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER " &
-"   AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  " &
 "  LEFT JOIN WMWHSE1.ORDERSTATUSSETUP   " &
 "   ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS  " &
 "  LEFT JOIN WMWHSE1.ORDERSTATUSSETUP ORDERSTATUSSETUP2   " &
@@ -468,8 +495,27 @@ WHERE cl.listname = 'SCHEMA'
 "   ON TCCOM100.T$BPID = STORER.STORERKEY   " &
 "  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130   " &
 "   ON TCCOM130.t$CADR = TCCOM100.T$CADR  " &
+" LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO,   " &
+"                    trans.description DSC_TIPO_PEDIDO   " &
+"               from WMWHSE5.codelkup clkp   " &
+"         inner join WMWHSE5.translationlist trans   " &
+"                 on trans.code = clkp.code   " &
+"                and trans.joinkey1 = clkp.listname   " &
+"              where clkp.listname = 'ORDERTYPE'   " &
+"                and trans.locale = 'pt'   " &
+"                and trans.tblname = 'CODELKUP'   " &
+"                and Trim(clkp.code) is not null ) TIPO_PEDIDO   " &
+"        ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type   " &
 " WHERE cl.listname = 'SCHEMA'   " &
 "   AND STORER.TYPE = 5   " &
+"   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE),   " &
+"                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE)))   " &
+"       Between '"+ Parameters!DataUltEventoDe.Value + "'   " &
+"           And '"+ Parameters!DataUltEventoAte.Value + "'   " &
 "Union " &
 " SELECT   " &
 "   WMSADMIN.PL_DB.DB_ALIAS  PLANTA,   " &
@@ -519,7 +565,9 @@ WHERE cl.listname = 'SCHEMA'
 "   SLS400.t$fovn$c   CNPJ,   " &
 "   ORDERS.C_COMPANY  NOME,   " &
 "   ORDERDETAIL.ORIGINALQTY  QTDE_TOTAL,   " &
-"   sls400.VALOR   VL   " &
+"   sls400.VALOR   VL,   " &
+"   ORDERS.type COD_TIPO_PEDIDO,   " &
+"   TIPO_PEDIDO.DSC_TIPO_PEDIDO   " &
 " FROM  WMWHSE2.ORDERS  " &
 " INNER JOIN WMWHSE2.ORDERDETAIL   " &
 "   ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY  " &
@@ -557,7 +605,6 @@ WHERE cl.listname = 'SCHEMA'
 "   a.ORDERLINENUMBER ) ORDERSTATUSHISTORY   " &
 "   ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY   " &
 "   AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER " &
-"   AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  " &
 "  LEFT JOIN WMWHSE2.ORDERSTATUSSETUP   " &
 "   ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS  " &
 "  LEFT JOIN WMWHSE2.ORDERSTATUSSETUP ORDERSTATUSSETUP2   " &
@@ -606,8 +653,27 @@ WHERE cl.listname = 'SCHEMA'
 "   ON TCCOM100.T$BPID = STORER.STORERKEY   " &
 "  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130   " &
 "   ON TCCOM130.t$CADR = TCCOM100.T$CADR  " &
+" LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO,   " &
+"                    trans.description DSC_TIPO_PEDIDO   " &
+"               from WMWHSE5.codelkup clkp   " &
+"         inner join WMWHSE5.translationlist trans   " &
+"                 on trans.code = clkp.code   " &
+"                and trans.joinkey1 = clkp.listname   " &
+"              where clkp.listname = 'ORDERTYPE'   " &
+"                and trans.locale = 'pt'   " &
+"                and trans.tblname = 'CODELKUP'   " &
+"                and Trim(clkp.code) is not null ) TIPO_PEDIDO   " &
+"        ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type   " &
 " WHERE cl.listname = 'SCHEMA'   " &
 "   AND STORER.TYPE = 5   " &
+"   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE),   " &
+"                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE)))   " &
+"       Between '"+ Parameters!DataUltEventoDe.Value + "'   " &
+"           And '"+ Parameters!DataUltEventoAte.Value + "'   " &
 "Union " &
 " SELECT   " &
 "   WMSADMIN.PL_DB.DB_ALIAS  PLANTA,   " &
@@ -657,7 +723,9 @@ WHERE cl.listname = 'SCHEMA'
 "   SLS400.t$fovn$c   CNPJ,   " &
 "   ORDERS.C_COMPANY  NOME,   " &
 "   ORDERDETAIL.ORIGINALQTY  QTDE_TOTAL,   " &
-"   sls400.VALOR   VL   " &
+"   sls400.VALOR   VL,   " &
+"   ORDERS.type COD_TIPO_PEDIDO,   " &
+"   TIPO_PEDIDO.DSC_TIPO_PEDIDO   " &
 " FROM  WMWHSE3.ORDERS  " &
 " INNER JOIN WMWHSE3.ORDERDETAIL   " &
 "   ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY  " &
@@ -695,7 +763,6 @@ WHERE cl.listname = 'SCHEMA'
 "   a.ORDERLINENUMBER ) ORDERSTATUSHISTORY   " &
 "   ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY   " &
 "   AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER " &
-"   AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  " &
 "  LEFT JOIN WMWHSE3.ORDERSTATUSSETUP   " &
 "   ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS  " &
 "  LEFT JOIN WMWHSE3.ORDERSTATUSSETUP ORDERSTATUSSETUP2   " &
@@ -744,8 +811,27 @@ WHERE cl.listname = 'SCHEMA'
 "   ON TCCOM100.T$BPID = STORER.STORERKEY   " &
 "  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130   " &
 "   ON TCCOM130.t$CADR = TCCOM100.T$CADR  " &
+" LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO,   " &
+"                    trans.description DSC_TIPO_PEDIDO   " &
+"               from WMWHSE5.codelkup clkp   " &
+"         inner join WMWHSE5.translationlist trans   " &
+"                 on trans.code = clkp.code   " &
+"                and trans.joinkey1 = clkp.listname   " &
+"              where clkp.listname = 'ORDERTYPE'   " &
+"                and trans.locale = 'pt'   " &
+"                and trans.tblname = 'CODELKUP'   " &
+"                and Trim(clkp.code) is not null ) TIPO_PEDIDO   " &
+"        ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type   " &
 " WHERE cl.listname = 'SCHEMA'   " &
 "   AND STORER.TYPE = 5   " &
+"   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE),   " &
+"                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE)))   " &
+"       Between '"+ Parameters!DataUltEventoDe.Value + "'   " &
+"           And '"+ Parameters!DataUltEventoAte.Value + "'   " &
 "Union " &
 " SELECT   " &
 "   WMSADMIN.PL_DB.DB_ALIAS  PLANTA,   " &
@@ -795,7 +881,9 @@ WHERE cl.listname = 'SCHEMA'
 "   SLS400.t$fovn$c   CNPJ,   " &
 "   ORDERS.C_COMPANY  NOME,   " &
 "   ORDERDETAIL.ORIGINALQTY  QTDE_TOTAL,   " &
-"   sls400.VALOR   VL   " &
+"   sls400.VALOR   VL,   " &
+"   ORDERS.type COD_TIPO_PEDIDO,   " &
+"   TIPO_PEDIDO.DSC_TIPO_PEDIDO   " &
 " FROM  WMWHSE4.ORDERS  " &
 " INNER JOIN WMWHSE4.ORDERDETAIL   " &
 "   ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY  " &
@@ -833,7 +921,6 @@ WHERE cl.listname = 'SCHEMA'
 "   a.ORDERLINENUMBER ) ORDERSTATUSHISTORY   " &
 "   ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY   " &
 "   AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER " &
-"   AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  " &
 "  LEFT JOIN WMWHSE4.ORDERSTATUSSETUP   " &
 "   ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS  " &
 "  LEFT JOIN WMWHSE4.ORDERSTATUSSETUP ORDERSTATUSSETUP2   " &
@@ -882,8 +969,27 @@ WHERE cl.listname = 'SCHEMA'
 "   ON TCCOM100.T$BPID = STORER.STORERKEY   " &
 "  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130   " &
 "   ON TCCOM130.t$CADR = TCCOM100.T$CADR  " &
+" LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO,   " &
+"                    trans.description DSC_TIPO_PEDIDO   " &
+"               from WMWHSE5.codelkup clkp   " &
+"         inner join WMWHSE5.translationlist trans   " &
+"                 on trans.code = clkp.code   " &
+"                and trans.joinkey1 = clkp.listname   " &
+"              where clkp.listname = 'ORDERTYPE'   " &
+"                and trans.locale = 'pt'   " &
+"                and trans.tblname = 'CODELKUP'   " &
+"                and Trim(clkp.code) is not null ) TIPO_PEDIDO   " &
+"        ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type   " &
 " WHERE cl.listname = 'SCHEMA'   " &
 "   AND STORER.TYPE = 5   " &
+"   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE),   " &
+"                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE)))   " &
+"       Between '"+ Parameters!DataUltEventoDe.Value + "'   " &
+"           And '"+ Parameters!DataUltEventoAte.Value + "'   " &
 "Union " &
 " SELECT   " &
 "   WMSADMIN.PL_DB.DB_ALIAS  PLANTA,   " &
@@ -933,7 +1039,9 @@ WHERE cl.listname = 'SCHEMA'
 "   SLS400.t$fovn$c   CNPJ,   " &
 "   ORDERS.C_COMPANY  NOME,   " &
 "   ORDERDETAIL.ORIGINALQTY  QTDE_TOTAL,   " &
-"   sls400.VALOR   VL   " &
+"   sls400.VALOR   VL,   " &
+"   ORDERS.type COD_TIPO_PEDIDO,   " &
+"   TIPO_PEDIDO.DSC_TIPO_PEDIDO   " &
 " FROM  WMWHSE5.ORDERS  " &
 " INNER JOIN WMWHSE5.ORDERDETAIL   " &
 "   ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY  " &
@@ -971,7 +1079,6 @@ WHERE cl.listname = 'SCHEMA'
 "   a.ORDERLINENUMBER ) ORDERSTATUSHISTORY   " &
 "   ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY   " &
 "   AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER " &
-"   AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  " &
 "  LEFT JOIN WMWHSE5.ORDERSTATUSSETUP   " &
 "   ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS  " &
 "  LEFT JOIN WMWHSE5.ORDERSTATUSSETUP ORDERSTATUSSETUP2   " &
@@ -1020,8 +1127,27 @@ WHERE cl.listname = 'SCHEMA'
 "   ON TCCOM100.T$BPID = STORER.STORERKEY   " &
 "  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130   " &
 "   ON TCCOM130.t$CADR = TCCOM100.T$CADR  " &
+" LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO,   " &
+"                    trans.description DSC_TIPO_PEDIDO   " &
+"               from WMWHSE5.codelkup clkp   " &
+"         inner join WMWHSE5.translationlist trans   " &
+"                 on trans.code = clkp.code   " &
+"                and trans.joinkey1 = clkp.listname   " &
+"              where clkp.listname = 'ORDERTYPE'   " &
+"                and trans.locale = 'pt'   " &
+"                and trans.tblname = 'CODELKUP'   " &
+"                and Trim(clkp.code) is not null ) TIPO_PEDIDO   " &
+"        ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type   " &
 " WHERE cl.listname = 'SCHEMA'   " &
 "   AND STORER.TYPE = 5   " &
+"   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE),   " &
+"                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE)))   " &
+"       Between '"+ Parameters!DataUltEventoDe.Value + "'   " &
+"           And '"+ Parameters!DataUltEventoAte.Value + "'   " &
 "Union " &
 " SELECT   " &
 "   WMSADMIN.PL_DB.DB_ALIAS  PLANTA,   " &
@@ -1071,7 +1197,9 @@ WHERE cl.listname = 'SCHEMA'
 "   SLS400.t$fovn$c   CNPJ,   " &
 "   ORDERS.C_COMPANY  NOME,   " &
 "   ORDERDETAIL.ORIGINALQTY  QTDE_TOTAL,   " &
-"   sls400.VALOR   VL   " &
+"   sls400.VALOR   VL,   " &
+"   ORDERS.type COD_TIPO_PEDIDO,   " &
+"   TIPO_PEDIDO.DSC_TIPO_PEDIDO   " &
 " FROM  WMWHSE6.ORDERS  " &
 " INNER JOIN WMWHSE6.ORDERDETAIL   " &
 "   ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY  " &
@@ -1109,7 +1237,6 @@ WHERE cl.listname = 'SCHEMA'
 "   a.ORDERLINENUMBER ) ORDERSTATUSHISTORY   " &
 "   ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY   " &
 "   AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER " &
-"   AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  " &
 "  LEFT JOIN WMWHSE6.ORDERSTATUSSETUP   " &
 "   ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS  " &
 "  LEFT JOIN WMWHSE6.ORDERSTATUSSETUP ORDERSTATUSSETUP2   " &
@@ -1158,8 +1285,27 @@ WHERE cl.listname = 'SCHEMA'
 "   ON TCCOM100.T$BPID = STORER.STORERKEY   " &
 "  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130   " &
 "   ON TCCOM130.t$CADR = TCCOM100.T$CADR  " &
+" LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO,   " &
+"                    trans.description DSC_TIPO_PEDIDO   " &
+"               from WMWHSE5.codelkup clkp   " &
+"         inner join WMWHSE5.translationlist trans   " &
+"                 on trans.code = clkp.code   " &
+"                and trans.joinkey1 = clkp.listname   " &
+"              where clkp.listname = 'ORDERTYPE'   " &
+"                and trans.locale = 'pt'   " &
+"                and trans.tblname = 'CODELKUP'   " &
+"                and Trim(clkp.code) is not null ) TIPO_PEDIDO   " &
+"        ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type   " &
 " WHERE cl.listname = 'SCHEMA'   " &
 "   AND STORER.TYPE = 5   " &
+"   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE),   " &
+"                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE)))   " &
+"       Between '"+ Parameters!DataUltEventoDe.Value + "'   " &
+"           And '"+ Parameters!DataUltEventoAte.Value + "'   " &
 "Union " &
 " SELECT   " &
 "   WMSADMIN.PL_DB.DB_ALIAS  PLANTA,   " &
@@ -1209,7 +1355,9 @@ WHERE cl.listname = 'SCHEMA'
 "   SLS400.t$fovn$c   CNPJ,   " &
 "   ORDERS.C_COMPANY  NOME,   " &
 "   ORDERDETAIL.ORIGINALQTY  QTDE_TOTAL,   " &
-"   sls400.VALOR   VL   " &
+"   sls400.VALOR   VL,   " &
+"   ORDERS.type COD_TIPO_PEDIDO,   " &
+"   TIPO_PEDIDO.DSC_TIPO_PEDIDO   " &
 " FROM  WMWHSE7.ORDERS  " &
 " INNER JOIN WMWHSE7.ORDERDETAIL   " &
 "   ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY  " &
@@ -1247,7 +1395,6 @@ WHERE cl.listname = 'SCHEMA'
 "   a.ORDERLINENUMBER ) ORDERSTATUSHISTORY   " &
 "   ON ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY   " &
 "   AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER " &
-"   AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS  " &
 "  LEFT JOIN WMWHSE7.ORDERSTATUSSETUP   " &
 "   ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS  " &
 "  LEFT JOIN WMWHSE7.ORDERSTATUSSETUP ORDERSTATUSSETUP2   " &
@@ -1296,8 +1443,27 @@ WHERE cl.listname = 'SCHEMA'
 "   ON TCCOM100.T$BPID = STORER.STORERKEY   " &
 "  LEFT JOIN BAANDB.ttccom130301@pln01 TCCOM130   " &
 "   ON TCCOM130.t$CADR = TCCOM100.T$CADR  " &
+" LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO,   " &
+"                    trans.description DSC_TIPO_PEDIDO   " &
+"               from WMWHSE5.codelkup clkp   " &
+"         inner join WMWHSE5.translationlist trans   " &
+"                 on trans.code = clkp.code   " &
+"                and trans.joinkey1 = clkp.listname   " &
+"              where clkp.listname = 'ORDERTYPE'   " &
+"                and trans.locale = 'pt'   " &
+"                and trans.tblname = 'CODELKUP'   " &
+"                and Trim(clkp.code) is not null ) TIPO_PEDIDO   " &
+"        ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type   " &
 " WHERE cl.listname = 'SCHEMA'   " &
 "   AND STORER.TYPE = 5   " &
+"   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE),   " &
+"                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,   " &
+"                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
+"                    AT time zone sessiontimezone) AS DATE)))   " &
+"       Between '"+ Parameters!DataUltEventoDe.Value + "'   " &
+"           And '"+ Parameters!DataUltEventoAte.Value + "'   " &
 "ORDER BY PLANTA, PEDIDO, DT_REGISTRO "
 
 )
