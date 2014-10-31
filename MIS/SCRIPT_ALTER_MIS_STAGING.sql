@@ -440,3 +440,46 @@ alter column ds_family varchar(80) Collate Latin1_General_CI_AS
  
 alter table sige.stg_sige_sub_familia
 alter column ds_sub_familia varchar(80) Collate Latin1_General_CI_AS
+
+/*
+--======================================================
+-- copiei os dados do cosmos, pois no criciuma essa tabela
+-- também estava vazia
+
+alter table fin.stg_sige_transacao
+alter column FTRA_ID_MODULO varchar(3)
+
+insert into fin.stg_sige_transacao
+values
+('CB','1','Inclusão'),
+('CB','2','Cancelamento'),
+('CB','3','Estorno'),
+('CB','4','Transferência'),
+('CB','5','Dinheiro'),
+('CB','6','Financeiro'),
+('CAP','7','Baixa Especial'),
+('CAP','1','Inclusao'),
+('CAP','2','Cancelamento'),
+('CAP','3','Pagamento'),
+('CAP','4','Est.Pagamento'),
+('CAP','5','Transferencia'),
+('CAP','6','Estorno Transferencia'),
+('CAP','9','Baixa LN - SC'),
+('CAP','10','Est. Baixa LN - SC'),
+('CAP','8','Estorno Baixa Especial'),
+('CAR','9','Baixa Titulo ST indevido'),
+('CAR','10','Est. Baixa Titulo ST indevido'),
+('CAR','13','Baixa LN'),
+('CAR','14','Est. Baixa LN - SC'),
+('CAR','15','Baixa LN - SC'),
+('CAR','11','Baixa Especial'),
+('CAR','12','Estorno Baixa Especial'),
+('CAR','1','Inclusao'),
+('CAR','2','Cancelamento'),
+('CAR','3','Pagamento'),
+('CAR','4','Estorno Pagamento'),
+('CAR','5','Transferencia'),
+('CAR','6','Estorno Transferencia'),
+('CAR','7','Pagamento'),
+('CAR','8','Estorno Pagamento')
+*/

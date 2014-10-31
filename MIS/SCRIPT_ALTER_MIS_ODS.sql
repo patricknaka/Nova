@@ -979,7 +979,7 @@ INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcament
 INSERT [ln].[ods_agrupamento_orcamento] ([id_unidade_negocio], [id_tipo_orcamento], [id_orcamento]) VALUES (14, 2, 27)
 
 
---copiei os dados do criciuma, pois não achei onde essa tabela é gerada
+--copiei os dados do criciuma, pois não achei onde essas tabelas são geradas
 /*
 alter table fin.aux_unineg_documento_titulo
 alter column ds_id_documento varchar(3)
@@ -987,7 +987,7 @@ alter column ds_id_documento varchar(3)
 alter table fin.aux_unineg_documento_titulo
 alter column ds_id_modulo varchar(3)
 
-insert into mis_ods.fin.aux_unineg_documento_titulo
+insert into fin.aux_unineg_documento_titulo
 values
 ('1','RB3','CAR'),
 ('1','RBN','CAR'),
@@ -1005,4 +1005,87 @@ values
 ('12','RPA','CAR'),
 ('18','RCD','CAR'),
 ('19','RCK','CAR')
+
+insert into fin.ods_unineg_titulo 
+values 
+('Atacado'),
+('B2B'),
+('Ressarcimento'),
+('Saldão/Avaria'),
+('VPC'),
+('Outros'),
+('Baixa'),
+('E-HUB'),
+('FIC'),
+('Geral'),
+('Juros'),
+('Partiu Viagens'),
+('PDD'),
+('PDD Atacado'),
+('PDD B2B (E2)'),
+('Recebimento Diversos'),
+('Reentrada - Diversos'),
+('Serviços'),
+('Stock Optons')
+
+insert into fin.ods_tipo_valor
+values
+('1','Principal'),
+('2','Imposto'),
+('3','Mora e Multa'),
+('4','Despesas'),
+('5','Pagto.Maior'),
+('6','Descontos'),
+('7','Encargos'),
+('8','Juros')
 */
+
+alter table mis_ods.ln.ods_car_titulo_mvmto
+alter column CD_TRANSACAO_TITULO nvarchar(3) collate Latin1_General_CI_AS
+
+alter table mis_ods.ln.ods_car_titulo_mvmto
+alter column CD_MODULO nvarchar(3) collate Latin1_General_CI_AS
+
+alter table MIS_ODS.ln.ods_car_titulo
+alter column cd_transacao_titulo nvarchar(3) collate latin1_general_ci_as
+
+alter table MIS_ODS.ln.ods_car_titulo
+alter column cd_modulo nvarchar(3) collate latin1_general_ci_as
+
+alter table MIS_ODS.ln.ods_car_titulo_parcelamento
+alter column cd_modulo nvarchar(3) collate latin1_general_ci_as
+
+--===============================================
+--APAGA pk
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'ln.ods_dom_situacao_titulo') AND name = N'PK_ods_dom_situacao_titulo')
+ALTER TABLE ln.ods_dom_situacao_titulo DROP CONSTRAINT [PK_ods_dom_situacao_titulo]
+
+alter table ln.ods_dom_situacao_titulo
+alter column cd_modulo nvarchar(3) collate latin1_general_ci_as not null 
+
+--RECRIA pk
+ALTER TABLE ln.ods_dom_situacao_titulo ADD  CONSTRAINT [PK_ods_dom_situacao_titulo] PRIMARY KEY CLUSTERED 
+(
+	[CD_SITUACAO_TITULO] ASC,
+	[CD_MODULO] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+--======================================================
+
+--===============================================
+--APAGA pk
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'FIN.ods_transacao') AND name = N'PK_transacao')
+ALTER TABLE FIN.ods_transacao DROP CONSTRAINT [PK_transacao]
+
+alter table FIN.ods_transacao
+alter column ds_id_modulo varchar(3) not null
+
+--RECRIA pk
+ALTER TABLE FIN.ods_transacao ADD  CONSTRAINT [PK_transacao] PRIMARY KEY CLUSTERED 
+(
+	[ds_id_modulo] ASC,
+	[nr_id_transacao] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+--======================================================
+

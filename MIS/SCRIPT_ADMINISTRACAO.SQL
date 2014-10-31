@@ -2,6 +2,13 @@
 --CONEXÕES
 --===============================
 
+--MIS_FINANCEIRO
+INSERT INTO ADM.ssis_conexoes
+VALUES ('MIS_FINANCEIRO',
+'Data Source=JUVENTUS-OLAP\HASONLINE01;Initial Catalog=MIS_FINANCEIRO;Provider=MSOLAP.4;Integrated Security=SSPI;Impersonation Level=Impersonate;',
+'\Package.Connections[MIS_FINANCEIRO].Properties[ConnectionString]',
+'String')
+
 --MIS_LN
 INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
 VALUES ('MIS_MIGRACAO', 
