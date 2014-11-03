@@ -40,7 +40,9 @@ SELECT
     znsls401.t$cepe$c                         CEP,
     znsls401.t$refe$c                         REFERENCIA,
     znsls401.t$fovn$c                         CPF,
-    znsls002.t$dsca$c                         TIPO_ENTREGA
+    znsls002.t$dsca$c                         TIPO_ENTREGA,
+    znsls401.t$lcat$c                         CATEGORIA,
+    znsls401.t$lass$c                         ASSUNTO
         
 FROM       baandb.tznsls401301 znsls401
 
