@@ -2,10 +2,13 @@ select Q1.*
   from  ( SELECT DISTINCT
                  301                        CIA,
                  tcemm030.t$euca            ID_FILIAL,  
-                 tcemm030.T$EUNT            CHAVE_FILIAL,
-                 cisli941.t$item$l          ID_ITEM,
+
+                 tcemm030.T$EUNT ||
+                 ' - '           ||
+                 tcemm030.t$dsca            CHAVE_NM_FILIAL,
+				 
+                 Trim(cisli941.t$item$l)    ID_ITEM,
                  trim(tcibd001.t$dscb$c)    DESC_ITEM,
-                
                  cisli941.t$dqua$l          QTD_FIS,
                  cisli941.t$pric$l          PR_UNIT,
                  tcibd001.t$ceat$l          COD_EAN,
@@ -19,20 +22,22 @@ select Q1.*
                  cisli940.t$fids$l          CLIE_NOME,
                  cisli940.t$docn$l          ID_NOTA,
                  cisli940.t$seri$l          ID_SERIE,
-                                            ID_DOC,
+                 TIPO.                      ID_DOC,
                  cisli941.t$line$l          LINHA_REF,
+     
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone sessiontimezone) AS DATE)  
-                                            DT_NF,                        
+                                            DT_NF,           
+           
                  cisli941.t$ccfo$l          ID_CFOP,
                  tcmcs940.t$dsca$l          DESC_CFOP,
-                 cisli940.t$fdty$l          TIPO_DOCTO, 
-                                            DESC_TIPO_DOC_FIS,
-                 cisli940.t$fdtc$l          COD_TIPO_DOC_FISCAL,
-                 tcmcs966.t$dsca$l          DESC_COD_TIPO_DOC_FIS
+                 cisli940.t$fdty$l          TIPO_DOCTO_FIS, 
+                 FGET.                      DESC_TIPO_DOC_FIS,
+                 cisli940.t$fdtc$l          COD_TIPO_DOC_REMESSA,
+                 tcmcs966.t$dsca$l          DESC_COD_TIPO_DOC_REMESSA
            
-            FROM baandb.tcisli940301  cisli940  
+      FROM baandb.tcisli940301  cisli940  
            
        LEFT JOIN ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_DOC_FIS
                      FROM baandb.tttadv401000 d, 
@@ -61,7 +66,8 @@ select Q1.*
                                                   and l1.t$cpac = l.t$cpac ) ) FGET
               ON cisli940.t$fdty$l = FGET.CNST
 
-      LEFT JOIN ( SELECT d.t$cnst CNST, l.t$desc ID_DOC
+       LEFT JOIN ( SELECT d.t$cnst CNST, 
+                          l.t$desc ID_DOC
                      FROM baandb.tttadv401000 d, 
                           baandb.tttadv140000 l 
                     WHERE d.t$cpac = 'tc' 
@@ -88,47 +94,43 @@ select Q1.*
                                                   and l1.t$cpac = l.t$cpac ) ) TIPO
               ON cisli940.t$doty$l = TIPO.CNST
               
-      INNER JOIN baandb.tcisli941301  cisli941
+      INNER JOIN baandb.tcisli941301 cisli941
               ON cisli940.t$fire$l = cisli941.t$fire$l
   
-       LEFT JOIN baandb.ttcmcs940301  tcmcs940
+       LEFT JOIN baandb.ttcmcs940301 tcmcs940
               ON tcmcs940.T$OFSO$L = cisli941.t$ccfo$l
 
-      INNER JOIN baandb.ttcibd001301  tcibd001
+      INNER JOIN baandb.ttcibd001301 tcibd001
               ON tcibd001.t$item = cisli941.t$item$l  
                    
-      INNER JOIN baandb.tznmcs030301  znmcs030
+      INNER JOIN baandb.tznmcs030301 znmcs030
               ON znmcs030.t$citg$c = tcibd001.t$citg
              AND znmcs030.t$seto$c = tcibd001.t$seto$c
                           
-      INNER JOIN baandb.ttcemm124301  tcemm124
+      INNER JOIN baandb.ttcemm124301 tcemm124
               ON tcemm124.t$cwoc  = cisli940.t$cofc$l 
 
-      INNER JOIN baandb.ttcemm030301  tcemm030
+      INNER JOIN baandb.ttcemm030301 tcemm030
               ON tcemm030.t$eunt = tcemm124.t$grid
-  
-      INNER JOIN baandb.ttcmcs023301  tcmcs023
+        
+      INNER JOIN baandb.ttcmcs023301 tcmcs023
               ON tcmcs023.t$citg = tcibd001.t$citg
   
-      INNER JOIN baandb.tznmcs031301  znmcs031
+      INNER JOIN baandb.tznmcs031301 znmcs031
               ON znmcs031.t$citg$c = tcibd001.t$citg 
              AND znmcs031.t$seto$c = tcibd001.t$seto$c 
              AND znmcs031.t$fami$c = tcibd001.t$fami$c
  
-      LEFT JOIN baandb.ttcmcs966301   tcmcs966
-             ON tcmcs966.t$fdtc$l=cisli940.t$fdtc$l
+       LEFT JOIN baandb.ttcmcs966301 tcmcs966
+              ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
       
-      LEFT JOIN baandb.ttcmcs003301   tcmcs003
-             ON tcmcs003.t$cwar=cisli941.t$cwar$l
-             	
-           WHERE cisli940.t$stat$l=6
-             AND  cisli940.t$fdty$l=17
-             AND tcemm124.t$dtyp=1 
-			 
-        ORDER BY cisli941.t$item$l ) Q1
-			
---where Q1.CHAVE_FILIAL IN (:Filial)
---  and ( (Q1.ID_DEPTO IN (:Depto)) OR (:Depto = '000'))
---  and ( (Q1.COD_SETOR IN (:Setor)) OR (:Setor = '000'))
---  and Q1.NUME_CFOP IN (:CFOP)
-
+       LEFT JOIN baandb.ttcmcs003301 tcmcs003
+              ON tcmcs003.t$cwar = cisli941.t$cwar$l
+              
+           WHERE cisli940.t$stat$l = 6
+             AND cisli940.t$fdty$l = 17
+             AND tcemm124.t$dtyp = 1 
+    
+        ORDER BY Trim(cisli941.t$item$l) ) Q1
+   
+where ID_FILIAL in (:Filial)
