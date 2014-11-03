@@ -224,6 +224,9 @@ FROM       baandb.ttfacp200301  tfacp200
         ON tdrec952.t$ttyp$l = tfacp200.t$ttyp
        AND tdrec952.t$invn$l = tfacp200.t$ninv
        AND tdrec952.t$fire$l = tdrec940.t$fire$l
+       AND tdrec952.t$dbcr$l = 1
+       AND tdrec952.t$trtp$l = 2
+       AND tdrec952.t$brty$l = 0
     
  LEFT JOIN ( SELECT iDOMAIN.t$cnst iCODE, iLABEL.t$desc DESC_CODIGO_FISCAL 
                FROM baandb.tttadv401000 iDOMAIN, 
@@ -365,9 +368,6 @@ FROM       baandb.ttfacp200301  tfacp200
        AND znacp005.t$ninv$c = znacp004.t$ninv$c
       
 WHERE tfacp200.t$docn = 0
-  AND tdrec952.t$dbcr$l = 1
-  AND tdrec952.t$trtp$l = 2
-  AND tdrec952.t$brty$l = 0
 
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND tfacp200.t$dued between :VencimentoDe AND :VencimentoAte
