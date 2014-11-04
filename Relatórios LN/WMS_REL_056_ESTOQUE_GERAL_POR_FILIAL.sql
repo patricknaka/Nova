@@ -21,9 +21,7 @@ SELECT Trim(tcibd001.t$item)             ID_ITEM,
        sum(whinr140.t$qlal-
            nvl(Q3.roma,0))               QT_RESERVADA, 
        sum(whinr140.t$qhnd -  
-           whinr140.t$qlal -  
-           (nvl(Q2.bloc,0)+
-            nvl(ats.qty,0)))             QT_SALDO, 
+           whinr140.t$qlal )             QT_SALDO, 
        max(Q1.mauc)                      VL_UNITARIO, 
         
        CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL 
