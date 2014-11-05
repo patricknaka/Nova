@@ -1,6 +1,6 @@
 SELECT
   DISTINCT
-    201                      Companhia,
+    301                      Companhia,
     tdpur400.t$otbp          COD_PN,
  regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
                              CNPJ,
@@ -63,7 +63,7 @@ SELECT
     ELSE NULL END AS         STATUS_APROVACAO_CONTABIL,
                 
     tfgld018.t$dcdt          DATA_DOCTO,
-    NVL(TRIM(tdrec940.t$ttyp$l), 'N/A')  
+    NVL(TRIM(CONCAT(tdrec940.t$ttyp$l, tdrec940.t$invn$l)), 'N/A')  
                              TRANSACAO_CAP,
     NVL(tdrec940.t$docn$l, tdpur401.t$docn$c)
                              NUM_NF,
@@ -73,44 +73,48 @@ SELECT
     
     tfacp201.t$payd          DATA_VENCTO,
     SITUACAO_PAGTO.          DSC_SITUACAO_PAGTO,
-    tfcmg101.t$plan          DATA_PLAN_PAGTO
+    tfcmg101.t$plan          DATA_PLAN_PAGTO,
+    
+    tcmcs023.t$dsca          CONTA_CONTABIL_DESCRICAO,
+    tdpur400.t$cofc          CODIGO_CENTRO_TRABALHO,
+    tcmcs065.t$dsca          CENTRO_TRABALHO_DESCRICAO
 
-FROM        baandb.ttdpur400201 tdpur400
+FROM        baandb.ttdpur400301 tdpur400
 
-INNER JOIN  baandb.ttdpur401201 tdpur401
+INNER JOIN  baandb.ttdpur401301 tdpur401
         ON  tdpur401.t$orno = tdpur400.t$orno
 
- LEFT JOIN   baandb.ttcibd001201 tcibd001
+ LEFT JOIN   baandb.ttcibd001301 tcibd001
         ON   tcibd001.t$item = tdpur401.t$item
        
- LEFT JOIN   baandb.ttdpur094201 tdpur094
+ LEFT JOIN   baandb.ttdpur094301 tdpur094
         ON   tdpur094.t$potp = tdpur400.t$cotp
  
- LEFT JOIN   baandb.ttccom100201 tccom100
+ LEFT JOIN   baandb.ttccom100301 tccom100
         ON   tccom100.t$bpid = tdpur400.t$otbp
         
- LEFT JOIN   baandb.ttccom130201  tccom130
+ LEFT JOIN   baandb.ttccom130301  tccom130
         ON   tccom130.t$cadr = tdpur400.t$otad
  
- LEFT JOIN   baandb.ttdrec947201  tdrec947
-        ON   tdrec947.t$ncmp$l = 201 
+ LEFT JOIN   baandb.ttdrec947301  tdrec947
+        ON   tdrec947.t$ncmp$l = 301 
        AND   tdrec947.t$oorg$l = 80
        AND   tdrec947.t$orno$l = tdpur401.t$orno
        AND   tdrec947.t$pono$l = tdpur401.t$pono
        AND   tdrec947.t$seqn$l = tdpur401.t$sqnb
        
- LEFT JOIN   baandb.ttdrec940201 tdrec940
+ LEFT JOIN   baandb.ttdrec940301 tdrec940
         ON   tdrec940.t$fire$l = tdrec947.t$fire$l
  
  LEFT JOIN  (select b.t$orno, 
                     min(b.t$trdt) dapr, 
                     b.t$logn
-               from baandb.ttdpur450201 b
+               from baandb.ttdpur450301 b
               where b.t$hdst=10
                 and b.t$trdt = 
                      
                     ( SELECT MIN(c.t$trdt) 
-                        FROM baandb.ttdpur450201 c 
+                        FROM baandb.ttdpur450301 c 
                        WHERE c.t$hdst=10 AND c.t$orno=b.t$orno)
              group by b.t$orno, b.t$logn) apr
         ON apr.t$orno=tdpur400.t$orno
@@ -123,12 +127,12 @@ INNER JOIN  baandb.ttdpur401201 tdpur401
  LEFT JOIN  (select h.t$orno, 
                     min(h.t$trdt) dapr, 
                     h.t$logn 
-               from baandb.ttdpur450201 h
+               from baandb.ttdpur450301 h
               where h.t$hdst=5
                 and h.t$trdt = 
        
                     ( SELECT MIN(i.t$trdt) 
-                        FROM baandb.ttdpur450201 i 
+                        FROM baandb.ttdpur450301 i 
                        WHERE i.t$hdst=5 AND i.t$orno=h.t$orno)
          
              group by h.t$orno, h.t$logn) crd
@@ -139,18 +143,18 @@ INNER JOIN  baandb.ttdpur401201 tdpur401
               from    baandb.tttaad200000 ttaad200) nome_crd
         ON    nome_crd.t$user=crd.t$logn
         
- LEFT JOIN  baandb.ttfgld018201 tfgld018
+ LEFT JOIN  baandb.ttfgld018301 tfgld018
         ON  tfgld018.t$ttyp = tdrec940.t$ttyp$l
       AND   tfgld018.t$docn = tdrec940.t$invn$l
       AND   tfgld018.t$ttyp != ' '
       AND   tfgld018.t$docn != 0
       
- LEFT JOIN  baandb.ttfcmg101201 tfcmg101
+ LEFT JOIN  baandb.ttfcmg101301 tfcmg101
         ON  tfcmg101.t$ttyp = tdrec940.t$ttyp$l
        AND  tfcmg101.t$ninv = tdrec940.t$invn$l
        AND  tfcmg101.t$ninv!=0
  
- LEFT JOIN  baandb.ttfacp201201 tfacp201
+ LEFT JOIN  baandb.ttfacp201301 tfacp201
         ON  tfacp201.t$ttyp = tdrec940.t$ttyp$l
        AND  tfacp201.t$ninv = tdrec940.t$invn$l
  
@@ -270,16 +274,22 @@ INNER JOIN  baandb.ttdpur401201 tdpur401
                      tcemm030.t$dsca  DESC_FILIAL,
                      tcemm030.t$euca  FILIAL,
                      tcemm124.t$cwoc
-               FROM  baandb.ttcemm124201 tcemm124, 
-                     baandb.ttcemm030201 tcemm030
+               FROM  baandb.ttcemm124301 tcemm124, 
+                     baandb.ttcemm030301 tcemm030
               WHERE  tcemm030.t$eunt=tcemm124.t$grid
-                AND  tcemm124.t$loco=201 ) unid_empr
+                AND  tcemm124.t$loco=301 ) unid_empr
         ON unid_empr.t$cwoc=tdpur400.t$cofc
  
  LEFT JOIN  (select  ttaad200.t$user,
                       ttaad200.t$name
               from    baandb.tttaad200000 ttaad200) nome_aprov
         ON    nome_aprov.t$user=tdrec940.t$logn$l
+        
+ LEFT JOIN  baandb.ttcmcs023301 tcmcs023
+        ON  tcmcs023.t$citg=tcibd001.t$citg
+ 
+ LEFT JOIN  baandb.ttcmcs065301 tcmcs065
+        ON  tcmcs065.t$cwoc=tdpur400.t$cofc
         
   WHERE tdpur401.t$oltp IN (2,4)
         
