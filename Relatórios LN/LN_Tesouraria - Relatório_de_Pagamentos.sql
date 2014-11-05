@@ -56,6 +56,7 @@ INNER JOIN baandb.ttfacp600301 tfacp600
  LEFT JOIN baandb.ttfacp200301 tfacp200a 
         ON tfacp200a.t$ttyp  = tfacp200.t$ttyp 
        AND tfacp200a.t$ninv  = tfacp200.t$ninv
+	   AND tfacp200a.t$lino  = 0
 
  LEFT JOIN (SELECT d.t$cnst CODE_PAGTO, 
                    l.t$desc DESC_PAGTO
@@ -85,10 +86,8 @@ INNER JOIN baandb.ttfacp600301 tfacp600
                                            and l1.t$cpac = l.t$cpac )) iSTPP
         ON tfcmg109.t$stpp = iSTPP.CODE_PAGTO 
   
-WHERE tfacp200a.t$lino = 0
-  
-AND tfcmg103.t$docd BETWEEN NVL(:DtPagtoDe, tfcmg103.t$docd) AND NVL(:DtPagtoAte, tfcmg103.t$docd)
-AND NVL(tfcmg103.t$paym,'- Não Definido -') IN (:Modalidade)
-AND NVL(tfcmg109.t$stpp,0) IN (:Situacao)
-AND tfcmg011.t$baoc$l = NVL(:Banco, tfcmg011.t$baoc$l)
-AND tfcmg103.t$btno = NVL(:Lote, tfcmg103.t$btno)
+WHERE tfcmg103.t$docd BETWEEN NVL(:DtPagtoDe, tfcmg103.t$docd) AND NVL(:DtPagtoAte, tfcmg103.t$docd)
+      AND NVL(tfcmg103.t$paym,'- Não Definido -') IN (:Modalidade)
+      AND NVL(tfcmg109.t$stpp,0) IN (:Situacao)
+      AND tfcmg011.t$baoc$l = NVL(:Banco, tfcmg011.t$baoc$l)
+      AND tfcmg103.t$btno = NVL(:Lote, tfcmg103.t$btno)
