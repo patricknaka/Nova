@@ -69,7 +69,8 @@ SELECT
     NVL(tdrec940.t$docn$l, tdpur401.t$docn$c)         NUM_NF,
     NVL(tdrec940.t$seri$l, tdpur401.t$seri$c)         SERI_NF,
     tfacp201.t$payd                                   DATA_VENCTO,
-    SITUACAO_PAGTO.                                   DSC_SITUACAO_PAGTO,
+    NVL(SITUACAO_PAGTO.DSC_SITUACAO_PAGTO, 
+        'Não informado'                               DSC_SITUACAO_PAGTO,
     tfcmg101.t$plan                                   DATA_PLAN_PAGTO,
     tcmcs023.t$dsca                                   CONTA_CONTABIL_DESCRICAO,
     tdpur400.t$cofc                                   CODIGO_CENTRO_TRABALHO,
@@ -296,10 +297,11 @@ WHERE tdpur401.t$oltp IN (2,4)
   AND NVL(APROVACAO_FIS.t$cnst, 0) IN (:STATUS_APR_FISCAL)
   AND NVL(CONTABIL.t$cnst, 0) IN (:STATUS_APR_CONTABIL)
   AND tdpur400.t$cotp IN (:TIPO_ORDEM)
+  AND crd.t$logn IN (:UsuarioSolicitante)
+  AND NVL(tfacp201.t$pyst$l, 0) IN (:SituacaoPagto)
   AND ((regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(regexp_replace(:CNPJ, '[^0-9]', ''))) OR (Trim(:CNPJ) is null))
   AND ( (Trim(:OrdemCompra) is null) OR (UPPER(Trim(tdpur400.t$orno)) like '%' || UPPER(Trim(:OrdemCompra) || '%')) )
   AND ( (Trim(:ReferenciaFiscal) is null) or (UPPER(Trim(tdrec940.t$fire$l)) like '%' || UPPER(Trim(:ReferenciaFiscal) || '%')) )
-  AND ( (:UsuarioSolicTodos = 0) OR (crd.t$logn in (:UsuarioSolic) AND (:UsuarioSolicTodos = 1)) )
 
 ORDER BY DATA_ORDEM, 
          STATUS_ORDEM, 
