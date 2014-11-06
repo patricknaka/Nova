@@ -16,7 +16,7 @@
 --****************************************************************************************************************************************************************
 
 SELECT DISTINCT
-	201 CD_CIA,																									--#FAF.113.n
+	1 CD_CIA,																									--#FAF.113.n
 --	nvl(r.t$lino, tfacP200.t$lino) NR_MOVIMENTO,																--#FAF.188.o
 --	nvl(r.t$lino, tfacP200.t$lino) SQ_MOVIMENTO,																--#FAF.188.n	--#FAF.186.2.o
 	tfacP200.t$lino SQ_MOVIMENTO,																				--#FAF.186.2.n

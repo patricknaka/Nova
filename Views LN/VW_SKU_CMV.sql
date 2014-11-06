@@ -1,6 +1,6 @@
 SELECT DISTINCT
 	ltrim(rtrim(q1.item)) CD_ITEM,
-	201 CD_CIA,
+	1 CD_CIA,
 	tcemm030.t$euca CD_FILIAL,
 	q1.mauc VL_CMV,
 	q1.grid CD_UNIDADE_EMPRESARIAL

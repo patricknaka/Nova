@@ -10,7 +10,7 @@
 -- #FAF.279 - 13-ago-2014, Fabio Ferreira,	Divisão percentual de redução base de cálculo
 --************************************************************************************************************************************************************
 SELECT
-  201 CD_CIA,
+  1 CD_CIA,
   (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
   WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
   AND tcemm030.t$eunt=tcemm124.t$grid

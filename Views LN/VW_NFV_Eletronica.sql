@@ -5,7 +5,7 @@
 -- #FAF.312 - 29-aug-2014, Fabio Ferreira, 	campo data atualização				
 --****************************************************************************************************************************************************************
 SELECT
-    201 CD_CIA,
+    1 CD_CIA,
     CASE WHEN tcemm030.t$euca = ' ' THEN substr(tcemm124.t$grid,-2,2) ELSE tcemm030.t$euca END AS CD_FILIAL,
     cisli940.t$docn$l NF_NFE,
     cisli940.t$seri$l NR_SERIE_NFE,

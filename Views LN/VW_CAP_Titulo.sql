@@ -15,7 +15,8 @@
 SELECT DISTINCT
 	'CAP' CD_MODULO,
 	tfacp200.t$ninv NR_TITULO,
-	tfacp200.t$pcom CD_CIA,
+	--tfacp200.t$pcom CD_CIA,
+  1 as CD_CIA,
 	--tfacp200.t$dim2 CODIGO_FILIAL,
 	CASE WHEN tfacp200.t$ttyp IN ('AGA', 'GA1') THEN 3 ELSE 2 END CD_FILIAL,
 	tfacp200.t$ttyp CD_TRANSACAO_TITULO,
@@ -64,18 +65,17 @@ SELECT DISTINCT
 		else TO_NUMBER(tfacp200.t$dim2) END
 		and rownum = 1 ) CD_UNIDADE_EMPRESARIAL,
 	tdrec940.t$fire$l NR_REFERENCIA_FISCAL,
-	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA
-
-	--tfacp200.t$leac CD_CONTA_ORIGEM,																		--#FAF.288.sn
+	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
+	tfacp200.t$leac CD_CONTA_ORIGEM,																		--#FAF.288.sn
 	
-	--(Select distinct tdrec952.t$leac$l from baandb.ttdrec952201 tdrec952
-	-- WHERE 	tdrec952.t$ttyp$l=tfacp200.t$ttyp
-	-- AND 	tdrec952.t$invn$l=tfacp200.t$ninv
-	-- AND    tdrec952.t$fire$l=tdrec940.t$fire$l
-	-- AND 	tdrec952.t$dbcr$l=1
-	-- AND	tdrec952.t$trtp$l=2
-	-- AND 	tdrec952.t$brty$l=0
-	-- and rownum=1)	CD_CONTA_DESTINO																		--#FAF.288.en
+	(Select distinct tdrec952.t$leac$l from baandb.ttdrec952201 tdrec952
+	 WHERE 	tdrec952.t$ttyp$l=tfacp200.t$ttyp
+	 AND 	tdrec952.t$invn$l=tfacp200.t$ninv
+	 AND    tdrec952.t$fire$l=tdrec940.t$fire$l
+	 AND 	tdrec952.t$dbcr$l=1
+	 AND	tdrec952.t$trtp$l=2
+	 AND 	tdrec952.t$brty$l=0
+	 and rownum=1)	CD_CONTA_DESTINO																		--#FAF.288.en
 	
 	
 FROM

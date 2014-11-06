@@ -1,4 +1,4 @@
---21/08/2014  Atualização do timezone
+﻿--21/08/2014  Atualização do timezone
 -- 	#FAF.300 - 25-aug-2014, Fabio Ferreira, 	Inclusão dos campos do LN que fazem parte da chave da tabela tfcmg948
 -- 	#MAR.332 - 06-out-2014, Marcia A. R. Torres, Buscar a agência da tabela tfcmg948.
 --====================================================================================================================
@@ -9,7 +9,7 @@ SELECT DISTINCT
 --	tfcmg011.t$agcd$l NR_AGENCIA,         --#MAR.332.o
 	tfcmg948.t$baof$l NR_AGENCIA,           --#MAR.332.n
 	tfcmg948.t$acco$l NR_CONTA,
-    201 CD_CIA,
+      1 CD_CIA,
 	tfcmg948.t$stat$l CD_STATUS_ARQUIVO,
 	tfcmg948.t$send$l CD_STATUS_ENVIO,
 	  	GREATEST(

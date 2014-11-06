@@ -7,7 +7,7 @@
 --  #FAF.296 - 21-aug-2014,	Fabio Ferreira,	Adicionado o campo NR_CNPJ_FABRICANTE
 --*********************************************************************************************************************************************************
 SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
-        201 CD_CIA,
+        1 CD_CIA,
         CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
 		THEN '00000000000000' 
 		WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
@@ -87,5 +87,5 @@ LEFT JOIN baandb.ttccom130201 tccom130f ON tccom130f.t$cadr=tcmcs060.t$cadr,				
 baandb.ttcmcs023201 tcmcs023
 WHERE
 tcmcs023.t$citg=tcibd001.t$citg
-AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE)>=TRUNC(sysdate, 'DAY')                          		--#FAF.120.n
+--AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--    AT time zone sessiontimezone) AS DATE)>=TRUNC(sysdate, 'DAY')                          		--#FAF.120.n

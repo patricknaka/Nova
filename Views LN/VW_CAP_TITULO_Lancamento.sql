@@ -1,7 +1,7 @@
 
 select
   distinct
-    201                             CD_CIA,
+    1                             CD_CIA,
     concat(concat(tdrec940.t$ttyp$l, ''), tdrec940.t$invn$l) CD_CHAVE_PRIMARIA,
     itrtp.trtpdesc                  DS_TIPO_LANCAMENTO,
     idbcr.dbcrdesc                  IN_DEBITO_CREDITO,

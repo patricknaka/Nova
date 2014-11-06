@@ -1,6 +1,6 @@
--- #FAF.283 - 18-ago-2014, Fabio Ferreira, Correção QT_FISICA
+﻿-- #FAF.283 - 18-ago-2014, Fabio Ferreira, Correção QT_FISICA
 --************************************************************************************************************************************************************
-SELECT  201 CD_CIA,
+SELECT  1 CD_CIA,
         tcemm030.t$euca CD_FILIAL,
         whina112.t$cwar CD_DEPOSITO,
         ltrim(rtrim(whina112.t$item)) CD_ITEM,

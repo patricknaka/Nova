@@ -1,6 +1,6 @@
 SELECT
                 znacp001.t$ttyp$c || znacp001.t$ninv$c cd_chave_primaria,
-                201 cd_cia,
+                1 cd_cia,
                 CASE WHEN tfacp200.t$ttyp IN ('AGA', 'GA1') THEN 3 ELSE 2 END cd_filial,
                 znacp001.t$tdoc$c cd_transacao_link,
                 znacp001.t$docn$c nr_documento_link,

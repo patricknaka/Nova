@@ -1,4 +1,4 @@
--- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota	
+﻿-- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota	
 -- #FAF.095 - 29-mai-2014, Fabio Ferreira, 	Correções para 	DT_SAIDA_NF em branco
 -- #FAF.022.1 - 03-jun-2014, Fabio Ferreira, 	Correções	
 -- #FAF.235 - 	03-jun-2014, Fabio Ferreira, 	Correções Timezone	e retirado campo VL_DESCONTO_INCONDICIONAL		
@@ -7,7 +7,7 @@ SELECT
 	brnfe940.t$fire$l NR_NF_RASCUNHO,
 	brnfe941.t$opfc$l CD_NATUREZA_OPERACAO_COMPRA,
 	tcmcs940.t$opor$l SQ_NATUREZA_OPERACAO_COMPRA,
-    201 CD_CIA,
+     	1 CD_CIA,
 	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=tdpur400.t$cofc
 	AND tcemm030.t$eunt=tcemm124.t$grid

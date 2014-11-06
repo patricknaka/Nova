@@ -4,7 +4,7 @@
 -- SQ_NATUREZA_OPERACAO		retirado com autorização Patrick em 20/08/2014
 --********************************************************************************************************************************************************
 SELECT
-    201 CD_CIA,
+    1 CD_CIA,
     tdpur401.t$orno NR_PEDIDO_COMPRA,
     tdpur401.t$pono NR_ITEM_NFR_REFERENCIA,
     ltrim(rtrim(tdpur401.t$item)) CD_ITEM,

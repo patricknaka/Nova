@@ -16,7 +16,7 @@
 -- #FAF.274 - 	08-aug-2014, Fabio Ferreira, 	Correção data de atualização			
 --****************************************************************************************************************************************************************
 SELECT DISTINCT
-	201 CD_CIA,
+	1 CD_CIA,
 	CASE WHEN nvl((	select c.t$styp from baandb.tcisli205201 c
 					where c.t$styp='BL ATC'
 					AND c.T$ITYP=tfacr200.t$ttyp

@@ -8,7 +8,7 @@
 -- #MAT.238.2 - 14-ago-2014, Marcia A. Torres, Exclusão dos campos NR_LOTE, VL_DESPESA_ACESSORIA e VL_DESCONTO_CONDICIONAL
 --************************************************************************************************************************************************************
 SELECT
-    201 CD_CIA,
+      1 CD_CIA,
 	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
 	AND tcemm030.t$eunt=tcemm124.t$grid

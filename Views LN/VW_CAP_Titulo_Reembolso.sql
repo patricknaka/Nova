@@ -5,7 +5,7 @@
 SELECT DISTINCT
  --           znsls412.T$TTYP$C || znsls412.t$ninv$c || znsls401.t$orno$c CD_CHAVE_PRIMARIA,			--#FAF.200.o
 			znsls412.T$TTYP$C || znsls412.t$ninv$c CD_CHAVE_PRIMARIA,									--#FAF.200.n
-            201 CD_CIA,
+            1 CD_CIA,
             znsls412.T$TTYP$C CD_TRANSACAO_TITULO,
             tcemm030.t$euca CD_FILIAL,
             znsls401.t$orno$c NR_ORDEM_VENDA,

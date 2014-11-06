@@ -7,7 +7,7 @@
 -- SQ_NATUREZA_OPERACAO e CD_DEPARTAMENTO	Eliminado com autorização do Patrick em 20/08/2014
 --*********************************************************************************************************************************************
 SELECT DISTINCT
-    201 CD_CIA,
+    1 CD_CIA,
     tcemm030.t$euca CD_FILIAL,      
     tdpur400.t$orno NR_PEDIDO_COMPRA,
     tdpur400.t$otbp CD_FORNECEDOR,

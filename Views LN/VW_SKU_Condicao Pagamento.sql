@@ -6,7 +6,7 @@ SELECT
         znpur008.t$cpay$c CD_CONDICAO_PAGAMENTO,
         tdipu010.t$sbim COD_COND_PGTO_AUT,
         znpur008.t$potp$c CD_TIPO_ORDEM,																			--#FAF.191.n
-        201 CD_CIA,
+        1 CD_CIA,
         tdipu010.t$vlmf$c VL_MINIMO_PEDIDO,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znpur008.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,

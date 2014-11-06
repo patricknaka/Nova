@@ -7,7 +7,7 @@
 -- 21/08/2014 - Atualização do timezone
 --*************************************************************************************************************************************************************
 SELECT DISTINCT
-	201 CD_CIA,																						--#FAF.113.n
+	1 CD_CIA,																						--#FAF.113.n
 	tfacp200.t$ninv NR_TITULO,
 	tfcmg011.t$baoc$l CD_BANCO,
 	tfcmg011.t$agcd$l NR_AGENCIA,

@@ -1,4 +1,4 @@
-SELECT  201 CD_CIA,
+SELECT  1 CD_CIA,
 			tcemm030.t$euca CD_FILIAL,
 			whinr140.t$cwar CD_DEPOSITO,
 			ltrim(rtrim(whinr140.t$item)) CD_ITEM,

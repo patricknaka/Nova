@@ -21,7 +21,7 @@ SELECT DISTINCT
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,											--#FAF.193.n
 --  tfacr200.t$ttyp CD_TIPO_TRANSACAO,																			--#FAF.193.o
 	tfacr200.t$ttyp CD_TRANSACAO_TITULO,																		--#FAF.193.o
-    201 CD_CIA,
+    1 CD_CIA,
 	CASE WHEN nvl((	select c.t$styp from baandb.tcisli205201 c
 					where c.t$styp='BL ATC'
 					AND c.T$ITYP=tfacr200.t$ttyp

@@ -1,8 +1,8 @@
--- #FAF.221, 19-aug-2014, Fabio Ferreira, 	Correção sinal da transação
+﻿-- #FAF.221, 19-aug-2014, Fabio Ferreira, 	Correção sinal da transação
 -- 21/08/2014    Atualização do timezone
 --*********************************************************************************************************************************************
 SELECT  
-        201                               CD_CIA,
+        1                                 CD_CIA,
         tcemm030.t$euca                   CD_FILIAL,
         tcemm112.t$grid                   CD_UNIDADE_EMPRESARIAL,
         ltrim(rtrim(whwmd215.t$item))     CD_ITEM,

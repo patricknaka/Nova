@@ -15,7 +15,7 @@
 -- conversão para caracter de NR_ITEM_NF_FATURA
 --****************************************************************************************************************************************************************
 SELECT DISTINCT 
-    201 CD_CIA,
+    1 CD_CIA,
     CASE WHEN tcemm030.t$euca = ' ' then substr(tcemm124.t$grid,-2,2) else tcemm030.t$euca end as CD_FILIAL,
 	cisli940.t$docn$l NR_NF,
 	cisli940.t$seri$l NR_SERIE_NF,
