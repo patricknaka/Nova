@@ -13,8 +13,8 @@ SELECT
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE)
                            DT_VENDA, 
-    
-    znsls402.t$vlmr$c      VL_VENDA, 
+                           
+    zncmg015.t$slst$c+ABS(znsls402.t$vlju$c)       VL_VENDA,
     zncmg015.t$slct$c      VL_CANCELAR,
     znsls402.t$auto$c      AUT,
     znsls402.t$nctf$c      NSU,
@@ -94,7 +94,7 @@ INNER JOIN baandb.tzncmg009301 zncmg009
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) )  Situacao
         ON Situacao.COD_SITUACAO = zncmg015.t$situ$c
-  
+        
 WHERE znsls400.T$IDPO$C = 'TD'
   AND znsls402.t$idmp$c = 1
   
