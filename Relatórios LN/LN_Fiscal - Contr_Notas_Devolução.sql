@@ -17,6 +17,7 @@ SELECT
     tccom130.t$cste                               UF_PARCEI,
     cisli940.t$amnt$l                             VALO_NFD,
     Usuario.t$logn$c                              USUARIO,
+    NOME_USUARIO.t$name                           NOME_USUARIO,
     cisli940.t$cnfe$l                             CHAVE_NFD,
     cisli940.t$stat$l                             STATUS, iTABLE.DESC_STAT,
     cisli940.t$fire$l                             REF_FISCAL,
@@ -64,11 +65,12 @@ INNER JOIN baandb.ttdsls401301  tdsls401
 INNER JOIN baandb.ttdsls400301  tdsls400
         ON tdsls400.t$orno = tdsls401.t$orno
     
-INNER JOIN baandb.ttdrec947301  tdrec947
+LEFT JOIN baandb.ttdrec947301  tdrec947
         ON tdrec947.t$orno$l = tdsls401.t$orno
        AND tdrec947.t$pono$l = tdsls401.t$pono
-
-INNER JOIN baandb.ttdrec940301  tdrec940
+       AND tdrec947.t$oorg$l = 1
+       
+LEFT JOIN baandb.ttdrec940301  tdrec940
         ON tdrec940.t$fire$l = tdrec947.t$fire$l
     
 INNER JOIN baandb.ttcemm124301  tcemm124
@@ -218,9 +220,14 @@ INNER JOIN baandb.ttccom130301 tccom130B
        AND znmcs092.t$creg$c = znmcs096.t$creg$c
        AND znmcs092.t$cfov$c = znmcs096.t$cfov$c
        
+  LEFT JOIN  (select  ttaad200.t$user,
+                      ttaad200.t$name
+              from    baandb.tttaad200000 ttaad200) NOME_USUARIO
+        ON    NOME_USUARIO.t$user=Usuario.t$logn$c
+        
 WHERE cisli940.t$fdty$l = 14
   AND tcemm124.t$dtyp = 1 
-  AND tdrec947.t$oorg$l = 1
+ 
 
   AND tcemm030.T$EUNT IN (:Filial)
   AND tdrec940.t$stat$l IN(:StatusRefFiscal)
