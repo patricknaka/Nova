@@ -48,12 +48,12 @@ select Q1.*
                  tcibd001.t$subf$c          SUBCATEGORIA,
                  tdipu001.t$manu$c          MARCA,
                  tcibd936.t$frat$l          NBM,
-                 cisli941.t$pric$l          PRECO_UNITARIO,
+                 Round(cisli941.t$pric$l,4) PRECO_UNITARIO,
                  cisli941.t$dqua$l          QTD_FATURADA,
-                 cisli941.t$insr$l          VL_SEGURO,
-                 cisli941.t$gexp$l          VL_DESPESA,
-                 cisli941.t$ldam$l          VL_DESCONTO,
-                 cisli941.t$fght$l          VL_FRETE,
+                 Round(cisli941.t$insr$l,4) VL_SEGURO,
+                 Round(cisli941.t$gexp$l,4) VL_DESPESA,
+                 Round(cisli941.t$ldam$l,4) VL_DESCONTO,
+                 Round(cisli941.t$fght$l,4) VL_FRETE,
      
                  IMPOSTO_1.                 BASE_ICMS,
                  IMPOSTO_1.                 VL_ICMS,
@@ -89,11 +89,10 @@ select Q1.*
                  IMPOSTO_ICMS_ST_SCONV.     BASE_ICMS_ST_SCONV,
                  IMPOSTO_ICMS_ST_SCONV.     PERC_ICMS_ST_SCONV,
                           
-                 cisli941.t$amnt$l          VL_TOTAL,
+                 Round(cisli941.t$amnt$l,4) VL_TOTAL,
                  tccom130.t$fovn$l          CNPJ_CLIENTE,
-                 Trim(REPLACE(tccom130.t$namc,';',' '))
-                                                     DESC_RUA,
-                 cisli941.t$gamt$l          VL_MERC,
+                 tccom130.t$namc            DESC_RUA,
+                 Round(cisli941.t$gamt$l,4) VL_MERC,
                                             
                  cisli940.t$fdty$l          TIPO_DOCTO, 
                                             DESC_TIPO_DOCTO,
@@ -221,13 +220,13 @@ select Q1.*
                                                   and l1.t$cpac = l.t$cpac ) ) COD_SEFAZ
               ON COD_SEFAZ.COD = cisli940.t$nfes$l
   
-       LEFT JOIN ( select cisli943.t$fbtx$l    BASE_ICMS,
-                          cisli943.t$amnt$l    VL_ICMS,
-                          cisli943.t$fbam$l    VL_ICMS_DEST,
-                          cisli943.t$rate$l    PERC_ICMS,
-                          cisli943.t$txsc$l    CST_ICMS,
-                          tcmcs938.t$gdog$l    ORIG_CST_ICMS,      
-                          tcmcs938.t$icmd$l    TRIBUT_CST_ICMS,
+       LEFT JOIN ( select cisli943.t$fbtx$l          BASE_ICMS,
+                          Round(cisli943.t$amnt$l,4) VL_ICMS,
+                          Round(cisli943.t$fbam$l,4) VL_ICMS_DEST,
+                          cisli943.t$rate$l          PERC_ICMS,
+                          cisli943.t$txsc$l          CST_ICMS,
+                          tcmcs938.t$gdog$l          ORIG_CST_ICMS,      
+                          tcmcs938.t$icmd$l          TRIBUT_CST_ICMS,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
                      from baandb.ttcmcs938301 tcmcs938
@@ -237,9 +236,9 @@ select Q1.*
               ON IMPOSTO_1.t$fire$l = cisli941.t$fire$l
              AND IMPOSTO_1.t$line$l = cisli941.t$line$l
 
-       LEFT JOIN ( select cisli943.t$sbas$l BASE_ICMS_ST,
-                          cisli943.t$amnt$l VL_ICMS_ST,
-                          cisli943.t$fbam$l VL_ICMS_ST_DEST,
+       LEFT JOIN ( select cisli943.t$sbas$l          BASE_ICMS_ST,
+                          Round(cisli943.t$amnt$l,4) VL_ICMS_ST,
+                          Round(cisli943.t$fbam$l,4) VL_ICMS_ST_DEST,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
                      from baandb.tcisli943301 cisli943
@@ -247,8 +246,8 @@ select Q1.*
               ON IMPOSTO_2.t$fire$l = cisli941.t$fire$l
              AND IMPOSTO_2.t$line$l = cisli941.t$line$l
 
-       LEFT JOIN ( select cisli943.t$fbam$l VL_IPI_DEST,
-                          cisli943.t$amnt$l VL_IPI,
+       LEFT JOIN ( select Round(cisli943.t$fbam$l,4) VL_IPI_DEST,
+                          Round(cisli943.t$amnt$l,4) VL_IPI,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
                      from baandb.tcisli943301 cisli943
@@ -256,12 +255,12 @@ select Q1.*
               ON IMPOSTO_3.t$fire$l = cisli941.t$fire$l
              AND IMPOSTO_3.t$line$l = cisli941.t$line$l
 
-       LEFT JOIN ( select cisli943.t$fbtx$l BASE_PIS,
-                          cisli943.t$rate$l PERC_PIS,
-                          cisli943.t$amnt$l VL_PIS,
-                          cisli943.t$txsc$l CST_PIS,
-                          tcmcs938.t$gdog$l ORIG_CST_PIS,      
-                          tcmcs938.t$icmd$l TRIBUT_CST_PIS,
+       LEFT JOIN ( select cisli943.t$fbtx$l          BASE_PIS,
+                          cisli943.t$rate$l          PERC_PIS,
+                          Round(cisli943.t$amnt$l,4) VL_PIS,
+                          cisli943.t$txsc$l          CST_PIS,
+                          tcmcs938.t$gdog$l          ORIG_CST_PIS,      
+                          tcmcs938.t$icmd$l          TRIBUT_CST_PIS,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
                      from baandb.ttcmcs938301 tcmcs938
@@ -271,12 +270,12 @@ select Q1.*
               ON IMPOSTO_5.t$fire$l = cisli941.t$fire$l
              AND IMPOSTO_5.t$line$l = cisli941.t$line$l
 
-       LEFT JOIN ( select cisli943.t$fbtx$l BASE_COFINS,
-                          cisli943.t$rate$l PERC_COFINS,
-                          cisli943.t$amnt$l VL_COFINS,
-                          cisli943.t$txsc$l CST_COFINS,
-                          tcmcs938.t$gdog$l ORIG_CST_COFINS,      
-                          tcmcs938.t$icmd$l TRIBUT_CST_COFINS,
+       LEFT JOIN ( select cisli943.t$fbtx$l          BASE_COFINS,
+                          cisli943.t$rate$l          PERC_COFINS,
+                          Round(cisli943.t$amnt$l,4) VL_COFINS,
+                          cisli943.t$txsc$l          CST_COFINS,
+                          tcmcs938.t$gdog$l          ORIG_CST_COFINS,      
+                          tcmcs938.t$icmd$l          TRIBUT_CST_COFINS,
                           cisli943.t$fire$l,
                           cisli943.t$line$l
                      from baandb.ttcmcs938301 tcmcs938
