@@ -171,6 +171,12 @@ values ('FILE_GESTAO_ICMS',
 '\Package.Variables[User::gstrFolderGestaoICMS].Properties[Value]',
 'String')
 
+--FILE_FOLLOW
+insert into ADMINISTRACAO.adm.ssis_conexoes
+values ('FILE_FOLLOW',
+'W:\Operacional\Relatorio Follow LN\Relatorio Follow\',
+'\Package.Variables[User::gstrFolderFollow].Properties[Value]',
+'String')
 
 --=================================================
 --inserção de colunas
