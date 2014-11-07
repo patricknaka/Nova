@@ -1,4 +1,4 @@
-SELECT 
+SELECT
   znrec002.t$date$c              DATA_CORTE,
   tcemm030.t$euca                NUME_FILIAL,
   tccom130.t$fovn$l              CNPJ_FORN,
@@ -40,12 +40,12 @@ INNER JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr   = cisli940.t$itoa$l
 
 INNER JOIN baandb.ttcemm124301 tcemm124
-        ON tcemm124.t$cwoc   = cisli940.t$cofc$l 
+        ON tcemm124.t$cwoc   = cisli940.t$cofc$l
 
 INNER JOIN baandb.ttcemm030301 tcemm030
         ON tcemm030.t$eunt   = tcemm124.t$grid
 
 INNER JOIN baandb.ttcibd001301 tcibd001
-        ON tcibd001.t$item   = tdrec941.t$item$l  
+        ON tcibd001.t$item   = tdrec941.t$item$l
 
 WHERE tcemm124.t$dtyp = 2
