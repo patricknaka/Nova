@@ -8,12 +8,7 @@ SELECT
     SUM(znfmd630.t$vlfC$c)      FRETE_APAGAR,
     cisli940.t$fdty$l           TIPO_DOCTO_FISCAL, 
     FGET.                       DESC_TIPO_DOCTO_FISCAL,
-    znfmd630.t$fili$c           FILIAL,
-	
-    Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone sessiontimezone) AS DATE))
-                                DATA
+    znfmd630.t$fili$c           FILIAL
 
 FROM       BAANDB.tznfmd630301  znfmd630
 
@@ -60,11 +55,10 @@ WHERE cisli940.t$fdty$l IN (:TipoDocto)
 
 GROUP BY znfmd630.t$cfrw$c,
          Trim(tcmcs080.t$dsca),
-         cisli940.t$fdty$l,
-         FGET.DESC_TIPO_DOCTO_FISCAL
-         znfmd630.t$fili$c,
-         Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
-               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone sessiontimezone) AS DATE)),
+         znfmd630.t$cfrw$c,
+         Trim(tcmcs080.t$dsca),
+         cisli940.t$fdty$l, 
+         FGET.DESC_TIPO_DOCTO_FISCAL,
+         znfmd630.t$fili$c
   
-ORDER BY 9, 8, 2
+ORDER BY 8, 3
