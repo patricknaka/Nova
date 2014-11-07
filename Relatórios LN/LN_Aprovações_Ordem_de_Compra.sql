@@ -70,10 +70,10 @@ SELECT
     NVL(tdrec940.t$seri$l, tdpur401.t$seri$c)         SERI_NF,
     tfacp201.t$payd                                   DATA_VENCTO,
     NVL(SITUACAO_PAGTO.DSC_SITUACAO_PAGTO, 
-        'Não informado'                               DSC_SITUACAO_PAGTO,
+        'Não informado')                               DSC_SITUACAO_PAGTO,
     tfcmg101.t$plan                                   DATA_PLAN_PAGTO,
     tcmcs023.t$dsca                                   CONTA_CONTABIL_DESCRICAO,
-    tdpur400.t$cofc                                   CODIGO_CENTRO_TRABALHO,
+    tdpur401.t$wrkc$l                                 CODIGO_CENTRO_TRABALHO,
     tcmcs065.t$dsca                                   CENTRO_TRABALHO_DESCRICAO
 
 FROM       baandb.ttdpur400301 tdpur400
@@ -283,7 +283,7 @@ INNER JOIN baandb.ttdpur401301 tdpur401
         ON tcmcs023.t$citg = tcibd001.t$citg
  
  LEFT JOIN baandb.ttcmcs065301 tcmcs065
-        ON tcmcs065.t$cwoc = tdpur400.t$cofc
+        ON tcmcs065.t$cwoc = tdpur401.t$wrkc$l
         
 WHERE tdpur401.t$oltp IN (2,4)
         
