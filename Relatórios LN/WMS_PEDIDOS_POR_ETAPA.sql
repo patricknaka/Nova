@@ -66,7 +66,8 @@
     maucLN.mauc                           VALOR_CUSTO_CMV,
     ORDERS.C_ADDRESS1                     DESTINATARIO,
     ORDERS.type                           COD_TIPO_PEDIDO,
-    TIPO_PEDIDO.                          DSC_TIPO_PEDIDO
+    TIPO_PEDIDO.                          DSC_TIPO_PEDIDO,
+	ORDERDETAIL.UOM						  UINDADE
  
 FROM       WMWHSE5.ORDERS
 
