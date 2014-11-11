@@ -1,5 +1,6 @@
   select Q1.* 
-  from  ( SELECT 301                                  CIA,                     -- 1
+  from  ( SELECT DISTINCT
+                 301                                  CIA,                     -- 1
                  tcemm030.T$EUNT                      FILIAL,                  -- 2
                  tcemm030.t$dsca                      DESC_FILIAL,             -- 3
                  tdrec940.t$docn$l                    NUME_NF,                 -- 4
@@ -287,15 +288,20 @@
             AND brmcs959.t$cyto$l = tccom130d.t$ccty
             AND brmcs959.t$stto$l = tccom130d.t$cste 
             AND brmcs959.t$cito$l = tccom130d.t$ccit 
+            AND brmcs959.t$tror$l = 1                   --#humberto.n
 	  
       LEFT  JOIN  baandb.ttfgld945301     tfgld945
-              ON  tfgld945.t$citg$l=tcibd001.t$citg
+              ON  tfgld945.t$tror$l=1
+             AND  tfgld945.t$trtp$l=2
+             AND  tfgld945.t$rfdt$l=3
+             AND  tfgld945.t$citg$l=tcibd001.t$citg
               
 WHERE tdrec940.t$stat$l IN (4,5,6)
   AND tdrec940.t$rfdt$l = 3
-  AND brmcs959.t$tror$l = 1
+  --AND brmcs959.t$tror$l = 1     --#humberto.o
 
 ORDER BY 2,6,21,28,24 ) Q1
+
 
  WHERE Q1.FILIAL IN (:Filial)
    AND Trunc(Q1.DATA_REFFISCAL)
