@@ -1,4 +1,4 @@
-  select Q1.* 
+select Q1.* 
   from  ( SELECT DISTINCT
                  301                                  CIA,                     -- 1
                  tcemm030.T$EUNT                      FILIAL,                  -- 2
@@ -89,7 +89,7 @@
                        IMPOSTO_6.TRIBUT_CST_COFINS)   CST_COFINS,              -- 61
                 nvl(IMPOSTO_5.BASE_PIS, 0)            BASE_PIS,                -- 62
                 nvl(IMPOSTO_6.BASE_COFINS, 0)         BASE_COFINS,             -- 63
-                brmcs959.t$stcd$l                     COD_SERV_MUNICIPAL
+                brmcs959.t$stcd$l                     COD_SERV_MUNICIPAL       -- 64
                         
            FROM baandb.ttdrec940301       tdrec940 
       
@@ -279,7 +279,7 @@
                    WHERE tdrec942.t$brty$l = 15 ) IMPOSTO_15
              ON IMPOSTO_15.t$fire$l = tdrec941.t$fire$l
             AND IMPOSTO_15.t$line$l = tdrec941.t$line$l
-			
+   
       LEFT JOIN baandb.ttccom130301       tccom130d
              ON tccom130d.t$cadr = tdrec940.t$sfra$l
 
@@ -288,20 +288,18 @@
             AND brmcs959.t$cyto$l = tccom130d.t$ccty
             AND brmcs959.t$stto$l = tccom130d.t$cste 
             AND brmcs959.t$cito$l = tccom130d.t$ccit 
-            AND brmcs959.t$tror$l = 1                   --#humberto.n
-	  
-      LEFT  JOIN  baandb.ttfgld945301     tfgld945
-              ON  tfgld945.t$tror$l=1
-             AND  tfgld945.t$trtp$l=2
-             AND  tfgld945.t$rfdt$l=3
-             AND  tfgld945.t$citg$l=tcibd001.t$citg
+            AND brmcs959.t$tror$l = 1
+   
+      LEFT JOIN baandb.ttfgld945301     tfgld945
+             ON tfgld945.t$tror$l = 1
+            AND tfgld945.t$trtp$l = 2
+            AND tfgld945.t$rfdt$l = 3
+            AND tfgld945.t$citg$l = tcibd001.t$citg
               
 WHERE tdrec940.t$stat$l IN (4,5,6)
   AND tdrec940.t$rfdt$l = 3
-  --AND brmcs959.t$tror$l = 1     --#humberto.o
 
 ORDER BY 2,6,21,28,24 ) Q1
-
 
  WHERE Q1.FILIAL IN (:Filial)
    AND Trunc(Q1.DATA_REFFISCAL)
