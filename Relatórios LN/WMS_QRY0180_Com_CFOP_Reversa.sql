@@ -60,7 +60,7 @@
     SLS400.t$fovn$c                        CNPJ,       
     ORDERS.C_COMPANY                       NOME,
     ORDERDETAIL.ORIGINALQTY                QTDE_TOTAL,
-    nvl(nvl(cisli940.t$amnt$l,TDSLS400.T$OAMT),0)	VL,
+    sls400.VALOR                           VL,
     ORDERS.type                            COD_TIPO_PEDIDO,
     TIPO_PEDIDO.                           DSC_TIPO_PEDIDO
 
@@ -155,8 +155,6 @@ INNER JOIN WMSADMIN.PL_DB
         ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
        AND SLS400.t$item$c = ORDERDETAIL.SKU
 
- LEFT JOIN BAANDB.TTDSLS400301@pln01 TDSLS400	ON	TDSLS400.T$ORNO = ORDERS.REFERENCEDOCUMENT
- 
  LEFT JOIN BAANDB.tcisli940301@pln01 CISLI940 
         ON CISLI940.T$DOCN$L = ORDERS.INVOICENUMBER
        AND CISLI940.T$SERI$L = ORDERS.LANE
