@@ -1081,3 +1081,5 @@ alter column ITEM_NR_ITEM numeric(15)
 
 alter table dbo.ods_tb_planilhao
 alter column Ean numeric (15)
+
+EXEC sp_rename 'dbo.ods_follow.ds_fabricantte', 'ds_fabricante', 'COLUMN';
