@@ -42,8 +42,24 @@ SELECT
     znsls401.t$fovn$c                         CPF,
     znsls002.t$dsca$c                         TIPO_ENTREGA,
     znsls401.t$lcat$c                         CATEGORIA,
-    znsls401.t$lass$c                         ASSUNTO
-        
+    znsls401.t$lass$c                         ASSUNTO,
+
+   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
+     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+                                              Data_EMISSAO_NF,
+
+    CUBAGEM.TOT                               CUBAGEM,
+    cisli941.t$dqua$l*tcibd001.t$wght         PESO_KG,
+    cisli941.t$pric$l                         VALOR_PRODUTO,
+    znsls401.t$orno$c                         ORDEM_DEVOLUCAO,
+    CASE WHEN znfmd630.t$stat$c='F' OR tdrec947.t$fire$l is not NULL THEN
+            'Nao'
+      ELSE  
+            'Sim'  END                        PENDENTE_COLETA,
+    CASE WHEN tdrec947.t$fire$l is NULL THEN
+            'Sim'
+    ELSE    'Não' END                         PENDENTE_DEVOLUCAO
+    
 FROM       baandb.tznsls401301 znsls401
 
  LEFT JOIN (select r.t$date$c,
@@ -68,6 +84,15 @@ FROM       baandb.tznsls401301 znsls401
         ON cisli245.t$slso = znsls004.t$orno$c
        AND cisli245.t$pono = znsls004.t$pono$c
 
+ LEFT JOIN baandb.ttdsls401301  tdsls401
+        ON tdsls401.t$orno=cisli245.t$slso
+       AND tdsls401.t$pono=cisli245.t$pono 
+       
+LEFT JOIN baandb.ttdrec947301  tdrec947
+        ON tdrec947.t$orno$l = tdsls401.t$orno
+       AND tdrec947.t$pono$l = tdsls401.t$pono
+       AND tdrec947.t$oorg$l = 1
+       
  LEFT JOIN baandb.tcisli940301 cisli940
         ON cisli940.t$fire$l = cisli245.t$fire$l
                   
@@ -88,7 +113,7 @@ FROM       baandb.tznsls401301 znsls401
         ON znfmd001.t$fovn$c = tccom130.t$fovn$l
     
  LEFT JOIN baandb.tznfmd630301 znfmd630
-        ON znfmd630.t$orno$c = cisli245.t$slso
+        ON znfmd630.t$pecl$c=TO_CHAR(znsls401.t$entr$c)
     
  LEFT JOIN ( Select znfmd640.t$fili$c,
                     znfmd640.t$etiq$c,
@@ -149,7 +174,23 @@ FROM       baandb.tznsls401301 znsls401
 
  LEFT  JOIN  baandb.tznsls002301 znsls002
          ON  znsls002.t$tpen$c=znsls401.t$itpe$c
-    
+   
+ LEFT JOIN  ( select sum( wmd.t$hght       * 
+                              wmd.t$wdth   * 
+                              wmd.t$dpth   * 
+                              sli.t$dqua$l * 
+                            znmcs.t$cuba$c) TOT,
+                  sli.t$fire$l,
+                  znmcs.t$cfrw$c
+             from baandb.tcisli941301 sli,
+                  baandb.twhwmd400301 wmd,
+                  baandb.tznmcs080301 znmcs 
+             where wmd.t$item = sli.t$item$l     
+             group by sli.t$fire$l, znmcs.t$cfrw$c ) CUBAGEM
+        ON  CUBAGEM.t$fire$l = cisli940.t$fire$l
+        AND CUBAGEM.t$cfrw$c = cisli940.t$cfrw$l
+
+ 
 WHERE znsls401.t$idor$c = 'TD'
   AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_FRETE)
   AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_DESP)
