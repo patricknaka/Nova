@@ -1088,4 +1088,67 @@ ALTER TABLE FIN.ods_transacao ADD  CONSTRAINT [PK_transacao] PRIMARY KEY CLUSTER
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 
 --======================================================
+--alterando collate da ods_nfv_cab
+--- apaga a PK
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[ln].[ods_nfv_cab]') AND name = N'PK_ods_nfv_cab')
+ALTER TABLE [ln].[ods_nfv_cab] DROP CONSTRAINT [PK_ods_nfv_cab]
+
+--corrige o COLLATE
+alter table ln.ods_nfv_cab
+alter column CD_FILIAL nvarchar(6) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column NR_SERIE_NF nvarchar(8) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column CD_NATUREZA_OPERACAO nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column SQ_NATUREZA_OPERACAO nvarchar(6) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column CD_CLIENTE_FATURA nvarchar(9) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column CD_CLIENTE_ENTREGA nvarchar(9) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column NR_PEDIDO nvarchar(20) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column NR_ENTREGA nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column NR_ORDEM nvarchar(9) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column NR_NF_FATURA nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column NR_SERIE_NF_FATURA nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column NR_NF_REMESSA nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column NR_SERIE_NF_REMESSA nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column CD_UNIDADE_EMPRESARIAL nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column NR_REFERENCIA_FISCAL nvarchar(15) collate Latin1_General_CI_AS not null
+
+alter table ln.ods_nfv_cab
+alter column CD_TIPO_DOCUMENTO_FISCAL nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfv_cab
+alter column CD_TIPO_ORDEM_VENDA nvarchar(10) collate Latin1_General_CI_AS
+
+--recria a PK
+ALTER TABLE [ln].[ods_nfv_cab] ADD  CONSTRAINT [PK_ods_nfv_cab] PRIMARY KEY NONCLUSTERED 
+(	[CD_CIA] ASC,
+	[NR_REFERENCIA_FISCAL] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
 
