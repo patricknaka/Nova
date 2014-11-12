@@ -35,8 +35,11 @@ select Q1.*
                  cisli940.t$fdty$l          TIPO_DOCTO_FIS, 
                  FGET.                      DESC_TIPO_DOC_FIS,
                  cisli940.t$fdtc$l          COD_TIPO_DOC_REMESSA,
-                 tcmcs966.t$dsca$l          DESC_COD_TIPO_DOC_REMESSA
-           
+                 tcmcs966.t$dsca$l          DESC_COD_TIPO_DOC_REMESSA,
+                 CASE WHEN tdrec955.t$qtdr$l > 0 THEN
+                      'Sim'
+                 ELSE 'Não' END             ENTRADA
+                 
       FROM baandb.tcisli940301  cisli940  
            
        LEFT JOIN ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_DOC_FIS
@@ -127,10 +130,15 @@ select Q1.*
        LEFT JOIN baandb.ttcmcs003301 tcmcs003
               ON tcmcs003.t$cwar = cisli941.t$cwar$l
               
+       LEFT JOIN baandb.ttdrec955301 tdrec955
+              ON tdrec955.t$fire$l=cisli941.t$fire$l
+             AND tdrec955.t$line$l=cisli941.t$line$l
+             AND tdrec955.t$sern$l=1
+             
            WHERE cisli940.t$stat$l = 6
              AND cisli940.t$fdty$l = 17
              AND tcemm124.t$dtyp = 1 
     
         ORDER BY Trim(cisli941.t$item$l) ) Q1
-   
+          
 where ID_FILIAL in (:Filial)
