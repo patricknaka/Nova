@@ -36,7 +36,7 @@
     ORDERS.INVOICENUMBER                  NOTA,
     ORDERS.LANE                           SERIE,
     CAGEIDDETAIL.CAGEID                   CARGA,
-    CASE WHEN SKU.SUSR2 = 2 THEN 'PESADO' 
+    CASE WHEN SKU.SUSR2 = '2' THEN 'PESADO' 
          ELSE 'LEVE' 
      END                                  TP_TRANSPORTE,
     ORDERS.C_ZIP                          CEP,
@@ -67,8 +67,9 @@
     ORDERS.C_ADDRESS1                     DESTINATARIO,
     ORDERS.type                           COD_TIPO_PEDIDO,
     TIPO_PEDIDO.                          DSC_TIPO_PEDIDO,
-	ORDERDETAIL.UOM						  UINDADE
- 
+	ORDERDETAIL.UOM						  UINDADE,
+	SLS400.t$eftr$c						  TRANSP_REDESPACHO
+-- 
 FROM       WMWHSE5.ORDERS
 
 INNER JOIN WMWHSE5.ORDERDETAIL 
@@ -158,6 +159,7 @@ INNER JOIN WMSADMIN.PL_DB
                     ZNSLS004.T$ORNO$C,
                     znsls401.t$item$c,
                     znsls401.t$tpes$c,
+					znsls401.t$eftr$c,
                     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - 
                           znsls401.t$vldi$c +
                           znsls401.t$vlfr$c + 
@@ -178,7 +180,8 @@ INNER JOIN WMSADMIN.PL_DB
            group by q.T$IDCA$C, 
                     ZNSLS004.T$ORNO$C,
                     znsls401.t$item$c,
-                    znsls401.t$tpes$c ) SLS400
+                    znsls401.t$tpes$c,
+					znsls401.t$eftr$c) SLS400
         ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
        AND SLS400.t$item$c = ORDERDETAIL.SKU
 
