@@ -118,8 +118,8 @@ select Q1.*
                  ON od.sku = sku.sku
          		
           LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-                 ON DPST.ID_DEPART = sku.skugroup
-                AND DPST.ID_SECTOR = sku.skugroup2
+                 ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
+                AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
          	   
           LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
                  ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
@@ -309,8 +309,8 @@ select Q1.*
                  ON od.sku = sku.sku
          		
           LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-                 ON DPST.ID_DEPART = sku.skugroup
-                AND DPST.ID_SECTOR = sku.skugroup2
+                 ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
+                AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
          	   
           LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
                  ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
@@ -500,8 +500,8 @@ select Q1.*
                  ON od.sku = sku.sku
          		
           LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-                 ON DPST.ID_DEPART = sku.skugroup
-                AND DPST.ID_SECTOR = sku.skugroup2
+                 ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
+                AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
          	   
           LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
                  ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
@@ -689,8 +689,8 @@ select Q1.*
                  ON od.sku = sku.sku
          		
           LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-                 ON DPST.ID_DEPART = sku.skugroup
-                AND DPST.ID_SECTOR = sku.skugroup2
+                 ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
+                AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
          	   
           LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
                  ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
@@ -880,8 +880,8 @@ select Q1.*
                  ON od.sku = sku.sku
          		
           LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-                 ON DPST.ID_DEPART = sku.skugroup
-                AND DPST.ID_SECTOR = sku.skugroup2
+                 ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
+                AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
          	   
           LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
                  ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
@@ -1071,8 +1071,8 @@ select Q1.*
                  ON od.sku = sku.sku
          		
           LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-                 ON DPST.ID_DEPART = sku.skugroup
-                AND DPST.ID_SECTOR = sku.skugroup2
+                 ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
+                AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
          	   
           LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
                  ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
@@ -1262,8 +1262,8 @@ select Q1.*
                  ON od.sku = sku.sku
          		
           LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-                 ON DPST.ID_DEPART = sku.skugroup
-                AND DPST.ID_SECTOR = sku.skugroup2
+                 ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
+                AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
          	   
           LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
                  ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
@@ -1453,8 +1453,8 @@ select Q1.*
                  ON od.sku = sku.sku
          		
           LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-                 ON DPST.ID_DEPART = sku.skugroup
-                AND DPST.ID_SECTOR = sku.skugroup2
+                 ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
+                AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
          	   
           LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
                  ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
@@ -1644,8 +1644,8 @@ select Q1.*
                  ON od.sku = sku.sku
          		
           LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-                 ON DPST.ID_DEPART = sku.skugroup
-                AND DPST.ID_SECTOR = sku.skugroup2
+                 ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
+                AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
          	   
           LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
                  ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
