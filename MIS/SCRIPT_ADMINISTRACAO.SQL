@@ -178,6 +178,13 @@ values ('FILE_FOLLOW',
 '\Package.Variables[User::gstrFolderFollow].Properties[Value]',
 'String')
 
+--FILE_DEVOLUCAO
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_DEVOLUCAO', 
+'W:\Operacional\Devolucao_LN\',
+'\Package.Variables[User::gstrFolderDevolucao].Properties[Value]',
+'String')
+
 --=================================================
 --inserção de colunas
 --=================================================
