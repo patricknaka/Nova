@@ -43,10 +43,14 @@ SELECT
     znsls002.t$dsca$c                         TIPO_ENTREGA,
     znsls401.t$lcat$c                         CATEGORIA,
     znsls401.t$lass$c                         ASSUNTO,
+  
+    CASE WHEN NVL(cisli940.t$date$l, to_date('01-01-1980','DD-MM-YYYY')) > to_date('01-01-1980','DD-MM-YYYY') 
+           THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone sessiontimezone) AS DATE)
+           ELSE NULL
+     END                                              DATA_EMISSAO_NF,
 
-   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 
-     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
-                                              Data_EMISSAO_NF,
 
     CUBAGEM.TOT                               CUBAGEM,
     cisli941.t$dqua$l*tcibd001.t$wght         PESO_KG,
