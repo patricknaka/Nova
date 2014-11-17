@@ -44,7 +44,7 @@ SELECT
     znsls401.t$lcat$c                         CATEGORIA,
     znsls401.t$lass$c                         ASSUNTO,
 
-   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
+   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
                                               Data_EMISSAO_NF,
 
@@ -195,5 +195,5 @@ WHERE znsls401.t$idor$c = 'TD'
   AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_FRETE)
   AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_DESP)
   AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_JUROS)
-        
+  
 ORDER BY Data_da_Ocorrencia, Pedido
