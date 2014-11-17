@@ -6,7 +6,8 @@ SELECT
         CODELKUP.UDF2                											DESCR_FILIAL,
 		TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
 			'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE),'DD')						DATA_PED,	
+			AT time zone sessiontimezone) AS DATE),'DD')						DATA_LIMITE,	
+		ORDERS.SUSR4															UNEG,
 		OH.STATUS																ULT_EVENTO,
 		OS.DESCRIPTION															ULT_EVENTO_DESCR,
 		COUNT(DISTINCT ORDERS.ORDERKEY)											PEDIDOS,
@@ -35,7 +36,8 @@ GROUP BY
     CODELKUP.UDF2,                											
     TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
     	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    	AT time zone sessiontimezone) AS DATE),'DD'),						
+    	AT time zone sessiontimezone) AS DATE),'DD'),
+	ORDERS.SUSR4,
     OH.STATUS,
 	OS.DESCRIPTION,
     CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE
