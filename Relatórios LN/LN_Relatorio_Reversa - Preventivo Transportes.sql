@@ -3,8 +3,12 @@ SELECT
     znsls401.t$pecl$c                         Pedido,
     znsls401.t$entr$c                         Entrega,
     tcibd001.t$dscb$c                         Descricao_do_Item,
-    cisli940.t$docn$l                         Nota,
-    cisli940.t$seri$l                         Serie,
+    CASE WHEN cisli940.t$docn$l=0 THEN
+         NULL
+    ELSE cisli940.t$docn$l END                Nota,
+    CASE WHEN cisli940.t$docn$l=0 THEN
+        NULL
+    ELSE cisli940.t$seri$l END                Serie,
     cisli940.t$stbn$l                         Nome_Cliente_Coleta,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 
