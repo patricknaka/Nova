@@ -1151,4 +1151,188 @@ ALTER TABLE [ln].[ods_nfv_cab] ADD  CONSTRAINT [PK_ods_nfv_cab] PRIMARY KEY NONC
 	[NR_REFERENCIA_FISCAL] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 
+--========================================================
 
+--alterando collate da ods_nfr_cab
+--- apaga a PK
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[ln].[ods_nfr_cab]') AND name = N'PK_ods_nrf_cab')
+ALTER TABLE [ln].[ods_nfr_cab] DROP CONSTRAINT [PK_ods_nrf_cab]
+
+--corrige o COLLATE
+alter table ln.ods_nfr_cab
+alter column CD_FILIAL nvarchar(6) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column NR_NFR nvarchar(9) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column CD_FORNECEDOR nvarchar(9) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column NR_SERIE_NF_RECEBIDA nvarchar(3) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column CD_NATUREZA_OPERACAO nvarchar(6) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column SQ_NATUREZA_OPERACAO nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column IN_MERC_UTILIZADA_CONSUMO nvarchar(40) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column NR_NFR_COMPLEMENTO nvarchar(40) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column CD_CONDICAO_PAGAMENTO nvarchar(3) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column DS_OBSERVACAO_NFR nvarchar(60) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column COD_CAMINHAO nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column DS_MOTIVO_DEVOLUCAO_ATO nvarchar(100) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column CD_TIPO_FRETE nvarchar(1) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column CD_UNIDADE_EMPRESARIAL nvarchar(30) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_cab
+alter column NR_REFERENCIA_FISCAL nvarchar(30) collate Latin1_General_CI_AS not null
+
+alter table ln.ods_nfr_cab
+alter column NR_RECEB_DOCTO_WMS nvarchar(40) collate Latin1_General_CI_AS
+
+--recria a PK
+ALTER TABLE [ln].[ods_nfr_cab] ADD  CONSTRAINT [PK_ods_nfr_cab] PRIMARY KEY NONCLUSTERED 
+(	[CD_CIA] ASC,
+	[NR_REFERENCIA_FISCAL] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+--===========================================================
+
+--alterando collate da ods_cap_titulo
+--- apaga a PK
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[ln].[ods_cap_titulo]') AND name = N'PK_ods_cap_titulo')
+ALTER TABLE [ln].[ods_cap_titulo] DROP CONSTRAINT [PK_ods_cap_titulo]
+
+--corrige o COLLATE
+alter table ln.ods_cap_titulo
+alter column CD_MODULO nvarchar(3) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column CD_FILIAL nvarchar(9) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column CD_TRANSACAO_TITULO nvarchar(3) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column CD_PARCEIRO nvarchar(9) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column NR_SERIE_NF_RECEBIDA nvarchar(3) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column IN_BLOQUEIO_TITULO nvarchar(40) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column CD_BANCO_DESTINO nvarchar(3) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column NR_AGENCIA_DESTINO nvarchar(4) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column NR_DIGITO_AGENCIA_DESTINO nvarchar(2) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column NR_CONTA_CORRENTE_DESTINO nvarchar(34) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column NR_DIG_CONTA_CORRENTE_DESTINO nvarchar(2) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column CD_UNIDADE_EMPRESARIAL nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_cap_titulo
+alter column NR_REFERENCIA_FISCAL nvarchar(18) collate Latin1_General_CI_AS 
+
+alter table ln.ods_cap_titulo
+alter column CD_CHAVE_PRIMARIA nvarchar(43) collate Latin1_General_CI_AS not null
+
+--recria a PK
+ALTER TABLE [ln].[ods_cap_titulo] ADD  CONSTRAINT [PK_ods_cap_titulo] PRIMARY KEY NONCLUSTERED 
+(	[CD_CIA] ASC,
+	[CD_CHAVE_PRIMARIA] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+--============================================================
+
+--alterando collate da ods_nfr_det
+--- apaga a PK
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[ln].[ods_nfr_det]') AND name = N'PK_ods_nfr_det')
+ALTER TABLE [ln].[ods_nfr_det] DROP CONSTRAINT [PK_ods_nfr_det]
+
+--corrige o COLLATE
+alter table ln.ods_nfr_det
+alter column CD_FILIAL nvarchar(6) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column CD_ITEM nvarchar(47) collate Latin1_General_CI_AS not null
+
+alter table ln.ods_nfr_det
+alter column CD_NBM nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column SQ_NBM nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column CD_DEPOSITO nvarchar(6) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column NR_NFR_REFERENCIA nvarchar(40) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column NR_ITEM_NFR_REFERENCIA nvarchar(40) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column CD_ITEM_KIT nvarchar(47) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column CD_NATUREZA_OPERACAO nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column SQ_NATUREZA_OPERACAO nvarchar(6) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column NR_PEDIDO_COMPRA nvarchar(9) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column CD_UNIDADE_EMPRESARIAL nvarchar(10) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column NR_REFERENCIA_FISCAL nvarchar(15) collate Latin1_General_CI_AS not null
+
+alter table ln.ods_nfr_det
+alter column NR_NFR nvarchar(9) collate Latin1_General_CI_AS
+
+alter table ln.ods_nfr_det
+alter column NR_CNPJ_CPF_ENTREGA nvarchar(20) collate Latin1_General_CI_AS
+
+--recria a PK
+ALTER TABLE [ln].[ods_nfr_det] ADD  CONSTRAINT [PK_ods_nfr_det] PRIMARY KEY NONCLUSTERED 
+(	[CD_CIA] ASC,
+	[SQ_ITEM_NF_RECEBIDA] ASC,
+	[CD_ITEM] ASC,
+	[NR_REFERENCIA_FISCAL] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+--==========================================
+
+alter table ln.ods_titulo_cap_ref
+alter column ds_id_titulo varchar(50) collate Latin1_General_CI_AS
+
+--==========================================

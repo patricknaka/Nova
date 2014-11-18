@@ -94,3 +94,24 @@ ALTER TABLE dbo.stg_sku_cmv
 ALTER COLUMN CD_UNIDADE_EMPRESARIAL NVARCHAR(10)
 COLLATE Latin1_General_CI_AS NULL
 
+
+--corrige o COLLATE
+alter table stg_est_referencia
+alter column CD_FILIAL nvarchar(6) collate Latin1_General_CI_AS
+
+alter table stg_est_referencia
+alter column CD_DEPOSITO nvarchar(6) collate Latin1_General_CI_AS
+
+alter table stg_est_referencia
+alter column CD_ITEM nvarchar(47) collate Latin1_General_CI_AS
+
+alter table stg_est_referencia
+alter column NR_NFR nvarchar(9) collate Latin1_General_CI_AS
+
+alter table stg_est_referencia
+alter column CD_UNIDADE_EMPRESARIAL nvarchar(10) collate Latin1_General_CI_AS
+
+alter table stg_est_referencia
+alter column NR_REFERENCIA_FISCAL nvarchar(10) collate Latin1_General_CI_AS
+
+
