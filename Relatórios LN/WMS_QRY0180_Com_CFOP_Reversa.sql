@@ -12,9 +12,48 @@
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE) 
                                            DT_REGISTRO,
-             
-    nvl(ORDERSTATUSSETUP2.DESCRIPTION,
-        ORDERSTATUSSETUP.DESCRIPTION )     EVENTO,
+
+CASE WHEN (ORDERS.status='02' or ORDERS.status='09' or ORDERS.status='04' or ORDERS.status='00') and
+          WAVEDETAIL.wavekey is null then
+  'Recebimento_host'
+WHEN (ORDERS.INVOICESTATUS='2' and ORDERS.status>='55') OR
+	 (nvl(LNREF.t$poco$c,' ')='NFT' and ORDERS.status='95') OR
+	 (nvl(LNREF.t$poco$c,' ')='CAN' and ORDERS.status='95') OR
+   ORDERS.fiscaldecision like 'CANCELADO DEVIDO A NÃO PROCESSAMENTO%' THEN
+  'Estorno' 
+WHEN ORDERS.status='100' then
+  'Perda_Logistica' 
+WHEN (ORDERS.status>='95' or sq2.status=6) then
+  'Expedicao_concluida'
+WHEN (sq2.status=3 or sq2.status=4) and ORDERS.status>='55' then
+  'Fechamento_Gaiola'
+WHEN sq2.status=5 and ORDERS.status>='55' then
+  'Entregue_Doca'
+WHEN sq2.orderid IS NOT NULL and sq2.status=2 and ORDERS.status>='55' then
+  'Inclusao_Carga'
+WHEN ORDERS.INVOICESTATUS='1' and ORDERS.status>='55' then
+  'DANFE_Solicitada'
+WHEN ORDERS.INVOICESTATUS='3' and ORDERS.status>='55' then
+  'DANFE_Aprovada'
+WHEN ORDERS.INVOICESTATUS='4' and ORDERS.status>='55' then
+  'Fim_Conferencia'
+WHEN (ORDERS.status<='22') and
+          WAVEDETAIL.wavekey is not null then
+  'Incluido_Onda'
+WHEN (ORDERS.status='29' and sq1.Released>0 and sq1.InPicking=0 and sq1.PartPicked=0) then
+  'Picking_Liberado'
+WHEN (ORDERS.status='52') then
+  'Inicio_Picking'
+WHEN (ORDERS.status='55') then
+  'Picking_Completo'
+ELSE
+  'Outros'  
+END EVENTO,
+
+
+										   
+    -- nvl(ORDERSTATUSSETUP2.DESCRIPTION,
+        -- ORDERSTATUSSETUP.DESCRIPTION )     EVENTO,
  
     nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -37,7 +76,7 @@
  
     TCCOM130.T$FOVN$L                      CNPJF,
     TCMCS060.T$DSCA                        FABRICANTE,
-    SLS400.T$IDCA$C                        CANAL,
+    LNREF.T$IDCA$C                        CANAL,
     ORDERS.C_VAT                           MEGA_ROTA,
     ORDERSTATUSSETUP.DESCRIPTION           SITUACAO,
     TASKDETAIL.TASKDETAILKEY               PROGRAMA,
@@ -57,13 +96,13 @@
      END                                   TP_TRANSPORTE,
   
     ORDERS.C_ZIP                           CEP,
-    SLS400.t$fovn$c                        CNPJ,       
+    LNREF.t$fovn$c                        CNPJ,       
     ORDERS.C_COMPANY                       NOME,
     ORDERDETAIL.ORIGINALQTY                QTDE_TOTAL,
     
     CASE WHEN nvl(cisli940.t$amnt$l,0) != 0 THEN cisli940.t$amnt$l
          WHEN NVL(TDSLS400.T$OAMT,0) != 0 THEN TDSLS400.T$OAMT
-         WHEN nvl(SLS400.VALOR,0) !=0 THEN SLS400.VALOR
+         WHEN nvl(LNREF.VALOR,0) !=0 THEN LNREF.VALOR
     ELSE
       0 END                                 VL,
     ORDERS.type                            COD_TIPO_PEDIDO,
@@ -76,7 +115,23 @@ INNER JOIN WMWHSE5.ORDERDETAIL
         ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY
         
 INNER JOIN WMWHSE5.SKU
-        ON SKU.SKU = ORDERDETAIL.SKU 
+        ON SKU.SKU = ORDERDETAIL.SKU
+        
+INNER JOIN (select 
+            o1.orderkey,
+            (select count(*) from WMWHSE5.orderdetail od1
+             where od1.orderkey=o1.orderkey
+             and od1.status='29') Released,
+            (select count(*) from WMWHSE5.orderdetail od1
+             where od1.orderkey=o1.orderkey
+             and od1.status='51') InPicking,
+            (select count(*) from WMWHSE5.orderdetail od1
+             where od1.orderkey=o1.orderkey
+             and od1.status='52') PartPicked,
+            (select count(*) from WMWHSE5.orderdetail od1
+             where od1.orderkey=o1.orderkey
+             and od1.status='55') PickedComplete
+            from WMWHSE5.orders o1) sq1 ON sq1.orderkey=orders.orderkey
 
  LEFT JOIN WMWHSE5.STORER 
         ON STORER.STORERKEY = sku.SUSR5 
@@ -96,6 +151,14 @@ INNER JOIN WMWHSE5.SKU
                             a.ORDERID
             from WMWHSE5.CAGEIDDETAIL a) CAGEIDDETAIL
         ON CAGEIDDETAIL.ORDERID = ORDERDETAIL.ORDERKEY 
+		
+    LEFT JOIN  (select cd.orderid, max(cg.status) status
+                from WMWHSE5.CAGEID cg, CAGEIDDETAIL cd
+                where cd.CAGEID=cg.CAGEID
+                group by cd.orderid) sq2
+                                    ON sq2.orderid=ORDERS.orderkey
+    LEFT JOIN WMWHSE5.WAVEDETAIL w ON w.ORDERKEY=ORDERS.ORDERKEY
+	
         
 -- LEFT JOIN WMWHSE5.CAGEID
 --        ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID
@@ -140,35 +203,96 @@ INNER JOIN WMSADMIN.PL_DB
         ON TASKDETAIL.ORDERKEY = ORDERDETAIL.ORDERKEY 
        AND TASKDETAIL.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER  
                
- LEFT JOIN ( select q.T$IDCA$C, 
-                    ZNSLS004.T$ORNO$C,
-                    znsls401.t$item$c,
-                    znsls401.t$tpes$c,
-                    q.t$fovn$c,
-                    sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - 
-                          znsls401.t$vldi$c +
-                          znsls401.t$vlfr$c + 
-                          znsls401.t$vlde$c ) VALOR
-               from BAANDB.TZNSLS004301@pln01 ZNSLS004, 
-                    BAANDB.TZNSLS400301@pln01 q,
-                    BAANDB.TZNSLS401301@pln01 ZNSLS401
-              where ZNSLS004.T$NCIA$C = q.T$NCIA$C
-                and ZNSLS004.T$UNEG$C = q.T$UNEG$C
-                and ZNSLS004.T$PECL$C = q.T$PECL$C
-                and ZNSLS004.T$SQPD$C = q.T$SQPD$C
-                and znsls401.T$NCIA$C = znsls004.T$NCIA$C
-                and znsls401.T$UNEG$C = znsls004.T$UNEG$C
-                and znsls401.T$PECL$C = znsls004.T$PECL$C
-                and znsls401.T$SQPD$C = znsls004.T$SQPD$C
-                and znsls401.t$entr$c = znsls004.t$entr$c
-                and znsls401.t$sequ$c = znsls004.t$sequ$c
-           group by q.T$IDCA$C, 
-                    ZNSLS004.T$ORNO$C,
-                    znsls401.t$item$c,
-                    znsls401.t$tpes$c,
-                    q.t$fovn$c ) SLS400
-        ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
-       AND SLS400.t$item$c = ORDERDETAIL.SKU
+ -- LEFT JOIN ( select q.T$IDCA$C, 
+                    -- ZNSLS004.T$ORNO$C,
+                    -- znsls401.t$item$c,
+                    -- znsls401.t$tpes$c,
+                    -- q.t$fovn$c,
+                    -- sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - 
+                          -- znsls401.t$vldi$c +
+                          -- znsls401.t$vlfr$c + 
+                          -- znsls401.t$vlde$c ) VALOR
+               -- from BAANDB.TZNSLS004301@pln01 ZNSLS004, 
+                    -- BAANDB.TZNSLS400301@pln01 q,
+                    -- BAANDB.TZNSLS401301@pln01 ZNSLS401
+              -- where ZNSLS004.T$NCIA$C = q.T$NCIA$C
+                -- and ZNSLS004.T$UNEG$C = q.T$UNEG$C
+                -- and ZNSLS004.T$PECL$C = q.T$PECL$C
+                -- and ZNSLS004.T$SQPD$C = q.T$SQPD$C
+                -- and znsls401.T$NCIA$C = znsls004.T$NCIA$C
+                -- and znsls401.T$UNEG$C = znsls004.T$UNEG$C
+                -- and znsls401.T$PECL$C = znsls004.T$PECL$C
+                -- and znsls401.T$SQPD$C = znsls004.T$SQPD$C
+                -- and znsls401.t$entr$c = znsls004.t$entr$c
+                -- and znsls401.t$sequ$c = znsls004.t$sequ$c
+           -- group by q.T$IDCA$C, 
+                    -- ZNSLS004.T$ORNO$C,
+                    -- znsls401.t$item$c,
+                    -- znsls401.t$tpes$c,
+                    -- q.t$fovn$c ) SLS400
+        -- ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
+       -- AND SLS400.t$item$c = ORDERDETAIL.SKU
+	   
+	   
+	   
+	LEFT JOIN  (select  r.t$orno$c,
+						r.t$ncia$c,
+						r.t$uneg$c,
+						r.t$pecl$c,
+						r.t$sqpd$c,
+						r.t$entr$c,
+						o.t$tpes$c,
+						q.t$idca$c,
+						q.t$fovn$c,
+						t0.t$poco$c,
+                    sum( (o.t$vlun$c * o.t$qtve$c) - 
+                          o.t$vldi$c +
+                          o.t$vlfr$c + 
+                          o.t$vlde$c ) VALOR
+				from 		BAANDB.TZNSLS004301@pln01 r
+				left join	BAANDB.TZNSLS401301@pln01 o	on 	o.t$ncia$c = r.t$ncia$c
+				                                        and o.t$uneg$c = r.t$uneg$c 
+				                                        and o.t$pecl$c = r.t$pecl$c
+				                                        and o.t$sqpd$c = r.t$sqpd$c 
+				                                        and o.t$entr$c = r.t$entr$c
+				left join 	BAANDB.TZNSLS400301@pln01 q on 	q.t$ncia$c = r.t$ncia$c
+				                                        and q.t$uneg$c = r.t$uneg$c
+				                                        and q.t$pecl$c = r.t$pecl$c
+				                                        and q.t$sqpd$c = r.t$sqpd$c
+				
+				
+				left join	(select t1.t$poco$c,
+									t1.t$ncia$c,
+                  t1.t$uneg$c, 
+									t1.t$pecl$c,
+				                    t1.t$sqpd$c,
+				                    t1.t$entr$c
+							 from	BAANDB.TZNSLS410301@pln01 t1
+							 where	t1.t$poco$c in ('NFT', 'WMS', 'CAN')
+							 and	t1.t$dtoc$c = (	select max(t2.t$dtoc$c)
+													from BAANDB.TZNSLS410301@pln01 t2
+													where t2.t$uneg$c = t1.t$uneg$c
+													and   t2.t$pecl$c = t1.t$pecl$c
+													and   t2.t$sqpd$c = t1.t$sqpd$c
+													and   t2.t$entr$c = t1.t$entr$c
+													and	  t2.t$poco$c in ('NFT', 'WMS', 'CAN'))) t0
+														on 	t0.t$ncia$c = r.t$ncia$c
+				                                        and t0.t$uneg$c = r.t$uneg$c
+				                                        and t0.t$pecl$c = r.t$pecl$c
+				                                        and t0.t$sqpd$c = r.t$sqpd$c
+				                                        and t0.t$entr$c = r.t$entr$c														
+				group by
+							r.t$orno$c,
+				            r.t$ncia$c,
+				            r.t$uneg$c,
+				            r.t$pecl$c,
+				            r.t$sqpd$c,
+				            r.t$entr$c,
+				            o.t$tpes$c,
+				            q.t$idca$c,
+				            q.t$fovn$c,
+				            t0.t$poco$c) LNREF ON LNREF.t$orno$c=ORDERS.REFERENCEDOCUMENT
+	   
 
  LEFT JOIN BAANDB.TTDSLS400301@pln01 TDSLS400	ON	TDSLS400.T$ORNO = ORDERS.REFERENCEDOCUMENT
  
@@ -204,6 +328,7 @@ INNER JOIN WMSADMIN.PL_DB
 
 WHERE cl.listname = 'SCHEMA'
   AND STORER.TYPE = 5
+
 
   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
