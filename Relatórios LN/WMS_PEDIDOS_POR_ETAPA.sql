@@ -67,9 +67,9 @@
     ORDERS.C_ADDRESS1                     DESTINATARIO,
     ORDERS.type                           COD_TIPO_PEDIDO,
     TIPO_PEDIDO.                          DSC_TIPO_PEDIDO,
-	ORDERDETAIL.UOM						  UINDADE,
-	SLS400.t$eftr$c						  TRANSP_REDESPACHO
--- 
+    ORDERDETAIL.UOM                       UNIDADE,
+    SLS400.t$eftr$c                       TRANSP_REDESPACHO
+
 FROM       WMWHSE5.ORDERS
 
 INNER JOIN WMWHSE5.ORDERDETAIL 
@@ -94,7 +94,8 @@ INNER JOIN WMWHSE5.SKU
                                                                                  from BAANDB.Twhina113301@pln01 c
                                                                                 where c.t$item = b.t$item
                                                                                   and c.t$cwar = b.t$cwar ) )                                    
-           group by whina113.t$item, whina113.t$cwar ) maucLN   
+           group by whina113.t$item, 
+                    whina113.t$cwar ) maucLN   
         ON maucLN.cwar = subStr(cl.DESCRIPTION,3,6)
        AND maucLN.item = sku.sku
   
@@ -159,7 +160,7 @@ INNER JOIN WMSADMIN.PL_DB
                     ZNSLS004.T$ORNO$C,
                     znsls401.t$item$c,
                     znsls401.t$tpes$c,
-					znsls401.t$eftr$c,
+                    znsls401.t$eftr$c,
                     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - 
                           znsls401.t$vldi$c +
                           znsls401.t$vlfr$c + 
@@ -181,7 +182,7 @@ INNER JOIN WMSADMIN.PL_DB
                     ZNSLS004.T$ORNO$C,
                     znsls401.t$item$c,
                     znsls401.t$tpes$c,
-					znsls401.t$eftr$c) SLS400
+                    znsls401.t$eftr$c ) SLS400
         ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
        AND SLS400.t$item$c = ORDERDETAIL.SKU
 
@@ -249,7 +250,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ORDERS.INVOICENUMBER      NOTA, " &
 "     ORDERS.LANE       SERIE, " &
 "     CAGEIDDETAIL.CAGEID       CARGA, " &
-"     CASE WHEN SKU.SUSR2 = 2 THEN 'PESADO' " &
+"     CASE WHEN SKU.SUSR2 = '2' THEN 'PESADO' " &
 "      ELSE 'LEVE' " &
 "      END      TP_TRANSPORTE, " &
 "     ORDERS.C_ZIP      CEP, " &
@@ -275,7 +276,9 @@ ORDER BY ORDERS.ORDERKEY
 "     maucLN.mauc       VALOR_CUSTO_CMV, " &
 "     ORDERS.C_ADDRESS1     DESTINATARIO, " &
 "     ORDERS.type       COD_TIPO_PEDIDO, " &
-"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO " &
+"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO, " &
+"     ORDERDETAIL.UOM   UNIDADE, " &
+"     SLS400.t$eftr$c   TRANSP_REDESPACHO " &
 " FROM       "+ Parameters!Table.Value + ".ORDERS " &
 " INNER JOIN "+ Parameters!Table.Value + ".ORDERDETAIL " &
 "     ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -351,6 +354,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
 "     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c, " &
 "     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - " &
 "       znsls401.t$vldi$c + " &
 "       znsls401.t$vlfr$c + " &
@@ -371,7 +375,8 @@ ORDER BY ORDERS.ORDERKEY
 "    group by q.T$IDCA$C, " &
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
-"     znsls401.t$tpes$c ) SLS400 " &
+"     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c ) SLS400 " &
 "     ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT " &
 "    AND SLS400.t$item$c = ORDERDETAIL.SKU " &
 "  LEFT JOIN ( select clkp.description, " &
@@ -432,7 +437,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ORDERS.INVOICENUMBER      NOTA, " &
 "     ORDERS.LANE       SERIE, " &
 "     CAGEIDDETAIL.CAGEID       CARGA, " &
-"     CASE WHEN SKU.SUSR2 = 2 THEN 'PESADO' " &
+"     CASE WHEN SKU.SUSR2 = '2' THEN 'PESADO' " &
 "      ELSE 'LEVE' " &
 "      END      TP_TRANSPORTE, " &
 "     ORDERS.C_ZIP      CEP, " &
@@ -458,7 +463,9 @@ ORDER BY ORDERS.ORDERKEY
 "     maucLN.mauc       VALOR_CUSTO_CMV, " &
 "     ORDERS.C_ADDRESS1     DESTINATARIO, " &
 "     ORDERS.type       COD_TIPO_PEDIDO, " &
-"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO " &
+"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO, " &
+"     ORDERDETAIL.UOM   UNIDADE, " &
+"     SLS400.t$eftr$c   TRANSP_REDESPACHO " &
 " FROM       WMWHSE1.ORDERS " &
 " INNER JOIN WMWHSE1.ORDERDETAIL " &
 "     ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -534,6 +541,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
 "     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c, " &
 "     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - " &
 "       znsls401.t$vldi$c + " &
 "       znsls401.t$vlfr$c + " &
@@ -554,7 +562,8 @@ ORDER BY ORDERS.ORDERKEY
 "    group by q.T$IDCA$C, " &
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
-"     znsls401.t$tpes$c ) SLS400 " &
+"     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c ) SLS400 " &
 "     ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT " &
 "    AND SLS400.t$item$c = ORDERDETAIL.SKU " &
 "  LEFT JOIN ( select clkp.description, " &
@@ -612,7 +621,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ORDERS.INVOICENUMBER      NOTA, " &
 "     ORDERS.LANE       SERIE, " &
 "     CAGEIDDETAIL.CAGEID       CARGA, " &
-"     CASE WHEN SKU.SUSR2 = 2 THEN 'PESADO' " &
+"     CASE WHEN SKU.SUSR2 = '2' THEN 'PESADO' " &
 "      ELSE 'LEVE' " &
 "      END      TP_TRANSPORTE, " &
 "     ORDERS.C_ZIP      CEP, " &
@@ -638,7 +647,9 @@ ORDER BY ORDERS.ORDERKEY
 "     maucLN.mauc       VALOR_CUSTO_CMV, " &
 "     ORDERS.C_ADDRESS1     DESTINATARIO, " &
 "     ORDERS.type       COD_TIPO_PEDIDO, " &
-"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO " &
+"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO, " &
+"     ORDERDETAIL.UOM   UNIDADE, " &
+"     SLS400.t$eftr$c   TRANSP_REDESPACHO " &
 " FROM       WMWHSE2.ORDERS " &
 " INNER JOIN WMWHSE2.ORDERDETAIL " &
 "     ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -714,6 +725,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
 "     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c, " &
 "     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - " &
 "       znsls401.t$vldi$c + " &
 "       znsls401.t$vlfr$c + " &
@@ -734,7 +746,8 @@ ORDER BY ORDERS.ORDERKEY
 "    group by q.T$IDCA$C, " &
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
-"     znsls401.t$tpes$c ) SLS400 " &
+"     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c ) SLS400 " &
 "     ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT " &
 "    AND SLS400.t$item$c = ORDERDETAIL.SKU " &
 "  LEFT JOIN ( select clkp.description, " &
@@ -792,7 +805,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ORDERS.INVOICENUMBER      NOTA, " &
 "     ORDERS.LANE       SERIE, " &
 "     CAGEIDDETAIL.CAGEID       CARGA, " &
-"     CASE WHEN SKU.SUSR2 = 2 THEN 'PESADO' " &
+"     CASE WHEN SKU.SUSR2 = '2' THEN 'PESADO' " &
 "      ELSE 'LEVE' " &
 "      END      TP_TRANSPORTE, " &
 "     ORDERS.C_ZIP      CEP, " &
@@ -818,7 +831,9 @@ ORDER BY ORDERS.ORDERKEY
 "     maucLN.mauc       VALOR_CUSTO_CMV, " &
 "     ORDERS.C_ADDRESS1     DESTINATARIO, " &
 "     ORDERS.type       COD_TIPO_PEDIDO, " &
-"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO " &
+"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO, " &
+"     ORDERDETAIL.UOM   UNIDADE, " &
+"     SLS400.t$eftr$c   TRANSP_REDESPACHO " &
 " FROM       WMWHSE3.ORDERS " &
 " INNER JOIN WMWHSE3.ORDERDETAIL " &
 "     ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -894,6 +909,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
 "     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c, " &
 "     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - " &
 "       znsls401.t$vldi$c + " &
 "       znsls401.t$vlfr$c + " &
@@ -914,7 +930,8 @@ ORDER BY ORDERS.ORDERKEY
 "    group by q.T$IDCA$C, " &
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
-"     znsls401.t$tpes$c ) SLS400 " &
+"     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c ) SLS400 " &
 "     ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT " &
 "    AND SLS400.t$item$c = ORDERDETAIL.SKU " &
 "  LEFT JOIN ( select clkp.description, " &
@@ -972,7 +989,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ORDERS.INVOICENUMBER      NOTA, " &
 "     ORDERS.LANE       SERIE, " &
 "     CAGEIDDETAIL.CAGEID       CARGA, " &
-"     CASE WHEN SKU.SUSR2 = 2 THEN 'PESADO' " &
+"     CASE WHEN SKU.SUSR2 = '2' THEN 'PESADO' " &
 "      ELSE 'LEVE' " &
 "      END      TP_TRANSPORTE, " &
 "     ORDERS.C_ZIP      CEP, " &
@@ -998,7 +1015,9 @@ ORDER BY ORDERS.ORDERKEY
 "     maucLN.mauc       VALOR_CUSTO_CMV, " &
 "     ORDERS.C_ADDRESS1     DESTINATARIO, " &
 "     ORDERS.type       COD_TIPO_PEDIDO, " &
-"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO " &
+"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO, " &
+"     ORDERDETAIL.UOM   UNIDADE, " &
+"     SLS400.t$eftr$c   TRANSP_REDESPACHO " &
 " FROM       WMWHSE4.ORDERS " &
 " INNER JOIN WMWHSE4.ORDERDETAIL " &
 "     ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -1074,6 +1093,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
 "     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c, " &
 "     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - " &
 "       znsls401.t$vldi$c + " &
 "       znsls401.t$vlfr$c + " &
@@ -1094,7 +1114,8 @@ ORDER BY ORDERS.ORDERKEY
 "    group by q.T$IDCA$C, " &
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
-"     znsls401.t$tpes$c ) SLS400 " &
+"     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c ) SLS400 " &
 "     ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT " &
 "    AND SLS400.t$item$c = ORDERDETAIL.SKU " &
 "  LEFT JOIN ( select clkp.description, " &
@@ -1152,7 +1173,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ORDERS.INVOICENUMBER      NOTA, " &
 "     ORDERS.LANE       SERIE, " &
 "     CAGEIDDETAIL.CAGEID       CARGA, " &
-"     CASE WHEN SKU.SUSR2 = 2 THEN 'PESADO' " &
+"     CASE WHEN SKU.SUSR2 = '2' THEN 'PESADO' " &
 "      ELSE 'LEVE' " &
 "      END      TP_TRANSPORTE, " &
 "     ORDERS.C_ZIP      CEP, " &
@@ -1178,7 +1199,9 @@ ORDER BY ORDERS.ORDERKEY
 "     maucLN.mauc       VALOR_CUSTO_CMV, " &
 "     ORDERS.C_ADDRESS1     DESTINATARIO, " &
 "     ORDERS.type       COD_TIPO_PEDIDO, " &
-"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO " &
+"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO, " &
+"     ORDERDETAIL.UOM   UNIDADE, " &
+"     SLS400.t$eftr$c   TRANSP_REDESPACHO " &
 " FROM       WMWHSE5.ORDERS " &
 " INNER JOIN WMWHSE5.ORDERDETAIL " &
 "     ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -1254,6 +1277,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
 "     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c, " &
 "     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - " &
 "       znsls401.t$vldi$c + " &
 "       znsls401.t$vlfr$c + " &
@@ -1274,7 +1298,8 @@ ORDER BY ORDERS.ORDERKEY
 "    group by q.T$IDCA$C, " &
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
-"     znsls401.t$tpes$c ) SLS400 " &
+"     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c ) SLS400 " &
 "     ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT " &
 "    AND SLS400.t$item$c = ORDERDETAIL.SKU " &
 "  LEFT JOIN ( select clkp.description, " &
@@ -1332,7 +1357,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ORDERS.INVOICENUMBER      NOTA, " &
 "     ORDERS.LANE       SERIE, " &
 "     CAGEIDDETAIL.CAGEID       CARGA, " &
-"     CASE WHEN SKU.SUSR2 = 2 THEN 'PESADO' " &
+"     CASE WHEN SKU.SUSR2 = '2' THEN 'PESADO' " &
 "      ELSE 'LEVE' " &
 "      END      TP_TRANSPORTE, " &
 "     ORDERS.C_ZIP      CEP, " &
@@ -1358,7 +1383,9 @@ ORDER BY ORDERS.ORDERKEY
 "     maucLN.mauc       VALOR_CUSTO_CMV, " &
 "     ORDERS.C_ADDRESS1     DESTINATARIO, " &
 "     ORDERS.type       COD_TIPO_PEDIDO, " &
-"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO " &
+"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO, " &
+"     ORDERDETAIL.UOM   UNIDADE, " &
+"     SLS400.t$eftr$c   TRANSP_REDESPACHO " &
 " FROM       WMWHSE6.ORDERS " &
 " INNER JOIN WMWHSE6.ORDERDETAIL " &
 "     ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -1434,6 +1461,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
 "     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c, " &
 "     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - " &
 "       znsls401.t$vldi$c + " &
 "       znsls401.t$vlfr$c + " &
@@ -1454,7 +1482,8 @@ ORDER BY ORDERS.ORDERKEY
 "    group by q.T$IDCA$C, " &
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
-"     znsls401.t$tpes$c ) SLS400 " &
+"     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c ) SLS400 " &
 "     ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT " &
 "    AND SLS400.t$item$c = ORDERDETAIL.SKU " &
 "  LEFT JOIN ( select clkp.description, " &
@@ -1512,7 +1541,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ORDERS.INVOICENUMBER      NOTA, " &
 "     ORDERS.LANE       SERIE, " &
 "     CAGEIDDETAIL.CAGEID       CARGA, " &
-"     CASE WHEN SKU.SUSR2 = 2 THEN 'PESADO' " &
+"     CASE WHEN SKU.SUSR2 = '2' THEN 'PESADO' " &
 "      ELSE 'LEVE' " &
 "      END      TP_TRANSPORTE, " &
 "     ORDERS.C_ZIP      CEP, " &
@@ -1538,7 +1567,9 @@ ORDER BY ORDERS.ORDERKEY
 "     maucLN.mauc       VALOR_CUSTO_CMV, " &
 "     ORDERS.C_ADDRESS1     DESTINATARIO, " &
 "     ORDERS.type       COD_TIPO_PEDIDO, " &
-"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO " &
+"     TIPO_PEDIDO.      DSC_TIPO_PEDIDO, " &
+"     ORDERDETAIL.UOM   UNIDADE, " &
+"     SLS400.t$eftr$c   TRANSP_REDESPACHO " &
 " FROM       WMWHSE7.ORDERS " &
 " INNER JOIN WMWHSE7.ORDERDETAIL " &
 "     ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY " &
@@ -1614,6 +1645,7 @@ ORDER BY ORDERS.ORDERKEY
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
 "     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c, " &
 "     sum( (znsls401.t$vlun$c * znsls401.t$qtve$c) - " &
 "       znsls401.t$vldi$c + " &
 "       znsls401.t$vlfr$c + " &
@@ -1634,7 +1666,8 @@ ORDER BY ORDERS.ORDERKEY
 "    group by q.T$IDCA$C, " &
 "     ZNSLS004.T$ORNO$C, " &
 "     znsls401.t$item$c, " &
-"     znsls401.t$tpes$c ) SLS400 " &
+"     znsls401.t$tpes$c, " &
+"     znsls401.t$eftr$c ) SLS400 " &
 "     ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT " &
 "    AND SLS400.t$item$c = ORDERDETAIL.SKU " &
 "  LEFT JOIN ( select clkp.description, " &
