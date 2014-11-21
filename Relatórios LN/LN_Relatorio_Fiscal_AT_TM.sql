@@ -144,3 +144,4 @@ select Q1.*
         ORDER BY CHAVE_NM_FILIAL, ID_ITEM ) Q1
           
 where ID_FILIAL in (:Filial)
+  and ENTRADA in (:Entrada)
