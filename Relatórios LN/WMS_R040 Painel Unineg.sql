@@ -55,7 +55,7 @@ GROUP BY
   ORDERS.ADDDATE
       
 order by 9 
-=======
+
 =IIF(Parameters!Table.Value <> "AAA", 
 
 "SELECT                                                                                         " &
@@ -565,4 +565,4 @@ order by 9
 "                                                                                               " &
 "ORDER BY DESCR_FILIAL, DATA_LIMITE                                                             "
 )
->>>>>>> origin/master
+
