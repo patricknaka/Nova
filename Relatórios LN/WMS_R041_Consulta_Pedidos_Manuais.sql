@@ -88,7 +88,7 @@ INNER JOIN baandb.tcisli245201 cisli245
        AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
   
 INNER JOIN baandb.ttccom130201 tccom130
-        ON tccom130.t$cadr   = cisli940.t$itbp$l
+        ON tccom130.t$cadr   = cisli940.t$itoa$l
   
 INNER JOIN baandb.ttcibd001201 tcibd001
         ON tcibd001.t$item   = cisli941.t$item$l
