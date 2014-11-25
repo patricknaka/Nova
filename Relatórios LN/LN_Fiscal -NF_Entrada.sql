@@ -269,7 +269,7 @@ select Q1.*
 
 
  WHERE Trunc(DT_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DT_EMISSAO) AND NVL(:DataEmissaoAte, DT_EMISSAO)
-   AND Trunc(DATA_RECEBIMENTO) BETWEEN NVL(:DataRecebimentoDe, DATA_RECEBIMENTO) AND NVL(:DataRecebimentooAte, DATA_RECEBIMENTO)
+   AND Trunc(DATA_RECEBIMENTO) BETWEEN NVL(:DataRecebimentoDe, DATA_RECEBIMENTO) AND NVL(:DataRecebimentoAte, DATA_RECEBIMENTO)
    AND Q1.CHAVE_FILIAL IN (:Filial)
    AND ( (Q1.ID_DEPTO IN (:Depto)) OR (:Depto = '000'))
    AND ( (Q1.COD_SETOR IN (:Setor)) OR (:Setor = '000'))
