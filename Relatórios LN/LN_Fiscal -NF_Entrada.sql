@@ -87,7 +87,8 @@ select Q1.*
                    
                  tdrec941.t$tamt$l                   VALO_TOTAL,
                  tdrec940.t$fovn$l                   CNPJ_FORN,
-                 tccom130.t$namc                     DESC_RUA,
+                 Trim(REPLACE(tccom130.t$namc,';',' '))
+                                                     DESC_RUA,
                  tdrec941.t$gamt$l                   VL_MERC,
                  
                  IMPOSTO_3.                          VL_IPI,
