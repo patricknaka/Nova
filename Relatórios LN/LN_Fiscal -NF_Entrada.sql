@@ -87,8 +87,7 @@ select Q1.*
                    
                  tdrec941.t$tamt$l                   VALO_TOTAL,
                  tdrec940.t$fovn$l                   CNPJ_FORN,
-                 Trim(REPLACE(tccom130.t$namc,';',' '))
-                                                     DESC_RUA,
+                 tccom130.t$namc                     DESC_RUA,
                  tdrec941.t$gamt$l                   VL_MERC,
                  
                  IMPOSTO_3.                          VL_IPI,
@@ -99,7 +98,7 @@ select Q1.*
           
             FROM baandb.ttdrec940301       tdrec940 
        
-       LEFT JOIN baandb.ttccom110301       tccom110
+      INNER JOIN baandb.ttccom110301       tccom110
               ON tccom110.T$ofbp = tdrec940.t$bpid$l
               
       INNER JOIN baandb.ttdrec941301       tdrec941
@@ -108,7 +107,11 @@ select Q1.*
        LEFT JOIN baandb.ttcmcs940301       tcmcs940
               ON tcmcs940.T$OFSO$L = tdrec941.t$opfc$l
               
-      INNER JOIN baandb.ttcibd001301       tcibd001
+       LEFT JOIN baandb.ttdrec947301       tdrec947
+              ON tdrec941.t$fire$l = tdrec947.t$fire$l 
+             AND tdrec941.t$line$l = tdrec947.T$LINE$L
+            
+       INNER JOIN baandb.ttcibd001301       tcibd001
               ON tcibd001.t$item = tdrec941.t$item$l
                   
        LEFT JOIN baandb.ttcibd936301       tcibd936
@@ -117,12 +120,12 @@ select Q1.*
        LEFT JOIN baandb.ttdipu001301       tdipu001
               ON tdipu001.t$item = tcibd001.t$item
       
-      INNER JOIN baandb.tznmcs030301       znmcs030
+      INNER JOIN baandb.tznmcs030301       znmcs030  
               ON znmcs030.t$citg$c = tcibd001.t$citg
              AND znmcs030.t$seto$c = tcibd001.t$seto$c
  
       INNER JOIN baandb.ttccom100301       tccom100
-              ON tccom100.t$bpid = tdrec940.t$bpid$l
+             ON tccom100.t$bpid = tdrec940.t$bpid$l
   
       INNER JOIN baandb.ttccom130301       tccom130
               ON tccom130.t$cadr = tdrec940.t$sfad$l
@@ -134,7 +137,7 @@ select Q1.*
             
       INNER JOIN baandb.ttcemm124301       tcemm124
               ON tcemm124.t$cwoc = tdrec940.t$cofc$l 
-             AND tcemm124.t$dtyp = 2
+             --AND tcemm124.t$dtyp = 2                  --humberto.o
  
       INNER JOIN baandb.ttcemm030301       tcemm030
               ON tcemm030.t$eunt = tcemm124.t$grid
@@ -175,7 +178,7 @@ select Q1.*
              AND znmcs031.t$seto$c = tcibd001.t$seto$c
              AND znmcs031.t$fami$c = tcibd001.t$fami$c
   
-      INNER JOIN baandb.tznmcs032301 znmcs032
+      INNER JOIN baandb.tznmcs032301 znmcs032  
               ON znmcs032.t$citg$c = tcibd001.t$citg
              AND znmcs032.t$seto$c = tcibd001.t$seto$c
              AND znmcs032.t$fami$c = tcibd001.t$fami$c
@@ -263,8 +266,9 @@ select Q1.*
            WHERE tdrec940.t$stat$l IN (4, 5)
         ORDER BY tdrec940.t$fire$l ) Q1
 
+
  WHERE Trunc(DT_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DT_EMISSAO) AND NVL(:DataEmissaoAte, DT_EMISSAO)
-   AND Trunc(DATA_RECEBIMENTO) BETWEEN NVL(:DataRecebimentoDe, DATA_RECEBIMENTO) AND NVL(:DataRecebimentoAte, DATA_RECEBIMENTO)
+   AND Trunc(DATA_RECEBIMENTO) BETWEEN NVL(:DataRecebimentoDe, DATA_RECEBIMENTO) AND NVL(:DataRecebimentooAte, DATA_RECEBIMENTO)
    AND Q1.CHAVE_FILIAL IN (:Filial)
    AND ( (Q1.ID_DEPTO IN (:Depto)) OR (:Depto = '000'))
    AND ( (Q1.COD_SETOR IN (:Setor)) OR (:Setor = '000'))
