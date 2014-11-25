@@ -174,7 +174,7 @@ INNER JOIN BAANDB.ttcmcs080301  tcmcs080
                                             and l1.t$cpac = l.t$cpac ) ) TIPO_DOC
         ON TIPO_DOC.t$cnst = cisli940.t$doty$l
 			   
-WHERE znfmd630.T$STAT$C = 'F'
+--WHERE znfmd630.T$STAT$C = 'F'
 
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
