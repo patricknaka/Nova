@@ -102,7 +102,8 @@
          ELSE 0 
      END                                   VL,
     ORDERS.type                            COD_TIPO_PEDIDO,
-    TIPO_PEDIDO.                           DSC_TIPO_PEDIDO
+    TIPO_PEDIDO.                           DSC_TIPO_PEDIDO,
+	CISLI940.T$BPID$L						   PARCEIRO_NEG
 
 FROM       WMWHSE5.ORDERS
 
