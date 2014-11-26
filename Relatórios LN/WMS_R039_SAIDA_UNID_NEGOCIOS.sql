@@ -18,7 +18,7 @@ SELECT
                                  PERIODO,
 
 tdsls400.t$cbrn                  ID_UNINEG,        --Ramo de Atividade (tdsls400)
-tcmcs031.t$dsca                  NOME_UNINEG,
+NVL(tcmcs031.t$dsca, 'REVERSA')  NOME_UNINEG,
 COUNT(tdsls400.t$orno)           NO_PEDIDOS
 
 FROM      baandb.ttdsls400301 tdsls400
