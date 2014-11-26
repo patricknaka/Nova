@@ -85,12 +85,12 @@ SELECT
     tcmcs940.t$dsca$l        DESC_CFO_ENTREGA,  
     cisli942.t$amnt$l        VLR_ICMS
   
-FROM       BAANDB.tznfmd630301  znfmd630 
+FROM       BAANDB.tznfmd630301 znfmd630 
 
-INNER JOIN BAANDB.ttcmcs080301  tcmcs080
+INNER JOIN BAANDB.ttcmcs080301 tcmcs080
         ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c 
-		
- LEFT JOIN BAANDB.tcisli940301  cisli940
+  
+ LEFT JOIN BAANDB.tcisli940301 cisli940
         ON cisli940.t$fire$l = znfmd630.t$fire$c
  
  LEFT JOIN BAANDB.tcisli942301 cisli942
@@ -109,10 +109,10 @@ INNER JOIN BAANDB.ttcmcs080301  tcmcs080
         ON znfmd170.t$fili$c = znfmd630.t$fili$c 
        AND znfmd170.t$cfrw$c = znfmd630.t$cfrw$c
  
- LEFT JOIN BAANDB.tcisli940301  cisli940
+ LEFT JOIN BAANDB.tcisli940301 cisli940
         ON cisli940.t$fire$l = znfmd630.t$fire$c 
  
- LEFT JOIN BAANDB.ttcmcs940301  tcmcs940
+ LEFT JOIN BAANDB.ttcmcs940301 tcmcs940
         ON tcmcs940.t$ofso$l = cisli940.t$ccfo$l 
                                  
  LEFT JOIN BAANDB.ttccom130301 tccom130
@@ -145,7 +145,7 @@ INNER JOIN BAANDB.ttcmcs080301  tcmcs080
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) TIPO_DOC_FIS
         ON TIPO_DOC_FIS.t$cnst = cisli940.t$fdty$l
- 	   
+     
  LEFT JOIN ( SELECT l.t$desc DESCR_TIPO_DOC,
                     d.t$cnst
                FROM baandb.tttadv401000 d,
@@ -173,7 +173,7 @@ INNER JOIN BAANDB.ttcmcs080301  tcmcs080
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) TIPO_DOC
         ON TIPO_DOC.t$cnst = cisli940.t$doty$l
-			   
+      
 --WHERE znfmd630.T$STAT$C = 'F'
 
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
