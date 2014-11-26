@@ -165,7 +165,7 @@ SELECT Q1.*
             0                                 QT_ROMANEADA, 
             0                                 QT_RESERVADA, 
             sum(whwmd630.t$qbls)              QT_SALDO, 
-            sum(Q1.mauc)                      VL_UNITARIO, 
+            max(Q1.mauc)                      VL_UNITARIO, 
             CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL 
                    THEN '00000000000000'  
                  WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')) < 11 
