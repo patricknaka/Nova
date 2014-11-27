@@ -17,7 +17,7 @@ SELECT
            AT time zone sessiontimezone) AS DATE)+1/24,'HH24'), 'HH24:MI') 
                                  PERIODO,
 
-tdsls400.t$cbrn                  ID_UNINEG,        --Ramo de Atividade (tdsls400)
+CASE WHEN tdsls400.t$cbrn = ' ' THEN 'REV' ELSE tdsls400.t$cbrn END                 ID_UNINEG,        --Ramo de Atividade (tdsls400)
 NVL(tcmcs031.t$dsca, 'REVERSA')  NOME_UNINEG,
 COUNT(tdsls400.t$orno)           NO_PEDIDOS
 
