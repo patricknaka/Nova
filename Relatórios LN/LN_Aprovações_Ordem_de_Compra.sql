@@ -18,9 +18,17 @@ SELECT
         AT time zone sessiontimezone) AS DATE)        DATA_ORDEM,
                            
     NVL(TRIM(ORDEM.STATUS_ORDEM), 'Não definido')     STATUS_ORDEM,
-    apr.t$logn                                        APROVADOR,
-    nome_apr.t$NAME                                   NOME_APROV_ORDEM,
     
+    --apr.t$logn                                        APROVADOR,
+    CASE WHEN tdpur400.t$hdst != 10 
+    THEN  NULL
+    ELSE apr.t$logn END                                 APROVADOR,
+        
+    --nome_apr.t$NAME                                   NOME_APROV_ORDEM,
+    CASE WHEN tdpur400.t$hdst != 10 
+    THEN  NULL
+    ELSE nome_apr.t$NAME END                            NOME_APROV_ORDEM,
+   
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(apr.dapr, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE)        DATA_APROVACAO,
@@ -108,7 +116,7 @@ INNER JOIN baandb.ttdpur401301 tdpur401
                     b.t$logn
                from baandb.ttdpur450301 b
               where b.t$hdst = 10
-                and b.t$trdt = ( SELECT MIN(c.t$trdt) 
+                and b.t$trdt = ( SELECT MAX(c.t$trdt) 
                                    FROM baandb.ttdpur450301 c 
                                   WHERE c.t$hdst = 10 
                                     AND c.t$orno = b.t$orno )
@@ -125,7 +133,7 @@ INNER JOIN baandb.ttdpur401301 tdpur401
                    h.t$logn 
               from baandb.ttdpur450301 h
              where h.t$hdst = 5
-               and h.t$trdt = ( SELECT MIN(i.t$trdt) 
+               and h.t$trdt = ( SELECT MAX(i.t$trdt) 
                                   FROM baandb.ttdpur450301 i 
                                  WHERE i.t$hdst = 5 
                                    AND i.t$orno = h.t$orno )
