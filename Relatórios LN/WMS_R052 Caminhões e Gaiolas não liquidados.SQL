@@ -20,3 +20,4 @@ FROM				WMWHSE5.CAGEID 		CAGE
 		                                        AND F170.T$NENT$C   = F171.T$NENT$C
 		                                        AND F170.T$CFRW$C   = F171.T$CFRW$C
 WHERE 	CAGE.STATUS != '7'
+AND F170.T$CFIM$C!=1
