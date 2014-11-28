@@ -125,7 +125,7 @@ LEFT JOIN baandb.ttdrec947301  tdrec947
     
  LEFT JOIN ( Select znfmd640.t$fili$c,
                     znfmd640.t$etiq$c,
-                    max(znfmd640.t$coci$c) OCORR,
+                    MAX(znfmd640.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640.T$DATE$C) OCORR,
                     max(znfmd640.t$date$c) DATA_OCORR
                from baandb.tznfmd640301 znfmd640
            group by znfmd640.t$fili$c,
@@ -141,7 +141,7 @@ LEFT JOIN baandb.ttdrec947301  tdrec947
                     znsls410.t$pecl$c,
                     znsls410.t$sqpd$c,
                     max(znsls410.t$dtoc$c) DATA_OCORR,
-                    max(znsls410.t$poco$c) PT_CONTR
+                    MAX(znsls410.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C,  znsls410.T$SEQN$C) PT_CONTR
                from baandb.tznsls410301 znsls410
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -204,4 +204,5 @@ WHERE znsls401.t$idor$c = 'TD'
   AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_DESP)
   AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_JUROS)
   
-ORDER BY Data_da_Ocorrencia, Pedido
+--ORDER BY Data_da_Ocorrencia, Pedido
+ORDER BY Pedido
