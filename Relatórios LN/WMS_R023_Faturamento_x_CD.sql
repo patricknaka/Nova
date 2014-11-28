@@ -6,7 +6,7 @@
            Count(Distinct sli245.t$slso)                                  PEDIDOS,
            Count(sli245.t$item)                                           ITENS,
            Count(sli245.t$item) /
-           Count(sli245.t$item)                                           ITENS_PED,
+           Count(distinct sli245.t$slso)                                  ITENS_PED,
            Round(Sum(sli941.t$amnt$l-sli941.t$fght$l), 4)                 VALOR_MERC,
            Round(Sum(sli941.t$amnt$l-sli941.t$fght$l-sli941.t$ldam$l), 4) VALOR_SEM_DESCONTO,
            Round(Sum(sli941.t$fght$l), 4)                                 VALOR_FRETE,
