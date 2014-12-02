@@ -19,5 +19,5 @@ FROM				WMWHSE5.CAGEID 		CAGE
 		LEFT JOIN	BAANDB.TZNFMD170301@pln01	F170	ON	F170.T$FILI$C	= F171.T$FILI$C
 		                                        AND F170.T$NENT$C   = F171.T$NENT$C
 		                                        AND F170.T$CFRW$C   = F171.T$CFRW$C
+                                            AND F170.T$CFIM$C!=1
 WHERE 	CAGE.STATUS != '7'
-AND F170.T$CFIM$C!=1
