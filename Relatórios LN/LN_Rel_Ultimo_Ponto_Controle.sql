@@ -1,3 +1,5 @@
+select Q1.* from (
+
 SELECT 
     znsls410.t$pecl$c                          PEDIDO,
     znsls410.t$entr$c                          NO_ENTREGA,
@@ -87,9 +89,13 @@ INNER JOIN baandb.tznsls400301 znsls400
  
  LEFT JOIN baandb.ttcemm030301 tcemm030
         ON tcemm030.t$eunt=tcemm124.t$grid
-        
- GROUP BY
-    znsls410.t$pecl$c,
-    znsls410.t$entr$c
 
- ORDER BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+GROUP BY  znsls410.t$pecl$c,
+          znsls410.t$entr$c 
+
+ ORDER BY DATA_HORA, PEDIDO ) Q1
+ 
+where ((NO_ENTREGA in (:NumEntrega) and :Todos = 1  ) or :Todos = 0 )
+  and trunc(DATA_HORA)   
+      between nvl(:DataOcorrenciaDe,DATA_HORA)
+          and nvl(:DataOcorrenciaAte,DATA_HORA)
