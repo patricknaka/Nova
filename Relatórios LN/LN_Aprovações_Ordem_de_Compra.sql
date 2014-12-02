@@ -82,8 +82,9 @@ SELECT
     tfcmg101.t$plan                                   DATA_PLAN_PAGTO,
     tcmcs023.t$dsca                                   CONTA_CONTABIL_DESCRICAO,
     tdpur401.t$wrkc$l                                 CODIGO_CENTRO_TRABALHO,
-    tcmcs065.t$dsca                                   CENTRO_TRABALHO_DESCRICAO
-
+    tcmcs065.t$dsca                                   CENTRO_TRABALHO_DESCRICAO,
+    tcmcs013.t$dsca                                   CONDICAO_PAGTO
+    
 FROM       baandb.ttdpur400301 tdpur400
 
 INNER JOIN baandb.ttdpur401301 tdpur401
@@ -292,6 +293,9 @@ INNER JOIN baandb.ttdpur401301 tdpur401
  
  LEFT JOIN baandb.ttcmcs065301 tcmcs065
         ON tcmcs065.t$cwoc = tdpur401.t$wrkc$l
+        
+ LEFT JOIN baandb.ttcmcs013301 tcmcs013
+        ON tcmcs013.t$cpay=tdpur400.t$cpay
         
 WHERE tdpur401.t$oltp IN (2,4)
         
