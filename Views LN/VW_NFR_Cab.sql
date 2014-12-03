@@ -8,7 +8,7 @@
 -- #MAT.238.2 - 14-ago-2014, Marcia A. Torres, Exclusão dos campos NR_LOTE, VL_DESPESA_ACESSORIA e VL_DESCONTO_CONDICIONAL
 --************************************************************************************************************************************************************
 SELECT
-      1 CD_CIA,
+    1 CD_CIA,
 	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
 	AND tcemm030.t$eunt=tcemm124.t$grid
@@ -113,9 +113,12 @@ SELECT
 		and li.t$fire$l=li.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)
 		and li.t$brty$l=6),0) VL_COFINS_IMPORTACAO,	
-	nvl((select sum(l.t$fght$l) from baandb.ttdrec941201 l
+	/*nvl((select sum(l.t$fght$l) from baandb.ttdrec941201 l
 		where	l.t$fire$l = tdrec940.t$fire$l
-		and l.t$crpd$l=1),0) VL_CIF,
+		and l.t$crpd$l = 1),0)*/ 
+    CAST(nvl((select sum(l.t$fght$l) from baandb.ttdrec941201 l
+		where	l.t$fire$l = tdrec940.t$fire$l
+		and l.t$crpd$l = 1),0) as numeric (18,2)) VL_CIF,
 	nvl((select lr.t$mdev$c from baandb.twhinh312201 lr, baandb.ttdrec947201 rf
 		where rf.t$fire$l=tdrec940.t$fire$l
 		and	lr.t$rcno=rf.t$rcno$l

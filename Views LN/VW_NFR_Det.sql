@@ -70,7 +70,7 @@ SELECT
 		and b.t$kitm=5),0) VL_SERVICO, 
   tdrec941.t$gexp$l VL_DESPESA,
   tdrec941.t$addc$l VL_DESCONTO,
-  tdrec941.t$fght$l VL_FRETE,
+  CAST(tdrec941.t$fght$l AS DECIMAL(18,2)) VL_FRETE,
   0 VL_DESPESA_ACESSORIA,            -- *** DUVIDA ***
   (SELECT tdrec942.t$rate$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
