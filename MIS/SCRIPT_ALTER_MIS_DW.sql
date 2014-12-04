@@ -1500,4 +1500,9 @@ GO
 ALTER TABLE [dbo].[ods_garantia_estendida] CHECK CONSTRAINT [FK_ods_garantia_estendida_ods_booleano1]
 GO
 
+--
+alter table stg_sige_devolucao_nr
+alter column ID_CAMINHAO varchar(20)
 
+alter table stg_sige_devolucao_nr
+alter column ID_deposito varchar(20)

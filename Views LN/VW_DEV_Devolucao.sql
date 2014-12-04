@@ -5,6 +5,7 @@
 -- #FAF.227.3 - 18-jul-2014, Fabio Ferreira, 	Diversos ajustes #227
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ULTIMA_ATUALIZ_NF
 -- 21/08/2014   Atualização timezone
+-- 04/12/2014   Inclusão NR_REFERENCIA_FISCAL_FATURA
 --*************************************************************************************************************************************************************
 SELECT
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940dev.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -113,7 +114,8 @@ SELECT
 					and a.t$sequ$c=znsls401dev.t$sequ$c),1)=0 THEN 1 ELSE 2 END ID_FORCADO,					--#FAF.140.en
 	to_char(znsls401org.t$entr$c) NR_ENTREGA_ORIGINAL,																--#FAF.227.3.sn
 	to_char(znsls401dev.t$entr$c) NR_ENTREGA_DEVOLUCAO,																	
-	cisli941dev.t$cwar$l CD_ARMAZEM 																		--#FAF.227.3.en
+	cisli941dev.t$cwar$l CD_ARMAZEM,
+	cisli940org.t$fire$l NR_REFERENCIA_FISCAL_FATURA																		--#FAF.227.3.en
 FROM
 				baandb.tznsls401201 znsls401dev								-- Pedido de devolução
 	INNER JOIN	baandb.tznsls401201 znsls401org								-- Pedido de venda original

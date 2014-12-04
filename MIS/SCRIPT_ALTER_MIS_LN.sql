@@ -114,4 +114,6 @@ alter column CD_UNIDADE_EMPRESARIAL nvarchar(10) collate Latin1_General_CI_AS
 alter table stg_est_referencia
 alter column NR_REFERENCIA_FISCAL nvarchar(10) collate Latin1_General_CI_AS
 
+alter table stg_dev_devolucao
+add NR_REFERENCIA_FISCAL_FATURA nvarchar(9) 
 
