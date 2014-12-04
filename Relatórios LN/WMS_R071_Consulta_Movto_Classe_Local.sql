@@ -1,6 +1,8 @@
 SELECT
 		TD.WHSEID							ID_PLANTA,
 		CL.UDF2                           	DESCR_PLANTA,
+		OC.ORDERKEY							ORDEM_WMS,
+		LN.T$ENTR$C							ENTREGA,
 		TD.SKU								ID_ITEM,
 		SK.DESCR							DESCR_ITEM,
 		SK.SUSR5							ID_SKU,				-- SKU FORNECEDOR
@@ -14,6 +16,12 @@ FROM
 				WMWHSE5.TASKDETAIL 	TD
 	INNER JOIN	ENTERPRISE.CODELKUP	CL	ON	UPPER(CL.UDF1)	=	TD.WHSEID
 	INNER JOIN 	WMWHSE5.SKU			SK	ON	SK.SKU			=	TD.SKU
+	INNER JOIN	WMWHSE5.ORDERS		OC	ON	OC.ORDERKEY		=	TD.ORDERKEY
+	INNER JOIN	(select	a.t$orno$c,
+						a.t$entr$c
+				 from	baandb.tznsls004301@pln01 a
+				 group by a.t$orno$c,
+				          a.t$entr$c) LN ON LN.T$ORNO$C		=	OC.REFERENCEDOCUMENT
 	LEFT JOIN	WMWHSE5.STORER		ST	ON 	ST.STORERKEY 	= 	SK.SUSR5
 	                                    AND ST.WHSEID 		= 	SK.WHSEID 
 	                                    AND ST.TYPE 		= 	5
