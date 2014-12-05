@@ -1,7 +1,7 @@
 SELECT
-  tfgld100.t$tedt                      DATA_TRANS,
+  tfgld106.t$dcdt                      DATA_TRANS,
   Filial.COD_FILIAL                    NUME_FILIAL,
-  tfgld106.t$dbcr                      NATU_LANÇTO,
+  tfgld106.t$dbcr                      NATU_LANÃ‡TO,
   tfgld106.t$obat                      LOTE,
   tfgld106.t$osrn                      SEQ_LOTE,  
   CASE WHEN ( select count(*) 
@@ -52,9 +52,10 @@ INNER JOIN baandb.ttfgld100301 tfgld100
  LEFT JOIN baandb.ttfgld010301  tfgld010
         ON tfgld106.t$typ1 = tfgld010.t$dtyp
        AND tfgld106.t$dim1 = tfgld010.t$dimx
-     
-WHERE tfgld100.t$tedt BETWEEN (:DataDe) AND (:DataAte)
-  AND NVL(Trim(Filial.COD_FILIAL), '000') IN (:Filial)
+       
+--WHERE tfgld100.t$tedt BETWEEN (:DataDe) AND (:DataAte)
+  WHERE tfgld106.t$dcdt BETWEEN (:DataDe) AND (:DataAte)
+--AND NVL(Trim(Filial.COD_FILIAL), '000') IN (:Filial)
   AND tfgld106.t$leac BETWEEN  case when trim(:IdContaDe) is null 
                                      then ' ' 
                                    else :IdContaDe
