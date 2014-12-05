@@ -1,0 +1,80 @@
+SELECT
+		RC.RECEIPTKEY								ASN,		--	NR
+		RC.WHSEID									ID_FILIAL,
+		CL.UDF2										DESCR_FILIAL,
+		TPNT.DESCRIPTION							OPERACAO,
+		
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, 
+		  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT time zone sessiontimezone) AS DATE) 	DT_NR,
+		CASE 	WHEN TDREC940.T$STAT$L = 1 THEN 'ABERTO'
+				WHEN TDREC940.T$STAT$L = 3 THEN 'NÃO APROVADO'
+				WHEN TDREC940.T$STAT$L = 4 THEN 'APROVADO'
+				WHEN TDREC940.T$STAT$L = 5 THEN 'APROVADO COM PROBLEMA'
+				WHEN TDREC940.T$STAT$L = 1 THEN 'ESTORNADO'
+				WHEN TDREC940.T$STAT$L = 200 THEN 'AGURARDANDO WMS'
+				WHEN TDREC940.T$STAT$L = 201 THEN 'PRONTO PARA ENVIAR WMS'
+			ELSE 'NÃO APLICAVEL' END				SITUACAO_NOTA,
+		RD.SUSR1									NF,
+
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 
+		  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT time zone sessiontimezone) AS DATE)	DATA_EMISSAO,
+		TDREC940.T$FOVN$L							CNPJ_FORNCEDOR,
+		TDREC940.T$OPFC$L							CFOP,
+		TDREC940.T$OPOR$L							SEQ_CFOP,
+		SK.SKUGROUP									ID_DEPARTAMENTO,
+		DEPART.DEPART_NAME							DESCR_DEPARTAMENTO,
+		RD.SKU										ID_ITEM,
+		SK.DESCR									DESCR_ITEM,
+		TCIBD936.T$FRAT$L							NBM,
+		TCIBD936.T$IFGC$L							SEQ_NBM,
+		TDREC941.T$PRIC$L							CUSTO,
+		TDREC941.T$QNTY$L							QTDE,
+		TDREC941.T$GAMT$L							VALOR_MERCARIA,
+		CASE WHEN ICMS.T$CASH$L=1
+			THEN ICMS.T$AMNT$L
+			ELSE 0 END								ICMS_PROPRIO,
+		CASE WHEN ICMS.T$ISCO$C=1
+			THEN ICMS.T$AMNT$L
+			ELSE 0 END								ICMS_ST_COM_CONV,
+		CASE WHEN ICMS.T$ISCO$C=1
+			THEN ICMS.T$AMNT$L
+			ELSE 0 END								ICMS_ST_SEM_CONV
+
+FROM			WMWHSE5.RECEIPT		RC
+	INNER JOIN	WMWHSE5.RECEIPTDETAIL	RD				ON	RD.RECEIPTKEY 			= 	RC.RECEIPTKEY
+	INNER JOIN	WMWHSE5.SKU				SK				ON	SK.SKU					=	RD.SKU
+	INNER JOIN	BAANDB.TTCIBD001301@PLN01	TCIBD001 	ON	TRIM(TCIBD001.T$ITEM) 	= 	SK.SKU
+	INNER JOIN	BAANDB.TTCIBD936301@PLN01 TCIBD936 		ON TCIBD936.T$IFGC$L 		= 	TCIBD001.T$IFGC$L
+	INNER JOIN	ENTERPRISE.CODELKUP		CL				ON	UPPER(CL.UDF1)			=	RC.WHSEID
+	LEFT JOIN	BAANDB.TTDREC940301@PLN01 TDREC940		ON	TDREC940.T$DOCN$L		=	REGEXP_SUBSTR(RD.SUSR1, '[^/]+', 1, 1)
+														AND	TO_CHAR(TDREC940.T$SERI$L)=	TO_CHAR(REGEXP_SUBSTR(RD.SUSR1, '[^/]+', 1, 2))
+														AND TO_CHAR(TDREC940.T$BPID$L)= TO_CHAR(RC.SUPPLIERCODE)
+	LEFT JOIN	BAANDB.TTDREC941301@PLN01 TDREC941  	ON	TDREC941.T$FIRE$L 		=	TDREC940.T$FIRE$L	
+														AND	TO_CHAR(TDREC941.T$LINE$L)=	TO_CHAR(RD.EXTERNLINENO)
+	LEFT JOIN (SELECT DISTINCT a.ID_DEPART, a.DEPART_NAME from  ENTERPRISE.DEPARTSECTORSKU a) DEPART                                           
+														ON TO_CHAR(DEPART.ID_DEPART) = 	TO_CHAR(SK.SKUGROUP)
+	LEFT JOIN ( select clkp.code         COD, 
+						trans.description
+				   from WMWHSE5.codelkup clkp
+				inner join WMWHSE5.translationlist trans 
+					 on trans.code = clkp.code
+					and trans.joinkey1 = clkp.listname
+				  where clkp.listname = 'RECEIPTYPE'
+					and trans.locale = 'pt'
+					and trans.tblname = 'CODELKUP' 
+					and Trim(clkp.code) is not null ) tpnt
+														ON TO_CHAR(tpnt.COD) 		= 	TO_CHAR(rc.TYPE)
+	LEFT JOIN 	(select tdrec942.t$amnt$l,
+						tdrec942.t$fire$l,
+						tdrec942.t$line$l,
+						tdrec949.t$isco$c,
+						tdrec942.t$cash$l
+				 from	baandb.ttdrec942301@pln01 tdrec942
+				 inner join baandb.ttdrec949301@pln01 tdrec949
+								on tdrec949.t$fire$l = tdrec942.t$fire$l
+								and tdrec949.t$brty$l = tdrec942.t$brty$l
+          where tdrec942.t$brty$l=2) ICMS
+														ON	ICMS.T$FIRE$L 			=	TDREC941.T$FIRE$L
+														AND	ICMS.T$LINE$L 			= 	TDREC941.T$LINE$L
