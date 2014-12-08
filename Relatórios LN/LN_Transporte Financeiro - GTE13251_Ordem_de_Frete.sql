@@ -27,7 +27,22 @@ SELECT
         
     cisli940.t$amnt$l        VLR_TOTAL_NF,
     znfmd630.t$vlfr$c        VLR_FRETE_CLIENTE,
-    cisli942.T$RATE$L        ALIQUOTA, 
+	
+	(	select al.t$pvat$l
+				from
+					baandb.tznfmd001301 fl
+					inner join baandb.ttcmcs065301 df on df.t$cwoc = fl.t$cofc$c
+					inner join baandb.ttccom130301 ef on ef.t$cadr = df.t$cadr,
+					baandb.ttcmcs080301 tr
+					inner join baandb.ttccom130301 et on et.t$cadr = tr.t$cadr$l,
+					baandb.ttcmcs951301 al
+				where al.t$rfdt$l=22
+					and al.t$stfr$l = et.t$cste
+					and al.t$stto$l = ef.t$cste
+					and fl.t$fili$c = znfmd630.t$fili$c
+					and TR.T$CFRW   = znfmd630.t$cfrw$c
+					and rownum=1) ALIQUOTA,
+	
     znfmd630.t$vlfc$c        PESO_VOLUME,
     znfmd068.t$adva$c        AD_VALOREM,
     znfmd068.t$peda$c        PEDAGIO, 
@@ -173,13 +188,17 @@ INNER JOIN BAANDB.ttcmcs080301 tcmcs080
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) TIPO_DOC
         ON TIPO_DOC.t$cnst = cisli940.t$doty$l
-      
---WHERE znfmd630.T$STAT$C = 'F'
 
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)) 
-      BETWEEN :DataDe 
-          AND :DataAte
-  AND cisli940.t$doty$l IN (:TipoDoc) -- NF, NFS ou NFE
-  AND ( (znfmd170.t$fovn$c like '%' || :CNPJ  || '%') OR (:CNPJ is null) )
+
+
+
+      
+WHERE case when cisli940.t$fdty$l=14 then 'NFE' else 'NFS' end = 'NFE'
+
+  -- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
+              -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                -- AT time zone sessiontimezone) AS DATE)) 
+      -- BETWEEN :DataDe 
+          -- AND :DataAte
+  -- AND cisli940.t$doty$l IN (:TipoDoc) -- NF, NFS ou NFE
+  -- AND ( (znfmd170.t$fovn$c like '%' || :CNPJ  || '%') OR (:CNPJ is null) )
