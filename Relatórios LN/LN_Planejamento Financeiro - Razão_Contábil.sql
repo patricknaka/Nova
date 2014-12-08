@@ -52,17 +52,20 @@ INNER JOIN baandb.ttfgld100301 tfgld100
  LEFT JOIN baandb.ttfgld010301  tfgld010
         ON tfgld106.t$typ1 = tfgld010.t$dtyp
        AND tfgld106.t$dim1 = tfgld010.t$dimx
-       
---WHERE tfgld100.t$tedt BETWEEN (:DataDe) AND (:DataAte)
-  WHERE tfgld106.t$dcdt BETWEEN (:DataDe) AND (:DataAte)
---AND NVL(Trim(Filial.COD_FILIAL), '000') IN (:Filial)
-  AND tfgld106.t$leac BETWEEN  case when trim(:IdContaDe) is null 
-                                     then ' ' 
-                                   else :IdContaDe
-                               end
-  AND :IdContaAte
-  AND tfgld106.t$dim1 BETWEEN case when trim(:IdCCustoDe) is null 
-                                     then ' ' 
-                                   else :IdCCustoDe 
-                               end  
-  AND :IdCCustoAte
+
+WHERE tfgld106.t$dcdt BETWEEN (:DataDe) AND (:DataAte)
+
+  AND Filial.COD_FILIAL BETWEEN CASE WHEN Trim(:CodFilialDe) IS NULL THEN ' ' 
+                                     ELSE :CodFilialDe 
+                                END
+                                      AND :CodFilialAte
+            
+  AND tfgld106.t$leac BETWEEN  CASE WHEN Trim(:IdContaDe) IS NULL THEN ' ' 
+                                     ELSE :IdContaDe
+                               END
+                                      AND :IdContaAte
+  
+  AND tfgld106.t$dim1 BETWEEN CASE WHEN Trim(:IdCCustoDe) IS NULL THEN ' ' 
+                                   ELSE :IdCCustoDe 
+                               END  
+                                    AND :IDCCUSTOATE
