@@ -1,110 +1,4 @@
-<<<<<<< HEAD
 select Q1.* from (
-=======
-SELECT 
-  DISTINCT
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
-                             DATA_EMISSAO, 
-    znfmd630.t$fili$c        FILIAL,
-    znfmd630.t$pecl$c        ENTREGA,
-    znfmd630.t$cono$c        CONTRATO,
-    znfmd060.t$cdes$c        DESCR_CONTRATO,  
-    znfmd630.t$docn$c        NOTA,
-    znfmd630.t$seri$c        SERIE, 
-    znfmd630.t$wght$c        PESO, 
-    
-    nvl( ( select sum(wmd.t$hght   * 
-                      wmd.t$wdth   * 
-                      wmd.t$dpth   * 
-                      sli.t$dqua$l * 
-                      znmcs.t$cuba$c)
-             from baandb.tcisli941301 sli,
-                  baandb.twhwmd400301 wmd, 
-                  baandb.tznmcs080301 znmcs
-            where sli.t$fire$l = cisli940.t$fire$l
-              and wmd.t$item = sli.t$item$l
-              and znmcs.t$cfrw$c = znfmd630.t$cfrw$c ), 0 ) 
-                             VOLUME_M3,
-        
-    cisli940.t$amnt$l        VLR_TOTAL_NF,
-    znfmd630.t$vlfr$c        VLR_FRETE_CLIENTE,
-	
-	(	select al.t$pvat$l
-				from
-					baandb.tznfmd001301 fl
-					inner join baandb.ttcmcs065301 df on df.t$cwoc = fl.t$cofc$c
-					inner join baandb.ttccom130301 ef on ef.t$cadr = df.t$cadr,
-					baandb.ttcmcs080301 tr
-					inner join baandb.ttccom130301 et on et.t$cadr = tr.t$cadr$l,
-					baandb.ttcmcs951301 al
-				where al.t$rfdt$l=22
-					and al.t$stfr$l = et.t$cste
-					and al.t$stto$l = ef.t$cste
-					and fl.t$fili$c = znfmd630.t$fili$c
-					and TR.T$CFRW   = znfmd630.t$cfrw$c
-					and rownum=1) ALIQUOTA,												--novo
-	
-    znfmd630.t$vlfc$c        PESO_VOLUME,
-    znfmd068.t$adva$c        AD_VALOREM,
-    znfmd068.t$peda$c        PEDAGIO, 
-    znfmd630.t$vlfa$c        ADICIONAIS, 
-    znfmd630.t$vlfc$c        FRETE_TOTAL,
-    znfmd170.t$fovn$c        CNPJ_TRANS, 
-    tcmcs080.t$seak          APELIDO, 
-    znfmd630.t$ncte$c        ID_CONHECIMENTO, 
-    cisli940.t$fire$l        ID_NR,
- 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
-                             DATA_DEV_EMISS_NR, 
-        
-    tccom130.t$fovn$l        CPF_DESTINATARIO, 
-    tccom130.t$pstc          CEP,
-    tccom130.t$dsca          MUNICIPIO,
-    tccom130.t$cste          UF,
-
-    ( select znfmd061.t$dzon$c
-        from baandb.tznfmd062301  znfmd062, baandb.tznfmd061301 znfmd061
-       where znfmd062.t$cfrw$c = znfmd630.t$cfrw$c 
-         and znfmd062.t$cono$c = znfmd630.t$cono$c
-         and znfmd062.t$cepd$c <= tccom130.t$pstc
-         and znfmd062.t$cepa$c >= tccom130.t$pstc
-         and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
-         and znfmd061.t$cono$c = znfmd062.t$cono$c
-         and znfmd061.t$creg$c = znfmd062.t$creg$c
-         and rownum = 1 )    REGIAO,
-         
-    ( select max(znfmd640.t$coci$c)
-        from BAANDB.tznfmd640301 znfmd640
-       where znfmd640.t$date$c = ( select max(znfmd640b.t$date$c) 
-                                     from BAANDB.tznfmd640301 znfmd640b
-                                    where znfmd640b.t$fili$c = znfmd640.t$fili$c 
-                                      AND znfmd640b.t$etiq$c = znfmd640.t$etiq$c )
-         and znfmd640.t$fili$c = znfmd630.t$fili$c 
-         and znfmd640.t$etiq$c = znfmd630.t$etiq$c )       
-                             ID_OCORRENCIA,
-        
-    ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znfmd640.t$date$c), 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)
-       FROM baandb.tznfmd640301 znfmd640
-       WHERE znfmd640.t$fili$c = znfmd630.t$fili$c
-         AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )
-                             DATA_OCORRENCIA,
-
-    cisli940.t$fdty$l        TIPO_DOCUMENTO_FIS, 
-    TIPO_DOC_FIS.            DESCR_TIPO_DOC_FIS,
-    cisli940.t$doty$l        CODE_TIPO_DOC,
-    TIPO_DOC.                DESCR_TIPO_DOC,
-    cisli940.t$ccfo$l        CFO_ENTREGA,
-    tcmcs940.t$dsca$l        DESC_CFO_ENTREGA,  
-    cisli942.t$amnt$l        VLR_ICMS
-  
-FROM       BAANDB.tznfmd630301 znfmd630 
->>>>>>> origin/master
 
   SELECT 
     DISTINCT
@@ -135,7 +29,22 @@ FROM       BAANDB.tznfmd630301 znfmd630
           
       cisli940.t$amnt$l        VLR_TOTAL_NF,
       znfmd630.t$vlfr$c        VLR_FRETE_CLIENTE,
-      cisli942.T$RATE$L        ALIQUOTA, 
+
+      (    select al.t$pvat$l
+             from baandb.tznfmd001301 fl
+       inner join baandb.ttcmcs065301 df 
+               on df.t$cwoc = fl.t$cofc$c
+       inner join baandb.ttccom130301 ef 
+               on ef.t$cadr = df.t$cadr, baandb.ttcmcs080301 tr
+       inner join baandb.ttccom130301 et 
+               on et.t$cadr = tr.t$cadr$l, baandb.ttcmcs951301 al
+            where al.t$rfdt$l = 22
+              and al.t$stfr$l = et.t$cste
+              and al.t$stto$l = ef.t$cste
+              and fl.t$fili$c = znfmd630.t$fili$c
+              and TR.T$CFRW   = znfmd630.t$cfrw$c
+              and rownum = 1 ) ALIQUOTA,           
+     
       znfmd630.t$vlfc$c        PESO_VOLUME,
       znfmd068.t$adva$c        AD_VALOREM,
       znfmd068.t$peda$c        PEDAGIO, 
@@ -187,10 +96,12 @@ FROM       BAANDB.tznfmd630301 znfmd630
   
       cisli940.t$fdty$l        TIPO_DOCUMENTO_FIS, 
       TIPO_DOC_FIS.            DESCR_TIPO_DOC_FIS,
-	  CASE
+
+      CASE
         WHEN cisli940.t$fdty$l = 14 THEN 'NFE' 
         ELSE 'NFS' 
       END AS                   TIPO_NF,
+
       cisli940.t$doty$l        CODE_TIPO_DOC,
       TIPO_DOC.                DESCR_TIPO_DOC,
       cisli940.t$ccfo$l        CFO_ENTREGA,
