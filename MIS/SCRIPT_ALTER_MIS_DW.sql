@@ -1506,3 +1506,150 @@ alter column ID_CAMINHAO varchar(20)
 
 alter table stg_sige_devolucao_nr
 alter column ID_deposito varchar(20)
+
+alter table stg_sige_devolucao_nr
+alter column ID_NR varchar(18)
+
+alter table stg_sige_devolucao_nr
+alter column USER_INCLUSAO varchar(30)
+
+alter table stg_sige_devolucao_nr
+alter column USER_ULT_ALTERACAO varchar(30)
+
+alter table stg_sige_devolucao_nr
+alter column USER_CONFERENCIA_FISCAL varchar(30)
+
+alter table stg_sige_devolucao_nr
+alter column id_transportadora varchar(18)
+
+--===============================================
+--eliminando a PK ods_transportadora
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_transportadora]') AND name = N'PK_ods_transportadora')
+ALTER TABLE [dbo].[ods_transportadora] DROP CONSTRAINT [PK_ods_transportadora]
+
+alter table ods_transportadora
+alter column id_transportadora varchar(18) not null
+
+--recria a PK na orders_status
+ALTER TABLE [dbo].[ods_transportadora] ADD  CONSTRAINT [PK_ods_transportadora] PRIMARY KEY CLUSTERED 
+(
+	[id_transportadora] ASC
+	
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+GO
+--===============================================
+alter table dbo.stg_sige_devolucao_instancia
+alter column DS_PROCESSO varchar(100)
+
+alter table dbo.stg_sige_devolucao_instancia
+alter column DS_ESTADO varchar(100)
+
+alter table dbo.stg_sige_devolucao_instancia
+alter column ID_INSTANCIA varchar(18)
+
+alter table dbo.ods_devolucao_processo
+alter column ds_processo varchar(100)
+
+alter table dbo.ods_devolucao_nr
+alter column id_nr varchar(18)
+
+alter table dbo.ods_devolucao_nr
+alter column id_deposito varchar(30)
+
+alter table dbo.ods_devolucao_nr
+alter column id_caminhao varchar(20)
+
+alter table dbo.aux_ods_devolucao_nr
+alter column id_nr varchar(18)
+
+alter table dbo.aux_ods_devolucao_nr
+alter column id_deposito varchar(30)
+
+alter table dbo.aux_ods_devolucao_nr
+alter column id_caminhao varchar(20)
+
+alter table dbo.dump_ods_devolucao_nr
+alter column id_nr varchar(18)
+
+alter table dbo.dump_ods_devolucao_nr
+alter column id_deposito varchar(30)
+
+alter table dbo.stg_sige_devolucao_cab
+alter column ID_INSTANCIA varchar(18)
+
+alter table dbo.aux_ods_devolucao_cab
+alter column ID_INSTANCIA varchar(18)
+
+alter table dbo.ods_devolucao_cab
+alter column ID_INSTANCIA varchar(18)
+
+--===============================================
+--eliminando a PK ods_transportadora
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ods_devolucao_instancia]') AND name = N'PK_ods_devolucao_instancia')
+ALTER TABLE [dbo].[ods_devolucao_instancia] DROP CONSTRAINT [PK_ods_devolucao_instancia]
+
+alter table [ods_devolucao_instancia]
+alter column id_instancia varchar(18) not null
+
+alter table ods_devolucao_instancia
+alter column ds_processo varchar(100)
+
+alter table ods_devolucao_instancia
+alter column ds_estado varchar(100)
+
+--recria a PK na orders_status
+ALTER TABLE [dbo].[ods_devolucao_instancia] ADD  CONSTRAINT [PK_ods_devolucao_instancia] PRIMARY KEY CLUSTERED 
+(
+	[id_cia] ASC,
+	[id_filial] ASC,
+	[id_instancia] ASC,
+	[nr_item_sku] ASC,
+	[nr_product_sku] ASC	
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [INDEX]
+GO
+
+--=====================================================
+alter table aux_ods_devolucao_instancia
+alter column id_instancia varchar(18)
+
+alter table aux_ods_devolucao_instancia
+alter column ds_processo varchar(100)
+
+alter table aux_ods_devolucao_instancia
+alter column ds_estado varchar(100)
+
+alter table dump_ods_devolucao_instancia
+alter column id_instancia varchar(18)
+
+alter table dump_ods_devolucao_instancia
+alter column ds_processo varchar(100)
+
+alter table dump_ods_devolucao_instancia
+alter column ds_estado varchar(100)
+
+alter table dbo.dim_devolucao_processo
+alter column ds_processo varchar(100)
+
+alter table dbo.dim_transportadora
+alter column id_transportadora varchar(18)
+
+
+alter table dbo.ods_devolucao_cab
+alter column ID_NR varchar(18)
+
+alter table dbo.aux_ods_devolucao_cab
+alter column ID_NR varchar(18)
+
+alter table dbo.aux_devolucao_instancia
+alter column ID_NR varchar(18)
+
+alter table dbo.aux_devolucao_instancia
+alter column id_caminhao varchar(20)
+
+alter table dbo.aux_devolucao_instancia
+alter column id_deposito varchar(30)
+
+--==============================
+
+insert into dim_devolucao_forcado
+values ('1','Sim'), ('2','Não')
