@@ -1083,3 +1083,34 @@ alter table dbo.ods_tb_planilhao
 alter column Ean numeric (15)
 
 EXEC sp_rename 'dbo.ods_follow.ds_fabricantte', 'ds_fabricante', 'COLUMN';
+
+--==============================================
+alter table dbo.ods_relatorio_devolucao_instancia
+alter column ID_NR varchar(18)
+
+alter table dbo.ods_relatorio_devolucao_instancia
+alter column id_instancia varchar(18)
+
+alter table dbo.ods_relatorio_devolucao_instancia
+alter column ds_processo varchar(100)
+
+alter table dbo.ods_relatorio_devolucao_instancia
+alter column id_caminhao varchar(20)
+
+alter table dbo.ods_relatorio_devolucao_instancia
+alter column id_deposito varchar(30)
+
+alter table dbo.aux_ods_relatorio_devolucao_instancia
+alter column ID_NR varchar(18)
+
+alter table dbo.aux_ods_relatorio_devolucao_instancia
+alter column id_instancia varchar(18)
+
+alter table dbo.aux_ods_relatorio_devolucao_instancia
+alter column ds_processo varchar(100)
+
+alter table dbo.aux_ods_relatorio_devolucao_instancia
+alter column id_caminhao varchar(20)
+
+alter table dbo.aux_ods_relatorio_devolucao_instancia
+alter column id_deposito varchar(30)

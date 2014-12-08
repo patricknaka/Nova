@@ -6,11 +6,13 @@
 -- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ULTIMA_ATUALIZ_NF
 -- 21/08/2014   Atualização timezone
 -- 04/12/2014   Inclusão NR_REFERENCIA_FISCAL_FATURA
+-- 05/12/2014	Inclusão dos campos: CD_MOTIVO_CATEGORIA, CD_MOTIVO_ASSUNTO, CD_MOTIVO_ETIQUETA, NR_ORDEM_VENDA_DEVOLUCAO, CD_STATUS_ORDEM_VDA_DEV e DT_ORDEM_VENDA_DEVOLUCAO
+
 --*************************************************************************************************************************************************************
 SELECT
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940dev.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
-    201 CD_CIA,
+    1 CD_CIA,
 	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l
 	AND tcemm030.t$eunt=tcemm124.t$grid
@@ -115,9 +117,20 @@ SELECT
 	to_char(znsls401org.t$entr$c) NR_ENTREGA_ORIGINAL,																--#FAF.227.3.sn
 	to_char(znsls401dev.t$entr$c) NR_ENTREGA_DEVOLUCAO,																	
 	cisli941dev.t$cwar$l CD_ARMAZEM,
-	cisli940org.t$fire$l NR_REFERENCIA_FISCAL_FATURA																		--#FAF.227.3.en
+	cisli940org.t$fire$l NR_REFERENCIA_FISCAL_FATURA,																		--#FAF.227.3.en
+	to_char(znsls401dev.t$ccat$c) CD_MOTIVO_CATEGORIA,																--#FAF.140.sn
+	to_char(znsls401dev.t$cass$c) CD_MOTIVO_ASSUNTO,
+	to_char(znsls401dev.t$cmot$c) CD_MOTIVO_ETIQUETA,
+  tdsls400.t$orno NR_ORDEM_VENDA_DEVOLUCAO,
+  tdsls400.t$hdst CD_STATUS_ORDEM_VDA_DEV,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE) DT_ORDEM_VENDA_DEVOLUCAO
 FROM
 				baandb.tznsls401201 znsls401dev								-- Pedido de devolução
+   
+  INNER JOIN  baandb.ttdsls400201 tdsls400
+  ON tdsls400.t$orno = znsls401dev.t$orno$c
+  
 	INNER JOIN	baandb.tznsls401201 znsls401org								-- Pedido de venda original
 			ON	znsls401org.t$pecl$c=znsls401dev.t$pvdt$c
 			AND	znsls401org.t$ncia$c=znsls401dev.t$ncia$c
