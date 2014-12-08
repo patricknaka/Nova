@@ -41,7 +41,7 @@ SELECT
 					and al.t$stto$l = ef.t$cste
 					and fl.t$fili$c = znfmd630.t$fili$c
 					and TR.T$CFRW   = znfmd630.t$cfrw$c
-					and rownum=1) ALIQUOTA,
+					and rownum=1) ALIQUOTA,												--novo
 	
     znfmd630.t$vlfc$c        PESO_VOLUME,
     znfmd068.t$adva$c        AD_VALOREM,
