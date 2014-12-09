@@ -40,7 +40,7 @@ SELECT
        AND whina112.t$pono = whinr110.t$pono
        AND whina112.t$cwar = whinr110.t$cwar
        AND whina112.t$item = whinr110.t$item
-       AND whina112.t$trdt = whinr110.t$trdt
+       -- AND whina112.t$trdt = whinr110.t$trdt
        AND whina112.t$itid = whinr110.t$itid
     
  LEFT JOIN baandb.twhina113301 whina113 
