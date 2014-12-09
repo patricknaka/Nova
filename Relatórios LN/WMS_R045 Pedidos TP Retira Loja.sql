@@ -68,7 +68,7 @@ FROM	BAANDB.TTDSLS400301@PLN01 TDSLS400
 		LEFT JOIN	(select
 							a.orderkey,
               max(b.code) keep (dense_rank last order by a.adddate) id_ponto,
-							max(b.description) ponto,
+							max(b.description) keep (dense_rank last order by a.adddate) ponto,
 							max(a.adddate) dataponto
 					 from    WMWHSE5.ORDERSTATUSHISTORY a
 					 inner join  WMWHSE5.ORDERSTATUSSETUP b  on b.code = a.status
