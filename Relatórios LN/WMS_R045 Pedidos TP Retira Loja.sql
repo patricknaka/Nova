@@ -14,6 +14,12 @@ SELECT
 					AND WMSPONTO.DATAPONTO IS NOT NULL)
 			THEN TO_CHAR(WMSPONTO.PONTO)
 			ELSE TO_CHAR(PONTO.PONTO) END									DESCR_PONTO,
+      
+		CASE WHEN (	WMSPONTO.DATAPONTO>PONTO.DATAPONTO
+					AND WMSPONTO.DATAPONTO IS NOT NULL)
+			THEN TO_CHAR(WMSPONTO.ID_PONTO)
+			ELSE TO_CHAR(PONTO.ID_PONTO) END									DESCR_PONTO,
+      
 		CASE	WHEN	OS.ORDERKEY IS NULL
 				THEN	'NÃO'
 				ELSE	'SIM' END											ENVIADO_WMS,
@@ -45,6 +51,7 @@ FROM	BAANDB.TTDSLS400301@PLN01 TDSLS400
 							a.t$sqpd$c,
 							max(a.t$dtoc$c) DATAPONTO,
 							max(a.t$cono$c) CONTRATO,
+              max(a.t$poco$c) keep (dense_rank last order by a.t$dtoc$c, a.t$seqn$c) ID_PONTO,
 							max(b.t$desc$c) keep (dense_rank last order by a.t$dtoc$c, a.t$seqn$c) PONTO,
 							min(case when a.t$poco$c='WMS' then a.t$dtoc$c else null end) DATAWMS
 					 from    BAANDB.TZNSLS410301@pln01 a
@@ -60,7 +67,8 @@ FROM	BAANDB.TTDSLS400301@PLN01 TDSLS400
 		LEFT JOIN	ORDERS			OS			ON	OS.REFERENCEDOCUMENT = TDSLS400.T$ORNO
 		LEFT JOIN	(select
 							a.orderkey,
-							max(b.description) keep (dense_rank last order by a.adddate) ponto,
+              max(b.code) keep (dense_rank last order by a.adddate) id_ponto,
+							max(b.description) ponto,
 							max(a.adddate) dataponto
 					 from    WMWHSE5.ORDERSTATUSHISTORY a
 					 inner join  WMWHSE5.ORDERSTATUSSETUP b  on b.code = a.status
