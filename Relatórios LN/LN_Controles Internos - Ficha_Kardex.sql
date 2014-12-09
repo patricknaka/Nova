@@ -72,6 +72,7 @@ SELECT
         ON cisli245.t$slso = whinr110.t$orno
        AND cisli245.t$pono = whinr110.t$pono
        AND cisli245.t$sqnb = whinr110.t$srnb
+	   AND cisli245.t$shpm=whinr110.t$shpm   --|#jac.n 09/12/2014
     
  LEFT JOIN baandb.tcisli941301 cisli941 
         ON cisli941.t$fire$l = cisli245.t$fire$l
