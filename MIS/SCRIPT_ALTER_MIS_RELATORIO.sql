@@ -1114,3 +1114,9 @@ alter column id_caminhao varchar(20)
 
 alter table dbo.aux_ods_relatorio_devolucao_instancia
 alter column id_deposito varchar(30)
+
+alter table dbo.rpt_relatorio_cap_analitico
+alter column ID_NR varchar(18)
+
+alter table dbo.rpt_relatorio_cap_analitico
+alter column PEDIDO varchar(9)
