@@ -1,0 +1,37 @@
+SELECT
+		WD.WAVEKEY													ONDA,
+		OC.ORDERKEY													ORDEM_WMS,
+		LN.T$PECL$C													PEDIDO,
+		LN.T$ENTR$C													ENTREGA,
+		OD.SKU														ID_ITEM,
+		SK.DESCR													DESCR_ITEM,
+		sum(OD.QTYPICKED)											QTD_SEPARADA,
+		sum(OD.ORIGINALQTY)											QTD_ROMANEADA,
+		sum(CASE WHEN TD.FROMLOC='STAGE' THEN TD.QTY ELSE 0 END)	QT_DOCE,
+		sum(CASE WHEN TD.FROMLOC='PICKTO' THEN TD.QTY ELSE 0 END)	QT_DSAI,
+		sum(CASE WHEN  
+			 (TD.FROMLOC='STAGE' OR TD.FROMLOC='PICKTO')
+			THEN 0
+			WHEN substr(TD.FROMLOC, LENGTH(TD.FROMLOC)-1, 2)>=03 
+			THEN TD.QTY ELSE 0 END)									QT_VERT
+FROM
+		WMWHSE5.ORDERDETAIL OD
+		INNER JOIN	WMWHSE5.ORDERS		OC		ON	OC.ORDERKEY		=	OD.ORDERKEY
+		INNER JOIN	WMWHSE5.WAVEDETAIL	WD		ON	WD.ORDERKEY		=	OC.ORDERKEY
+		INNER JOIN	WMWHSE5.SKU			SK		ON	SK.SKU			=	OD.SKU
+		INNER JOIN	WMWHSE5.TASKDETAIL	TD		ON	TD.ORDERKEY		=	OD.ORDERKEY
+		LEFT JOIN (	select 	a.t$pecl$c,
+							a.t$entr$c,
+							a.t$orno$c
+					from baandb.tznsls004301@pln01 a
+					group by a.t$pecl$c,
+					         a.t$entr$c,
+							 a.t$orno$c)	LN	ON	LN.T$ORNO$C 	=	OC.REFERENCEDOCUMENT
+WHERE OD.STATUS='06'
+GROUP BY
+		WD.WAVEKEY,						 
+        OC.ORDERKEY,	
+        LN.T$PECL$C,	
+        LN.T$ENTR$C,	
+        OD.SKU,		
+        SK.DESCR
