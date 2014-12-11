@@ -47,7 +47,7 @@
     SKU.STDGROSSWGT                       PESO_BRUTO,
     ORDERS.C_CITY                         MUNICIPIO,
     ORDERS.C_STATE                        ESTADO,
-    ORDERDETAIL.SHIPPEDQTY                QUANTIDADE,
+    ORDERDETAIL.ORIGINALQTY                QUANTIDADE,
     sls400.                               VALOR,
  
     REDESPACHO.description                REDESPACHO,
