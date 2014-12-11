@@ -483,3 +483,10 @@ values
 ('CAR','7','Pagamento'),
 ('CAR','8','Estorno Pagamento')
 */
+
+--=========================
+ALTER TABLE com.stg_hist_ati_can
+ALTER COLUMN ds_status_atual VARCHAR(3)
+
+ALTER TABLE com.stg_hist_ati_can2
+ALTER COLUMN ds_status VARCHAR(3)

@@ -185,6 +185,13 @@ VALUES ('FILE_DEVOLUCAO',
 '\Package.Variables[User::gstrFolderDevolucao].Properties[Value]',
 'String')
 
+--FILE_REL_CANCEL
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_REL_CANCEL', 
+'W:\Operacional\Relatório Histórico Ativação Cancelamento_LN\Relatorio_Cancelamento\',
+'\Package.Variables[User::gstrFolderRelCancel].Properties[Value]',
+'String')
+
 --=================================================
 --inserção de colunas
 --=================================================
@@ -202,7 +209,14 @@ values (49,'stg_est_estoque_ln','2014-10-01','2014-10-01','2014-10-01','2014-01-
     (54,'dw_estoque_sige','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,8),
     (55,'ods_estoque_rateio_custo_logistico','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,8),
     (56,'olap_estoque_sige','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,8),
-    (57,'olap-1_estoque_sige','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,8)
+    (57,'olap-1_estoque_sige','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,8),
+    (62,'ssis_controlador_devolucao','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,0),
+    (63,'stg_purchase_open_ln','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,0),
+    (64,'ods_purchase_open','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,0),
+    (65,'stg_purchase_open','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,0),
+    (66,'ssis_controlador_Rel_Cancelamento','2014-10-01','2014-10-01','2014-10-01','2014-01-01',1,null,0)
+
+
 
 --===============================
 --PROCEDURES

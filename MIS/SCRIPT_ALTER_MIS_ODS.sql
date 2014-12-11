@@ -1336,3 +1336,6 @@ alter table ln.ods_titulo_cap_ref
 alter column ds_id_titulo varchar(50) collate Latin1_General_CI_AS
 
 --==========================================
+
+ALTER TABLE com.ods_hist_alt_ati_can_prod
+ALTER COLUMN ds_status VARCHAR(3)
