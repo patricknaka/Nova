@@ -17,8 +17,10 @@ SELECT
    END                                 ID_CONTA_CONTRAPARTIDA,
   tfgld106.t$leac                      ID_CONTA_PRINCIPAL,
   tfgld008.t$desc                      NOME_DA_CONTA,
-  tfgld106.t$dim1                      ID_CCUSTO,  
-  tfgld010.t$desc                      NOME_CCUSTO,
+  tfgld106.t$dim1                      ID_CCUSTO,
+  CASE WHEN tfgld106.t$dim1 = ' ' THEN
+        ' '
+  ELSE  tfgld010.t$desc END            NOME_CCUSTO,
   tfgld106.t$refr                      HIST_COMPLETO,
   
   CASE WHEN tfgld106.t$dbcr = 1 
