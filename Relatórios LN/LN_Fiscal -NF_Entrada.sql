@@ -108,9 +108,9 @@ select Q1.*
        LEFT JOIN baandb.ttcmcs940301       tcmcs940
               ON tcmcs940.T$OFSO$L = tdrec941.t$opfc$l
               
-       LEFT JOIN baandb.ttdrec947301       tdrec947
-              ON tdrec941.t$fire$l = tdrec947.t$fire$l 
-             AND tdrec941.t$line$l = tdrec947.T$LINE$L
+       -- LEFT JOIN baandb.ttdrec947301       tdrec947
+              -- ON tdrec941.t$fire$l = tdrec947.t$fire$l 
+             -- AND tdrec941.t$line$l = tdrec947.T$LINE$L
             
        INNER JOIN baandb.ttcibd001301       tcibd001
               ON tcibd001.t$item = tdrec941.t$item$l
