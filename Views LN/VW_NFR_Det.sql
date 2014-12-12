@@ -25,8 +25,8 @@ SELECT
   tdrec941.t$qnty$l QT_NOMINAL_NF,
   	(SELECT sum(tdrec947.t$qnty$l) FROM baandb.ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
-	AND tdrec947.t$line$l=tdrec941.t$line$l
-	AND rownum=1) QT_RECEBIDA,
+	AND tdrec947.t$line$l=tdrec941.t$line$l) QT_RECEBIDA,
+	--AND rownum=1) 
   tdrec941.t$pric$l VL_UNITARIO,
   (SELECT tdrec942.t$rate$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
