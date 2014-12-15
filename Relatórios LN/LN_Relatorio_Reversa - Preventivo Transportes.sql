@@ -2,7 +2,18 @@ SELECT
   DISTINCT
     znsls401.t$pecl$c                         Pedido,
     znsls401.t$entr$c                         Entrega,
-    tcibd001.t$dscb$c                         Descricao_do_Item,
+    CASE WHEN TRIM(cisli941.t$item$l) =  TRIM(PARAM.IT_FRETE) THEN
+        'FRETE'
+    ELSE
+        CASE WHEN TRIM(cisli941.t$item$l) =  TRIM(PARAM.IT_DESP) THEN
+          'DESPESAS'
+        ELSE
+            CASE WHEN TRIM(cisli941.t$item$l) =  TRIM(PARAM.IT_JUROS) THEN
+              'JUROS'
+            ELSE tcibd001.t$dscb$c 
+            END          
+        END 
+    END                                       Descricao_do_Item,
     CASE WHEN cisli940.t$docn$l=0 THEN
          NULL
     ELSE cisli940.t$docn$l END                Nota,
@@ -178,7 +189,7 @@ LEFT JOIN baandb.ttdrec947301  tdrec947
        AND TRIM(JUROS.t$item$l) = TRIM(PARAM.IT_JUROS)
     
  LEFT JOIN baandb.ttcibd001301 tcibd001
-        ON tcibd001.t$item = cisli941.t$item$l
+        ON TRIM(tcibd001.t$item) = TRIM(znsls401.t$item$c)
 
  LEFT  JOIN  baandb.tznsls002301 znsls002
          ON  znsls002.t$tpen$c=znsls401.t$itpe$c
@@ -199,10 +210,6 @@ LEFT JOIN baandb.ttdrec947301  tdrec947
         AND CUBAGEM.t$cfrw$c = cisli940.t$cfrw$l
 
  
-WHERE znsls401.t$idor$c = 'TD'
-  AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_FRETE)
-  AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_DESP)
-  AND TRIM(cisli941.t$item$l) !=  TRIM(PARAM.IT_JUROS)
+WHERE TRIM(znsls401.t$idor$c) = 'TD'
   
---ORDER BY Data_da_Ocorrencia, Pedido
 ORDER BY Pedido
