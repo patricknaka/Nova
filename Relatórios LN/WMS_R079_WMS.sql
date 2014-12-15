@@ -1,9 +1,9 @@
 select 
-  q1.WHSEID,
-  q1.udf2,
-  count(q1.orderkey), 
-  q1.SCHEDULEDSHIPDATE,
-  q1.ADDDATE,
+  q1.WHSEID					ID_LOCAL,
+  q1.udf2					LOCAL,
+  count(q1.orderkey)		QTD_PEDIDOS, 
+  q1.SCHEDULEDSHIPDATE		DT_LIMITE,
+  q1.ADDDATE				DT_WMS,
   q1.ID_EVENTO,
   q1.DESCR_EVENTO
 
