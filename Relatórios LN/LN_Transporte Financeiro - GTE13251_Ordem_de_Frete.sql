@@ -1,4 +1,7 @@
-select Q1.* from (
+select Q1.*,
+(Q1.PESO_VOLUME+Q1.AD_VALOREM+Q1.PEDAGIO+Q1.ADICIONAIS)*(ALIQUOTA/100) VALOR_ICMS, 
+(Q1.PESO_VOLUME+Q1.AD_VALOREM+Q1.PEDAGIO+Q1.ADICIONAIS)*(ALIQUOTA/100) + Q1.PESO_VOLUME FRETE_TOTAL
+from (
 
   SELECT 
     DISTINCT
@@ -46,10 +49,10 @@ select Q1.* from (
               and rownum = 1 ) ALIQUOTA,           
      
       znfmd630.t$vlfc$c        PESO_VOLUME,
-      znfmd068.t$adva$c        AD_VALOREM,
+      znfmd068.t$adva$c*(cisli940.t$amnt$l/100)        AD_VALOREM,
       znfmd068.t$peda$c        PEDAGIO, 
-      znfmd630.t$vlfa$c        ADICIONAIS, 
-      znfmd630.t$vlfc$c        FRETE_TOTAL,
+      NVL(znfmd660.valor_adic,0)      ADICIONAIS, 
+      -- znfmd630.t$vlfc$c        FRETE_TOTAL,
       znfmd170.t$fovn$c        CNPJ_TRANS, 
       tcmcs080.t$seak          APELIDO, 
       znfmd630.t$ncte$c        ID_CONHECIMENTO, 
@@ -105,8 +108,12 @@ select Q1.* from (
       cisli940.t$doty$l        CODE_TIPO_DOC,
       TIPO_DOC.                DESCR_TIPO_DOC,
       cisli940.t$ccfo$l        CFO_ENTREGA,
-      tcmcs940.t$dsca$l        DESC_CFO_ENTREGA,  
-      cisli942.t$amnt$l        VLR_ICMS
+      tcmcs940.t$dsca$l        DESC_CFO_ENTREGA  
+      
+	  
+	  
+	  
+	  --cisli942.t$amnt$l        VLR_ICMS
     
   FROM       BAANDB.tznfmd630301 znfmd630 
   
@@ -196,6 +203,23 @@ select Q1.* from (
                                               and l1.t$clan = l.t$clan 
                                               and l1.t$cpac = l.t$cpac ) ) TIPO_DOC
           ON TIPO_DOC.t$cnst = cisli940.t$doty$l
+		  
+	LEFT JOIN (	select	a.t$cfrw$c,
+						a.t$cono$c,
+						a.t$fili$c,
+						a.t$ngai$c,
+						a.t$etiq$c,
+						sum(a.t$vafr$c) valor_adic
+				from	baandb.tznfmd660301 a
+				group by a.t$cfrw$c,
+						 a.t$cono$c,
+						 a.t$fili$c,
+						 a.t$ngai$c,
+						 a.t$etiq$c) znfmd660	ON	ZNFMD660.t$cfrw$c = ZNFMD630.t$cfrw$c
+												AND ZNFMD660.t$cono$c = ZNFMD630.t$cono$c
+												AND ZNFMD660.t$fili$c = ZNFMD630.t$fili$c
+												AND ZNFMD660.t$ngai$c = ZNFMD630.t$ngai$c
+												AND ZNFMD660.t$etiq$c = ZNFMD630.t$etiq$c
 ) Q1
 WHERE TIPO_NF IN (:TipoNF)
       AND DATA_EMISSAO
