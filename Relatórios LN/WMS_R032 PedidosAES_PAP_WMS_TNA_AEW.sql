@@ -75,7 +75,8 @@ INNER JOIN ( select upper(wmsCODE.UDF1) Filial,
  LEFT JOIN WMWHSE5.ORDERS OWMS 
         ON OWMS.REFERENCEDOCUMENT = TDSLS400.T$ORNO
 
-WHERE wmsCODE.FILIAL :Table
+WHERE OWMS.STATUS NOT IN ('95', '96,', '97', '98', '99', '100')
+  AND wmsCODE.FILIAL :Table
 
 
 
@@ -158,7 +159,8 @@ WHERE wmsCODE.FILIAL :Table
 " LEFT JOIN " + Parameters!Table.Value + ".ORDERS OWMS           " &
 "        ON OWMS.REFERENCEDOCUMENT = TDSLS400.T$ORNO             " &
 "		                                                         " &
-"WHERE wmsCODE.FILIAL = '" + Parameters!Table.Value + "'         " &
+"WHERE OWMS.STATUS NOT IN ('95','96,','97','98','99','100')      " &
+"  AND wmsCODE.FILIAL = '" + Parameters!Table.Value + "'         " &
 "		                                                         " &
 "Order by 2,3,4                                                  "
 
@@ -243,7 +245,8 @@ WHERE wmsCODE.FILIAL :Table
 " LEFT JOIN WMWHSE1.ORDERS OWMS                                  " &
 "        ON OWMS.REFERENCEDOCUMENT = TDSLS400.T$ORNO             " &
 "		                                                         " &
-"WHERE wmsCODE.FILIAL = 'WMWHSE1'                                " &
+"WHERE OWMS.STATUS NOT IN ('95','96,','97','98','99','100')      " &
+"  AND wmsCODE.FILIAL = 'WMWHSE1'                                " &
 "		                                                         " &
 "Union                                                           " &
 "SELECT wmsCODE.FILIAL            FILIAL,                        " &
@@ -325,7 +328,8 @@ WHERE wmsCODE.FILIAL :Table
 " LEFT JOIN WMWHSE2.ORDERS OWMS                                  " &
 "        ON OWMS.REFERENCEDOCUMENT = TDSLS400.T$ORNO             " &
 "		                                                         " &
-"WHERE wmsCODE.FILIAL = 'WMWHSE2'                                " &
+"WHERE OWMS.STATUS NOT IN ('95','96,','97','98','99','100')      " &
+"  AND wmsCODE.FILIAL = 'WMWHSE2'                                " &
 "		                                                         " &
 "Union                                                           " &
 "SELECT wmsCODE.FILIAL            FILIAL,                        " &
@@ -407,7 +411,8 @@ WHERE wmsCODE.FILIAL :Table
 " LEFT JOIN WMWHSE3.ORDERS OWMS                                  " &
 "        ON OWMS.REFERENCEDOCUMENT = TDSLS400.T$ORNO             " &
 "		                                                         " &
-"WHERE wmsCODE.FILIAL = 'WMWHSE3'                                " &
+"WHERE OWMS.STATUS NOT IN ('95','96,','97','98','99','100')      " &
+"  AND wmsCODE.FILIAL = 'WMWHSE3'                                " &
 "		                                                         " &
 "Union                                                           " &
 "SELECT wmsCODE.FILIAL            FILIAL,                        " &
@@ -489,7 +494,8 @@ WHERE wmsCODE.FILIAL :Table
 " LEFT JOIN WMWHSE4.ORDERS OWMS                                  " &
 "        ON OWMS.REFERENCEDOCUMENT = TDSLS400.T$ORNO             " &
 "		                                                         " &
-"WHERE wmsCODE.FILIAL = 'WMWHSE4'                                " &
+"WHERE OWMS.STATUS NOT IN ('95','96,','97','98','99','100')      " &
+"  AND wmsCODE.FILIAL = 'WMWHSE4'                                " &
 "		                                                         " &
 "Union                                                           " &
 "SELECT wmsCODE.FILIAL            FILIAL,                        " &
@@ -571,7 +577,8 @@ WHERE wmsCODE.FILIAL :Table
 " LEFT JOIN WMWHSE5.ORDERS OWMS                                  " &
 "        ON OWMS.REFERENCEDOCUMENT = TDSLS400.T$ORNO             " &
 "		                                                         " &
-"WHERE wmsCODE.FILIAL = 'WMWHSE5'                                " &
+"WHERE OWMS.STATUS NOT IN ('95','96,','97','98','99','100')      " &
+"  AND wmsCODE.FILIAL = 'WMWHSE5'                                " &
 "		                                                         " &
 "Union                                                           " &
 "SELECT wmsCODE.FILIAL            FILIAL,                        " &
@@ -653,7 +660,8 @@ WHERE wmsCODE.FILIAL :Table
 " LEFT JOIN WMWHSE6.ORDERS OWMS                                  " &
 "        ON OWMS.REFERENCEDOCUMENT = TDSLS400.T$ORNO             " &
 "		                                                         " &
-"WHERE wmsCODE.FILIAL = 'WMWHSE6'                                " &
+"WHERE OWMS.STATUS NOT IN ('95','96,','97','98','99','100')      " &
+"  AND wmsCODE.FILIAL = 'WMWHSE6'                                " &
 "		                                                         " &
 "Union                                                           " &
 "SELECT wmsCODE.FILIAL            FILIAL,                        " &
@@ -735,6 +743,7 @@ WHERE wmsCODE.FILIAL :Table
 " LEFT JOIN WMWHSE7.ORDERS OWMS                                  " &
 "        ON OWMS.REFERENCEDOCUMENT = TDSLS400.T$ORNO             " &
 "		                                                         " &
-"WHERE wmsCODE.FILIAL = 'WMWHSE7'                                " &
+"WHERE OWMS.STATUS NOT IN ('95','96,','97','98','99','100')      " &
+"  AND wmsCODE.FILIAL = 'WMWHSE7'                                " &
 "		                                                         " &
 "Order by 2,3,4                                                  "
