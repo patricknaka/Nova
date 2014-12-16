@@ -1,5 +1,7 @@
 SELECT
   tfgld106.t$dcdt                      DATA_TRANS,
+  tfgld106.t$oyer                      ANO_FISCAL,
+  tfgld106.T$FPRD                      PERI_FISCAL,
   Filial.COD_FILIAL                    NUME_FILIAL,
   tfgld106.t$dbcr                      NATU_LANÇTO,
   tfgld106.t$obat                      LOTE,
