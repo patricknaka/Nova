@@ -3,6 +3,9 @@ SELECT
   tfgld106.t$oyer                      ANO_FISCAL,
   tfgld106.T$FPRD                      PERI_FISCAL,
   Filial.COD_FILIAL                    NUME_FILIAL,
+  CASE WHEN Filial.COD_FILIAL is NULL THEN
+    ' '
+  ELSE  tfgld010_2.t$desc END          NOME_FILIAL,
   tfgld106.t$dbcr                      NATU_LANÇTO,
   tfgld106.t$obat                      LOTE,
   tfgld106.t$osrn                      SEQ_LOTE,  
@@ -59,6 +62,10 @@ INNER JOIN baandb.ttfgld100301 tfgld100
         ON tfgld106.t$typ1 = tfgld010.t$dtyp
        AND tfgld106.t$dim1 = tfgld010.t$dimx
 
+  LEFT JOIN baandb.ttfgld010301 tfgld010_2
+         ON tfgld010_2.t$dimx=Filial.COD_FILIAL
+        AND tfgld010_2.t$dtyp=2
+       
 WHERE TRUNC(tfgld106.t$dcdt) BETWEEN (:DataDe) AND (:DataAte)
 
   AND NVL(Trim(Filial.COD_FILIAL), '000') IN (:Filial)
