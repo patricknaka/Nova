@@ -49,7 +49,7 @@
     SKU.STDGROSSWGT                       PESO_BRUTO,
     ORDERS.C_CITY                         MUNICIPIO,
     ORDERS.C_STATE                        ESTADO,
-    ORDERDETAIL.SHIPPEDQTY                QUANTIDADE
+    ORDERDETAIL.ORIGINALQTY               QUANTIDADE
     
 FROM       WMWHSE5.ORDERS
 
