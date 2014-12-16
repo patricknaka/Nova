@@ -1339,3 +1339,30 @@ alter column ds_id_titulo varchar(50) collate Latin1_General_CI_AS
 
 ALTER TABLE com.ods_hist_alt_ati_can_prod
 ALTER COLUMN ds_status VARCHAR(3)
+
+--===========================================
+
+alter table log.ods_fluxo_pedidos_entrada
+add nr_qtde_pecas int, nr_vl_m3 numeric(18,6)
+
+alter table log.ods_fluxo_pedidos_saida
+add nr_qtde_pecas int, nr_vl_m3 numeric(18,6)
+
+--==============================================
+CREATE TABLE [log].[ods_fluxo_pedidos_caixa](
+	[nr_dt_emissao] [int] NULL,
+	[nr_hora] [int] NULL,
+	[ds_filial] [nvarchar](5) NULL,
+	[nr_id_planta] [int] NULL,
+	[nr_id_filial] [int] NULL,
+	[nr_id_unidade_negocio] [int] NULL,
+	[nr_id_localidade] [int] NULL,
+	[nr_id_departamento] [int] NULL,
+	[nr_qtde_pedido] [numeric](18, 0) NULL,
+	[nr_qtde_pecas] [int] NULL,
+	[nr_vl_m3] [numeric](18, 6) NULL
+) ON [PRIMARY]
+
+--===============================================
+
+

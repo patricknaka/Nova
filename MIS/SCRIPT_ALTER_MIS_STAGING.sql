@@ -490,3 +490,88 @@ ALTER COLUMN ds_status_atual VARCHAR(3)
 
 ALTER TABLE com.stg_hist_ati_can2
 ALTER COLUMN ds_status VARCHAR(3)
+
+--=============================
+alter table log.stg_entrada_fluxo_pedidos
+add PECAS int null,
+	M3 numeric(18,6) null
+
+-==========================================
+drop table [log].[stg_saida_fluxo_pedidos]
+go
+
+CREATE TABLE [log].[stg_saida_fluxo_pedidos](
+	[FILIAL] [varchar](20) NULL,
+	[ID_FILIAL] [int] NULL,
+	[DT_EMISSAO] [date] NULL,
+	[PERIODO] [time](7) NULL,
+	[PEDV_ID_UNINEG] [int] NULL,
+	[ITEG_ID_DEPTO] [int] NULL,
+	[PEDV_CEP_ENTREGA] [numeric](8, 0) NULL,
+	[PEDIDOS] [numeric](18, 0) NULL,
+	[VL_TOTAL] [money] NULL,
+	[PECAS] [int] NULL,
+	[M3] [numeric](18, 6) NULL
+) ON [PRIMARY]
+
+GO
+
+--=============================================
+CREATE TABLE [log].[stg_caixa_fluxo_pedidos](
+	[FILIAL] [nvarchar](10) NULL,
+	[ID_FILIAL] [int] NULL,
+	[DT_EMISSAO] [date] NULL,
+	[PERIODO] [time](7) NULL,
+	[PEDV_ID_UNINEG] [int] NULL,
+	[ITEG_ID_DEPTO] [int] NULL,
+	[PEDV_CEP_ENTREGA] [numeric](8, 0) NULL,
+	[PEDIDOS] [numeric](18, 0) NULL,
+	[PECAS] [int] NULL,
+	[M3] [numeric](18, 6) NULL
+) ON [PRIMARY]
+
+GO
+
+--===================================================
+alter table log.stg_caixa_fluxo_pedidos
+alter column FILIAL varchar(10)
+
+--==================================================
+
+alter table log.aux_fluxo_pedidos_entrada
+add nr_qtde_pecas int, nr_vl_m3 numeric(18,6)
+
+alter table log.aux_fluxo_pedidos_saida
+add nr_qtde_pecas int, nr_vl_m3 numeric(18,6)
+
+alter TABLE [log].[aux_fact_fluxo_pedidos_entrada]
+add	[nr_qtde_pecas] [int] NULL,
+	[nr_vl_m3] [numeric](18, 6) NULL
+
+--===================================================
+CREATE TABLE [log].[aux_fluxo_pedidos_caixa](
+	[nr_dt_emissao] [int] NULL,
+	[nr_hora] [int] NULL,
+	[ds_filial] [nvarchar](5) NULL,
+	[nr_id_planta] [int] NULL,
+	[nr_id_filial] [int] NULL,
+	[nr_id_unidade_negocio] [int] NULL,
+	[nr_id_localidade] [int] NULL,
+	[nr_id_departamento] [int] NULL,
+	[nr_qtde_pedido] [numeric](18, 0) NULL,
+	[nr_qtde_pecas] [int] NULL,
+	[nr_vl_m3] [numeric](18, 6) NULL
+) ON [PRIMARY]
+
+--======================================================
+CREATE TABLE [log].[aux_fact_fluxo_pedidos_caixa](
+	[nr_dt_emissao] [int] NULL,
+	[nr_hora] [int] NULL,
+	[nr_id_planta] [int] NULL,
+	[nr_id_unidade_negocio] [int] NULL,
+	[nr_id_localidade] [int] NULL,
+	[nr_id_departamento] [int] NULL,
+	[nr_qtde_pedido] [numeric](18, 0) NULL,
+	[nr_qtde_pecas] [int] NULL,
+	[nr_vl_m3] [numeric](18, 6) NULL
+) ON [PRIMARY]
