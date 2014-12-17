@@ -19,15 +19,9 @@ SELECT
                            
     NVL(TRIM(ORDEM.STATUS_ORDEM), 'Não definido')     STATUS_ORDEM,
     
-    --apr.t$logn                                        APROVADOR,
-    CASE WHEN tdpur400.t$hdst != 10 
-    THEN  NULL
-    ELSE apr.t$logn END                                 APROVADOR,
-        
-    --nome_apr.t$NAME                                   NOME_APROV_ORDEM,
-    CASE WHEN tdpur400.t$hdst != 10 
-    THEN  NULL
-    ELSE nome_apr.t$NAME END                            NOME_APROV_ORDEM,
+    apr.t$logn                                        APROVADOR,
+   
+    nome_apr.t$NAME                                   NOME_APROV_ORDEM,
    
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(apr.dapr, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
