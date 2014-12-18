@@ -96,9 +96,9 @@
     ORDERS.C_COMPANY                       NOME,
     ORDERDETAIL.ORIGINALQTY                QTDE_TOTAL,
     
-    CASE WHEN NVL(cisli940.t$amnt$l, 0) != 0 THEN cisli940.t$amnt$l
-         WHEN NVL(TDSLS400.T$OAMT, 0)   != 0 THEN TDSLS400.T$OAMT
+    CASE WHEN NVL(TDSLS400.T$OAMT, 0)   != 0 THEN TDSLS400.T$OAMT
          WHEN NVL(LNREF.VALOR, 0)       != 0 THEN LNREF.VALOR
+		 WHEN NVL(maucLN.mauc, 0)       != 0 THEN maucLN.mauc
          ELSE 0 
      END                                   VL,
     ORDERS.type                            COD_TIPO_PEDIDO,
@@ -143,6 +143,23 @@ INNER JOIN (select o1.orderkey,
         
  LEFT JOIN ENTERPRISE.CODELKUP cl  
         ON UPPER(cl.UDF1) = UPPER(ORDERS.WHSEID)
+		
+		
+ LEFT JOIN ( select trim(whwmd217.t$item) item,                             
+ 					whwmd217.t$cwar cwar,                                   
+ 					case when sum(nvl(whwmd217.t$mauc$1,0)) = 0                             
+ 					 then  sum(whwmd217.t$ftpa$1)                                              
+ 					 else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
+ 					end mauc                                                
+ 			   from baandb.twhwmd217301@pln01 whwmd217                      
+        left join baandb.twhinr140301@pln01 a                             
+ 				 on a.t$cwar = whwmd217.t$cwar                              
+ 				and a.t$item = whwmd217.t$item                              
+ 			  --where whwmd217.t$mauc$1 != 0                                  
+ 		   group by whwmd217.t$item,                                        
+ 					whwmd217.t$cwar ) maucLN                                
+ 								ON maucLN.cwar = subStr(CL.DESCRIPTION,3,6)                         
+ 								AND maucLN.item = ORDERDETAIL.SKU 
       
  LEFT JOIN WMWHSE5.WAVEDETAIL
         ON WAVEDETAIL.ORDERKEY = ORDERDETAIL.ORDERKEY  
