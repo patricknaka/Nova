@@ -192,6 +192,20 @@ VALUES ('FILE_REL_CANCEL',
 '\Package.Variables[User::gstrFolderRelCancel].Properties[Value]',
 'String')
 
+--FLUXO_PEDIDOS
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FLUXO_PEDIDOS', 
+'W:\Operacional\Fluxo Pedidos_LN\Fluxo Pedidos\',
+'\Package.Variables[User::gstrFolderFluxoPed].Properties[Value]',
+'String')
+
+--FILE_FLASH_FAT
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_FLASH_FAT', 
+'W:\Operacional\Flash_Fat_LN\Flash_Fat\',
+'\Package.Variables[User::gstrFolderFlashFat].Properties[Value]',
+'String')
+
 --=================================================
 --inserção de colunas
 --=================================================
