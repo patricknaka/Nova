@@ -296,7 +296,7 @@ select Q1.*
             AND tfgld945.t$rfdt$l = 3
             AND tfgld945.t$citg$l = tcibd001.t$citg
               
-WHERE tdrec940.t$stat$l IN (4,5,6)
+WHERE tdrec940.t$stat$l IN (4,5)
   AND tdrec940.t$rfdt$l = 3
   AND tdrec940.t$opfc$l != '1403'
 
