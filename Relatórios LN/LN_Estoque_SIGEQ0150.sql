@@ -19,9 +19,9 @@ SELECT Q1.*
             sum(whinr140.t$qhnd -  
                 nvl(Q2.bloc,0))               QT_FISICA, 
             sum(nvl(Q3.roma,0))               QT_ROMANEADA, 
-            sum(whinr140.t$qlal)              QT_RESERVADA, 
+            sum(reserva.quan)              QT_RESERVADA, 
             sum(whinr140.t$qhnd -  
-                whinr140.t$qlal -  
+                reserva.quan -  
                 nvl(Q2.bloc,0))               QT_SALDO, 
             max(Q1.mauc)                      VL_UNITARIO, 
              
@@ -37,7 +37,19 @@ SELECT Q1.*
           FROM       baandb.ttcibd001301 tcibd001
           
           INNER JOIN baandb.twhinr140301 whinr140 
-                  ON whinr140.t$item   = tcibd001.t$item 
+                  ON whinr140.t$item   = tcibd001.t$item
+		  LEFT JOIN (SELECT	a.t$item,
+							a.t$cwar,
+							sum(a.t$qana) quan
+					 from baandb.twhinp100301 a
+					 where	a.t$koor=3
+					 and a.t$kotr=2
+					 and a.t$cdis$c=' '
+					 group by a.t$item,
+					          a.t$cwar) reserva
+				ON 	reserva.t$item = whinr140.t$item
+				AND	reserva.t$cwar = whinr140.t$cwar
+					
            
            LEFT JOIN baandb.ttdipu001301 tdipu001  
                   ON tdipu001.t$item = tcibd001.t$item 
@@ -78,7 +90,8 @@ SELECT Q1.*
                  AND Q1.t$cadr = tcmcs003.t$cadr 
                       
            LEFT JOIN ( SELECT whwmd630.t$item,  
-                              whwmd630.t$cwar,  
+                              whwmd630.t$cwar, 
+							  whwmd630.t$loca,
                               sum(whwmd630.t$qbls) bloc 
                          FROM baandb.twhwmd630301 whwmd630 
                         WHERE NOT EXISTS ( SELECT *  
@@ -88,9 +101,11 @@ SELECT Q1.*
                                               AND tcmcs095.t$prcd = 9999 
                                               AND tcmcs095.t$koda = whwmd630.t$bloc ) 
                      GROUP BY whwmd630.t$item,  
-                              whwmd630.t$cwar ) Q2  
+                              whwmd630.t$cwar,
+							  whwmd630.t$loca) Q2  
                   ON Q2.t$item = whinr140.t$item  
-                 AND Q2.t$cwar = whinr140.t$cwar 
+                 AND Q2.t$cwar = whinr140.t$cwar
+				 AND Q2.t$loca = whinr140.t$loca
             
            LEFT JOIN ( SELECT whinh220.t$item,  
                               whinh220.t$cwar,  
@@ -163,8 +178,9 @@ SELECT Q1.*
             whwmd630.t$bloc                   TIPDEP, 
             sum(whwmd630.t$qbls)              QT_FISICA, 
             0                                 QT_ROMANEADA, 
-            0                                 QT_RESERVADA, 
-            sum(whwmd630.t$qbls)              QT_SALDO, 
+			sum(nvl(reserva.quan,0))		  QT_RESERVADA, 
+            sum(whwmd630.t$qbls)-
+			sum(nvl(reserva.quan,0))		  QT_SALDO, 
             max(Q1.mauc)                      VL_UNITARIO, 
             CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL 
                    THEN '00000000000000'  
@@ -188,6 +204,20 @@ SELECT Q1.*
              
           INNER JOIN baandb.twhwmd630301 whwmd630 
                   ON whwmd630.t$item   = tcibd001.t$item 
+				  
+		  LEFT JOIN (SELECT	a.t$item,
+							a.t$cwar,
+							a.t$cdis$c,
+							sum(a.t$qana) quan
+					 from baandb.twhinp100301 a
+					 where	a.t$koor=3
+					 and a.t$kotr=2
+					 group by a.t$item,
+					          a.t$cwar,
+							  a.t$cdis$c) reserva
+				ON 	reserva.t$item = whwmd630.t$item
+				AND	reserva.t$cwar = whwmd630.t$cwar
+				AND reserva.t$cdis$c = whwmd630.t$bloc
 				   
           INNER JOIN baandb.ttcemm112301 tcemm112 
                   ON tcemm112.t$waid   = whwmd630.t$cwar 
