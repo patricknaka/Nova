@@ -11,15 +11,25 @@ select Q1.*
                  tcmcs940.T$DSCA$L                   NOME_CFOP,
                  tccom110.t$cbtp                     COD_TIPO,
                  tdrec940.t$stpn$l                   INS_EsT,
-                 tccom130.t$ccit                     ID_MUNIC,
+                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
+                      tccom130_ret.t$ccit
+                 ELSE tccom130.t$ccit END            ID_MUNIC,
                  CASE tdrec940.t$sfad$l WHEN tdrec940.t$ifad$l THEN 'Fatura' 
                                         ELSE 'Entrega' 
                   END                                TIPO_ENDER, 
                  tdrec940.t$sfad$l                   SEQ_ENDER,
-                 tccom130.t$dist$l                   END_BAIRRO,
-                 tccom130.t$hono                     END_NUMERO,
-                 tccom130.t$namd                     END_COMPL,
-                 tccom130.t$cste                     UF,
+                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
+                      tccom130_ret.t$dist$l
+                 ELSE tccom130.t$dist$l END          END_BAIRRO,
+                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
+                      tccom130_ret.t$hono
+                 ELSE tccom130.t$hono END            END_NUMERO,
+                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
+                      tccom130_ret.t$namd
+                 ELSE tccom130.t$namd END           END_COMPL,
+                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
+                      tccom130_ret.t$cste
+                 ELSE tccom130.t$cste END           UF,
                  tccom139.t$ibge$l                   COD_IBGE,
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -87,8 +97,10 @@ select Q1.*
                    
                  tdrec941.t$tamt$l                   VALO_TOTAL,
                  tdrec940.t$fovn$l                   CNPJ_FORN,
-                 Trim(REPLACE(tccom130.t$namc,';',' '))
-                                                     DESC_RUA,
+
+                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
+                      Trim(REPLACE(tccom130_ret.t$namc,';',' '))
+                 ELSE Trim(REPLACE(tccom130.t$namc,';',' ')) END DESC_RUA,
                  tdrec941.t$gamt$l                   VL_MERC,
                  
                  IMPOSTO_3.                          VL_IPI,
@@ -102,7 +114,7 @@ select Q1.*
       INNER JOIN baandb.ttccom110301       tccom110
               ON tccom110.T$ofbp = tdrec940.t$bpid$l
               
-      INNER JOIN baandb.ttdrec941301       tdrec941
+      INNER JOIN baandb.ttdrec941301       tdrec941      
               ON tdrec940.t$fire$l = tdrec941.t$fire$l
                  
        LEFT JOIN baandb.ttcmcs940301       tcmcs940
@@ -121,16 +133,19 @@ select Q1.*
        LEFT JOIN baandb.ttdipu001301       tdipu001
               ON tdipu001.t$item = tcibd001.t$item
       
-      INNER JOIN baandb.tznmcs030301       znmcs030  
+      INNER JOIN baandb.tznmcs030301       znmcs030
               ON znmcs030.t$citg$c = tcibd001.t$citg
              AND znmcs030.t$seto$c = tcibd001.t$seto$c
  
       INNER JOIN baandb.ttccom100301       tccom100
              ON tccom100.t$bpid = tdrec940.t$bpid$l
   
-      INNER JOIN baandb.ttccom130301       tccom130
+      LEFT JOIN baandb.ttccom130301       tccom130      --humberto
               ON tccom130.t$cadr = tdrec940.t$sfad$l
-                  
+      
+      LEFT JOIN baandb.ttccom130301       tccom130_ret  --p/a notas de retorno de mercadoria
+             ON tccom130_ret.t$cadr=tdrec940.t$stoa$l
+             
        LEFT JOIN baandb.ttccom139301       tccom139
               ON tccom139.t$ccty = tccom130.t$ccty
              AND tccom139.t$cste = tccom130.t$cste
@@ -265,7 +280,9 @@ select Q1.*
              AND IMPOSTO_ST_SCONV.t$line$l = tdrec941.t$line$l
  
            WHERE tdrec940.t$stat$l IN (4, 5)
+
         ORDER BY tdrec940.t$fire$l ) Q1
+
 
 
  WHERE Trunc(DT_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DT_EMISSAO) AND NVL(:DataEmissaoAte, DT_EMISSAO)
