@@ -1,5 +1,7 @@
 SELECT
   DISTINCT
+  tdsls400_2.t$sotp,
+  tdsls094.t$dsca,
     znsls401.t$pecl$c                         Pedido,
     znsls401.t$entr$c                         Entrega,
     CASE WHEN TRIM(cisli941.t$item$l) =  TRIM(PARAM.IT_FRETE) THEN
@@ -102,12 +104,12 @@ FROM       baandb.tznsls401301 znsls401
  LEFT JOIN baandb.tcisli245301 cisli245
         ON cisli245.t$slso = znsls004.t$orno$c
        AND cisli245.t$pono = znsls004.t$pono$c
-
+       
  LEFT JOIN baandb.ttdsls401301  tdsls401
         ON tdsls401.t$orno=cisli245.t$slso
        AND tdsls401.t$pono=cisli245.t$pono 
-       
-LEFT JOIN baandb.ttdrec947301  tdrec947
+
+ LEFT JOIN baandb.ttdrec947301  tdrec947
         ON tdrec947.t$orno$l = tdsls401.t$orno
        AND tdrec947.t$pono$l = tdsls401.t$pono
        AND tdrec947.t$oorg$l = 1
@@ -121,6 +123,12 @@ LEFT JOIN baandb.ttdrec947301  tdrec947
       
  LEFT JOIN baandb.ttdsls400301 tdsls400
         ON tdsls400.t$orno = cisli245.t$slso
+        
+ LEFT JOIN baandb.ttdsls400301 tdsls400_2
+        ON tdsls400_2.t$orno=znsls401.t$orno$c
+        
+ LEFT JOIN baandb.ttdsls094301 tdsls094
+        ON tdsls094.t$sotp=tdsls400_2.t$sotp
     
  LEFT JOIN baandb.ttcmcs065301 tcmcs065
         ON tcmcs065.t$cwoc = tdsls400.t$cofc
@@ -211,5 +219,8 @@ LEFT JOIN baandb.ttdrec947301  tdrec947
 
  
 WHERE TRIM(znsls401.t$idor$c) = 'TD'
-  
+AND   znsls401.t$qtve$c < 0
+AND   (tdsls094.t$reto = 1 OR tdsls094.t$reto=3)
+AND   (znsls401.t$itpe$c=15 OR znsls401.t$itpe$c=9)
+
 ORDER BY Pedido
