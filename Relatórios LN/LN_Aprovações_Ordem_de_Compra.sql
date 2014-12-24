@@ -77,7 +77,14 @@ SELECT
     tcmcs023.t$dsca                                   CONTA_CONTABIL_DESCRICAO,
     tdpur401.t$wrkc$l                                 CODIGO_CENTRO_TRABALHO,
     tcmcs065.t$dsca                                   CENTRO_TRABALHO_DESCRICAO,
-    tcmcs013.t$dsca                                   CONDICAO_PAGTO
+    tcmcs013.t$dsca                                   CONDICAO_PAGTO,
+    tfgld018.t$user                                   LOGIN_APROVADOR_CONTABIL,
+    apr_cont.NOME                                     APROVADOR_CONTABIL,
+    tfgld018.t$date                                   DATA_APROVACAO_CONTABIL,
+
+    TO_CHAR(TRUNC(tfgld018.t$time/3600),'FM9900') || ':' ||
+    TO_CHAR(TRUNC(MOD(tfgld018.t$time,3600)/60),'FM00') || ':' ||
+    TO_CHAR(MOD(tfgld018.t$time,60),'FM00')           HORA_APROVACAO_CONTABIL
     
 FROM       baandb.ttdpur400301 tdpur400
 
@@ -122,7 +129,7 @@ INNER JOIN baandb.ttdpur401301 tdpur401
                     ttaad200.t$name
                from baandb.tttaad200000 ttaad200 ) nome_apr
         ON nome_apr.t$user = apr.t$logn
-               
+ 
  LEFT JOIN (select h.t$orno, 
                    min(h.t$trdt) dapr, 
                    h.t$logn 
@@ -290,7 +297,12 @@ INNER JOIN baandb.ttdpur401301 tdpur401
         
  LEFT JOIN baandb.ttcmcs013301 tcmcs013
         ON tcmcs013.t$cpay=tdpur400.t$cpay
-        
+
+  LEFT JOIN ( select ttaad200.t$user LOGIN,
+                    ttaad200.t$name NOME
+               from baandb.tttaad200000 ttaad200 ) apr_cont
+        ON apr_cont.LOGIN=tfgld018.t$user
+                  
 WHERE tdpur401.t$oltp IN (2,4)
         
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
