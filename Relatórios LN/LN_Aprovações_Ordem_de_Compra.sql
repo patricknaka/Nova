@@ -72,7 +72,7 @@ SELECT
     NVL(tdrec940.t$seri$l, tdpur401.t$seri$c)         SERI_NF,
     tfacp201.t$payd                                   DATA_VENCTO,
     NVL(SITUACAO_PAGTO.DSC_SITUACAO_PAGTO, 
-        'Não informado')                               DSC_SITUACAO_PAGTO,
+        'Não informado')                              DSC_SITUACAO_PAGTO,
     tfcmg101.t$plan                                   DATA_PLAN_PAGTO,
     tcmcs023.t$dsca                                   CONTA_CONTABIL_DESCRICAO,
     tdpur401.t$wrkc$l                                 CODIGO_CENTRO_TRABALHO,
@@ -82,9 +82,11 @@ SELECT
     apr_cont.NOME                                     APROVADOR_CONTABIL,
     tfgld018.t$date                                   DATA_APROVACAO_CONTABIL,
 
-    TO_CHAR(TRUNC(tfgld018.t$time/3600),'FM9900') || ':' ||
-    TO_CHAR(TRUNC(MOD(tfgld018.t$time,3600)/60),'FM00') || ':' ||
-    TO_CHAR(MOD(tfgld018.t$time,60),'FM00')           HORA_APROVACAO_CONTABIL
+    CASE WHEN tfgld018.t$time IS NULL THEN NULL
+           ELSE TO_CHAR(TRUNC(tfgld018.t$time/3600),'FM9900') || ':' ||
+                TO_CHAR(TRUNC(MOD(tfgld018.t$time,3600)/60),'FM00') || ':' ||
+                TO_CHAR(MOD(tfgld018.t$time,60),'FM00')
+    END                                               HORA_APROVACAO_CONTABIL
     
 FROM       baandb.ttdpur400301 tdpur400
 
@@ -150,13 +152,13 @@ INNER JOIN baandb.ttdpur401301 tdpur401
  LEFT JOIN baandb.ttfgld018301 tfgld018
         ON tfgld018.t$ttyp = tdrec940.t$ttyp$l
        AND tfgld018.t$docn = tdrec940.t$invn$l
-       AND tfgld018.t$ttyp != ' '
-       AND tfgld018.t$docn != 0
+       AND tfgld018.t$ttyp !=  ' '
+       AND tfgld018.t$docn !=  0
       
  LEFT JOIN baandb.ttfcmg101301 tfcmg101
         ON tfcmg101.t$ttyp = tdrec940.t$ttyp$l
        AND tfcmg101.t$ninv = tdrec940.t$invn$l
-       AND tfcmg101.t$ninv != 0
+       AND tfcmg101.t$ninv !=  0
  
  LEFT JOIN baandb.ttfacp201301 tfacp201
         ON tfacp201.t$ttyp = tdrec940.t$ttyp$l
@@ -296,12 +298,12 @@ INNER JOIN baandb.ttdpur401301 tdpur401
         ON tcmcs065.t$cwoc = tdpur401.t$wrkc$l
         
  LEFT JOIN baandb.ttcmcs013301 tcmcs013
-        ON tcmcs013.t$cpay=tdpur400.t$cpay
+        ON tcmcs013.t$cpay = tdpur400.t$cpay
 
-  LEFT JOIN ( select ttaad200.t$user LOGIN,
+ LEFT JOIN ( select ttaad200.t$user LOGIN,
                     ttaad200.t$name NOME
                from baandb.tttaad200000 ttaad200 ) apr_cont
-        ON apr_cont.LOGIN=tfgld018.t$user
+        ON apr_cont.LOGIN = tfgld018.t$user
                   
 WHERE tdpur401.t$oltp IN (2,4)
         
