@@ -68,7 +68,7 @@ INNER JOIN baandb.tznfmd630301     znfmd630
         ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
            
 INNER JOIN baandb.tznsls401301     znsls401
-        ON znsls401.t$entr$c = znfmd630.t$pecl$c  
+        ON TO_CHAR(znsls401.t$entr$c) = TO_CHAR(znfmd630.t$pecl$c)  
        AND znsls401.t$orno$c = znfmd630.t$orno$c   
   
 INNER JOIN baandb.tznsls400301     znsls400
