@@ -39,13 +39,7 @@ SELECT DISTINCT
   cisli940.t$styp$l    TIPO_VENDA,
   znfmd170.t$fovn$c    CNPJ_TRANSPORTADORA,
   
-  nvl( ( SELECT znfmd006.t$creg$c  
-           FROM tznfmd006201  znfmd006
-          WHERE TO_NUMBER(znfmd006.t$fpst$c) <= znsls401.t$cepe$c 
-            AND TO_NUMBER(znfmd006.t$tpst$c) >= znsls401.t$cepe$c 
-            AND znfmd006.t$creg$c != 'BR'
-            AND rownum=1 ),'BR' )
-                      REGIAO,
+  NVL(REGIAO.DSC,'BR') REGIAO,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE)      
@@ -68,96 +62,111 @@ SELECT DISTINCT
   znsls401.t$qtve$c   QTDE_PEDIDO,
   znfmd630.t$etiq$c   ETIQUETA
   
-FROM  baandb.ttcmcs080201     tcmcs080,
-      baandb.tznsls004201     znsls004,
-      baandb.tznsls400201     znsls400,
-      baandb.tznsls401201     znsls401
+FROM       baandb.ttcmcs080301     tcmcs080
 
-LEFT JOIN baandb.tznint002201     znint002
-       ON znint002.t$ncia$c = znsls401.t$ncia$c
-      AND znint002.t$uneg$c = znsls401.t$uneg$c
-
-LEFT JOIN baandb.ttcmcs031201     tcmcs031
-       ON znint002.t$cbrn$c = tcmcs031.t$cbrn
-         
-LEFT JOIN baandb.tcisli245201  cisli245  
-       ON cisli245.t$slso = znsls401.t$orno$c
-      AND cisli245.t$pono = znsls401.t$pono$c
-      AND cisli245.t$item = znsls401.t$itml$c
-      
-LEFT JOIN baandb.tcisli941201  cisli941  
-       ON cisli941.t$fire$l = cisli245.t$fire$l
-      AND cisli941.t$line$l = cisli245.t$line$l
-
-LEFT JOIN baandb.tznsls002201 znsls002
-       ON znsls002.t$tpen$c = znsls401.t$itpe$c
+INNER JOIN baandb.tznfmd630301     znfmd630
+        ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
+           
+INNER JOIN baandb.tznsls401301     znsls401
+        ON znsls401.t$entr$c = znfmd630.t$pecl$c  
+       AND znsls401.t$orno$c = znfmd630.t$orno$c   
+  
+INNER JOIN baandb.tznsls400301     znsls400
+        ON znsls400.t$ncia$c = znsls401.t$ncia$c 
+       AND znsls400.t$uneg$c = znsls401.T$UNEG$c 
+       AND znsls400.t$pecl$c = znsls401.T$pecl$c 
+       AND znsls400.t$sqpd$c = znsls401.T$sqpd$c
        
-LEFT JOIN baandb.twhwmd400201 whwmd400
-       ON whwmd400.t$item = znsls401.t$itml$c,
-       
-          baandb.tznfmd630201      znfmd630
+ LEFT JOIN ( SELECT znfmd006.t$creg$c DSC,
+                    TO_NUMBER(znfmd006.t$fpst$c) t$fpst$c,
+                    TO_NUMBER(znfmd006.t$tpst$c) t$tpst$c
+               FROM baandb.tznfmd006301  znfmd006
+              WHERE znfmd006.t$creg$c != 'BR' ) REGIAO
+        ON REGIAO.t$fpst$c <= znsls401.t$cepe$c 
+       AND REGIAO.t$tpst$c >= znsls401.t$cepe$c 
+            
+ LEFT JOIN baandb.tznint002301     znint002
+        ON znint002.t$ncia$c = znsls401.t$ncia$c
+       AND znint002.t$uneg$c = znsls401.t$uneg$c
+ 
+ LEFT JOIN baandb.ttcmcs031301     tcmcs031
+        ON znint002.t$cbrn$c = tcmcs031.t$cbrn
           
-LEFT JOIN baandb.tznfmd067201  znfmd067
-       ON znfmd067.t$cfrw$c = znfmd630.t$cfrw$c 
-      AND znfmd067.t$cono$c = znfmd630.t$cono$c
-      AND znfmd067.t$fili$c = znfmd630.t$fili$c  
-      
-LEFT JOIN baandb.tznfmd170201 znfmd170
-       ON znfmd170.t$fili$c = znfmd630.t$fili$c 
-      AND znfmd170.t$cfrw$c = znfmd630.t$cfrw$c
-      
-LEFT JOIN baandb.tcisli940201  cisli940
-       ON cisli940.t$fire$l = znfmd630.t$fire$c 
-      AND cisli940.t$docn$l = znfmd630.t$docn$c 
-      AND cisli940.t$seri$l = znfmd630.t$seri$c
+ LEFT JOIN baandb.tcisli245301  cisli245  
+        ON cisli245.t$slso = znsls401.t$orno$c
+       AND cisli245.t$pono = znsls401.t$pono$c
+       AND cisli245.t$item = znsls401.t$itml$c
+       
+ LEFT JOIN baandb.tcisli941301  cisli941  
+        ON cisli941.t$fire$l = cisli245.t$fire$l
+       AND cisli941.t$line$l = cisli245.t$line$l
+ 
+ LEFT JOIN baandb.tznsls002301 znsls002
+        ON znsls002.t$tpen$c = znsls401.t$itpe$c
         
-LEFT JOIN baandb.tznfmd640201 znfmd640
-       ON znfmd640.t$fili$c = znfmd630.t$fili$c 
-      AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
-      
-LEFT JOIN baandb.tznfmd915201  znfmd915
-       ON znfmd915.t$cage$c = znfmd630.t$ngai$c
-      AND znfmd915.t$orid$c = znfmd630.t$etiq$c ,
-      
-        ( SELECT d.t$cnst CODE_STAT, l.t$desc DESC_TIPO_DOCUMENTO
-            FROM baandb.tttadv401000 d, 
-                 baandb.tttadv140000 l 
-           WHERE d.t$cpac='ci' 
-             AND d.t$cdom ='sli.tdff.l'
-             AND d.t$vers='B61U'
-             AND d.t$rele='a7'
-             AND d.t$cust='glo1'
-             AND l.t$clab=d.t$za_clab
-             AND l.t$clan='p'
-             AND l.t$cpac='ci'
-             AND l.t$vers=( SELECT max(l1.t$vers) 
-                              FROM tttadv140000 l1 
-                             WHERE l1.t$clab=l.t$clab 
-                               AND l1.t$clan=l.t$clan 
-                               AND l1.t$cpac=l.t$cpac ) ) FGET
-                               
-WHERE znsls400.t$ncia$c = znsls401.t$ncia$c 
-  AND znsls400.t$uneg$c = znsls401.T$UNEG$c 
-  AND znsls400.t$pecl$c = znsls401.T$pecl$c 
-  AND znsls400.t$sqpd$c = znsls401.T$sqpd$c
-  AND znsls004.t$ncia$c = znsls401.t$ncia$c 
-  AND znsls004.t$uneg$c = znsls401.T$UNEG$c 
-  AND znsls004.t$pecl$c = znsls401.T$pecl$c 
-  AND znsls004.t$sqpd$c = znsls401.T$sqpd$c 
-  AND znsls004.t$orno$c = znsls401.T$orno$c
-  AND znsls004.t$pono$c = znsls401.T$pono$c    
-  AND znsls401.t$entr$c = znfmd630.t$pecl$c  
-  AND znsls401.t$orno$c = znfmd630.t$orno$c   
-  AND tcmcs080.t$cfrw = znfmd630.t$cfrw$c
-  AND cisli940.t$fdty$l = FGET.CODE_STAT
-  AND znfmd640.t$date$c = ( select max(oc.t$date$c) 
-                              from baandb.tznfmd640201 oc
-                             where oc.t$fili$c = znfmd640.t$fili$c
-                               and oc.t$etiq$c = znfmd640.t$etiq$c )
+ LEFT JOIN baandb.twhwmd400301 whwmd400
+        ON whwmd400.t$item = znsls401.t$itml$c
+        
+ LEFT JOIN baandb.tznfmd067301  znfmd067
+        ON znfmd067.t$cfrw$c = znfmd630.t$cfrw$c 
+       AND znfmd067.t$cono$c = znfmd630.t$cono$c
+       AND znfmd067.t$fili$c = znfmd630.t$fili$c  
+       
+ LEFT JOIN baandb.tznfmd170301 znfmd170
+        ON znfmd170.t$fili$c = znfmd630.t$fili$c 
+       AND znfmd170.t$cfrw$c = znfmd630.t$cfrw$c
+       
+ LEFT JOIN baandb.tcisli940301  cisli940
+        ON cisli940.t$fire$l = znfmd630.t$fire$c 
+       AND cisli940.t$docn$l = znfmd630.t$docn$c 
+       AND cisli940.t$seri$l = znfmd630.t$seri$c
+         
+ LEFT JOIN baandb.tznfmd640301 znfmd640
+        ON znfmd640.t$fili$c = znfmd630.t$fili$c 
+       AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
+       
+ LEFT JOIN baandb.tznfmd915301  znfmd915
+        ON znfmd915.t$cage$c = znfmd630.t$ngai$c
+       AND znfmd915.t$orid$c = znfmd630.t$etiq$c
+       
+ LEFT JOIN ( SELECT d.t$cnst CODE_STAT, l.t$desc DESC_TIPO_DOCUMENTO
+               FROM baandb.tttadv401000 d, 
+                    baandb.tttadv140000 l 
+              WHERE d.t$cpac = 'ci' 
+                AND d.t$cdom = 'sli.tdff.l'
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'ci'
+                AND l.t$clab = d.t$za_clab
+                AND rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) || 
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) FGET
+        ON cisli940.t$fdty$l = FGET.CODE_STAT
+        
+WHERE (   (znfmd640.t$date$c is null) 
+       OR (znfmd640.t$date$c = ( select max(oc.t$date$c) 
+                                   from baandb.tznfmd640301 oc
+                                  where oc.t$fili$c = znfmd640.t$fili$c
+                                    and oc.t$etiq$c = znfmd640.t$etiq$c )) )
 
-/*
-  AND cisli940.t$fdty$l = NVL(:TipoEntrega, cisli940.t$fdty$l)
-  AND znsls400.t$dtem$c BETWEEN :DtExpIni AND :DtExpFim
-  AND tcmcs080.t$dsca = CASE WHEN :Transportadora = 'Todas' THEN tcmcs080.t$dsca ELSE :Transportadora END
-  AND tcmcs031.t$dsca = CASE WHEN :Marca = 'Todas' THEN tcmcs031.t$dsca ELSE :Marca END
-*/
+  AND znsls401.t$itpe$c IN (:TipoEntrega)
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)) 
+      BETWEEN :DtExpIni 
+          AND :DtExpFim
+  AND tcmcs080.t$cfrw = CASE WHEN :Transportadora = 'T' THEN tcmcs080.t$cfrw ELSE :Transportadora END
+  AND tcmcs031.t$cbrn = CASE WHEN :Marca = 'T' THEN tcmcs031.t$cbrn ELSE :Marca END
