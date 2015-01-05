@@ -13,9 +13,9 @@ STATUSCANCELADO.ADDDATE                     DT_CANC,
 ORDERS.WHSEID                               PLANTA,
 CODELKUP.UDF2                               DESC_PLANTA
 
-FROM      WMWHSE4.ORDERS
+FROM      WMWHSE5.ORDERS
 
-LEFT JOIN WMWHSE4.WAVEDETAIL
+LEFT JOIN WMWHSE5.WAVEDETAIL
        ON WAVEDETAIL.ORDERKEY=ORDERS.ORDERKEY
        
 LEFT JOIN TASKDETAIL
@@ -27,9 +27,9 @@ LEFT JOIN TASKDETAIL
                     max(a.STATUS)   STATUS, 
                     max(a.ADDDATE)  ADDDATE, 
                     max(a.ADDWHO)   ADDWHO 
-              FROM WMWHSE4.ORDERSTATUSHISTORY a
+              FROM WMWHSE5.ORDERSTATUSHISTORY a
               WHERE a.ADDDATE = ( select  max(b.adddate) 
-                                  from    WMWHSE4.ORDERSTATUSHISTORY b
+                                  from    WMWHSE5.ORDERSTATUSHISTORY b
                                   where   b.ORDERKEY = a.ORDERKEY
                                   and     b.ORDERLINENUMBER = a.ORDERLINENUMBER )
               GROUP BY a.ORDERKEY, 
@@ -38,8 +38,8 @@ LEFT JOIN TASKDETAIL
      
 LEFT JOIN ( SELECT MAX(C.ADDDATE)  ADDDATE,
                     C.ORDERKEY
-            FROM WMWHSE4.ORDERSTATUSHISTORY C
-            WHERE C.STATUS=98
+            FROM WMWHSE5.ORDERSTATUSHISTORY C
+            WHERE C.STATUS=99
             GROUP BY C.ORDERKEY)  STATUSCANCELADO
        ON STATUSCANCELADO.ORDERKEY=ORDERS.ORDERKEY
             
@@ -51,7 +51,7 @@ LEFT JOIN ( SELECT a.UDF1, a.UDF2
             WHERE LISTNAME='SCHEMA')  CODELKUP
        ON   UPPER(CODELKUP.UDF1)=UPPER(ORDERS.WHSEID)
 
-LEFT JOIN WMWHSE4.taskmanageruser tu 
+LEFT JOIN WMWHSE5.taskmanageruser tu 
        ON tu.userkey = ULTIMO_EVENTO.ADDWHO
        
 order by ORDERS.ORDERKEY
