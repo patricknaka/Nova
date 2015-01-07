@@ -1,7 +1,7 @@
 SELECT CG.WHSEID            ID_FILIAL,
        CL.UDF2              DESCR_FILIAL,
        PZ.PUTAWAYZONE       ZONA,
-       SUBSTR(CG.LOC,3,2)   RUA,
+       SUBSTR(CG.LOC,1,5)   RUA,
        SUM(CASE WHEN CG.STATUS != 0 
                   THEN 1 
                 ELSE 0 
@@ -31,9 +31,9 @@ INNER JOIN ENTERPRISE.CODELKUP CL
         ON UPPER(CL.UDF1) = CG.WHSEID
        AND CL.LISTNAME = 'SCHEMA'
   GROUP BY PZ.PUTAWAYZONE,
-           SUBSTR(CG.LOC,3,2),
+           SUBSTR(CG.LOC,1,5),
            CG.WHSEID,
-           CL.UDF2   
+           CL.UDF2
 		   
 		   
 =IIF(Parameters!Table.Value <> "AAA",
@@ -41,7 +41,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "SELECT CG.WHSEID            ID_FILIAL,                                  " &
 "       CL.UDF2              DESCR_FILIAL,                               " &
 "       PZ.PUTAWAYZONE       ZONA,                                       " &
-"       SUBSTR(CG.LOC,3,2)   RUA,                                        " &
+"       SUBSTR(CG.LOC,1,5)   RUA,                                        " &
 "       SUM(CASE WHEN CG.STATUS != 0                                     " &
 "                  THEN 1                                                " &
 "                ELSE 0                                                  " &
@@ -71,18 +71,18 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "        ON UPPER(CL.UDF1) = CG.WHSEID                                   " &
 "       AND CL.LISTNAME = 'SCHEMA'                                       " &
 "  GROUP BY PZ.PUTAWAYZONE,                                              " &
-"           SUBSTR(CG.LOC,3,2),                                          " &
+"           SUBSTR(CG.LOC,1,5),                                          " &
 "           CG.WHSEID,                                                   " &
 "           CL.UDF2                                                      " &
 "                                                                        " &
-"ORDER BY PZ.PUTAWAYZONE, SUBSTR(CG.LOC,3,2)                             "
+"ORDER BY PZ.PUTAWAYZONE, SUBSTR(CG.LOC,1,5)                             "
 
 ,
 
 "SELECT CG.WHSEID            ID_FILIAL,               " &
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
-"       SUBSTR(CG.LOC,3,2)   RUA,                     " &
+"       SUBSTR(CG.LOC,1,5)   RUA,                     " &
 "       SUM(CASE WHEN CG.STATUS != 0                  " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
@@ -112,7 +112,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "        ON UPPER(CL.UDF1) = CG.WHSEID                " &
 "       AND CL.LISTNAME = 'SCHEMA'                    " &
 "  GROUP BY PZ.PUTAWAYZONE,                           " &
-"           SUBSTR(CG.LOC,3,2),                       " &
+"           SUBSTR(CG.LOC,1,5),                       " &
 "           CG.WHSEID,                                " &
 "           CL.UDF2                                   " &
 "                                                     " &
@@ -121,7 +121,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "SELECT CG.WHSEID            ID_FILIAL,               " &
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
-"       SUBSTR(CG.LOC,3,2)   RUA,                     " &
+"       SUBSTR(CG.LOC,1,5)   RUA,                     " &
 "       SUM(CASE WHEN CG.STATUS != 0                  " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
@@ -151,7 +151,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "        ON UPPER(CL.UDF1) = CG.WHSEID                " &
 "       AND CL.LISTNAME = 'SCHEMA'                    " &
 "  GROUP BY PZ.PUTAWAYZONE,                           " &
-"           SUBSTR(CG.LOC,3,2),                       " &
+"           SUBSTR(CG.LOC,1,5),                       " &
 "           CG.WHSEID,                                " &
 "           CL.UDF2                                   " &
 "                                                     " &
@@ -160,7 +160,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "SELECT CG.WHSEID            ID_FILIAL,               " &
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
-"       SUBSTR(CG.LOC,3,2)   RUA,                     " &
+"       SUBSTR(CG.LOC,1,5)   RUA,                     " &
 "       SUM(CASE WHEN CG.STATUS != 0                  " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
@@ -190,7 +190,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "        ON UPPER(CL.UDF1) = CG.WHSEID                " &
 "       AND CL.LISTNAME = 'SCHEMA'                    " &
 "  GROUP BY PZ.PUTAWAYZONE,                           " &
-"           SUBSTR(CG.LOC,3,2),                       " &
+"           SUBSTR(CG.LOC,1,5),                       " &
 "           CG.WHSEID,                                " &
 "           CL.UDF2                                   " &
 "                                                     " &
@@ -199,7 +199,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "SELECT CG.WHSEID            ID_FILIAL,               " &
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
-"       SUBSTR(CG.LOC,3,2)   RUA,                     " &
+"       SUBSTR(CG.LOC,1,5)   RUA,                     " &
 "       SUM(CASE WHEN CG.STATUS != 0                  " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
@@ -229,7 +229,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "        ON UPPER(CL.UDF1) = CG.WHSEID                " &
 "       AND CL.LISTNAME = 'SCHEMA'                    " &
 "  GROUP BY PZ.PUTAWAYZONE,                           " &
-"           SUBSTR(CG.LOC,3,2),                       " &
+"           SUBSTR(CG.LOC,1,5),                       " &
 "           CG.WHSEID,                                " &
 "           CL.UDF2                                   " &
 "                                                     " &
@@ -238,7 +238,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "SELECT CG.WHSEID            ID_FILIAL,               " &
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
-"       SUBSTR(CG.LOC,3,2)   RUA,                     " &
+"       SUBSTR(CG.LOC,1,5)   RUA,                     " &
 "       SUM(CASE WHEN CG.STATUS != 0                  " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
@@ -268,7 +268,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "        ON UPPER(CL.UDF1) = CG.WHSEID                " &
 "       AND CL.LISTNAME = 'SCHEMA'                    " &
 "  GROUP BY PZ.PUTAWAYZONE,                           " &
-"           SUBSTR(CG.LOC,3,2),                       " &
+"           SUBSTR(CG.LOC,1,5),                       " &
 "           CG.WHSEID,                                " &
 "           CL.UDF2                                   " &
 "                                                     " &
@@ -277,7 +277,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "SELECT CG.WHSEID            ID_FILIAL,               " &
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
-"       SUBSTR(CG.LOC,3,2)   RUA,                     " &
+"       SUBSTR(CG.LOC,1,5)   RUA,                     " &
 "       SUM(CASE WHEN CG.STATUS != 0                  " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
@@ -307,7 +307,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "        ON UPPER(CL.UDF1) = CG.WHSEID                " &
 "       AND CL.LISTNAME = 'SCHEMA'                    " &
 "  GROUP BY PZ.PUTAWAYZONE,                           " &
-"           SUBSTR(CG.LOC,3,2),                       " &
+"           SUBSTR(CG.LOC,1,5),                       " &
 "           CG.WHSEID,                                " &
 "           CL.UDF2                                   " &
 "                                                     " &
@@ -316,7 +316,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "SELECT CG.WHSEID            ID_FILIAL,               " &
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
-"       SUBSTR(CG.LOC,3,2)   RUA,                     " &
+"       SUBSTR(CG.LOC,1,5)   RUA,                     " &
 "       SUM(CASE WHEN CG.STATUS != 0                  " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
@@ -346,7 +346,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "        ON UPPER(CL.UDF1) = CG.WHSEID                " &
 "       AND CL.LISTNAME = 'SCHEMA'                    " &
 "  GROUP BY PZ.PUTAWAYZONE,                           " &
-"           SUBSTR(CG.LOC,3,2),                       " &
+"           SUBSTR(CG.LOC,1,5),                       " &
 "           CG.WHSEID,                                " &
 "           CL.UDF2                                   " &
 "                                                     " &
