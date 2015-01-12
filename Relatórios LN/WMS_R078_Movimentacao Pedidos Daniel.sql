@@ -20,28 +20,20 @@ SELECT
 		LD.PUTAWAYZONE						ZONA_DEST,
 		OC.STATUS							ID_SITUACAO,
 		SS.DESCRIPTION						DESCR_SITUACAO,
-<<<<<<< HEAD
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
            AT time zone sessiontimezone) AS DATE)
 											DT_HR,
 		IT.EDITWHO							ID_OPERADOR,
-=======
-		OC.EDITDATE							DT_HR,
-		TD.EDITWHO							ID_OPERADOR,
->>>>>>> parent of 9892107... R078
 		subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',')-4 )   	NOME_OP		
 FROM
 		WMWHSE5.TASKDETAIL						TD
-<<<<<<< HEAD
 		INNER JOIN	WMWHSE5.ITRN				IT	ON	IT.SOURCEKEY	=	TD.SOURCEKEY
 													AND	IT.FROMLOC		=	TD.FROMLOC
 													AND	IT.TOLOC		=	TD.TOLOC
 													AND	IT.SKU			=	TD.SKU
 													AND	IT.LOT			=	TD.LOT
 													AND IT.SOURCETYPE	=	'PICKING'
-=======
->>>>>>> parent of 9892107... R078
 		INNER JOIN 	ENTERPRISE.CODELKUP			CL	ON	UPPER(CL.UDF1)	=	TD.WHSEID
 													AND	CL.LISTNAME 	=	'SCHEMA'
 		INNER JOIN	WMWHSE5.ORDERS				OC	ON	OC.ORDERKEY		=	TD.ORDERKEY
@@ -51,7 +43,6 @@ FROM
 		INNER JOIN	WMWHSE5.LOC					LD	ON	LD.LOC			=	TD.TOLOC
 		INNER JOIN	WMWHSE5.PUTAWAYZONE 		PD	ON	PD.PUTAWAYZONE	=	LD.PUTAWAYZONE
 		INNER JOIN	WMWHSE5.ORDERSTATUSSETUP	SS	ON	SS.CODE			=	OC.STATUS
-<<<<<<< HEAD
 		LEFT JOIN 	WMWHSE5.taskmanageruser 	tu 	ON 	tu.userkey 		= 	IT.EDITWHO
 WHERE
 				TD.TASKTYPE = 'PK'
@@ -567,9 +558,3 @@ WHERE
 
 )
 
-=======
-		LEFT JOIN 	WMWHSE5.taskmanageruser 	tu 	ON 	tu.userkey 		= 	TD.EDITWHO
-WHERE
-				TD.TASKTYPE = 'PK'
-		AND		TD.STATUS = 9
->>>>>>> parent of 9892107... R078
