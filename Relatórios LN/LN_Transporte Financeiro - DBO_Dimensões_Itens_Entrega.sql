@@ -12,17 +12,18 @@ SELECT
     whwmd400.t$wdth                    LARGURA,
     whwmd400.t$dpth                    COMPRIMENTO,
     znfmd630.t$wght$c                  PESO,
-    whwmd400.t$hght * whwmd400.t$wdth  M3
-                      
-FROM       baandb.tznfmd630201 znfmd630
+    whwmd400.t$hght * whwmd400.t$wdth *  
+    whwmd400.t$dpth * cisli941.t$dqua$l  M3
 
-INNER JOIN baandb.tcisli941201 cisli941
+FROM       baandb.tznfmd630301 znfmd630
+
+INNER JOIN baandb.tcisli941301 cisli941
         ON cisli941.T$FIRE$L = znfmd630.t$fire$c
 
-INNER JOIN baandb.tcisli940201 cisli940
+INNER JOIN baandb.tcisli940301 cisli940
         ON cisli940.t$fire$l = cisli941.t$fire$l
 
-INNER JOIN baandb.twhwmd400201 whwmd400
+INNER JOIN baandb.twhwmd400301 whwmd400
         ON whwmd400.t$item = cisli941.T$ITEM$L
 
 WHERE znfmd630.t$pecl$c IN (:Entrega)
