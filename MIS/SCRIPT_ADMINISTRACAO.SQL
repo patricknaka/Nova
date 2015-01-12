@@ -206,6 +206,20 @@ VALUES ('FILE_FLASH_FAT',
 '\Package.Variables[User::gstrFolderFlashFat].Properties[Value]',
 'String')
 
+--FILE_MG_TODAY
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_MG_TODAY', 
+'W:\Operacional\Margin Today Prod\Margin Today\',
+'\Package.Variables[User::gstrFolderMgToday].Properties[Value]',
+'String')
+
+--FILE_MG_MKPL
+INSERT INTO [ADMINISTRACAO].[adm].[ssis_conexoes]
+VALUES ('FILE_MG_MKPL', 
+'W:\Operacional\Margin Approved Market Place Prod\Margin Approved Market Place\',
+'\Package.Variables[User::gstrFolderMgMkpl].Properties[Value]',
+'String')
+
 --=================================================
 --inserção de colunas
 --=================================================
