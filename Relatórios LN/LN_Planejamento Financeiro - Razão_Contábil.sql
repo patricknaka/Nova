@@ -28,11 +28,11 @@ SELECT
    END                                 ID_CONTA_CONTRAPARTIDA,
   
   tfgld106.t$leac                      ID_CONTA_PRINCIPAL,
-  tfgld008.t$desc                      NOME_DA_CONTA,
-  DIM3.t$DESC                          UN_NEGOCIO,
-  DIM5.t$DESC                          BANDEIRA,
-  tfgld106.t$dim6                      PROJETO,
+  tfgld008.t$desc                      NOME_DA_CONTA,  
   tfgld106.t$dim1                      ID_CCUSTO,
+  tfgld106.t$dim3                      UN_NEGOCIO,
+  tfgld106.t$dim5                      BANDEIRA,
+  tfgld106.t$dim6                      PROJETO,
   
   CASE WHEN tfgld106.t$dim1 = ' ' THEN ' '
        ELSE tfgld010.t$desc 
@@ -70,20 +70,6 @@ INNER JOIN baandb.ttfgld100301 tfgld100
         ON tfgld106.t$typ1 = tfgld010.t$dtyp
        AND tfgld106.t$dim1 = tfgld010.t$dimx
  
- LEFT JOIN (Select  a.t$DTYP,
-                    a.t$DIMX,
-                    a.t$DESC
-            From    baandb.ttfgld010301 a) DIM3
-        ON  DIM3.t$DTYP=tfgld106.t$typ3
-        AND DIM3.t$DIMX=tfgld106.t$dim3
-        
-LEFT JOIN (Select   a.t$DTYP,
-                    a.t$DIMX,
-                    a.t$DESC
-            From    baandb.ttfgld010301 a) DIM5
-        ON  DIM5.t$DTYP=tfgld106.t$typ5
-        AND DIM5.t$DIMX=tfgld106.t$dim5
-      
 WHERE TRUNC(tfgld106.t$dcdt) BETWEEN (:DataDe) AND (:DataAte)
 
   AND NVL(Trim(Filial.COD_FILIAL), '000') IN (:Filial)
