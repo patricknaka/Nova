@@ -1,8 +1,9 @@
+<<<<<<< HEAD
 SELECT CG.WHSEID            ID_FILIAL,
        CL.UDF2              DESCR_FILIAL,
        PZ.PUTAWAYZONE       ZONA,
        SUBSTR(CG.LOC,1,5)   RUA,
-       SUM(CASE WHEN CG.STATUS != 0 
+       SUM(CASE WHEN CG.STATUS = 0 
                   THEN 1 
                 ELSE 0 
             END)            QT_INVENTARIO,
@@ -42,7 +43,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "       CL.UDF2              DESCR_FILIAL,                               " &
 "       PZ.PUTAWAYZONE       ZONA,                                       " &
 "       SUBSTR(CG.LOC,1,5)   RUA,                                        " &
-"       SUM(CASE WHEN CG.STATUS != 0                                     " &
+"       SUM(CASE WHEN CG.STATUS = 0                                      " &
 "                  THEN 1                                                " &
 "                ELSE 0                                                  " &
 "            END)            QT_INVENTARIO,                              " &
@@ -83,7 +84,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
 "       SUBSTR(CG.LOC,1,5)   RUA,                     " &
-"       SUM(CASE WHEN CG.STATUS != 0                  " &
+"       SUM(CASE WHEN CG.STATUS = 0                   " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
 "            END)            QT_INVENTARIO,           " &
@@ -122,7 +123,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
 "       SUBSTR(CG.LOC,1,5)   RUA,                     " &
-"       SUM(CASE WHEN CG.STATUS != 0                  " &
+"       SUM(CASE WHEN CG.STATUS = 0                   " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
 "            END)            QT_INVENTARIO,           " &
@@ -161,7 +162,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
 "       SUBSTR(CG.LOC,1,5)   RUA,                     " &
-"       SUM(CASE WHEN CG.STATUS != 0                  " &
+"       SUM(CASE WHEN CG.STATUS = 0                   " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
 "            END)            QT_INVENTARIO,           " &
@@ -200,7 +201,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
 "       SUBSTR(CG.LOC,1,5)   RUA,                     " &
-"       SUM(CASE WHEN CG.STATUS != 0                  " &
+"       SUM(CASE WHEN CG.STATUS = 0                   " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
 "            END)            QT_INVENTARIO,           " &
@@ -239,7 +240,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
 "       SUBSTR(CG.LOC,1,5)   RUA,                     " &
-"       SUM(CASE WHEN CG.STATUS != 0                  " &
+"       SUM(CASE WHEN CG.STATUS = 0                   " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
 "            END)            QT_INVENTARIO,           " &
@@ -278,7 +279,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
 "       SUBSTR(CG.LOC,1,5)   RUA,                     " &
-"       SUM(CASE WHEN CG.STATUS != 0                  " &
+"       SUM(CASE WHEN CG.STATUS = 0                   " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
 "            END)            QT_INVENTARIO,           " &
@@ -317,7 +318,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "       CL.UDF2              DESCR_FILIAL,            " &
 "       PZ.PUTAWAYZONE       ZONA,                    " &
 "       SUBSTR(CG.LOC,1,5)   RUA,                     " &
-"       SUM(CASE WHEN CG.STATUS != 0                  " &
+"       SUM(CASE WHEN CG.STATUS = 0                   " &
 "                  THEN 1                             " &
 "                ELSE 0                               " &
 "            END)            QT_INVENTARIO,           " &
@@ -353,3 +354,40 @@ INNER JOIN ENTERPRISE.CODELKUP CL
 "ORDER BY DESCR_FILIAL, ZONA, RUA                     "
 
 )
+=======
+SELECT
+	CG.WHSEID										ID_FILIAL,
+	CL.UDF2                     					DESCR_FILIAL,
+	PZ.PUTAWAYZONE									ZONA,
+	SUBSTR(CG.LOC,3,2) 								RUA,
+	SUM(CASE WHEN CG.STATUS!=0 THEN 1 ELSE 0 END) 	QT_INVENTARIO,
+	COUNT(CG.LOC) 									QT_HABILITADO
+FROM  
+	(	SELECT 	IV.WHSEID,
+				IV.LOC,
+				MAX(IV.STATUS) STATUS
+		FROM
+		( select
+			CD.WHSEID,
+			CD.LOC,
+			CD.STATUS
+		  from WMWHSE4.CC CC
+		  inner join WMWHSE4.CCDETAIL CD on CD.CCKEY = CC.CCKEY
+		  WHERE CC.STATUS!=9
+		  union 
+		  select
+			PH.WHSEID,
+			PH.LOC,
+			PH.STATUS
+		  FROM WMWHSE4.PHYSICAL PH) IV
+		GROUP BY IV.WHSEID, IV.LOC) CG
+	INNER JOIN WMWHSE4.LOC LC ON LC.LOC = CG.LOC
+	INNER JOIN WMWHSE4.PUTAWAYZONE PZ ON PZ.PUTAWAYZONE = LC.PUTAWAYZONE
+	INNER JOIN ENTERPRISE.CODELKUP CL ON  UPPER(CL.UDF1) = CG.WHSEID
+									  AND CL.LISTNAME = 'SCHEMA'
+GROUP BY 
+	PZ.PUTAWAYZONE,
+	SUBSTR(CG.LOC,3,2),
+	CG.WHSEID,
+    CL.UDF2   
+>>>>>>> parent of cf75d17... Relatório R078
