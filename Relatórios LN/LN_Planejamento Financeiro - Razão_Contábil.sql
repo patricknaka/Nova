@@ -30,13 +30,29 @@ SELECT
   tfgld106.t$leac                      ID_CONTA_PRINCIPAL,
   tfgld008.t$desc                      NOME_DA_CONTA,  
   tfgld106.t$dim1                      ID_CCUSTO,
-  tfgld106.t$dim3                      UN_NEGOCIO,
-  tfgld106.t$dim5                      BANDEIRA,
-  tfgld106.t$dim6                      PROJETO,
-  
-  CASE WHEN tfgld106.t$dim1 = ' ' THEN ' '
-       ELSE tfgld010.t$desc 
+
+   CASE WHEN tfgld106.t$dim1=' ' THEN ' '
+       ELSE ( SELECT tfgld010_1.t$desc
+                FROM baandb.ttfgld010301 tfgld010_1
+               WHERE tfgld010_1.t$dimx = tfgld106.t$dim1
+                 AND tfgld010_1.t$dtyp = 1 )      
    END                                 NOME_CCUSTO,
+   
+   CASE WHEN tfgld106.t$dim3=' ' THEN ' '
+       ELSE ( SELECT tfgld010_3.t$desc
+                FROM baandb.ttfgld010301 tfgld010_3
+               WHERE tfgld010_3.t$dimx = tfgld106.t$dim3
+                 AND tfgld010_3.t$dtyp = 3 )      
+   END                                 UN_NEGOCIO,
+   
+   CASE WHEN tfgld106.t$dim5=' ' THEN ' '
+       ELSE ( SELECT tfgld010_5.t$desc
+                FROM baandb.ttfgld010301 tfgld010_5
+               WHERE tfgld010_5.t$dimx = tfgld106.t$dim5
+                 AND tfgld010_5.t$dtyp = 5 )      
+   END                                 BANDEIRA,
+   
+  tfgld106.t$dim6                      PROJETO,
   
   tfgld106.t$refr                      HIST_COMPLETO,
   
@@ -65,10 +81,11 @@ INNER JOIN baandb.ttfgld100301 tfgld100
      
  LEFT JOIN baandb.ttfgld008301 tfgld008
         ON tfgld008.t$leac = tfgld106.t$leac
-    
- LEFT JOIN baandb.ttfgld010301 tfgld010
-        ON tfgld106.t$typ1 = tfgld010.t$dtyp
-       AND tfgld106.t$dim1 = tfgld010.t$dimx
+
+--WHERE TRUNC(tfgld106.t$dcdt) BETWEEN '01-12-2014' AND '31-12-2014'        
+--  AND tfgld106.t$leac BETWEEN '300000000' AND '3999999999'
+--  AND tfgld106.t$oyer = 2014
+--  AND tfgld106.T$FPRD = 12
  
 WHERE TRUNC(tfgld106.t$dcdt) BETWEEN (:DataDe) AND (:DataAte)
 
