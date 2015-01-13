@@ -12,15 +12,15 @@ select Q1.*
                  tdrec940.t$fovn$l          CNPJ,                                            
                  tdrec940.t$bpid$l          COD_FORNECEDOR,
                  tdrec940.t$fids$l          NOME_FORNECEDOR,
-                 tdrec941.t$ccfo$l          COD_CFOP,
+                 tdrec941.t$opfc$l          COD_CFOP,
                  tcmcs940.t$dsca$l          DESC_CFOP,
                  ' '                        SEQ_CFOP,       --SIGE
                  STATUS.DESCR               SITUACAO_NF,
                  Trim(tdrec941.t$item$l)    ID_ITEM,
                  trim(tcibd001.t$dscb$c)    DESC_ITEM,
-                 tdrec941.t$dqua$l          QTD,
+                 tdrec941.t$qnty$l          QTD,
                  tdrec941.t$pric$l          PRECO_UNIT,
-                 tdrec941.t$amnt$l          VL_TOTAL,
+                 tdrec941.t$tamt$l          VL_TOTAL,
                  TIPO.DESCR                 TIPO
                  
       FROM baandb.ttdrec940301  tdrec940  
@@ -51,7 +51,7 @@ select Q1.*
                                                 where l1.t$clab = l.t$clab 
                                                   and l1.t$clan = l.t$clan 
                                                   and l1.t$cpac = l.t$cpac ) ) TIPO
-              ON tdrec940.t$fdty$l = TIPO.CNST
+              ON tdrec940.t$rfdt$l = TIPO.CNST
 
        LEFT JOIN ( SELECT d.t$cnst CNST, 
                           l.t$desc DESCR
@@ -88,7 +88,7 @@ select Q1.*
              ON tccom130.t$cadr=tdrec940.t$itoa$l
          
        LEFT JOIN baandb.ttcmcs940301 tcmcs940
-              ON tcmcs940.T$OFSO$L = tdrec941.t$ccfo$l
+              ON tcmcs940.T$OFSO$L = tdrec941.t$opfc$l
 
       INNER JOIN baandb.ttcibd001301 tcibd001
               ON tcibd001.t$item = tdrec941.t$item$l  
