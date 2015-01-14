@@ -5,6 +5,9 @@ select Q1.*
                  tdrec941.t$fire$l          REF_FIS,
                  tdrec941.t$line$l          LINHA_REF,
                  tcemm030.t$euca            FILIAL,
+                 tcemm030.T$EUNT ||
+                 ' - '           ||
+                 tcemm030.t$dsca            CHAVE_NM_FILIAL,
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone sessiontimezone) AS DATE)  
@@ -84,8 +87,8 @@ select Q1.*
       INNER JOIN baandb.ttdrec941301 tdrec941
               ON tdrec940.t$fire$l = tdrec941.t$fire$l
   
-      LEFT JOIN baandb.ttccom130301  tccom130
-             ON tccom130.t$cadr=tdrec940.t$itoa$l
+       LEFT JOIN baandb.ttccom130301  tccom130
+              ON tccom130.t$cadr=tdrec940.t$itoa$l
          
        LEFT JOIN baandb.ttcmcs940301 tcmcs940
               ON tcmcs940.T$OFSO$L = tdrec941.t$opfc$l
