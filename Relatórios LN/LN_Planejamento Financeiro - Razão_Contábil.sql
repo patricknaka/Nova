@@ -82,11 +82,6 @@ INNER JOIN baandb.ttfgld100301 tfgld100
  LEFT JOIN baandb.ttfgld008301 tfgld008
         ON tfgld008.t$leac = tfgld106.t$leac
 
---WHERE TRUNC(tfgld106.t$dcdt) BETWEEN '01-12-2014' AND '31-12-2014'        
---  AND tfgld106.t$leac BETWEEN '300000000' AND '3999999999'
---  AND tfgld106.t$oyer = 2014
---  AND tfgld106.T$FPRD = 12
- 
 WHERE TRUNC(tfgld106.t$dcdt) BETWEEN (:DataDe) AND (:DataAte)
 
   AND NVL(Trim(Filial.COD_FILIAL), '000') IN (:Filial)
@@ -100,5 +95,6 @@ WHERE TRUNC(tfgld106.t$dcdt) BETWEEN (:DataDe) AND (:DataAte)
                                    ELSE :IdCCustoDe 
                                END  
                                     AND :IdCCustoAte
-  AND tfgld106.t$oyer = :AnoFis
-  AND tfgld106.T$FPRD = :PeriodoFis
+  
+  AND tfgld106.t$oyer = SUBSTR(:PeriodoFis, 4,4)
+  AND tfgld106.T$FPRD = SUBSTR(:PeriodoFis, 1,2)
