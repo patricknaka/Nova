@@ -31,7 +31,7 @@ select Q1.*
                       tccom130_ret.t$cste
                  ELSE tccom130.t$cste END           UF,
                  tccom139.t$ibge$l                   COD_IBGE,
-                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
+                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone sessiontimezone) AS DATE)  
                                                      DATA_RECEBIMENTO,
