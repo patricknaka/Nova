@@ -280,6 +280,7 @@ select Q1.*
              AND IMPOSTO_ST_SCONV.t$line$l = tdrec941.t$line$l
  
            WHERE tdrec940.t$stat$l IN (4, 5)
+           AND   tdrec940.t$rfdt$l != 13
 
         ORDER BY tdrec940.t$fire$l ) Q1
 
