@@ -98,9 +98,10 @@ select Q1.*
                  tdrec941.t$tamt$l                   VALO_TOTAL,
                  tdrec940.t$fovn$l                   CNPJ_FORN,
 
-                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
-                      Trim(REPLACE(tccom130_ret.t$namc,';',' '))
-                 ELSE Trim(REPLACE(tccom130.t$namc,';',' ')) END DESC_RUA,
+                 CASE WHEN tdrec940.t$sfad$l = ' ' 
+                        THEN Trim(REPLACE(tccom130_ret.t$namc, ';', ' '))
+                      ELSE   Trim(REPLACE(tccom130.t$namc, ';', ' ')) 
+                  END                                DESC_RUA,
                  tdrec941.t$gamt$l                   VL_MERC,
                  
                  IMPOSTO_3.                          VL_IPI,
@@ -120,31 +121,27 @@ select Q1.*
        LEFT JOIN baandb.ttcmcs940301       tcmcs940
               ON tcmcs940.T$OFSO$L = tdrec941.t$opfc$l
               
-       -- LEFT JOIN baandb.ttdrec947301       tdrec947
-              -- ON tdrec941.t$fire$l = tdrec947.t$fire$l 
-             -- AND tdrec941.t$line$l = tdrec947.T$LINE$L
-            
-       INNER JOIN baandb.ttcibd001301       tcibd001
+      INNER JOIN baandb.ttcibd001301       tcibd001
               ON tcibd001.t$item = tdrec941.t$item$l
                   
        LEFT JOIN baandb.ttcibd936301       tcibd936
               ON tcibd936.t$ifgc$l = tcibd001.t$ifgc$l
-             
+
        LEFT JOIN baandb.ttdipu001301       tdipu001
               ON tdipu001.t$item = tcibd001.t$item
-      
+
       INNER JOIN baandb.tznmcs030301       znmcs030
               ON znmcs030.t$citg$c = tcibd001.t$citg
              AND znmcs030.t$seto$c = tcibd001.t$seto$c
- 
+
       INNER JOIN baandb.ttccom100301       tccom100
-             ON tccom100.t$bpid = tdrec940.t$bpid$l
-  
-      LEFT JOIN baandb.ttccom130301       tccom130      --humberto
+              ON tccom100.t$bpid = tdrec940.t$bpid$l
+
+       LEFT JOIN baandb.ttccom130301       tccom130
               ON tccom130.t$cadr = tdrec940.t$sfad$l
       
-      LEFT JOIN baandb.ttccom130301       tccom130_ret  --p/a notas de retorno de mercadoria
-             ON tccom130_ret.t$cadr=tdrec940.t$stoa$l
+       LEFT JOIN baandb.ttccom130301       tccom130_ret
+              ON tccom130_ret.t$cadr = tdrec940.t$stoa$l
              
        LEFT JOIN baandb.ttccom139301       tccom139
               ON tccom139.t$ccty = tccom130.t$ccty
@@ -153,7 +150,6 @@ select Q1.*
             
       INNER JOIN baandb.ttcemm124301       tcemm124
               ON tcemm124.t$cwoc = tdrec940.t$cofc$l 
-             --AND tcemm124.t$dtyp = 2                  --humberto.o
  
       INNER JOIN baandb.ttcemm030301       tcemm030
               ON tcemm030.t$eunt = tcemm124.t$grid
@@ -280,11 +276,9 @@ select Q1.*
              AND IMPOSTO_ST_SCONV.t$line$l = tdrec941.t$line$l
  
            WHERE tdrec940.t$stat$l IN (4, 5)
-           AND   tdrec940.t$rfdt$l != 13
+             AND tdrec940.t$rfdt$l != 13
 
         ORDER BY tdrec940.t$fire$l ) Q1
-
-
 
  WHERE Trunc(DT_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DT_EMISSAO) AND NVL(:DataEmissaoAte, DT_EMISSAO)
    AND Trunc(DATA_RECEBIMENTO) BETWEEN NVL(:DataRecebimentoDe, DATA_RECEBIMENTO) AND NVL(:DataRecebimentoAte, DATA_RECEBIMENTO)
