@@ -98,8 +98,8 @@ SELECT
      END                                        DESCR_STAT_PRG,
 	 
     CONCAT(znacp005.t$ttyp$c,znacp005.t$ninv$c) TITULO_AGRUPADOR,
-    tdpur400.t$cotp                             COD_TIPO_ORDEM,          --tipo de ordem de compra
-    tdpur094.t$dsca                             DECR_TIPO_ORDEM,         --descrição tipo ordem de compra
+    OrdemCompra.                                COD_TIPO_ORDEM,          --tipo de ordem de compra
+    OrdemCompra.                                DECR_TIPO_ORDEM,         --descrição tipo ordem de compra
     tfacp200.t$leac                             COD_CONTA_CONTROLE,
     tfgld008.t$desc                             DESCR_CONTA_CONTROLE,
     tdrec952.t$leac$l                           COD_CONTA_DESTINO,
@@ -259,12 +259,6 @@ FROM       baandb.ttfacp200301  tfacp200
  LEFT JOIN baandb.ttdrec947301  tdrec947
         ON tdrec947.t$fire$l = tdrec940.t$fire$l
  
- LEFT JOIN baandb.ttdpur400301  tdpur400
-        ON tdpur400.t$orno = tdrec947.t$orno$l
-     
- LEFT JOIN baandb.ttdpur094301  tdpur094
-        ON tdpur094.t$potp = tdpur400.t$cotp
-        
  LEFT JOIN baandb.ttcmcs966301  tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
            
@@ -367,6 +361,16 @@ FROM       baandb.ttfacp200301  tfacp200
        AND znacp005.t$ttyp$c = znacp004.t$ttyp$c
        AND znacp005.t$ninv$c = znacp004.t$ninv$c
       
+ LEFT JOIN ( select tdpur400.t$cotp  COD_TIPO_ORDEM,          --tipo de ordem de compra
+                    tdpur094.t$dsca  DECR_TIPO_ORDEM,         --descrição tipo ordem de compra
+                    tdpur400.t$orno,
+                    tdpur400.t$cotp,
+                    tdpur094.t$potp
+               from baandb.ttdpur400301  tdpur400
+          left join baandb.ttdpur094301  tdpur094
+                 on tdpur094.t$potp = tdpur400.t$cotp ) OrdemCompra
+        ON OrdemCompra.t$orno = tdrec947.t$orno$l
+
 WHERE tfacp200.t$docn = 0
 
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
