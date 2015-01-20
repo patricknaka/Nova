@@ -17,10 +17,11 @@ SELECT DISTINCT
   znfmd630.t$vlmr$c     VLR_TOTAL_NF,
   znsls400.t$cepf$c     CEP,
   znsls400.t$cidf$c     CIDADE, 
-  NVL(REGIAO.DSC,'BR')  REGIAO,
+  NVL(REGIAO.DSC,'BR')  ID_REGIAO,
+  NVL(ZNFMD061.T$DZON$C, 'BRASIL')		REGIAO,
   znsls400.t$uffa$c     UF,  
   znfmd067.t$fate$c     ID_ESTAB,
-  znfmd067.t$cfrw$c     ID_TRANSP,
+  tcmcs080.t$cfrw       ID_TRANSP,
   
   tcmcs080.t$cfrw   ||    
   ' - '             ||    
@@ -74,6 +75,10 @@ LEFT JOIN  BAANDB.tznfmd060301 znfmd060
        AND REGIAO.t$tpst$c > = znsls401.t$cepe$c
        AND REGIAO.t$cfrw$c = znfmd630.t$cfrw$c
        AND REGIAO.t$cono$c = znfmd630.t$cono$c
+
+ LEFT JOIN BAANDB.TZNFMD061301 ZNFMD061		ON	ZNFMD061.T$CFRW$C 	=	REGIAO.T$CFRW$C
+											AND	ZNFMD061.T$CONO$C	=	REGIAO.T$CONO$C
+											AND ZNFMD061.T$CREG$C	=	REGIAO.DSC
                                
 WHERE (   (znfmd640.t$date$c is null) 
        OR (znfmd640.t$date$c = ( select max(oc.t$date$c) 
