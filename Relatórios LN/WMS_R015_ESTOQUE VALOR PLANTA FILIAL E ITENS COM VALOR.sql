@@ -30,7 +30,23 @@ SELECT
   nvl(max(maucLN.mauc),0)*
       sum(llid.qty)                    VALOR,
   sum(llid.netwgt)                     PESO,
-  sum(sku.STDCUBE*ll.qty)              M3
+  sum(sku.STDCUBE*ll.qty)              M3,
+  
+  CASE WHEN SKU.BOMITEMTYPE=0 THEN 'NÃO'
+  ELSE 'SIM' END                      TIK_KIT,
+  
+  CASE WHEN SKU.BOMITEMTYPE!=0 
+    THEN NVL(BOM.SKU, SKU.SKU)
+    ELSE NULL END                     AGRUPADOR,
+  LN_FAM.T$FAMI$C                     ID_FAMILIA,
+  
+  CASE WHEN SKU.BOMITEMTYPE!=0 
+    THEN NVL(BOM.SKU, SKU.SKU)
+    ELSE SKU.SKU END                  ITEM_LN,
+  
+  LN_FAM.T$DSCA$C                     NOME_FAMILIA
+  
+  
     
 FROM       WMWHSE5.lotxloc ll
 
@@ -80,8 +96,24 @@ INNER JOIN WMWHSE5.loc
         ON TO_CHAR(departSector.id_depart) = sku.skugroup 
        AND TO_CHAR(departSector.ID_SECTOR) = sku.skugroup2
        
-WHERE departSector.ID_DEPART IN (:Depto)
-  AND ( (Trim(ll.sku) IN (:Itens) And (:ItensTodos = 0)) OR (:ItensTodos = 1) )
+ LEFT JOIN WMWHSE5.BILLOFMATERIAL BOM
+        ON BOM.COMPONENTSKU = SKU.SKU
+        
+ LEFT JOIN BAANDB.TTCIBD001301@PLN01 LN_ITM
+        ON TRIM(LN_ITM.T$ITEM) = CASE WHEN SKU.BOMITEMTYPE!=4 
+                                  THEN SKU.SKU
+                                  ELSE BOM.SKU END
+        
+ LEFT JOIN BAANDB.TZNMCS031301@PLN01 LN_FAM
+        ON  LN_FAM.T$CITG$C = LN_ITM.T$CITG
+        AND LN_FAM.T$SETO$C = LN_ITM.T$SETO$C
+        AND LN_FAM.T$FAMI$C = LN_ITM.T$FAMI$C
+       
+--WHERE departSector.ID_DEPART IN (:Depto)
+--  AND ( (Trim(ll.sku) IN (:Itens) And (:ItensTodos = 0)) OR (:ItensTodos = 1) )
+    
+--    WHERE SKU.BOMITEMTYPE!=0
+    
     
 GROUP BY WMSADMIN.PL_DB.DB_ALIAS, 
          cl.DESCRIPTION, 
@@ -94,7 +126,19 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
          ll.loc, 
          ll.holdreason, 
          departSector.depart_name, 
-         departSector.sector_name
+         departSector.sector_name,
+         
+         
+         
+  SKU.BOMITEMTYPE,
+  CASE WHEN SKU.BOMITEMTYPE!=0 
+    THEN NVL(BOM.SKU, SKU.SKU)
+    ELSE NULL END,
+  CASE WHEN SKU.BOMITEMTYPE!=0 
+    THEN NVL(BOM.SKU, SKU.SKU)
+    ELSE SKU.SKU END,
+  LN_FAM.T$FAMI$C,
+  LN_FAM.T$DSCA$C
 		 
 "SELECT                                                    " &
 "  WMSADMIN.PL_DB.DB_ALIAS              ARMAZEM,           " &
