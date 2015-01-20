@@ -1,36 +1,36 @@
 SELECT DISTINCT
-  znfmd630.t$fili$c  FILIAL,
+  znfmd630.t$fili$c                     FILIAL,
   
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone sessiontimezone) AS DATE)      
-                     DT_HR_EXPEDICAO, 
+                                        DT_HR_EXPEDICAO, 
 
-  znfmd630.t$docn$c     NUME_NOTA,
-  znfmd630.t$seri$c     NUME_SERIE,  
-  znsls401.t$entr$c     NUME_ENTREGA,
-  znsls002.t$dsca$c     DESC_TIPO_ENTREGA_NOME,
-  znfmd630.t$wght$c     PESO,
-  znfmd630.t$qvol$c     VOLUME,
-  znsls401.t$vlun$c     VL_SEM_FRETE,
-  znfmd630.t$vlft$c     FRETE_GTE,
-  znfmd630.t$vlmr$c     VLR_TOTAL_NF,
-  znsls400.t$cepf$c     CEP,
-  znsls400.t$cidf$c     CIDADE, 
-  NVL(REGIAO.DSC,'BR')  ID_REGIAO,
+  znfmd630.t$docn$c                     NUME_NOTA,
+  znfmd630.t$seri$c                     NUME_SERIE,  
+  znsls401.t$entr$c                     NUME_ENTREGA,
+  znsls002.t$dsca$c                     DESC_TIPO_ENTREGA_NOME,
+  znfmd630.t$wght$c                     PESO,
+  znfmd630.t$qvol$c                     VOLUME,
+  znsls401.t$vlun$c                     VL_SEM_FRETE,
+  znfmd630.t$vlft$c                     FRETE_GTE,
+  znfmd630.t$vlmr$c                     VLR_TOTAL_NF,
+  znsls400.t$cepf$c                     CEP,
+  znsls400.t$cidf$c                     CIDADE, 
+  NVL(REGIAO.DSC,'BR')                  ID_REGIAO,
   NVL(ZNFMD061.T$DZON$C, 'BRASIL')		REGIAO,
-  znsls400.t$uffa$c     UF,  
-  znfmd067.t$fate$c     ID_ESTAB,
-  tcmcs080.t$cfrw       ID_TRANSP,
+  znsls400.t$uffa$c                     UF,  
+  znfmd067.t$fate$c                     ID_ESTAB,
+  tcmcs080.t$cfrw                       ID_TRANSP,
   
   tcmcs080.t$cfrw   ||    
   ' - '             ||    
-  Trim(tcmcs080.t$dsca) COD_DESC_TRANSPORTADOR,
+  Trim(tcmcs080.t$dsca)                 COD_DESC_TRANSPORTADOR,
   
-  tcmcs080.t$seak       APELID_TRAN,
-  znfmd630.t$cono$c     CONTRATO,
-  znfmd060.t$cdes$c     NOME_CONTRATO,
-  znfmd630.t$etiq$c     ETIQUETA  
+  tcmcs080.t$seak                       APELID_TRAN,
+  znfmd630.t$cono$c                     CONTRATO,
+  znfmd060.t$cdes$c                     NOME_CONTRATO,
+  znfmd630.t$etiq$c                     ETIQUETA  
  
 FROM       baandb.ttcmcs080301 tcmcs080
 
@@ -68,17 +68,16 @@ LEFT JOIN  BAANDB.tznfmd060301 znfmd060
                     znfmd062.t$cono$c,
                     TO_NUMBER(znfmd062.t$cepd$c) t$fpst$c,
                     TO_NUMBER(znfmd062.t$cepa$c) t$tpst$c
-               FROM baandb.tznfmd062301  znfmd062
-              --WHERE znfmd062.t$creg$c != 'BR' AND ROWNUM = 1 
-                                                  ) REGIAO
+               FROM baandb.tznfmd062301  znfmd062 ) REGIAO
         ON REGIAO.t$fpst$c < = znsls401.t$cepe$c 
        AND REGIAO.t$tpst$c > = znsls401.t$cepe$c
        AND REGIAO.t$cfrw$c = znfmd630.t$cfrw$c
        AND REGIAO.t$cono$c = znfmd630.t$cono$c
 
- LEFT JOIN BAANDB.TZNFMD061301 ZNFMD061		ON	ZNFMD061.T$CFRW$C 	=	REGIAO.T$CFRW$C
-											AND	ZNFMD061.T$CONO$C	=	REGIAO.T$CONO$C
-											AND ZNFMD061.T$CREG$C	=	REGIAO.DSC
+ LEFT JOIN BAANDB.TZNFMD061301 ZNFMD061
+        ON ZNFMD061.T$CFRW$C = REGIAO.T$CFRW$C
+       AND ZNFMD061.T$CONO$C = REGIAO.T$CONO$C
+       AND ZNFMD061.T$CREG$C = REGIAO.DSC
                                
 WHERE (   (znfmd640.t$date$c is null) 
        OR (znfmd640.t$date$c = ( select max(oc.t$date$c) 
