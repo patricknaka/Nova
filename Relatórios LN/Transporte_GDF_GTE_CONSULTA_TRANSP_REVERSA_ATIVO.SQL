@@ -1,4 +1,6 @@
 SELECT
+  znfmd001.t$fili$c             ID_Filial,
+  znfmd001.t$dsca$c             DESCR_FILIAL,
   tccom130.t$fovn$l             CNPJ,
   tcmcs080.t$dsca               RAZAO_SOCIAL,
   tcmcs080.t$seak               APELIDO,
@@ -10,7 +12,7 @@ SELECT
   znfmd064.t$cono$c             ID_CONTRATO,
   znfmd060.t$cdes$c             CONTRATO_NOME,
   tccom100.t$prst               SITUACAO_CONTRATO_CNPJ,
-  CONTRATO_CNPJ.                DS_SITUACAO_CONTRATO_CNPJ  
+  CONTRATO_CNPJ.                DS_SITUACAO_CONTRATO_CNPJ
   
 FROM       BAANDB.tznfmd064301  znfmd064
 
@@ -26,6 +28,13 @@ INNER JOIN BAANDB.ttccom100301  tccom100
   
 INNER JOIN BAANDB.ttccom130301  tccom130
         ON tccom130.t$cadr   = tccom100.t$cadr
+
+INNER JOIN BAANDB.tznfmd067301  znfmd067
+        ON znfmd067.t$cfrw$c = znfmd064.t$cfrw$c
+       AND znfmd067.t$cono$c = znfmd064.t$cono$c
+
+INNER JOIN BAANDB.tznfmd001301  znfmd001
+        ON znfmd001.t$fili$c = znfmd067.t$fili$c
     
  LEFT JOIN ( SELECT d.t$cnst CD_SITUACAO_CONTRATO_REVERSA,
                     l.t$desc DS_SITUACAO_CONTRATO_REVERSA
@@ -82,7 +91,7 @@ INNER JOIN BAANDB.ttccom130301  tccom130
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) CONTRATO_CNPJ
         ON CONTRATO_CNPJ.CD_SITUACAO_CONTRATO_CNPJ = tccom100.t$prst
-		
+  
  LEFT JOIN ( select a.t$cdes$c  DS_CONTRATO_REVERSA,
                     a.t$cfrw$c,
                     a.t$cono$c
@@ -91,8 +100,7 @@ INNER JOIN BAANDB.ttccom130301  tccom130
        AND CONTRATO_REVERSA.t$cono$c = znfmd064.t$rono$c
 
 WHERE znfmd064.t$ativ$c = 1 
-  AND znfmd064.t$ativ$c IN (:ContratoReversa)
-  AND tccom100.t$prst IN (:ContratoCNPJ)
+  AND znfmd001.t$fili$c IN (:Filial)
+  AND tcmcs080.t$cfrw IN (:Transportadora)
   
-ORDER BY
-   1, 2
+ORDER BY 2, 3, 4
