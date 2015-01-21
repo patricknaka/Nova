@@ -34,7 +34,9 @@ SELECT
   
   CASE WHEN SKU.BOMITEMTYPE = 0 
          THEN 'Não'
-       ELSE   'Sim' 
+       WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)
+	     THEN 'KIT'
+	   ELSE 'TIK'
    END                                TIK_KIT,
   
   CASE WHEN SKU.BOMITEMTYPE != 0 
