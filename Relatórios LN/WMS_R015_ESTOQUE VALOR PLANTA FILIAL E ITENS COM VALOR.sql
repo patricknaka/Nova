@@ -35,22 +35,22 @@ SELECT
   CASE WHEN SKU.BOMITEMTYPE = 0 
          THEN 'Não'
        WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)
-	     THEN 'KIT'
-	   ELSE 'TIK'
-   END                                TIK_KIT,
+         THEN 'KIT'
+       ELSE   'TIK'
+   END                                 TIK_KIT,
   
   CASE WHEN SKU.BOMITEMTYPE != 0 
          THEN NVL(BOM.SKU, SKU.SKU)
        ELSE   NULL 
-   END                                AGRUPADOR,
-  LN_FAM.T$FAMI$C                     ID_FAMILIA,
+   END                                 AGRUPADOR,
+  LN_FAM.T$FAMI$C                      ID_FAMILIA,
   
   CASE WHEN SKU.BOMITEMTYPE != 0 
          THEN NVL(BOM.SKU, SKU.SKU)
        ELSE   SKU.SKU 
-   END                                ITEM_LN,
+   END                                 ITEM_LN,
   
-  LN_FAM.T$DSCA$C                     NOME_FAMILIA
+  LN_FAM.T$DSCA$C                      NOME_FAMILIA
     
 FROM       WMWHSE5.lotxloc ll
 
@@ -138,7 +138,7 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
               ELSE SKU.SKU END,
          LN_FAM.T$FAMI$C,
          LN_FAM.T$DSCA$C
-		 
+   
 
 
 =IIF(Parameters!Table.Value <> "AAA",
@@ -176,8 +176,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "   sum(sku.STDCUBE*ll.qty)              M3,              " &
 "   CASE WHEN SKU.BOMITEMTYPE = 0                         " &
 "          THEN 'Não'                                     " &
-"        ELSE   'Sim'                                     " &
-"    END                                TIK_KIT,          " &
+"        WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)" &
+"          THEN 'KIT'                                     " &
+"        ELSE   'TIK'                                     " &
+"    END                                 TIK_KIT,         " &
 "   CASE WHEN SKU.BOMITEMTYPE != 0                        " &
 "          THEN NVL(BOM.SKU, SKU.SKU)                     " &
 "        ELSE   NULL                                      " &
@@ -298,8 +300,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "   sum(sku.STDCUBE*ll.qty)              M3,              " &
 "   CASE WHEN SKU.BOMITEMTYPE = 0                         " &
 "          THEN 'Não'                                     " &
-"        ELSE   'Sim'                                     " &
-"    END                                TIK_KIT,          " &
+"        WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)" &
+"          THEN 'KIT'                                     " &
+"        ELSE   'TIK'                                     " &
+"    END                                 TIK_KIT,         " &
 "   CASE WHEN SKU.BOMITEMTYPE != 0                        " &
 "          THEN NVL(BOM.SKU, SKU.SKU)                     " &
 "        ELSE   NULL                                      " &
@@ -418,8 +422,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "   sum(sku.STDCUBE*ll.qty)              M3,              " &
 "   CASE WHEN SKU.BOMITEMTYPE = 0                         " &
 "          THEN 'Não'                                     " &
-"        ELSE   'Sim'                                     " &
-"    END                                TIK_KIT,          " &
+"        WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)" &
+"          THEN 'KIT'                                     " &
+"        ELSE   'TIK'                                     " &
+"    END                                 TIK_KIT,         " &
 "   CASE WHEN SKU.BOMITEMTYPE != 0                        " &
 "          THEN NVL(BOM.SKU, SKU.SKU)                     " &
 "        ELSE   NULL                                      " &
@@ -538,8 +544,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "   sum(sku.STDCUBE*ll.qty)              M3,              " &
 "   CASE WHEN SKU.BOMITEMTYPE = 0                         " &
 "          THEN 'Não'                                     " &
-"        ELSE   'Sim'                                     " &
-"    END                                TIK_KIT,          " &
+"        WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)" &
+"          THEN 'KIT'                                     " &
+"        ELSE   'TIK'                                     " &
+"    END                                 TIK_KIT,         " &
 "   CASE WHEN SKU.BOMITEMTYPE != 0                        " &
 "          THEN NVL(BOM.SKU, SKU.SKU)                     " &
 "        ELSE   NULL                                      " &
@@ -658,8 +666,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "   sum(sku.STDCUBE*ll.qty)              M3,              " &
 "   CASE WHEN SKU.BOMITEMTYPE = 0                         " &
 "          THEN 'Não'                                     " &
-"        ELSE   'Sim'                                     " &
-"    END                                TIK_KIT,          " &
+"        WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)" &
+"          THEN 'KIT'                                     " &
+"        ELSE   'TIK'                                     " &
+"    END                                 TIK_KIT,         " &
 "   CASE WHEN SKU.BOMITEMTYPE != 0                        " &
 "          THEN NVL(BOM.SKU, SKU.SKU)                     " &
 "        ELSE   NULL                                      " &
@@ -778,8 +788,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "   sum(sku.STDCUBE*ll.qty)              M3,              " &
 "   CASE WHEN SKU.BOMITEMTYPE = 0                         " &
 "          THEN 'Não'                                     " &
-"        ELSE   'Sim'                                     " &
-"    END                                TIK_KIT,          " &
+"        WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)" &
+"          THEN 'KIT'                                     " &
+"        ELSE   'TIK'                                     " &
+"    END                                 TIK_KIT,         " &
 "   CASE WHEN SKU.BOMITEMTYPE != 0                        " &
 "          THEN NVL(BOM.SKU, SKU.SKU)                     " &
 "        ELSE   NULL                                      " &
@@ -898,8 +910,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "   sum(sku.STDCUBE*ll.qty)              M3,              " &
 "   CASE WHEN SKU.BOMITEMTYPE = 0                         " &
 "          THEN 'Não'                                     " &
-"        ELSE   'Sim'                                     " &
-"    END                                TIK_KIT,          " &
+"        WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)" &
+"          THEN 'KIT'                                     " &
+"        ELSE   'TIK'                                     " &
+"    END                                 TIK_KIT,         " &
 "   CASE WHEN SKU.BOMITEMTYPE != 0                        " &
 "          THEN NVL(BOM.SKU, SKU.SKU)                     " &
 "        ELSE   NULL                                      " &
@@ -1018,8 +1032,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
 "   sum(sku.STDCUBE*ll.qty)              M3,              " &
 "   CASE WHEN SKU.BOMITEMTYPE = 0                         " &
 "          THEN 'Não'                                     " &
-"        ELSE   'Sim'                                     " &
-"    END                                TIK_KIT,          " &
+"        WHEN (SKU.BOMITEMTYPE = 1 OR SKU.BOMITEMTYPE = 2)" &
+"          THEN 'KIT'                                     " &
+"        ELSE   'TIK'                                     " &
+"    END                                 TIK_KIT,         " &
 "   CASE WHEN SKU.BOMITEMTYPE != 0                        " &
 "          THEN NVL(BOM.SKU, SKU.SKU)                     " &
 "        ELSE   NULL                                      " &
