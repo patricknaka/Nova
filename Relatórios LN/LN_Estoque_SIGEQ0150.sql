@@ -1,4 +1,7 @@
-SELECT Trim(tcibd001.t$item)             ID_ITEM, 
+SELECT  Q1.*, 
+        GREATEST(Q1.QT_SALDO1,0) QT_SALDO
+FROM 
+(SELECT Trim(tcibd001.t$item)                ID_ITEM, 
            tcibd001.t$dsca                   NOME, 
            tcibd001.t$csig                   ITEG_SITUACAO, 
            tcibd001.t$citg                   COD_DEPTO, 
@@ -27,11 +30,11 @@ SELECT Trim(tcibd001.t$item)             ID_ITEM,
                   THEN 0
                 ELSE   sum(reserva.quan)
             END                              QT_RESERVADA, 
-   
+            
            CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN sum(whinr140.t$qhnd - nvl(Q2.bloc,0))
-                ELSE   sum(whinr140.t$qhnd - reserva.quan - nvl(Q2.bloc,0))               
-            END                              QT_SALDO, 
+                ELSE   sum(whinr140.t$qhnd - reserva.quan - nvl(Q2.bloc,0))
+            END                               QT_SALDO1, 
     
            max(Q1.mauc)                      VL_UNITARIO, 
             
@@ -325,4 +328,4 @@ INNER JOIN baandb.tznmcs032301 znmcs032
            tccom130.t$fovn$l,  
            tccom100.t$nama,  
            tccom100.t$seak,
-           whwmd400.t$hght, whwmd400.t$wdth, whwmd400.t$dpth
+           whwmd400.t$hght, whwmd400.t$wdth, whwmd400.t$dpth) Q1
