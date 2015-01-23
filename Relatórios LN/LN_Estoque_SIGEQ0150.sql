@@ -1,7 +1,4 @@
-SELECT  Q1.*, 
-        GREATEST(Q1.QT_SALDO1,0) QT_SALDO
-FROM 
-(SELECT Trim(tcibd001.t$item)                ID_ITEM, 
+SELECT Trim(tcibd001.t$item)                 ID_ITEM, 
            tcibd001.t$dsca                   NOME, 
            tcibd001.t$csig                   ITEG_SITUACAO, 
            tcibd001.t$citg                   COD_DEPTO, 
@@ -28,13 +25,13 @@ FROM
    
            CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN 0
-                ELSE   sum(reserva.quan)
+                ELSE   sum(nvl(reserva.quan, 0))
             END                              QT_RESERVADA, 
-            
-           CASE WHEN tcmcs003.t$tpar$l = 2 
-                  THEN sum(whinr140.t$qhnd - nvl(Q2.bloc,0))
-                ELSE   sum(whinr140.t$qhnd - reserva.quan - nvl(Q2.bloc,0))
-            END                               QT_SALDO1, 
+           
+		   GREATEST ( CASE WHEN tcmcs003.t$tpar$l = 2 
+                             THEN sum(whinr140.t$qhnd - nvl(Q2.bloc,0))
+                           ELSE   sum(whinr140.t$qhnd - nvl(reserva.quan, 0) - nvl(Q2.bloc,0))               
+                       END, 0)               QT_SALDO, 
     
            max(Q1.mauc)                      VL_UNITARIO, 
             
@@ -46,17 +43,22 @@ FROM
             END                              ID_FORNECEDOR, 
            tccom100.t$nama                   FORN_NOME, 
            tccom100.t$seak                   FORN_APELIDO,
-           whwmd400.t$hght * whwmd400.t$wdth * whwmd400.t$dpth M3,
+           whwmd400.t$hght * 
+           whwmd400.t$wdth * 
+           whwmd400.t$dpth                   M3,
            
-           whwmd400.t$hght * whwmd400.t$wdth * whwmd400.t$dpth *
-           (sum(whinr140.t$qhnd - nvl(Q2.bloc,0)))             M3_TOTAL 
+           whwmd400.t$hght * 
+           whwmd400.t$wdth * 
+           whwmd400.t$dpth *
+           (sum(whinr140.t$qhnd - 
+                nvl(Q2.bloc,0)))             M3_TOTAL 
               
       FROM baandb.ttcibd001301 tcibd001
      
 INNER JOIN baandb.twhinr140301 whinr140 
         ON whinr140.t$item   = tcibd001.t$item
 
-LEFT JOIN baandb.twhwmd400301 whwmd400
+ LEFT JOIN baandb.twhwmd400301 whwmd400
         ON whwmd400.t$item = tcibd001.t$item
 
  LEFT JOIN ( select a.t$item,
@@ -185,7 +187,9 @@ INNER JOIN baandb.tznmcs032301 znmcs032
            tccom130.t$fovn$l,  
            tccom100.t$nama,  
            tccom100.t$seak,
-           whwmd400.t$hght, whwmd400.t$wdth, whwmd400.t$dpth
+           whwmd400.t$hght, 
+           whwmd400.t$wdth, 
+           whwmd400.t$dpth
       
 UNION 
       
@@ -206,8 +210,9 @@ UNION
            sum(whwmd630.t$qbls)              QT_FISICA, 
            0                                 QT_ROMANEADA, 
            sum(nvl(reserva.quan,0))          QT_RESERVADA, 
-           sum(whwmd630.t$qbls) -
-           sum(nvl(reserva.quan,0))          QT_SALDO, 
+           GREATEST ( sum(whwmd630.t$qbls) -
+                      sum(nvl(reserva.quan,0)), 0 )
+                                             QT_SALDO, 
            max(Q1.mauc)                      VL_UNITARIO, 
            CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL 
                   THEN '00000000000000'  
@@ -217,10 +222,14 @@ UNION
             END                              ID_FORNECEDOR, 
            tccom100.t$nama                   FORN_NOME, 
            tccom100.t$seak                   FORN_APELIDO,
-           whwmd400.t$hght * whwmd400.t$wdth * whwmd400.t$dpth M3,
+           whwmd400.t$hght * 
+           whwmd400.t$wdth * 
+           whwmd400.t$dpth                   M3,
            
-           whwmd400.t$hght * whwmd400.t$wdth * whwmd400.t$dpth *
-           sum(whwmd630.t$qbls)                                M3_TOTAL
+           whwmd400.t$hght * 
+           whwmd400.t$wdth * 
+           whwmd400.t$dpth *
+           sum(whwmd630.t$qbls)              M3_TOTAL
            
       FROM baandb.ttcibd001301 tcibd001 
      
@@ -328,4 +337,6 @@ INNER JOIN baandb.tznmcs032301 znmcs032
            tccom130.t$fovn$l,  
            tccom100.t$nama,  
            tccom100.t$seak,
-           whwmd400.t$hght, whwmd400.t$wdth, whwmd400.t$dpth) Q1
+           whwmd400.t$hght, 
+           whwmd400.t$wdth, 
+           whwmd400.t$dpth
