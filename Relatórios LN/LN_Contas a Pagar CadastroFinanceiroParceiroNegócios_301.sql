@@ -2,36 +2,38 @@ SELECT
   DISTINCT
     301                                     COMPANHIA,
     tccom130.t$fovn$l                       ENTIDADE_FISCAL,
-    CONCAT(CONCAT(tccom100.t$bpid, '  '),  
-             tccom100.t$nama)               PARCEIRO_NEGOCIOS,
+    tccom100.t$bpid                         COD_PARCEIRO_NEGOCIOS,  
+    tccom100.t$nama                         DSC_PARCEIRO_NEGOCIOS,
     tccom125.t$cban                         COD_CONTA,
     tccom125.t$brch                         FILIAL_BANCARIA,
-    CONCAT(CONCAT(tfcmg011.t$baoc$l, '  '),  
+    tfcmg011.t$baoc$l                       CODE_BANCO,
+    tfcmg011.t$bnam                         NOME_BANCO,
+	CONCAT(CONCAT(tfcmg011.t$baoc$l, '  '),  
              tfcmg011.t$bnam)               BANCO,
     tccom125.t$bano                         COD_CONTA_BANCARIA,
     tccom125.t$dacc$d                       DIG_CONTA_BANCARIA,
-    CONCAT(CONCAT(tccom125.t$toac, ' - '),  
-             iTOAC.ToacDesc)                TIPO_CONTA_BANCARIA,
-    CONCAT(CONCAT(tccom122.t$paym, ' - '),  
-             tfcmg003.t$desc)               METODO_PAGAMENTO,
-    CONCAT(CONCAT(tccom122.t$mopa$d, ' - '),  
-             iMOPA.MopaDesc)                MODALIDADE_PAGAMENTO,
+    tccom125.t$toac                         COD_TIPO_CONTA_BANCARIA,
+    iTOAC.ToacDesc                          DSC_TIPO_CONTA_BANCARIA,
+    tccom122.t$paym                         COD_METODO_PAGAMENTO,
+    tfcmg003.t$desc                         DSC_METODO_PAGAMENTO,
+    tccom122.t$mopa$d                       COD_MODALIDADE_PAGAMENTO,
+    iMOPA.MopaDesc                          DSC_MODALIDADE_PAGAMENTO,
     CONCAT(CONCAT(tccom130.t$namc, ', '),  
              tccom130.t$hono)               ENDERECO,
     tccom130.t$dist$l                       BAIRRO,
     tccom130.t$pstc                         CEP,       
-    tccom130.t$ccit                         CIDADE,
+    tccom130.t$ccit                         COD_CIDADE,
+    tccom139.t$dsca                         CIDADE,
     tccom130.t$cste                         ESTADO,
     tccom130.t$ccty                         COD_PAIS,
-    CONCAT(CONCAT(tcmcs010.t$tfcd, ' '),  
-             tccom130.t$telp)               TELEFONE,
-    CONCAT(CONCAT(tccom100.t$bprl, ' '),  
-             iBPRL.BprlDesc)                FUNCAO,                          
-    CONCAT(CONCAT(tccom100.t$prst, ' '),  
-             iPRST.PrstDesc)                STATUS,       
+    tccom130.t$telp                         TELEFONE,
+    tccom100.t$bprl                         COD_FUNCAO,
+    iBPRL.BprlDesc                          DSC_FUNCAO,
+    tccom100.t$prst                         COD_STATUS,
+    iPRST.PrstDesc                          DSC_STATUS,
     CASE WHEN tccom100.t$btbv = 1 
            THEN 'Sim' 
-         ELSE 'Não' 
+         ELSE   'Não' 
      END                                    A_SER_VERIFICADO,
     tccom100.t$prbp                         PARCEIRO_NEGOCIOS_PAI,  
     tccom130.t$ftyp$l                       TIPO_IDENTIFICADOR_FISCAL,
@@ -58,6 +60,9 @@ FROM       baandb.ttccom100301  tccom100
   
  LEFT JOIN baandb.ttcmcs010301 tcmcs010
         ON tcmcs010.t$ccty = tccom130.t$ccty
+		
+ LEFT JOIN baandb.ttccom139301 tccom139
+        ON tccom139.t$city = tccom130.t$ccit
     
  LEFT JOIN baandb.ttfcmg011301 tfcmg011
         ON tfcmg011.t$bank = tccom125.t$brch
@@ -179,5 +184,9 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt,
                 AT time zone sessiontimezone) AS DATE)) 
       Between :DataEmissaoDe 
           And :DataEmissaoAte
+  AND ( (:TodosPN = 0) or (tccom100.t$bpid in (:PN) and :TodosPN = 1  ) )
   AND tccom130.t$ftyp$l IN (:IdentificadorFiscal)
+  AND NVL(tfcmg011.t$baoc$l, '0') IN (:Banco)
   AND ( (:CNPJTodos = 0) OR (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IN (:CNPJ) AND (:CNPJTodos = 1)) )
+  
+ORDER BY DATA_CRIACAO
