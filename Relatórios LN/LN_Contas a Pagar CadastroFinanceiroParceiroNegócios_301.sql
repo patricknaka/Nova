@@ -1,7 +1,8 @@
 SELECT 
   DISTINCT
     301                                     COMPANHIA,
-    tccom130.t$fovn$l                       ENTIDADE_FISCAL,
+    regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
+                                            ENTIDADE_FISCAL,
     tccom100.t$bpid                         COD_PARCEIRO_NEGOCIOS,  
     tccom100.t$nama                         DSC_PARCEIRO_NEGOCIOS,
     tccom125.t$cban                         COD_CONTA,
