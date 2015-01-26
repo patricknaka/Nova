@@ -27,7 +27,8 @@ SELECT
           ELSE 'Sim' 
      END                                        DESC_SITUA2,
 
-    PAGTO_PLANEJADO.                            DATA_PLAN_PAGTO,  --Preencher se status = Selecionado (3)
+    --PAGTO_PLANEJADO.                            DATA_PLAN_PAGTO,  --Preencher se status = Selecionado (3)
+    tflcb230.t$payd$d                           DATA_PLAN_PAGTO,
          
     tfacp200.t$bloc                             STATUS_BLOQUEIO,
     
@@ -58,7 +59,8 @@ SELECT
                    tccom125.t$bano || '-' || 
                    tccom125.t$dacc$d )          CONTA_PN,
                    
-    LOTE_PAGTO.                                 LOTE_PAGTO,
+    --LOTE_PAGTO.                                 LOTE_PAGTO,
+    tflcb230.t$btno$d                           LOTE_PAGTO,
     
     tdrec940.t$fire$l                           NUM_RFISCAL,
     tdrec940.t$rfdt$l                           NUM_CFISCAL, 
@@ -118,36 +120,39 @@ INNER JOIN baandb.ttccom100301 tccom100
 INNER JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
     
- LEFT JOIN ( select max(a.t$btno) LOTE_PAGTO, 
-                    a.t$ttyp, 
-                    a.t$ninv
-               from baandb.ttfcmg101301 a
-           group by a.t$ttyp, a.t$ninv ) LOTE_PAGTO
-        ON LOTE_PAGTO.t$ttyp = tfacp200.t$ttyp
-       AND LOTE_PAGTO.t$ninv = tfacp200.t$ninv
+-- LEFT JOIN ( select max(a.t$btno) LOTE_PAGTO, 
+--                    a.t$ttyp, 
+--                    a.t$ninv
+--               from baandb.ttfcmg101301 a
+--           group by a.t$ttyp, a.t$ninv ) LOTE_PAGTO
+--        ON LOTE_PAGTO.t$ttyp = tfacp200.t$ttyp
+--       AND LOTE_PAGTO.t$ninv = tfacp200.t$ninv
        
  LEFT JOIN ( select m.t$bloc COD_STATUS_BLOQUEIO,
                     m.t$desc DSC_STATUS_BLOQUEIO
                from baandb.ttfacp002301 m ) BLOQUEIO
         ON BLOQUEIO.COD_STATUS_BLOQUEIO = tfacp200.t$bloc
 
- LEFT JOIN ( select MIN(a.t$plan) DATA_PLAN_PAGTO,
-                    a.t$ttyp,
-                    a.t$ninv,
-                    a.t$schn
-               from baandb.ttfcmg101301 a 
-           group by a.t$ttyp,
-                    a.t$ninv,
-                    a.t$schn ) PAGTO_PLANEJADO
-        ON PAGTO_PLANEJADO.t$ttyp = tfacp200.t$ttyp
-       AND PAGTO_PLANEJADO.t$ninv = tfacp200.t$ninv 
-       AND PAGTO_PLANEJADO.t$schn = tfacp201.t$schn
+-- LEFT JOIN ( select MIN(a.t$plan) DATA_PLAN_PAGTO,
+--                    a.t$ttyp,
+--                    a.t$ninv,
+--                    a.t$schn
+--               from baandb.ttfcmg101301 a 
+--           group by a.t$ttyp,
+--                    a.t$ninv,
+--                    a.t$schn) PAGTO_PLANEJADO
+--        ON PAGTO_PLANEJADO.t$ttyp = tfacp200.t$ttyp
+--       AND PAGTO_PLANEJADO.t$ninv = tfacp200.t$ninv 
+--       AND PAGTO_PLANEJADO.t$schn = tfacp201.t$schn
+      
 
  LEFT JOIN ( SELECT a.t$ttyp$d, 
                     a.t$ninv$d,
                     a.t$lach$d,
                     max(a.t$stat$d) t$stat$d,
-                    max(a.t$send$d) t$send$d
+                    max(a.t$send$d) t$send$d,
+                    max(a.t$btno$d) t$btno$d,
+                    max(a.t$payd$d) t$payd$d
                FROM baandb.ttflcb230301 a
               WHERE a.t$sern$d = ( select max(b.t$sern$d)
                                      from baandb.ttflcb230301 b
