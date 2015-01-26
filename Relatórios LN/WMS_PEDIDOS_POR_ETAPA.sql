@@ -192,16 +192,17 @@ INNER JOIN WMSADMIN.PL_DB
               where clkp.listname = 'INCOTERMS' )  REDESPACHO
         ON REDESPACHO.code = orders.INCOTERM
      
- LEFT JOIN ( select clkp.code         COD_TIPO_PEDIDO, 
-                    trans.description DSC_TIPO_PEDIDO
+ LEFT JOIN ( select clkp.code              COD_TIPO_PEDIDO, 
+                    NVL(trans.description, 
+                        clkp.description)  DSC_TIPO_PEDIDO
                from WMWHSE5.codelkup clkp
-         inner join WMWHSE5.translationlist trans 
+          left join WMWHSE5.translationlist trans 
                  on trans.code = clkp.code
                 and trans.joinkey1 = clkp.listname
-              where clkp.listname = 'ORDERTYPE'
                 and trans.locale = 'pt'
                 and trans.tblname = 'CODELKUP' 
-                and Trim(clkp.code) is not null ) TIPO_PEDIDO
+              where clkp.listname = 'ORDERTYPE'
+                and Trim(clkp.code) is not null  ) TIPO_PEDIDO
         ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type
   
 --WHERE NVL(SLS002.T$TPEN$C, 0) IN (:TipoEntrega)
