@@ -198,7 +198,8 @@ select Q1.*
  
        LEFT JOIN ( SELECT tdrec942.t$fire$l,
                           tdrec942.t$line$l,
-                          tdrec942.t$fbtx$l         BASE_ICMS,
+--                          tdrec942.t$fbtx$l         BASE_ICMS,
+                          tdrec942.t$base$l         BASE_ICMS,
                           tdrec942.t$rate$l         PERC_ICMS,
                           tdrec942.t$amnt$l         VL_ICMS,
                           tdrec942.t$txsc$l         CST_ICMS,
@@ -231,7 +232,8 @@ select Q1.*
               ON IMPOSTO_3.t$fire$l = tdrec941.t$fire$l
              AND IMPOSTO_3.t$line$l = tdrec941.t$line$l
 
-       LEFT JOIN ( SELECT tdrec942.t$fbtx$l         BASE_PIS,
+       LEFT JOIN ( SELECT --tdrec942.t$fbtx$l         BASE_PIS,
+                          tdrec942.t$base$l         BASE_PIS,
                           tdrec942.t$rate$l         PERC_PIS, 
                           tdrec942.t$amnt$l         VL_PIS, 
                           tdrec942.t$txsc$l         CST_PIS,
@@ -246,7 +248,8 @@ select Q1.*
               ON IMPOSTO_5.t$fire$l=tdrec941.t$fire$l
              AND IMPOSTO_5.t$line$l=tdrec941.t$line$l
   
-       LEFT JOIN ( SELECT tdrec942.t$fbtx$l         BASE_COFINS,
+       LEFT JOIN ( SELECT --tdrec942.t$fbtx$l         BASE_COFINS,
+                          tdrec942.t$base$l         BASE_COFINS,
                           tdrec942.t$rate$l         PERC_COFINS,
                           tdrec942.t$amnt$l         VL_COFINS, 
                           tdrec942.t$txsc$l         CST_COFINS,
@@ -277,7 +280,6 @@ select Q1.*
  
            WHERE tdrec940.t$stat$l IN (4, 5)
              AND tdrec940.t$rfdt$l != 13
-
         ORDER BY tdrec940.t$fire$l ) Q1
 
  WHERE Trunc(DT_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DT_EMISSAO) AND NVL(:DataEmissaoAte, DT_EMISSAO)
