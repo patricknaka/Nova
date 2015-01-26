@@ -54,8 +54,16 @@ INNER JOIN baandb.tznfmd170301 znfmd170
        AND znfmd171.t$nent$c = znfmd170.t$nent$c 
        AND znfmd171.t$fili$c = znfmd170.t$fili$c
 	   
+INNER JOIN baandb.tznsls004301 znsls004
+        ON znsls004.t$orno$c = znfmd630.t$orno$c		
+	   
 INNER JOIN baandb.tznsls401301 znsls401
-        ON znsls401.t$orno$c = znfmd630.t$orno$c
+        ON 	znsls401.t$ncia$c = znsls004.t$ncia$c
+		AND znsls401.t$uneg$c = znsls004.t$uneg$c
+		AND znsls401.t$pecl$c = znsls004.t$pecl$c
+		AND znsls401.t$sqpd$c = znsls004.t$sqpd$c
+		AND znsls401.t$entr$c = znsls004.t$entr$c
+		AND znsls401.t$sequ$c = znsls004.t$sequ$c
   
  LEFT JOIN baandb.twhwmd400301 whwmd400
         ON whwmd400.t$item = znsls401.t$itml$c
@@ -67,17 +75,17 @@ INNER JOIN baandb.ttcibd001301  tcibd001
         ON tcmcs023.t$citg = tcibd001.t$citg
 	   
 WHERE znfmd630.t$fili$c = :Planta
-  -- AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
-               -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 -- AT time zone sessiontimezone) AS DATE) ) 
-      -- BETWEEN :DataLiqDe 
-          -- AND :DataLiqAte
-		  
-  AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dten$c, 
+  AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone sessiontimezone) AS DATE) ) 
       BETWEEN :DataLiqDe 
-          AND :DataLiqAte		  
+          AND :DataLiqAte
+		  
+  -- AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dten$c, 
+               -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 -- AT time zone sessiontimezone) AS DATE) ) 
+      -- BETWEEN :DataLiqDe 
+          -- AND :DataLiqAte		  
 		  
   AND znsls401.t$mgrt$c in (:MegaRota)
   AND tcmcs080.t$cfrw in (:Transp)
