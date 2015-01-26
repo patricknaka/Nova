@@ -67,11 +67,18 @@ INNER JOIN baandb.ttcibd001301  tcibd001
         ON tcmcs023.t$citg = tcibd001.t$citg
 	   
 WHERE znfmd630.t$fili$c = :Planta
-  AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
+  -- AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
+               -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 -- AT time zone sessiontimezone) AS DATE) ) 
+      -- BETWEEN :DataLiqDe 
+          -- AND :DataLiqAte
+		  
+  AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dten$c, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone sessiontimezone) AS DATE) ) 
       BETWEEN :DataLiqDe 
-          AND :DataLiqAte
+          AND :DataLiqAte		  
+		  
   AND znsls401.t$mgrt$c in (:MegaRota)
   AND tcmcs080.t$cfrw in (:Transp)
   
