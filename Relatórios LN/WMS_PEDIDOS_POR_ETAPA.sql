@@ -47,7 +47,7 @@
     SKU.STDGROSSWGT                       PESO_BRUTO,
     ORDERS.C_CITY                         MUNICIPIO,
     ORDERS.C_STATE                        ESTADO,
-    ORDERDETAIL.ORIGINALQTY                QUANTIDADE,
+    ORDERDETAIL.ORIGINALQTY               QUANTIDADE,
     sls400.                               VALOR,
  
     REDESPACHO.description                REDESPACHO,
@@ -385,17 +385,18 @@ ORDER BY ORDERS.ORDERKEY
 "    from "+ Parameters!Table.Value + ".codelkup clkp " &
 "       where clkp.listname = 'INCOTERMS' )  REDESPACHO " &
 "     ON REDESPACHO.code = orders.INCOTERM " &
-"  LEFT JOIN ( select clkp.code     COD_TIPO_PEDIDO, " &
-"     trans.description DSC_TIPO_PEDIDO " &
-"    from "+ Parameters!Table.Value + ".codelkup clkp " &
-"      inner join "+ Parameters!Table.Value + ".translationlist trans " &
-"      on trans.code = clkp.code " &
-"     and trans.joinkey1 = clkp.listname " &
-"       where clkp.listname = 'ORDERTYPE' " &
-"     and trans.locale = 'pt' " &
-"     and trans.tblname = 'CODELKUP' " &
-"     and Trim(clkp.code) is not null ) TIPO_PEDIDO " &
-"     ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type " &
+"  LEFT JOIN ( select clkp.code       COD_TIPO_PEDIDO, " &
+"              NVL(trans.description,                  " &
+"                  clkp.description)  DSC_TIPO_PEDIDO  " &
+"         from "+ Parameters!Table.Value + ".codelkup clkp         " &
+"    left join "+ Parameters!Table.Value + ".translationlist trans " &
+"           on trans.code = clkp.code            " &
+"          and trans.joinkey1 = clkp.listname    " &
+"          and trans.locale = 'pt'               " &
+"          and trans.tblname = 'CODELKUP'        " &
+"        where clkp.listname = 'ORDERTYPE'       " &
+"          and Trim(clkp.code) is not null  ) TIPO_PEDIDO  " &
+"  ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type            " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN ("+ JOIN(Parameters!TipoEntrega.Value, ", ") + ") "&
 " AND Trunc(ORDERSTATUSHISTORY.ADDDATE) "&
 "   Between '"+ Parameters!DataUltEventoDe.Value + "' "&
@@ -572,17 +573,18 @@ ORDER BY ORDERS.ORDERKEY
 "    from WMWHSE1.codelkup clkp " &
 "       where clkp.listname = 'INCOTERMS' )  REDESPACHO " &
 "     ON REDESPACHO.code = orders.INCOTERM " &
-"  LEFT JOIN ( select clkp.code     COD_TIPO_PEDIDO, " &
-"     trans.description DSC_TIPO_PEDIDO " &
-"    from WMWHSE1.codelkup clkp " &
-"      inner join WMWHSE1.translationlist trans " &
-"      on trans.code = clkp.code " &
-"     and trans.joinkey1 = clkp.listname " &
-"       where clkp.listname = 'ORDERTYPE' " &
-"     and trans.locale = 'pt' " &
-"     and trans.tblname = 'CODELKUP' " &
-"     and Trim(clkp.code) is not null ) TIPO_PEDIDO " &
-"     ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type " &
+"  LEFT JOIN ( select clkp.code       COD_TIPO_PEDIDO, " &
+"              NVL(trans.description,                  " &
+"                  clkp.description)  DSC_TIPO_PEDIDO  " &
+"         from WMWHSE1.codelkup clkp             " &
+"    left join WMWHSE1.translationlist trans     " &
+"           on trans.code = clkp.code            " &
+"          and trans.joinkey1 = clkp.listname    " &
+"          and trans.locale = 'pt'               " &
+"          and trans.tblname = 'CODELKUP'        " &
+"        where clkp.listname = 'ORDERTYPE'       " &
+"          and Trim(clkp.code) is not null  ) TIPO_PEDIDO  " &
+"  ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type            " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN ("+ JOIN(Parameters!TipoEntrega.Value, ", ") + ") "&
 " AND Trunc(ORDERSTATUSHISTORY.ADDDATE) "&
 "   Between '"+ Parameters!DataUltEventoDe.Value + "' "&
@@ -756,17 +758,18 @@ ORDER BY ORDERS.ORDERKEY
 "    from WMWHSE2.codelkup clkp " &
 "       where clkp.listname = 'INCOTERMS' )  REDESPACHO " &
 "     ON REDESPACHO.code = orders.INCOTERM " &
-"  LEFT JOIN ( select clkp.code     COD_TIPO_PEDIDO, " &
-"     trans.description DSC_TIPO_PEDIDO " &
-"    from WMWHSE2.codelkup clkp " &
-"      inner join WMWHSE2.translationlist trans " &
-"      on trans.code = clkp.code " &
-"     and trans.joinkey1 = clkp.listname " &
-"       where clkp.listname = 'ORDERTYPE' " &
-"     and trans.locale = 'pt' " &
-"     and trans.tblname = 'CODELKUP' " &
-"     and Trim(clkp.code) is not null ) TIPO_PEDIDO " &
-"     ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type " &
+"  LEFT JOIN ( select clkp.code       COD_TIPO_PEDIDO, " &
+"              NVL(trans.description,                  " &
+"                  clkp.description)  DSC_TIPO_PEDIDO  " &
+"         from WMWHSE2.codelkup clkp             " &
+"    left join WMWHSE2.translationlist trans     " &
+"           on trans.code = clkp.code            " &
+"          and trans.joinkey1 = clkp.listname    " &
+"          and trans.locale = 'pt'               " &
+"          and trans.tblname = 'CODELKUP'        " &
+"        where clkp.listname = 'ORDERTYPE'       " &
+"          and Trim(clkp.code) is not null  ) TIPO_PEDIDO  " &
+"  ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type            " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN ("+ JOIN(Parameters!TipoEntrega.Value, ", ") + ") "&
 " AND Trunc(ORDERSTATUSHISTORY.ADDDATE) "&
 "   Between '"+ Parameters!DataUltEventoDe.Value + "' "&
@@ -940,17 +943,18 @@ ORDER BY ORDERS.ORDERKEY
 "    from WMWHSE3.codelkup clkp " &
 "       where clkp.listname = 'INCOTERMS' )  REDESPACHO " &
 "     ON REDESPACHO.code = orders.INCOTERM " &
-"  LEFT JOIN ( select clkp.code     COD_TIPO_PEDIDO, " &
-"     trans.description DSC_TIPO_PEDIDO " &
-"    from WMWHSE3.codelkup clkp " &
-"      inner join WMWHSE3.translationlist trans " &
-"      on trans.code = clkp.code " &
-"     and trans.joinkey1 = clkp.listname " &
-"       where clkp.listname = 'ORDERTYPE' " &
-"     and trans.locale = 'pt' " &
-"     and trans.tblname = 'CODELKUP' " &
-"     and Trim(clkp.code) is not null ) TIPO_PEDIDO " &
-"     ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type " &
+"  LEFT JOIN ( select clkp.code       COD_TIPO_PEDIDO, " &
+"              NVL(trans.description,                  " &
+"                  clkp.description)  DSC_TIPO_PEDIDO  " &
+"         from WMWHSE3.codelkup clkp             " &
+"    left join WMWHSE3.translationlist trans     " &
+"           on trans.code = clkp.code            " &
+"          and trans.joinkey1 = clkp.listname    " &
+"          and trans.locale = 'pt'               " &
+"          and trans.tblname = 'CODELKUP'        " &
+"        where clkp.listname = 'ORDERTYPE'       " &
+"          and Trim(clkp.code) is not null  ) TIPO_PEDIDO  " &
+"  ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type            " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN ("+ JOIN(Parameters!TipoEntrega.Value, ", ") + ") "&
 " AND Trunc(ORDERSTATUSHISTORY.ADDDATE) "&
 "   Between '"+ Parameters!DataUltEventoDe.Value + "' "&
@@ -1124,17 +1128,18 @@ ORDER BY ORDERS.ORDERKEY
 "    from WMWHSE4.codelkup clkp " &
 "       where clkp.listname = 'INCOTERMS' )  REDESPACHO " &
 "     ON REDESPACHO.code = orders.INCOTERM " &
-"  LEFT JOIN ( select clkp.code     COD_TIPO_PEDIDO, " &
-"     trans.description DSC_TIPO_PEDIDO " &
-"    from WMWHSE4.codelkup clkp " &
-"      inner join WMWHSE4.translationlist trans " &
-"      on trans.code = clkp.code " &
-"     and trans.joinkey1 = clkp.listname " &
-"       where clkp.listname = 'ORDERTYPE' " &
-"     and trans.locale = 'pt' " &
-"     and trans.tblname = 'CODELKUP' " &
-"     and Trim(clkp.code) is not null ) TIPO_PEDIDO " &
-"     ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type " &
+"  LEFT JOIN ( select clkp.code       COD_TIPO_PEDIDO, " &
+"              NVL(trans.description,                  " &
+"                  clkp.description)  DSC_TIPO_PEDIDO  " &
+"         from WMWHSE4.codelkup clkp             " &
+"    left join WMWHSE4.translationlist trans     " &
+"           on trans.code = clkp.code            " &
+"          and trans.joinkey1 = clkp.listname    " &
+"          and trans.locale = 'pt'               " &
+"          and trans.tblname = 'CODELKUP'        " &
+"        where clkp.listname = 'ORDERTYPE'       " &
+"          and Trim(clkp.code) is not null  ) TIPO_PEDIDO  " &
+"  ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type            " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN ("+ JOIN(Parameters!TipoEntrega.Value, ", ") + ") "&
 " AND Trunc(ORDERSTATUSHISTORY.ADDDATE) "&
 "   Between '"+ Parameters!DataUltEventoDe.Value + "' "&
@@ -1308,17 +1313,18 @@ ORDER BY ORDERS.ORDERKEY
 "    from WMWHSE5.codelkup clkp " &
 "       where clkp.listname = 'INCOTERMS' )  REDESPACHO " &
 "     ON REDESPACHO.code = orders.INCOTERM " &
-"  LEFT JOIN ( select clkp.code     COD_TIPO_PEDIDO, " &
-"     trans.description DSC_TIPO_PEDIDO " &
-"    from WMWHSE5.codelkup clkp " &
-"      inner join WMWHSE5.translationlist trans " &
-"      on trans.code = clkp.code " &
-"     and trans.joinkey1 = clkp.listname " &
-"       where clkp.listname = 'ORDERTYPE' " &
-"     and trans.locale = 'pt' " &
-"     and trans.tblname = 'CODELKUP' " &
-"     and Trim(clkp.code) is not null ) TIPO_PEDIDO " &
-"     ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type " &
+"  LEFT JOIN ( select clkp.code       COD_TIPO_PEDIDO, " &
+"              NVL(trans.description,                  " &
+"                  clkp.description)  DSC_TIPO_PEDIDO  " &
+"         from WMWHSE5.codelkup clkp             " &
+"    left join WMWHSE5.translationlist trans     " &
+"           on trans.code = clkp.code            " &
+"          and trans.joinkey1 = clkp.listname    " &
+"          and trans.locale = 'pt'               " &
+"          and trans.tblname = 'CODELKUP'        " &
+"        where clkp.listname = 'ORDERTYPE'       " &
+"          and Trim(clkp.code) is not null  ) TIPO_PEDIDO  " &
+"  ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type            " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN ("+ JOIN(Parameters!TipoEntrega.Value, ", ") + ") "&
 " AND Trunc(ORDERSTATUSHISTORY.ADDDATE) "&
 "   Between '"+ Parameters!DataUltEventoDe.Value + "' "&
@@ -1492,17 +1498,18 @@ ORDER BY ORDERS.ORDERKEY
 "    from WMWHSE6.codelkup clkp " &
 "       where clkp.listname = 'INCOTERMS' )  REDESPACHO " &
 "     ON REDESPACHO.code = orders.INCOTERM " &
-"  LEFT JOIN ( select clkp.code     COD_TIPO_PEDIDO, " &
-"     trans.description DSC_TIPO_PEDIDO " &
-"    from WMWHSE6.codelkup clkp " &
-"      inner join WMWHSE6.translationlist trans " &
-"      on trans.code = clkp.code " &
-"     and trans.joinkey1 = clkp.listname " &
-"       where clkp.listname = 'ORDERTYPE' " &
-"     and trans.locale = 'pt' " &
-"     and trans.tblname = 'CODELKUP' " &
-"     and Trim(clkp.code) is not null ) TIPO_PEDIDO " &
-"     ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type " &
+"  LEFT JOIN ( select clkp.code       COD_TIPO_PEDIDO, " &
+"              NVL(trans.description,                  " &
+"                  clkp.description)  DSC_TIPO_PEDIDO  " &
+"         from WMWHSE6.codelkup clkp             " &
+"    left join WMWHSE6.translationlist trans     " &
+"           on trans.code = clkp.code            " &
+"          and trans.joinkey1 = clkp.listname    " &
+"          and trans.locale = 'pt'               " &
+"          and trans.tblname = 'CODELKUP'        " &
+"        where clkp.listname = 'ORDERTYPE'       " &
+"          and Trim(clkp.code) is not null  ) TIPO_PEDIDO  " &
+"  ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type            " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN ("+ JOIN(Parameters!TipoEntrega.Value, ", ") + ") "&
 " AND Trunc(ORDERSTATUSHISTORY.ADDDATE) "&
 "   Between '"+ Parameters!DataUltEventoDe.Value + "' "&
@@ -1676,17 +1683,18 @@ ORDER BY ORDERS.ORDERKEY
 "    from WMWHSE7.codelkup clkp " &
 "       where clkp.listname = 'INCOTERMS' )  REDESPACHO " &
 "     ON REDESPACHO.code = orders.INCOTERM " &
-"  LEFT JOIN ( select clkp.code     COD_TIPO_PEDIDO, " &
-"     trans.description DSC_TIPO_PEDIDO " &
-"    from WMWHSE7.codelkup clkp " &
-"      inner join WMWHSE7.translationlist trans " &
-"      on trans.code = clkp.code " &
-"     and trans.joinkey1 = clkp.listname " &
-"       where clkp.listname = 'ORDERTYPE' " &
-"     and trans.locale = 'pt' " &
-"     and trans.tblname = 'CODELKUP' " &
-"     and Trim(clkp.code) is not null ) TIPO_PEDIDO " &
-"     ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type " &
+"  LEFT JOIN ( select clkp.code       COD_TIPO_PEDIDO, " &
+"              NVL(trans.description,                  " &
+"                  clkp.description)  DSC_TIPO_PEDIDO  " &
+"         from WMWHSE7.codelkup clkp             " &
+"    left join WMWHSE7.translationlist trans     " &
+"           on trans.code = clkp.code            " &
+"          and trans.joinkey1 = clkp.listname    " &
+"          and trans.locale = 'pt'               " &
+"          and trans.tblname = 'CODELKUP'        " &
+"        where clkp.listname = 'ORDERTYPE'       " &
+"          and Trim(clkp.code) is not null  ) TIPO_PEDIDO  " &
+"  ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type            " &
 "WHERE NVL(SLS002.T$TPEN$C, 0) IN ("+ JOIN(Parameters!TipoEntrega.Value, ", ") + ") "&
 " AND Trunc(ORDERSTATUSHISTORY.ADDDATE) "&
 "   Between '"+ Parameters!DataUltEventoDe.Value + "' "&
