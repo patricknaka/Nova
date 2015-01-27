@@ -1,7 +1,7 @@
 select 
   distinct 
     301                         CIA,
-    tcemm122.t$grid             CodFilial,
+    tcemm124.t$grid             CodFilial,
     tccom130a.t$fovn$l          Filial,
     cisli940.t$docn$l           Nota_Fiscal,
     cisli940.t$seri$l           Serie,
@@ -36,30 +36,35 @@ select
     
     Status_Ordem_Armazem.       DESCR_Status_Ordem_Armazem,
     cisli940.t$cnfe$l           Chave_de_Acesso,
-	
+ 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE) 
                                 Data_Entrada,
-								
+        
     tdrec940.t$fire$l           Ref_Fiscal_Entrada,  
     tdrec940.t$stat$l           CODE_STAT_REC,            --Status ref. Fiscal 
     STAT_REC.                   DESCR_CODE_STAT_REC       --Status ref. Fiscal    
     
-from       baandb.tcisli940301 cisli940
+from baandb.twhinh200301 whinh200
 
 inner join baandb.tcisli245301 cisli245
-        on cisli245.t$fire$l = cisli940.t$fire$l
+        on cisli245.t$slcp = 301
+       and cisli245.t$ortp = 2
+       and cisli245.t$koor = 34
+       and cisli245.t$slso = whinh200.t$orno
+       and cisli245.t$oset = whinh200.t$oset
+  
+inner join baandb.tcisli940301 cisli940
+        on cisli940.t$fire$l = cisli245.t$fire$l
 
-inner join baandb.twhinh200301 whinh200
-        on whinh200.t$orno = cisli245.t$slso 
-       and whinh200.t$oset = cisli245.t$oset
-     
 inner join baandb.ttccom130301 tccom130a
         on tccom130a.t$cadr  = cisli940.t$sfra$l 
 
-inner join baandb.ttcemm122301 tcemm122
-        on tcemm122.t$bupa   = tccom130a.t$cadr
+inner join baandb.ttcemm124301 tcemm124
+        on tcemm124.t$loco = 301
+       and tcemm124.t$dtyp = 1
+       and tcemm124.t$cwoc = cisli940.t$cofc$l
 
 inner join baandb.ttccom130301 tccom130b
         on tccom130b.t$cadr  = cisli940.t$stoa$l
@@ -73,7 +78,7 @@ inner join baandb.ttccom100301 tccom100
      
  left join baandb.ttdrec940301 tdrec940 
         on tdrec940.t$fire$l = tdrec947.t$fire$l 
- 	  
+    
  left join ( SELECT l.t$desc DESCR_Status_da_NF,
                     d.t$cnst
                FROM baandb.tttadv401000 d,
@@ -101,7 +106,7 @@ inner join baandb.ttccom100301 tccom100
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) Status_da_NF
         on Status_da_NF.t$cnst = cisli940.t$stat$l
- 	   
+     
  left join ( SELECT l.t$desc DESCR_Status_Ordem_Armazem,
                     d.t$cnst
                FROM baandb.tttadv401000 d,
@@ -157,15 +162,15 @@ inner join baandb.ttccom100301 tccom100
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) STAT_REC
         on STAT_REC.t$cnst = tdrec940.t$stat$l
-			  
-where tdrec940.t$rfdt$l = 4
-  and cisli940.t$fdty$l = 4 
 
+where whinh200.t$oorg = 3
+  and whinh200.t$otyp in ('509', '511', '514', '515')  
+  
   and Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE)) 
       Between :EmissaoDe 
           And :EmissaoAte
-  and tcemm122.t$grid In (:Filial)
-  and cisli940.t$ccfo$l In (:CFOP)
-  and cisli940.t$stat$l In (:StatusNF)
+  and tcemm124.t$grid in (:Filial)
+  and cisli940.t$ccfo$l in (:CFOP)
+  and cisli940.t$stat$l in (:StatusNF)
