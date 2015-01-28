@@ -45,8 +45,9 @@ select Q1.*
                      AT time zone sessiontimezone) AS DATE)              DT_ENTR_PLAN,
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)              DT_PLAN_REC
-                     
+                     AT time zone sessiontimezone) AS DATE)              DT_PLAN_REC,
+                tccom130.t$fovn$l                                        CNPJ_FORN    
+                
            FROM baandb.tznsls410301 znsls410 
      
      INNER JOIN baandb.tznsls400301 znsls400
@@ -86,6 +87,15 @@ select Q1.*
       
       LEFT JOIN baandb.ttdsls400301 tdsls400
              ON tdsls400.t$orno=znsls401.t$orno$c
+      
+      LEFT JOIN baandb.ttdipu001301 tdipu001
+             ON tdipu001.t$item=tcibd001.t$item
+      
+      LEFT JOIN baandb.ttccom100301 tccom100
+             ON tccom100.t$bpid=tdipu001.t$otbp
+      
+      LEFT JOIN baandb.ttccom130301 tccom130
+             ON tccom130.t$cadr=tccom100.t$cadr
              
           WHERE znsls401.t$idor$c = 'LJ'
       
@@ -107,7 +117,8 @@ select Q1.*
                 znsls401.T$TPES$C,
                 tdsls400.t$odat,
                 tdsls400.t$ddat,
-                tdsls400.t$prdt
+                tdsls400.t$prdt,
+                tccom130.t$fovn$l
                
        ORDER BY PEDIDO ) Q1
  
