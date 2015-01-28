@@ -35,8 +35,18 @@ select Q1.*
                       AT time zone sessiontimezone) AS DATE)             DT_ENTREGA,
                 
                 znint002.T$desc$C                                        UNID_NEGOC,
-                znsls401.T$TPES$C                                        TP_ESTOQUE
- 
+                znsls401.T$TPES$C                                        TP_ESTOQUE,
+                WMS_ORDERS.ORDERKEY                                      PEDIDO_WMS,
+                CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone sessiontimezone) AS DATE)              DT_ORDEM,
+                CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone sessiontimezone) AS DATE)              DT_ENTR_PLAN,
+                CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone sessiontimezone) AS DATE)              DT_PLAN_REC
+                     
            FROM baandb.tznsls410301 znsls410 
      
      INNER JOIN baandb.tznsls400301 znsls400
@@ -70,10 +80,18 @@ select Q1.*
              
       LEFT JOIN baandb.ttcmcs023301 tcmcs023
              ON tcmcs023.t$citg=tcibd001.t$citg
+        
+      LEFT JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_ORDERS
+             ON WMS_ORDERS.REFERENCEDOCUMENT=znsls401.t$orno$c
+      
+      LEFT JOIN baandb.ttdsls400301 tdsls400
+             ON tdsls400.t$orno=znsls401.t$orno$c
              
           WHERE znsls401.t$idor$c = 'LJ'
       
        GROUP BY znsls410.t$pecl$c,
+                znsls410.t$orno$c,
+                WMS_ORDERS.ORDERKEY,
                 znsls410.t$entr$c,
                 tcemm030.T$EUNT,
                 tcemm030.t$euca,
@@ -86,7 +104,10 @@ select Q1.*
                 tcmcs060.t$dsca,
                 znsls401.t$vlun$c,
                 znint002.T$desc$C,
-                znsls401.T$TPES$C
+                znsls401.T$TPES$C,
+                tdsls400.t$odat,
+                tdsls400.t$ddat,
+                tdsls400.t$prdt
                
        ORDER BY PEDIDO ) Q1
  
