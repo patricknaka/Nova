@@ -70,7 +70,7 @@ select Q1.*
              ON tcemm030.t$eunt = tcemm124.t$grid
       
       LEFT JOIN baandb.ttcibd001301 tcibd001
-             ON tcibd001.t$item = znsls401.t$item$c
+             ON Trim(tcibd001.t$item) = TO_CHAR(znsls401.t$item$c)
              
       LEFT JOIN baandb.ttcmcs060301 tcmcs060
              ON tcmcs060.t$cmnf = tcibd001.t$cmnf
@@ -80,22 +80,22 @@ select Q1.*
             AND znint002.t$ncia$c = znsls410.t$ncia$c
              
       LEFT JOIN baandb.ttcmcs023301 tcmcs023
-             ON tcmcs023.t$citg=tcibd001.t$citg
+             ON tcmcs023.t$citg = tcibd001.t$citg
         
       LEFT JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_ORDERS
-             ON WMS_ORDERS.REFERENCEDOCUMENT=znsls401.t$orno$c
+             ON WMS_ORDERS.REFERENCEDOCUMENT = znsls401.t$orno$c
       
       LEFT JOIN baandb.ttdsls400301 tdsls400
-             ON tdsls400.t$orno=znsls401.t$orno$c
+             ON tdsls400.t$orno = znsls401.t$orno$c
       
       LEFT JOIN baandb.ttdipu001301 tdipu001
-             ON tdipu001.t$item=tcibd001.t$item
+             ON tdipu001.t$item = tcibd001.t$item
       
       LEFT JOIN baandb.ttccom100301 tccom100
-             ON tccom100.t$bpid=tdipu001.t$otbp
+             ON tccom100.t$bpid = tdipu001.t$otbp
       
       LEFT JOIN baandb.ttccom130301 tccom130
-             ON tccom130.t$cadr=tccom100.t$cadr
+             ON tccom130.t$cadr = tccom100.t$cadr
              
           WHERE znsls401.t$idor$c = 'LJ'
       
