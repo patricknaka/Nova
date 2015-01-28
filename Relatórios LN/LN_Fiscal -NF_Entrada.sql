@@ -9,7 +9,7 @@ select Q1.*
                  tdrec940.t$fire$l                   REFE_FISCAL,  
                  tdrec941.t$opfc$l                   NUME_CFOP,
                  tcmcs940.T$DSCA$L                   NOME_CFOP,
-                 tccom110.t$cbtp                     COD_TIPO,
+                 tccom120.t$cbtp                     COD_TIPO,
                  tdrec940.t$stpn$l                   INS_EsT,
                  CASE WHEN tdrec940.t$sfad$l = ' ' THEN
                       tccom130_ret.t$ccit
@@ -60,8 +60,9 @@ select Q1.*
                  tdrec941.t$gexp$l                   VL_DESPESA,
                  tdrec941.t$addc$l                   VL_DESCONTO,
                  tdrec941.t$fght$l                   VL_FRETE,
-                 
-                 IMPOSTO_1.                          BASE_ICMS,
+                 CASE WHEN IMPOSTO_1.PERC_ICMS = 0.00 THEN
+                      0.00
+                 ELSE IMPOSTO_1.BASE_ICMS END        BASE_ICMS,
                  IMPOSTO_1.                          PERC_ICMS,
                  IMPOSTO_1.                          VL_ICMS,
                  IMPOSTO_1.                          CST_ICMS,
@@ -74,15 +75,17 @@ select Q1.*
                  IMPOSTO_2.                          BASE_ICMS_ST,
                  IMPOSTO_2.                          VL_ICMS_ST,
                  IMPOSTO_2.                          VL_ICMS_ST_DEST,      
-                 
-                 IMPOSTO_5.                          BASE_PIS,
+                 CASE WHEN IMPOSTO_5.PERC_PIS=0.00 THEN
+                      0.00
+                 ELSE IMPOSTO_5.BASE_PIS END         BASE_PIS,
                  IMPOSTO_5.                          PERC_PIS,
                  IMPOSTO_5.                          VL_PIS,
                  IMPOSTO_5.                          CST_PIS,
                  IMPOSTO_5.                          ORIG_CST_PIS,      
                  IMPOSTO_5.                          TRIBUT_CST_PIS,
-                 
-                 IMPOSTO_6.                          BASE_COFINS,
+                 CASE WHEN PERC_COFINS=0.00 THEN
+                      0.00
+                 ELSE IMPOSTO_6.BASE_COFINS END      BASE_COFINS,
                  IMPOSTO_6.                          PERC_COFINS,
                  IMPOSTO_6.                          VL_COFINS,
                  IMPOSTO_6.                          CST_COFINS,
@@ -112,8 +115,8 @@ select Q1.*
           
             FROM baandb.ttdrec940301       tdrec940 
        
-      INNER JOIN baandb.ttccom110301       tccom110
-              ON tccom110.T$ofbp = tdrec940.t$bpid$l
+      LEFT JOIN baandb.ttccom120301       tccom120
+              ON tccom120.T$otbp = tdrec940.t$bpid$l
               
       INNER JOIN baandb.ttdrec941301       tdrec941      
               ON tdrec940.t$fire$l = tdrec941.t$fire$l
