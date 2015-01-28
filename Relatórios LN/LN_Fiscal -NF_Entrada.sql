@@ -11,25 +11,31 @@ select Q1.*
                  tcmcs940.T$DSCA$L                   NOME_CFOP,
                  tccom120.t$cbtp                     COD_TIPO,
                  tdrec940.t$stpn$l                   INS_EsT,
-                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
-                      tccom130_ret.t$ccit
-                 ELSE tccom130.t$ccit END            ID_MUNIC,
-                 CASE tdrec940.t$sfad$l WHEN tdrec940.t$ifad$l THEN 'Fatura' 
-                                        ELSE 'Entrega' 
+                 CASE WHEN tdrec940.t$sfad$l = ' ' 
+                        THEN tccom130_ret.t$ccit
+                      ELSE   tccom130.t$ccit 
+                  END                                ID_MUNIC,
+                 CASE tdrec940.t$sfad$l WHEN tdrec940.t$ifad$l 
+                        THEN 'Fatura' 
+                      ELSE   'Entrega' 
                   END                                TIPO_ENDER, 
                  tdrec940.t$sfad$l                   SEQ_ENDER,
-                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
-                      tccom130_ret.t$dist$l
-                 ELSE tccom130.t$dist$l END          END_BAIRRO,
-                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
-                      tccom130_ret.t$hono
-                 ELSE tccom130.t$hono END            END_NUMERO,
-                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
-                      tccom130_ret.t$namd
-                 ELSE tccom130.t$namd END           END_COMPL,
-                 CASE WHEN tdrec940.t$sfad$l = ' ' THEN
-                      tccom130_ret.t$cste
-                 ELSE tccom130.t$cste END           UF,
+                 CASE WHEN tdrec940.t$sfad$l = ' ' 
+                        THEN tccom130_ret.t$dist$l
+                      ELSE tccom130.t$dist$l 
+                  END                                END_BAIRRO,
+                 CASE WHEN tdrec940.t$sfad$l = ' ' 
+                        THEN tccom130_ret.t$hono
+                      ELSE tccom130.t$hono 
+                  END                                END_NUMERO,
+                 CASE WHEN tdrec940.t$sfad$l = ' '
+                        THEN tccom130_ret.t$namd
+                      ELSE tccom130.t$namd 
+                  END                                END_COMPL,
+                 CASE WHEN tdrec940.t$sfad$l = ' ' 
+                        THEN tccom130_ret.t$cste
+                      ELSE tccom130.t$cste 
+                  END                                UF,
                  tccom139.t$ibge$l                   COD_IBGE,
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -60,9 +66,10 @@ select Q1.*
                  tdrec941.t$gexp$l                   VL_DESPESA,
                  tdrec941.t$addc$l                   VL_DESCONTO,
                  tdrec941.t$fght$l                   VL_FRETE,
-                 CASE WHEN IMPOSTO_1.PERC_ICMS = 0.00 THEN
-                      0.00
-                 ELSE IMPOSTO_1.BASE_ICMS END        BASE_ICMS,
+                 CASE WHEN IMPOSTO_1.PERC_ICMS = 0.00 
+                        THEN 0.00
+                      ELSE   IMPOSTO_1.BASE_ICMS 
+                  END                                BASE_ICMS,
                  IMPOSTO_1.                          PERC_ICMS,
                  IMPOSTO_1.                          VL_ICMS,
                  IMPOSTO_1.                          CST_ICMS,
@@ -75,17 +82,19 @@ select Q1.*
                  IMPOSTO_2.                          BASE_ICMS_ST,
                  IMPOSTO_2.                          VL_ICMS_ST,
                  IMPOSTO_2.                          VL_ICMS_ST_DEST,      
-                 CASE WHEN IMPOSTO_5.PERC_PIS=0.00 THEN
-                      0.00
-                 ELSE IMPOSTO_5.BASE_PIS END         BASE_PIS,
+                 CASE WHEN IMPOSTO_5.PERC_PIS = 0.00 
+                        THEN 0.00
+                      ELSE   IMPOSTO_5.BASE_PIS 
+                  END                                BASE_PIS,
                  IMPOSTO_5.                          PERC_PIS,
                  IMPOSTO_5.                          VL_PIS,
                  IMPOSTO_5.                          CST_PIS,
                  IMPOSTO_5.                          ORIG_CST_PIS,      
                  IMPOSTO_5.                          TRIBUT_CST_PIS,
-                 CASE WHEN PERC_COFINS=0.00 THEN
-                      0.00
-                 ELSE IMPOSTO_6.BASE_COFINS END      BASE_COFINS,
+                 CASE WHEN PERC_COFINS = 0.00 
+                        THEN 0.00
+                      ELSE   IMPOSTO_6.BASE_COFINS 
+                  END                                BASE_COFINS,
                  IMPOSTO_6.                          PERC_COFINS,
                  IMPOSTO_6.                          VL_COFINS,
                  IMPOSTO_6.                          CST_COFINS,
@@ -248,8 +257,8 @@ select Q1.*
                INNER JOIN baandb.ttdrec942301 tdrec942
                        ON tcmcs938.t$txsc$l = tdrec942.t$txsc$l
                     WHERE tdrec942.t$brty$l = 5 ) IMPOSTO_5
-              ON IMPOSTO_5.t$fire$l=tdrec941.t$fire$l
-             AND IMPOSTO_5.t$line$l=tdrec941.t$line$l
+              ON IMPOSTO_5.t$fire$l = tdrec941.t$fire$l
+             AND IMPOSTO_5.t$line$l = tdrec941.t$line$l
   
        LEFT JOIN ( SELECT --tdrec942.t$fbtx$l         BASE_COFINS,
                           tdrec942.t$base$l         BASE_COFINS,
@@ -282,7 +291,7 @@ select Q1.*
              AND IMPOSTO_ST_SCONV.t$line$l = tdrec941.t$line$l
  
            WHERE tdrec940.t$stat$l IN (4, 5)
-             AND tdrec940.t$rfdt$l != 13
+             AND tdrec940.t$rfdt$l ! =  13
         ORDER BY tdrec940.t$fire$l ) Q1
 
  WHERE Trunc(DT_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DT_EMISSAO) AND NVL(:DataEmissaoAte, DT_EMISSAO)
