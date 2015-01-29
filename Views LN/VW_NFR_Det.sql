@@ -25,8 +25,8 @@ SELECT
   tdrec941.t$qnty$l QT_NOMINAL_NF,
   	(SELECT sum(tdrec947.t$qnty$l) FROM baandb.ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
-	AND tdrec947.t$line$l=tdrec941.t$line$l) QT_RECEBIDA,
-	--AND rownum=1) 
+	AND tdrec947.t$line$l=tdrec941.t$line$l
+	AND rownum=1) QT_RECEBIDA,
   tdrec941.t$pric$l VL_UNITARIO,
   (SELECT tdrec942.t$rate$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
@@ -98,11 +98,20 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VL_PIS,
-  cast((SELECT CASE WHEN tdrec942.t$rdbc$l!=0 then tdrec942.t$base$l/(tdrec942.t$rdbc$l/100) else 0 end		--#FAF.279.n
+
+-- comentei a instrução original pois estava sendo considerado o valor calculado e precisamos da base de calculo - Rosana
+--  cast((SELECT CASE WHEN tdrec942.t$rdbc$l!=0 then tdrec942.t$base$l/(tdrec942.t$rdbc$l/100) else 0 end		--#FAF.279.n
+--  FROM baandb.ttdrec942201 tdrec942
+--  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+--  AND tdrec942.t$line$l=tdrec941.t$line$l
+--  AND tdrec942.t$brty$l=1) as numeric (12,2)) VL_BASE_ICMS_NAO_REDUTOR,  
+
+  cast((SELECT CASE WHEN tdrec942.t$rdbc$l!=0 then tdrec942.t$base$l else 0 end		--#FAF.279.n
   FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) as numeric (12,2)) VL_BASE_ICMS_NAO_REDUTOR,  
+
   (SELECT tdrec942.t$amni$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
