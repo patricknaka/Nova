@@ -6,7 +6,8 @@ select Q1.DATA_EMISSAO,
        Q1.NOTA,
        Q1.SERIE,
        sum(Q1.PESO) PESO,
-       sum(Q1.VOLUME_M3) VOLUME_M3 ,
+       sum(Q1.VOLUME_M3) VOLUME_M3,
+       sum(Q1.VOLUME_CUBICO) VOLUME_CUBICO,
        Q1.VLR_TOTAL_NF,
        Q1.VLR_FRETE_CLIENTE,
        Q1.ALIQUOTA,
@@ -67,7 +68,17 @@ from ( SELECT DISTINCT
                         and wmd.t$item = sli.t$item$l
                         and znmcs.t$cfrw$c = znfmd630.t$cfrw$c ), 0 ) 
                                              VOLUME_M3,
-                                             
+
+             nvl( ( select sum(wmd.t$hght    * 
+                                wmd.t$wdth   * 
+                                wmd.t$dpth   * 
+                                sli.t$dqua$l )
+                       from baandb.tcisli941301 sli,
+                            baandb.twhwmd400301 wmd
+                      where sli.t$fire$l = cisli940.t$fire$l
+                        and wmd.t$item = sli.t$item$l), 0 ) 
+                                             VOLUME_CUBICO,
+                        
               cisli940.t$amnt$l              VLR_TOTAL_NF,
               znfmd630.t$vlfr$c              VLR_FRETE_CLIENTE,
 
