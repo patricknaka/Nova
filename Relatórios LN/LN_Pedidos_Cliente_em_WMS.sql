@@ -82,7 +82,7 @@ select Q1.*
       LEFT JOIN baandb.ttcmcs023301 tcmcs023
              ON tcmcs023.t$citg = tcibd001.t$citg
         
-      LEFT JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_ORDERS
+      INNER JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_ORDERS
              ON WMS_ORDERS.REFERENCEDOCUMENT = znsls401.t$orno$c
       
       LEFT JOIN baandb.ttdsls400301 tdsls400
@@ -100,7 +100,7 @@ select Q1.*
           WHERE znsls401.t$idor$c = 'LJ'
       
        GROUP BY znsls410.t$pecl$c,
-                znsls410.t$orno$c,
+                --znsls410.t$orno$c,
                 WMS_ORDERS.ORDERKEY,
                 znsls410.t$entr$c,
                 tcemm030.T$EUNT,
