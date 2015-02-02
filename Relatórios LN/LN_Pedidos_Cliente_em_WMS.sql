@@ -3,7 +3,9 @@ select Q1.*
                 znsls410.t$entr$c                                        NO_ENTREGA,
                 tcemm030.T$EUNT                                          CHAVE_FILIAL,
                 tcemm030.t$euca                                          FILIAL,
-                tcemm030.t$dsca                                          NOME_FILIAL,                         
+                tcemm030.t$dsca                                          NOME_FILIAL, 
+                UPPER(WMS_CL.UDF1)                                       ID_FILIAL_WMS,
+                WMS_CL.UDF2                                              NOME_FILIAL_WMS,
                 znsls401.t$item$c                                        ITEM,      
                 tcibd001.t$dsca                                          DESCRICAO,                         
                 znsls401.t$qtve$c                                        QT_PEDIDO,
@@ -84,6 +86,10 @@ select Q1.*
         
       INNER JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_ORDERS
              ON WMS_ORDERS.REFERENCEDOCUMENT = znsls401.t$orno$c
+             
+      INNER JOIN ENTERPRISE.CODELKUP@DL_LN_WMS WMS_CL
+              ON UPPER(WMS_CL.UDF1) = WMS_ORDERS.WHSEID
+              AND WMS_CL.LISTNAME='SCHEMA'
       
       LEFT JOIN baandb.ttdsls400301 tdsls400
              ON tdsls400.t$orno = znsls401.t$orno$c
@@ -118,7 +124,9 @@ select Q1.*
                 tdsls400.t$odat,
                 tdsls400.t$ddat,
                 tdsls400.t$prdt,
-                tccom130.t$fovn$l
+                tccom130.t$fovn$l,
+                UPPER(WMS_CL.UDF1),
+                WMS_CL.UDF2
                
        ORDER BY PEDIDO ) Q1
  
