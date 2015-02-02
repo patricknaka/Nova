@@ -38,21 +38,18 @@
   znsls400.T$idca$c CD_CANAL_VENDA,                                  --#FAF.134.sn
   znsls400.t$idli$c NR_LISTA_CASAMENTO,
   (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,    --#FAF.134.en
-  CASE WHEN znint501.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO,                    --#FAF.161.n
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+  
+
+CASE WHEN zncom005.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO,                    --#FAF.161.n
+   
+
+ CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,                      --#FAF.205.n
     sum(zncom005.t$igva$c) VL_ITEM_GARANTIA,                                  --#FAF.043.2.n
     zncom005.t$enga$c CD_PLANO_GARANTIA,                                    --#FAF.043.2.n
     tcibd001.T$NRPE$C QT_PRAZO_GARANTIA                                 --#MAT.001.n
   FROM
-    BAANDB.tzncom005201 zncom005
-  LEFT JOIN BAANDB.tznint501201 znint501                                --#FAF.161.sn
-    ON  znint501.t$ncia$c=zncom005.t$ncia$c
-    AND  znint501.t$uneg$c=zncom005.t$uneg$c
-    AND znint501.t$pecl$c=zncom005.t$pecl$c
-    AND znint501.t$sqpd$c=zncom005.t$sqpd$c
-    AND znint501.t$entr$c=zncom005.t$entr$c
-    AND znint501.t$sequ$c=zncom005.t$sequ$c,                            --#FAF.161.en
+    baandb.tzncom005201 zncom005
     baandb.ttcibd001201 tcibd001,                                            
     baandb.ttdsls400201 tdsls400,
     baandb.ttdsls401201 tdsls401,
@@ -88,5 +85,5 @@
   AND zncom005.t$avpn$c!=0                                --#FAF.018.n
   GROUP BY  znsls400.T$uneg$c, znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$cdve$c, tdsls400.t$hdst, znsls400.t$dtem$c,
         tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item, zncom005.t$fire$c, zncom005.t$line$c, znsls400.T$idca$c,
-        znsls400.T$cven$c, znsls400.t$idli$c, tdsls400.t$itbp, znint501.t$canc$c, zncom005.t$enga$c, 
+        znsls400.T$cven$c, znsls400.t$idli$c, tdsls400.t$itbp, zncom005.t$canc$c, zncom005.t$enga$c, 
         tcibd001.T$NRPE$C                     --#MAT.001.n

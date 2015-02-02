@@ -1,4 +1,5 @@
-﻿SELECT
+﻿
+SELECT
     1 CD_CIA,
     case when (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
@@ -102,12 +103,12 @@
 		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VL_ADICIONAL_IMPORTACAO,
 		nvl((select sum(li.t$amnt$l) from baandb.tcisli943201 li, baandb.tcisli941201 l
 		where	l.t$fire$l = cisli940.t$fire$l
-		and li.t$fire$l=li.t$fire$l
+		and li.t$fire$l=l.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)
 		and li.t$brty$l=5),0) VL_PIS_IMPORTACAO, 
 		nvl((select sum(li.t$amnt$l) from baandb.tcisli943201 li, baandb.tcisli941201 l
 		where	l.t$fire$l = cisli940.t$fire$l
-		and li.t$fire$l=li.t$fire$l
+		and li.t$fire$l=l.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)
 		and li.t$brty$l=6),0) VL_COFINS_IMPORTACAO,
 		nvl((select sum(l.t$fght$l) from baandb.tcisli941201 l
