@@ -91,7 +91,7 @@ SELECT
            ELSE TO_CHAR(TRUNC(tfgld018.t$time/3600),'FM9900') || ':' ||
                 TO_CHAR(TRUNC(MOD(tfgld018.t$time,3600)/60),'FM00') || ':' ||
                 TO_CHAR(MOD(tfgld018.t$time,60),'FM00')
-    END                                               HORA_APROVACAO_CONTABIL
+    END                                               HORA_APROVACAO_CONTABIL,
 =======
     tcmcs013.t$dsca                                   CONDICAO_PAGTO
 >>>>>>> parent of cf75d17... Relatório R078
@@ -332,7 +332,9 @@ INNER JOIN baandb.ttdpur401301 tdpur401
         
 >>>>>>> parent of cf75d17... Relatório R078
 WHERE tdpur401.t$oltp IN (2,4)
-        
+AND tdrec940.t$stat$l!=6
+AND tdrec940.t$rfdt$l!=13
+
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone sessiontimezone) AS DATE))
