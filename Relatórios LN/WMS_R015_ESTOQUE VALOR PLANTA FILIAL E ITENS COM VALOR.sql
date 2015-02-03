@@ -50,7 +50,11 @@ SELECT
        ELSE   SKU.SKU 
    END                                 ITEM_LN,
   
-  LN_FAM.T$DSCA$C                      NOME_FAMILIA
+  LN_FAM.T$DSCA$C                      NOME_FAMILIA,
+  
+  CASE WHEN BOM.PRIMARYCOMPONENT=1
+		THEN 'SIM'
+		ELSE 'NÃO' END					COMPONENTE_MESTRE
     
 FROM       WMWHSE5.lotxloc ll
 
@@ -137,7 +141,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
                 THEN NVL(BOM.SKU, SKU.SKU)
               ELSE SKU.SKU END,
          LN_FAM.T$FAMI$C,
-         LN_FAM.T$DSCA$C
+         LN_FAM.T$DSCA$C,
+  CASE WHEN BOM.PRIMARYCOMPONENT=1
+		THEN 'SIM'
+		ELSE 'NÃO' END
    
 
 

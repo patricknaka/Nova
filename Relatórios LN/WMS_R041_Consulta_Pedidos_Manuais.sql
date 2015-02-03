@@ -97,32 +97,32 @@ INNER JOIN baandb.ttcibd001301 tcibd001
  LEFT JOIN baandb.ttcmcs966301 tcmcs966
         ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
   
-         LEFT JOIN ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_DOCTO
-                     FROM baandb.tttadv401000 d, 
-                          baandb.tttadv140000 l 
-                    WHERE d.t$cpac = 'ci' 
-                      AND d.t$cdom = 'sli.tdff.l'
-                      AND l.t$clan = 'p'
-                      AND l.t$cpac = 'ci'
-                      AND l.t$clab = d.t$za_clab
-                      AND rpad(d.t$vers,4) ||
-                          rpad(d.t$rele,2) ||
-                          rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                          rpad(l1.t$rele,2) ||
-                                                          rpad(l1.t$cust,4)) 
-                                                 from baandb.tttadv401000 l1 
-                                                where l1.t$cpac = d.t$cpac 
-                                                  and l1.t$cdom = d.t$cdom )
-                      AND rpad(l.t$vers,4) ||
-                          rpad(l.t$rele,2) ||
-                          rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                          rpad(l1.t$rele,2) || 
-                                                          rpad(l1.t$cust,4)) 
-                                                 from baandb.tttadv140000 l1 
-                                                where l1.t$clab = l.t$clab 
-                                                  and l1.t$clan = l.t$clan 
-                                                  and l1.t$cpac = l.t$cpac ) ) FGET
-              ON cisli940.t$fdty$l = FGET.CNST
+ LEFT JOIN ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_DOCTO
+             FROM baandb.tttadv401000 d, 
+                  baandb.tttadv140000 l 
+            WHERE d.t$cpac = 'ci' 
+              AND d.t$cdom = 'sli.tdff.l'
+              AND l.t$clan = 'p'
+              AND l.t$cpac = 'ci'
+              AND l.t$clab = d.t$za_clab
+              AND rpad(d.t$vers,4) ||
+                  rpad(d.t$rele,2) ||
+                  rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                  rpad(l1.t$rele,2) ||
+                                                  rpad(l1.t$cust,4)) 
+                                         from baandb.tttadv401000 l1 
+                                        where l1.t$cpac = d.t$cpac 
+                                          and l1.t$cdom = d.t$cdom )
+              AND rpad(l.t$vers,4) ||
+                  rpad(l.t$rele,2) ||
+                  rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                  rpad(l1.t$rele,2) || 
+                                                  rpad(l1.t$cust,4)) 
+                                         from baandb.tttadv140000 l1 
+                                        where l1.t$clab = l.t$clab 
+                                          and l1.t$clan = l.t$clan 
+                                          and l1.t$cpac = l.t$cpac ) ) FGET
+        ON cisli940.t$fdty$l = FGET.CNST
 
 WHERE cisli940.t$fdty$l != 11
 

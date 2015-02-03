@@ -105,7 +105,7 @@ Select Q1.*
                znsls012.t$lmot$c            DESCR_MOTIVO,
                znsls401ret.t$lmot$c         MOTIVO_ETQ_WMS,
               
-               znsls400ret.t$ncia$c         UNID_NEG,
+               znsls400ret.t$uneg$c         UNID_NEG,
                znfmd630ret.t$fili$c         FILIAL,
 		       
                CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630ret.t$date$c,
