@@ -9,7 +9,7 @@ SELECT
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE) 
                                                   DATA_EMISSA,
-    cisli940.t$ccfo$l                             COD_CFOP,
+    NVL(cisli940.t$ccfo$l, 'N/I')                 COD_CFOP,
     cisli245.t$slso                               ORDEM,
     tdsls400.t$sotp                               TIPO_ORD_VENDA_DEV,
     tccom130.t$fovn$l                             CPF_CNPJ,
@@ -28,9 +28,9 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(NVL(cisli940d.t$date$l, znmcs092.t$trdt$c), 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE)    DATA_NF_VENDA,
-		
+  
     NVL(cisli940d.t$amnt$l, znmcs092.t$amnt$c)    VALO_NF_VENDA,
-    znsls005.t$orno$c                              NUME_OV,
+    znsls005.t$orno$c                             NUME_OV,
     cisli940.t$fdty$l                             COD_TIPO_DOC_FISCAL,
     iTIPODOCFIS.DESCR                             DESC_TIPO_DOC_FISCAL,
     tdrec940.t$stat$l                             CODE_STAT_NF_ORIG,      -- Status ref fiscal
@@ -45,21 +45,30 @@ SELECT
     cisli940d.t$stat$l                            STATUS_NFD,
     DESCR_STATUS_NFD.DS_SITUACAO_NF               DESCR_STATUS_NFD
   
-FROM    			baandb.tznsls005301 znsls005
-		INNER JOIN	baandb.ttdsls401301 tdsls401	ON	tdsls401.t$orno = znsls005.t$orde$c
-													AND	tdsls401.t$pono = znsls005.t$posi$c
-													
-		INNER JOIN baandb.ttdsls400301  tdsls400	ON 	tdsls400.t$orno = tdsls401.t$orno
+FROM       baandb.tznsls005301 znsls005
+
+INNER JOIN baandb.ttdsls401301 tdsls401 
+        ON tdsls401.t$orno = znsls005.t$orde$c
+       AND tdsls401.t$pono = znsls005.t$posi$c
+             
+INNER JOIN baandb.ttdsls400301  tdsls400 
+        ON tdsls400.t$orno = tdsls401.t$orno
+  
+INNER JOIN baandb.tcisli245301 cisli245 
+        ON cisli245.t$slcp = 301
+       AND cisli245.t$ortp = 1
+       AND cisli245.t$koor = 3
+       AND cisli245.t$slso = tdsls401.t$orno
+       AND cisli245.t$oset = tdsls401.t$sqnb
+  
+INNER JOIN baandb.tcisli940301  cisli940
+        ON cisli940.t$fire$l = cisli245.t$fire$l
 		
-		INNER JOIN	baandb.tcisli245301	cisli245	ON 	cisli245.t$slcp = 301
-													AND	cisli245.t$ortp = 1
-													AND cisli245.t$koor = 3
-													AND cisli245.t$slso = tdsls401.t$orno
-													AND	cisli245.t$oset = tdsls401.t$sqnb
+INNER JOIN baandb.tcisli940301  cisli940d 
+        ON cisli940d.t$fire$l = znsls005.t$firs$c
 		
-		INNER JOIN	baandb.tcisli940301  cisli940 	ON	cisli940.t$fire$l = cisli245.t$fire$l
-		INNER JOIN 	baandb.tcisli940301  cisli940d	ON	cisli940d.t$fire$l = znsls005.t$firs$c
-		LEFT JOIN 	baandb.ttdrec940301  tdrec940	ON 	tdrec940.t$fire$l = znsls005.t$refi$c
+ LEFT JOIN baandb.ttdrec940301  tdrec940 
+        ON tdrec940.t$fire$l = znsls005.t$refi$c
 
 INNER JOIN baandb.ttcemm124301  tcemm124
         ON tcemm124.t$cwoc = cisli940.t$cofc$l
@@ -195,7 +204,6 @@ INNER JOIN baandb.ttccom130301 tccom130B
         ON znmcs096.t$orno$c = cisli245.t$slso
        AND znmcs096.t$pono$c = cisli245.t$pono
        AND znmcs096.t$ncmp$c = 2
-       AND ROWNUM = 1
        
  LEFT JOIN baandb.tznmcs092301   znmcs092
         ON znmcs092.t$ncmp$c = znmcs096.t$ncmp$c
@@ -208,20 +216,20 @@ INNER JOIN baandb.ttccom130301 tccom130B
        AND znmcs092.t$creg$c = znmcs096.t$creg$c
        AND znmcs092.t$cfov$c = znmcs096.t$cfov$c
        
-  LEFT JOIN  (select  ttaad200.t$user,
-                      ttaad200.t$name
-              from    baandb.tttaad200000 ttaad200) NOME_USUARIO
-        ON    NOME_USUARIO.t$user=Usuario.t$logn$c
+  LEFT JOIN ( select ttaad200.t$user,
+                     ttaad200.t$name
+                from baandb.tttaad200000 ttaad200 ) NOME_USUARIO
+         ON NOME_USUARIO.t$user=Usuario.t$logn$c
         
 WHERE cisli940.t$fdty$l = 14
   AND tcemm124.t$dtyp = 1
   AND znsls005.t$refi$c != ' ' 
- 
 
   AND tcemm030.T$EUNT IN (:Filial)
   AND tdrec940.t$stat$l IN(:StatusRefFiscal)
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE)) 
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)) 
       Between :EmissaoDE 
           And :EmissaoATE
-  AND tdrec940.t$opfc$l IN (:COD_CFOP)
+  AND NVL(cisli940.t$ccfo$l, 'N/I') IN (:COD_CFOP)
