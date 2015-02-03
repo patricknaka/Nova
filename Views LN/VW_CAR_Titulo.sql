@@ -16,6 +16,7 @@
 --****************************************************************************************************************************************************************
 --ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY HH:MI:SS AM';
 
+
 SELECT DISTINCT	
 --  CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,												--#FAF.193.o
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,											--#FAF.193.n
@@ -27,8 +28,8 @@ SELECT DISTINCT
 					AND c.T$ITYP=tfacr200.t$ttyp
 					AND c.t$idoc=tfacr200.t$ninv
 					AND rownum=1),' ')=' ' 
-	THEN 2
-	ELSE 3
+	THEN '2'
+	ELSE '3'
 	END CD_FILIAL,	
 	'CAR' CD_MODULO,
 	tfacr200.t$doct$l SQ_DOCUMENTO,
@@ -125,5 +126,6 @@ FROM
 WHERE tfgld100.t$btno=tfacr200.t$btno
 AND tfgld100.t$year=tfacr200.t$year
 AND tfacr200.t$docn=0
+AND tfacr200.t$trec!=9
 --AND tfacr201.t$ttyp = tfacr200.t$ttyp               --#MAR.273.sn		--#FAF.282.o
 --AND tfacr201.t$ninv = tfacr200.t$ninv               --#MAR.273.en		--#FAF.282.o

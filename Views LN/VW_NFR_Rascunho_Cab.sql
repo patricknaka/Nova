@@ -7,7 +7,7 @@ SELECT
 	brnfe940.t$fire$l NR_NF_RASCUNHO,
 	brnfe941.t$opfc$l CD_NATUREZA_OPERACAO_COMPRA,
 	tcmcs940.t$opor$l SQ_NATUREZA_OPERACAO_COMPRA,
-     	1 CD_CIA,
+    1 CD_CIA,
 	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=tdpur400.t$cofc
 	AND tcemm030.t$eunt=tcemm124.t$grid
@@ -68,7 +68,7 @@ SELECT
 	(select 
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(ttdpur451201.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone sessiontimezone) AS DATE)																	--#FAF.235.n	
-	from baandb.ttdpur451201 where ttdpur451201.t$orno=tdpur400.t$orno) DT_ALTERACAO,
+	from baandb.ttdpur451201 where ttdpur451201.t$orno=tdpur400.t$orno) DT_ULT_ATUALIZACAO,
 	(select ttdpur451201.t$logn
 	from baandb.ttdpur451201 where ttdpur451201.t$orno=tdpur400.t$orno
 	and ttdpur451201.t$trdt=(select min(d.t$trdt)
