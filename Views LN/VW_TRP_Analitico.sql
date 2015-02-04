@@ -43,7 +43,11 @@ select distinct
       (select sum(nl.t$dqua$l) from baandb.tcisli941201 nl, baandb.ttcibd001201 i
 		where nl.t$fire$l=znfmd630.t$fire$c
 		and i.t$item=nl.t$item$l
-		and i.t$kitm<3) QT_VOLUMES
+		and i.t$kitm<3) QT_VOLUMES,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
+		GREATEST(znfmd630.t$udat$c, znfmd060.t$udat$c, tdsls401.t$rcd_utc, tdsls400.t$rcd_utc, cisli940.t$rcd_utc),
+		'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
 from  BAANDB.TZNFMD630201 znfmd630,
       BAANDB.TZNSLS401201 znsls401,
       BAANDB.TZNSLS400201 znsls400,
