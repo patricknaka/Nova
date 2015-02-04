@@ -72,16 +72,11 @@ SELECT
     NVL(tdrec940.t$seri$l, tdpur401.t$seri$c)         SERI_NF,
     tfacp201.t$payd                                   DATA_VENCTO,
     NVL(SITUACAO_PAGTO.DSC_SITUACAO_PAGTO, 
-<<<<<<< HEAD
         'Não informado')                              DSC_SITUACAO_PAGTO,
-=======
-        'Não informado')                               DSC_SITUACAO_PAGTO,
->>>>>>> parent of cf75d17... Relatório R078
     tfcmg101.t$plan                                   DATA_PLAN_PAGTO,
     tcmcs023.t$dsca                                   CONTA_CONTABIL_DESCRICAO,
     tdpur401.t$wrkc$l                                 CODIGO_CENTRO_TRABALHO,
     tcmcs065.t$dsca                                   CENTRO_TRABALHO_DESCRICAO,
-<<<<<<< HEAD
     tcmcs013.t$dsca                                   CONDICAO_PAGTO,
     tfgld018.t$user                                   LOGIN_APROVADOR_CONTABIL,
     apr_cont.NOME                                     APROVADOR_CONTABIL,
@@ -91,10 +86,7 @@ SELECT
            ELSE TO_CHAR(TRUNC(tfgld018.t$time/3600),'FM9900') || ':' ||
                 TO_CHAR(TRUNC(MOD(tfgld018.t$time,3600)/60),'FM00') || ':' ||
                 TO_CHAR(MOD(tfgld018.t$time,60),'FM00')
-    END                                               HORA_APROVACAO_CONTABIL,
-=======
-    tcmcs013.t$dsca                                   CONDICAO_PAGTO
->>>>>>> parent of cf75d17... Relatório R078
+    END                                               HORA_APROVACAO_CONTABIL
     
 FROM       baandb.ttdpur400301 tdpur400
 
@@ -139,11 +131,7 @@ INNER JOIN baandb.ttdpur401301 tdpur401
                     ttaad200.t$name
                from baandb.tttaad200000 ttaad200 ) nome_apr
         ON nome_apr.t$user = apr.t$logn
-<<<<<<< HEAD
- 
-=======
-               
->>>>>>> parent of cf75d17... Relatório R078
+
  LEFT JOIN (select h.t$orno, 
                    min(h.t$trdt) dapr, 
                    h.t$logn 
@@ -164,22 +152,13 @@ INNER JOIN baandb.ttdpur401301 tdpur401
  LEFT JOIN baandb.ttfgld018301 tfgld018
         ON tfgld018.t$ttyp = tdrec940.t$ttyp$l
        AND tfgld018.t$docn = tdrec940.t$invn$l
-<<<<<<< HEAD
        AND tfgld018.t$ttyp !=  ' '
        AND tfgld018.t$docn !=  0
-=======
-       AND tfgld018.t$ttyp != ' '
-       AND tfgld018.t$docn != 0
->>>>>>> parent of cf75d17... Relatório R078
       
  LEFT JOIN baandb.ttfcmg101301 tfcmg101
         ON tfcmg101.t$ttyp = tdrec940.t$ttyp$l
        AND tfcmg101.t$ninv = tdrec940.t$invn$l
-<<<<<<< HEAD
        AND tfcmg101.t$ninv !=  0
-=======
-       AND tfcmg101.t$ninv != 0
->>>>>>> parent of cf75d17... Relatório R078
  
  LEFT JOIN baandb.ttfacp201301 tfacp201
         ON tfacp201.t$ttyp = tdrec940.t$ttyp$l
@@ -319,21 +298,16 @@ INNER JOIN baandb.ttdpur401301 tdpur401
         ON tcmcs065.t$cwoc = tdpur401.t$wrkc$l
         
  LEFT JOIN baandb.ttcmcs013301 tcmcs013
-<<<<<<< HEAD
         ON tcmcs013.t$cpay = tdpur400.t$cpay
 
  LEFT JOIN ( select ttaad200.t$user LOGIN,
                     ttaad200.t$name NOME
                from baandb.tttaad200000 ttaad200 ) apr_cont
         ON apr_cont.LOGIN = tfgld018.t$user
-                  
-=======
-        ON tcmcs013.t$cpay=tdpur400.t$cpay
-        
->>>>>>> parent of cf75d17... Relatório R078
+
 WHERE tdpur401.t$oltp IN (2,4)
-AND tdrec940.t$stat$l!=6
-AND tdrec940.t$rfdt$l!=13
+  AND tdrec940.t$stat$l != 6
+  AND tdrec940.t$rfdt$l != 13
 
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -342,7 +316,7 @@ AND tdrec940.t$rfdt$l!=13
           And :EmissaoAte
   AND unid_empr.DEPTO_COMPRAS IN (:FILIAL)
   AND NVL(ORDEM.t$cnst, 0) IN (:STATUS_ORDEM)
-  AND NVL(APROVACAO_FIS.t$cnst, 0) IN (:STATUS_APR_FISCAL)
+  AND NVL(tdrec940.t$stat$l, 0) IN (:STATUS_APR_FISCAL)
   AND NVL(CONTABIL.t$cnst, 0) IN (:STATUS_APR_CONTABIL)
   AND tdpur400.t$cotp IN (:TIPO_ORDEM)
   AND crd.t$logn IN (:UsuarioSolicitante)
