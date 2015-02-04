@@ -18,20 +18,24 @@ select Q1.*
               NVL(znfmd630.t$fili$c, znfmd001.t$fili$c)       ID_FILIAL,
               NVL(znfmd001a.t$dsca$c, znfmd001.t$dsca$c)      FILIAL
           
-          FROM       baandb.tcisli940301 cisli940v
+          FROM  baandb.ttdsls401301 tdsls401       
+
+INNER JOIN baandb.tcisli245301 cisli245v 
+        ON cisli245v.t$slcp = 301
+       AND cisli245v.t$ortp = 1
+       AND cisli245v.t$koor = 3
+       AND cisli245v.t$slso = tdsls401.t$orno
+       AND cisli245v.t$pono = tdsls401.t$pono
+       AND cisli245v.t$oset = tdsls401.t$sqnb          
+          
+INNER JOIN baandb.tcisli940301 cisli940v
+        ON cisli940v.t$fire$l = cisli245v.t$fire$l
          
            LEFT JOIN BAANDB.tznfmd630301 znfmd630
                   ON znfmd630.t$fire$c = cisli940v.t$fire$l 
          
            LEFT JOIN baandb.ttcmcs080301 tcmcs080
                   ON tcmcs080.t$cfrw   = cisli940v.T$cfrw$l
-         
-          INNER JOIN baandb.tcisli245301 cisli245v
-                  ON cisli940v.t$fire$l = cisli245v.t$fire$l
-         
-          INNER JOIN baandb.ttdsls401301 tdsls401
-                  ON tdsls401.t$orno   = cisli245v.t$slso
-                 AND tdsls401.t$pono   = cisli245v.t$pono
              
           INNER JOIN baandb.tcisli245301 cisli245d  
                   ON cisli245d.t$fire$l = tdsls401.t$fire$l
