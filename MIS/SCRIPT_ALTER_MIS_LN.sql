@@ -124,3 +124,10 @@ ADD NR_REFERENCIA_FISCAL_FATURA nvarchar(9),
 	CD_STATUS_ORDEM_VDA_DEV INT,
 	DT_ORDEM_VENDA_DEVOLUCAO DATETIME 
 
+--========================================================
+alter table stg_pev_cab
+alter column NR_NF_CONSOLIDADA nvarchar(5) null
+
+alter table stg_pev_cab
+alter column NR_SERIE_NF_CONSOLIDADA nvarchar(2) null
+
