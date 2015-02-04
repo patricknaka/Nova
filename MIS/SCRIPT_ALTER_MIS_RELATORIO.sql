@@ -1120,3 +1120,21 @@ alter column ID_NR varchar(18)
 
 alter table dbo.rpt_relatorio_cap_analitico
 alter column PEDIDO varchar(9)
+
+/************************************************************************************/
+--MUDANÇAS 2015
+/************************************************************************************/
+
+
+ALTER TABLE MIS_RELATORIO.DBO.stg_sige_extranet_fornecedores
+ADD cd_parceiro varchar(9)
+
+ALTER TABLE MIS_RELATORIO.DBO.stg_sige_extranet_fornecedores_liquidado
+ADD cd_parceiro varchar(9)
+
+ALTER TABLE MIS_RELATORIO.DBO.ods_sige_extranet_fornecedores
+ADD	cd_parceiro varchar(9)
+
+
+ALTER TABLE MIS_RELATORIO.DBO.ods_sige_extranet_fornecedores_liquidado
+ADD	cd_parceiro varchar(9)

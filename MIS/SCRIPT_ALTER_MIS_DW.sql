@@ -1668,3 +1668,8 @@ ADD CD_PARCEIRO VARCHAR(9)
 
 
 
+ALTER TABLE MIS_DW.DBO.ODS_SIGE_TITULO
+add cd_parceiro varchar(9)
+
+ALTER TABLE MIS_DW.DBO.aux_ods_sige_titulo
+add cd_parceiro varchar(9)
