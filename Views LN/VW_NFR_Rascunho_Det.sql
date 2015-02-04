@@ -71,7 +71,12 @@ SELECT
 		and a.t$cdec='001'
 		and rownum=1),0)=0 THEN 0
 	ELSE brnfe941.t$fght$l
-	END VL_CIF_IMPORTACAO
+	END VL_CIF_IMPORTACAO,
+	
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
+		GREATEST(brnfe941.t$rcd_utc, tdpur401.t$rcd_utc, tdpur400.t$rcd_utc),
+		'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO	
 
 FROM
 	baandb.tbrnfe941201 brnfe941,
