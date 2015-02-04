@@ -36,7 +36,7 @@ INNER JOIN baandb.tcisli940301 cisli940v
          
            LEFT JOIN baandb.ttcmcs080301 tcmcs080
                   ON tcmcs080.t$cfrw   = cisli940v.T$cfrw$l
-             
+
           INNER JOIN baandb.tcisli245301 cisli245d  
                   ON cisli245d.t$fire$l = tdsls401.t$fire$l
                  AND cisli245d.t$line$l = tdsls401.t$line$l
@@ -44,7 +44,15 @@ INNER JOIN baandb.tcisli940301 cisli940v
           INNER JOIN baandb.tcisli940301 cisli940d
                   ON cisli940d.t$fire$l = cisli245d.t$fire$l
          
-           LEFT JOIN baandb.tznsls401301 znsls401
+           LEFT JOIN (  select distinct 
+                                a.t$ncia$c,
+                                a.t$uneg$c,
+                                a.t$pecl$c,
+                                a.t$sqpd$c,
+                                a.t$entr$c,
+                                a.t$orno$c,
+                                a.t$pono$c
+                        from baandb.tznsls004301 a) znsls401
                   ON tdsls401.t$orno   = znsls401.t$orno$c
                  AND tdsls401.t$pono   = znsls401.t$pono$c
         
