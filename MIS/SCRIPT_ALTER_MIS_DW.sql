@@ -1653,3 +1653,18 @@ alter column id_deposito varchar(30)
 
 insert into dim_devolucao_forcado
 values ('1','Sim'), ('2','Não')
+
+
+
+
+
+/******************************************************************************************/
+--ALTERAÇÕES 2015
+
+/******************************************************************************************/
+
+ALTER TABLE MIS_DW.DBO.stg_sige_titulo
+ADD CD_PARCEIRO VARCHAR(9)
+
+
+
