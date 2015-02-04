@@ -18,14 +18,14 @@ SELECT  1 CD_CIA,
 --    nvl(Q2.bloc,0)                                 QT_SALDO,
            CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN whinr140.t$qhnd - nvl(Q2.bloc,0)
-                ELSE   whinr140.t$qhnd - reserva.quan - nvl(Q2.bloc,0)               
+                ELSE   whinr140.t$qhnd - nvl(reserva.quan,0) - nvl(Q2.bloc,0)               
             END                              QT_SALDO,                    --ok
 
 
 --    whinr140.t$qlal              QT_RESERVADA, 
            CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN 0
-                ELSE   reserva.quan
+                ELSE   nvl(reserva.quan,0)
             END                              QT_RESERVADA,              --ok
             
       q1.mauc VL_CMV,
@@ -103,7 +103,7 @@ AND 	(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0
            
 UNION
 
-SELECT  1 CD_CIA,
+SELECT  301 CD_CIA,
         tcemm030.t$euca CD_FILIAL,
         whwmd630.t$cwar CD_DEPOSITO,
         ltrim(rtrim(whwmd630.t$item)) CD_ITEM,
