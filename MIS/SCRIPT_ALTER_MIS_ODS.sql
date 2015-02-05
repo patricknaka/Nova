@@ -1366,3 +1366,13 @@ CREATE TABLE [log].[ods_fluxo_pedidos_caixa](
 --===============================================
 
 
+/****************************************************************************/
+--MUDANÇAS 2015
+/****************************************************************************/
+
+ALTER TABLE LN.ods_pev_cab
+ALTER COLUMN NR_NF_CONSOLIDADA NVARCHAR(5)
+
+
+ALTER TABLE LN.ods_pev_cab
+ALTER COLUMN NR_SERIE_NF_CONSOLIDADA NVARCHAR(2)

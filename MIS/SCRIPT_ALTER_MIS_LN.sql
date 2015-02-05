@@ -125,6 +125,10 @@ ADD NR_REFERENCIA_FISCAL_FATURA nvarchar(9),
 	DT_ORDEM_VENDA_DEVOLUCAO DATETIME 
 
 --========================================================
+/*****************************************************************************************/
+--MUDANÇAS 2015
+/*****************************************************************************************/
+
 alter table stg_pev_cab
 alter column NR_NF_CONSOLIDADA nvarchar(5) null
 
