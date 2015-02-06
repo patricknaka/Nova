@@ -6,6 +6,9 @@ SELECT
         tcemm030.t$euca                   CD_FILIAL,
         tcemm112.t$grid                   CD_UNIDADE_EMPRESARIAL,
         ltrim(rtrim(whwmd215.t$item))     CD_ITEM,
+        CASE WHEN q2.cod_bloc is NULL THEN
+            'WN'
+        ELSE q2.cod_bloc END              CD_RESTRICAO,
         sum(whwmd215.t$qhnd - nvl(q2.bloc,0))+ sum(nvl(whinr110.t$qstk,0)) QT_FISICA,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whwmd215.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
@@ -59,12 +62,14 @@ SELECT
             tcemm030q.t$euca=tcemm030.t$euca AND
             tcemm112q.t$grid=tcemm112.t$grid AND
             whina112.t$item=whwmd215.t$item
+            
         GROUP BY whina112.t$item, tcemm030q.t$euca, tcemm112q.t$grid) VL_CMV
 		
 FROM    baandb.twhwmd215201 whwmd215
 
 --		LEFT JOIN ( SELECT  sum(whinr110q.t$qstk * case when whinr110q.t$kost IN (5, 102) then -1 else 1 end)  t$qstk, 			--#FAF.221.o
-    LEFT JOIN ( SELECT whwmd630.t$item, whwmd630.t$cwar, sum(whwmd630.t$qbls) bloc
+    LEFT JOIN ( SELECT whwmd630.t$item, whwmd630.t$cwar, sum(whwmd630.t$qbls) bloc,
+                       whwmd630.t$bloc cod_bloc
                  FROM baandb.twhwmd630201 whwmd630, baandb.twhwmd215201 whwmd215
                  WHERE whwmd215.t$cwar = whwmd630.t$cwar
                  AND   whwmd215.t$item = whwmd630.t$item
@@ -73,7 +78,7 @@ FROM    baandb.twhwmd215201 whwmd215
                                  AND    tcmcs095.t$sumd = 0 
                                  AND    tcmcs095.t$prcd = 9999
                                  AND    tcmcs095.t$koda = whwmd630.t$bloc)
-                 group by whwmd630.t$item, whwmd630.t$cwar) q2 
+                 group by whwmd630.t$item, whwmd630.t$cwar, whwmd630.t$bloc) q2 
                  ON q2.t$item = whwmd215.t$item AND q2.t$cwar = whwmd215.t$cwar
           
 
@@ -97,4 +102,4 @@ WHERE   tcemm112.t$loco = 201
 AND     tcemm112.t$waid = whwmd215.t$cwar
 AND 	  tcemm030.t$eunt=tcemm112.t$grid
 AND     (whwmd215.t$qhnd>0 or whwmd215.t$qall>0)
-GROUP BY tcemm030.t$euca, tcemm112.t$grid, whwmd215.t$item
+GROUP BY tcemm030.t$euca, tcemm112.t$grid, whwmd215.t$item, q2.cod_bloc
