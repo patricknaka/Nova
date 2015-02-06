@@ -135,3 +135,11 @@ alter column NR_NF_CONSOLIDADA nvarchar(5) null
 alter table stg_pev_cab
 alter column NR_SERIE_NF_CONSOLIDADA nvarchar(2) null
 
+ALTER TABLE stg_trp_analitico
+ADD DT_ULT_ATUALIZACAO datetime
+
+ALTER TABLE stg_trp_analitico_atualiza
+ADD DT_ULT_ATUALIZACAO datetime
+
+ALTER TABLE stg_NFR_Rascunho_Det
+ADD DT_ULT_ATUALIZACAO datetime
