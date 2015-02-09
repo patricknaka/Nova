@@ -4,29 +4,24 @@ SELECT  1 CD_CIA,
 			ltrim(rtrim(whinr140.t$item)) CD_ITEM,
 			tcmcs003.t$tpar$l CD_MODALIDADE,
 
-     whinr140.t$qhnd - nvl(Q2.bloc,0)                QT_FISICA,             --ok
-
---    nvl(Q3.roma,0)                                  QT_ROMANEADA,
+     whinr140.t$qhnd - nvl(Q2.bloc,0)                 QT_FISICA,
            CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN 0
                 ELSE   nvl(Q3.roma,0)   
-            END                              QT_ROMANEADA,                  --ok
+            END                                       QT_ROMANEADA,
 
-
---    whinr140.t$qhnd -  
---    whinr140.t$qlal -  
---    nvl(Q2.bloc,0)                                 QT_SALDO,
            CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN whinr140.t$qhnd - nvl(Q2.bloc,0)
-                ELSE   whinr140.t$qhnd - nvl(reserva.quan,0) - nvl(Q2.bloc,0)               
-            END                              QT_SALDO,                    --ok
+--         ELSE   whinr140.t$qhnd - nvl(reserva.quan,0) - nvl(Q2.bloc,0)
+           ELSE  CASE WHEN ( whinr140.t$qhnd - nvl(reserva.quan,0) - nvl(Q2.bloc,0)) < 0.00 THEN
+                        0.00
+                 ELSE whinr140.t$qhnd - nvl(reserva.quan,0) - nvl(Q2.bloc,0) END
+            END                                       QT_SALDO,
 
-
---    whinr140.t$qlal              QT_RESERVADA, 
            CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN 0
                 ELSE   nvl(reserva.quan,0)
-            END                              QT_RESERVADA,              --ok
+            END                                       QT_RESERVADA,
             
       q1.mauc VL_CMV,
 
@@ -45,7 +40,7 @@ FROM    baandb.twhinr140301 whinr140
                 and a.t$kotr = 2
                 and a.t$cdis$c = ' '
            group by a.t$item,
-                    a.t$cwar ) reserva            --ok
+                    a.t$cwar ) reserva
         ON reserva.t$item = whinr140.t$item
        AND reserva.t$cwar = whinr140.t$cwar
        
@@ -65,12 +60,12 @@ FROM    baandb.twhinr140301 whinr140
 
         LEFT JOIN ( SELECT  whwmd630.t$item, 
                             whwmd630.t$cwar,
-                            whwmd630.t$loca,                                  --ok
+                            whwmd630.t$loca,
                             sum(whwmd630.t$qbls) bloc
 					 FROM baandb.twhwmd630301 whwmd630, baandb.twhinr140301 whinr140
 					 WHERE whinr140.t$cwar = whwmd630.t$cwar
 					 AND   whinr140.t$item = whwmd630.t$item
-           AND   whinr140.t$loca = whwmd630.t$loca                            --ok
+           AND   whinr140.t$loca = whwmd630.t$loca
 					 AND NOT EXISTS (SELECT * FROM baandb.ttcmcs095301 tcmcs095
                            WHERE  tcmcs095.t$modu = 'BOD' 
                            AND    tcmcs095.t$sumd = 0 
@@ -79,7 +74,7 @@ FROM    baandb.twhinr140301 whinr140
 					 group by whwmd630.t$item, whwmd630.t$cwar, whwmd630.t$loca) q2 
            ON  q2.t$item = whinr140.t$item 
            AND q2.t$cwar = whinr140.t$cwar
-           AND q2.t$loca = whinr140.t$loca                                    --ok
+           AND q2.t$loca = whinr140.t$loca
            
           LEFT JOIN ( SELECT  whinh220.t$item, 
                               whinh220.t$cwar, 
@@ -110,10 +105,11 @@ SELECT  301 CD_CIA,
         tcmcs003.t$tpar$l CD_MODALIDADE,
         whwmd630.t$qbls QT_FISICA,
         0 QT_ROMANEADA,
---        whwmd630.t$qbls QT_SALDO,
-        whwmd630.t$qbls - nvl(reserva.quan,0)       QT_SALDO,             --ok
---        0 QT_RESERVADA,
-        nvl(reserva.quan,0)                         QT_RESERVADA,         --ok
+        CASE WHEN (whwmd630.t$qbls - nvl(reserva.quan,0)) < 0.00 THEN
+          0.00
+        ELSE whwmd630.t$qbls - nvl(reserva.quan,0) END 
+                                                    QT_SALDO,
+        nvl(reserva.quan,0)                         QT_RESERVADA,
         q1.mauc VL_CMV,
         whwmd630.t$bloc CD_TIPO_BLOQUEIO,
         tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
@@ -128,7 +124,7 @@ FROM    baandb.twhwmd630301 whwmd630
                 and a.t$kotr = 2
            group by a.t$item,
                     a.t$cwar,
-                    a.t$cdis$c ) reserva                                  --ok
+                    a.t$cdis$c ) reserva
         ON reserva.t$item = whwmd630.t$item
        AND reserva.t$cwar = whwmd630.t$cwar
        AND reserva.t$cdis$c = whwmd630.t$bloc
