@@ -138,7 +138,7 @@ INNER JOIN baandb.ttdpur401301 tdpur401
                    h.t$logn 
               from baandb.ttdpur450301 h
              where h.t$hdst = 5
-               and h.t$trdt = ( SELECT MAX(i.t$trdt) 
+               and h.t$trdt = ( SELECT MIN(i.t$trdt) 
                                   FROM baandb.ttdpur450301 i 
                                  WHERE i.t$hdst = 5 
                                    AND i.t$orno = h.t$orno )
