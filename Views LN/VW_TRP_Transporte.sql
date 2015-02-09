@@ -33,7 +33,7 @@ select distinct
     and a.t$fire$l=b.t$refr$l)
     else NULL   ---' '
     end NR_SERIE_NOTA_FATURA,
-  201 CD_CIA,
+  1 CD_CIA,
   pesovol.vol VL_VOLUME_M3,
   znfmd630.t$wght$c VL_PESO,
   pesovol.vol*300 VL_PESO_CUBADO,

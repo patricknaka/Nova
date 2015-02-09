@@ -9,12 +9,13 @@
       (select c.t$dsci$c from baandb.tznfmd640201 o, baandb.tznfmd030201 c
 			where o.t$date$c=(select max(o1.t$date$c) from baandb.tznfmd640201 o1 where o1.t$etiq$c=o.t$etiq$c)
 			and o.t$etiq$c=znfmd630.t$etiq$c and c.t$ocin$c=o.t$coci$c and rownum=1) DS_OCORRENCIA_INTERNA,
-      (select max(o.t$date$c) from baandb.tznfmd640201 o, baandb.tznfmd030201 c
-			where o.t$etiq$c=znfmd630.t$etiq$c and c.t$ocin$c=o.t$coci$c) DT_OCORRENCIA,
-	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
-		GREATEST(znfmd630.t$udat$c, znfmd060.t$udat$c, tdsls401.t$rcd_utc, tdsls400.t$rcd_utc, cisli940.t$rcd_utc,
+      (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone sessiontimezone) AS DATE)from BAANDB.TZNFMD640201 o, BAANDB.TZNFMD030201 c
+		    where o.T$ETIQ$C=znfmd630.T$ETIQ$C and c.t$ocin$c=o.T$COCI$C) DT_OCORRENCIA,
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
+        GREATEST(znfmd630.t$udat$c, znfmd060.t$udat$c, tdsls401.t$rcd_utc, tdsls400.t$rcd_utc, cisli940.t$rcd_utc,
 				nvl((select max(o.t$udat$c) from baandb.tznfmd640201 o, baandb.tznfmd030201 c
-				 where o.t$etiq$c=znfmd630.t$etiq$c and c.t$ocin$c=o.t$coci$c),TO_DATE('01-01-2000', 'DD-MM-YYYY'))),
+				where o.t$etiq$c=znfmd630.t$etiq$c and c.t$ocin$c=o.t$coci$c),TO_DATE('01-01-2000', 'DD-MM-YYYY'))),
 		'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
 from  baandb.tznfmd630201 znfmd630,
