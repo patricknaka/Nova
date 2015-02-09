@@ -5,7 +5,7 @@ SELECT
     znsls400b.t$idcp$c  CAMPANHA,
     tccom130r.t$fovn$l  CNPJ,
     tccom938.t$desa$l   RAZAO_SOCIAL,
-    --Não tem no LN     JOGO_NF,
+    --NÃ£o tem no LN     JOGO_NF,
     tfacr200r.t$docn$l  NOTA_TITULO,
     tfacr200r.t$seri$l  SERIE,
     tfacr200r.t$docd    DTA_EMISSAO,
@@ -13,14 +13,14 @@ SELECT
     tfacr200r.t$docn    TITULO_CAR,
     tfacr200r.t$amnt    VL_TITULO_CAR,
     tfacr200r.t$tdoc    DOCTO_TRANSACAO,
-    --Não tem no LN     PEDIDO_GRUPO,
+    --NÃ£o tem no LN     PEDIDO_GRUPO,
     znsls400b.t$pecl$c  ID_PED_VENDA,
     cisli940c.t$amnt$l  VL_INST_CANCELAMENTO,
     tfacr200p.t$docn    TITULO_CAP,
     tfacr200p.t$amnt    VL_TITULO_CAP,
     tfacr200r.t$amnt-   
     cisli940c.t$amnt$l  VL_BOLETO
-    --Não tem no LN     DESC_CAMPANHA
+    --NÃ£o tem no LN     DESC_CAMPANHA
 
 FROM       baandb.ttfacr200301 tfacr200r
   
@@ -34,7 +34,7 @@ FROM       baandb.ttfacr200301 tfacr200r
         ON cisli940c.t$ityp$l = tfacr200r.t$ttyp
        AND cisli940c.t$idoc$l = tfacr200r.t$ninv
        AND cisli940c.t$docn$l = tfacr200r.t$docn$l
-       AND cisli940c.t$stat$l = 301
+       AND cisli940c.t$sfcp$l = 301
 
  LEFT JOIN baandb.tcisli940301 cisli940b
         ON cisli940b.t$ityp$l = tfacr200r.t$ttyp
