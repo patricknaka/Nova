@@ -5,6 +5,7 @@ SELECT
         1                                 CD_CIA,
         tcemm030.t$euca                   CD_FILIAL,
         tcemm112.t$grid                   CD_UNIDADE_EMPRESARIAL,
+        whwmd215.t$cwar                   CD_ARMAZEM,
         ltrim(rtrim(whwmd215.t$item))     CD_ITEM,
         CASE WHEN q2.cod_bloc is NULL THEN
             'WN'
@@ -61,9 +62,10 @@ SELECT
                                                     whina112a.t$trdt = whina113.t$trdt) AND
             tcemm030q.t$euca=tcemm030.t$euca AND
             tcemm112q.t$grid=tcemm112.t$grid AND
+            whina112.t$cwar=whwmd215.t$cwar  AND
             whina112.t$item=whwmd215.t$item
             
-        GROUP BY whina112.t$item, tcemm030q.t$euca, tcemm112q.t$grid) VL_CMV
+        GROUP BY whina112.t$cwar, whina112.t$item, tcemm030q.t$euca, tcemm112q.t$grid) VL_CMV
 		
 FROM    baandb.twhwmd215201 whwmd215
 
@@ -102,4 +104,5 @@ WHERE   tcemm112.t$loco = 201
 AND     tcemm112.t$waid = whwmd215.t$cwar
 AND 	  tcemm030.t$eunt=tcemm112.t$grid
 AND     (whwmd215.t$qhnd>0 or whwmd215.t$qall>0)
-GROUP BY tcemm030.t$euca, tcemm112.t$grid, whwmd215.t$item, q2.cod_bloc
+
+GROUP BY tcemm030.t$euca, tcemm112.t$grid, whwmd215.t$cwar, whwmd215.t$item, q2.cod_bloc
