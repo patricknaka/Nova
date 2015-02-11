@@ -125,3 +125,5 @@ WHERE  ( SELECT znfmd640.t$coci$c
     AT time zone sessiontimezone) AS DATE))
     BETWEEN :DataPlanejadaDe
         AND :DataPlanejadaAte
+    AND tcmcs080.t$cfrw IN (:Transportadora)
+    AND NVL(TRIM(znfmd630.t$stat$c),'P') IN (:Situacao)
