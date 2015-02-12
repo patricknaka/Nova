@@ -38,42 +38,54 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124301 tcemm124, baandb.ttcemm03
                               and tcibd001b.t$kitm<3),1)) 
   AS                                            VL_FRETE_CIA
 
-FROM baandb.tcisli940301 cisli940,
-     baandb.tcisli941301 cisli941,	
-     baandb.tcisli941301 cisli941f,
-     baandb.tcisli245301 cisli245,
-     baandb.ttdsls401301 tdsls401,
-     baandb.tznsls004301 znsls004,
-     baandb.tznsls401301 znsls401,
-     baandb.tznsls400301 znsls400,
-     baandb.tznfmd630301 znfmd630,
-     baandb.ttdsls400301 tdsls400
+FROM baandb.tcisli941301 cisli941f
 
-WHERE cisli941f.t$fire$l=cisli940.t$fire$l
-  AND cisli245.t$fire$l=cisli941.t$fire$l
-  AND cisli245.t$line$l=cisli941.t$line$l
-  AND tdsls401.t$orno = cisli245.t$slso
-  AND tdsls401.t$pono = cisli245.t$pono
-  AND	znsls004.t$orno$c=tdsls401.t$orno
-  AND	znsls004.t$pono$c=tdsls401.t$pono
-  AND	znsls401.t$ncia$c=znsls004.t$ncia$c	
+INNER JOIN baandb.tcisli941301 cisli941
+        ON cisli941.t$fire$l=cisli941f.t$fire$l
+       AND cisli941.t$line$l=cisli941f.t$line$l
+       
+INNER JOIN baandb.tcisli940301  cisli940
+        ON cisli940.t$fire$l=cisli941f.t$fire$l
+       AND((cisli941.T$fire$L= cisli941f.T$REFR$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
+        or cisli941.T$fire$L= cisli941f.T$fire$L)
+       AND ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
+        or cisli941.T$line$L= cisli941f.T$line$l)
+       AND cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (1,2,5)
+
+LEFT JOIN baandb.tcisli245301 cisli245
+       ON cisli245.t$fire$l=cisli941.t$fire$l
+      AND cisli245.t$line$l=cisli941.t$line$l
+      
+LEFT JOIN baandb.ttdsls401301 tdsls401
+      ON tdsls401.t$orno = cisli245.t$slso
+     AND tdsls401.t$pono = cisli245.t$pono
+   
+LEFT JOIN baandb.tznsls004301 znsls004
+       ON	znsls004.t$orno$c=tdsls401.t$orno
+      AND	znsls004.t$pono$c=tdsls401.t$pono
+
+INNER JOIN baandb.ttdsls400301 tdsls400
+        ON tdsls400.t$orno=tdsls401.t$orno
+       AND tdsls400.t$fdty$l=1
+        
+LEFT JOIN baandb.tznsls401301 znsls401
+   ON	znsls401.t$ncia$c=znsls004.t$ncia$c	
   AND znsls401.t$uneg$c=znsls004.t$uneg$c
   AND znsls401.t$pecl$c=znsls004.t$pecl$c
   AND znsls401.t$sqpd$c=znsls004.t$sqpd$c
   AND	znsls401.t$entr$c=znsls004.t$entr$c
   AND	znsls401.t$sequ$c=znsls004.t$sequ$c
   AND	ltrim(rtrim(tdsls401.t$item))=ltrim(rtrim(znsls401.t$item$c))
-  AND znsls400.t$ncia$c=znsls401.t$ncia$c
-  AND znsls400.t$uneg$c=znsls401.t$uneg$c
-  AND znsls400.t$pecl$c=znsls401.t$pecl$c
-  AND znsls400.t$sqpd$c=znsls401.t$sqpd$c
-  AND ltrim(rtrim(znfmd630.t$pecl$c))=ltrim(rtrim((znsls401.t$entr$c)))
-  AND ltrim(rtrim(znfmd630.t$fire$c))=ltrim(rtrim((cisli940.t$fire$l)))
-  AND znfmd630.t$fire$c != ' '
-  and ((cisli941.T$fire$L= cisli941f.T$REFR$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
-        or cisli941.T$fire$L= cisli941f.T$fire$L)
-  and ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
-        or cisli941.T$line$L= cisli941f.T$line$l)
-    and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (1,2,5)
- AND tdsls400.t$fdty$l=1
 
+LEFT JOIN baandb.tznsls400301 znsls400
+       ON znsls400.t$ncia$c=znsls401.t$ncia$c
+      AND znsls400.t$uneg$c=znsls401.t$uneg$c
+      AND znsls400.t$pecl$c=znsls401.t$pecl$c
+      AND znsls400.t$sqpd$c=znsls401.t$sqpd$c 
+
+INNER JOIN baandb.tznfmd630301 znfmd630
+       ON ltrim(rtrim(znfmd630.t$pecl$c))=ltrim(rtrim((znsls401.t$entr$c)))
+      AND ltrim(rtrim(znfmd630.t$fire$c))=ltrim(rtrim((cisli940.t$fire$l)))
+      AND znfmd630.t$fire$c != ' '
+      
+      
