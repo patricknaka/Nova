@@ -1,0 +1,74 @@
+SELECT DISTINCT
+
+        d.WHSEID                       ARMAZEM,                               --01
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.ADDDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)  
+                                      DATA_LANCTO,                            --02
+        d.RECEIPTKEY                  ASN,                                    --03
+        d.ADDWHO                      OPERADOR,                               --04
+        d.SKU                         ITEM,                                   --05
+        SKU.DESCR                     DESCRICAO,                              --06
+        ALTSKU.ALTSKU                 EAN,                                    --07
+        SKU.SKUGROUP                  DEPART,                                 --08
+        SKU.SKUGROUP2                 SETOR,                                  --09
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)  
+                                    DATA_RECBTO,                              --10   
+        d.QTYEXPECTED               QTDE_PCS_LANC,                            --11
+        d.QTYRECEIVED               QTDE_PCS_RECEBIDAS,                       --12
+        tdrec941.t$fire$l           REF_FISCAL,                               --13
+        r.REFERENCETYPE             TIPO_ORDEM,                               --14
+        tdrec940.t$fovn$l           CNPJ,                                     --15
+        tdrec940.t$fids$l           FORNECEDOR,                               --16
+        tccom130.t$cste             ESTADO,                                   --17
+        tdrec940.t$docn$l           NOTA_FISCAL,                              --18
+        tdrec940.t$seri$l           SERIE_NF,                                 --19
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)  
+                                    DT_EMISSAO_ENT,                           --20
+        tdrec941.t$opfc$l           CFOP,                                     --21
+        tdrec941.t$qnty$l           QTDE,                                     --22
+        tdrec941.t$pric$l           VALOR_UNITARIO,                           --23
+        cisli940.t$docn$l           NF_SAIDA,                                 --24
+        cisli940.t$seri$l           SERIE_NF_SAIDA,                           --25
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone sessiontimezone) AS DATE)  
+                                    DT_EMISSAO_SAIDA,                         --26
+        cisli940.t$cfrw$l           TRANSP_COLETA,                            --27
+        tcmcs080.t$dsca             DESCR_TRANSP                              --28
+        
+FROM WMWHSE5.RECEIPTDETAIL  d
+
+        INNER JOIN WMWHSE5.RECEIPT  r
+                ON r.RECEIPTKEY=d.RECEIPTKEY
+
+        INNER JOIN ENTERPRISE.SKU SKU
+                ON SKU.SKU=d.SKU
+                
+        LEFT JOIN WMWHSE5.ALTSKU ALTSKU
+               ON ALTSKU.SKU=d.SKU
+               
+        LEFT JOIN baandb.ttdrec940301@pln01 tdrec940
+               ON tdrec940.t$docn$l=SUBSTR(d.SUSR1,1,INSTR(d.SUSR1,'/')-1)
+              AND tdrec940.t$seri$l=SUBSTR(d.SUSR1,INSTR(d.SUSR1,'/')+1,3)
+              
+        LEFT JOIN baandb.ttdrec941301@pln01 tdrec941
+               ON tdrec941.t$fire$l=tdrec940.t$fire$l
+               
+        LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080
+               ON tcmcs080.t$cfrw=tdrec940.t$cfrw$l
+        
+        LEFT JOIN baandb.tcisli941301@pln01 cisli941
+               ON cisli941.t$fire$l=tdrec941.t$dvrf$c
+              AND cisli941.t$line$l=tdrec941.t$dvln$c
+              
+        LEFT JOIN baandb.tcisli940301@pln01 cisli940
+                ON cisli940.t$fire$l=cisli941.t$fire$l
+                
+        LEFT JOIN baandb.ttccom130301@pln01 tccom130
+               ON tccom130.t$cadr=tdrec940.t$sfad$l
+               
