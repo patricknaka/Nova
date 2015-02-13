@@ -11,7 +11,7 @@ SELECT DISTINCT
   ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') END NR_CNPJ_FILIAL,       --#FAF.151.n  
   
 --        TCCOM130.T$FOVN$L CGC_FILIAL,                 --#FAF.151.o
-        201 CD_CIA,
+        1 CD_CIA,
         (SELECT C.T$NAMA FROM baandb.TTCCOM000201 C 
          WHERE C.T$INDT<TO_DATE('2000-01-01', 'YYYY-DD-MM') AND C.T$NCMP=201) NM_CIA
 FROM
