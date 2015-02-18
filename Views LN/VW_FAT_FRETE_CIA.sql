@@ -50,10 +50,6 @@ INNER JOIN baandb.tcisli941301 cisli941
        
 INNER JOIN baandb.tcisli940301  cisli940
         ON cisli940.t$fire$l=cisli941f.t$fire$l
-       AND((cisli941.T$fire$L= cisli941f.T$REFR$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
-        or cisli941.T$fire$L= cisli941f.T$fire$L)
-       AND ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
-        or cisli941.T$line$L= cisli941f.T$line$l)
        AND cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (1,2,5)
 
 LEFT JOIN baandb.tcisli245301 cisli245
@@ -70,7 +66,6 @@ LEFT JOIN baandb.tznsls004301 znsls004
 
 INNER JOIN baandb.ttdsls400301 tdsls400
         ON tdsls400.t$orno=tdsls401.t$orno
-       AND tdsls400.t$fdty$l=1
         
 LEFT JOIN baandb.tznsls401301 znsls401
    ON	znsls401.t$ncia$c=znsls004.t$ncia$c	
