@@ -29,14 +29,18 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124301 tcemm124, baandb.ttcemm03
   cisli941f.t$dqua$l                            QT_FATURADA,
   cisli941f.t$gamt$l                            VL_PRODUTO,
   znsls401.t$vlfr$c                             VL_FRETE_CLIENTE,
-  nvl((select sum(f.t$vlfc$c) from baandb.tznfmd630301 f where f.t$fire$c=cisli940.t$fire$l),0) * (cisli941f.t$gamt$l/nvl((select sum(cisli941b.t$gamt$l)
+    nvl((select sum(f.t$vlfc$c) from baandb.tznfmd630301 f where f.t$fire$c=cisli940.t$fire$l),0)*(
+                        nvl((select sum(lf.t$gamt$l) from baandb.tcisli941301 lf
+                             where  lf.t$fire$l=(case when cisli940.t$fdty$l=15 then cisli941f.t$refr$l else cisli941f.t$fire$l end)
+                             and    lf.t$line$l=(case when cisli940.t$fdty$l=15 then cisli941f.t$rfdl$l else cisli941f.t$line$l end)                                   
+                            ),0) /
+                         nvl((select sum(cisli941b.t$gamt$l)
                               from baandb.tcisli941301 cisli941b, baandb.ttcibd001301 tcibd001b
-                              where cisli941b.t$fire$l=cisli941f.t$fire$l
-                              and cisli941b.t$line$l=cisli941f.t$line$l
+                              where cisli941b.t$fire$l=(case when cisli940.t$fdty$l=15 then cisli941f.t$refr$l else cisli941f.t$fire$l end)
+                              --and cisli941b.t$line$l=cisli941f.t$line$l
                               and tcibd001b.T$ITEM=cisli941b.t$item$l
                               and cisli941b.t$gamt$l!=0
-                              and tcibd001b.t$kitm<3),1)) 
-  AS                                            VL_FRETE_CIA
+                              and tcibd001b.t$kitm<3),1)) VL_FRETE_CIA
 
 FROM baandb.tcisli941301 cisli941f
 
