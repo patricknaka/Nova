@@ -1,4 +1,4 @@
-﻿-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
+?-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
 -- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
 -- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
 -- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)	
@@ -283,6 +283,33 @@ SELECT
   AND tcemm124.t$loco=201
   AND rownum=1) CD_UNIDADE_EMPRESARIAL,
   tdrec941.t$fire$l NR_REFERENCIA_FISCAL,
+  tdrec940.t$stat$l STATUS_NF,
+  ( SELECT l.t$desc
+    FROM baandb.tttadv401000 d,
+         baandb.tttadv140000 l
+    WHERE d.t$cpac = 'td'
+    AND d.t$cdom = 'rec.stat.l'
+    AND l.t$clan = 'p'
+    AND l.t$cpac = 'td'
+    AND l.t$clab = d.t$za_clab
+    AND rpad(d.t$vers,4) ||
+        rpad(d.t$rele,2) ||
+        rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                        rpad(l1.t$rele,2) ||
+                                        rpad(l1.t$cust,4)) 
+                             from baandb.tttadv401000 l1 
+                             where l1.t$cpac = d.t$cpac 
+                             and l1.t$cdom = d.t$cdom )
+    AND rpad(l.t$vers,4) ||
+        rpad(l.t$rele,2) ||
+        rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                        rpad(l1.t$rele,2) ||
+                                        rpad(l1.t$cust,4)) 
+                             from baandb.tttadv140000 l1 
+                             where l1.t$clab = l.t$clab 
+                             and l1.t$clan = l.t$clan 
+                             and l1.t$cpac = l.t$cpac ) 
+    AND d.t$cnst = tdrec940.t$stat$l) DESC_STATUS,
   (SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
 	AND tdrec947.t$line$l=tdrec941.t$line$l
@@ -312,6 +339,7 @@ FROM
   baandb.ttdrec940201 tdrec940,
   baandb.ttcibd001201 tcibd001,
   baandb.ttcibd936201 tcibd936
+          
 WHERE
   tcibd001.t$item=tdrec941.t$item$l
 AND tcibd936.t$ifgc$l=tcibd001.t$ifgc$l
