@@ -1,6 +1,7 @@
 SELECT DISTINCT
 
-        d.WHSEID                       ARMAZEM,                               --01
+        d.WHSEID                      ARMAZEM,                               --01
+        cl.UDF2                       DESC_ARMAZEM,           
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.ADDDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone sessiontimezone) AS DATE)  
@@ -11,35 +12,37 @@ SELECT DISTINCT
         SKU.DESCR                     DESCRICAO,                              --06
         ALTSKU.ALTSKU                 EAN,                                    --07
         SKU.SKUGROUP                  DEPART,                                 --08
-        SKU.SKUGROUP2                 SETOR,                                  --09
+        DEPTO.DEPART_NAME             NOME_DEPART,                            --09
+        SKU.SKUGROUP2                 SETOR,                                  --10
+        DEPTO.SECTOR_NAME             NOME_SETOR,                             --11
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone sessiontimezone) AS DATE)  
-                                    DATA_RECBTO,                              --10   
-        d.QTYEXPECTED               QTDE_PCS_LANC,                            --11
-        d.QTYRECEIVED               QTDE_PCS_RECEBIDAS,                       --12
-        tdrec941.t$fire$l           REF_FISCAL,                               --13
-        r.REFERENCETYPE             TIPO_ORDEM,                               --14
-        tdrec940.t$fovn$l           CNPJ,                                     --15
-        tdrec940.t$fids$l           FORNECEDOR,                               --16
-        tccom130.t$cste             ESTADO,                                   --17
-        tdrec940.t$docn$l           NOTA_FISCAL,                              --18
-        tdrec940.t$seri$l           SERIE_NF,                                 --19
+                                    DATA_RECBTO,                              --12   
+        d.QTYEXPECTED               QTDE_PCS_LANC,                            --13
+        d.QTYRECEIVED               QTDE_PCS_RECEBIDAS,                       --14
+        tdrec941.t$fire$l           REF_FISCAL,                               --15
+        TIPO_REC.DSC                TIPO_ORDEM,                               --16
+        tdrec940.t$fovn$l           CNPJ,                                     --17
+        tdrec940.t$fids$l           FORNECEDOR,                               --18
+        tccom130.t$cste             ESTADO,                                   --19
+        tdrec940.t$docn$l           NOTA_FISCAL,                              --20
+        tdrec940.t$seri$l           SERIE_NF,                                 --21
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone sessiontimezone) AS DATE)  
-                                    DT_EMISSAO_ENT,                           --20
-        tdrec941.t$opfc$l           CFOP,                                     --21
-        tdrec941.t$qnty$l           QTDE,                                     --22
-        tdrec941.t$pric$l           VALOR_UNITARIO,                           --23
-        cisli940.t$docn$l           NF_SAIDA,                                 --24
-        cisli940.t$seri$l           SERIE_NF_SAIDA,                           --25
+                                    DT_EMISSAO_ENT,                           --22
+        tdrec941.t$opfc$l           CFOP,                                     --23
+        tdrec941.t$qnty$l           QTDE,                                     --24
+        tdrec941.t$pric$l           VALOR_UNITARIO,                           --25
+        cisli940.t$docn$l           NF_SAIDA,                                 --26
+        cisli940.t$seri$l           SERIE_NF_SAIDA,                           --27
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone sessiontimezone) AS DATE)  
-                                    DT_EMISSAO_SAIDA,                         --26
-        cisli940.t$cfrw$l           TRANSP_COLETA,                            --27
-        tcmcs080.t$dsca             DESCR_TRANSP                              --28
+                                    DT_EMISSAO_SAIDA,                         --28
+        cisli940.t$cfrw$l           TRANSP_COLETA,                            --29
+        tcmcs080.t$dsca             DESCR_TRANSP                              --30
         
 FROM WMWHSE5.RECEIPTDETAIL  d
 
@@ -51,7 +54,27 @@ FROM WMWHSE5.RECEIPTDETAIL  d
                 
         LEFT JOIN WMWHSE5.ALTSKU ALTSKU
                ON ALTSKU.SKU=d.SKU
-               
+        
+        LEFT JOIN WMWHSE5.DEPARTSECTORSKU DEPTO
+               ON TO_CHAR(DEPTO.ID_DEPART)=TO_CHAR(SKU.SKUGROUP)
+              AND TO_CHAR(DEPTO.ID_SECTOR)=TO_CHAR(SKU.SKUGROUP2)
+        
+         LEFT JOIN ( select clkp.code          COD, 
+                            NVL(trans.description, 
+                            clkp.description)  DSC
+                    from WMWHSE5.codelkup clkp
+                    left join WMWHSE5.translationlist trans 
+                           on trans.code = clkp.code
+                          and trans.joinkey1 = clkp.listname
+                          and trans.locale = 'pt'
+                          and trans.tblname = 'CODELKUP' 
+                    where clkp.listname = 'RECEIPTYPE'
+                    and Trim(clkp.code) is not null  ) TIPO_REC
+          ON TIPO_REC.COD = r.TYPE
+        
+        LEFT JOIN ENTERPRISE.CODELKUP cl  
+          ON UPPER(cl.UDF1) = UPPER(r.WHSEID)
+        
         LEFT JOIN baandb.ttdrec940301@pln01 tdrec940
                ON tdrec940.t$docn$l=SUBSTR(d.SUSR1,1,INSTR(d.SUSR1,'/')-1)
               AND tdrec940.t$seri$l=SUBSTR(d.SUSR1,INSTR(d.SUSR1,'/')+1,3)
