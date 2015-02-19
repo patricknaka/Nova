@@ -53,7 +53,11 @@ SELECT
     
     MAX(znsls400.t$telf$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  TELEFONE_1,
     
-    MAX(znsls400.t$te1f$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  TELEFONE_2
+    MAX(znsls400.t$te1f$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  TELEFONE_2,
+    
+    MAX(znfmd640.t$ulog$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  MATRICULA,
+    
+    MAX(ttaad200.t$name) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  NOME
     
 FROM       baandb.tznsls410301 znsls410
 
@@ -64,7 +68,15 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND znsls400.t$sqpd$c = znsls410.t$sqpd$c
        
  LEFT JOIN baandb.tznfmd630301 znfmd630
-        ON znfmd630.t$orno$c = znsls410.t$orno$c
+        ON to_char(znfmd630.t$pecl$c) = to_char(znsls410.t$entr$c)
+        
+ LEFT JOIN baandb.tznfmd640301 znfmd640
+        ON  znfmd640.t$fili$c = znfmd630.t$fili$c
+        AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
+        AND znfmd640.t$coci$c = znsls410.t$poco$c
+        
+ LEFT JOIN baandb.tttaad200000 ttaad200
+        ON  ttaad200.t$user = znfmd640.t$ulog$c
  
  LEFT JOIN baandb.ttcmcs080301 tcmcs080
         ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
