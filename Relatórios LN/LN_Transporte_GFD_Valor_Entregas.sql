@@ -42,3 +42,4 @@ WHERE UPPER(znfmd640.t$coci$c) = 'ETR'
   AND znfmd630.t$fili$c IN (:FILIAL)
   AND znfmd630.t$cfrw$c IN (:TRANSPORTADORA)
   AND znsls401.t$uneg$c IN (:UniNEGOCIO)
+  AND ( (:EntregaTodas = 0) or (znfmd630.t$pecl$c IN (:Entrega) and (:EntregaTodas = 1)) )

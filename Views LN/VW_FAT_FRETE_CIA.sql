@@ -29,14 +29,18 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124301 tcemm124, baandb.ttcemm03
   cisli941f.t$dqua$l                            QT_FATURADA,
   cisli941f.t$gamt$l                            VL_PRODUTO,
   znsls401.t$vlfr$c                             VL_FRETE_CLIENTE,
-  nvl((select sum(f.t$vlfc$c) from baandb.tznfmd630301 f where f.t$fire$c=cisli940.t$fire$l),0) * (cisli941f.t$gamt$l/nvl((select sum(cisli941b.t$gamt$l)
+    nvl((select sum(f.t$vlfc$c) from baandb.tznfmd630301 f where f.t$fire$c=cisli940.t$fire$l),0)*(
+                        nvl((select sum(lf.t$gamt$l) from baandb.tcisli941301 lf
+                             where  lf.t$fire$l=(case when cisli940.t$fdty$l=15 then cisli941f.t$refr$l else cisli941f.t$fire$l end)
+                             and    lf.t$line$l=(case when cisli940.t$fdty$l=15 then cisli941f.t$rfdl$l else cisli941f.t$line$l end)                                   
+                            ),0) /
+                         nvl((select sum(cisli941b.t$gamt$l)
                               from baandb.tcisli941301 cisli941b, baandb.ttcibd001301 tcibd001b
-                              where cisli941b.t$fire$l=cisli941f.t$fire$l
-                              and cisli941b.t$line$l=cisli941f.t$line$l
+                              where cisli941b.t$fire$l=(case when cisli940.t$fdty$l=15 then cisli941f.t$refr$l else cisli941f.t$fire$l end)
+                              --and cisli941b.t$line$l=cisli941f.t$line$l
                               and tcibd001b.T$ITEM=cisli941b.t$item$l
                               and cisli941b.t$gamt$l!=0
-                              and tcibd001b.t$kitm<3),1)) 
-  AS                                            VL_FRETE_CIA
+                              and tcibd001b.t$kitm<3),1)) VL_FRETE_CIA
 
 FROM baandb.tcisli941301 cisli941f
 
@@ -46,10 +50,6 @@ INNER JOIN baandb.tcisli941301 cisli941
        
 INNER JOIN baandb.tcisli940301  cisli940
         ON cisli940.t$fire$l=cisli941f.t$fire$l
-       AND((cisli941.T$fire$L= cisli941f.T$REFR$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
-        or cisli941.T$fire$L= cisli941f.T$fire$L)
-       AND ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
-        or cisli941.T$line$L= cisli941f.T$line$l)
        AND cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (1,2,5)
 
 LEFT JOIN baandb.tcisli245301 cisli245
@@ -66,7 +66,6 @@ LEFT JOIN baandb.tznsls004301 znsls004
 
 INNER JOIN baandb.ttdsls400301 tdsls400
         ON tdsls400.t$orno=tdsls401.t$orno
-       AND tdsls400.t$fdty$l=1
         
 LEFT JOIN baandb.tznsls401301 znsls401
    ON	znsls401.t$ncia$c=znsls004.t$ncia$c	
