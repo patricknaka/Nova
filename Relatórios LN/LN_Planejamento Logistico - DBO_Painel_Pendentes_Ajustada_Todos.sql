@@ -3,6 +3,7 @@ SELECT
     tcmcs080.t$dsca    DESC_TRANSP, 
     znfmd060.t$cdes$c  DESC_CONTRATO,
     znsls401.t$entr$c  NUME_ENTREGA,
+	znfmd630.t$etiq$c  NUME_ETIQUETA,
     znfmd630.t$fili$c  NUME_FILIAL, 
     cisli940.t$docn$l  NUME_NOTA,  
     cisli940.t$seri$l  NUME_SERIE,     
@@ -125,5 +126,5 @@ WHERE  ( SELECT znfmd640.t$coci$c
     AT time zone sessiontimezone) AS DATE))
     BETWEEN :DataPlanejadaDe
         AND :DataPlanejadaAte
-    AND tcmcs080.t$cfrw IN (:Transportadora)
-    AND NVL(TRIM(znfmd630.t$stat$c),'P') IN (:Situacao)
+	AND tcmcs080.t$cfrw IN (:Transportadora)
+	AND NVL(TRIM(znfmd630.t$stat$c),'P') IN (:Situacao)
