@@ -3,7 +3,20 @@ SELECT
     FILIAL.DSC_FILIAL        FILIAL,
     cisli940.t$docn$l        NF,
     cisli940.t$seri$l        SERIE,
-    
+
+    CASE WHEN WMS_ORDERS.ORDERKEY is null THEN
+      WMS_OA_ORDERS.ORDERKEY
+    ELSE
+      WMS_ORDERS.ORDERKEY END      PEDIDO_WMS,
+      
+    CASE WHEN CODELKUP.DESCRIPTION = ' ' THEN
+      CODELKUP_OA.DESCRIPTION
+    ELSE
+      CODELKUP.DESCRIPTION END      DESCRICAO_PEDIDO,
+      
+      WMS_ORDERS.TYPE       TIPO,
+      WMS_OA_ORDERS.TYPE    TIPO_OA,
+      
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE) 
@@ -124,6 +137,20 @@ INNER JOIN baandb.ttcibd001301 tcibd001
                                           and l1.t$cpac = l.t$cpac ) ) FGET
         ON cisli940.t$fdty$l = FGET.CNST
 
+      LEFT JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_ORDERS
+             ON WMS_ORDERS.REFERENCEDOCUMENT = cisli245.t$slso
+     
+      LEFT JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_OA_ORDERS
+             ON SUBSTR(WMS_OA_ORDERS.REFERENCEDOCUMENT,4,9) = CISLI245.T$SLSO
+             
+      LEFT JOIN WMWHSE5.CODELKUP@DL_LN_WMS CODELKUP
+        ON  CODELKUP.LISTNAME='ORDERTYPE'
+        AND CODELKUP.CODE = WMS_ORDERS.TYPE
+        
+      LEFT JOIN WMWHSE5.CODELKUP@DL_LN_WMS CODELKUP_OA
+        ON  CODELKUP_OA.LISTNAME='ORDERTYPE'
+       AND CODELKUP_OA.CODE = WMS_OA_ORDERS.TYPE
+        
 WHERE cisli940.t$fdty$l != 11
 
 AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
