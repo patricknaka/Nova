@@ -372,6 +372,12 @@ FROM       baandb.ttfacp200301  tfacp200
         ON OrdemCompra.t$orno = tdrec947.t$orno$l
 
 WHERE tfacp200.t$docn = 0
+AND not exists (  select tfacp601.t$payt, tfacp601.t$payd, tfacp601.t$payl, tfacp601.t$pays
+                    from  baandb.ttfacp601301  tfacp601
+                    where tfacp601.t$icom=301
+                      and tfacp601.t$ityp=tfacp200.t$ttyp
+                      and tfacp601.t$idoc=tfacp200.t$ninv
+                      and tfacp601.t$step=20 )
 
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND tfacp200.t$dued between :VencimentoDe AND :VencimentoAte
