@@ -13,8 +13,7 @@ SELECT
   
   tfgld106.t$dbcr                      NATU_LANÇTO,
   tfgld106.t$obat                      LOTE,
-  tfgld106.t$osrn                      SEQ_LOTE,  
-  
+  tfgld106.t$otyp                      TIPO_TRANSACAO,
   CASE WHEN ( select count(*) 
                 from baandb.ttfgld106301 a1
                where a1.t$otyp = tfgld106.t$otyp
@@ -54,7 +53,8 @@ SELECT
    
   tfgld106.t$dim6                      PROJETO,
   
-  tfgld106.t$refr                      HIST_COMPLETO,
+  tfgld106.t$desc$l                    HIST_COMPLETO,
+  tfgld106.t$refr                      REFERENCIA,
   
   CASE WHEN tfgld106.t$dbcr = 1 THEN tfgld106.t$amnt 
        ELSE 0 
