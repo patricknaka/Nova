@@ -87,7 +87,9 @@ SELECT
            ELSE TO_CHAR(TRUNC(tfgld018.t$time/3600),'FM9900') || ':' ||
                 TO_CHAR(TRUNC(MOD(tfgld018.t$time,3600)/60),'FM00') || ':' ||
                 TO_CHAR(MOD(tfgld018.t$time,60),'FM00')
-    END                                               HORA_APROVACAO_CONTABIL
+    END                                               HORA_APROVACAO_CONTABIL,
+	tttxt010a.t$text									TEXTO_CAB,
+	tttxt010b.t$text									TEXTO_RDP
     
 FROM       baandb.ttdpur400301 tdpur400
 
@@ -305,26 +307,36 @@ INNER JOIN baandb.ttdpur401301 tdpur401
                     ttaad200.t$name NOME
                from baandb.tttaad200000 ttaad200 ) apr_cont
         ON apr_cont.LOGIN = tfgld018.t$user
+		
+ LEFT JOIN baandb.ttttxt010301 tttxt010a 
+        ON tttxt010a.t$ctxt = tdpur400.t$txta
+       AND tttxt010a.t$clan = 'p'
+	   AND tttxt010a.t$seqe = 1
+	   
+ LEFT JOIN baandb.ttttxt010301 tttxt010b 
+        ON tttxt010b.t$ctxt = tdpur400.t$txtb
+       AND tttxt010b.t$clan = 'p'
+	   AND tttxt010b.t$seqe = 1
 
 WHERE tdpur401.t$oltp IN (2,4)
   AND NVL(tdrec940.t$stat$l, 0) != 6
   AND NVL(tdrec940.t$rfdt$l, 0) != 13
 
-  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE))
-      Between :EmissaoDe
-          And :EmissaoAte
-  AND unid_empr.DEPTO_COMPRAS IN (:FILIAL)
-  AND NVL(ORDEM.t$cnst, 0) IN (:STATUS_ORDEM)
-  AND NVL(tdrec940.t$stat$l, 0) IN (:STATUS_APR_FISCAL)
-  AND NVL(CONTABIL.t$cnst, 0) IN (:STATUS_APR_CONTABIL)
-  AND tdpur400.t$cotp IN (:TIPO_ORDEM)
-  AND crd.t$logn IN (:UsuarioSolicitante)
-  AND NVL(tfacp201.t$pyst$l, 0) IN (:SituacaoPagto)
-  AND ((regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(regexp_replace(:CNPJ, '[^0-9]', ''))) OR (Trim(:CNPJ) is null))
-  AND ( (Trim(:OrdemCompra) is null) OR (UPPER(Trim(tdpur400.t$orno)) like '%' || UPPER(Trim(:OrdemCompra) || '%')) )
-  AND ( (Trim(:ReferenciaFiscal) is null) or (UPPER(Trim(tdrec940.t$fire$l)) like '%' || UPPER(Trim(:ReferenciaFiscal) || '%')) )
+ AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone sessiontimezone) AS DATE))
+     Between :EmissaoDe
+         And :EmissaoAte
+ AND unid_empr.DEPTO_COMPRAS IN (:FILIAL)
+ AND NVL(ORDEM.t$cnst, 0) IN (:STATUS_ORDEM)
+ AND NVL(tdrec940.t$stat$l, 0) IN (:STATUS_APR_FISCAL)
+ AND NVL(CONTABIL.t$cnst, 0) IN (:STATUS_APR_CONTABIL)
+ AND tdpur400.t$cotp IN (:TIPO_ORDEM)
+ AND crd.t$logn IN (:UsuarioSolicitante)
+ AND NVL(tfacp201.t$pyst$l, 0) IN (:SituacaoPagto)
+ AND ((regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(regexp_replace(:CNPJ, '[^0-9]', ''))) OR (Trim(:CNPJ) is null))
+ AND ( (Trim(:OrdemCompra) is null) OR (UPPER(Trim(tdpur400.t$orno)) like '%' || UPPER(Trim(:OrdemCompra) || '%')) )
+ AND ( (Trim(:ReferenciaFiscal) is null) or (UPPER(Trim(tdrec940.t$fire$l)) like '%' || UPPER(Trim(:ReferenciaFiscal) || '%')) )
 
 ORDER BY DATA_ORDEM, 
          STATUS_ORDEM, 
