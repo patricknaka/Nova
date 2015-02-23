@@ -10,7 +10,7 @@ SELECT
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE), 'HH24')      
                                              HORA,
-    taskdetail.addwho                        OPERADOR,
+    PICKDETAIL.EDITWHO                         OPERADOR,
     subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',')-4 )      NOME_OP,
     loc.putawayzone                          GRUPO_CLASSE_LOCAL,
@@ -19,13 +19,16 @@ SELECT
     count(distinct taskdetail.orderkey )     ORDEM_COL,
     sum(taskdetail.qty)                      PECAS
     
-FROM      WMWHSE4.taskdetail
+FROM      WMWHSE5.taskdetail
+
+INNER JOIN WMWHSE5.PICKDETAIL
+		ON	PICKDETAIL.PICKDETAILKEY = TASKDETAIL.PICKDETAILKEY
     
-LEFT JOIN WMWHSE4.taskmanageruser tu 
-       ON tu.userkey = TASKDETAIL.EDITWHO,
+LEFT JOIN WMWHSE5.taskmanageruser tu 
+       ON tu.userkey = PICKDETAIL.EDITWHO,
     
           WMSADMIN.PL_DB,
-          WMWHSE4.loc 
+          WMWHSE5.loc 
     
 WHERE taskdetail.status = 9 
   and taskdetail.tasktype = 'PK' 
@@ -34,9 +37,9 @@ WHERE taskdetail.status = 9
   and PL_DB.DB_ENTERPRISE = 0
   and loc.loc = taskdetail.fromloc
 
-  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) between :DataDe and :DataAte
+ and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
+     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone sessiontimezone) AS DATE)) between :DataDe and :DataAte
     
 GROUP BY taskdetail.whseid, 
          PL_DB.DB_ALIAS,
@@ -46,7 +49,7 @@ GROUP BY taskdetail.whseid,
          to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone sessiontimezone) AS DATE), 'HH24'),
-         taskdetail.addwho,
+         PICKDETAIL.EDITWHO,
          subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ), 
          loc.putawayzone
     
