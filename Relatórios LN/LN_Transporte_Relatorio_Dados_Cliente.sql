@@ -28,3 +28,7 @@ INNER JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
   
 WHERE ((znsls401.t$entr$c IN (:NumEntrega) AND :Todos = 1  )  OR :Todos = 0 )
+  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 
+        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE))
+      BETWEEN :DataPrometidaDe
+          AND :DataPrometidaAte
