@@ -16,7 +16,8 @@ SELECT
     znsls401.t$nome$c        NOME_CLIENTE,
     znsls401.t$emae$c        E_MAIL,
     znsls401.t$te1e$c        TELEFONE_1,
-    znsls401.t$te2e$c        TELEFONE_2
+    znsls401.t$te2e$c        TELEFONE_2,
+	znsls401.t$pztr$c		 TransitTime_CClinente
     
 FROM       baandb.tznsls401301 znsls401
 
