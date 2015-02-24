@@ -28,7 +28,7 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(NVL(cisli940d.t$date$l, znmcs092.t$trdt$c), 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE)    DATA_NF_VENDA,
-		
+  
     NVL(cisli940d.t$amnt$l, znmcs092.t$amnt$c)    VALO_NF_VENDA,
     cisli245d.t$slso                              NUME_OV,
     cisli940.t$fdty$l                             COD_TIPO_DOC_FISCAL,
@@ -45,7 +45,7 @@ SELECT
     cisli940d.t$stat$l                            STATUS_NFD,
     DESCR_STATUS_NFD.DS_SITUACAO_NF               DESCR_STATUS_NFD
   
-FROM      baandb.tcisli245301  cisli245       
+FROM       baandb.tcisli245301  cisli245       
  
 
 INNER JOIN baandb.tcisli940301  cisli940
@@ -223,16 +223,16 @@ INNER JOIN baandb.ttccom130301 tccom130B
        AND znmcs092.t$creg$c = znmcs096.t$creg$c
        AND znmcs092.t$cfov$c = znmcs096.t$cfov$c
        
-  LEFT JOIN  (select  ttaad200.t$user,
-                      ttaad200.t$name
-              from    baandb.tttaad200000 ttaad200) NOME_USUARIO
-        ON    NOME_USUARIO.t$user=Usuario.t$logn$c
+ LEFT JOIN ( select ttaad200.t$user,
+                    ttaad200.t$name
+               from baandb.tttaad200000 ttaad200 ) NOME_USUARIO
+        ON NOME_USUARIO.t$user = Usuario.t$logn$c
         
 WHERE cisli940.t$fdty$l = 14
   AND tcemm124.t$dtyp = 1
 
   AND tcemm030.T$EUNT IN (:Filial)
-  AND tdrec940.t$stat$l IN(:StatusRefFiscal)
+  AND NVL(tdrec940.t$stat$l,0) IN(:StatusRefFiscal)
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone sessiontimezone) AS DATE)) 
