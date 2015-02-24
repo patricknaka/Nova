@@ -8,8 +8,7 @@ Select Q1.*
                
                znsls401ret.t$cmot$c         ID_MOTIVO,
                znsls401ret.t$lmot$c         MOTI_NOME,
-               znsls401ret.t$orno$c         ID_INSTANCIA,
-               tccom130ori.t$fovn$l         CNPJ_TRANSP,
+               znsls401ret.t$orno$c         ID_INSTANCIA,               tccom130ori.t$fovn$l         CNPJ_TRANSP,
                tcmcs080ori.t$dsca           TRANSP_NOME,
                znfmd630ori.t$cono$c         TRANSP_CONTRATO,
                tccom130ret.t$fovn$l         CNPJ_TRANSP_COLETA,
@@ -146,7 +145,7 @@ Select Q1.*
              ON tccom130ret.t$cadr = tcmcs080ret.t$cadr$l
       
       LEFT JOIN BAANDB.tznsls401301  znsls401ret
-             ON znsls401ret.t$entr$c = znfmd630ret.t$pecl$c 
+             ON to_char(znsls401ret.t$entr$c) = to_char(znfmd630ret.t$pecl$c)
 
      INNER JOIN BAANDB.tznsls400301  znsls400ret
              ON znsls400ret.t$ncia$c = znsls401ret.t$ncia$c 
@@ -261,4 +260,4 @@ WHERE Trunc(NVL(Q1.DT_SITUACAO, SysDate)) BETWEEN NVL(:DataSituacaoDe, NVL(Q1.DT
   AND Q1.CNPJ_FILIAL IN (:Filial)
   AND Q1.SITUACAO IN (:Situacao)
   AND Q1.IN_FORCADO in (:Forcado)
-  AND ( (:EntregaTodas = 0) or (Q1.ENTREGA IN (:Entrega) and (:EntregaTodas = 1)) )  
+  AND ( (:EntregaTodas = 0) or (Q1.ENTREGA IN (:Entrega) and (:EntregaTodas = 1)) )
