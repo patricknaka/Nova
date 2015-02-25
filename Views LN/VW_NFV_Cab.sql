@@ -1,5 +1,4 @@
-﻿
-SELECT
+﻿SELECT
     1 CD_CIA,
     case when (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
@@ -135,8 +134,17 @@ SELECT
   (SELECT tdsls400.t$sotp                                        --#MAT.308.sn
    FROM baandb.ttdsls400201 tdsls400            
    WHERE tdsls400.t$orno=entr.t$orno$c
-   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA        --#MAT.308.en 
+   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA,        --#MAT.308.en 
 
+        CASE WHEN cisli940.t$fdty$l=15 then
+          (select a.t$fire$l from baandb.tcisli940201 a, baandb.tcisli941201 b
+          where b.t$fire$l=cisli940.t$fire$l
+          and a.t$fire$l=b.t$refr$l
+          and rownum=1
+          group by a.t$fire$l
+          ) else NULL
+       end  NR_REFERENCIA_FISCAL_FAT 
+   
 FROM
 		baandb.tcisli940201 cisli940
 		LEFT JOIN (SELECT 	znsls401.t$entr$c, 
