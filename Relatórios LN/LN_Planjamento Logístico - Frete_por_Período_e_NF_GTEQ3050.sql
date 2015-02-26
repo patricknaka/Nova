@@ -165,11 +165,11 @@ WHERE (   (znfmd640.t$date$c is null)
                                   where oc.t$fili$c = znfmd640.t$fili$c
                                     and oc.t$etiq$c = znfmd640.t$etiq$c )) )
 
---  AND znsls401.t$itpe$c IN (:TipoEntrega)
---  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
---              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---                AT time zone sessiontimezone) AS DATE)) 
---      BETWEEN :DtExpIni 
---          AND :DtExpFim
---  AND tcmcs080.t$cfrw = CASE WHEN :Transportadora = 'T' THEN tcmcs080.t$cfrw ELSE :Transportadora END
---  AND tcmcs031.t$cbrn = CASE WHEN :Marca = 'T' THEN tcmcs031.t$cbrn ELSE :Marca END
+  AND znsls401.t$itpe$c IN (:TipoEntrega)
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone sessiontimezone) AS DATE)) 
+      BETWEEN :DtExpIni 
+          AND :DtExpFim
+  AND tcmcs080.t$cfrw = CASE WHEN :Transportadora = 'T' THEN tcmcs080.t$cfrw ELSE :Transportadora END
+  AND tcmcs031.t$cbrn = CASE WHEN :Marca = 'T' THEN tcmcs031.t$cbrn ELSE :Marca END
