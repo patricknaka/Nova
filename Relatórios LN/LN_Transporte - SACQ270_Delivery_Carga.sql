@@ -119,10 +119,17 @@ Select Q1.*
                   where a.t$ncia$c = znsls400ret.t$ncia$c
                     and a.t$uneg$c = znsls400ret.t$uneg$c ) 
                                             DESCR_UNID_NEG
-        
-           FROM BAANDB.tcisli245301  cisli245ret
+
+      FROM BAANDB.tznsls401301  znsls401ret             
+             
+      LEFT JOIN BAANDB.tcisli245301  cisli245ret            
+             ON cisli245ret.t$slcp=301
+            AND cisli245ret.t$ortp=1
+            AND cisli245ret.t$koor=3
+            AND cisli245ret.t$slso=znsls401ret.t$orno$c
+            AND cisli245ret.t$pono=znsls401ret.t$pono$c       
 	   
-     INNER JOIN BAANDB.tcisli940301  cisli940ret
+      INNER JOIN BAANDB.tcisli940301  cisli940ret
              ON cisli940ret.t$fire$l = cisli245ret.t$fire$l
       
       LEFT JOIN BAANDB. tznfmd630301  znfmd630ret
@@ -143,27 +150,22 @@ Select Q1.*
       
       LEFT JOIN BAANDB.ttccom130301  tccom130ret
              ON tccom130ret.t$cadr = tcmcs080ret.t$cadr$l
-      
-      LEFT JOIN BAANDB.tznsls401301  znsls401ret
-             ON to_char(znsls401ret.t$entr$c) = to_char(znfmd630ret.t$pecl$c)
 
-     INNER JOIN BAANDB.tznsls400301  znsls400ret
+     INNER JOIN BAANDB.tznsls400301  znsls400ret           
              ON znsls400ret.t$ncia$c = znsls401ret.t$ncia$c 
             AND znsls400ret.t$uneg$c = znsls401ret.t$UNEG$c 
             AND znsls400ret.t$pecl$c = znsls401ret.t$pecl$c 
             AND znsls400ret.t$sqpd$c = znsls401ret.t$sqpd$c 
 		 
-     INNER JOIN BAANDB.ttdsls401301  tdsls401ret
+     INNER JOIN BAANDB.ttdsls401301  tdsls401ret                  
              ON tdsls401ret.t$orno   = cisli245ret.t$slso
             AND tdsls401ret.t$pono   = cisli245ret.t$pono
-            AND tdsls401ret.t$orno   = znsls401ret.t$orno$c
-            AND tdsls401ret.t$pono   = znsls401ret.t$pono$c
        
-     INNER JOIN BAANDB.tcisli245301  cisli245ori
+     INNER JOIN BAANDB.tcisli245301  cisli245ori                
              ON cisli245ori.t$fire$l = tdsls401ret.t$fire$l
             AND cisli245ori.t$line$l = tdsls401ret.t$line$l
 		 
-     INNER JOIN BAANDB.tcisli940301  cisli940ori
+     INNER JOIN BAANDB.tcisli940301  cisli940ori                  
              ON cisli940ori.t$fire$l = cisli245ori.t$fire$l
 
       LEFT JOIN BAANDB.ttcmcs080301  tcmcs080ori
@@ -179,11 +181,10 @@ Select Q1.*
              ON cisli941ret.t$fire$l = cisli245ret.t$fire$l
             AND cisli941ret.t$line$l = cisli245ret.t$line$l
           
-     INNER JOIN BAANDB.tznsls401301  znsls401ori
+     INNER JOIN BAANDB.tznsls401301  znsls401ori              
              ON znsls401ori.t$orno$c = cisli245ori.t$slso
             AND znsls401ori.t$pono$c = cisli245ori.t$pono 
 
-	  
       LEFT JOIN BAANDB.tznsls401301  znsls401gar
              ON znsls401gar.t$ncia$c = znsls401ori.t$ncia$c
             AND znsls401gar.t$uneg$c = znsls401ori.t$uneg$c       
@@ -252,7 +253,8 @@ Select Q1.*
               ON OCORRENCIA.t$fili$c = znfmd630ret.t$fili$c
              AND OCORRENCIA.t$etiq$c = znfmd630ret.t$etiq$c
 			 
-     WHERE cisli940ret.t$fdty$l = 14 ) Q1
+     WHERE  cisli940ret.t$fdty$l = 14
+     AND    znsls401ret.t$idor$c='TD' ) Q1
    
 WHERE Trunc(NVL(Q1.DT_SITUACAO, SysDate)) BETWEEN NVL(:DataSituacaoDe, NVL(Q1.DT_SITUACAO, SysDate)) AND NVL(:DataSituacaoAte, NVL(Q1.DT_SITUACAO, SysDate))
   AND Trunc(Q1.DT_REGISTRO) BETWEEN :DataRegistroDe AND :DataRegistroAte
