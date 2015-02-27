@@ -18,11 +18,27 @@ SELECT
     TRIM(cisli941.t$item$l)  ID_ITEM,
     tcibd001.t$dsca          NOME_ITEM,
     cisli941.t$dqua$l        QTD_FATURADA,
-    cisli941.t$iprt$l        VL_PRODUTO,
-    cisli941.t$amnt$l        VL_TOTAL_ITEM,
-    cisli941.t$gamt$l        VL_MERCADORIA,
-    cisli941.t$fght$l        VL_FRETE,
-    cisli941.t$ldam$l        VL_DESC_INC,
+    CASE WHEN cisli941.t$iprt$l=0 THEN
+		tdsls401.t$pric ELSE
+		cisli941.t$iprt$l
+		END	 				 VL_PRODUTO,
+    CASE WHEN cisli941.t$amnt$l=0 THEN
+		tdsls401.t$oamt ELSE
+		cisli941.t$amnt$l
+		END	    			 VL_TOTAL_ITEM,
+    CASE WHEN cisli941.t$gamt$l=0 THEN
+		tdsls401.t$pric ELSE
+		cisli941.t$gamt$l
+		END					 VL_MERCADORIA,
+    CASE WHEN cisli941.t$fght$l=0 THEN
+			znsls401.t$vlfr$c ELSE
+			cisli941.t$fght$l
+		END					 VL_FRETE,
+	
+    CASE WHEN cisli941.t$ldam$l=0 THEN
+			znsls401.t$vlde$c ELSE 
+			cisli941.t$ldam$l 
+	END 					 VL_DESC_INC,
     
     NVL(( select cisli943.t$amnt$l 
             from baandb.tcisli943301 cisli943
@@ -83,6 +99,9 @@ INNER JOIN baandb.tcisli245301 cisli245
  LEFT JOIN baandb.tznsls401301 znsls401
         ON znsls401.t$orno$c = cisli245.t$slso
        AND znsls401.t$pono$c = cisli245.t$pono
+	   
+ LEFT JOIN baandb.ttdsls401301 tdsls401 
+        ON tdsls401.t$orno = cisli245.t$slso 
 
  LEFT JOIN baandb.tznsls400301 znsls400
         ON znsls400.t$ncia$c = znsls401.t$ncia$c
@@ -136,11 +155,13 @@ INNER JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_OA_ORDERS
         
 WHERE cisli940.t$fdty$l != 11
   AND cisli940.t$docn$l != 0
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE)) 
-        Between :EmissaoDe
-            And :EmissaoAte
+  AND cisli940.t$stat$l NOT IN (2,101)
+
+  -- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+                -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  -- AT time zone sessiontimezone) AS DATE)) 
+        -- Between :EmissaoDe
+            -- And :EmissaoAte
 
 ORDER BY FILIAL, 
          DT_EMISSAO, 
