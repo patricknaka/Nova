@@ -96,11 +96,19 @@ SELECT
     ORDERS.C_COMPANY                       NOME,
     ORDERDETAIL.ORIGINALQTY                QTDE_TOTAL,
     
-    CASE WHEN NVL(TDSLS400.T$OAMT, 0) != 0 THEN TDSLS400.T$OAMT
-         WHEN NVL(LNREF.VALOR, 0)     != 0 THEN LNREF.VALOR
+    -- CASE WHEN NVL(TDSLS400.T$OAMT, 0) != 0 THEN TDSLS400.T$OAMT
+         -- WHEN NVL(LNREF.VALOR, 0)     != 0 THEN LNREF.VALOR
+         -- WHEN NVL(maucLN.mauc, 0)     != 0 THEN maucLN.mauc
+         -- ELSE 0 
+     -- END                                   VL,
+	 
+    CASE WHEN NVL(cisli941.t$amnt$l, 0) != 0 THEN cisli941.t$amnt$l
+         WHEN NVL(TDSLS400.T$OAMT, 0) != 0 THEN TDSLS400.T$OAMT
          WHEN NVL(maucLN.mauc, 0)     != 0 THEN maucLN.mauc
          ELSE 0 
-     END                                   VL,
+     END                                   VL,	 
+	 
+	 
     ORDERS.type                            COD_TIPO_PEDIDO,
     TIPO_PEDIDO.                           DSC_TIPO_PEDIDO,
     CISLI940.T$BPID$L                      PARCEIRO_NEG,
@@ -225,10 +233,6 @@ INNER JOIN WMSADMIN.PL_DB
                     q.t$idca$c,
                     q.t$fovn$c,
                     t0.t$poco$c,
-                    sum( (o.t$vlun$c * o.t$qtve$c) - 
-                          o.t$vldi$c +
-                          o.t$vlfr$c + 
-                          o.t$vlde$c ) VALOR
                from BAANDB.TZNSLS004301@pln01 r
           left join BAANDB.TZNSLS401301@pln01 o 
                  on o.t$ncia$c = r.t$ncia$c
@@ -277,15 +281,37 @@ INNER JOIN WMSADMIN.PL_DB
  LEFT JOIN BAANDB.TTDSLS400301@pln01 TDSLS400 
         ON TDSLS400.T$ORNO = ORDERS.REFERENCEDOCUMENT
  
- LEFT JOIN BAANDB.TTCMCS003301@pln01 TCMCS003 
-        ON TCMCS003.T$CWAR = SUBSTR(CL.DESCRIPTION,3,10)
+ -- LEFT JOIN BAANDB.TTCMCS003301@pln01 TCMCS003 
+        -- ON TCMCS003.T$CWAR = SUBSTR(CL.DESCRIPTION,3,10)
  
- LEFT JOIN BAANDB.tcisli940301@pln01 CISLI940 
-        ON CISLI940.T$DOCN$L = ORDERS.INVOICENUMBER
-       AND CISLI940.T$SERI$L = ORDERS.LANE
-       AND CISLI940.T$SFRA$L = TCMCS003.T$CADR
-       AND CISLI940.T$DOCN$L != 0
-       AND CISLI940.T$FDTY$L != 11
+ -- LEFT JOIN BAANDB.tcisli940301@pln01 CISLI940 
+        -- ON CISLI940.T$DOCN$L = ORDERS.INVOICENUMBER
+       -- AND CISLI940.T$SERI$L = ORDERS.LANE
+       -- AND CISLI940.T$SFRA$L = TCMCS003.T$CADR
+       -- AND CISLI940.T$DOCN$L != 0
+       -- AND CISLI940.T$FDTY$L != 11
+	   
+	   
+		LEFT JOIN	BAANDB.TWHINH431301@PLN01	WHINH431	ON	WHINH431.T$SHPM				=	SUBSTR(ORDERDETAIL.EXTERNORDERKEY,5,9)
+															AND	TO_CHAR(WHINH431.T$PONO)	=	TO_CHAR(ORDERDETAIL.EXTERNLINENO)
+															
+		LEFT JOIN	BAANDB.TCISLI245301@PLN01	CISLI245	ON	CISLI245.T$SLCP				=	301
+															AND	CISLI245.T$ORTP				=	CASE WHEN SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)='100'
+																								THEN 1 ELSE 2 END
+															AND	CISLI245.T$KOOR				=	CASE WHEN SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)='100'
+                                                                                                THEN 3 ELSE
+																								TO_NUMBER(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,2)) END
+															AND	CISLI245.T$SLSO				=	WHINH431.T$WORN
+															AND CISLI245.T$OSET				=	WHINH431.T$WSET
+															AND	CISLI245.T$PONO				=	WHINH431.T$WPON
+															AND	CISLI245.T$SQNB				=	WHINH431.T$WSEQ
+															AND	CISLI245.T$SHPM				=	WHINH431.T$SHPM
+		LEFT JOIN	BAANDB.TCISLI941301@PLN01	CISLI941	ON	CISLI941.T$FIRE$L			=	CISLI245.T$FIRE$L
+															AND	CISLI941.T$LINE$L			=	CISLI245.T$LINE$L
+		LEFT JOIN	BAANDB.TCISLI940301@PLN01	CISLI940	ON	CISLI940.T$FIRE$L			=	CISLI941.T$FIRE$L
+															
+
+
     
  LEFT JOIN BAANDB.ttcibd001301@pln01 TCIBD001 
         ON TRIM(TCIBD001.T$ITEM) = SKU.SKU
