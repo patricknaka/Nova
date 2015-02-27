@@ -13,8 +13,8 @@ SELECT DISTINCT
   znfmd630.t$wght$c                     PESO,
   znfmd630.t$qvol$c                     VOLUME,
   znsls401.t$vlun$c                     VL_SEM_FRETE,
-  znfmd630.t$vlft$c                     FRETE_GTE,
-  znfmd630.t$vlmr$c                     VLR_TOTAL_NF,
+  znfmd630.t$vlfc$c                     FRETE_GTE,
+  cisli940.t$amnt$l                     VLR_TOTAL_NF,
   znsls400.t$cepf$c                     CEP,
   znsls400.t$cidf$c                     CIDADE, 
   NVL(REGIAO.DSC,'BR')                  ID_REGIAO,
@@ -36,6 +36,9 @@ FROM       baandb.ttcmcs080301 tcmcs080
 
 INNER JOIN baandb.tznfmd630301 znfmd630
         ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c 
+		
+INNER JOIN baandb.tcisli940301 cisli940
+		ON cisli940.t$fire$l = znfmd630.t$fire$c
       
 INNER JOIN baandb.tznsls401301 znsls401
         ON TO_CHAR(znsls401.t$entr$c) = TO_CHAR(znfmd630.t$pecl$c)  
