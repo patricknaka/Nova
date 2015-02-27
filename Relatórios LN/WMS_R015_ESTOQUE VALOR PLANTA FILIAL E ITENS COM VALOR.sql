@@ -21,14 +21,24 @@ SELECT
   departSector.sector_name             SETOR, 
   Trim(pz.DESCR)                       CLAL,
   ll.loc                               LOCA,
-  nvl(max(maucLN.mauc),0)              PRECO,
+
+  CASE WHEN max(maucLN.mauc) IS NULL THEN
+      nvl(max(maucLN_02.mauc),0)
+  ELSE nvl(max(maucLN.mauc),0) END     PRECO,
+  
   CASE WHEN TO_CHAR(ll.holdreason) = ' ' 
          THEN 'OK'
        ELSE  TO_CHAR(ll.holdreason) 
    END                                 WARR,
   sum(llid.qty)                        QTD_EST,
-  nvl(max(maucLN.mauc),0)*
-      sum(llid.qty)                    VALOR,
+  
+  CASE WHEN max(maucLN.mauc) IS NULL THEN
+    nvl(max(maucLN_02.mauc),0)*
+      sum(llid.qty)
+  ELSE
+    nvl(max(maucLN.mauc),0)*
+      sum(llid.qty) END                VALOR,
+      
   sum(llid.netwgt)                     PESO,
   sum(sku.STDCUBE*ll.qty)              M3,
   
@@ -58,7 +68,7 @@ SELECT
    END                                 COMPONENTE_MESTRE,
    
    BOM.SKU                            ITEM_PAI,
-   SKP.DESCR						  DESC_PAI,
+   SKP.DESCR						              DESC_PAI,
    TIPO_ITEM.DSC_TIPO                 KIT_TIK2,
    BOM.SEQUENCE                       SEQUENCIA
    
@@ -92,7 +102,22 @@ INNER JOIN ENTERPRISE.CODELKUP cl
                     whina113.t$cwar ) maucLN   
         ON maucLN.cwar = subStr(cl.DESCRIPTION,3,6)
        AND maucLN.item = llid.sku
-     
+
+ LEFT JOIN ( select trim(whwmd217.t$item) item,                             
+                    whwmd217.t$cwar cwar,                                   
+                    case when sum(nvl(whwmd217.t$mauc$1,0)) = 0                             
+                           then sum(whwmd217.t$ftpa$1)                                              
+                         else   round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
+                    end mauc                                                
+               from baandb.twhwmd217301@pln01 whwmd217                      
+          left join baandb.twhinr140301@pln01 a                             
+                 on a.t$cwar = whwmd217.t$cwar                              
+                and a.t$item = whwmd217.t$item                              
+           group by whwmd217.t$item,                                        
+                    whwmd217.t$cwar ) maucLN_02                                
+        ON maucLN_02.cwar = subStr(CL.DESCRIPTION,3,6)                         
+       AND maucLN_02.item = llid.sku
+
 INNER JOIN WMWHSE5.sku 
         ON sku.SKU = ll.SKU
     
@@ -141,10 +166,10 @@ INNER JOIN WMWHSE5.loc
                 and Trim(clkp.code) is not null  ) TIPO_ITEM
         ON TIPO_ITEM.COD_TIPO = SKU.BOMITEMTYPE
        
---WHERE departSector.ID_DEPART IN (:Depto)
---  AND ( (Trim(ll.sku) IN (:Itens) And (:ItensTodos = 0)) OR (:ItensTodos = 1) )
+WHERE departSector.ID_DEPART IN (:Depto)
+  AND ( (Trim(ll.sku) IN (:Itens) And (:ItensTodos = 0)) OR (:ItensTodos = 1) )
 --where BOM.sku='1766619'
-    
+
 GROUP BY WMSADMIN.PL_DB.DB_ALIAS, 
          cl.DESCRIPTION, 
          STORER.COMPANY, 
