@@ -159,3 +159,6 @@ create table stg_flash_caixa_pedidos (
 	CD_DEPARTAMENTO NVARCHAR(6)NULL,
 	DS_DEPARTAMENTO NVARCHAR(30) NULL
 )
+
+--=====================================================
+EXECUTE sp_rename 'STG_GAR_ESTENDIDA.ID_CANCELADO', 'IN_CANCELADO', 'COLUMN'
