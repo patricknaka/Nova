@@ -4,17 +4,20 @@ SELECT
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$date$c, 
      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone sessiontimezone) AS DATE)
+       AT time zone 'America/Sao_Paulo') AS DATE)
                            DATA_OCORRENCIA,
          
     znsls402.t$ncam$c      CARTAO,
- 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 
-    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)
-                           DT_VENDA, 
+
+    znsls402.t$dtra$c DT_VENDA1,
+
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'), 
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+                           DT_VENDA2,
+
                            
-    zncmg015.t$slst$c+ABS(znsls402.t$vlju$c)       VL_VENDA,
+    zncmg015.t$slst$c + 
+    ABS(znsls402.t$vlju$c) VL_VENDA,
     zncmg015.t$slct$c      VL_CANCELAR,
     znsls402.t$auto$c      AUT,
     znsls402.t$nctf$c      NSU,
@@ -39,7 +42,7 @@ SELECT
       THEN NULL 
         ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$rdat$c, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone sessiontimezone) AS DATE) 
+            AT time zone 'America/Sao_Paulo') AS DATE) 
     END                    DT_RETORNO_REMESSA
   
 FROM       baandb.tznsls402301 znsls402
@@ -100,7 +103,7 @@ WHERE znsls400.T$IDPO$C = 'TD'
   
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$date$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) 
+        AT time zone 'America/Sao_Paulo') AS DATE)) 
       Between :DataOcorrenciaDe 
           And :DataOcorrenciaAte
   
@@ -109,4 +112,4 @@ WHERE znsls400.T$IDPO$C = 'TD'
   AND ( (zncmg015.t$nrem$c IN (:Remessa)) OR (:RemessaTodos = 1) )
   AND ( (zncmg015.t$pecl$c IN (:Pedido)) OR (:PedidoTodos = 1) )
     
-ORDER BY zncmg015.t$pecl$c 
+ORDER BY  znsls402.t$dtra$c --zncmg015.t$pecl$c
