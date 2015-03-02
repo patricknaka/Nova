@@ -104,10 +104,12 @@ INNER JOIN (select a.t$ncia$c,
          inner join WMWHSE4.ORDERSTATUSSETUP b             
                   on b.code = a.status                                            
            group by a.orderkey) WMSPONTO                                          
-         ON WMSPONTO.ORDERKEY = OS.ORDERKEY                                       
+         ON WMSPONTO.ORDERKEY = OS.ORDERKEY
 WHERE ZNSLS400.T$TPED$C = 'Q'   
 AND WMSPONTO.ID_PONTO NOT IN ('95', '96,', '97', '98', '99', '100')
-ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS                                             
+AND OS.STATUS NOT IN ('95', '96,', '97', '98', '99', '100')
+AND PONTO.ID_PONTO!='BES'
+ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS                                            
 
 
 
