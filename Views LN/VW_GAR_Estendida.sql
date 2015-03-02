@@ -10,7 +10,7 @@
   -- #FAF.043.3 - 11-jul-2014, Fabio Ferreira,   Ajustes NR_GARANTIA_ESTENDIDA
   -- #MAT.001 - 24-jul-2014, Marcia Amador R. Torres,   Adicionado campo QT_PRAZO_GARANTIA
   --********************************************************************************************************************************************************
-    SELECT
+       SELECT
     zncom005.t$cdve$c NR_GARANTIA_ESTENDIDA,                              --#FAF.043.3.o
     tdsls400.t$hdst CD_STATUS_PEDIDO,                     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -40,7 +40,7 @@
   (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,    --#FAF.134.en
   
 
-CASE WHEN zncom005.t$canc$c!=1 THEN 1 ELSE 0 END ID_CANCELADO,                    --#FAF.161.n
+CASE WHEN zncom005.t$canc$c=1 THEN 1 ELSE 0 END ID_CANCELADO,                    --#FAF.161.n
    
 
  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -49,7 +49,7 @@ CASE WHEN zncom005.t$canc$c!=1 THEN 1 ELSE 0 END ID_CANCELADO,                  
     zncom005.t$enga$c CD_PLANO_GARANTIA,                                    --#FAF.043.2.n
     tcibd001.T$NRPE$C QT_PRAZO_GARANTIA                                 --#MAT.001.n
   FROM
-    baandb.tzncom005201 zncom005
+    baandb.tzncom005201 zncom005,
     baandb.ttcibd001201 tcibd001,                                            
     baandb.ttdsls400201 tdsls400,
     baandb.ttdsls401201 tdsls401,
