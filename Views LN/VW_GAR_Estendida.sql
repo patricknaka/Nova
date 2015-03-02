@@ -40,7 +40,7 @@
   (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,    --#FAF.134.en
   
 
-CASE WHEN zncom005.t$canc$c!=1 THEN 2 ELSE 1 END ID_CANCELADO,                    --#FAF.161.n
+CASE WHEN zncom005.t$canc$c!=1 THEN 1 ELSE 0 END ID_CANCELADO,                    --#FAF.161.n
    
 
  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
