@@ -40,7 +40,7 @@ SELECT
 	tfgld205.t$fcam VL_CREDITO,
 	(SELECT 
 --	CAST((FROM_TZ(CAST(TO_CHAR(MAX(tfgld100.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 		--#FAF.005.o
---			AT time zone sessiontimezone) AS DATE)															--#FAF.005.o
+--			AT time zone 'America/Sao_Paulo') AS DATE)															--#FAF.005.o
 	MAX(tfgld100.t$trdt)																					--#FAF.005.n
 	FROM baandb.ttfgld100201 tfgld100
 	WHERE tfgld100.t$year=tfgld205.t$year

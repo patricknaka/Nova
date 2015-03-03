@@ -11,7 +11,7 @@ SELECT
 	tccom125.t$dacc$d NR_DIGITO_CONTA,
 	CASE WHEN tccom125.t$rcd_utc<TO_DATE('1990-01-01', 'YYYY-MM-DD') THEN tccom125.t$rcd_utc				--#FAF.002.sn
 	ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom125.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) 
+    AT time zone 'America/Sao_Paulo') AS DATE) 
 	END DT_ULT_ATUALIZACAO																			--#FAF.002.en
 FROM
 	baandb.ttccom125201 tccom125,

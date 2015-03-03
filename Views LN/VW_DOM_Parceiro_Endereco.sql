@@ -29,14 +29,14 @@ SELECT 	adbp.t$bpid CD_PARCEIRO,
     CASE WHEN addr.t$info = ' ' THEN NULL ELSE addr.t$info END  DS_EMAIL,  
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(addr.t$crdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_CADASTRO,     
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_CADASTRO,     
     --CAST((FROM_TZ(CAST(TO_CHAR(addr.t$crdt, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      --  AT time zone sessiontimezone) AS DATE) DT_CADASTRO,     
+      --  AT time zone 'America/Sao_Paulo') AS DATE) DT_CADASTRO,     
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(addr.t$dtlm, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE)  DT_ATUALIZACAO
+    AT time zone 'America/Sao_Paulo') AS DATE)  DT_ATUALIZACAO
     --CAST((FROM_TZ(CAST(TO_CHAR(addr.t$dtlm, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-      --  AT time zone sessiontimezone) AS DATE)  DT_ULT_ATUALIZACAO
+      --  AT time zone 'America/Sao_Paulo') AS DATE)  DT_ULT_ATUALIZACAO
       
 FROM   baandb.ttccom133201 adbp,
     baandb.ttccom100201 tccom100,                                        --#FAF.091.n
@@ -44,4 +44,4 @@ FROM   baandb.ttccom133201 adbp,
 WHERE   addr.t$cadr = adbp.t$cadr
 --	and    tccom100.t$bpid=adbp.t$bpid									--#FAF.255.o
 and    tccom100.t$bpid=adbp.t$bpid										--#FAF.255.n
-order by 1,2
+--order by 1,2

@@ -20,10 +20,10 @@
 		cisli940.t$opor$l SQ_NATUREZA_OPERACAO,
 		cisli940.t$fdty$l CD_TIPO_NF,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NF,
+			AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_NF,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE) HR_EMISSAO_NF,
+			AT time zone 'America/Sao_Paulo') AS DATE) HR_EMISSAO_NF,
 
 		cisli940.t$itbp$l CD_CLIENTE_FATURA,
 		cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
@@ -83,7 +83,7 @@
           else ' '
           end NR_SERIE_NF_REMESSA,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE) DT_SITUACAO_NF,
+			AT time zone 'America/Sao_Paulo') AS DATE) DT_SITUACAO_NF,
 		cisli940.t$stat$l CD_SITUACAO_NF,
 		cisli940.t$amfi$l VL_DESPESA_FINANCEIRA,
 		(SELECT cisli942.t$amnt$l FROM baandb.tcisli942201 cisli942
@@ -115,12 +115,12 @@
 		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VL_CIF_IMPORTACAO,
 	GREATEST(																									--#FAF.286.sn
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE),
+			AT time zone 'America/Sao_Paulo') AS DATE),
 	nvl((select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(c1.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE) from baandb.tcisli941201 c1 
+			AT time zone 'America/Sao_Paulo') AS DATE) from baandb.tcisli941201 c1 
 			where c1.t$fire$l=cisli940.t$fire$l), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
 	nvl((select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(c2.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE) from baandb.tcisli943201 c2 
+			AT time zone 'America/Sao_Paulo') AS DATE) from baandb.tcisli943201 c2 
 			where c2.t$fire$l=cisli940.t$fire$l), TO_DATE('01-JAN-1970', 'DD-MON-YYYY'))) DT_ULT_ATUALIZACAO,		--#FAF.286.en
    (SELECT tcemm124.t$grid FROM baandb.ttcemm124201 tcemm124
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
@@ -134,17 +134,8 @@
   (SELECT tdsls400.t$sotp                                        --#MAT.308.sn
    FROM baandb.ttdsls400201 tdsls400            
    WHERE tdsls400.t$orno=entr.t$orno$c
-   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA,        --#MAT.308.en 
+   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA        --#MAT.308.en 
 
-        CASE WHEN cisli940.t$fdty$l=15 then
-          (select a.t$fire$l from baandb.tcisli940201 a, baandb.tcisli941201 b
-          where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l
-          and rownum=1
-          group by a.t$fire$l
-          ) else NULL
-       end  NR_REFERENCIA_FISCAL_FAT 
-   
 FROM
 		baandb.tcisli940201 cisli940
 		LEFT JOIN (SELECT 	znsls401.t$entr$c, 

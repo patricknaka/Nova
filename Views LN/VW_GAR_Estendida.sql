@@ -10,13 +10,13 @@
   -- #FAF.043.3 - 11-jul-2014, Fabio Ferreira,   Ajustes NR_GARANTIA_ESTENDIDA
   -- #MAT.001 - 24-jul-2014, Marcia Amador R. Torres,   Adicionado campo QT_PRAZO_GARANTIA
   --********************************************************************************************************************************************************
-       SELECT
+ SELECT
     zncom005.t$cdve$c NR_GARANTIA_ESTENDIDA,                              --#FAF.043.3.o
     tdsls400.t$hdst CD_STATUS_PEDIDO,                     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_EMISSAO_GARANTIA,                      
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_GARANTIA,                      
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_PEDIDO_PRODUTO,                        
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_PEDIDO_PRODUTO,                        
     ltrim(rtrim(tdsls401p.t$item)) CD_ITEM,              
     ltrim(rtrim(tdsls401.t$item)) CD_ITEM_GARANTIA,                                  
     sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_CUSTO,                        --#FAF.043.2.n
@@ -44,12 +44,12 @@ CASE WHEN zncom005.t$canc$c=1 THEN 1 ELSE 0 END IN_CANCELADO,                   
    
 
  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,                      --#FAF.205.n
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                      --#FAF.205.n
     sum(zncom005.t$igva$c) VL_ITEM_GARANTIA,                                  --#FAF.043.2.n
     zncom005.t$enga$c CD_PLANO_GARANTIA,                                    --#FAF.043.2.n
     tcibd001.T$NRPE$C QT_PRAZO_GARANTIA                                 --#MAT.001.n
   FROM
-    baandb.tzncom005201 zncom005,
+    BAANDB.tzncom005201 zncom005,
     baandb.ttcibd001201 tcibd001,                                            
     baandb.ttdsls400201 tdsls400,
     baandb.ttdsls401201 tdsls401,

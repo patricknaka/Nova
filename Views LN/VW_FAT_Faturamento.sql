@@ -38,7 +38,7 @@
 --****************************************************************************************************************************************************************
 SELECT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-  AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
+  AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
   znsls400.t$ncia$c CD_CIA,
   CASE WHEN (	SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030	--#FAF.303.1.sn
   WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
@@ -65,7 +65,7 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm03
        ELSE regexp_replace(substr(cisli940.t$ccfo$l,instr(cisli940.t$ccfo$l,'-')+1,3), '[^0-9]', '')
   END	SQ_NATUREZA_OPERACAO,	--#FAF.249.n
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-  AT time zone sessiontimezone) AS DATE) DT_FATURA,
+  AT time zone 'America/Sao_Paulo') AS DATE) DT_FATURA,
   cisli940.t$itbp$l CD_CLIENTE_FATURA,
   cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
   znsls401.t$sequ$c NR_SEQ_ENTREGA,
@@ -93,7 +93,7 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm03
   END NR_SERIE_NF_CONSOLIDADA, --#FAF.087.n
   cisli940.t$stat$l CD_SITUACAO_NF,
   (Select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(brnfe020.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-   AT time zone sessiontimezone) AS DATE)
+   AT time zone 'America/Sao_Paulo') AS DATE)
    FROM baandb.tbrnfe020201 brnfe020
    Where brnfe020.t$refi$l=cisli940.t$fire$l AND brnfe020.t$ncmp$l=201) 
   AS DT_STATUS,
@@ -107,17 +107,14 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm03
   AS VL_ICMS_ST,
   cisli941f.t$gamt$l VL_PRODUTO,
   znsls401.t$vlfr$c VL_FRETE,
-      nvl((select sum(f.t$vlfc$c) from baandb.tznfmd630201 f where f.t$fire$c=cisli940.t$fire$l),0)*(
-                        nvl((select sum(lf.t$gamt$l) from baandb.tcisli941301 lf
-                             where  lf.t$fire$l=(case when cisli940.t$fdty$l=15 then cisli941f.t$refr$l else cisli941f.t$fire$l end)
-                             and    lf.t$line$l=(case when cisli940.t$fdty$l=15 then cisli941f.t$rfdl$l else cisli941f.t$line$l end)                                   
-                            ),0) /
-                         nvl((select sum(cisli941b.t$gamt$l)
-                              from baandb.tcisli941301 cisli941b, baandb.ttcibd001201 tcibd001b
-                              where cisli941b.t$fire$l=(case when cisli940.t$fdty$l=15 then cisli941f.t$refr$l else cisli941f.t$fire$l end)
+  nvl((select sum(f.t$vlfc$c) from baandb.tznfmd630201 f where f.t$fire$c=cisli940.t$fire$l),0) * (cisli941f.t$gamt$l/nvl((select sum(cisli941b.t$gamt$l)
+                              from baandb.tcisli941201 cisli941b, baandb.ttcibd001201 tcibd001b
+                              where cisli941b.t$fire$l=cisli941f.t$fire$l
+                              and cisli941b.t$line$l=cisli941f.t$line$l
                               and tcibd001b.T$ITEM=cisli941b.t$item$l
                               and cisli941b.t$gamt$l!=0 --#FAF.008.n
-                              and tcibd001b.t$kitm<3),1)) VL_FRETE_CIA,
+                              and tcibd001b.t$kitm<3),1)) 
+  AS VL_FRETE_CIA,
   TRUNC(case when cisli941.t$item$l not in	
         (select a.t$itjl$c
         from baandb.tznsls000201 a
@@ -188,7 +185,7 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm03
     nvl(CSLL.t$amnt$l, 0) -cisli941f.t$iprt$l*(nvl(CSLL.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(CSLL.t$rate$l,0)/100)
     ELSE 0 END	VL_CSLL_OUTROS, --#FAF.201.en
     cisli941f.t$tldm$l VL_DESCONTO_INCONDICIONAL,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
   AS DT_PEDIDO,
   znsls400.t$idca$c CD_CANAL,
   endfat.t$ccit CD_CIDADE_FATURA,
@@ -219,7 +216,7 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm03
        AND cisli943.t$brty$l=3),0) VL_BASE_IPI,
        nvl((select t.t$suno from baandb.ttcmcs080201 t where t.t$cfrw=cisli940.t$cfrw$l and rownum=1),' ') 
   AS CD_TRANSPORTADORA, --#FAF.063.n
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
   AS DT_ENTREGA,
     (Select sum(znfmd630.t$qvol$c) From baandb.tznfmd630201 znfmd630 WHERE znfmd630.t$fire$c=cisli941f.t$fire$l and rownum=1) 
   AS QT_VOLUME,

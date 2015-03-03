@@ -5,8 +5,8 @@ SELECT DISTINCT
     1				              CD_CIA,
     znsls412.t$pecl$c                         NR_PEDIDO,
     znsls401.t$orno$c                         NR_ORDEM,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls412.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls412.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
     CASE WHEN znsls400.t$idcp$c = 0 THEN Null 
          ELSE znsls400.t$idcp$c END           NR_CAMPANHA_B2B,
     CASE WHEN znsls400.t$idco$c = 0 THEN Null

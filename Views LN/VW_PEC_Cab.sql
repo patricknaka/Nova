@@ -25,17 +25,17 @@ SELECT DISTINCT
     ELSE 2
     END IN_CONSUMO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE)	DT_EMISSAO_PEDIDO,								--#FAF.246.n
+    AT time zone 'America/Sao_Paulo') AS DATE)	DT_EMISSAO_PEDIDO,								--#FAF.246.n
     apr.t$logn DS_USUARIO_APROVACAO_PEDIDO,
     CASE WHEN tdpur400.t$hdst>=10 THEN 1
     ELSE 2
     END IN_APROVADO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(apr.dapr, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_APROVACAO_PEDIDO,								--#FAF.246.n
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_APROVACAO_PEDIDO,								--#FAF.246.n
     tdpur400.t$hdst CD_SITUACAO_PEDIDO,
     (select 
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(tdpur450.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE)													--#FAF.246.n
+    AT time zone 'America/Sao_Paulo') AS DATE)													--#FAF.246.n
 	from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno
     and tdpur450.t$hdst=tdpur400.t$hdst) DT_SITUACAO_PEDIDO,
@@ -44,7 +44,7 @@ SELECT DISTINCT
     and rownum=1) DS_USUARIO_GERACAO_PEDIDO,
     (select 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(tdpur401.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE)
+    AT time zone 'America/Sao_Paulo') AS DATE)
 	from baandb.ttdpur401201 tdpur401
 	where tdpur401.t$orno=tdpur400.t$orno) DT_ULT_ATUALIZACAO, 
     nvl((select t.t$text from baandb.ttttxt010201 t 
@@ -70,7 +70,7 @@ SELECT DISTINCT
 	tdpur400.t$oamt VL_TOTAL_MERCADORIA,
    (select 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(tdpur450.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE)   									--#FAF.246.n
+		AT time zone 'America/Sao_Paulo') AS DATE)   									--#FAF.246.n
     from baandb.ttdpur450201 tdpur450
     where tdpur450.t$orno=tdpur400.t$orno) DT_CRIACAO									--#FAF.236.n
 FROM

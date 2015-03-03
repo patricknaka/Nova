@@ -19,11 +19,11 @@ SELECT DISTINCT
 		THEN '00000000000000'
 		ELSE regexp_replace(znrec007.t$fovf$c, '[^0-9]', '') END  NR_CNPJ_FILIAL,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znrec007.t$datf$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_INICIAL,
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_INICIAL,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znrec007.t$datt$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_FINAL,
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_FINAL,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znrec007.t$datp$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_VENCIMENTO,
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_VENCIMENTO,
       znrec007.t$paym$c   CD_METODO_PAGAMENTO,
       znrec007.t$dept$c   CD_DEPARTAMENTO,
       znrec007.t$seto$c   CD_SETOR,
@@ -31,20 +31,11 @@ SELECT DISTINCT
       znrec007.t$sfam$c   CD_SUB_FAMILIA,
       znrec007.t$boni$c   DS_FLAG_PEDIDO_BONIFICADO,
       znrec007.t$mvpc$c   CD_MODALIDADE_VPC,
-      GREATEST(
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znrec007.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE),
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE))
-    DT_ULT_ATUALIZACAO
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO
 FROM
       baandb.tznrec007201 znrec007,
-      (select a.t$itbp,
-              a.t$ttyp,
-              a.t$ninv,
-              max(a.t$rcd_utc) t$rcd_utc
-       from baandb.ttfacr200201 a
-       group by a.t$itbp, a.t$ttyp, a.t$ninv) tfacr200
+      baandb.ttfacr200201 tfacr200
 WHERE
       znrec007.t$ttyp$c = tfacr200.t$ttyp AND
       znrec007.t$docn$c = tfacr200.t$ninv

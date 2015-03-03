@@ -4,16 +4,16 @@ SELECT
 		Q_ENTREGA.t$ENTR$C			NR_ENTREGA,
     tdsls400.t$ORNO         NR_ORDEM,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) DT_LIMITE_EXP,
+      AT time zone 'America/Sao_Paulo') AS DATE) DT_LIMITE_EXP,
 		--tdsls400.t$ddat				  DT_LIMITE_EXP,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)  DT_EMISSAO,
+      AT time zone 'America/Sao_Paulo') AS DATE)  DT_EMISSAO,
 		--znsls400.t$dtem$c			  DT_EMISSAO,
 		znfmd001.t$fili$c			  CD_FILIAL,
 		znfmd001.t$dsca$c			  DS_FILIAL,
 		Q_ENTREGA.VL_TOTAL      VL_TOTAL,
 		Q_ENTREGA.QUANTIDADE    QT_VENDIDA,
-		Q_ENTREGA.t$itml$c			CD_ITEM,
+		ltrim(rtrim(Q_ENTREGA.t$itml$c))	CD_ITEM,
 		whwmd400.t$hght*
 		whwmd400.t$wdth*
 		whwmd400.t$dpth*

@@ -15,13 +15,14 @@
 -- #FAF.259 - 	05-aug-2014, Fabio Ferreira, 	Correção titulo referencia	
 -- #FAF.274 - 	08-aug-2014, Fabio Ferreira, 	Correção data de atualização			
 --****************************************************************************************************************************************************************
+
 SELECT DISTINCT
 	1 CD_CIA,
 	CASE WHEN nvl((	select c.t$styp from baandb.tcisli205201 c
 					where c.t$styp='BL ATC'
 					AND c.T$ITYP=tfacr200.t$ttyp
 					AND c.t$idoc=tfacr200.t$ninv
-					AND rownum=1),' ')=' ' THEN 2 ELSE 3 END CD_FILIAL,
+					AND rownum=1),' ')=' ' THEN '2' ELSE '3' END CD_FILIAL,
 --	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.o
 	tfacr200.t$docn NR_MOVIMENTO,																			--#FAF.186.n
 --	tfacr200.t$lino NR_MOVIMENTO,
@@ -62,13 +63,13 @@ SELECT DISTINCT
 	
 	GREATEST(																									--#FAF.274.n
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone sessiontimezone) AS DATE), 
+		AT time zone 'America/Sao_Paulo') AS DATE), 
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),																							
+		AT time zone 'America/Sao_Paulo') AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),																							
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg001.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+    AT time zone 'America/Sao_Paulo') AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg409.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY'))) DT_ULT_ATUALIZACAO,
+    AT time zone 'America/Sao_Paulo') AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY'))) DT_ULT_ATUALIZACAO,
 	
 	(Select u.t$eunt From baandb.ttcemm030201 u
 	 where u.t$euca!=' '
@@ -146,4 +147,4 @@ WHERE
       tfacr200.t$docn!=0
 AND   t.t$ttyp=tfacr200.t$ttyp																				--#FAF.079.sn
 AND   t.t$ninv=tfacr200.t$ninv
-AND   t.t$docn=0																							--#FAF.079.en
+AND   t.t$docn=0																							--#FAF.079.en																					--#FAF.079.en

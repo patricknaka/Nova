@@ -1,13 +1,13 @@
 SELECT  DISTINCT
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,                                                                 --#MAR.265.en
+         AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                                                 --#MAR.265.en
         znsls400.t$ncia$c CD_CIA,
         tdsls400.t$orno NR_ORDEM,
         tdsls400.t$ofbp CD_CLIENTE,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) DT_COMPRA,
+        AT time zone 'America/Sao_Paulo') AS DATE) DT_COMPRA,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) HR_COMPRA, -- * CAMPO DATA-HORA
+        AT time zone 'America/Sao_Paulo') AS DATE) HR_COMPRA, -- * CAMPO DATA-HORA
         znsls400.t$uneg$c CD_UNIDADE_NEGOCIO,
         sls401q.t$pecl$c NR_PEDIDO_LOJA,
         TO_CHAR(sls401q.t$entr$c) NR_ENTREGA,                                      --#FAF.046.n
@@ -20,7 +20,7 @@ SELECT  DISTINCT
         tdsls400.t$hdst CD_SITUACAO_PEDIDO,
         (SELECT 
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(ttdsls450201.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)
+      AT time zone 'America/Sao_Paulo') AS DATE)
          FROM baandb.ttdsls450201
          WHERE ttdsls450201.t$orno=tdsls400.t$orno) DT_SITUACAO_PEDIDO,
         znsls400.t$vlfr$c VL_FRETE_CLIENTE,
@@ -101,7 +101,7 @@ FROM    baandb.ttdsls400201 tdsls400
           max(znsls401.t$pzcd$c)  t$pzcd$c,
           max(znsls401.t$pcga$c)       t$pcga$c,                                  --#FAF.177.n
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(znsls401.t$dtep$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) t$dtep$c,
+      AT time zone 'America/Sao_Paulo') AS DATE) t$dtep$c,
           max(znsls401.t$itpe$c)       t$itpe$c,
           max(znsls401.t$mgrt$c)       t$mgrt$c,                                  --#FAF.177.n
           znsls401.t$orno$c       t$orno,
@@ -146,7 +146,7 @@ FROM    baandb.ttdsls400201 tdsls400
                  tznsls410201.t$uneg$c uneg,
                  tznsls410201.t$pecl$c pecl,
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(tznsls410201.t$dtoc$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE) dtoc
+          AT time zone 'America/Sao_Paulo') AS DATE) dtoc
           FROM baandb.tznsls410201
           WHERE
           tznsls410201.t$dtoc$c = (SELECT Max(b.t$dtoc$c)

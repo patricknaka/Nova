@@ -36,11 +36,11 @@ SELECT
        znsls401.t$come$c DS_COMPLEMENTO_ENTREGA,
        znsls401.t$refe$c DS_REFERENCIA_ENDERECO_ENTREGA,
 	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_EMISSAO,
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO,
 	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_CHEGADA_PEDIDO,
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_CHEGADA_PEDIDO,
 	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
 	   znsls400.t$idli$c NR_LISTA_CASAMENTO																		--#FAF.005.n
 FROM baandb.tznsls401201 znsls401 
 INNER JOIN baandb.tznsls400201 znsls400 
@@ -99,11 +99,9 @@ tccom130c.t$hono,
 znsls401.t$come$c,
 znsls401.t$refe$c,
 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-AT time zone sessiontimezone) AS DATE),
+AT time zone 'America/Sao_Paulo') AS DATE),
 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-AT time zone sessiontimezone) AS DATE),
+AT time zone 'America/Sao_Paulo') AS DATE),
 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-AT time zone sessiontimezone) AS DATE),
-znsls400.t$idli$c;
-
-
+AT time zone 'America/Sao_Paulo') AS DATE),
+znsls400.t$idli$c

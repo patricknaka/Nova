@@ -17,14 +17,14 @@ SELECT
 	(SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
 	AND rownum=1) NR_NFR,
-	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NFR,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_NFR,
 	tdrec940.t$rfdt$l CD_TIPO_OPERACAO,
 	tdrec940.t$bpid$l CD_FORNECEDOR,
 	tdrec940.t$docn$l NR_NF_RECEBIDA,
 	tdrec940.t$seri$l NR_SERIE_NF_RECEBIDA,
 	tdrec940.t$doty$l CD_TIPO_NF,
-	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_EMISSAO_NF_RECEBIDA,
-	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_SAIDA_NF_RECEBIDA,	 
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_NF_RECEBIDA,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) DT_SAIDA_NF_RECEBIDA,	 
 	tdrec940.t$opfc$l CD_NATUREZA_OPERACAO,
 	tdrec940.t$opor$l SQ_NATUREZA_OPERACAO,
 	CASE WHEN tdrec940.t$opor$l='1556' THEN 1 ELSE 2 END IN_MERC_UTILIZADA_CONSUMO,
@@ -76,8 +76,8 @@ SELECT
 	AND t.t$ctxt=tdrec940.t$obse$l
 	and rownum=1),' ') DS_OBSERVACAO_NFR,
 	tdrec940.t$stat$l CD_SITUACAO_NFR,
-	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  AT time zone sessiontimezone) AS DATE) DT_SITUACAO,
-  	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(GREATEST(tdrec940.t$date$l, tdrec940.t$idat$l, tdrec940.t$odat$l, tdrec940.t$adat$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  AT time zone 'America/Sao_Paulo') AS DATE) DT_SITUACAO,
+  	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
 	tdrec940.t$lipl$l COD_CAMINHAO,
 	--(SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947
 	--WHERE tdrec947.t$fire$l=tdrec940.t$fire$l

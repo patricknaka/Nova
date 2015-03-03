@@ -11,7 +11,7 @@
 --*************************************************************************************************************************************************************
 SELECT
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940dev.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
     1 CD_CIA,
 	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=cisli940dev.t$cofc$l
@@ -23,7 +23,7 @@ SELECT
 	tdrec940rec.t$opfc$l CD_NATUREZA_OPERACAO,
 	tdrec940rec.t$opor$l SQ_NATUREZA_OPERACAO,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940org.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_FATURA,
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_FATURA,
 	cisli940org.t$itbp$l CD_CLIENTE_FATURA,
 	cisli940org.t$stbp$l CD_CLIENTE_ENTREGA,
 	znsls401org.t$sequ$c SQ_ENTREGA,
@@ -45,7 +45,7 @@ SELECT
 	AND rownum=1) CD_STATUS,
 	(SELECT 
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.t$dtoc$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE)
+		AT time zone 'America/Sao_Paulo') AS DATE)
 		FROM baandb.tznsls410201 znsls410
 		WHERE znsls410.t$ncia$c=znsls401dev.t$ncia$c
 		AND znsls410.t$uneg$c=znsls401dev.t$uneg$c
@@ -69,7 +69,7 @@ SELECT
 	cisli941dev.t$amnt$l VL_TOTAL_ITEM,																		--#FAF.223.3.n
 	znsls401org.t$orno$c NR_PEDIDO_ORIGINAL,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_PEDIDO,
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_PEDIDO,
 	znsls400org.t$idca$c CD_CANAL_VENDAS,
 	tccom130.t$ftyp$l CD_TIPO_CLIENTE,
 	tccom130.t$ccit CD_CIDADE,
@@ -124,7 +124,7 @@ SELECT
   tdsls400.t$orno NR_ORDEM_VENDA_DEVOLUCAO,
   tdsls400.t$hdst CD_STATUS_ORDEM_VDA_DEV,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) DT_ORDEM_VENDA_DEVOLUCAO
+        AT time zone 'America/Sao_Paulo') AS DATE) DT_ORDEM_VENDA_DEVOLUCAO
 FROM
 				baandb.tznsls401201 znsls401dev								-- Pedido de devolução
    

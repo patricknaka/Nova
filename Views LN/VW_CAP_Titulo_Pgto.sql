@@ -16,7 +16,7 @@ SELECT DISTINCT
 	tfacp201.t$mopa$d CD_MODALIDADE_PAGAMENTO,														--#FAF.184.1.n
 	tfacp200.t$docn SQ_DOCUMENTO,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp600.t$sdat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_PAGAMENTO,
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_PAGAMENTO,
 	ABS(tfacp200.t$amti + tfacp200.t$ramn$l) VL_PAGAMENTO,
 	tfacP200.t$lino NR_MOVIMENTO,
 	CASE WHEN tflcb230.t$revs$d=1 then TO_CHAR(tflcb230.t$lach$d)
@@ -90,4 +90,4 @@ WHERE
 						and a.t$payl=tfacp600.t$payl)
   AND tfacp201.t$ttyp=tfacp200.t$ttyp
   AND tfacp201.t$ninv=tfacp200.t$ninv
-  AND tfacp201.t$schn=tfacp200.t$schn																								--#FAF.163.1.en
+  AND tfacp201.t$schn=tfacp200.t$schn																								--#FAF.163.1.en																							--#FAF.163.1.en

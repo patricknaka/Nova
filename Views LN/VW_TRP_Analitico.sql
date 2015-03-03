@@ -2,30 +2,28 @@ select distinct
       TO_CHAR(znsls401.T$NCIA$C) CD_FILIAL,
       znint002.T$DESC$C NM_UNIDADE_NEGOCIO,
       (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) from BAANDB.TZNFMD640201 o
+      AT time zone 'America/Sao_Paulo') AS DATE) from BAANDB.TZNFMD640201 o
 		where o.T$COCI$C='ROT' and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_SAIDA_ENTREGA,
      znsls401.T$pecl$C NR_PEDIDO,
       znfmd630.T$pecl$C NR_ENTREGA,
       znfmd630.t$vlft$c VL_FRETE_PAGAR_GARANTIA,
       znsls002.T$DSCA$C DS_TIPO_ENTREGA,
       (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) from BAANDB.TZNFMD640201 o
+      AT time zone 'America/Sao_Paulo') AS DATE) from BAANDB.TZNFMD640201 o
 		where o.T$COCI$C='ENT' and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_ENTREGA_REALIZADA,
       CASE WHEN znfmd630.t$stat$c='F' THEN 'FINALIZADO' ELSE 'EM PROCESSO' END NM_TIPO_ESTAGIO,
-      --znfmd630.t$ncar$c NR_EXPEDICAO,
-      --' ' CD_REGIAO_TRANSPORTADORA,
       znfmd630.T$FILI$C CD_ESTABELECIMENTO,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) DT_PROMETIDA,
+      AT time zone 'America/Sao_Paulo') AS DATE) DT_PROMETIDA,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) DT_ENTREGA_PREVISTA,
+      AT time zone 'America/Sao_Paulo') AS DATE) DT_ENTREGA_PREVISTA,
       znfmd630.t$fire$c NR_REFERENCIA_FISCAL,
       --201 CD_CIA,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) DT_EMISSAO_PEDIDO,    
+      AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_PEDIDO,    
       znfmd060.t$ttra$c CD_TIPO_TRANSPORTE,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.t$rdta, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) DT_LIMITE_EXPEDICAO,    
+      AT time zone 'America/Sao_Paulo') AS DATE) DT_LIMITE_EXPEDICAO,    
        (select o.T$COCI$C from BAANDB.TZNFMD640201 o
 		where o.T$date$c=(select max(o1.T$date$c) from BAANDB.TZNFMD640201 o1 where o1.T$ETIQ$C=o.T$ETIQ$C)
 		and o.T$ETIQ$C=znfmd630.T$ETIQ$C and rownum=1) CD_OCORRENCIA_INTERNA,
@@ -33,7 +31,7 @@ select distinct
 		where o.T$date$c=(select max(o1.T$date$c) from BAANDB.TZNFMD640201 o1 where o1.T$ETIQ$C=o.T$ETIQ$C)
 		and o.T$ETIQ$C=znfmd630.T$ETIQ$C and c.t$ocin$c=o.T$COCI$C and rownum=1) DS_OCORRENCIA_INTERNA,
       (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)from BAANDB.TZNFMD640201 o, BAANDB.TZNFMD030201 c
+      AT time zone 'America/Sao_Paulo') AS DATE)from BAANDB.TZNFMD640201 o, BAANDB.TZNFMD030201 c
 		where o.T$ETIQ$C=znfmd630.T$ETIQ$C and c.t$ocin$c=o.T$COCI$C) DT_OCORRENCIA,
       znsls401.t$ufen$c NM_UF_DESTINATARIO,
       to_char(znsls401.t$cepe$c) CD_CEP_DESTINATARIO,
@@ -47,7 +45,7 @@ select distinct
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
 		GREATEST(znfmd630.t$udat$c, znfmd060.t$udat$c, tdsls401.t$rcd_utc, tdsls400.t$rcd_utc, cisli940.t$rcd_utc),
 		'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_ATUALIZACAO
 from  BAANDB.TZNFMD630201 znfmd630,
       BAANDB.TZNSLS401201 znsls401,
       BAANDB.TZNSLS400201 znsls400,
