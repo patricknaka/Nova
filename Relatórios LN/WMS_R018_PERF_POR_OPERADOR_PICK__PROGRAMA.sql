@@ -10,7 +10,7 @@ SELECT
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE), 'HH24')         
                                                 HORA,                        
-    PICKDETAIL.EDITWHO                          OPERADOR,                    
+    USERACTIVITY.USERID                          OPERADOR,                    
     subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',') - 4 )       NOME_OP,                              
     taskdetail.wavekey                          PROGRAMA,                    
@@ -18,15 +18,15 @@ SELECT
     COUNT(taskdetail.sku)                       ITEM,                        
     LOC.LOGICALLOCATION                         ORDEM_COL,
     SUM(taskdetail.qty)                         PEÇAS,                      
-    min(PICKDETAIL.ORDERKEY)                    PEDIDO_HOST                  
+    min(TASKDETAIL.ORDERKEY)                    PEDIDO_HOST                  
 
 FROM       WMWHSE5.taskdetail            
 
-INNER JOIN WMWHSE5.PICKDETAIL
-        ON PICKDETAIL.PICKDETAILKEY = TASKDETAIL.PICKDETAILKEY
+INNER JOIN WMWHSE5.USERACTIVITY
+        ON USERACTIVITY.TASKDETAILKEY = TASKDETAIL.TASKDETAILKEY
 
  LEFT JOIN WMWHSE5.taskmanageruser tu 
-        ON tu.userkey = PICKDETAIL.EDITWHO
+        ON tu.userkey = USERACTIVITY.USERID
     
 INNER JOIN WMSADMIN.PL_DB
         ON UPPER(PL_DB.db_logid) = UPPER(taskdetail.whseid)
@@ -39,11 +39,11 @@ WHERE taskdetail.status = 9
   AND PL_DB.ISACTIVE = 1                                                     
   AND PL_DB.DB_ENTERPRISE = 0                                                
 
- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
-     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone sessiontimezone) AS DATE)) 
-     Between :DataDe 
-         And :DataAte
+-- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
+--     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--       AT time zone sessiontimezone) AS DATE)) 
+--     Between :DataDe 
+--         And :DataAte
 
 GROUP BY taskdetail.whseid,                                                  
          PL_DB.DB_ALIAS,                                                     
@@ -53,7 +53,7 @@ GROUP BY taskdetail.whseid,
          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone sessiontimezone) AS DATE), 'HH24'), 
-         PICKDETAIL.EDITWHO,                                                  
+         USERACTIVITY.USERID,                                                  
          subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ), 
          taskdetail.wavekey, 
          LOC.LOGICALLOCATION         
