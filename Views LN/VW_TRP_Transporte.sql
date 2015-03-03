@@ -6,12 +6,12 @@
 select distinct
   (select 
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) 
+    AT time zone 'America/Sao_Paulo') AS DATE) 
   from BAANDB.TZNFMD640201 o
   where o.T$COCI$C='ROT'
   and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_SAIDA_ENTREGA, -- Fazer relacionamentoa
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_PROMETIDA,
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_PROMETIDA,
   znfmd630.t$vlft$c VL_FRETE_PAGAR_GARANTIA,
   znfmd630.t$vlfr$c VL_FRETE_CLIENTE,
   znfmd630.t$vlfa$c VL_FRETE_CLIENTE_ORIGINAL,
@@ -48,7 +48,7 @@ select distinct
   znfmd060.T$REFE$C DS_OBS_ROMANEIO,
   znfmd630.T$PECL$C NR_ENTREGA,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO                                         --#MAR.258.en
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO                                         --#MAR.258.en
   
 from  BAANDB.TZNFMD630201 znfmd630,
 	  baandb.ttcmcs080201 tcmcs080,	

@@ -1,4 +1,4 @@
-?-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
+﻿?-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
 -- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
 -- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
 -- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)	
@@ -98,13 +98,6 @@ SELECT
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VL_PIS,
-
--- comentei a instrução original pois estava sendo considerado o valor calculado e precisamos da base de calculo - Rosana
---  cast((SELECT CASE WHEN tdrec942.t$rdbc$l!=0 then tdrec942.t$base$l/(tdrec942.t$rdbc$l/100) else 0 end		--#FAF.279.n
---  FROM baandb.ttdrec942201 tdrec942
---  WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
---  AND tdrec942.t$line$l=tdrec941.t$line$l
---  AND tdrec942.t$brty$l=1) as numeric (12,2)) VL_BASE_ICMS_NAO_REDUTOR,  
 
   cast((SELECT CASE WHEN tdrec942.t$rdbc$l!=0 then tdrec942.t$base$l else 0 end		--#FAF.279.n
   FROM baandb.ttdrec942201 tdrec942
@@ -262,7 +255,7 @@ SELECT
   CASE WHEN tdrec941.t$crpd$l=1 and (tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8) 
   THEN tdrec941.t$fght$l ELSE 0 END VL_CIF_IMPORTACAO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,   
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,   
   CASE WHEN tdrec941.t$sour$l=2 or tdrec941.t$sour$l=8 
   THEN tdrec941.t$copr$l ELSE 0 END VL_CUSTO_IMPORTACAO, 
  (SELECT tdrec942.t$amnr$l FROM baandb.ttdrec942201 tdrec942
@@ -283,8 +276,8 @@ SELECT
   AND tcemm124.t$loco=201
   AND rownum=1) CD_UNIDADE_EMPRESARIAL,
   tdrec941.t$fire$l NR_REFERENCIA_FISCAL,
-  tdrec940.t$stat$l STATUS_NF,
-  ( SELECT l.t$desc
+  tdrec940.t$stat$l CD_STATUS_NF,
+  /*( SELECT l.t$desc
     FROM baandb.tttadv401000 d,
          baandb.tttadv140000 l
     WHERE d.t$cpac = 'td'
@@ -309,7 +302,7 @@ SELECT
                              where l1.t$clab = l.t$clab 
                              and l1.t$clan = l.t$clan 
                              and l1.t$cpac = l.t$cpac ) 
-    AND d.t$cnst = tdrec940.t$stat$l) DESC_STATUS,
+    AND d.t$cnst = tdrec940.t$stat$l) DS_STATUS,*/
   (SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
 	AND tdrec947.t$line$l=tdrec941.t$line$l

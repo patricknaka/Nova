@@ -1,7 +1,7 @@
 SELECT DISTINCT
 	'CAP' CD_MODULO,
 	tfacp200.t$ninv NR_TITULO,
-  1 as CD_CIA,
+  	1 as CD_CIA,
 	CASE WHEN tfacp200.t$ttyp IN ('AGA', 'GA1') THEN 3 ELSE 2 END CD_FILIAL,
 	tfacp200.t$ttyp CD_TRANSACAO_TITULO,
 	tfacp200.t$tpay CD_TIPO_DOCUMENTO,
@@ -24,7 +24,7 @@ SELECT DISTINCT
 	tfacp201.t$pyst$l CD_PREPARADO_PAGAMENTO,
 	tfacp200.t$stap CD_SITUACAO_TITULO,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_SITUACAO_TITULO,
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_SITUACAO_TITULO,
 	tfacp200.t$doty$l CD_TIPO_NF,
 	tfacp200.t$balh$1 VL_SALDO,
 	tfcmg011f.t$baoc$l CD_BANCO_DESTINO,
@@ -37,7 +37,7 @@ SELECT DISTINCT
 		where p.t$ttyp=tfacp200.t$ttyp and p.t$ninv=tfacp200.t$ninv
 		and ROWNUM=1),0) VL_TAXA_MULTA,																		--#FAF.003.en
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
 	(Select u.t$eunt From baandb.ttcemm030201 u where u.t$euca!=' '
 		AND TO_NUMBER(u.t$euca)=CASE WHEN tfacp200.t$dim2=' ' then 999
 		WHEN tfacp200.t$dim2>to_char(0) then 999 

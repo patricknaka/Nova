@@ -49,7 +49,7 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         tcibd001.t$wght VL_PESO_BRUTO,
         tcibd001.t$tptr$c CD_TIPO_TRANSPORTE,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
+        AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
         tcibd001.t$mont$c IN_MONTAGEM,
           CASE WHEN tcibd001.t$csig='SUS' THEN 1
           ELSE 2
@@ -59,7 +59,7 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         whwmd400.t$slmp CD_ROTATIVIDADE,
         tcibd001.t$cuni CD_UNIDADE_MEDIDA,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) DT_CADASTRO,
+        AT time zone 'America/Sao_Paulo') AS DATE) DT_CADASTRO,
           CASE WHEN tcibd001.t$espe$c = 2 THEN 1
           ELSE 2
           END IN_KIT,
@@ -88,4 +88,4 @@ baandb.ttcmcs023201 tcmcs023
 WHERE
 tcmcs023.t$citg=tcibd001.t$citg
 --AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---    AT time zone sessiontimezone) AS DATE)>=TRUNC(sysdate, 'DAY')                          		--#FAF.120.n
+--   AT time zone 'America/Sao_Paulo') AS DATE)>=TRUNC(sysdate, 'DAY')                          		--#FAF.120.n

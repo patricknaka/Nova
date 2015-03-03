@@ -1,4 +1,4 @@
--- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota			
+﻿-- #FAF.022 - 27-mai-2014, Fabio Ferreira, 	Correções e alteração da origem da informação para os dados da pré-nota			
 -- #FAF.237 - 22-jul-2014, Fabio Ferreira, 	Correções 
 --************************************************************************************************************************************************************
 SELECT
@@ -76,7 +76,7 @@ SELECT
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
 		GREATEST(brnfe941.t$rcd_utc, tdpur401.t$rcd_utc, tdpur400.t$rcd_utc),
 		'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO	
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_ATUALIZACAO	
 
 FROM
 	baandb.tbrnfe941201 brnfe941,

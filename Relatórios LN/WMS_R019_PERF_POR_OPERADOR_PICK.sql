@@ -10,7 +10,7 @@ SELECT
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone sessiontimezone) AS DATE), 'HH24')      
                                              HORA,
-    PICKDETAIL.EDITWHO                       OPERADOR,
+    USERACTIVITY.USERID                       OPERADOR,
     subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',') - 4 )    NOME_OP,
     loc.putawayzone                          GRUPO_CLASSE_LOCAL,
@@ -21,11 +21,11 @@ SELECT
     
 FROM       WMWHSE5.taskdetail
 
-INNER JOIN WMWHSE5.PICKDETAIL
-        ON PICKDETAIL.PICKDETAILKEY = TASKDETAIL.PICKDETAILKEY
+INNER JOIN WMWHSE5.USERACTIVITY
+        ON USERACTIVITY.TASKDETAILKEY = TASKDETAIL.TASKDETAILKEY
     
  LEFT JOIN WMWHSE5.taskmanageruser tu 
-        ON tu.userkey = PICKDETAIL.EDITWHO
+        ON tu.userkey = USERACTIVITY.USERID
     
 INNER JOIN WMSADMIN.PL_DB
         ON UPPER(PL_DB.db_logid) = UPPER(taskdetail.whseid)
@@ -38,11 +38,11 @@ WHERE taskdetail.status = 9
   and PL_DB.ISACTIVE = 1
   and PL_DB.DB_ENTERPRISE = 0
 
-  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) 
-      Between :DataDe 
-          And :DataAte
+--  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
+--      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--        AT time zone sessiontimezone) AS DATE)) 
+--      Between :DataDe 
+--          And :DataAte
     
 GROUP BY taskdetail.whseid, 
          PL_DB.DB_ALIAS,
@@ -52,7 +52,7 @@ GROUP BY taskdetail.whseid,
          to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone sessiontimezone) AS DATE), 'HH24'),
-         PICKDETAIL.EDITWHO,
+         USERACTIVITY.USERID,
          subStr( tu.usr_name,4, inStr(tu.usr_name, ',') - 4 ), 
          loc.putawayzone
     

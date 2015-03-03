@@ -3,7 +3,7 @@
 SELECT
     LTRIM(RTRIM(whina112.t$item))     CD_ITEM,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whina112.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) DT_ULTIMO_RECEBIMENTO,
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_ULTIMO_RECEBIMENTO,
 
     sum(whina113.t$mauc$1)   VL_CMV,
     whinr110.t$qstk     QT_ULTIMO_RECEBIMENTO,
@@ -27,9 +27,9 @@ WHERE
 	whinr110.t$qstk > 0
     AND
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whina113.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) =( SELECT
+    AT time zone 'America/Sao_Paulo') AS DATE) =( SELECT
                           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whina112a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-							AT time zone sessiontimezone) AS DATE)
+							AT time zone 'America/Sao_Paulo') AS DATE)
                       FROM
                           baandb.twhina112201 whina112a,
                           baandb.twhina113201 whina113a,

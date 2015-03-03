@@ -14,7 +14,7 @@ SELECT
     tdpur401.t$pric VL_UNITARIO_ATUAL_ITEM,
     tdpur401.t$qidl QT_ENTREGUE,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$ddtb, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ENTREGA,
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_ENTREGA,
     CASE WHEN ABS(tdpur401.t$qidl)>ABS(tdpur401.t$qoor)
 	THEN tdpur401.t$qidl-tdpur401.t$qoor 
 	ELSE 0
@@ -26,7 +26,7 @@ SELECT
 	ELSE 'A' END CD_STATUS_ITEM,																	--#FAF.006.en
     tcibd001.t$obse$c DS_OBSERVACAO_ITEM,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
     tdpur401.t$disc$1 VL_PERCENTUAL_DESCONTO,
 	FreteSeg.fght VL_FRETE,																			--#FAF.228.n
     (select sum(brmcs941.t$tamt$l) 
@@ -56,4 +56,4 @@ FROM
 WHERE
         tcibd001.t$item=tdpur401.t$item
     AND tdipu001.t$item=tdpur401.t$item 
-    AND tdpur401.t$oltp IN (1,4)															--#FAF.131.n
+    AND tdpur401.t$oltp IN (1,4)															--#FAF.131.n														--#FAF.131.n

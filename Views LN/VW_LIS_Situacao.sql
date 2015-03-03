@@ -10,12 +10,12 @@ select distinct
 			
             CASE WHEN tdsls400.t$hdst=40 THEN
               (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-						AT time zone sessiontimezone) AS DATE)
+						AT time zone 'America/Sao_Paulo') AS DATE)
                from baandb.ttdsls450201 a
                where A.T$orno = znsls401.T$ORNO$C)
             ELSE 
               (select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-						AT time zone sessiontimezone) AS DATE) 
+						AT time zone 'America/Sao_Paulo') AS DATE) 
               from baandb.ttdsls450201 a
               where A.T$BKYN=2
               and A.T$TRDT>(select  max(b.t$trdt) 
@@ -23,7 +23,7 @@ select distinct
                             where b.T$BKYN=1 
                             and b.t$orno=a.t$orno)
               AND a.t$orno=znsls401.T$ORNO$C)
-            END      DT_ULT_ATUALIZACAO
+            END      DT_ULT_ATUALIZACAO   
 			
 from        baandb.tznsls401201 znsls401
 inner join  baandb.ttdsls401201 tdsls401

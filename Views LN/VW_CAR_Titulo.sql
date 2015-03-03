@@ -14,13 +14,8 @@
 -- 21/08/2014    Atualização do timezone
 -- #FAF.282 - 23-ago-2014, Fabio Ferreira, 	Inclusão do campo conta controle
 --****************************************************************************************************************************************************************
---ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MON-YYYY HH:MI:SS AM';
-
-
 SELECT DISTINCT	
---  CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) NR_TITULO,												--#FAF.193.o
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,											--#FAF.193.n
---  tfacr200.t$ttyp CD_TIPO_TRANSACAO,																			--#FAF.193.o
 	tfacr200.t$ttyp CD_TRANSACAO_TITULO,																		--#FAF.193.o
     1 CD_CIA,
 	CASE WHEN nvl((	select c.t$styp from baandb.tcisli205201 c
@@ -72,19 +67,19 @@ SELECT DISTINCT
 	and rownum=1),' ') DS_OBSERVACAO_TITULO,
 	tfgld100.t$user DS_USUARIO_GERACAO_TITULO,
 --	CAST((FROM_TZ(CAST(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAR.273.so
---		AT time zone sessiontimezone) AS DATE) DT_ATUALIZACAO,                                        --#MAR.273.eo
+--		AT time zone 'America/Sao_Paulo') AS DATE) DT_ATUALIZACAO,                                        --#MAR.273.eo
  
   GREATEST(                                                                                         --#MAR.273.sn
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+		AT time zone 'America/Sao_Paulo') AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
 --    nvl(CAST((FROM_TZ(CAST(TO_CHAR(tfacr201.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 								--#FAF.282.o
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(																										--#FAF.282.sn
 		(select max(a.t$rcd_utc) from baandb.ttfacr201201 a
 			where a.t$ttyp=tfacr200.t$ttyp
 			and a.t$ninv=tfacr200.t$ninv), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+			AT time zone 'America/Sao_Paulo') AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg001.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY'))) DT_ULT_ATUALIZACAO,                                     --#MAR.273.en
+		AT time zone 'America/Sao_Paulo') AS DATE), TO_DATE('01-JAN-1970', 'DD-MON-YYYY'))) DT_ULT_ATUALIZACAO,                                     --#MAR.273.en
 	
 	(Select u.t$eunt From baandb.ttcemm030201 u
 		where u.t$euca!=' '

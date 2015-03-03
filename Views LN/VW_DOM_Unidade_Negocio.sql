@@ -9,6 +9,5 @@ SELECT
 	ELSE ' '
 	END NM_TIPO_VENDA,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znint002.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO
 FROM baandb.tznint002201 znint002
-

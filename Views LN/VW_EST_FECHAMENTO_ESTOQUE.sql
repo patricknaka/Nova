@@ -5,14 +5,14 @@ SELECT
         1                                 CD_CIA,
         tcemm030.t$euca                   CD_FILIAL,
         tcemm112.t$grid                   CD_UNIDADE_EMPRESARIAL,
-        whwmd215.t$cwar                   CD_ARMAZEM,
+        whwmd215.t$cwar                   CD_DEPOSITO,
         ltrim(rtrim(whwmd215.t$item))     CD_ITEM,
         CASE WHEN q2.cod_bloc is NULL THEN
             'WN'
-        ELSE q2.cod_bloc END              CD_RESTRICAO,
+        ELSE q2.cod_bloc END              CD_TIPO_BLOQUEIO,
         sum(whwmd215.t$qhnd - nvl(q2.bloc,0))+ sum(nvl(whinr110.t$qstk,0)) QT_FISICA,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whwmd215.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone sessiontimezone) AS DATE) DT_ULT_ATUALIZACAO,
+            AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
         (SELECT sum(whina113.t$mauc$1)  VL_CMV
           FROM
             baandb.twhina112201 whina112,
@@ -88,7 +88,7 @@ FROM    baandb.twhwmd215201 whwmd215
 							whinr110q.t$cwar,
 							whinr110q.t$item,
 							CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whinr110q.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-								AT time zone sessiontimezone) AS DATE)t$trdt
+								AT time zone 'America/Sao_Paulo') AS DATE)t$trdt
 					FROM 	baandb.twhinr110201 whinr110q
 					WHERE	whinr110q.t$trdt >= TRUNC(sysdate, 'DD')
           

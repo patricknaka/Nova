@@ -48,7 +48,7 @@ SELECT DISTINCT
 											) NR_TITULO_REFERENCIA,												--#FAF.002.en
 
 	(select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(s.t$sdat), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE) from baandb.ttfacp600201 s 
+		AT time zone 'America/Sao_Paulo') AS DATE) from baandb.ttfacp600201 s 
 		where s.t$payt=tfacp200.t$tdoc and s.t$payd=tfacp200.t$docn) DT_SITUACAO,
 		
 --	nvl(r.t$amth$1, tfacp200.t$amth$1) VL_TRANSACAO,															--#FAF.186.2.o
@@ -56,7 +56,7 @@ SELECT DISTINCT
 
 	CASE WHEN tfacp200.t$rcd_utc<TO_DATE('1990-01-01', 'YYYY-MM-DD') THEN tfacp200.t$rcd_utc					--#FAF.003.en
 	ELSE	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) END DT_ULT_ATUALIZACAO,
+    AT time zone 'America/Sao_Paulo') AS DATE) END DT_ULT_ATUALIZACAO,
 
 	tfacp200.t$ttyp || tfacp200.t$ninv CD_CHAVE_PRIMARIA,
 	CASE WHEN tfacp200.t$tdoc='ENC' THEN 5																							--#FAF.212.1.n
@@ -70,7 +70,7 @@ SELECT DISTINCT
   ELSE 0 END
   CD_TIPO_MOVIMENTO
 --  CAST((FROM_TZ(CAST(TO_CHAR(tfacp200.t$rcd_utc, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 	--#FAF.003.so
---        AT time zone sessiontimezone) AS DATE) DT_HR_ATUALIZACAO										--#FAF.003.eo
+--        AT time zone 'America/Sao_Paulo') AS DATE) DT_HR_ATUALIZACAO										--#FAF.003.eo
 FROM
 	baandb.ttfacp200201 tfacp200
 																																--#FAF.186.2.so
