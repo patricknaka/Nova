@@ -3,18 +3,18 @@ SELECT
     WMSADMIN.DB_ALIAS                    PLANTA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)             
+        AT time zone 'America/Sao_Paulo') AS DATE)             
                                          DT_LIMITE,
     ORDERS.ORDERKEY                      PEDIDO,
     znsls401.t$uneg$c                    ID_UNINEG,
     ORDERS.SUSR4                         UNINEG,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)                        
+        AT time zone 'America/Sao_Paulo') AS DATE)                        
                                          DT_COMPRA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                                          DT_REGISTRO,
     subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',')-4 )  OPERADOR,
@@ -29,11 +29,11 @@ SELECT
     WAVEDETAIL.WAVEKEY                   ONDA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)                     
+        AT time zone 'America/Sao_Paulo') AS DATE)                     
                                          DT_FECHA_GAIOLA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)                
+        AT time zone 'America/Sao_Paulo') AS DATE)                
                                          DT_LIQUIDADO,
     ORDERS.CARRIERCODE                   ID_TRANSP,
     ORDERS.CARRIERNAME                   NOME_TRANSP,    
@@ -61,7 +61,7 @@ SELECT
     ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)             
+        AT time zone 'America/Sao_Paulo') AS DATE)             
                                          DT_ENTREGA1,
     ORDERS.INVOICENUMBER                 NR_NF,  
     ORDERS.LANE                          SERIE_NF,
@@ -129,7 +129,7 @@ INNER JOIN WMSADMIN.PL_DB    WMSADMIN
    
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) Between :DataRegistroDe
+        AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataRegistroDe
   AND :DataRegistroAte
 
   
@@ -139,18 +139,18 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,    " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_LIMITE,                 " &
 "    ORDERS.ORDERKEY                      PEDIDO,                    " &
 "    znsls401.t$uneg$c                    ID_UNINEG,                 " &
 "    ORDERS.SUSR4                         UNINEG,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,           " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"        AT time zone sessiontimezone) AS DATE)                      " &  
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &  
 "                                         DT_COMPRA,                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                                         DT_REGISTRO,               " &
 "    subStr( tu.usr_name,4,                                          " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
@@ -165,11 +165,11 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,        " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                     
 "                                         DT_FECHA_GAIOLA,           " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                
 "                                         DT_LIQUIDADO,              " &
 "    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
 "    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
@@ -197,7 +197,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
@@ -265,7 +265,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "                                                                                 " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE))                     " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE))                     " & 
 "  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
 "  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 
@@ -276,18 +276,18 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,    " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_LIMITE,                 " &
 "    ORDERS.ORDERKEY                      PEDIDO,                    " &
 "    znsls401.t$uneg$c                    ID_UNINEG,                 " &
 "    ORDERS.SUSR4                         UNINEG,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,           " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"        AT time zone sessiontimezone) AS DATE)                      " &  
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &  
 "                                         DT_COMPRA,                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                                         DT_REGISTRO,               " &
 "    subStr( tu.usr_name,4,                                          " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
@@ -302,11 +302,11 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,        " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                     
 "                                         DT_FECHA_GAIOLA,           " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                
 "                                         DT_LIQUIDADO,              " &
 "    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
 "    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
@@ -334,7 +334,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
@@ -402,7 +402,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "                                                                                 " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE))                     " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE))                     " & 
 "  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
 "  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
@@ -413,18 +413,18 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,    " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_LIMITE,                 " &
 "    ORDERS.ORDERKEY                      PEDIDO,                    " &
 "    znsls401.t$uneg$c                    ID_UNINEG,                 " &
 "    ORDERS.SUSR4                         UNINEG,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,           " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"        AT time zone sessiontimezone) AS DATE)                      " &  
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &  
 "                                         DT_COMPRA,                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                                         DT_REGISTRO,               " &
 "    subStr( tu.usr_name,4,                                          " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
@@ -439,11 +439,11 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,        " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                     
 "                                         DT_FECHA_GAIOLA,           " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                
 "                                         DT_LIQUIDADO,              " &
 "    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
 "    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
@@ -471,7 +471,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
@@ -539,7 +539,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "                                                                                 " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE))                     " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE))                     " & 
 "  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
 "  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
@@ -550,18 +550,18 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,    " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_LIMITE,                 " &
 "    ORDERS.ORDERKEY                      PEDIDO,                    " &
 "    znsls401.t$uneg$c                    ID_UNINEG,                 " &
 "    ORDERS.SUSR4                         UNINEG,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,           " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"        AT time zone sessiontimezone) AS DATE)                      " &  
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &  
 "                                         DT_COMPRA,                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                                         DT_REGISTRO,               " &
 "    subStr( tu.usr_name,4,                                          " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
@@ -576,11 +576,11 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,        " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                     
 "                                         DT_FECHA_GAIOLA,           " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                
 "                                         DT_LIQUIDADO,              " &
 "    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
 "    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
@@ -608,7 +608,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
@@ -676,7 +676,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "                                                                                 " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE))                     " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE))                     " & 
 "  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
 "  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
@@ -687,18 +687,18 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,    " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_LIMITE,                 " &
 "    ORDERS.ORDERKEY                      PEDIDO,                    " &
 "    znsls401.t$uneg$c                    ID_UNINEG,                 " &
 "    ORDERS.SUSR4                         UNINEG,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,           " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"        AT time zone sessiontimezone) AS DATE)                      " &  
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &  
 "                                         DT_COMPRA,                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                                         DT_REGISTRO,               " &
 "    subStr( tu.usr_name,4,                                          " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
@@ -713,11 +713,11 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,        " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                     
 "                                         DT_FECHA_GAIOLA,           " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                
 "                                         DT_LIQUIDADO,              " &
 "    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
 "    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
@@ -745,7 +745,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
@@ -813,7 +813,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "                                                                                 " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE))                     " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE))                     " & 
 "  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
 "  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
@@ -824,18 +824,18 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,    " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_LIMITE,                 " &
 "    ORDERS.ORDERKEY                      PEDIDO,                    " &
 "    znsls401.t$uneg$c                    ID_UNINEG,                 " &
 "    ORDERS.SUSR4                         UNINEG,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,           " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"        AT time zone sessiontimezone) AS DATE)                      " &  
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &  
 "                                         DT_COMPRA,                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                                         DT_REGISTRO,               " &
 "    subStr( tu.usr_name,4,                                          " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
@@ -850,11 +850,11 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,        " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                     
 "                                         DT_FECHA_GAIOLA,           " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                
 "                                         DT_LIQUIDADO,              " &
 "    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
 "    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
@@ -882,7 +882,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
@@ -950,7 +950,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "                                                                                 " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE))                     " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE))                     " & 
 "  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
 "  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
@@ -961,18 +961,18 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,    " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_LIMITE,                 " &
 "    ORDERS.ORDERKEY                      PEDIDO,                    " &
 "    znsls401.t$uneg$c                    ID_UNINEG,                 " &
 "    ORDERS.SUSR4                         UNINEG,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,           " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"        AT time zone sessiontimezone) AS DATE)                      " &  
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &  
 "                                         DT_COMPRA,                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                                         DT_REGISTRO,               " &
 "    subStr( tu.usr_name,4,                                          " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
@@ -987,11 +987,11 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,        " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                     
 "                                         DT_FECHA_GAIOLA,           " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                
 "                                         DT_LIQUIDADO,              " &
 "    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
 "    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
@@ -1019,7 +1019,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
@@ -1087,7 +1087,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "                                                                                 " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE))                     " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE))                     " & 
 "  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
 "  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                    " &
@@ -1098,18 +1098,18 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WMSADMIN.DB_ALIAS                    PLANTA,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,    " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_LIMITE,                 " &
 "    ORDERS.ORDERKEY                      PEDIDO,                    " &
 "    znsls401.t$uneg$c                    ID_UNINEG,                 " &
 "    ORDERS.SUSR4                         UNINEG,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,           " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"        AT time zone sessiontimezone) AS DATE)                      " &  
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &  
 "                                         DT_COMPRA,                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                                         DT_REGISTRO,               " &
 "    subStr( tu.usr_name,4,                                          " &
 "            inStr(tu.usr_name, ',')-4 )  OPERADOR,                  " &
@@ -1124,11 +1124,11 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    WAVEDETAIL.WAVEKEY                   ONDA,                      " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,        " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                     
 "                                         DT_FECHA_GAIOLA,           " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &                
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &                
 "                                         DT_LIQUIDADO,              " &
 "    ORDERS.CARRIERCODE                   ID_TRANSP,                 " &
 "    ORDERS.CARRIERNAME                   NOME_TRANSP,               " &
@@ -1156,7 +1156,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "    ORDERSTATUSSETUP.DESCRIPTION         ULT_EVENTO,                " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)                      " &             
+"        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_ENTREGA1,               " &
 "    ORDERS.INVOICENUMBER                 NR_NF,                     " &
 "    ORDERS.LANE                          SERIE_NF,                  " &
@@ -1224,7 +1224,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "                                                                                 " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,      " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE))                     " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE))                     " & 
 "  Between '" + Parameters!DataRegistroDe.Value + "'                 " &
 "  AND '" + Parameters!DataRegistroAte.Value + "'                    " &
 "                " &

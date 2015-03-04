@@ -10,7 +10,7 @@ select Q1.*
                  tcemm030.t$dsca            CHAVE_NM_FILIAL,
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)  
+                     AT time zone 'America/Sao_Paulo') AS DATE)  
                                             DATA,
                  tdrec940.t$fovn$l          CNPJ,                                            
                  tdrec940.t$bpid$l          COD_FORNECEDOR,

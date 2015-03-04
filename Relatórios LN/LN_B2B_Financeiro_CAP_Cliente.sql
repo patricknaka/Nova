@@ -13,7 +13,7 @@ SELECT
     tccom130b.t$fovn$l        CPF_CLIENTE,
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400b.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
-     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) 
+     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
                               DTA_EMISSAO_PEDIDO,  
                               
     tccom130b.t$nama          NOME_CLIENTE,                      

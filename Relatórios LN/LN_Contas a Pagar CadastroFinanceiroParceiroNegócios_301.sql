@@ -42,7 +42,7 @@ SELECT
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
+        AT time zone 'America/Sao_Paulo') AS DATE) 
                                             DATA_CRIACAO
           
 FROM       baandb.ttccom100301  tccom100
@@ -182,7 +182,7 @@ FROM       baandb.ttccom100301  tccom100
    
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)) 
+                AT time zone 'America/Sao_Paulo') AS DATE)) 
       Between :DataEmissaoDe 
           And :DataEmissaoAte
   AND ( (:TodosPN = 0) or (tccom100.t$bpid in (:PN) and :TodosPN = 1  ) )

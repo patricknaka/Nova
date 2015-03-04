@@ -3,7 +3,7 @@ SELECT
   znfmd630.t$pecl$c  ENTREGA,
   
   CAST((FROM_TZ(CAST(TO_CHAR(znsls400.t$dtin$c,'DD-MON-YYYY HH:MI:SS AM') AS 
-    TIMESTAMP), 'GMT') AT time zone sessiontimezone) AS DATE)  
+    TIMESTAMP), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  
                      DATA_COMPRA,
   
   ( SELECT znfmd640.t$coci$c
@@ -41,6 +41,6 @@ INNER JOIN BAANDB.tznsls400201 znsls400
 WHERE znsls401.t$itpe$c = 5 --Agendado
   
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE))
+          AT time zone 'America/Sao_Paulo') AS DATE))
       BETWEEN :Data_Compra_De
           AND :Data_Compra_Ate

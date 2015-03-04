@@ -12,22 +12,22 @@ SELECT CL.UDF2                           FILIAL,
        
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE)              
+           AT time zone 'America/Sao_Paulo') AS DATE)              
                                          DT_LIMITE,
        
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE)
+           AT time zone 'America/Sao_Paulo') AS DATE)
                                          DT_PROMETIDA,
        
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE)
+           AT time zone 'America/Sao_Paulo') AS DATE)
                                          DT_REC_HOST,
        
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE)
+           AT time zone 'America/Sao_Paulo') AS DATE)
                                          DT_FEC_GAI,
     
        dtETR.dateETR                     DT_LIQ_SEC,
@@ -39,7 +39,7 @@ SELECT CL.UDF2                           FILIAL,
     
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLI940.T$DATE$L, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE)
+           AT time zone 'America/Sao_Paulo') AS DATE)
                                          DT_EMISSAO_NF,
        
        ORDERS.CARRIERCODE                ID_TRANSP,
@@ -113,7 +113,7 @@ INNER JOIN WMWHSE5.CODELKUP CL
   
 WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE), 'DAY') 
+          AT time zone 'America/Sao_Paulo') AS DATE), 'DAY') 
       Between :DataDe
           And :DataAte
 
@@ -131,19 +131,19 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        ORDERS.SUSR4                      NOME_UNIDNEG,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_LIMITE,                     " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_PROMETIDA,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_REC_HOST,                   " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,             " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_FEC_GAI,                    " &
 "        dtETR.dateETR                     DT_LIQ_SEC,                    " &
 "        PEDIDO.T$IDLI$C                   ID_LISTA_CAS,                  " &
@@ -153,7 +153,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        SLI940.T$OPOR$L                   SEQ_CFO,                       " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLI940.T$DATE$L,              " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_EMISSAO_NF,                 " &
 "        ORDERS.CARRIERCODE                ID_TRANSP,                     " &
 "        ORDERS.CARRIERNAME                NOME_TRANSP,                   " &
@@ -217,7 +217,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
 " WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE))                       " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))                       " &
 "       Between '"+ Parameters!DataDe.Value + "'                          " &
 "           And '"+ Parameters!DataAte.Value + "'                         " &
 "ORDER BY FILIAL, ORDEM_WMS, DT_LIMITE                                    "
@@ -237,19 +237,19 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        ORDERS.SUSR4                      NOME_UNIDNEG,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_LIMITE,                     " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_PROMETIDA,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_REC_HOST,                   " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,             " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_FEC_GAI,                    " &
 "        dtETR.dateETR                     DT_LIQ_SEC,                    " &
 "        PEDIDO.T$IDLI$C                   ID_LISTA_CAS,                  " &
@@ -259,7 +259,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        SLI940.T$OPOR$L                   SEQ_CFO,                       " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLI940.T$DATE$L,              " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_EMISSAO_NF,                 " &
 "        ORDERS.CARRIERCODE                ID_TRANSP,                     " &
 "        ORDERS.CARRIERNAME                NOME_TRANSP,                   " &
@@ -323,7 +323,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
 " WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE))                       " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))                       " &
 "       Between '"+ Parameters!DataDe.Value + "'                          " &
 "           And '"+ Parameters!DataAte.Value + "'                         " &
 "Union                                                                    " &
@@ -340,19 +340,19 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        ORDERS.SUSR4                      NOME_UNIDNEG,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_LIMITE,                     " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_PROMETIDA,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_REC_HOST,                   " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,             " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_FEC_GAI,                    " &
 "        dtETR.dateETR                     DT_LIQ_SEC,                    " &
 "        PEDIDO.T$IDLI$C                   ID_LISTA_CAS,                  " &
@@ -362,7 +362,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        SLI940.T$OPOR$L                   SEQ_CFO,                       " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLI940.T$DATE$L,              " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_EMISSAO_NF,                 " &
 "        ORDERS.CARRIERCODE                ID_TRANSP,                     " &
 "        ORDERS.CARRIERNAME                NOME_TRANSP,                   " &
@@ -426,7 +426,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
 " WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE))                       " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))                       " &
 "       Between '"+ Parameters!DataDe.Value + "'                          " &
 "           And '"+ Parameters!DataAte.Value + "'                         " &
 "Union                                                                    " &
@@ -443,19 +443,19 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        ORDERS.SUSR4                      NOME_UNIDNEG,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_LIMITE,                     " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_PROMETIDA,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_REC_HOST,                   " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,             " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_FEC_GAI,                    " &
 "        dtETR.dateETR                     DT_LIQ_SEC,                    " &
 "        PEDIDO.T$IDLI$C                   ID_LISTA_CAS,                  " &
@@ -465,7 +465,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        SLI940.T$OPOR$L                   SEQ_CFO,                       " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLI940.T$DATE$L,              " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_EMISSAO_NF,                 " &
 "        ORDERS.CARRIERCODE                ID_TRANSP,                     " &
 "        ORDERS.CARRIERNAME                NOME_TRANSP,                   " &
@@ -529,7 +529,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
 " WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE))                       " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))                       " &
 "       Between '"+ Parameters!DataDe.Value + "'                          " &
 "           And '"+ Parameters!DataAte.Value + "'                         " &
 "Union                                                                    " &
@@ -546,19 +546,19 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        ORDERS.SUSR4                      NOME_UNIDNEG,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_LIMITE,                     " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_PROMETIDA,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_REC_HOST,                   " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,             " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_FEC_GAI,                    " &
 "        dtETR.dateETR                     DT_LIQ_SEC,                    " &
 "        PEDIDO.T$IDLI$C                   ID_LISTA_CAS,                  " &
@@ -568,7 +568,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        SLI940.T$OPOR$L                   SEQ_CFO,                       " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLI940.T$DATE$L,              " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_EMISSAO_NF,                 " &
 "        ORDERS.CARRIERCODE                ID_TRANSP,                     " &
 "        ORDERS.CARRIERNAME                NOME_TRANSP,                   " &
@@ -632,7 +632,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
 " WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE))                       " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))                       " &
 "       Between '"+ Parameters!DataDe.Value + "'                          " &
 "           And '"+ Parameters!DataAte.Value + "'                         " &
 "Union                                                                    " &
@@ -649,19 +649,19 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        ORDERS.SUSR4                      NOME_UNIDNEG,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_LIMITE,                     " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_PROMETIDA,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_REC_HOST,                   " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,             " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_FEC_GAI,                    " &
 "        dtETR.dateETR                     DT_LIQ_SEC,                    " &
 "        PEDIDO.T$IDLI$C                   ID_LISTA_CAS,                  " &
@@ -671,7 +671,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        SLI940.T$OPOR$L                   SEQ_CFO,                       " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLI940.T$DATE$L,              " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_EMISSAO_NF,                 " &
 "        ORDERS.CARRIERCODE                ID_TRANSP,                     " &
 "        ORDERS.CARRIERNAME                NOME_TRANSP,                   " &
@@ -735,7 +735,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
 " WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE))                       " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))                       " &
 "       Between '"+ Parameters!DataDe.Value + "'                          " &
 "           And '"+ Parameters!DataAte.Value + "'                         " &
 "Union                                                                    " &
@@ -752,19 +752,19 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        ORDERS.SUSR4                      NOME_UNIDNEG,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_LIMITE,                     " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_PROMETIDA,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_REC_HOST,                   " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,             " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_FEC_GAI,                    " &
 "        dtETR.dateETR                     DT_LIQ_SEC,                    " &
 "        PEDIDO.T$IDLI$C                   ID_LISTA_CAS,                  " &
@@ -774,7 +774,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        SLI940.T$OPOR$L                   SEQ_CFO,                       " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLI940.T$DATE$L,              " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_EMISSAO_NF,                 " &
 "        ORDERS.CARRIERCODE                ID_TRANSP,                     " &
 "        ORDERS.CARRIERNAME                NOME_TRANSP,                   " &
@@ -838,7 +838,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
 " WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE))                       " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))                       " &
 "       Between '"+ Parameters!DataDe.Value + "'                          " &
 "           And '"+ Parameters!DataAte.Value + "'                         " &
 "Union                                                                    " &
@@ -855,19 +855,19 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        ORDERS.SUSR4                      NOME_UNIDNEG,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_LIMITE,                     " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,     " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_PROMETIDA,                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,               " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_REC_HOST,                   " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,             " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_FEC_GAI,                    " &
 "        dtETR.dateETR                     DT_LIQ_SEC,                    " &
 "        PEDIDO.T$IDLI$C                   ID_LISTA_CAS,                  " &
@@ -877,7 +877,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "        SLI940.T$OPOR$L                   SEQ_CFO,                       " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLI940.T$DATE$L,              " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')   " &
-"            AT time zone sessiontimezone) AS DATE)                       " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                                          DT_EMISSAO_NF,                 " &
 "        ORDERS.CARRIERCODE                ID_TRANSP,                     " &
 "        ORDERS.CARRIERNAME                NOME_TRANSP,                   " &
@@ -941,7 +941,7 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
 "         ON dtETR.t$orno$c = ORDERS.REFERENCEDOCUMENT                    " &
 " WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE," &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE))                       " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))                       " &
 "       Between '"+ Parameters!DataDe.Value + "'                          " &
 "           And '"+ Parameters!DataAte.Value + "'                         " &
 "ORDER BY FILIAL, ORDEM_WMS, DT_LIMITE                                    "

@@ -18,7 +18,7 @@ SELECT
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                               DATA_RFISCAL,
     tdrec940.t$ptyp$l         TIPO_ORDEM,
     tdrec940.t$rfdt$l         CODE_TIPO_OPER,
@@ -102,7 +102,7 @@ INNER JOIN BAANDB.ttccom100301 tccom100
          
  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone sessiontimezone) AS DATE)) 
+                 AT time zone 'America/Sao_Paulo') AS DATE)) 
        BETWEEN :RefFiscal_De 
            AND :RefFiscal_Ate
    AND ( (Trim(tccom130.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ IS NULL) )
@@ -130,7 +130,7 @@ SELECT
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                               DATA_RFISCAL,
     cisli940.t$ptyp$l         TIPO_ORDEM,
     cisli940.t$fdty$l         CODE_TIPO_OPER,
@@ -211,7 +211,7 @@ INNER JOIN BAANDB.ttccom100301 tccom100
 
  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l,
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone sessiontimezone) AS DATE)) 
+                 AT time zone 'America/Sao_Paulo') AS DATE)) 
        BETWEEN :RefFiscal_De 
            AND :RefFiscal_Ate
    AND ( (Trim(tccom130.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ IS NULL) )

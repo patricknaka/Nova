@@ -15,11 +15,11 @@
 "  PLDS.UDF2                DESCR_PLANTA,                          " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.ADDDATE,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                           DATA_ABERTURA_GAIOLA,                  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE,              " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                            DATA_FECHAMENTO_GAIOLA                " &
 "                                                                  " &
 "FROM       " + Parameters!Table.Value + ".CAGEID CAGE             " &
@@ -62,11 +62,11 @@
 "  PLDS.UDF2                DESCR_PLANTA,                          " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.ADDDATE,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                           DATA_ABERTURA_GAIOLA,                  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE,              " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                            DATA_FECHAMENTO_GAIOLA                " &
 "                                                                  " &
 "FROM       WMWHSE1.CAGEID CAGE                                    " &
@@ -107,11 +107,11 @@
 "  PLDS.UDF2                DESCR_PLANTA,                          " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.ADDDATE,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                           DATA_ABERTURA_GAIOLA,                  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE,              " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                            DATA_FECHAMENTO_GAIOLA                " &
 "                                                                  " &
 "FROM       WMWHSE2.CAGEID CAGE                                    " &
@@ -152,11 +152,11 @@
 "  PLDS.UDF2                DESCR_PLANTA,                          " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.ADDDATE,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                           DATA_ABERTURA_GAIOLA,                  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE,              " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                            DATA_FECHAMENTO_GAIOLA                " &
 "                                                                  " &
 "FROM       WMWHSE3.CAGEID CAGE                                    " &
@@ -197,11 +197,11 @@
 "  PLDS.UDF2                DESCR_PLANTA,                          " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.ADDDATE,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                           DATA_ABERTURA_GAIOLA,                  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE,              " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                            DATA_FECHAMENTO_GAIOLA                " &
 "                                                                  " &
 "FROM       WMWHSE4.CAGEID CAGE                                    " &
@@ -242,11 +242,11 @@
 "  PLDS.UDF2                DESCR_PLANTA,                          " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.ADDDATE,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                           DATA_ABERTURA_GAIOLA,                  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE,              " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                            DATA_FECHAMENTO_GAIOLA                " &
 "                                                                  " &
 "FROM       WMWHSE5.CAGEID CAGE                                    " &
@@ -287,11 +287,11 @@
 "  PLDS.UDF2                DESCR_PLANTA,                          " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.ADDDATE,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                           DATA_ABERTURA_GAIOLA,                  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE,              " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                            DATA_FECHAMENTO_GAIOLA                " &
 "                                                                  " &
 "FROM       WMWHSE6.CAGEID CAGE                                    " &
@@ -332,11 +332,11 @@
 "  PLDS.UDF2                DESCR_PLANTA,                          " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.ADDDATE,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                           DATA_ABERTURA_GAIOLA,                  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE,              " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"      AT time zone sessiontimezone) AS DATE)                      " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                      " &
 "                            DATA_FECHAMENTO_GAIOLA                " &
 "                                                                  " &
 "FROM       WMWHSE7.CAGEID CAGE                                    " &

@@ -5,10 +5,10 @@ SELECT
     tdrec940.t$fire$l                                NUME_RFISCAL,
 
     CASE WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
-              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) < '01/01/1980'
+              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) < '01/01/1980'
            THEN NULL
          ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 
-              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
      END                                             DATA_NR,
  
     CASE WHEN tdrec947.t$oorg$l = 1 
@@ -41,11 +41,11 @@ SELECT
     tdrec940.t$lipl$l                                PLACA_CAMINHAO,  
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 
-    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                                      DATA_EMISSAO,
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 
-    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                                      DATA_REGISTRO
 FROM       baandb.ttdrec940201 tdrec940  
 
@@ -170,6 +170,6 @@ WHERE tcemm124.t$dtyp = 1
   AND tdrec949.t$brty$l = 1
   AND tdrec940.t$rfdt$l = 22 -- Conhec. Transp. Rodoviário
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
-            'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)) 
+            'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)) 
 			Between :DataEmissaoDe 
 			    And :DataEmissaoAte

@@ -3,7 +3,7 @@ SELECT
     WMSADMIN.PL_DB.DB_ALIAS                           FILIAL, 
     TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')           
+          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')           
                                                       MESANO,
     SUM(RECEIPTDETAIL.QTYRECEIVED)                    QTDE_PECAS,
     SUM(REC941.T$GAMT$L)                              VALOR_RECEBIDO,
@@ -44,18 +44,18 @@ WHERE RECEIPT.STATUS IN (9,11)
 
 --  AND (  ( (CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE, 
 --        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---          AT time zone sessiontimezone) AS DATE)) Between ('01/' || :RecebidoDe) 
+--          AT time zone 'America/Sao_Paulo') AS DATE)) Between ('01/' || :RecebidoDe) 
 --        And ( To_Char(LAST_DAY('01/' || :RecebidoAte), 'dd/MM/yyyy') )  )
 --        OR :RecebidoDe Is Null OR :RecebidoAte Is Null )
 
 GROUP BY WMSADMIN.PL_DB.DB_ALIAS, 
          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE), 'MM/yyyy')
+              AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')
 
 ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')
+          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')
 
 
 
@@ -64,7 +64,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "    WMSADMIN.PL_DB.DB_ALIAS                           FILIAL,                 " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,           " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " & 
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &            
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &            
 "                                                      MESANO,                 " &
 "    SUM(RECEIPTDETAIL.QTYRECEIVED)                    QTDE_PECAS,             " &
 "    SUM(REC941.T$GAMT$L)                              VALOR_RECEBIDO,         " &
@@ -99,7 +99,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "WHERE RECEIPT.STATUS IN (9,11)                                                " &
 "  AND (  ( ((CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,          " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE))                             " & 
+"          AT time zone 'America/Sao_Paulo') AS DATE))                             " & 
 "        Between ('01/' || '" + Parameters!RecebidoDe.Value + "')              " &
 "        And ( To_Char(LAST_DAY('01/' || '" + Parameters!RecebidoAte.Value + "'), 'dd/MM/yyyy') )  )           " &
 "        OR '" + Parameters!RecebidoDe.Value + "' Is Null OR '" + Parameters!RecebidoAte.Value + "' is null )  " &
@@ -107,11 +107,11 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'MM/yyyy')              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')              " &
 "                                                                              " &
 "ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &
 
 -- Query com UNION **************************************************************************
 
@@ -120,7 +120,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "    WMSADMIN.PL_DB.DB_ALIAS                           FILIAL,                 " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,           " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " & 
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &            
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &            
 "                                                      MESANO,                 " &
 "    SUM(RECEIPTDETAIL.QTYRECEIVED)                    QTDE_PECAS,             " &
 "    SUM(REC941.T$GAMT$L)                              VALOR_RECEBIDO,         " &
@@ -155,7 +155,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "WHERE RECEIPT.STATUS IN (9,11)                                                " &
 "  AND (  ( ((CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,          " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE))                             " & 
+"          AT time zone 'America/Sao_Paulo') AS DATE))                             " & 
 "        Between ('01/' || '" + Parameters!RecebidoDe.Value + "')              " &
 "        And ( To_Char(LAST_DAY('01/' || '" + Parameters!RecebidoAte.Value + "'), 'dd/MM/yyyy') )  )           " &
 "        OR '" + Parameters!RecebidoDe.Value + "' Is Null OR '" + Parameters!RecebidoAte.Value + "' is null )  " &
@@ -163,11 +163,11 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'MM/yyyy')              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')              " &
 "                                                                              " &
 "ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &
 "                                                                              " &
 "Union                                                                         " &
 "                                                                              " &
@@ -176,7 +176,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "    WMSADMIN.PL_DB.DB_ALIAS                           FILIAL,                 " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,           " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " & 
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &            
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &            
 "                                                      MESANO,                 " &
 "    SUM(RECEIPTDETAIL.QTYRECEIVED)                    QTDE_PECAS,             " &
 "    SUM(REC941.T$GAMT$L)                              VALOR_RECEBIDO,         " &
@@ -211,7 +211,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "WHERE RECEIPT.STATUS IN (9,11)                                                " &
 "  AND (  ( ((CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,          " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE))                             " & 
+"          AT time zone 'America/Sao_Paulo') AS DATE))                             " & 
 "        Between ('01/' || '" + Parameters!RecebidoDe.Value + "')              " &
 "        And ( To_Char(LAST_DAY('01/' || '" + Parameters!RecebidoAte.Value + "'), 'dd/MM/yyyy') )  )           " &
 "        OR '" + Parameters!RecebidoDe.Value + "' Is Null OR '" + Parameters!RecebidoAte.Value + "' is null )  " &
@@ -219,11 +219,11 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'MM/yyyy')              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')              " &
 "                                                                              " &
 "ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &
 "                                                                              " &
 "Union                                                                         " &
 "                                                                              " &
@@ -232,7 +232,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "    WMSADMIN.PL_DB.DB_ALIAS                           FILIAL,                 " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,           " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " & 
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &            
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &            
 "                                                      MESANO,                 " &
 "    SUM(RECEIPTDETAIL.QTYRECEIVED)                    QTDE_PECAS,             " &
 "    SUM(REC941.T$GAMT$L)                              VALOR_RECEBIDO,         " &
@@ -267,7 +267,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "WHERE RECEIPT.STATUS IN (9,11)                                                " &
 "  AND (  ( ((CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,          " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE))                             " & 
+"          AT time zone 'America/Sao_Paulo') AS DATE))                             " & 
 "        Between ('01/' || '" + Parameters!RecebidoDe.Value + "')              " &
 "        And ( To_Char(LAST_DAY('01/' || '" + Parameters!RecebidoAte.Value + "'), 'dd/MM/yyyy') )  )           " &
 "        OR '" + Parameters!RecebidoDe.Value + "' Is Null OR '" + Parameters!RecebidoAte.Value + "' is null )  " &
@@ -275,11 +275,11 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'MM/yyyy')              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')              " &
 "                                                                              " &
 "ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &
 "                                                                              " &
 "Union                                                                         " &
 "                                                                              " &
@@ -288,7 +288,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "    WMSADMIN.PL_DB.DB_ALIAS                           FILIAL,                 " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,           " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " & 
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &            
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &            
 "                                                      MESANO,                 " &
 "    SUM(RECEIPTDETAIL.QTYRECEIVED)                    QTDE_PECAS,             " &
 "    SUM(REC941.T$GAMT$L)                              VALOR_RECEBIDO,         " &
@@ -323,7 +323,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "WHERE RECEIPT.STATUS IN (9,11)                                                " &
 "  AND (  ( ((CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,          " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE))                             " & 
+"          AT time zone 'America/Sao_Paulo') AS DATE))                             " & 
 "        Between ('01/' || '" + Parameters!RecebidoDe.Value + "')              " &
 "        And ( To_Char(LAST_DAY('01/' || '" + Parameters!RecebidoAte.Value + "'), 'dd/MM/yyyy') )  )           " &
 "        OR '" + Parameters!RecebidoDe.Value + "' Is Null OR '" + Parameters!RecebidoAte.Value + "' is null )  " &
@@ -331,11 +331,11 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'MM/yyyy')              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')              " &
 "                                                                              " &
 "ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &
 "                                                                              " &
 "Union                                                                         " &
 "                                                                              " &
@@ -344,7 +344,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "    WMSADMIN.PL_DB.DB_ALIAS                           FILIAL,                 " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,           " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " & 
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &            
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &            
 "                                                      MESANO,                 " &
 "    SUM(RECEIPTDETAIL.QTYRECEIVED)                    QTDE_PECAS,             " &
 "    SUM(REC941.T$GAMT$L)                              VALOR_RECEBIDO,         " &
@@ -379,7 +379,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "WHERE RECEIPT.STATUS IN (9,11)                                                " &
 "  AND (  ( ((CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,          " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE))                             " & 
+"          AT time zone 'America/Sao_Paulo') AS DATE))                             " & 
 "        Between ('01/' || '" + Parameters!RecebidoDe.Value + "')              " &
 "        And ( To_Char(LAST_DAY('01/' || '" + Parameters!RecebidoAte.Value + "'), 'dd/MM/yyyy') )  )           " &
 "        OR '" + Parameters!RecebidoDe.Value + "' Is Null OR '" + Parameters!RecebidoAte.Value + "' is null )  " &
@@ -387,11 +387,11 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'MM/yyyy')              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')              " &
 "                                                                              " &
 "ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &
 "                                                                              " &
 "Union                                                                         " &
 "                                                                              " &
@@ -442,7 +442,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "    WMSADMIN.PL_DB.DB_ALIAS                           FILIAL,                 " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,           " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " & 
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &            
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &            
 "                                                      MESANO,                 " &
 "    SUM(RECEIPTDETAIL.QTYRECEIVED)                    QTDE_PECAS,             " &
 "    SUM(REC941.T$GAMT$L)                              VALOR_RECEBIDO,         " &
@@ -477,7 +477,7 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "WHERE RECEIPT.STATUS IN (9,11)                                                " &
 "  AND (  ( ((CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,          " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE))                             " & 
+"          AT time zone 'America/Sao_Paulo') AS DATE))                             " & 
 "        Between ('01/' || '" + Parameters!RecebidoDe.Value + "')              " &
 "        And ( To_Char(LAST_DAY('01/' || '" + Parameters!RecebidoAte.Value + "'), 'dd/MM/yyyy') )  )           " &
 "        OR '" + Parameters!RecebidoDe.Value + "' Is Null OR '" + Parameters!RecebidoAte.Value + "' is null )  " &
@@ -485,8 +485,8 @@ ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,
 "GROUP BY WMSADMIN.PL_DB.DB_ALIAS,                                             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'MM/yyyy')              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')              " &
 "                                                                              " &
 "ORDER BY TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPT.RECEIPTDATE,      " & 
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"          AT time zone sessiontimezone) AS DATE), 'MM/yyyy')                  " &
+"          AT time zone 'America/Sao_Paulo') AS DATE), 'MM/yyyy')                  " &

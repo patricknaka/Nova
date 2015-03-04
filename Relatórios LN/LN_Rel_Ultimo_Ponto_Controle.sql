@@ -9,18 +9,18 @@ SELECT
         
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.T$DTOC$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C, znsls410.T$SEQN$C),
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) DATA_HORA,
+        AT time zone 'America/Sao_Paulo') AS DATE) DATA_HORA,
                 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.T$DATE$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C), 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) DATA_PROCESSAMENTO,
+        AT time zone 'America/Sao_Paulo') AS DATE) DATA_PROCESSAMENTO,
                                                                     
     CASE WHEN (MAX(znsls410.T$DTEM$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)) < =    to_date('01-01-1980','DD-MM-YYYY') 
     THEN  NULL
     ELSE
           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.T$DTEM$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C),
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE) END 
+           AT time zone 'America/Sao_Paulo') AS DATE) END 
                                                DATA_SAIDA,
 
     CASE WHEN (MAX(znsls410.T$DTEP$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)) < =    to_date('01-01-1980','DD-MM-YYYY') 
@@ -28,7 +28,7 @@ SELECT
     ELSE
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.T$DTEP$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C), 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) END    
+        AT time zone 'America/Sao_Paulo') AS DATE) END    
                                                DATA_PROMETIDA,
         
     

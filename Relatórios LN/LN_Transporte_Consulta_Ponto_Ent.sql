@@ -4,11 +4,11 @@ SELECT
     znfmd640.t$coci$c  PONTO,
       
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
                        DATA_PONTO,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
                        DATA_PROCESSAMENTO
 
 FROM       BAANDB.tznfmd630301 znfmd630
@@ -20,12 +20,12 @@ WHERE
       znfmd640.t$coci$c = 'ENT'
 
       AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE))
+          AT time zone 'America/Sao_Paulo') AS DATE))
       BETWEEN :DataPontoDe
           AND :DataPontoAte
     
      AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE))
+          AT time zone 'America/Sao_Paulo') AS DATE))
       BETWEEN :DataProceDe
           AND :DataProceAte
        

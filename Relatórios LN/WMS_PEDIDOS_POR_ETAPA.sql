@@ -4,21 +4,21 @@
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)
+      AT time zone 'America/Sao_Paulo') AS DATE)
                           DATA_LIMITE,
         
     ORDERS.ORDERKEY               PEDIDO,
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) 
+      AT time zone 'America/Sao_Paulo') AS DATE) 
                           DATA_REGISTRO,
         
     ORDERSTATUSSETUP2.DESCRIPTION       EVENTO,
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) 
+      AT time zone 'America/Sao_Paulo') AS DATE) 
                           DATA_ULT_EVENTO,
         
     ORDERSTATUSHISTORY.ADDWHO         OPERADOR,
@@ -208,7 +208,7 @@ INNER JOIN WMSADMIN.PL_DB
 --WHERE NVL(SLS002.T$TPEN$C, 0) IN (:TipoEntrega)
 --  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
 --          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---          AT time zone sessiontimezone) AS DATE)) 
+--          AT time zone 'America/Sao_Paulo') AS DATE)) 
 --    Between :DataUltEventoDe 
 --      And :DataUltEventoAte
 --  AND ORDERSTATUSSETUP.CODE IN (:ClasseEventos)
@@ -224,17 +224,17 @@ ORDER BY ORDERS.ORDERKEY
 "   WMSADMIN.PL_DB.DB_ALIAS     DSC_PLANTA, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_LIMITE, " &
 "   ORDERS.ORDERKEY     PEDIDO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_REGISTRO, " &
 "   ORDERSTATUSSETUP2.DESCRIPTION   EVENTO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_ULT_EVENTO, " &
 "   ORDERSTATUSHISTORY.ADDWHO   OPERADOR, " &
 "   ORDERDETAIL.SKU     ITEM, " &
@@ -412,17 +412,17 @@ ORDER BY ORDERS.ORDERKEY
 "   WMSADMIN.PL_DB.DB_ALIAS     DSC_PLANTA, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_LIMITE, " &
 "   ORDERS.ORDERKEY     PEDIDO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_REGISTRO, " &
 "   ORDERSTATUSSETUP2.DESCRIPTION   EVENTO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_ULT_EVENTO, " &
 "   ORDERSTATUSHISTORY.ADDWHO   OPERADOR, " &
 "   ORDERDETAIL.SKU     ITEM, " &
@@ -597,17 +597,17 @@ ORDER BY ORDERS.ORDERKEY
 "   WMSADMIN.PL_DB.DB_ALIAS     DSC_PLANTA, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_LIMITE, " &
 "   ORDERS.ORDERKEY     PEDIDO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_REGISTRO, " &
 "   ORDERSTATUSSETUP2.DESCRIPTION   EVENTO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_ULT_EVENTO, " &
 "   ORDERSTATUSHISTORY.ADDWHO   OPERADOR, " &
 "   ORDERDETAIL.SKU     ITEM, " &
@@ -782,17 +782,17 @@ ORDER BY ORDERS.ORDERKEY
 "   WMSADMIN.PL_DB.DB_ALIAS     DSC_PLANTA, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_LIMITE, " &
 "   ORDERS.ORDERKEY     PEDIDO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_REGISTRO, " &
 "   ORDERSTATUSSETUP2.DESCRIPTION   EVENTO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_ULT_EVENTO, " &
 "   ORDERSTATUSHISTORY.ADDWHO   OPERADOR, " &
 "   ORDERDETAIL.SKU     ITEM, " &
@@ -967,17 +967,17 @@ ORDER BY ORDERS.ORDERKEY
 "   WMSADMIN.PL_DB.DB_ALIAS     DSC_PLANTA, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_LIMITE, " &
 "   ORDERS.ORDERKEY     PEDIDO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_REGISTRO, " &
 "   ORDERSTATUSSETUP2.DESCRIPTION   EVENTO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_ULT_EVENTO, " &
 "   ORDERSTATUSHISTORY.ADDWHO   OPERADOR, " &
 "   ORDERDETAIL.SKU     ITEM, " &
@@ -1152,17 +1152,17 @@ ORDER BY ORDERS.ORDERKEY
 "   WMSADMIN.PL_DB.DB_ALIAS     DSC_PLANTA, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_LIMITE, " &
 "   ORDERS.ORDERKEY     PEDIDO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_REGISTRO, " &
 "   ORDERSTATUSSETUP2.DESCRIPTION   EVENTO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_ULT_EVENTO, " &
 "   ORDERSTATUSHISTORY.ADDWHO   OPERADOR, " &
 "   ORDERDETAIL.SKU     ITEM, " &
@@ -1337,17 +1337,17 @@ ORDER BY ORDERS.ORDERKEY
 "   WMSADMIN.PL_DB.DB_ALIAS     DSC_PLANTA, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_LIMITE, " &
 "   ORDERS.ORDERKEY     PEDIDO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_REGISTRO, " &
 "   ORDERSTATUSSETUP2.DESCRIPTION   EVENTO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_ULT_EVENTO, " &
 "   ORDERSTATUSHISTORY.ADDWHO   OPERADOR, " &
 "   ORDERDETAIL.SKU     ITEM, " &
@@ -1522,17 +1522,17 @@ ORDER BY ORDERS.ORDERKEY
 "   WMSADMIN.PL_DB.DB_ALIAS     DSC_PLANTA, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_LIMITE, " &
 "   ORDERS.ORDERKEY     PEDIDO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_REGISTRO, " &
 "   ORDERSTATUSSETUP2.DESCRIPTION   EVENTO, " &
 "   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"   AT time zone sessiontimezone) AS DATE) " &
+"   AT time zone 'America/Sao_Paulo') AS DATE) " &
 "       DATA_ULT_EVENTO, " &
 "   ORDERSTATUSHISTORY.ADDWHO   OPERADOR, " &
 "   ORDERDETAIL.SKU     ITEM, " &

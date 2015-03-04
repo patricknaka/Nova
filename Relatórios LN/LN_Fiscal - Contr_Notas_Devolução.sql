@@ -7,7 +7,7 @@ SELECT
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
+        AT time zone 'America/Sao_Paulo') AS DATE) 
                                                   DATA_EMISSA,
     cisli940.t$ccfo$l                             COD_CFOP,
     cisli245.t$slso                               ORDEM,
@@ -27,7 +27,7 @@ SELECT
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(NVL(cisli940d.t$date$l, znmcs092.t$trdt$c), 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)    DATA_NF_VENDA,
+        AT time zone 'America/Sao_Paulo') AS DATE)    DATA_NF_VENDA,
   
     NVL(cisli940d.t$amnt$l, znmcs092.t$amnt$c)    VALO_NF_VENDA,
     cisli245d.t$slso                              NUME_OV,
@@ -39,7 +39,7 @@ SELECT
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)    DATA_REC,
+        AT time zone 'America/Sao_Paulo') AS DATE)    DATA_REC,
                                              
     tdrec940.t$logn$l                             USER_REC,
     cisli940d.t$stat$l                            STATUS_NFD,
@@ -235,7 +235,7 @@ WHERE cisli940.t$fdty$l = 14
   AND NVL(tdrec940.t$stat$l,0) IN(:StatusRefFiscal)
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)) 
+                AT time zone 'America/Sao_Paulo') AS DATE)) 
       Between :EmissaoDE 
           And :EmissaoATE
   AND NVL(cisli940.t$ccfo$l, 'N/I') IN (:COD_CFOP)

@@ -5,7 +5,7 @@ SELECT
     cisli940.t$docn$l                       NUME_NOTA,
     cisli940.t$seri$l                       NUME_SERIE,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE) 
+          AT time zone 'America/Sao_Paulo') AS DATE) 
                                             DATA_EMISSAO,
     tccom130.t$fovn$l                       CNPJ_FORNECEDOR,
     tccom130.t$nama                         NOME_FORNECEDOR,
@@ -128,7 +128,7 @@ INNER JOIN baandb.ttcemm030301  tcemm030
         ON cisli940.t$stat$l = SGET.CNST
                        
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE)) Between :DataEmissaoDe And :DataEmissaoAte
+                  AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataEmissaoDe And :DataEmissaoAte
   AND cisli940.t$cofc$l IN (:Depto)
   AND cisli940.t$ccfo$l IN (:CFOP)
   AND cisli940.t$fdty$l IN (:TipoOrdem)

@@ -12,17 +12,17 @@ SELECT
    
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtap$c, 
      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone sessiontimezone) AS DATE)
+       AT time zone 'America/Sao_Paulo') AS DATE)
                          DATA_APR, 
        
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone sessiontimezone) AS DATE)
+       AT time zone 'America/Sao_Paulo') AS DATE)
                          DATA_PLANENT,   
        
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone sessiontimezone) AS DATE)
+       AT time zone 'America/Sao_Paulo') AS DATE)
                          DATA_PLANREC,   
    
    CASE WHEN znsls401.t$tpes$c = 'X' THEN 'Crossdocking'
@@ -33,7 +33,7 @@ SELECT
     
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone sessiontimezone) AS DATE)
+       AT time zone 'America/Sao_Paulo') AS DATE)
                          DATA_ORDEM,
        
    Trim(tdsls401.t$item) CODE_ITEM,
@@ -249,15 +249,15 @@ WHERE tcemm124.t$dtyp = 1
   AND whinp100.t$kotr = 2
 
  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone sessiontimezone) AS DATE)) Between NVL(:DataEntregaDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                            AT time zone sessiontimezone) AS DATE)) 
+                 AT time zone 'America/Sao_Paulo') AS DATE)) Between NVL(:DataEntregaDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                                                                            AT time zone 'America/Sao_Paulo') AS DATE)) 
                                                              And NVL(:DataEntregaAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                            AT time zone sessiontimezone) AS DATE))
+                                                                                            AT time zone 'America/Sao_Paulo') AS DATE))
  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone sessiontimezone) AS DATE)) Between NVL(:DataRecebeDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                           AT time zone sessiontimezone) AS DATE)) 
+                 AT time zone 'America/Sao_Paulo') AS DATE)) Between NVL(:DataRecebeDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                                                                           AT time zone 'America/Sao_Paulo') AS DATE)) 
                                                              And NVL(:DataRecebeAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                           AT time zone sessiontimezone) AS DATE))
+                                                                                           AT time zone 'America/Sao_Paulo') AS DATE))
  AND tcemm030.T$EUNT IN (:Filial)
  AND Trim(tcmcs023.t$citg) IN (:Depto)
  AND ULT_PONTO.t$poco$c IN (:Status)  

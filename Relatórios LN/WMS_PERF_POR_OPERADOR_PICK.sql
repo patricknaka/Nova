@@ -4,11 +4,11 @@ SELECT
     PL_DB.DB_ALIAS                           DSC_PLANTA,
     trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE), 'DD')          
+        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')          
                                              DIA,
     to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE), 'HH24')      
+        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')      
                                              HORA,
     taskdetail.addwho                        OPERADOR,
     subStr( tu.usr_name,4,
@@ -36,16 +36,16 @@ WHERE taskdetail.status = 9
 
   and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) between :DataDe and :DataAte
+        AT time zone 'America/Sao_Paulo') AS DATE)) between :DataDe and :DataAte
     
 GROUP BY taskdetail.whseid, 
          PL_DB.DB_ALIAS,
          trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE), 'DD'), 
+              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'), 
          to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE), 'HH24'),
+              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),
          taskdetail.addwho,
          subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ), 
          loc.putawayzone
@@ -60,11 +60,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                           DSC_PLANTA,                    " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                             DIA,                           " &
 "    to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                     " &
 "                                             HORA,                          " &
 "    taskdetail.addwho                        OPERADOR,                      " &
 "    subStr( tu.usr_name,4,                                                  " &
@@ -92,7 +92,7 @@ ORDER BY 2
 "                                                                            " &
 "  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"       AT time zone sessiontimezone) AS DATE))                              " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                              " &
 "  between '" + Parameters!DataDe.Value + "'   " &                           " &
 "  and '" + Parameters!DataAte.Value + "'                                    " &
 "                                                                            " &
@@ -100,10 +100,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                    " &
 "         trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                " &
 "         to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,     " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),              " &
 "         taskdetail.addwho,                                                 " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                " &
 "         loc.putawayzone                                                    " &
@@ -118,11 +118,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                           DSC_PLANTA,                    " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                             DIA,                           " &
 "    to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                     " &
 "                                             HORA,                          " &
 "    taskdetail.addwho                        OPERADOR,                      " &
 "    subStr( tu.usr_name,4,                                                  " &
@@ -150,7 +150,7 @@ ORDER BY 2
 "                                                                            " &
 "  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"       AT time zone sessiontimezone) AS DATE))                              " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                              " &
 "  between '" + Parameters!DataDe.Value + "'   " &                           " &
 "  and '" + Parameters!DataAte.Value + "'                                    " &
 "                                                                            " &
@@ -158,10 +158,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                    " &
 "         trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                " &
 "         to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,     " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),              " &
 "         taskdetail.addwho,                                                 " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                " &
 "         loc.putawayzone                                                    " &
@@ -174,11 +174,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                           DSC_PLANTA,                    " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                             DIA,                           " &
 "    to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                     " &
 "                                             HORA,                          " &
 "    taskdetail.addwho                        OPERADOR,                      " &
 "    subStr( tu.usr_name,4,                                                  " &
@@ -206,7 +206,7 @@ ORDER BY 2
 "                                                                            " &
 "  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"       AT time zone sessiontimezone) AS DATE))                              " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                              " &
 "  between '" + Parameters!DataDe.Value + "'   " &                           " &
 "  and '" + Parameters!DataAte.Value + "'                                    " &
 "                                                                            " &
@@ -214,10 +214,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                    " &
 "         trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                " &
 "         to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,     " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),              " &
 "         taskdetail.addwho,                                                 " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                " &
 "         loc.putawayzone                                                    " &
@@ -230,11 +230,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                           DSC_PLANTA,                    " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                             DIA,                           " &
 "    to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                     " &
 "                                             HORA,                          " &
 "    taskdetail.addwho                        OPERADOR,                      " &
 "    subStr( tu.usr_name,4,                                                  " &
@@ -262,7 +262,7 @@ ORDER BY 2
 "                                                                            " &
 "  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"       AT time zone sessiontimezone) AS DATE))                              " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                              " &
 "  between '" + Parameters!DataDe.Value + "'   " &                           " &
 "  and '" + Parameters!DataAte.Value + "'                                    " &
 "                                                                            " &
@@ -270,10 +270,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                    " &
 "         trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                " &
 "         to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,     " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),              " &
 "         taskdetail.addwho,                                                 " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                " &
 "         loc.putawayzone                                                    " &
@@ -286,11 +286,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                           DSC_PLANTA,                    " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                             DIA,                           " &
 "    to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                     " &
 "                                             HORA,                          " &
 "    taskdetail.addwho                        OPERADOR,                      " &
 "    subStr( tu.usr_name,4,                                                  " &
@@ -318,7 +318,7 @@ ORDER BY 2
 "                                                                            " &
 "  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"       AT time zone sessiontimezone) AS DATE))                              " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                              " &
 "  between '" + Parameters!DataDe.Value + "'   " &                           " &
 "  and '" + Parameters!DataAte.Value + "'                                    " &
 "                                                                            " &
@@ -326,10 +326,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                    " &
 "         trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                " &
 "         to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,     " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),              " &
 "         taskdetail.addwho,                                                 " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                " &
 "         loc.putawayzone                                                    " &
@@ -342,11 +342,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                           DSC_PLANTA,                    " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                             DIA,                           " &
 "    to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                     " &
 "                                             HORA,                          " &
 "    taskdetail.addwho                        OPERADOR,                      " &
 "    subStr( tu.usr_name,4,                                                  " &
@@ -374,7 +374,7 @@ ORDER BY 2
 "                                                                            " &
 "  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"       AT time zone sessiontimezone) AS DATE))                              " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                              " &
 "  between '" + Parameters!DataDe.Value + "'   " &                           " &
 "  and '" + Parameters!DataAte.Value + "'                                    " &
 "                                                                            " &
@@ -382,10 +382,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                    " &
 "         trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                " &
 "         to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,     " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),              " &
 "         taskdetail.addwho,                                                 " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                " &
 "         loc.putawayzone                                                    " &
@@ -398,11 +398,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                           DSC_PLANTA,                    " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                             DIA,                           " &
 "    to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                     " &
 "                                             HORA,                          " &
 "    taskdetail.addwho                        OPERADOR,                      " &
 "    subStr( tu.usr_name,4,                                                  " &
@@ -430,7 +430,7 @@ ORDER BY 2
 "                                                                            " &
 "  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"       AT time zone sessiontimezone) AS DATE))                              " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                              " &
 "  between '" + Parameters!DataDe.Value + "'   " &                           " &
 "  and '" + Parameters!DataAte.Value + "'                                    " &
 "                                                                            " &
@@ -438,10 +438,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                    " &
 "         trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                " &
 "         to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,     " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),              " &
 "         taskdetail.addwho,                                                 " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                " &
 "         loc.putawayzone                                                    " &
@@ -454,11 +454,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                           DSC_PLANTA,                    " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                             DIA,                           " &
 "    to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                     " &
 "                                             HORA,                          " &
 "    taskdetail.addwho                        OPERADOR,                      " &
 "    subStr( tu.usr_name,4,                                                  " &
@@ -486,7 +486,7 @@ ORDER BY 2
 "                                                                            " &
 "  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"       AT time zone sessiontimezone) AS DATE))                              " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                              " &
 "  between '" + Parameters!DataDe.Value + "'   " &                           " &
 "  and '" + Parameters!DataAte.Value + "'                                    " &
 "                                                                            " &
@@ -494,10 +494,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                    " &
 "         trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                " &
 "         to_char(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,     " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),              " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),              " &
 "         taskdetail.addwho,                                                 " &
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                " &
 "         loc.putawayzone                                                    " &

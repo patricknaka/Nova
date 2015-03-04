@@ -19,7 +19,7 @@ SELECT
     'Concluído'                 ID_SIT,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(IT.EDITDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)                 
+        AT time zone 'America/Sao_Paulo') AS DATE)                 
                                          DT_SIT,
     CASE WHEN IT.FROMLOC IN ('STAGE', 'RETURN')
       THEN 'PUTAWAY'
@@ -75,7 +75,7 @@ SELECT
     TO_CHAR(CODELKUP.DESCRIPTION)                 ID_SIT,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)                 
+        AT time zone 'America/Sao_Paulo') AS DATE)                 
                                          DT_SIT,
     'PUTAWAY'                            TIPO
   
@@ -106,7 +106,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
   AND TASKDETAIL.STATUS != 9  
   -- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE, 
       -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        -- AT time zone sessiontimezone) AS DATE)) Between :DataSituacaoDe
+        -- AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataSituacaoDe
   -- AND :DataSituacaoAte
   
 "SELECT                                                                                    " &
@@ -130,7 +130,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " &                 
 "                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      " + Parameters!Table.Value + ".LOC,                                             " &
@@ -159,7 +159,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " & 
 "        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 
@@ -186,7 +186,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " &                 
 "                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE1.LOC,                                                                    " &
@@ -215,7 +215,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " & 
 "        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
@@ -242,7 +242,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " &                 
 "                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE2.LOC,                                                                    " &
@@ -271,7 +271,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " & 
 "        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
@@ -298,7 +298,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " &                 
 "                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE3.LOC,                                                                    " &
@@ -327,7 +327,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " & 
 "        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
@@ -354,7 +354,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " &                 
 "                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE4.LOC,                                                                    " &
@@ -383,7 +383,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " & 
 "        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
@@ -410,7 +410,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " &                 
 "                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE5.LOC,                                                                    " &
@@ -439,7 +439,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " & 
 "        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
@@ -466,7 +466,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " &                 
 "                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE6.LOC,                                                                    " &
@@ -495,7 +495,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " & 
 "        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &
@@ -522,7 +522,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "    CODELKUP.DESCRIPTION                 ID_SIT,                                          " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                               " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " &                 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " &                 
 "                                         DT_SIT                                           " &
 "                                                                                          " &
 "FROM      WMWHSE7.LOC,                                                                    " &
@@ -551,7 +551,7 @@ WHERE SKU.SKU = TASKDETAIL.SKU
 "  AND TASKDETAIL.TASKTYPE = 'PA'                                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.EDITDATE,                       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"        AT time zone sessiontimezone) AS DATE)                                            " & 
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                            " & 
 "        Between '" + Parameters!DataSituacaoDe.Value + "'                                 " &
 "  AND '" + Parameters!DataSituacaoAte.Value + "'                                          " &
 "                                                                                          " &

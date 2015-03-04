@@ -25,13 +25,13 @@ SELECT
        ELSE 'SIM'                                                                 
   END                     ENVIADO_WMS,                                            
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PONTO.DATAWMS, 'DD-MON-YYYY HH24:MI:SS'),    
-    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      
                           DATA_ENVIO_WMS,                                         
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$DDAT, 'DD-MON-YYYY HH24:MI:SS'),  
-    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      
                           DATA_LIMITE,                                            
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'),  
-    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      
                           DATA_PROMETIDA,                                         
   PONTO.CONTRATO          CONTRATO_TRANSP,
   ZNSLS401.T$ITPE$C		  ID_TIPO_ENTREGA,
@@ -142,13 +142,13 @@ ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS
 "       ELSE 'SIM'                                                                 " &
 "  END                     ENVIADO_WMS,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PONTO.DATAWMS, 'DD-MON-YYYY HH24:MI:SS'),    " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_ENVIO_WMS,                                         " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$DDAT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_LIMITE,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_PROMETIDA,                                         " &
 "  PONTO.CONTRATO          CONTRATO_TRANSP                                         " &
 "FROM       BAANDB.TTDSLS400301@PLN01 TDSLS400                                     " &
@@ -237,13 +237,13 @@ ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS
 "       ELSE 'SIM'                                                                 " &
 "  END                     ENVIADO_WMS,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PONTO.DATAWMS, 'DD-MON-YYYY HH24:MI:SS'),    " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_ENVIO_WMS,                                         " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$DDAT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_LIMITE,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_PROMETIDA,                                         " &
 "  PONTO.CONTRATO          CONTRATO_TRANSP                                         " &
 "FROM       BAANDB.TTDSLS400301@PLN01 TDSLS400                                     " &
@@ -331,13 +331,13 @@ ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS
 "       ELSE 'SIM'                                                                 " &
 "  END                     ENVIADO_WMS,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PONTO.DATAWMS, 'DD-MON-YYYY HH24:MI:SS'),    " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_ENVIO_WMS,                                         " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$DDAT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_LIMITE,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_PROMETIDA,                                         " &
 "  PONTO.CONTRATO          CONTRATO_TRANSP                                         " &
 "FROM       BAANDB.TTDSLS400301@PLN01 TDSLS400                                     " &
@@ -425,13 +425,13 @@ ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS
 "       ELSE 'SIM'                                                                 " &
 "  END                     ENVIADO_WMS,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PONTO.DATAWMS, 'DD-MON-YYYY HH24:MI:SS'),    " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_ENVIO_WMS,                                         " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$DDAT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_LIMITE,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_PROMETIDA,                                         " &
 "  PONTO.CONTRATO          CONTRATO_TRANSP                                         " &
 "FROM       BAANDB.TTDSLS400301@PLN01 TDSLS400                                     " &
@@ -519,13 +519,13 @@ ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS
 "       ELSE 'SIM'                                                                 " &
 "  END                     ENVIADO_WMS,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PONTO.DATAWMS, 'DD-MON-YYYY HH24:MI:SS'),    " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_ENVIO_WMS,                                         " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$DDAT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_LIMITE,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_PROMETIDA,                                         " &
 "  PONTO.CONTRATO          CONTRATO_TRANSP                                         " &
 "FROM       BAANDB.TTDSLS400301@PLN01 TDSLS400                                     " &
@@ -613,13 +613,13 @@ ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS
 "       ELSE 'SIM'                                                                 " &
 "  END                     ENVIADO_WMS,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PONTO.DATAWMS, 'DD-MON-YYYY HH24:MI:SS'),    " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_ENVIO_WMS,                                         " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$DDAT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_LIMITE,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_PROMETIDA,                                         " &
 "  PONTO.CONTRATO          CONTRATO_TRANSP                                         " &
 "FROM       BAANDB.TTDSLS400301@PLN01 TDSLS400                                     " &
@@ -707,13 +707,13 @@ ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS
 "       ELSE 'SIM'                                                                 " &
 "  END                     ENVIADO_WMS,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PONTO.DATAWMS, 'DD-MON-YYYY HH24:MI:SS'),    " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_ENVIO_WMS,                                         " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$DDAT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_LIMITE,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_PROMETIDA,                                         " &
 "  PONTO.CONTRATO          CONTRATO_TRANSP                                         " &
 "FROM       BAANDB.TTDSLS400301@PLN01 TDSLS400                                     " &
@@ -801,13 +801,13 @@ ORDER BY DESCR_FILIAL, DATA_ENVIO_WMS
 "       ELSE 'SIM'                                                                 " &
 "  END                     ENVIADO_WMS,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PONTO.DATAWMS, 'DD-MON-YYYY HH24:MI:SS'),    " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_ENVIO_WMS,                                         " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$DDAT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_LIMITE,                                            " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)      " &
+"    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)      " &
 "                          DATA_PROMETIDA,                                         " &
 "  PONTO.CONTRATO          CONTRATO_TRANSP                                         " &
 "FROM       BAANDB.TTDSLS400301@PLN01 TDSLS400                                     " &

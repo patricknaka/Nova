@@ -154,7 +154,7 @@ SELECT
  WHERE whinr110.t$kost > 0
  
    AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whinr110.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone sessiontimezone) AS DATE)) BETWEEN :DataMovDe AND :DataMovAte
+                 AT time zone 'America/Sao_Paulo') AS DATE)) BETWEEN :DataMovDe AND :DataMovAte
    AND tcemm030.T$EUNT IN (:Filial)
    AND Trim(whinr110.t$item) = NVL(:CodItem, Trim(whinr110.t$item))
 

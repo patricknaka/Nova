@@ -3,7 +3,7 @@ SELECT DISTINCT
   
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)      
+      AT time zone 'America/Sao_Paulo') AS DATE)      
                                         DT_HR_EXPEDICAO, 
 
   znfmd630.t$docn$c                     NUME_NOTA,
@@ -91,7 +91,7 @@ WHERE (   (znfmd640.t$date$c is null)
   AND znsls401.t$itpe$c IN (:TipoEntrega)
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)) 
+                AT time zone 'America/Sao_Paulo') AS DATE)) 
       BETWEEN :DtExpIni
           AND :DtExpFim
   AND tcmcs080.t$cfrw = CASE WHEN :Transportadora = 'T' THEN tcmcs080.t$cfrw ELSE :Transportadora END

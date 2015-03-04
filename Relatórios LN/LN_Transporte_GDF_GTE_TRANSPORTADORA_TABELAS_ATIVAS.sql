@@ -13,7 +13,7 @@ SELECT
  
   Max( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd068.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'),
          'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE) )
+           AT time zone 'America/Sao_Paulo') AS DATE) )
                      DT_ALTIMA_ALTERACAO
                                
 FROM       BAANDB.tznfmd068301 znfmd068
@@ -29,7 +29,7 @@ INNER JOIN BAANDB.ttccom130301 tccom130
  
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd068.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'),
               'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE))
+                AT time zone 'America/Sao_Paulo') AS DATE))
       Between :UltimaAlteracaoDe
           And :UltimaAlteracaoAte
   AND znfmd068.t$cfrw$c IN (:Transportadora)

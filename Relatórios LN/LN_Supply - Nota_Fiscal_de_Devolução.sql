@@ -23,7 +23,7 @@ SELECT
 
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)
+      AT time zone 'America/Sao_Paulo') AS DATE)
                              DATA_FAT,
  
     cisli940.t$stat$l        SIT_NFE, 
@@ -76,7 +76,7 @@ SELECT
    
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)    
+      AT time zone 'America/Sao_Paulo') AS DATE)    
                              DATA_ORDEM_DEVOLVIDA,
                              
     NVL( ( select Trim(tttxt010.t$text)
@@ -150,11 +150,11 @@ INNER JOIN( SELECT d.t$cnst CODE_STAT,
         ON DSTAT.CODE_STAT = cisli940.t$stat$l
                         
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-               AT time zone sessiontimezone) AS DATE)) 
+               AT time zone 'America/Sao_Paulo') AS DATE)) 
       BETWEEN NVL(:DtEmissaoDe,CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                  AT time zone sessiontimezone) AS DATE)) 
+                                  AT time zone 'America/Sao_Paulo') AS DATE)) 
           AND NVL(:DtEmissaoAte,CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                   AT time zone sessiontimezone) AS DATE)) 
+                                   AT time zone 'America/Sao_Paulo') AS DATE)) 
 
       AND tccom130.t$fovn$l Like NVL('%'  || (:CNPJ) || '%', tccom130.t$fovn$l)
       AND tcibd001.t$citg IN (:Depto)

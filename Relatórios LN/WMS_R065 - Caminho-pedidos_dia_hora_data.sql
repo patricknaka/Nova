@@ -15,10 +15,10 @@
 "                                                                                          " &
 "FROM ( SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))          DATA,                  " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))          DATA,                  " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                         AT time zone sessiontimezone) AS DATE), 'HH24') HORA,            " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24') HORA,            " &
 "              O.WHSEID                                                   ID_LOCAL,        " &
 "              ( select a.UDF2                                                             " &
 "                  from ENTERPRISE.CODELKUP a                                              " &
@@ -32,24 +32,24 @@
 "        WHERE O.STATUS = '95'                                                             " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "          AND O.ACTUALSHIPDATE IS NOT NULL                                                " &
 "     GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                        AT time zone sessiontimezone) AS DATE)),                          " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)),                          " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                        " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                        " &
 "              O.WHSEID                                                                    " &
 "union                                                                                     " &
 "SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE))           DATA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))           DATA,                        " &
 "       TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE), 'HH24')   HORA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HORA,                        " &
 "       O.WHSEID                                              ID_LOCAL,                    " &
 "       ( select a.UDF2                                                                    " &
 "          from ENTERPRISE.CODELKUP a                                                      " &
@@ -62,15 +62,15 @@
 "WHERE O.STATUS IN ('9', '11', '15')                                                       " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                     " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE)),                                     " &
+"             AT time zone 'America/Sao_Paulo') AS DATE)),                                     " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE), 'HH24'),                             " &
+"             AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                             " &
 "         O.WHSEID ) Q1                                                                    " &
 "GROUP BY                                                                                  " &
 "  Q1.DATA,                                                                                " &
@@ -97,10 +97,10 @@
 "                                                                                          " &
 "FROM ( SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))          DATA,                  " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))          DATA,                  " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                         AT time zone sessiontimezone) AS DATE), 'HH24') HORA,            " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24') HORA,            " &
 "              O.WHSEID                                                   ID_LOCAL,        " &
 "              ( select a.UDF2                                                             " &
 "                  from ENTERPRISE.CODELKUP a                                              " &
@@ -114,24 +114,24 @@
 "        WHERE O.STATUS = '95'                                                             " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "          AND O.ACTUALSHIPDATE IS NOT NULL                                                " &
 "     GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                        AT time zone sessiontimezone) AS DATE)),                          " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)),                          " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                        " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                        " &
 "              O.WHSEID                                                                    " &
 "union                                                                                     " &
 "SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE))           DATA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))           DATA,                        " &
 "       TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE), 'HH24')   HORA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HORA,                        " &
 "       O.WHSEID                                              ID_LOCAL,                    " &
 "       ( select a.UDF2                                                                    " &
 "          from ENTERPRISE.CODELKUP a                                                      " &
@@ -144,15 +144,15 @@
 "WHERE O.STATUS IN ('9', '11', '15')                                                       " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                     " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE)),                                     " &
+"             AT time zone 'America/Sao_Paulo') AS DATE)),                                     " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE), 'HH24'),                             " &
+"             AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                             " &
 "         O.WHSEID ) Q1                                                                    " &
 "GROUP BY                                                                                  " &
 "  Q1.DATA,                                                                                " &
@@ -177,10 +177,10 @@
 "                                                                                          " &
 "FROM ( SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))          DATA,                  " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))          DATA,                  " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                         AT time zone sessiontimezone) AS DATE), 'HH24') HORA,            " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24') HORA,            " &
 "              O.WHSEID                                                   ID_LOCAL,        " &
 "              ( select a.UDF2                                                             " &
 "                  from ENTERPRISE.CODELKUP a                                              " &
@@ -194,24 +194,24 @@
 "        WHERE O.STATUS = '95'                                                             " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "          AND O.ACTUALSHIPDATE IS NOT NULL                                                " &
 "     GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                        AT time zone sessiontimezone) AS DATE)),                          " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)),                          " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                        " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                        " &
 "              O.WHSEID                                                                    " &
 "union                                                                                     " &
 "SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE))           DATA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))           DATA,                        " &
 "       TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE), 'HH24')   HORA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HORA,                        " &
 "       O.WHSEID                                              ID_LOCAL,                    " &
 "       ( select a.UDF2                                                                    " &
 "          from ENTERPRISE.CODELKUP a                                                      " &
@@ -224,15 +224,15 @@
 "WHERE O.STATUS IN ('9', '11', '15')                                                       " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                     " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE)),                                     " &
+"             AT time zone 'America/Sao_Paulo') AS DATE)),                                     " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE), 'HH24'),                             " &
+"             AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                             " &
 "         O.WHSEID ) Q1                                                                    " &
 "GROUP BY                                                                                  " &
 "  Q1.DATA,                                                                                " &
@@ -257,10 +257,10 @@
 "                                                                                          " &
 "FROM ( SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))          DATA,                  " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))          DATA,                  " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                         AT time zone sessiontimezone) AS DATE), 'HH24') HORA,            " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24') HORA,            " &
 "              O.WHSEID                                                   ID_LOCAL,        " &
 "              ( select a.UDF2                                                             " &
 "                  from ENTERPRISE.CODELKUP a                                              " &
@@ -274,24 +274,24 @@
 "        WHERE O.STATUS = '95'                                                             " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "          AND O.ACTUALSHIPDATE IS NOT NULL                                                " &
 "     GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                        AT time zone sessiontimezone) AS DATE)),                          " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)),                          " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                        " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                        " &
 "              O.WHSEID                                                                    " &
 "union                                                                                     " &
 "SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE))           DATA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))           DATA,                        " &
 "       TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE), 'HH24')   HORA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HORA,                        " &
 "       O.WHSEID                                              ID_LOCAL,                    " &
 "       ( select a.UDF2                                                                    " &
 "          from ENTERPRISE.CODELKUP a                                                      " &
@@ -304,15 +304,15 @@
 "WHERE O.STATUS IN ('9', '11', '15')                                                       " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                     " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE)),                                     " &
+"             AT time zone 'America/Sao_Paulo') AS DATE)),                                     " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE), 'HH24'),                             " &
+"             AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                             " &
 "         O.WHSEID ) Q1                                                                    " &
 "GROUP BY                                                                                  " &
 "  Q1.DATA,                                                                                " &
@@ -337,10 +337,10 @@
 "                                                                                          " &
 "FROM ( SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))          DATA,                  " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))          DATA,                  " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                         AT time zone sessiontimezone) AS DATE), 'HH24') HORA,            " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24') HORA,            " &
 "              O.WHSEID                                                   ID_LOCAL,        " &
 "              ( select a.UDF2                                                             " &
 "                  from ENTERPRISE.CODELKUP a                                              " &
@@ -354,24 +354,24 @@
 "        WHERE O.STATUS = '95'                                                             " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "          AND O.ACTUALSHIPDATE IS NOT NULL                                                " &
 "     GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                        AT time zone sessiontimezone) AS DATE)),                          " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)),                          " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                        " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                        " &
 "              O.WHSEID                                                                    " &
 "union                                                                                     " &
 "SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE))           DATA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))           DATA,                        " &
 "       TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE), 'HH24')   HORA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HORA,                        " &
 "       O.WHSEID                                              ID_LOCAL,                    " &
 "       ( select a.UDF2                                                                    " &
 "          from ENTERPRISE.CODELKUP a                                                      " &
@@ -384,15 +384,15 @@
 "WHERE O.STATUS IN ('9', '11', '15')                                                       " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                     " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE)),                                     " &
+"             AT time zone 'America/Sao_Paulo') AS DATE)),                                     " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE), 'HH24'),                             " &
+"             AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                             " &
 "         O.WHSEID ) Q1                                                                    " &
 "GROUP BY                                                                                  " &
 "  Q1.DATA,                                                                                " &
@@ -417,10 +417,10 @@
 "                                                                                          " &
 "FROM ( SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))          DATA,                  " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))          DATA,                  " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                         AT time zone sessiontimezone) AS DATE), 'HH24') HORA,            " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24') HORA,            " &
 "              O.WHSEID                                                   ID_LOCAL,        " &
 "              ( select a.UDF2                                                             " &
 "                  from ENTERPRISE.CODELKUP a                                              " &
@@ -434,24 +434,24 @@
 "        WHERE O.STATUS = '95'                                                             " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "          AND O.ACTUALSHIPDATE IS NOT NULL                                                " &
 "     GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                        AT time zone sessiontimezone) AS DATE)),                          " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)),                          " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                        " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                        " &
 "              O.WHSEID                                                                    " &
 "union                                                                                     " &
 "SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE))           DATA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))           DATA,                        " &
 "       TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE), 'HH24')   HORA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HORA,                        " &
 "       O.WHSEID                                              ID_LOCAL,                    " &
 "       ( select a.UDF2                                                                    " &
 "          from ENTERPRISE.CODELKUP a                                                      " &
@@ -464,15 +464,15 @@
 "WHERE O.STATUS IN ('9', '11', '15')                                                       " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                     " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE)),                                     " &
+"             AT time zone 'America/Sao_Paulo') AS DATE)),                                     " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE), 'HH24'),                             " &
+"             AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                             " &
 "         O.WHSEID ) Q1                                                                    " &
 "GROUP BY                                                                                  " &
 "  Q1.DATA,                                                                                " &
@@ -497,10 +497,10 @@
 "                                                                                          " &
 "FROM ( SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))          DATA,                  " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))          DATA,                  " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                         AT time zone sessiontimezone) AS DATE), 'HH24') HORA,            " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24') HORA,            " &
 "              O.WHSEID                                                   ID_LOCAL,        " &
 "              ( select a.UDF2                                                             " &
 "                  from ENTERPRISE.CODELKUP a                                              " &
@@ -514,24 +514,24 @@
 "        WHERE O.STATUS = '95'                                                             " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "          AND O.ACTUALSHIPDATE IS NOT NULL                                                " &
 "     GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                        AT time zone sessiontimezone) AS DATE)),                          " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)),                          " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                        " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                        " &
 "              O.WHSEID                                                                    " &
 "union                                                                                     " &
 "SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE))           DATA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))           DATA,                        " &
 "       TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE), 'HH24')   HORA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HORA,                        " &
 "       O.WHSEID                                              ID_LOCAL,                    " &
 "       ( select a.UDF2                                                                    " &
 "          from ENTERPRISE.CODELKUP a                                                      " &
@@ -544,15 +544,15 @@
 "WHERE O.STATUS IN ('9', '11', '15')                                                       " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                     " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE)),                                     " &
+"             AT time zone 'America/Sao_Paulo') AS DATE)),                                     " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE), 'HH24'),                             " &
+"             AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                             " &
 "         O.WHSEID ) Q1                                                                    " &
 "GROUP BY                                                                                  " &
 "  Q1.DATA,                                                                                " &
@@ -577,10 +577,10 @@
 "                                                                                          " &
 "FROM ( SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))          DATA,                  " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))          DATA,                  " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                         AT time zone sessiontimezone) AS DATE), 'HH24') HORA,            " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24') HORA,            " &
 "              O.WHSEID                                                   ID_LOCAL,        " &
 "              ( select a.UDF2                                                             " &
 "                  from ENTERPRISE.CODELKUP a                                              " &
@@ -594,24 +594,24 @@
 "        WHERE O.STATUS = '95'                                                             " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "          AND O.ACTUALSHIPDATE IS NOT NULL                                                " &
 "     GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"                        AT time zone sessiontimezone) AS DATE)),                          " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)),                          " &
 "              TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.ACTUALSHIPDATE,                  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                        " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                        " &
 "              O.WHSEID                                                                    " &
 "union                                                                                     " &
 "SELECT TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE))           DATA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))           DATA,                        " &
 "       TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                            " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"           AT time zone sessiontimezone) AS DATE), 'HH24')   HORA,                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HORA,                        " &
 "       O.WHSEID                                              ID_LOCAL,                    " &
 "       ( select a.UDF2                                                                    " &
 "          from ENTERPRISE.CODELKUP a                                                      " &
@@ -624,15 +624,15 @@
 "WHERE O.STATUS IN ('9', '11', '15')                                                       " &
 "          AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                     " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')              " &
-"                  AT time zone sessiontimezone) AS DATE))                                 " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE))                                 " &
 "              BETWEEN '" + Parameters!DataDe.Value + "'                                   " &
 "                  AND '" + Parameters!DataAte.Value + "'                                  " &
 "GROUP BY TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE)),                                     " &
+"             AT time zone 'America/Sao_Paulo') AS DATE)),                                     " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(O.RECEIPTDATE,                          " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                   " &
-"             AT time zone sessiontimezone) AS DATE), 'HH24'),                             " &
+"             AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                             " &
 "         O.WHSEID ) Q1                                                                    " &
 "GROUP BY                                                                                  " &
 "  Q1.DATA,                                                                                " &

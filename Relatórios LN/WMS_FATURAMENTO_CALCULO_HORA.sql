@@ -7,11 +7,11 @@ SELECT
             inStr(tu.usr_name, ',')-4 )            NOME_USUARIO,
     TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE), 'DD')       
+        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')       
                                                    DATA,
     TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone sessiontimezone) AS DATE), 'HH24')    
+            AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')    
                                                    HORA,
     ORDERS.LANE                                    SERIE,
     count(distinct ORDERS.INVOICENUMBER)           QT_NOTA,
@@ -43,7 +43,7 @@ WHERE ORDERS.ORDERKEY = ORDERDETAIL.ORDERKEY
   
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
 	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte
+		AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte
   
 GROUP BY  PL_DB.DB_ALIAS,
           ORDERS.WHSEID, 
@@ -52,10 +52,10 @@ GROUP BY  PL_DB.DB_ALIAS,
           subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ), 
           TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE), 'DD') ,
+              AT time zone 'America/Sao_Paulo') AS DATE), 'DD') ,
           TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE), 'HH24'),
+                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),
           ORDERS.LANE,
           SKU.SUSR2
           
@@ -68,11 +68,11 @@ GROUP BY  PL_DB.DB_ALIAS,
 "            inStr(tu.usr_name, ',')-4 )            NOME_USUARIO,                             " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                                        " &       
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                                        " &       
 "                                                   DATA,                                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"            AT time zone sessiontimezone) AS DATE), 'HH24')                                  " &    
+"            AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                                  " &    
 "                                                   HORA,                                     " &
 "    ORDERS.LANE                                    SERIE,                                    " &
 "    count(distinct ORDERS.INVOICENUMBER)           QT_NOTA,                                  " &
@@ -104,7 +104,7 @@ GROUP BY  PL_DB.DB_ALIAS,
 "                                                                                             " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                " &
-"		AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
+"		AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
 "                                                                                             " &
 "GROUP BY PL_DB.DB_ALIAS,                                                                     " &
 "         ORDERS.WHSEID,                                                                      " &
@@ -113,10 +113,10 @@ GROUP BY  PL_DB.DB_ALIAS,
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                                 " &
 "          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,               " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE), 'DD') ,                                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD') ,                                " &
 "          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,             " & 
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                           " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                           " &
 "         ORDERS.LANE,                                                                        " &
 "         SKU.SUSR2                                                                           "
 
@@ -131,11 +131,11 @@ GROUP BY  PL_DB.DB_ALIAS,
 "            inStr(tu.usr_name, ',')-4 )            NOME_USUARIO,                             " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                                        " &       
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                                        " &       
 "                                                   DATA,                                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"            AT time zone sessiontimezone) AS DATE), 'HH24')                                  " &    
+"            AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                                  " &    
 "                                                   HORA,                                     " &
 "    ORDERS.LANE                                    SERIE,                                    " &
 "    count(distinct ORDERS.INVOICENUMBER)           QT_NOTA,                                  " &
@@ -167,7 +167,7 @@ GROUP BY  PL_DB.DB_ALIAS,
 "                                                                                             " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                " &
-"		AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
+"		AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
 "                                                                                             " &
 "GROUP BY PL_DB.DB_ALIAS,                                                                     " &
 "         ORDERS.WHSEID,                                                                      " &
@@ -176,10 +176,10 @@ GROUP BY  PL_DB.DB_ALIAS,
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                                 " &
 "          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,               " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE), 'DD') ,                                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD') ,                                " &
 "          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,             " & 
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                           " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                           " &
 "         ORDERS.LANE,                                                                        " &
 "         SKU.SUSR2                                                                           " &
 "                                                                                             " &
@@ -194,11 +194,11 @@ GROUP BY  PL_DB.DB_ALIAS,
 "            inStr(tu.usr_name, ',')-4 )            NOME_USUARIO,                             " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                                        " &       
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                                        " &       
 "                                                   DATA,                                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"            AT time zone sessiontimezone) AS DATE), 'HH24')                                  " &    
+"            AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                                  " &    
 "                                                   HORA,                                     " &
 "    ORDERS.LANE                                    SERIE,                                    " &
 "    count(distinct ORDERS.INVOICENUMBER)           QT_NOTA,                                  " &
@@ -230,7 +230,7 @@ GROUP BY  PL_DB.DB_ALIAS,
 "                                                                                             " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                " &
-"		AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
+"		AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
 "                                                                                             " &
 "GROUP BY PL_DB.DB_ALIAS,                                                                     " &
 "         ORDERS.WHSEID,                                                                      " &
@@ -239,10 +239,10 @@ GROUP BY  PL_DB.DB_ALIAS,
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                                 " &
 "          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,               " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE), 'DD') ,                                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD') ,                                " &
 "          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,             " & 
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                           " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                           " &
 "         ORDERS.LANE,                                                                        " &
 "         SKU.SUSR2                                                                           " &
 "                                                                                             " &
@@ -257,11 +257,11 @@ GROUP BY  PL_DB.DB_ALIAS,
 "            inStr(tu.usr_name, ',')-4 )            NOME_USUARIO,                             " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                                        " &       
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                                        " &       
 "                                                   DATA,                                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"            AT time zone sessiontimezone) AS DATE), 'HH24')                                  " &    
+"            AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                                  " &    
 "                                                   HORA,                                     " &
 "    ORDERS.LANE                                    SERIE,                                    " &
 "    count(distinct ORDERS.INVOICENUMBER)           QT_NOTA,                                  " &
@@ -293,7 +293,7 @@ GROUP BY  PL_DB.DB_ALIAS,
 "                                                                                             " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                " &
-"		AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
+"		AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
 "                                                                                             " &
 "GROUP BY PL_DB.DB_ALIAS,                                                                     " &
 "         ORDERS.WHSEID,                                                                      " &
@@ -302,10 +302,10 @@ GROUP BY  PL_DB.DB_ALIAS,
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                                 " &
 "          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,               " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE), 'DD') ,                                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD') ,                                " &
 "          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,             " & 
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                           " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                           " &
 "         ORDERS.LANE,                                                                        " &
 "         SKU.SUSR2                                                                           " &
 "                                                                                             " &
@@ -320,11 +320,11 @@ GROUP BY  PL_DB.DB_ALIAS,
 "            inStr(tu.usr_name, ',')-4 )            NOME_USUARIO,                             " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                                        " &       
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                                        " &       
 "                                                   DATA,                                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"            AT time zone sessiontimezone) AS DATE), 'HH24')                                  " &    
+"            AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                                  " &    
 "                                                   HORA,                                     " &
 "    ORDERS.LANE                                    SERIE,                                    " &
 "    count(distinct ORDERS.INVOICENUMBER)           QT_NOTA,                                  " &
@@ -356,7 +356,7 @@ GROUP BY  PL_DB.DB_ALIAS,
 "                                                                                             " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                " &
-"		AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
+"		AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
 "                                                                                             " &
 "GROUP BY PL_DB.DB_ALIAS,                                                                     " &
 "         ORDERS.WHSEID,                                                                      " &
@@ -365,10 +365,10 @@ GROUP BY  PL_DB.DB_ALIAS,
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                                 " &
 "          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,               " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE), 'DD') ,                                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD') ,                                " &
 "          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,             " & 
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                           " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                           " &
 "         ORDERS.LANE,                                                                        " &
 "         SKU.SUSR2                                                                           " &
 "                                                                                             " &
@@ -383,11 +383,11 @@ GROUP BY  PL_DB.DB_ALIAS,
 "            inStr(tu.usr_name, ',')-4 )            NOME_USUARIO,                             " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                                        " &       
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                                        " &       
 "                                                   DATA,                                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"            AT time zone sessiontimezone) AS DATE), 'HH24')                                  " &    
+"            AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                                  " &    
 "                                                   HORA,                                     " &
 "    ORDERS.LANE                                    SERIE,                                    " &
 "    count(distinct ORDERS.INVOICENUMBER)           QT_NOTA,                                  " &
@@ -419,7 +419,7 @@ GROUP BY  PL_DB.DB_ALIAS,
 "                                                                                             " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                " &
-"		AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
+"		AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
 "                                                                                             " &
 "GROUP BY PL_DB.DB_ALIAS,                                                                     " &
 "         ORDERS.WHSEID,                                                                      " &
@@ -428,10 +428,10 @@ GROUP BY  PL_DB.DB_ALIAS,
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                                 " &
 "          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,               " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE), 'DD') ,                                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD') ,                                " &
 "          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,             " & 
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                           " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                           " &
 "         ORDERS.LANE,                                                                        " &
 "         SKU.SUSR2                                                                           " &
 "                                                                                             " &
@@ -446,11 +446,11 @@ GROUP BY  PL_DB.DB_ALIAS,
 "            inStr(tu.usr_name, ',')-4 )            NOME_USUARIO,                             " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                                        " &       
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                                        " &       
 "                                                   DATA,                                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"            AT time zone sessiontimezone) AS DATE), 'HH24')                                  " &    
+"            AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                                  " &    
 "                                                   HORA,                                     " &
 "    ORDERS.LANE                                    SERIE,                                    " &
 "    count(distinct ORDERS.INVOICENUMBER)           QT_NOTA,                                  " &
@@ -482,7 +482,7 @@ GROUP BY  PL_DB.DB_ALIAS,
 "                                                                                             " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                " &
-"		AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
+"		AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
 "                                                                                             " &
 "GROUP BY PL_DB.DB_ALIAS,                                                                     " &
 "         ORDERS.WHSEID,                                                                      " &
@@ -491,10 +491,10 @@ GROUP BY  PL_DB.DB_ALIAS,
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                                 " &
 "          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,               " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE), 'DD') ,                                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD') ,                                " &
 "          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,             " & 
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                           " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                           " &
 "         ORDERS.LANE,                                                                        " &
 "         SKU.SUSR2                                                                           " &
 "                                                                                             " &
@@ -509,11 +509,11 @@ GROUP BY  PL_DB.DB_ALIAS,
 "            inStr(tu.usr_name, ',')-4 )            NOME_USUARIO,                             " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                                        " &       
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                                        " &       
 "                                                   DATA,                                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"            AT time zone sessiontimezone) AS DATE), 'HH24')                                  " &    
+"            AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                                  " &    
 "                                                   HORA,                                     " &
 "    ORDERS.LANE                                    SERIE,                                    " &
 "    count(distinct ORDERS.INVOICENUMBER)           QT_NOTA,                                  " &
@@ -545,7 +545,7 @@ GROUP BY  PL_DB.DB_ALIAS,
 "                                                                                             " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,                   " &
 "	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                                " &
-"		AT time zone sessiontimezone) AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
+"		AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataUltEventoDe AND :DataUltEventoAte    " &
 "                                                                                             " &
 "GROUP BY PL_DB.DB_ALIAS,                                                                     " &
 "         ORDERS.WHSEID,                                                                      " &
@@ -554,10 +554,10 @@ GROUP BY  PL_DB.DB_ALIAS,
 "         subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),                                 " &
 "          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,               " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE), 'DD') ,                                " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD') ,                                " &
 "          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,             " & 
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                  AT time zone sessiontimezone) AS DATE), 'HH24'),                           " &
+"                  AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),                           " &
 "         ORDERS.LANE,                                                                        " &
 "         SKU.SUSR2                                                                           " &
 "                                                                                             " &

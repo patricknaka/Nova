@@ -5,16 +5,16 @@ SELECT
 
     TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-        AT time zone sessiontimezone) AS DATE),'HH24')  
+        AT time zone 'America/Sao_Paulo') AS DATE),'HH24')  
                                      DT_EMISSAO,
                     
     TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-        AT time zone sessiontimezone) AS DATE),'HH24'), 'HH24:MI')
+        AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'HH24:MI')
     || ' ~ ' 
     || TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-           AT time zone sessiontimezone) AS DATE)+1/24,'HH24'), 'HH24:MI') 
+           AT time zone 'America/Sao_Paulo') AS DATE)+1/24,'HH24'), 'HH24:MI') 
                                      PERIODO,
 
     CASE WHEN tdsls400.t$cbrn = ' ' THEN 'REV' ELSE tdsls400.t$cbrn END                 
@@ -51,7 +51,7 @@ LEFT JOIN ( select upper(wmsCODE.UDF1)  FILIAL,
 
 WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
         'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-          AT time zone sessiontimezone) AS DATE),'HH24')
+          AT time zone 'America/Sao_Paulo') AS DATE),'HH24')
       BETWEEN :EmissaoDe
           AND :EmissaoAte
    
@@ -62,15 +62,15 @@ GROUP BY  wmsCODE.FILIAL,
           
           TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-             AT time zone sessiontimezone) AS DATE),'HH24'),
+             AT time zone 'America/Sao_Paulo') AS DATE),'HH24'),
           
           TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
             'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-              AT time zone sessiontimezone) AS DATE),'HH24'), 'HH24:MI')
+              AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'HH24:MI')
           || ' ~ ' 
           || TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
                'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-                 AT time zone sessiontimezone) AS DATE)+1/24,'HH24'), 'HH24:MI'),
+                 AT time zone 'America/Sao_Paulo') AS DATE)+1/24,'HH24'), 'HH24:MI'),
 
           tdsls400.t$cbrn,
           tcmcs031.t$dsca

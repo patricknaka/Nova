@@ -21,7 +21,7 @@ SELECT
 		OC.STATUS							ID_SITUACAO,
 		SS.DESCRIPTION						DESCR_SITUACAO,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE)
+           AT time zone 'America/Sao_Paulo') AS DATE)
 											DT_HR,
 		IT.EDITWHO							ID_OPERADOR,
 		subStr( tu.usr_name,4,
@@ -49,7 +49,7 @@ WHERE
 		AND		TD.STATUS = 9
 		AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE)
+           AT time zone 'America/Sao_Paulo') AS DATE)
       BETWEEN :DataMovtoDe
           AND :DataMovtoAte
 
@@ -68,7 +68,7 @@ WHERE
 "       TD.STARTTIME            INICIO_MOV_1,                             " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               INICIO_MOV,                               " &
 "       TD.SKU                  ID_ITEM,                                  " &
 "       SK.DESCR                DESCR_ITEM,                               " &
@@ -84,7 +84,7 @@ WHERE
 "       OC.EDITDATE             DT_HR_1,                                  " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               DT_HR,                                    " &
 "       TD.EDITWHO              ID_OPERADOR,                              " &
 "       subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') -4 )              " &
@@ -113,7 +113,7 @@ WHERE
 "  AND TD.STATUS = 9                                                      " &
 "  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "      BETWEEN '"+ Parameters!DataMovtoDe.Value + "'                      " &
 "          AND '"+ Parameters!DataMovtoAte.Value + "'                     " &
 "                                                                         " &
@@ -133,7 +133,7 @@ WHERE
 "       TD.STARTTIME            INICIO_MOV_1,                             " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               INICIO_MOV,                               " &
 "       TD.SKU                  ID_ITEM,                                  " &
 "       SK.DESCR                DESCR_ITEM,                               " &
@@ -149,7 +149,7 @@ WHERE
 "       OC.EDITDATE             DT_HR_1,                                  " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               DT_HR,                                    " &
 "       TD.EDITWHO              ID_OPERADOR,                              " &
 "       subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') -4 )              " &
@@ -178,7 +178,7 @@ WHERE
 "  AND TD.STATUS = 9                                                      " &
 "  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "      BETWEEN '"+ Parameters!DataMovtoDe.Value + "'                      " &
 "          AND '"+ Parameters!DataMovtoAte.Value + "'                     " &
 "                                                                         " &
@@ -195,7 +195,7 @@ WHERE
 "       TD.STARTTIME            INICIO_MOV_1,                             " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               INICIO_MOV,                               " &
 "       TD.SKU                  ID_ITEM,                                  " &
 "       SK.DESCR                DESCR_ITEM,                               " &
@@ -211,7 +211,7 @@ WHERE
 "       OC.EDITDATE             DT_HR_1,                                  " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               DT_HR,                                    " &
 "       TD.EDITWHO              ID_OPERADOR,                              " &
 "       subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') -4 )              " &
@@ -240,7 +240,7 @@ WHERE
 "  AND TD.STATUS = 9                                                      " &
 "  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "      BETWEEN '"+ Parameters!DataMovtoDe.Value + "'                      " &
 "          AND '"+ Parameters!DataMovtoAte.Value + "'                     " &
 "                                                                         " &
@@ -257,7 +257,7 @@ WHERE
 "       TD.STARTTIME            INICIO_MOV_1,                             " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               INICIO_MOV,                               " &
 "       TD.SKU                  ID_ITEM,                                  " &
 "       SK.DESCR                DESCR_ITEM,                               " &
@@ -273,7 +273,7 @@ WHERE
 "       OC.EDITDATE             DT_HR_1,                                  " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               DT_HR,                                    " &
 "       TD.EDITWHO              ID_OPERADOR,                              " &
 "       subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') -4 )              " &
@@ -302,7 +302,7 @@ WHERE
 "  AND TD.STATUS = 9                                                      " &
 "  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "      BETWEEN '"+ Parameters!DataMovtoDe.Value + "'                      " &
 "          AND '"+ Parameters!DataMovtoAte.Value + "'                     " &
 "                                                                         " &
@@ -319,7 +319,7 @@ WHERE
 "       TD.STARTTIME            INICIO_MOV_1,                             " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               INICIO_MOV,                               " &
 "       TD.SKU                  ID_ITEM,                                  " &
 "       SK.DESCR                DESCR_ITEM,                               " &
@@ -335,7 +335,7 @@ WHERE
 "       OC.EDITDATE             DT_HR_1,                                  " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               DT_HR,                                    " &
 "       TD.EDITWHO              ID_OPERADOR,                              " &
 "       subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') -4 )              " &
@@ -364,7 +364,7 @@ WHERE
 "  AND TD.STATUS = 9                                                      " &
 "  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "      BETWEEN '"+ Parameters!DataMovtoDe.Value + "'                      " &
 "          AND '"+ Parameters!DataMovtoAte.Value + "'                     " &
 "                                                                         " &
@@ -381,7 +381,7 @@ WHERE
 "       TD.STARTTIME            INICIO_MOV_1,                             " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               INICIO_MOV,                               " &
 "       TD.SKU                  ID_ITEM,                                  " &
 "       SK.DESCR                DESCR_ITEM,                               " &
@@ -397,7 +397,7 @@ WHERE
 "       OC.EDITDATE             DT_HR_1,                                  " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               DT_HR,                                    " &
 "       TD.EDITWHO              ID_OPERADOR,                              " &
 "       subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') -4 )              " &
@@ -426,7 +426,7 @@ WHERE
 "  AND TD.STATUS = 9                                                      " &
 "  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "      BETWEEN '"+ Parameters!DataMovtoDe.Value + "'                      " &
 "          AND '"+ Parameters!DataMovtoAte.Value + "'                     " &
 "                                                                         " &
@@ -443,7 +443,7 @@ WHERE
 "       TD.STARTTIME            INICIO_MOV_1,                             " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               INICIO_MOV,                               " &
 "       TD.SKU                  ID_ITEM,                                  " &
 "       SK.DESCR                DESCR_ITEM,                               " &
@@ -459,7 +459,7 @@ WHERE
 "       OC.EDITDATE             DT_HR_1,                                  " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               DT_HR,                                    " &
 "       TD.EDITWHO              ID_OPERADOR,                              " &
 "       subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') -4 )              " &
@@ -488,7 +488,7 @@ WHERE
 "  AND TD.STATUS = 9                                                      " &
 "  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "      BETWEEN '"+ Parameters!DataMovtoDe.Value + "'                      " &
 "          AND '"+ Parameters!DataMovtoAte.Value + "'                     " &
 "                                                                         " &
@@ -505,7 +505,7 @@ WHERE
 "       TD.STARTTIME            INICIO_MOV_1,                             " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               INICIO_MOV,                               " &
 "       TD.SKU                  ID_ITEM,                                  " &
 "       SK.DESCR                DESCR_ITEM,                               " &
@@ -521,7 +521,7 @@ WHERE
 "       OC.EDITDATE             DT_HR_1,                                  " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OC.EDITDATE,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                               DT_HR,                                    " &
 "       TD.EDITWHO              ID_OPERADOR,                              " &
 "       subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') -4 )              " &
@@ -550,7 +550,7 @@ WHERE
 "  AND TD.STATUS = 9                                                      " &
 "  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.STARTTIME,                   " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"           AT time zone sessiontimezone) AS DATE)                        " &
+"           AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "      BETWEEN '"+ Parameters!DataMovtoDe.Value + "'                      " &
 "          AND '"+ Parameters!DataMovtoAte.Value + "'                     " &
 "                                                                         " &

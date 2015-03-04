@@ -15,7 +15,7 @@
 "  TD.TOLOC        ID_CLA_LOC,                                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                 " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE)                       " &
+"    AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                  DT_SITUACAO                                    " &
 "FROM       " + Parameters!Table.Value + ".TASKDETAIL  TD         " &
 "INNER JOIN ENTERPRISE.CODELKUP CL                                " &
@@ -42,7 +42,7 @@
 "  AND TD.STATUS = '9'                                            " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,       " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE))                      " &
+"    AT time zone 'America/Sao_Paulo') AS DATE))                      " &
 "	BETWEEN '" + Parameters!DataSituacaoDe.Value + "'             " &
 "        AND '" + Parameters!DataSituacaoAte.Value + "'           " &
 "ORDER BY DESCR_PLANTA, DT_SITUACAO                               "
@@ -64,7 +64,7 @@
 "  TD.TOLOC        ID_CLA_LOC,                                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                 " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE)                       " &
+"    AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                  DT_SITUACAO                                    " &
 "FROM       WMWHSE1.TASKDETAIL  TD                                " &
 "INNER JOIN ENTERPRISE.CODELKUP CL                                " &
@@ -91,7 +91,7 @@
 "  AND TD.STATUS = '9'                                            " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,       " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE))                      " &
+"    AT time zone 'America/Sao_Paulo') AS DATE))                      " &
 "   BETWEEN '" + Parameters!DataSituacaoDe.Value + "'             " &
 "        AND '" + Parameters!DataSituacaoAte.Value + "'           " &
 "                                                                 " &
@@ -112,7 +112,7 @@
 "  TD.TOLOC        ID_CLA_LOC,                                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                 " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE)                       " &
+"    AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                  DT_SITUACAO                                    " &
 "FROM       WMWHSE2.TASKDETAIL  TD                                " &
 "INNER JOIN ENTERPRISE.CODELKUP CL                                " &
@@ -139,7 +139,7 @@
 "  AND TD.STATUS = '9'                                            " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,       " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE))                      " &
+"    AT time zone 'America/Sao_Paulo') AS DATE))                      " &
 "	BETWEEN '" + Parameters!DataSituacaoDe.Value + "'             " &
 "        AND '" + Parameters!DataSituacaoAte.Value + "'           " &
 "                                                                 " &
@@ -160,7 +160,7 @@
 "  TD.TOLOC        ID_CLA_LOC,                                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                 " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE)                       " &
+"    AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                  DT_SITUACAO                                    " &
 "FROM       WMWHSE3.TASKDETAIL  TD                                " &
 "INNER JOIN ENTERPRISE.CODELKUP CL                                " &
@@ -187,7 +187,7 @@
 "  AND TD.STATUS = '9'                                            " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,       " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE))                      " &
+"    AT time zone 'America/Sao_Paulo') AS DATE))                      " &
 "	BETWEEN '" + Parameters!DataSituacaoDe.Value + "'             " &
 "        AND '" + Parameters!DataSituacaoAte.Value + "'           " &
 "                                                                 " &
@@ -208,7 +208,7 @@
 "  TD.TOLOC        ID_CLA_LOC,                                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                 " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE)                       " &
+"    AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                  DT_SITUACAO                                    " &
 "FROM       WMWHSE4.TASKDETAIL  TD                                " &
 "INNER JOIN ENTERPRISE.CODELKUP CL                                " &
@@ -235,7 +235,7 @@
 "  AND TD.STATUS = '9'                                            " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,       " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE))                      " &
+"    AT time zone 'America/Sao_Paulo') AS DATE))                      " &
 "	BETWEEN '" + Parameters!DataSituacaoDe.Value + "'             " &
 "        AND '" + Parameters!DataSituacaoAte.Value + "'           " &
 "                                                                 " &
@@ -256,7 +256,7 @@
 "  TD.TOLOC        ID_CLA_LOC,                                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                 " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE)                       " &
+"    AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                  DT_SITUACAO                                    " &
 "FROM       WMWHSE5.TASKDETAIL  TD                                " &
 "INNER JOIN ENTERPRISE.CODELKUP CL                                " &
@@ -283,7 +283,7 @@
 "  AND TD.STATUS = '9'                                            " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,       " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE))                      " &
+"    AT time zone 'America/Sao_Paulo') AS DATE))                      " &
 "	BETWEEN '" + Parameters!DataSituacaoDe.Value + "'             " &
 "        AND '" + Parameters!DataSituacaoAte.Value + "'           " &
 "                                                                 " &
@@ -304,7 +304,7 @@
 "  TD.TOLOC        ID_CLA_LOC,                                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                 " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE)                       " &
+"    AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                  DT_SITUACAO                                    " &
 "FROM       WMWHSE6.TASKDETAIL  TD                                " &
 "INNER JOIN ENTERPRISE.CODELKUP CL                                " &
@@ -331,7 +331,7 @@
 "  AND TD.STATUS = '9'                                            " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,       " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE))                      " &
+"    AT time zone 'America/Sao_Paulo') AS DATE))                      " &
 "	BETWEEN '" + Parameters!DataSituacaoDe.Value + "'             " &
 "        AND '" + Parameters!DataSituacaoAte.Value + "'           " &
 "                                                                 " &
@@ -352,7 +352,7 @@
 "  TD.TOLOC        ID_CLA_LOC,                                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                 " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE)                       " &
+"    AT time zone 'America/Sao_Paulo') AS DATE)                       " &
 "                  DT_SITUACAO                                    " &
 "FROM       WMWHSE7.TASKDETAIL  TD                                " &
 "INNER JOIN ENTERPRISE.CODELKUP CL                                " &
@@ -379,7 +379,7 @@
 "  AND TD.STATUS = '9'                                            " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,       " &
 "   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"    AT time zone sessiontimezone) AS DATE))                      " &
+"    AT time zone 'America/Sao_Paulo') AS DATE))                      " &
 "	BETWEEN '" + Parameters!DataSituacaoDe.Value + "'             " &
 "        AND '" + Parameters!DataSituacaoAte.Value + "'           " &
 "                                                                 " &

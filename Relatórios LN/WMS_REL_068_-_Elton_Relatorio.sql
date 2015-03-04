@@ -3,14 +3,14 @@ SELECT
     WMSADMIN.PL_DB.DB_ALIAS       FILIAL,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone sessiontimezone) AS DATE)
+         AT time zone 'America/Sao_Paulo') AS DATE)
                                   DT_LIMITE,
     ORDERS.ORDERKEY               PEDIDO,
     ZNSLS401.T$UNEG$C             UNINEG,
     ORDERS.SUSR4                  DSC_UNINEG,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone sessiontimezone) AS DATE)
+         AT time zone 'America/Sao_Paulo') AS DATE)
                                   DT_REGISTRO,
   
     HISTORY.ULT_EVENTO,
@@ -90,7 +90,7 @@ INNER JOIN ( select A.ORDERKEY,
     
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone sessiontimezone) AS DATE))
+         AT time zone 'America/Sao_Paulo') AS DATE))
   Between :DataLimiteDe
       AND :DataLimiteAte
 
@@ -102,14 +102,14 @@ ORDER BY ORDERS.ORDERKEY
 "    WMSADMIN.PL_DB.DB_ALIAS       FILIAL,                                                      " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                               " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                             " &
-"         AT time zone sessiontimezone) AS DATE)                                                " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                  DT_LIMITE,                                                   " &
 "    ORDERS.ORDERKEY               PEDIDO,                                                      " &
 "    ZNSLS401.T$UNEG$C             UNINEG,                                                      " &
 "    ORDERS.SUSR4                  DSC_UNINEG,                                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                             " &
-"         AT time zone sessiontimezone) AS DATE)                                                " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                  DT_REGISTRO,                                                 " &
 "                                                                                               " &
 "    HISTORY.ULT_EVENTO,                                                                        " &
@@ -189,7 +189,7 @@ ORDER BY ORDERS.ORDERKEY
 "                                                                                               " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                             " &
-"         AT time zone sessiontimezone) AS DATE))                                               " &
+"         AT time zone 'America/Sao_Paulo') AS DATE))                                               " &
 "  Between '" + Parameters!DataLimiteDe.Value + "'                                              " &
 "      AND '" + Parameters!DataLimiteAte.Value + "'                                             " &
 "                                                                                               " &
@@ -202,14 +202,14 @@ ORDER BY ORDERS.ORDERKEY
 "    WMSADMIN.PL_DB.DB_ALIAS       FILIAL,                                " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_LIMITE,                             " &
 "    ORDERS.ORDERKEY               PEDIDO,                                " &
 "    ZNSLS401.T$UNEG$C             UNINEG,                                " &
 "    ORDERS.SUSR4                  DSC_UNINEG,                            " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_REGISTRO,                           " &
 "                                                                         " &
 "    HISTORY.ULT_EVENTO,                                                  " &
@@ -289,7 +289,7 @@ ORDER BY ORDERS.ORDERKEY
 "                                                                         " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE))                         " &
+"         AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  Between '" + Parameters!DataLimiteDe.Value + "'                        " &
 "      AND '" + Parameters!DataLimiteAte.Value + "'                       " &
 "                                                                         " &
@@ -300,14 +300,14 @@ ORDER BY ORDERS.ORDERKEY
 "    WMSADMIN.PL_DB.DB_ALIAS       FILIAL,                                " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_LIMITE,                             " &
 "    ORDERS.ORDERKEY               PEDIDO,                                " &
 "    ZNSLS401.T$UNEG$C             UNINEG,                                " &
 "    ORDERS.SUSR4                  DSC_UNINEG,                            " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_REGISTRO,                           " &
 "                                                                         " &
 "    HISTORY.ULT_EVENTO,                                                  " &
@@ -387,7 +387,7 @@ ORDER BY ORDERS.ORDERKEY
 "                                                                         " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE))                         " &
+"         AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  Between '" + Parameters!DataLimiteDe.Value + "'                        " &
 "      AND '" + Parameters!DataLimiteAte.Value + "'                       " &
 "                                                                         " &
@@ -398,14 +398,14 @@ ORDER BY ORDERS.ORDERKEY
 "    WMSADMIN.PL_DB.DB_ALIAS       FILIAL,                                " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_LIMITE,                             " &
 "    ORDERS.ORDERKEY               PEDIDO,                                " &
 "    ZNSLS401.T$UNEG$C             UNINEG,                                " &
 "    ORDERS.SUSR4                  DSC_UNINEG,                            " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_REGISTRO,                           " &
 "                                                                         " &
 "    HISTORY.ULT_EVENTO,                                                  " &
@@ -485,7 +485,7 @@ ORDER BY ORDERS.ORDERKEY
 "                                                                         " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE))                         " &
+"         AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  Between '" + Parameters!DataLimiteDe.Value + "'                        " &
 "      AND '" + Parameters!DataLimiteAte.Value + "'                       " &
 "                                                                         " &
@@ -496,14 +496,14 @@ ORDER BY ORDERS.ORDERKEY
 "    WMSADMIN.PL_DB.DB_ALIAS       FILIAL,                                " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_LIMITE,                             " &
 "    ORDERS.ORDERKEY               PEDIDO,                                " &
 "    ZNSLS401.T$UNEG$C             UNINEG,                                " &
 "    ORDERS.SUSR4                  DSC_UNINEG,                            " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_REGISTRO,                           " &
 "                                                                         " &
 "    HISTORY.ULT_EVENTO,                                                  " &
@@ -583,7 +583,7 @@ ORDER BY ORDERS.ORDERKEY
 "                                                                         " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE))                         " &
+"         AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  Between '" + Parameters!DataLimiteDe.Value + "'                        " &
 "      AND '" + Parameters!DataLimiteAte.Value + "'                       " &
 "                                                                         " &
@@ -594,14 +594,14 @@ ORDER BY ORDERS.ORDERKEY
 "    WMSADMIN.PL_DB.DB_ALIAS       FILIAL,                                " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_LIMITE,                             " &
 "    ORDERS.ORDERKEY               PEDIDO,                                " &
 "    ZNSLS401.T$UNEG$C             UNINEG,                                " &
 "    ORDERS.SUSR4                  DSC_UNINEG,                            " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_REGISTRO,                           " &
 "                                                                         " &
 "    HISTORY.ULT_EVENTO,                                                  " &
@@ -681,7 +681,7 @@ ORDER BY ORDERS.ORDERKEY
 "                                                                         " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE))                         " &
+"         AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  Between '" + Parameters!DataLimiteDe.Value + "'                        " &
 "      AND '" + Parameters!DataLimiteAte.Value + "'                       " &
 "                                                                         " &
@@ -692,14 +692,14 @@ ORDER BY ORDERS.ORDERKEY
 "    WMSADMIN.PL_DB.DB_ALIAS       FILIAL,                                " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_LIMITE,                             " &
 "    ORDERS.ORDERKEY               PEDIDO,                                " &
 "    ZNSLS401.T$UNEG$C             UNINEG,                                " &
 "    ORDERS.SUSR4                  DSC_UNINEG,                            " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_REGISTRO,                           " &
 "                                                                         " &
 "    HISTORY.ULT_EVENTO,                                                  " &
@@ -779,7 +779,7 @@ ORDER BY ORDERS.ORDERKEY
 "                                                                         " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE))                         " &
+"         AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  Between '" + Parameters!DataLimiteDe.Value + "'                        " &
 "      AND '" + Parameters!DataLimiteAte.Value + "'                       " &
 "                                                                         " &
@@ -790,14 +790,14 @@ ORDER BY ORDERS.ORDERKEY
 "    WMSADMIN.PL_DB.DB_ALIAS       FILIAL,                                " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_LIMITE,                             " &
 "    ORDERS.ORDERKEY               PEDIDO,                                " &
 "    ZNSLS401.T$UNEG$C             UNINEG,                                " &
 "    ORDERS.SUSR4                  DSC_UNINEG,                            " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE)                          " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)                          " &
 "                                  DT_REGISTRO,                           " &
 "                                                                         " &
 "    HISTORY.ULT_EVENTO,                                                  " &
@@ -877,7 +877,7 @@ ORDER BY ORDERS.ORDERKEY
 "                                                                         " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"         AT time zone sessiontimezone) AS DATE))                         " &
+"         AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  Between '" + Parameters!DataLimiteDe.Value + "'                        " &
 "      AND '" + Parameters!DataLimiteAte.Value + "'                       " &
 "                                                                         " &

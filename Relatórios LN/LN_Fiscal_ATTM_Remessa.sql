@@ -11,7 +11,7 @@ select Q1.* from
       tcemm030.t$dsca          CHAVE_NM_FILIAL,
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)  
+          AT time zone 'America/Sao_Paulo') AS DATE)  
                                DATA,
       tccom130.t$fovn$l        CNPJ,                                            
       cisli940.t$itoa$l        COD_FORNECEDOR,
@@ -97,7 +97,7 @@ select Q1.* from
     AND tcemm124.t$dtyp = 1 
     AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone sessiontimezone) AS DATE)
+            AT time zone 'America/Sao_Paulo') AS DATE)
         BETWEEN :DataDe
             AND :DataAte
     AND tcemm030.T$EUNT IN (:Filial)

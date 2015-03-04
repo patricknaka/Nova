@@ -3,7 +3,7 @@ SELECT DISTINCT
   tcmcs031.t$dsca      MARCA,  
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)      
+      AT time zone 'America/Sao_Paulo') AS DATE)      
                        DATA_EXPEDICAO, 
   znfmd630.t$docn$c    NUME_NOTA,
   znfmd630.t$seri$c    NUME_SERIE,   
@@ -28,7 +28,7 @@ SELECT DISTINCT
   znsls400.t$uffa$c    UF,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli245.t$ddat, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)        
+      AT time zone 'America/Sao_Paulo') AS DATE)        
                        DATA_ENTREGA,
   znsls400.t$idca$c    CANAL_VENDA,
   CASE WHEN znfmd630.t$stat$c = 'F' 
@@ -45,19 +45,19 @@ SELECT DISTINCT
   NVL(REGIAO.DSC,'BR') REGIAO,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)      
+      AT time zone 'America/Sao_Paulo') AS DATE)      
                       DATA_PROMETIDA,
   znsls401.t$idpa$c   PERIODO,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtre$c, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)      
+      AT time zone 'America/Sao_Paulo') AS DATE)      
                       DATA_AJUSTADA,
   znfmd630.t$cono$c   CONTRATO,
   znfmd640.t$coci$c   ULTIMA_OCORRENCIA,
   znfmd640.t$obsv$c   OCORRENCIA,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)      
+      AT time zone 'America/Sao_Paulo') AS DATE)      
                       DATA_OCORRENCIA,
   znsls401.t$pzfo$c   PRAZO_ENTREGA,
   cisli941.t$dqua$l   QTDE_FATURADA,
@@ -168,7 +168,7 @@ WHERE (   (znfmd640.t$date$c is null)
   AND znsls401.t$itpe$c IN (:TipoEntrega)
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)) 
+                AT time zone 'America/Sao_Paulo') AS DATE)) 
       BETWEEN :DtExpIni 
           AND :DtExpFim
   AND tcmcs080.t$cfrw = CASE WHEN :Transportadora = 'T' THEN tcmcs080.t$cfrw ELSE :Transportadora END

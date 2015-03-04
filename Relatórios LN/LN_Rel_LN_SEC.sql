@@ -6,15 +6,15 @@ SELECT
   ORDERS.LANE           SR,                                              
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         
-      AT time zone sessiontimezone) AS DATE)                             
+      AT time zone 'America/Sao_Paulo') AS DATE)                             
                         DT_FATURAMENTO,                                  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       
-        AT time zone sessiontimezone) AS DATE)                           
+        AT time zone 'America/Sao_Paulo') AS DATE)                           
                         DT_FECHA_GAIOLA,                                 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,                   
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       
-        AT time zone sessiontimezone) AS DATE)                           
+        AT time zone 'America/Sao_Paulo') AS DATE)                           
                         DT_LIQ,
     CASE WHEN ORDERS.ACTUALSHIPDATE IS NOT NULL THEN 'FINALIZADO' ELSE 'PENDENTE' END STATUS
 FROM       WMWHSE5.ORDERS                                                
@@ -52,15 +52,15 @@ WHERE ORDERS.INVOICENUMBER != 0
 "  ORDERS.LANE           SR,                                              " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         " &
-"      AT time zone sessiontimezone) AS DATE)                             " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                             " &
 "                        DT_FATURAMENTO,                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                 " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_FECHA_GAIOLA,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TRACK.DATA_LIQ,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_LIQ                                           " &
 "FROM       " + Parameters!Table.Value + ".ORDERS                         " &
 " LEFT JOIN " + Parameters!Table.Value + ".CAGEIDDETAIL                   " &
@@ -87,7 +87,7 @@ WHERE ORDERS.INVOICENUMBER != 0
 "WHERE ORDERS.INVOICENUMBER != 0                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')     " &
-"          AT time zone sessiontimezone) AS DATE))                        " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                        " &
 "      Between :DataFaturamentoDe                                         " &
 "          And :DataFaturamentoAte                                        " &
 "ORDER BY DESC_PLANTA, PEDIDO                                             "
@@ -102,15 +102,15 @@ WHERE ORDERS.INVOICENUMBER != 0
 "  ORDERS.LANE           SR,                                              " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         " &
-"      AT time zone sessiontimezone) AS DATE)                             " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                             " &
 "                        DT_FATURAMENTO,                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                 " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_FECHA_GAIOLA,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TRACK.DATA_LIQ,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_LIQ                                           " &
 "FROM       WMWHSE1.ORDERS                                                " &
 " LEFT JOIN WMWHSE1.CAGEIDDETAIL                                          " &
@@ -137,7 +137,7 @@ WHERE ORDERS.INVOICENUMBER != 0
 "WHERE ORDERS.INVOICENUMBER != 0                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')     " &
-"          AT time zone sessiontimezone) AS DATE))                        " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                        " &
 "      Between :DataFaturamentoDe                                         " &
 "          And :DataFaturamentoAte                                        " &
 "                                                                         " &
@@ -151,15 +151,15 @@ WHERE ORDERS.INVOICENUMBER != 0
 "  ORDERS.LANE           SR,                                              " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         " &
-"      AT time zone sessiontimezone) AS DATE)                             " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                             " &
 "                        DT_FATURAMENTO,                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                 " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_FECHA_GAIOLA,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TRACK.DATA_LIQ,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_LIQ                                           " &
 "FROM       WMWHSE2.ORDERS                                                " &
 " LEFT JOIN WMWHSE2.CAGEIDDETAIL                                          " &
@@ -186,7 +186,7 @@ WHERE ORDERS.INVOICENUMBER != 0
 "WHERE ORDERS.INVOICENUMBER != 0                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,        " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"          AT time zone sessiontimezone) AS DATE))                        " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                        " &
 "       Between :DataFaturamentoDe                                        " &
 "           And :DataFaturamentoAte                                       " &
 "                                                                         " &
@@ -200,15 +200,15 @@ WHERE ORDERS.INVOICENUMBER != 0
 "  ORDERS.LANE           SR,                                              " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         " &
-"      AT time zone sessiontimezone) AS DATE)                             " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                             " &
 "                        DT_FATURAMENTO,                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                 " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_FECHA_GAIOLA,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TRACK.DATA_LIQ,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_LIQ                                           " &
 "FROM       WMWHSE3.ORDERS                                                " &
 " LEFT JOIN WMWHSE3.CAGEIDDETAIL                                          " &
@@ -235,7 +235,7 @@ WHERE ORDERS.INVOICENUMBER != 0
 "WHERE ORDERS.INVOICENUMBER != 0                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')     " &
-"          AT time zone sessiontimezone) AS DATE))                        " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                        " &
 "      Between :DataFaturamentoDe                                         " &
 "          And :DataFaturamentoAte                                        " &
 "                                                                         " &
@@ -249,15 +249,15 @@ WHERE ORDERS.INVOICENUMBER != 0
 "  ORDERS.LANE           SR,                                              " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         " &
-"      AT time zone sessiontimezone) AS DATE)                             " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                             " &
 "                        DT_FATURAMENTO,                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                 " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_FECHA_GAIOLA,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TRACK.DATA_LIQ,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_LIQ                                           " &
 "FROM       WMWHSE4.ORDERS                                                " &
 " LEFT JOIN WMWHSE4.CAGEIDDETAIL                                          " &
@@ -284,7 +284,7 @@ WHERE ORDERS.INVOICENUMBER != 0
 "WHERE ORDERS.INVOICENUMBER != 0                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')     " &
-"          AT time zone sessiontimezone) AS DATE))                        " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                        " &
 "      Between :DataFaturamentoDe                                         " &
 "          And :DataFaturamentoAte                                        " &
 "                                                                         " &
@@ -298,15 +298,15 @@ WHERE ORDERS.INVOICENUMBER != 0
 "  ORDERS.LANE           SR,                                              " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         " &
-"      AT time zone sessiontimezone) AS DATE)                             " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                             " &
 "                        DT_FATURAMENTO,                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                 " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_FECHA_GAIOLA,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TRACK.DATA_LIQ,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_LIQ                                           " &
 "FROM       WMWHSE5.ORDERS                                                " &
 " LEFT JOIN WMWHSE5.CAGEIDDETAIL                                          " &
@@ -333,7 +333,7 @@ WHERE ORDERS.INVOICENUMBER != 0
 "WHERE ORDERS.INVOICENUMBER != 0                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')     " &
-"          AT time zone sessiontimezone) AS DATE))                        " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                        " &
 "      Between :DataFaturamentoDe                                         " &
 "          And :DataFaturamentoAte                                        " &
 "                                                                         " &
@@ -347,15 +347,15 @@ WHERE ORDERS.INVOICENUMBER != 0
 "  ORDERS.LANE           SR,                                              " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         " &
-"      AT time zone sessiontimezone) AS DATE)                             " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                             " &
 "                        DT_FATURAMENTO,                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                 " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_FECHA_GAIOLA,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TRACK.DATA_LIQ,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_LIQ                                           " &
 "FROM       WMWHSE6.ORDERS                                                " &
 " LEFT JOIN WMWHSE6.CAGEIDDETAIL                                          " &
@@ -382,7 +382,7 @@ WHERE ORDERS.INVOICENUMBER != 0
 "WHERE ORDERS.INVOICENUMBER != 0                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')     " &
-"          AT time zone sessiontimezone) AS DATE))                        " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                        " &
 "      Between :DataFaturamentoDe                                         " &
 "          And :DataFaturamentoAte                                        " &
 "                                                                         " &
@@ -396,15 +396,15 @@ WHERE ORDERS.INVOICENUMBER != 0
 "  ORDERS.LANE           SR,                                              " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         " &
-"      AT time zone sessiontimezone) AS DATE)                             " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                             " &
 "                        DT_FATURAMENTO,                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                 " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_FECHA_GAIOLA,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TRACK.DATA_LIQ,                   " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE)                           " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)                           " &
 "                        DT_LIQ                                           " &
 "FROM       WMWHSE7.ORDERS                                                " &
 " LEFT JOIN WMWHSE7.CAGEIDDETAIL                                          " &
@@ -431,7 +431,7 @@ WHERE ORDERS.INVOICENUMBER != 0
 "WHERE ORDERS.INVOICENUMBER != 0                                          " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')     " &
-"          AT time zone sessiontimezone) AS DATE))                        " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                        " &
 "      Between :DataFaturamentoDe                                         " &
 "          And :DataFaturamentoAte                                        " &
 "ORDER BY DESC_PLANTA, PEDIDO                                             "

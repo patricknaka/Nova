@@ -43,7 +43,7 @@ WHERE tdsls401.t$dltp = 15
   AND tdsls401.t$qoor > 0
 
   AND Trunc(  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) ) 
+        AT time zone 'America/Sao_Paulo') AS DATE) ) 
       Between :DataDe 
           And :DataAte
   AND ( (:Filial = 'AAA') OR (UPPER(wmsCODE.UDF1) = :Filial) )

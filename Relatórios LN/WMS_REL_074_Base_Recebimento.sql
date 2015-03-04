@@ -3,7 +3,7 @@
     WMSADMIN.PL_DB.DB_ALIAS                          FILIAL, 
     trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE), 'DD')
+        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')
                                                      DATA,
     count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,
     count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,
@@ -40,14 +40,14 @@ WHERE RECEIPTDETAIL.STATUS >= 9
   
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) 
+        AT time zone 'America/Sao_Paulo') AS DATE)) 
       Between :DataRectoDe
           And :DataRectoAte
 
 GROUP BY PL_DB.DB_ALIAS,
          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE), 'DD'), 
+              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'), 
          CODELKUP.LONG_VALUE,
          CASE WHEN SKU.SUSR8 = 'MINUCIOSO' 
                 THEN 'SIM' 
@@ -61,7 +61,7 @@ ORDER BY DATA
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,                  " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,      " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                         " &
 "                                                     DATA,                    " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,              " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,              " &
@@ -92,13 +92,13 @@ ORDER BY DATA
 "  AND CODELKUP.LISTNAME = 'RECEIPTYPE'                                        " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE))                               " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                               " &
 "      Between '" + Parameters!DataRectoDe.Value + "'                          " &
 "          And '" + Parameters!DataRectoAte.Value + "'                         " &
 "GROUP BY PL_DB.DB_ALIAS,                                                      " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                  " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                  " &
 "         CODELKUP.LONG_VALUE,                                                 " &
 "         CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                    " &
 "                THEN 'SIM'                                                    " &
@@ -113,7 +113,7 @@ ORDER BY DATA
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,                  " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,      " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                         " &
 "                                                     DATA,                    " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,              " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,              " &
@@ -144,13 +144,13 @@ ORDER BY DATA
 "  AND CODELKUP.LISTNAME = 'RECEIPTYPE'                                        " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE))                               " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                               " &
 "      Between '" + Parameters!DataRectoDe.Value + "'                          " &
 "          And '" + Parameters!DataRectoAte.Value + "'                         " &
 "GROUP BY PL_DB.DB_ALIAS,                                                      " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                  " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                  " &
 "         CODELKUP.LONG_VALUE,                                                 " &
 "         CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                    " &
 "                THEN 'SIM'                                                    " &
@@ -164,7 +164,7 @@ ORDER BY DATA
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,                  " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,      " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                         " &
 "                                                     DATA,                    " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,              " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,              " &
@@ -195,13 +195,13 @@ ORDER BY DATA
 "  AND CODELKUP.LISTNAME = 'RECEIPTYPE'                                        " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE))                               " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                               " &
 "      Between '" + Parameters!DataRectoDe.Value + "'                          " &
 "          And '" + Parameters!DataRectoAte.Value + "'                         " &
 "GROUP BY PL_DB.DB_ALIAS,                                                      " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                  " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                  " &
 "         CODELKUP.LONG_VALUE,                                                 " &
 "         CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                    " &
 "                THEN 'SIM'                                                    " &
@@ -215,7 +215,7 @@ ORDER BY DATA
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,                  " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,      " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                         " &
 "                                                     DATA,                    " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,              " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,              " &
@@ -246,13 +246,13 @@ ORDER BY DATA
 "  AND CODELKUP.LISTNAME = 'RECEIPTYPE'                                        " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE))                               " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                               " &
 "      Between '" + Parameters!DataRectoDe.Value + "'                          " &
 "          And '" + Parameters!DataRectoAte.Value + "'                         " &
 "GROUP BY PL_DB.DB_ALIAS,                                                      " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                  " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                  " &
 "         CODELKUP.LONG_VALUE,                                                 " &
 "         CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                    " &
 "                THEN 'SIM'                                                    " &
@@ -266,7 +266,7 @@ ORDER BY DATA
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,                  " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,      " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                         " &
 "                                                     DATA,                    " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,              " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,              " &
@@ -297,13 +297,13 @@ ORDER BY DATA
 "  AND CODELKUP.LISTNAME = 'RECEIPTYPE'                                        " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE))                               " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                               " &
 "      Between '" + Parameters!DataRectoDe.Value + "'                          " &
 "          And '" + Parameters!DataRectoAte.Value + "'                         " &
 "GROUP BY PL_DB.DB_ALIAS,                                                      " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                  " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                  " &
 "         CODELKUP.LONG_VALUE,                                                 " &
 "         CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                    " &
 "                THEN 'SIM'                                                    " &
@@ -317,7 +317,7 @@ ORDER BY DATA
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,                  " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,      " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                         " &
 "                                                     DATA,                    " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,              " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,              " &
@@ -348,13 +348,13 @@ ORDER BY DATA
 "  AND CODELKUP.LISTNAME = 'RECEIPTYPE'                                        " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE))                               " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                               " &
 "      Between '" + Parameters!DataRectoDe.Value + "'                          " &
 "          And '" + Parameters!DataRectoAte.Value + "'                         " &
 "GROUP BY PL_DB.DB_ALIAS,                                                      " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                  " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                  " &
 "         CODELKUP.LONG_VALUE,                                                 " &
 "         CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                    " &
 "                THEN 'SIM'                                                    " &
@@ -368,7 +368,7 @@ ORDER BY DATA
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,                  " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,      " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                         " &
 "                                                     DATA,                    " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,              " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,              " &
@@ -399,13 +399,13 @@ ORDER BY DATA
 "  AND CODELKUP.LISTNAME = 'RECEIPTYPE'                                        " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE))                               " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                               " &
 "      Between '" + Parameters!DataRectoDe.Value + "'                          " &
 "          And '" + Parameters!DataRectoAte.Value + "'                         " &
 "GROUP BY PL_DB.DB_ALIAS,                                                      " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                  " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                  " &
 "         CODELKUP.LONG_VALUE,                                                 " &
 "         CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                    " &
 "                THEN 'SIM'                                                    " &
@@ -419,7 +419,7 @@ ORDER BY DATA
 "    WMSADMIN.PL_DB.DB_ALIAS                          FILIAL,                  " &
 "    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,      " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                         " &
 "                                                     DATA,                    " &
 "    count(distinct RECEIPTDETAIL.RECEIPTKEY)         NU_RECBTOS,              " &
 "    count(distinct nvl(RECEIPT.SUPPLIERCODE, ' ') )  NU_FORNECS,              " &
@@ -450,13 +450,13 @@ ORDER BY DATA
 "  AND CODELKUP.LISTNAME = 'RECEIPTYPE'                                        " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')            " &
-"        AT time zone sessiontimezone) AS DATE))                               " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                               " &
 "      Between '" + Parameters!DataRectoDe.Value + "'                          " &
 "          And '" + Parameters!DataRectoAte.Value + "'                         " &
 "GROUP BY PL_DB.DB_ALIAS,                                                      " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),                  " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                  " &
 "         CODELKUP.LONG_VALUE,                                                 " &
 "         CASE WHEN SKU.SUSR8 = 'MINUCIOSO'                                    " &
 "                THEN 'SIM'                                                    " &

@@ -10,7 +10,7 @@ select Q1.*
                 
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone sessiontimezone) AS DATE)
+                    AT time zone 'America/Sao_Paulo') AS DATE)
                                                       DATA_EMISSAO,
                      
                 CASE WHEN cisli940.t$stat$l = 2 THEN 'CANCELADA'

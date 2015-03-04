@@ -15,7 +15,7 @@ SELECT
     cisli940.t$idoc$l            DOC_LIGADO_TRANSACAO,
 
  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
-     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                  DATA_EMISSAO_NF,
 
     cisli940.t$fire$l            REF_FISCAL_NF,
@@ -159,7 +159,7 @@ SELECT
     cisli940.t$idoc$l            DOC_LIGADO_TRANSACAO,
 
  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
-     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                  DATA_EMISSAO_NF,
                                  
     cisli940.t$fire$l            REF_FISCAL_NF,
@@ -307,7 +307,7 @@ SELECT
    tdrec940.t$invn$l            DOC_LIGADO_TRANSACAO,
    
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 
-    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                 DATA_EMISSAO_NF,
                                 
    tdrec940.t$fire$l            REF_FISCAL_NF,

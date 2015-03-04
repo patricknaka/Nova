@@ -28,7 +28,7 @@ SELECT
                   
     nvl( ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE)
+              AT time zone 'America/Sao_Paulo') AS DATE)
              from WMWHSE5.ORDERSTATUSHISTORY  A
             where A.ADDDATE = ( select max(A1.ADDDATE) 
                                   from WMWHSE5.ORDERSTATUSHISTORY  A1
@@ -36,24 +36,24 @@ SELECT
               and A.ORDERKEY = ORDERS.ORDERKEY
               and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE, 
                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                              AT time zone sessiontimezone) AS DATE)) 
+                              AT time zone 'America/Sao_Paulo') AS DATE)) 
                                     DT_ULT_EVENTO,
                   
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone sessiontimezone) AS DATE)                  
+         AT time zone 'America/Sao_Paulo') AS DATE)                  
                                     DT_WMS,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone sessiontimezone) AS DATE)                 
+         AT time zone 'America/Sao_Paulo') AS DATE)                 
                                     PETK_DT_FECHAMENTO_GAIOLA,  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone sessiontimezone) AS DATE)        
+         AT time zone 'America/Sao_Paulo') AS DATE)        
                                     DT_LIMITE,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone sessiontimezone) AS DATE)        
+         AT time zone 'America/Sao_Paulo') AS DATE)        
                                     DT_PROMETIDA,
     ORDERS.C_VAT                    MEGA_ROTA,
     znsls401.t$fovn$c               PEDV_ID_TRANSP,
@@ -81,7 +81,7 @@ INNER JOIN WMSADMIN.PL_DB             WMSADMIN
 
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone sessiontimezone) AS DATE)) Between :DataLimiteDe
+         AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataLimiteDe
   AND :DataLimiteAte
   
 
@@ -115,7 +115,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE)                                         " &
+"              AT time zone 'America/Sao_Paulo') AS DATE)                                         " &
 "             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
 "                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
@@ -123,24 +123,24 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
 "                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"                              AT time zone sessiontimezone) AS DATE) )                       " &
+"                              AT time zone 'America/Sao_Paulo') AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                  
 "                                    DT_WMS,                                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                 
 "                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_LIMITE,                                               " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
@@ -168,7 +168,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"         AT time zone 'America/Sao_Paulo') AS DATE))                                             " & 
 "  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " & 
 
@@ -204,7 +204,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE)                                         " &
+"              AT time zone 'America/Sao_Paulo') AS DATE)                                         " &
 "             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
 "                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
@@ -212,24 +212,24 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
 "                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"                              AT time zone sessiontimezone) AS DATE) )                       " &
+"                              AT time zone 'America/Sao_Paulo') AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                  
 "                                    DT_WMS,                                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                 
 "                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_LIMITE,                                               " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
@@ -257,7 +257,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"         AT time zone 'America/Sao_Paulo') AS DATE))                                             " & 
 "  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
@@ -293,7 +293,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE)                                         " &
+"              AT time zone 'America/Sao_Paulo') AS DATE)                                         " &
 "             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
 "                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
@@ -301,24 +301,24 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
 "                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"                              AT time zone sessiontimezone) AS DATE) )                       " &
+"                              AT time zone 'America/Sao_Paulo') AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                  
 "                                    DT_WMS,                                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                 
 "                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_LIMITE,                                               " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
@@ -346,7 +346,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"         AT time zone 'America/Sao_Paulo') AS DATE))                                             " & 
 "  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
@@ -382,7 +382,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE)                                         " &
+"              AT time zone 'America/Sao_Paulo') AS DATE)                                         " &
 "             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
 "                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
@@ -390,24 +390,24 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
 "                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"                              AT time zone sessiontimezone) AS DATE) )                       " &
+"                              AT time zone 'America/Sao_Paulo') AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                  
 "                                    DT_WMS,                                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                 
 "                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_LIMITE,                                               " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
@@ -435,7 +435,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"         AT time zone 'America/Sao_Paulo') AS DATE))                                             " & 
 "  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
@@ -471,7 +471,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE)                                         " &
+"              AT time zone 'America/Sao_Paulo') AS DATE)                                         " &
 "             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
 "                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
@@ -479,24 +479,24 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
 "                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"                              AT time zone sessiontimezone) AS DATE) )                       " &
+"                              AT time zone 'America/Sao_Paulo') AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                  
 "                                    DT_WMS,                                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                 
 "                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_LIMITE,                                               " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
@@ -524,7 +524,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"         AT time zone 'America/Sao_Paulo') AS DATE))                                             " & 
 "  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
@@ -560,7 +560,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE)                                         " &
+"              AT time zone 'America/Sao_Paulo') AS DATE)                                         " &
 "             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
 "                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
@@ -568,24 +568,24 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
 "                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"                              AT time zone sessiontimezone) AS DATE) )                       " &
+"                              AT time zone 'America/Sao_Paulo') AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                  
 "                                    DT_WMS,                                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                 
 "                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_LIMITE,                                               " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
@@ -613,7 +613,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"         AT time zone 'America/Sao_Paulo') AS DATE))                                             " & 
 "  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
@@ -649,7 +649,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE)                                         " &
+"              AT time zone 'America/Sao_Paulo') AS DATE)                                         " &
 "             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
 "                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
@@ -657,24 +657,24 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
 "                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"                              AT time zone sessiontimezone) AS DATE) )                       " &
+"                              AT time zone 'America/Sao_Paulo') AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                  
 "                                    DT_WMS,                                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                 
 "                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_LIMITE,                                               " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
@@ -702,7 +702,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"         AT time zone 'America/Sao_Paulo') AS DATE))                                             " & 
 "  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &
@@ -738,7 +738,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "    nvl( ( select select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.ADDDATE,                       " & 
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                     " &
-"              AT time zone sessiontimezone) AS DATE)                                         " &
+"              AT time zone 'America/Sao_Paulo') AS DATE)                                         " &
 "             from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A                       " &
 "            where A.ADDDATE = ( select max(A1.ADDDATE)                                       " &
 "                                  from " + Parameters!Table.Value + ".ORDERSTATUSHISTORY  A1 " &
@@ -746,24 +746,24 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "              and A.ORDERKEY = ORDERS.ORDERKEY                                               " &
 "              and rownum = 1 ), CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,          " & 
 "                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"                              AT time zone sessiontimezone) AS DATE) )                       " &
+"                              AT time zone 'America/Sao_Paulo') AS DATE) )                       " &
 "                                    DT_ULT_EVENTO,                                           " &
 "                                                                                             " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,                                       " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                  
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                  
 "                                    DT_WMS,                                                  " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGEID.CLOSEDATE,                                     " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &                 
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &                 
 "                                    PETK_DT_FECHAMENTO_GAIOLA,                               " &  
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_LIMITE,                                               " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                             " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE)                                              " &        
+"         AT time zone 'America/Sao_Paulo') AS DATE)                                              " &        
 "                                    DT_PROMETIDA,                                            " &
 "    ORDERS.C_VAT                    MEGA_ROTA,                                               " &
 "    znsls401.t$fovn$c               PEDV_ID_TRANSP,                                          " &
@@ -791,7 +791,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,
 "                                                                                             " &
 "WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDDELVDATE,                     " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                           " &
-"         AT time zone sessiontimezone) AS DATE))                                             " & 
+"         AT time zone 'America/Sao_Paulo') AS DATE))                                             " & 
 "  Between '" + Parameters!DataLimiteDe.Value + "'                                            " &
 "  AND '" + Parameters!DataLimiteAte.Value + "'                                               " &
 "                                                                                             " &

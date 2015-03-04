@@ -46,7 +46,7 @@ select Q1.DATA_EMISSAO,
 from ( SELECT DISTINCT
               CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE)
+                  AT time zone 'America/Sao_Paulo') AS DATE)
                                              DATA_EMISSAO, 
               znfmd630.t$fili$c              FILIAL,
               znfmd630.t$pecl$c              ENTREGA,
@@ -109,7 +109,7 @@ from ( SELECT DISTINCT
               
               CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE)
+                  AT time zone 'America/Sao_Paulo') AS DATE)
                                              DATA_DEV_EMISS_NR, 
           
               tccom130.t$fovn$l              CPF_DESTINATARIO, 
@@ -141,7 +141,7 @@ from ( SELECT DISTINCT
                   
               ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znfmd640.t$date$c), 
                         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                          AT time zone sessiontimezone) AS DATE)
+                          AT time zone 'America/Sao_Paulo') AS DATE)
                   FROM baandb.tznfmd640301 znfmd640
                  WHERE znfmd640.t$fili$c = znfmd630.t$fili$c
                    AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )

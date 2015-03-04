@@ -23,7 +23,7 @@ SELECT
      
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd062.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'),
           'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone sessiontimezone) AS DATE)
+            AT time zone 'America/Sao_Paulo') AS DATE)
                          DATA_HORA
 
 FROM       BAANDB.tznfmd067201 znfmd067
@@ -88,7 +88,7 @@ WHERE  znfmd067.t$ativ$c = 1
        
        AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd062.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'),
            'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone sessiontimezone) AS DATE))
+            AT time zone 'America/Sao_Paulo') AS DATE))
        Between :DataDe
            And :DataAte
        

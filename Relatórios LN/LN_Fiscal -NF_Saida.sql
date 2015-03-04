@@ -26,12 +26,12 @@ select Q1.*
      
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)  
+                     AT time zone 'America/Sao_Paulo') AS DATE)  
                                             DATA_FATURAMENTO,
            
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)  
+                     AT time zone 'America/Sao_Paulo') AS DATE)  
                                             DATA_EMISSAO,
                  cisli941.t$line$l          LINE_ITEM,
                  tcibd001.t$citg            ID_DEPTO,

@@ -28,12 +28,12 @@ SELECT
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whwmd210.t$rcd_utc, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                        DT_ALTERCAO,
       
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znwmd200.t$rcd_utc, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                        DT_ARQ,
       
     znwmd200.T$qtdf$c  QT_ARQUIVO,

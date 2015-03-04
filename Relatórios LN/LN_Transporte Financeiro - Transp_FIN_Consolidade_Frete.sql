@@ -24,7 +24,7 @@ select q1.* from (
      
        AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)) 
+                     AT time zone 'America/Sao_Paulo') AS DATE)) 
            BETWEEN :DataDe 
                AND :DataAte
      

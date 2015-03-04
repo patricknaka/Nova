@@ -9,7 +9,7 @@ SELECT
     tcibd001.t$dsca	  ITEM_DESC,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)  
+        AT time zone 'America/Sao_Paulo') AS DATE)  
                       DATA_PROMETIDA,
     znsls401.t$ufen$c	UF,
     znsls401.t$nome$c	NOME_CLIENTE,

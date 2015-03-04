@@ -14,7 +14,7 @@ select  q1.t$uneg$c                       ID_UNEG,
         Q1.PT_CONTR                       ULT_PONTO,
         
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
-         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                           HORA_ULT_PONTO,
         tdsls400.t$cfrw                   TRANSPORTADDORA,
         TCMCS080.T$DSCA                   NOME_TRANSP,

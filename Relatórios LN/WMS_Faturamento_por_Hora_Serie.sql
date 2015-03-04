@@ -2,9 +2,9 @@ select
 	wmsCODE.FILIAL                                            FILIAL,     
 	wmsCODE.ID_FILIAL                                         DSC_PLANTA,
   trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE), 'DD')     DT_EMISSAO,  
+          AT time zone 'America/Sao_Paulo') AS DATE), 'DD')     DT_EMISSAO,  
   trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE), 'HH24')   HR,
+          AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HR,
   sli940.t$seri$l                                           SERIE,
   
   
@@ -42,7 +42,7 @@ where
 
      sli940.t$stat$l IN (5,6) and sli940.t$nfes$l IN (1,2,5)
 		and   trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE), 'DD')  BETWEEN :DataDe AND :DataAte
+          AT time zone 'America/Sao_Paulo') AS DATE), 'DD')  BETWEEN :DataDe AND :DataAte
 
     and sli941.t$item$l not in
           ( select a.t$itjl$c
@@ -62,8 +62,8 @@ group by
 	wmsCODE.FILIAL,
 	wmsCODE.ID_FILIAL,
   trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE), 'DD'),  
+          AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),  
   trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE), 'HH24'),
+          AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),
   sli940.t$seri$l
 

@@ -15,7 +15,7 @@ SELECT DISTINCT
   
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 
   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE) 
+    AT time zone 'America/Sao_Paulo') AS DATE) 
                         DTA_UTILIZACAO, 
   
   znsls402.t$vlpg$c     VLR_UTILIZADO,
@@ -76,7 +76,7 @@ WHERE znacr200.t$date$c BETWEEN :DTA_CRIACAO_DE AND :DTA_CRIACAO_ATE
   AND Trunc(tfacr201.t$dued$l) BETWEEN :DTA_VENCIMENTO_DE AND :DTA_VENCIMENTO_ATE
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 
   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE)) BETWEEN :DTA_UTILIZACAO_DE AND :DTA_UTILIZACAO_ATE
+    AT time zone 'America/Sao_Paulo') AS DATE)) BETWEEN :DTA_UTILIZACAO_DE AND :DTA_UTILIZACAO_ATE
   AND zngld006.t$type$c IN (:TipoVale)
 
   AND ( CASE WHEN tfacr201.t$dued$l < sysdate THEN 1  --'Expirado' 

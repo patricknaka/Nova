@@ -27,11 +27,11 @@ select Q1.*
                  
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)  
+                     AT time zone 'America/Sao_Paulo') AS DATE)  
                                                       DATA_REFFISCAL,          -- 21
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)  
+                     AT time zone 'America/Sao_Paulo') AS DATE)  
                                                       DT_EMISSAO,              -- 22
                  tdrec940.t$opfc$l                    CFO,                     -- 23
                  tdrec941.t$line$l                    LINE_ITEM,               -- 24

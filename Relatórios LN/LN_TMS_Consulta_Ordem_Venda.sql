@@ -15,7 +15,7 @@ SELECT DISTINCT
        
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE)    DT_INCL_PED
+           AT time zone 'America/Sao_Paulo') AS DATE)    DT_INCL_PED
                                              
 FROM       baandb.ttdsls401301  tdsls401
 
@@ -101,7 +101,7 @@ INNER JOIN baandb.ttccom130301 tccom130
        
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE))
+                AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataInclusaoDe
           And :DataInclusaoAte
   AND NVL(znfmd630.T$fili$c,tcemm030.t$euca) IN (:Filial)

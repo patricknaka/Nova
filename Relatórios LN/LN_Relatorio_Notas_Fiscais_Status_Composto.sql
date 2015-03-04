@@ -9,13 +9,13 @@ SELECT
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)      MENOR_DATA,
+          AT time zone 'America/Sao_Paulo') AS DATE)      MENOR_DATA,
     
     TO_TIMESTAMP(TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'))
     - 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)      ESPERA
+          AT time zone 'America/Sao_Paulo') AS DATE)      ESPERA
   
 FROM  baandb.tcisli940301 cisli940
 

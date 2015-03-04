@@ -2,7 +2,7 @@ select Q1.*
   from ( SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -85,7 +85,7 @@ select Q1.*
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,
@@ -215,7 +215,7 @@ select Q1.*
 SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -298,7 +298,7 @@ SELECT
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,
@@ -428,7 +428,7 @@ SELECT
 SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -511,7 +511,7 @@ SELECT
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,
@@ -641,7 +641,7 @@ SELECT
 SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -724,7 +724,7 @@ SELECT
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,
@@ -854,7 +854,7 @@ SELECT
 SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -937,7 +937,7 @@ SELECT
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,
@@ -1067,7 +1067,7 @@ SELECT
 SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -1150,7 +1150,7 @@ SELECT
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,
@@ -1280,7 +1280,7 @@ SELECT
 SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -1363,7 +1363,7 @@ SELECT
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,
@@ -1493,7 +1493,7 @@ SELECT
 SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -1576,7 +1576,7 @@ SELECT
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,
@@ -1706,7 +1706,7 @@ SELECT
 SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -1789,7 +1789,7 @@ SELECT
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,
@@ -1919,7 +1919,7 @@ SELECT
 SELECT 
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)  
+                AT time zone 'America/Sao_Paulo') AS DATE)  
                                            data_limite_exped,
            znsls401.t$entr$c               pedido_entrega,
            a.referencedocument             ordem_venda,
@@ -2002,7 +2002,7 @@ SELECT
                 WHERE h.orderkey = a.orderkey
                 AND h.status = a.status ), a.editdate) END  
         ,'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)        
+                        AT time zone 'America/Sao_Paulo') AS DATE)        
                 ult_evento_data,
                    
            sq2.CAGEID                      carga,

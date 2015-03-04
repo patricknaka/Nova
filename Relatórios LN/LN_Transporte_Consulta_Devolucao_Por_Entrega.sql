@@ -85,7 +85,7 @@ INNER JOIN baandb.tcisli940301 cisli940v
            LEFT JOIN ( select znfmd640b.t$fili$c,
                               znfmd640b.t$etiq$c,
                               max(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640b.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 
-                                    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)) DATO
+                                    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)) DATO
                          from BAANDB.tznfmd640301 znfmd640b 
                      group by znfmd640b.t$fili$c,
                               znfmd640b.t$etiq$c )  OCORRENCIA

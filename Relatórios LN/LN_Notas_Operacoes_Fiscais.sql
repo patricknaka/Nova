@@ -6,7 +6,7 @@ SELECT
                        
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,  
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-        AT time zone sessiontimezone) AS DATE)  
+        AT time zone 'America/Sao_Paulo') AS DATE)  
                        DATA_APROV, 
                        
     tdrec940.t$fire$l  REFE_FISCAL,                  
@@ -72,7 +72,7 @@ INNER JOIN baandb.ttcemm122301  tcemm122
 		
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,  
        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-         AT time zone sessiontimezone) AS DATE)) 
+         AT time zone 'America/Sao_Paulo') AS DATE)) 
       BETWEEN :DtAprovacaoDe 
           AND :DtAprovacaoAte 
    AND tcemm122.T$grid IN (:Filial) 

@@ -22,32 +22,32 @@ select Q1.*
                   KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C, 
                                                  znsls410.T$SEQN$C),
                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-                      AT time zone sessiontimezone) AS DATE)             DT_ULT_RASTR,
+                      AT time zone 'America/Sao_Paulo') AS DATE)             DT_ULT_RASTR,
                 
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls400.T$DTEM$C) 
                   KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, 
                                                  znsls410.T$SEQN$C),
                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-                      AT time zone sessiontimezone) AS DATE)             DT_EMISSAO,
+                      AT time zone 'America/Sao_Paulo') AS DATE)             DT_EMISSAO,
                 
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls401.T$DTEP$C) 
                   KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, 
                                                  znsls410.T$SEQN$C),
                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-                      AT time zone sessiontimezone) AS DATE)             DT_ENTREGA,
+                      AT time zone 'America/Sao_Paulo') AS DATE)             DT_ENTREGA,
                 
                 znint002.T$desc$C                                        UNID_NEGOC,
                 znsls401.T$TPES$C                                        TP_ESTOQUE,
                 WMS_ORDERS.ORDERKEY                                      PEDIDO_WMS,
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)              DT_ORDEM,
+                     AT time zone 'America/Sao_Paulo') AS DATE)              DT_ORDEM,
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)              DT_ENTR_PLAN,
+                     AT time zone 'America/Sao_Paulo') AS DATE)              DT_ENTR_PLAN,
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)              DT_PLAN_REC,
+                     AT time zone 'America/Sao_Paulo') AS DATE)              DT_PLAN_REC,
                 tccom130.t$fovn$l                                        CNPJ_FORN    
                 
            FROM baandb.tznsls410301 znsls410 

@@ -17,7 +17,7 @@ Select Q1.*
             znfmd630ret.t$cono$c         TRANSP_CONTRATO_COLETA,
             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400ret.t$dtin$c, 
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone sessiontimezone) AS DATE) 
+                    AT time zone 'America/Sao_Paulo') AS DATE) 
                                          DT_OCORR,
             CASE WHEN znfmd630ret.t$stat$c = 'F' 
                    THEN 'FECHADO' 
@@ -28,13 +28,13 @@ Select Q1.*
             znsls401ret.t$entr$c         ENTREGA,
             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940ori.t$date$l, 
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone sessiontimezone) AS DATE) 
+                    AT time zone 'America/Sao_Paulo') AS DATE) 
                                          DT_EMISSAO_NFS,
             cisli940ori.t$docn$l         ID_NF_ORIG,
             cisli940ori.t$seri$l         SERIE_ORIG,
             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940ret.t$date$l,
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone sessiontimezone) AS DATE) 
+                    AT time zone 'America/Sao_Paulo') AS DATE) 
                                          DT_EMISSAO_NFE,
             znfmd630ret.t$fili$c         FILI_NFE,
             cisli940ret.t$docn$l         NFE,
@@ -92,7 +92,7 @@ Select Q1.*
             znfmd630ret.t$fili$c         FILIAL,
             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630ret.t$date$c,
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone sessiontimezone) AS DATE) 
+                    AT time zone 'America/Sao_Paulo') AS DATE) 
                                          DT_REGISTRO,
             znfmd001ret.t$dsca$c         NOME_FILIAL,
             znfmd001ret.t$fovn$c         CNPJ_FILIAL,
@@ -218,7 +218,7 @@ Select Q1.*
     LEFT JOIN ( SELECT znfmd640.t$stat$c   STATUS_OCORRENCIA, 
                        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znfmd640.t$date$c), 
                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                           AT time zone sessiontimezone) AS DATE)
+                           AT time zone 'America/Sao_Paulo') AS DATE)
                                            DATA_OCORRENCIA,
                        znfmd640.t$fili$c,
                        znfmd640.t$etiq$c

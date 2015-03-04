@@ -18,7 +18,7 @@ select
     tdrec940.t$fids$l     NOME,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                           DT_EMISSAO,
     tdrec940.t$opfc$l     ID_NATOPE,
     tdrec940.t$opor$l     SEQ_NATOPE,
@@ -50,11 +50,11 @@ select
     tcmcs013b.t$dsca      CONP_NOME_PED,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                           DT_EMISSAO_PED,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$ddat, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                           DT_ENTREGA_PED,
     tdpur400.t$hdst       NOCA_SITUACAO,
     
@@ -134,4 +134,4 @@ where tdrec947.t$fire$l = tdrec941.t$fire$l
   
   and Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) Between &DataEmissaoNFDe and &DataEmissaoNFAte
+        AT time zone 'America/Sao_Paulo') AS DATE)) Between &DataEmissaoNFDe and &DataEmissaoNFAte

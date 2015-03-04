@@ -8,7 +8,7 @@ SELECT
   tdrec940.t$seri$l      SERI_NF, 
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)        
+      AT time zone 'America/Sao_Paulo') AS DATE)        
                          DATA_EMISS,
   tdrec940.t$stat$l      CODE_STATUS, 
                          DESC_DOMAIN_STAT.DESC_STAT, 
@@ -105,7 +105,7 @@ WHERE tdrec940.t$rfdt$l = 13
   
   AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)) between :EmissaoDe AND :EmissaoAte
+      AT time zone 'America/Sao_Paulo') AS DATE)) between :EmissaoDe AND :EmissaoAte
   AND tdrec940.t$stat$l = (CASE WHEN :StatusNF = 0 THEN tdrec940.t$stat$l ELSE :StatusNF END)
   AND Trim(tcibd001.t$citg) IN (:GrupoItem)
   AND ( (Trim(tccom130.t$fovn$l) like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null) )

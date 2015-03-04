@@ -11,7 +11,7 @@ SELECT
    tdrec940.t$fids$l      NOME_FORNECEDOR,
    
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
-   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                           DATA_FISCAL,
         
    tdrec940.t$opfc$l      NUME_CFOP,
@@ -25,11 +25,11 @@ SELECT
    tdpur401.t$cdec        CONDICAO_ENTREGA_NR,
    
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 
-    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                           DATA_ORDEM,   
         
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$ddta, 'DD-MON-YYYY HH24:MI:SS'), 
-    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                           DATA_PLANEJADA,
         
    tcibd001.t$csig        SINALIZACAO_ITEM,

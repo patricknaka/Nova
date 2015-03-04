@@ -2,10 +2,10 @@ SELECT
   tdrec940.t$cofc$l                       DEPTO,
   tcemm030.t$euca                         FILIAL,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
+        AT time zone 'America/Sao_Paulo') AS DATE) 
                                           DATA_EMISSAO,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
+        AT time zone 'America/Sao_Paulo') AS DATE) 
                                           DATA_FISCAL,
   
   CASE WHEN tfacp200.t$balc = 0 
@@ -127,7 +127,7 @@ INNER JOIN baandb.ttcemm030301 tcemm030
     
 WHERE Trim(tdrec940.t$opfc$l) in ('1933', '2933', '1300')
   AND Trunc(  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) ) Between :DataFiscalDe AND :DataFiscalAte
+        AT time zone 'America/Sao_Paulo') AS DATE) ) Between :DataFiscalDe AND :DataFiscalAte
 		
 GROUP BY
   tdrec940.t$cofc$l, tcemm030.t$euca,   tdrec940.t$idat$l, tdrec940.t$date$l, 
@@ -138,4 +138,4 @@ GROUP BY
 ORDER BY tdrec940.t$cofc$l,
          tcemm030.t$euca,
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                    AT time zone sessiontimezone) AS DATE) 
+                                    AT time zone 'America/Sao_Paulo') AS DATE) 

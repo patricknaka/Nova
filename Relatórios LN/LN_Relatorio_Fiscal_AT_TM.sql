@@ -27,7 +27,7 @@ select Q1.*
      
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)  
+                     AT time zone 'America/Sao_Paulo') AS DATE)  
                                             DT_NF,     
                  STATUS.DESCR               SITUACAO_NF,           
                  cisli941.t$ccfo$l          ID_CFOP,

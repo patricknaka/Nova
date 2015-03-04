@@ -4,7 +4,7 @@ SELECT
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) 
+      AT time zone 'America/Sao_Paulo') AS DATE) 
                                                     DT_NR,
              
     tdrec940.t$fire$l                               NR,
@@ -14,7 +14,7 @@ SELECT
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) 
+      AT time zone 'America/Sao_Paulo') AS DATE) 
                                                     DATA_EMISSAO,
               
     tdrec940.t$opfc$l                               CFOP,
@@ -91,4 +91,4 @@ WHERE TRIM(tdrec940.t$opfc$l) IN ('1933', '2933', '1300')
   
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)) Between :DataEmissaoDe AND :DataEmissaoAte
+      AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataEmissaoDe AND :DataEmissaoAte

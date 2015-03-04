@@ -4,7 +4,7 @@ SELECT DISTINCT
         cl.UDF2                       DESC_ARMAZEM,                           --02        
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(d.ADDDATE), 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE)  
+              AT time zone 'America/Sao_Paulo') AS DATE)  
                                       DATA_LANCTO,                            --03
         d.RECEIPTKEY                  ASN,                                    --04
         d.EXTERNLINENO                LINHA_ASN,                              --05
@@ -23,7 +23,7 @@ SELECT DISTINCT
         DEPTO.SECTOR_NAME             NOME_SETOR,                             --13
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(d.DATERECEIVED), 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE)
+              AT time zone 'America/Sao_Paulo') AS DATE)
                                     DATA_RECBTO,                              --14   
         SUM(d.QTYEXPECTED)          QTDE_PCS_LANC,                            --15
         SUM(d.QTYRECEIVED)          QTDE_PCS_RECEBIDAS,                       --16
@@ -37,7 +37,7 @@ SELECT DISTINCT
         tdrec940.t$seri$l           SERIE_NF,                                 --24
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE)  
+              AT time zone 'America/Sao_Paulo') AS DATE)  
                                     DT_EMISSAO_ENT,                           --25
         tdrec941.t$opfc$l           CFOP,                                     --26
         MAX(tdrec941.t$qnty$l)      QTDE,                                     --27
@@ -46,7 +46,7 @@ SELECT DISTINCT
         cisli940.t$seri$l           SERIE_NF_SAIDA,                           --30
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE)  
+              AT time zone 'America/Sao_Paulo') AS DATE)  
                                     DT_EMISSAO_SAIDA,                         --31
         cisli940.t$cfrw$l           TRANSP_COLETA,                            --32
         tcmcs080.t$dsca             DESCR_TRANSP,                             --33
@@ -123,7 +123,7 @@ FROM WMWHSE5.RECEIPTDETAIL  d
                         
     WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED,  
                         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-                        AT time zone sessiontimezone) AS DATE)) = :DataRecto 
+                        AT time zone 'America/Sao_Paulo') AS DATE)) = :DataRecto 
         AND r.type IN (:TipoOrdem) 
         AND ((:ASN_Todos = 0) OR (d.RECEIPTKEY IN (:ASN) AND :ASN_Todos = 1)) 
         AND ((:Qtde_Pecas is null) OR (tdrec941.t$qnty$l = :Qtde_Pecas)) 

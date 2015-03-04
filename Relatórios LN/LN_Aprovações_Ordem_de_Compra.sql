@@ -15,7 +15,7 @@ SELECT
    
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)        DATA_ORDEM,
+        AT time zone 'America/Sao_Paulo') AS DATE)        DATA_ORDEM,
                            
     NVL(TRIM(ORDEM.STATUS_ORDEM), 'Não definido')     STATUS_ORDEM,
     
@@ -25,7 +25,7 @@ SELECT
    
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(apr.dapr, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)        DATA_APROVACAO,
+        AT time zone 'America/Sao_Paulo') AS DATE)        DATA_APROVACAO,
   
     unid_empr.DEPTO_COMPRAS                           DEPTO_COMPRAS,
     tdpur400.t$sorn                                   ORDEM_PN_FORNECEDOR,
@@ -39,21 +39,21 @@ SELECT
     CASE WHEN NVL(tdrec940.t$idat$l, to_date('01-01-1980','DD-MM-YYYY')) > to_date('01-01-1980','DD-MM-YYYY') 
            THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone sessiontimezone) AS DATE)
+                    AT time zone 'America/Sao_Paulo') AS DATE)
          WHEN tdpur401.t$date$c < =   to_date('01-01-1980','DD-MM-YYYY') 
            THEN NULL
          ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$date$c, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone sessiontimezone) AS DATE) 
+                  AT time zone 'America/Sao_Paulo') AS DATE) 
      END                                              DATA_HORA_EMISSAO,
                              
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)        DATA_HORA_APROVACAO,
+        AT time zone 'America/Sao_Paulo') AS DATE)        DATA_HORA_APROVACAO,
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)        DATA_HORA_FISCAL,
+        AT time zone 'America/Sao_Paulo') AS DATE)        DATA_HORA_FISCAL,
                             
     tdrec940.t$fire$l                                 REF_FISCAL, 
     
@@ -324,7 +324,7 @@ WHERE tdpur401.t$oltp IN (2,4)
 
  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-               AT time zone sessiontimezone) AS DATE))
+               AT time zone 'America/Sao_Paulo') AS DATE))
      Between :EmissaoDe
          And :EmissaoAte
  AND unid_empr.DEPTO_COMPRAS IN (:FILIAL)

@@ -26,11 +26,11 @@ select Q1.*
                 tccom130.t$cste                     UF,
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)  
+                     AT time zone 'America/Sao_Paulo') AS DATE)  
                                                     DATA_RECEBIMENTO,
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE)  
+                     AT time zone 'America/Sao_Paulo') AS DATE)  
                                                     DT_EMISSAO,
                 
                 tdrec941.t$opfc$l                    CFO,

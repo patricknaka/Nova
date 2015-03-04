@@ -4,10 +4,10 @@ SELECT
     ORDERS.ORDERKEY                                      				PEDIDO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE), 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)           				DATA,
+        AT time zone 'America/Sao_Paulo') AS DATE)           				DATA,
     TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE), 'HH')    				HORA,
+        AT time zone 'America/Sao_Paulo') AS DATE), 'HH')    				HORA,
     ORDERSTATUSHISTORY.ADDWHO                            				ID_USUARIO,
     subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   				NOME_USUARIO,
     sum(ORDERDETAIL.SHIPPEDQTY)                          				QUANT,
@@ -53,7 +53,7 @@ WHERE ORDERS.STATUS > =  95
   
   -- AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE), 
       -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        -- AT time zone sessiontimezone) AS DATE)) BETWEEN :DataDe
+        -- AT time zone 'America/Sao_Paulo') AS DATE)) BETWEEN :DataDe
   -- AND :DataAte
   
 GROUP BY 	ORDERS.WHSEID,                                        				
@@ -80,10 +80,10 @@ ORDER BY ORDERS.ORDERKEY
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)           DATA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -114,7 +114,7 @@ ORDER BY ORDERS.ORDERKEY
 "                                                                                   " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE))                                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                                    " &
 "  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
@@ -137,10 +137,10 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)           DATA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -171,7 +171,7 @@ QUERY COM UNION ****************************************************************
 "                                                                                   " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE))                                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                                    " &
 "  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
@@ -224,7 +224,7 @@ QUERY COM UNION ****************************************************************
 "                                                                                   " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE))                                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                                    " &
 "  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
@@ -247,10 +247,10 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)           DATA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -281,7 +281,7 @@ QUERY COM UNION ****************************************************************
 "                                                                                   " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE))                                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                                    " &
 "  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
@@ -304,10 +304,10 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)           DATA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -338,7 +338,7 @@ QUERY COM UNION ****************************************************************
 "                                                                                   " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE))                                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                                    " &
 "  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
@@ -361,10 +361,10 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)           DATA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -395,7 +395,7 @@ QUERY COM UNION ****************************************************************
 "                                                                                   " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE))                                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                                    " &
 "  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
@@ -418,10 +418,10 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)           DATA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -452,7 +452,7 @@ QUERY COM UNION ****************************************************************
 "                                                                                   " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE))                                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                                    " &
 "  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &
@@ -475,10 +475,10 @@ QUERY COM UNION ****************************************************************
 "    ORDERS.ORDERKEY                                      PEDIDO,                   " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE)           DATA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)           DATA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE,              " & 
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE), 'HH')    HORA,                     " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH')    HORA,                     " &
 "    ORDERSTATUSHISTORY.ADDWHO                            ID_USUARIO,               " &
 "    subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   NOME_USUARIO,             " &
 "    sum(ORDERDETAIL.SHIPPEDQTY)                          NFCA_QT_VOLUMES,          " &
@@ -509,7 +509,7 @@ QUERY COM UNION ****************************************************************
 "                                                                                   " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE),    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"        AT time zone sessiontimezone) AS DATE))                                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE))                                    " &
 "  BETWEEN '" + Parameters!DataDe.Value + "'  " &                                   " &
 "  AND '" + Parameters!DataAte.Value + "'                                           " &
 "                                                                                   " &

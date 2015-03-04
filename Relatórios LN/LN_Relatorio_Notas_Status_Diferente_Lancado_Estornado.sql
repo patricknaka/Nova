@@ -8,7 +8,7 @@ select Q1.*
          	   
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone sessiontimezone) AS DATE)  
+                    AT time zone 'America/Sao_Paulo') AS DATE)  
                                             DATA_GERACAO_NF,
                 tccom130.t$fovn$l           CNPJ_CLIENTE,
                 tccom130.t$nama             CLIENTE,

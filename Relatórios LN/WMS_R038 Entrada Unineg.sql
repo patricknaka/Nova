@@ -11,15 +11,15 @@ SELECT
 		
 		TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OS.ADDDATE, 
 			'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE),'DD')					DATA_PED,
+			AT time zone 'America/Sao_Paulo') AS DATE),'DD')					DATA_PED,
 		
        TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OS.ADDDATE, 
                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-                         AT time zone sessiontimezone) AS DATE),'HH24'), 'HH24:MI')
+                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'HH24:MI')
        || ' ~ ' 
        || TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OS.ADDDATE, 
                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-                         AT time zone sessiontimezone) AS DATE)+1/24,'HH24'), 'HH24:MI')
+                         AT time zone 'America/Sao_Paulo') AS DATE)+1/24,'HH24'), 'HH24:MI')
 																			PERIODO,
 															
 		count(distinct OS.ORDERKEY)											PEDIDOS
@@ -38,12 +38,12 @@ GROUP BY
 		OL.T$DESC$C,
 		TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OS.ADDDATE, 
 			'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT time zone sessiontimezone) AS DATE),'DD'),
+			AT time zone 'America/Sao_Paulo') AS DATE),'DD'),
        TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OS.ADDDATE, 
                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-                         AT time zone sessiontimezone) AS DATE),'HH24'), 'HH24:MI')
+                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'HH24:MI')
        || ' ~ ' 
        || TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OS.ADDDATE, 
                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-                         AT time zone sessiontimezone) AS DATE)+1/24,'HH24'), 'HH24:MI')
+                         AT time zone 'America/Sao_Paulo') AS DATE)+1/24,'HH24'), 'HH24:MI')
                           

@@ -2,16 +2,16 @@ SELECT CL.UDF2                         FILIAL,
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME, 
          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-           AT time zone sessiontimezone) AS DATE) 
+           AT time zone 'America/Sao_Paulo') AS DATE) 
                                        DTHR,
        
        TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME, 
                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-                         AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')
+                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')
        || ' ~ ' 
        || TO_CHAR(TO_NUMBER((TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME, 
                                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-                                         AT time zone sessiontimezone) AS DATE),'HH24')) + 1))
+                                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24')) + 1))
        || ':00'                        DH_FORMAT,
        
        COUNT(DISTINCT TD.ORDERKEY)     QT_PED,
@@ -28,16 +28,16 @@ WHERE TD.TASKTYPE = 'PK'
   AND TD.STATUS = '9'
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME, 
               'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-                AT time zone sessiontimezone) AS DATE))
+                AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataDe
           And :DataAte
 
 GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME, 
            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-             AT time zone sessiontimezone) AS DATE),
+             AT time zone 'America/Sao_Paulo') AS DATE),
          TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME, 
                          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')
-                           AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')
+                           AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')
          || ' ~ ' 
          || TO_CHAR(TO_NUMBER((TO_CHAR(TD.ENDTIME,'HH24'))+1))
          || ':00',
@@ -48,16 +48,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "                                                                                                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                            " &
 "          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                        " &
-"            AT time zone sessiontimezone) AS DATE)                                                " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                        DTHR,                                                     " &
 "                                                                                                  " &
 "       TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                               " &
 "                       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                           " &
-"                         AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
 "        || ' ~ '                                                                                  " &
 "        || TO_CHAR(TO_NUMBER((TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,              " &
 "                                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')          " &
-"                                          AT time zone sessiontimezone) AS DATE),'HH24')) + 1))   " &
+"                                          AT time zone 'America/Sao_Paulo') AS DATE),'HH24')) + 1))   " &
 "        || ':00'                        DH_FORMAT,                                                " &
 "                                                                                                  " &
 "        COUNT(DISTINCT TD.ORDERKEY)     QT_PED,                                                   " &
@@ -74,16 +74,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "   AND TD.STATUS = '9'                                                                            " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                       " &
 "               'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                   " &
-"                 AT time zone sessiontimezone) AS DATE))                                          " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE))                                          " &
 "       Between '"+ Parameters!DataDe.Value + "'                                                   " &
 "           And '"+ Parameters!DataAte.Value + "'                                                  " &
 "                                                                                                  " &
 " GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                          " &
 "            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                      " &
-"              AT time zone sessiontimezone) AS DATE),                                             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                                             " &
 "          TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                            " &
 "                          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                        " &
-"                            AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
+"                            AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
 "          || ' ~ '                                                                                " &
 "          || TO_CHAR(TO_NUMBER((TO_CHAR(TD.ENDTIME,'HH24'))+1))                                   " &
 "          ||                              ':00',                                                  " &
@@ -97,16 +97,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "                                                                                                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                            " &
 "          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                        " &
-"            AT time zone sessiontimezone) AS DATE)                                                " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                        DTHR,                                                     " &
 "                                                                                                  " &
 "       TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                               " &
 "                       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                           " &
-"                         AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
 "        || ' ~ '                                                                                  " &
 "        || TO_CHAR(TO_NUMBER((TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,              " &
 "                                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')          " &
-"                                          AT time zone sessiontimezone) AS DATE),'HH24')) + 1))   " &
+"                                          AT time zone 'America/Sao_Paulo') AS DATE),'HH24')) + 1))   " &
 "        || ':00'                        DH_FORMAT,                                                " &
 "                                                                                                  " &
 "        COUNT(DISTINCT TD.ORDERKEY)     QT_PED,                                                   " &
@@ -123,16 +123,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "   AND TD.STATUS = '9'                                                                            " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                       " &
 "               'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                   " &
-"                 AT time zone sessiontimezone) AS DATE))                                          " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE))                                          " &
 "       Between '"+ Parameters!DataDe.Value + "'                                                   " &
 "           And '"+ Parameters!DataAte.Value + "'                                                  " &
 "                                                                                                  " &
 " GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                          " &
 "            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                      " &
-"              AT time zone sessiontimezone) AS DATE),                                             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                                             " &
 "          TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                            " &
 "                          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                        " &
-"                            AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
+"                            AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
 "          || ' ~ '                                                                                " &
 "          || TO_CHAR(TO_NUMBER((TO_CHAR(TD.ENDTIME,'HH24'))+1))                                   " &
 "          ||                              ':00',                                                  " &
@@ -145,16 +145,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "                                                                                                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                            " &
 "          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                        " &
-"            AT time zone sessiontimezone) AS DATE)                                                " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                        DTHR,                                                     " &
 "                                                                                                  " &
 "       TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                               " &
 "                       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                           " &
-"                         AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
 "        || ' ~ '                                                                                  " &
 "        || TO_CHAR(TO_NUMBER((TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,              " &
 "                                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')          " &
-"                                          AT time zone sessiontimezone) AS DATE),'HH24')) + 1))   " &
+"                                          AT time zone 'America/Sao_Paulo') AS DATE),'HH24')) + 1))   " &
 "        || ':00'                        DH_FORMAT,                                                " &
 "                                                                                                  " &
 "        COUNT(DISTINCT TD.ORDERKEY)     QT_PED,                                                   " &
@@ -171,16 +171,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "   AND TD.STATUS = '9'                                                                            " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                       " &
 "               'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                   " &
-"                 AT time zone sessiontimezone) AS DATE))                                          " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE))                                          " &
 "       Between '"+ Parameters!DataDe.Value + "'                                                   " &
 "           And '"+ Parameters!DataAte.Value + "'                                                  " &
 "                                                                                                  " &
 " GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                          " &
 "            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                      " &
-"              AT time zone sessiontimezone) AS DATE),                                             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                                             " &
 "          TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                            " &
 "                          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                        " &
-"                            AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
+"                            AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
 "          || ' ~ '                                                                                " &
 "          || TO_CHAR(TO_NUMBER((TO_CHAR(TD.ENDTIME,'HH24'))+1))                                   " &
 "          ||                              ':00',                                                  " &
@@ -193,16 +193,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "                                                                                                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                            " &
 "          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                        " &
-"            AT time zone sessiontimezone) AS DATE)                                                " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                        DTHR,                                                     " &
 "                                                                                                  " &
 "       TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                               " &
 "                       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                           " &
-"                         AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
 "        || ' ~ '                                                                                  " &
 "        || TO_CHAR(TO_NUMBER((TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,              " &
 "                                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')          " &
-"                                          AT time zone sessiontimezone) AS DATE),'HH24')) + 1))   " &
+"                                          AT time zone 'America/Sao_Paulo') AS DATE),'HH24')) + 1))   " &
 "        || ':00'                        DH_FORMAT,                                                " &
 "                                                                                                  " &
 "        COUNT(DISTINCT TD.ORDERKEY)     QT_PED,                                                   " &
@@ -219,16 +219,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "   AND TD.STATUS = '9'                                                                            " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                       " &
 "               'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                   " &
-"                 AT time zone sessiontimezone) AS DATE))                                          " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE))                                          " &
 "       Between '"+ Parameters!DataDe.Value + "'                                                   " &
 "           And '"+ Parameters!DataAte.Value + "'                                                  " &
 "                                                                                                  " &
 " GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                          " &
 "            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                      " &
-"              AT time zone sessiontimezone) AS DATE),                                             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                                             " &
 "          TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                            " &
 "                          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                        " &
-"                            AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
+"                            AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
 "          || ' ~ '                                                                                " &
 "          || TO_CHAR(TO_NUMBER((TO_CHAR(TD.ENDTIME,'HH24'))+1))                                   " &
 "          ||                              ':00',                                                  " &
@@ -241,16 +241,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "                                                                                                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                            " &
 "          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                        " &
-"            AT time zone sessiontimezone) AS DATE)                                                " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                        DTHR,                                                     " &
 "                                                                                                  " &
 "       TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                               " &
 "                       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                           " &
-"                         AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
 "        || ' ~ '                                                                                  " &
 "        || TO_CHAR(TO_NUMBER((TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,              " &
 "                                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')          " &
-"                                          AT time zone sessiontimezone) AS DATE),'HH24')) + 1))   " &
+"                                          AT time zone 'America/Sao_Paulo') AS DATE),'HH24')) + 1))   " &
 "        || ':00'                        DH_FORMAT,                                                " &
 "                                                                                                  " &
 "        COUNT(DISTINCT TD.ORDERKEY)     QT_PED,                                                   " &
@@ -267,16 +267,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "   AND TD.STATUS = '9'                                                                            " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                       " &
 "               'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                   " &
-"                 AT time zone sessiontimezone) AS DATE))                                          " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE))                                          " &
 "       Between '"+ Parameters!DataDe.Value + "'                                                   " &
 "           And '"+ Parameters!DataAte.Value + "'                                                  " &
 "                                                                                                  " &
 " GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                          " &
 "            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                      " &
-"              AT time zone sessiontimezone) AS DATE),                                             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                                             " &
 "          TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                            " &
 "                          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                        " &
-"                            AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
+"                            AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
 "          || ' ~ '                                                                                " &
 "          || TO_CHAR(TO_NUMBER((TO_CHAR(TD.ENDTIME,'HH24'))+1))                                   " &
 "          ||                              ':00',                                                  " &
@@ -289,16 +289,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "                                                                                                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                            " &
 "          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                        " &
-"            AT time zone sessiontimezone) AS DATE)                                                " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                        DTHR,                                                     " &
 "                                                                                                  " &
 "       TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                               " &
 "                       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                           " &
-"                         AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
 "        || ' ~ '                                                                                  " &
 "        || TO_CHAR(TO_NUMBER((TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,              " &
 "                                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')          " &
-"                                          AT time zone sessiontimezone) AS DATE),'HH24')) + 1))   " &
+"                                          AT time zone 'America/Sao_Paulo') AS DATE),'HH24')) + 1))   " &
 "        || ':00'                        DH_FORMAT,                                                " &
 "                                                                                                  " &
 "        COUNT(DISTINCT TD.ORDERKEY)     QT_PED,                                                   " &
@@ -315,16 +315,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "   AND TD.STATUS = '9'                                                                            " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                       " &
 "               'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                   " &
-"                 AT time zone sessiontimezone) AS DATE))                                          " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE))                                          " &
 "       Between '"+ Parameters!DataDe.Value + "'                                                   " &
 "           And '"+ Parameters!DataAte.Value + "'                                                  " &
 "                                                                                                  " &
 " GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                          " &
 "            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                      " &
-"              AT time zone sessiontimezone) AS DATE),                                             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                                             " &
 "          TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                            " &
 "                          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                        " &
-"                            AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
+"                            AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
 "          || ' ~ '                                                                                " &
 "          || TO_CHAR(TO_NUMBER((TO_CHAR(TD.ENDTIME,'HH24'))+1))                                   " &
 "          ||                              ':00',                                                  " &
@@ -337,16 +337,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "                                                                                                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                            " &
 "          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                        " &
-"            AT time zone sessiontimezone) AS DATE)                                                " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                        DTHR,                                                     " &
 "                                                                                                  " &
 "       TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                               " &
 "                       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                           " &
-"                         AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
 "        || ' ~ '                                                                                  " &
 "        || TO_CHAR(TO_NUMBER((TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,              " &
 "                                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')          " &
-"                                          AT time zone sessiontimezone) AS DATE),'HH24')) + 1))   " &
+"                                          AT time zone 'America/Sao_Paulo') AS DATE),'HH24')) + 1))   " &
 "        || ':00'                        DH_FORMAT,                                                " &
 "                                                                                                  " &
 "        COUNT(DISTINCT TD.ORDERKEY)     QT_PED,                                                   " &
@@ -363,16 +363,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "   AND TD.STATUS = '9'                                                                            " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                       " &
 "               'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                   " &
-"                 AT time zone sessiontimezone) AS DATE))                                          " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE))                                          " &
 "       Between '"+ Parameters!DataDe.Value + "'                                                   " &
 "           And '"+ Parameters!DataAte.Value + "'                                                  " &
 "                                                                                                  " &
 " GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                          " &
 "            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                      " &
-"              AT time zone sessiontimezone) AS DATE),                                             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                                             " &
 "          TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                            " &
 "                          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                        " &
-"                            AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
+"                            AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
 "          || ' ~ '                                                                                " &
 "          || TO_CHAR(TO_NUMBER((TO_CHAR(TD.ENDTIME,'HH24'))+1))                                   " &
 "          ||                              ':00',                                                  " &
@@ -385,16 +385,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "                                                                                                  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                            " &
 "          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                        " &
-"            AT time zone sessiontimezone) AS DATE)                                                " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                                                " &
 "                                        DTHR,                                                     " &
 "                                                                                                  " &
 "       TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                               " &
 "                       'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                           " &
-"                         AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
+"                         AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI')    " &
 "        || ' ~ '                                                                                  " &
 "        || TO_CHAR(TO_NUMBER((TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,              " &
 "                                        'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')          " &
-"                                          AT time zone sessiontimezone) AS DATE),'HH24')) + 1))   " &
+"                                          AT time zone 'America/Sao_Paulo') AS DATE),'HH24')) + 1))   " &
 "        || ':00'                        DH_FORMAT,                                                " &
 "                                                                                                  " &
 "        COUNT(DISTINCT TD.ORDERKEY)     QT_PED,                                                   " &
@@ -411,16 +411,16 @@ GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,
 "   AND TD.STATUS = '9'                                                                            " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                       " &
 "               'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                   " &
-"                 AT time zone sessiontimezone) AS DATE))                                          " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE))                                          " &
 "       Between '"+ Parameters!DataDe.Value + "'                                                   " &
 "           And '"+ Parameters!DataAte.Value + "'                                                  " &
 "                                                                                                  " &
 " GROUP BY CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                                          " &
 "            'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                                      " &
-"              AT time zone sessiontimezone) AS DATE),                                             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                                             " &
 "          TO_CHAR(TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TD.ENDTIME,                            " &
 "                          'DD-MON-YYYY HH24'), 'DD-MON-YYYY HH24'), 'GMT')                        " &
-"                            AT time zone sessiontimezone) AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
+"                            AT time zone 'America/Sao_Paulo') AS DATE),'HH24'), 'DD/MM/YYYY HH24:MI') " &
 "          || ' ~ '                                                                                " &
 "          || TO_CHAR(TO_NUMBER((TO_CHAR(TD.ENDTIME,'HH24'))+1))                                   " &
 "          ||                              ':00',                                                  " &

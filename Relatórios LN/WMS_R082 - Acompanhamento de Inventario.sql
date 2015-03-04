@@ -8,7 +8,7 @@ SELECT Q1.            ID_PLANTA,
        CS.DESCRIPTION DESCR_SITUACAO,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone sessiontimezone) AS DATE)
+                AT time zone 'America/Sao_Paulo') AS DATE)
                       DT_SITUACAO,
        ' '            SIMULACAO
 FROM ( select IV.WHSEID               ID_PLANTA,
@@ -73,7 +73,7 @@ INNER JOIN WMWHSE5.CODELKUP CS
 "       CS.DESCRIPTION DESCR_SITUACAO,                                         " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                    " &
 "              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"                AT time zone sessiontimezone) AS DATE)                        " &
+"                AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                      DT_SITUACAO,                                            " &
 "       ' '            SIMULACAO                                               " &
 "FROM ( select IV.WHSEID               ID_PLANTA,                              " &
@@ -138,7 +138,7 @@ INNER JOIN WMWHSE5.CODELKUP CS
 "       CS.DESCRIPTION DESCR_SITUACAO,                                         " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                    " &
 "              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"                AT time zone sessiontimezone) AS DATE)                        " &
+"                AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                      DT_SITUACAO,                                            " &
 "       ' '            SIMULACAO                                               " &
 "FROM ( select IV.WHSEID               ID_PLANTA,                              " &
@@ -201,7 +201,7 @@ INNER JOIN WMWHSE5.CODELKUP CS
 "       CS.DESCRIPTION DESCR_SITUACAO,                                         " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                    " &
 "              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"                AT time zone sessiontimezone) AS DATE)                        " &
+"                AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                      DT_SITUACAO,                                            " &
 "       ' '            SIMULACAO                                               " &
 "FROM ( select IV.WHSEID               ID_PLANTA,                              " &
@@ -264,7 +264,7 @@ INNER JOIN WMWHSE5.CODELKUP CS
 "       CS.DESCRIPTION DESCR_SITUACAO,                                         " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                    " &
 "              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"                AT time zone sessiontimezone) AS DATE)                        " &
+"                AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                      DT_SITUACAO,                                            " &
 "       ' '            SIMULACAO                                               " &
 "FROM ( select IV.WHSEID               ID_PLANTA,                              " &
@@ -327,7 +327,7 @@ INNER JOIN WMWHSE5.CODELKUP CS
 "       CS.DESCRIPTION DESCR_SITUACAO,                                         " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                    " &
 "              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"                AT time zone sessiontimezone) AS DATE)                        " &
+"                AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                      DT_SITUACAO,                                            " &
 "       ' '            SIMULACAO                                               " &
 "FROM ( select IV.WHSEID               ID_PLANTA,                              " &
@@ -390,7 +390,7 @@ INNER JOIN WMWHSE5.CODELKUP CS
 "       CS.DESCRIPTION DESCR_SITUACAO,                                         " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                    " &
 "              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"                AT time zone sessiontimezone) AS DATE)                        " &
+"                AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                      DT_SITUACAO,                                            " &
 "       ' '            SIMULACAO                                               " &
 "FROM ( select IV.WHSEID               ID_PLANTA,                              " &
@@ -453,7 +453,7 @@ INNER JOIN WMWHSE5.CODELKUP CS
 "       CS.DESCRIPTION DESCR_SITUACAO,                                         " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                    " &
 "              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"                AT time zone sessiontimezone) AS DATE)                        " &
+"                AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                      DT_SITUACAO,                                            " &
 "       ' '            SIMULACAO                                               " &
 "FROM ( select IV.WHSEID               ID_PLANTA,                              " &
@@ -516,7 +516,7 @@ INNER JOIN WMWHSE5.CODELKUP CS
 "       CS.DESCRIPTION DESCR_SITUACAO,                                         " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                    " &
 "              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')    " &
-"                AT time zone sessiontimezone) AS DATE)                        " &
+"                AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                      DT_SITUACAO,                                            " &
 "       ' '            SIMULACAO                                               " &
 "FROM ( select IV.WHSEID               ID_PLANTA,                              " &

@@ -19,12 +19,12 @@ select Q1.*
              CASE WHEN brnfe940.t$stpr$c = 3 
                     THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(brnfe940.t$fcdt$c, 
                            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-                             AT time zone sessiontimezone) AS DATE) 
+                             AT time zone 'America/Sao_Paulo') AS DATE) 
               END                  data_status_altera_erro,
          						  
              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(brnfe940.t$sdat$c, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-                 AT time zone sessiontimezone) AS DATE) 
+                 AT time zone 'America/Sao_Paulo') AS DATE) 
                                    data_status_altera_agenda
          
          FROM       baandb.tbrnfe940301  brnfe940

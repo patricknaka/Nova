@@ -3,7 +3,7 @@ SELECT DISTINCT
     tcemm030.t$euca                   NUM_FILIAL,
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)
+      AT time zone 'America/Sao_Paulo') AS DATE)
                                       DTA_CRIACAO,
            
     znsls401.t$orno$c                 NUM_ORDEM,    
@@ -53,7 +53,7 @@ INNER JOIN baandb.tznsls402201 znsls402
 WHERE tcemm124.t$dtyp = 1 
 
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)) 
+      AT time zone 'America/Sao_Paulo') AS DATE)) 
       BETWEEN :CriacaoDe 
           AND :CriacaoAte
 

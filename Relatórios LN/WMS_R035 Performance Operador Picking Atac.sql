@@ -5,7 +5,7 @@
 "  PL_DB.DB_ALIAS                DSC_PLANTA,                               " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"      AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                DATA_COL,                                 " &
 "  OS.SCHEDULEDSHIPDATE          DATA_LIM,                                 " &
 "  (select a.t$pecl$c PEDIDO                                               " &
@@ -17,11 +17,11 @@
 "  WD.WAVEKEY                    ONDA,                                     " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_INICIO,                                " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_FIM,                                   " &
 "  taskdetail.addwho             OPERADOR,                                 " &
 "  subStr( tu.usr_name, 4,                                                 " &
@@ -58,7 +58,7 @@
 "                                                                          " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"          AT time zone sessiontimezone) AS DATE))                         " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  between '" + Parameters!DataDe.Value + "'                               " &
 "      and '" + Parameters!DataAte.Value + "'                              " &
 "                                                                          " &
@@ -70,10 +70,10 @@
 "          WD.WAVEKEY,                                                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,        " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"              AT time zone sessiontimezone) AS DATE),                     " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"             AT time zone sessiontimezone) AS DATE),                      " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),                      " &
 "          taskdetail.addwho,                                              " &
 "          subStr( tu.usr_name,4,                                          " &
 "                  inStr(tu.usr_name, ',')-4 ),                            " &
@@ -89,7 +89,7 @@
 "  PL_DB.DB_ALIAS                DSC_PLANTA,                               " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"      AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                DATA_COL,                                 " &
 "  OS.SCHEDULEDSHIPDATE          DATA_LIM,                                 " &
 "  (select a.t$pecl$c PEDIDO                                               " &
@@ -101,11 +101,11 @@
 "  WD.WAVEKEY                    ONDA,                                     " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_INICIO,                                " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_FIM,                                   " &
 "  taskdetail.addwho             OPERADOR,                                 " &
 "  subStr( tu.usr_name, 4,                                                 " &
@@ -142,7 +142,7 @@
 "                                                                          " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"          AT time zone sessiontimezone) AS DATE))                         " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  between '" + Parameters!DataDe.Value + "'                               " &
 "      and '" + Parameters!DataAte.Value + "'                              " &
 "                                                                          " &
@@ -154,10 +154,10 @@
 "          WD.WAVEKEY,                                                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,        " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"              AT time zone sessiontimezone) AS DATE),                     " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"             AT time zone sessiontimezone) AS DATE),                      " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),                      " &
 "          taskdetail.addwho,                                              " &
 "          subStr( tu.usr_name,4,                                          " &
 "                  inStr(tu.usr_name, ',')-4 ),                            " &
@@ -171,7 +171,7 @@
 "  PL_DB.DB_ALIAS                DSC_PLANTA,                               " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"      AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                DATA_COL,                                 " &
 "  OS.SCHEDULEDSHIPDATE          DATA_LIM,                                 " &
 "  (select a.t$pecl$c PEDIDO                                               " &
@@ -183,11 +183,11 @@
 "  WD.WAVEKEY                    ONDA,                                     " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_INICIO,                                " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_FIM,                                   " &
 "  taskdetail.addwho             OPERADOR,                                 " &
 "  subStr( tu.usr_name, 4,                                                 " &
@@ -224,7 +224,7 @@
 "                                                                          " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"          AT time zone sessiontimezone) AS DATE))                         " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  between '" + Parameters!DataDe.Value + "'                               " &
 "      and '" + Parameters!DataAte.Value + "'                              " &
 "                                                                          " &
@@ -236,10 +236,10 @@
 "          WD.WAVEKEY,                                                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,        " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"              AT time zone sessiontimezone) AS DATE),                     " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"             AT time zone sessiontimezone) AS DATE),                      " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),                      " &
 "          taskdetail.addwho,                                              " &
 "          subStr( tu.usr_name,4,                                          " &
 "                  inStr(tu.usr_name, ',')-4 ),                            " &
@@ -253,7 +253,7 @@
 "  PL_DB.DB_ALIAS                DSC_PLANTA,                               " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"      AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                DATA_COL,                                 " &
 "  OS.SCHEDULEDSHIPDATE          DATA_LIM,                                 " &
 "  (select a.t$pecl$c PEDIDO                                               " &
@@ -265,11 +265,11 @@
 "  WD.WAVEKEY                    ONDA,                                     " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_INICIO,                                " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_FIM,                                   " &
 "  taskdetail.addwho             OPERADOR,                                 " &
 "  subStr( tu.usr_name, 4,                                                 " &
@@ -306,7 +306,7 @@
 "                                                                          " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"          AT time zone sessiontimezone) AS DATE))                         " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  between '" + Parameters!DataDe.Value + "'                               " &
 "      and '" + Parameters!DataAte.Value + "'                              " &
 "                                                                          " &
@@ -318,10 +318,10 @@
 "          WD.WAVEKEY,                                                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,        " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"              AT time zone sessiontimezone) AS DATE),                     " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"             AT time zone sessiontimezone) AS DATE),                      " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),                      " &
 "          taskdetail.addwho,                                              " &
 "          subStr( tu.usr_name,4,                                          " &
 "                  inStr(tu.usr_name, ',')-4 ),                            " &
@@ -335,7 +335,7 @@
 "  PL_DB.DB_ALIAS                DSC_PLANTA,                               " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"      AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                DATA_COL,                                 " &
 "  OS.SCHEDULEDSHIPDATE          DATA_LIM,                                 " &
 "  (select a.t$pecl$c PEDIDO                                               " &
@@ -347,11 +347,11 @@
 "  WD.WAVEKEY                    ONDA,                                     " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_INICIO,                                " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_FIM,                                   " &
 "  taskdetail.addwho             OPERADOR,                                 " &
 "  subStr( tu.usr_name, 4,                                                 " &
@@ -388,7 +388,7 @@
 "                                                                          " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"          AT time zone sessiontimezone) AS DATE))                         " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  between '" + Parameters!DataDe.Value + "'                               " &
 "      and '" + Parameters!DataAte.Value + "'                              " &
 "                                                                          " &
@@ -400,10 +400,10 @@
 "          WD.WAVEKEY,                                                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,        " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"              AT time zone sessiontimezone) AS DATE),                     " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"             AT time zone sessiontimezone) AS DATE),                      " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),                      " &
 "          taskdetail.addwho,                                              " &
 "          subStr( tu.usr_name,4,                                          " &
 "                  inStr(tu.usr_name, ',')-4 ),                            " &
@@ -417,7 +417,7 @@
 "  PL_DB.DB_ALIAS                DSC_PLANTA,                               " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"      AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                DATA_COL,                                 " &
 "  OS.SCHEDULEDSHIPDATE          DATA_LIM,                                 " &
 "  (select a.t$pecl$c PEDIDO                                               " &
@@ -429,11 +429,11 @@
 "  WD.WAVEKEY                    ONDA,                                     " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_INICIO,                                " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_FIM,                                   " &
 "  taskdetail.addwho             OPERADOR,                                 " &
 "  subStr( tu.usr_name, 4,                                                 " &
@@ -470,7 +470,7 @@
 "                                                                          " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"          AT time zone sessiontimezone) AS DATE))                         " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  between '" + Parameters!DataDe.Value + "'                               " &
 "      and '" + Parameters!DataAte.Value + "'                              " &
 "                                                                          " &
@@ -482,10 +482,10 @@
 "          WD.WAVEKEY,                                                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,        " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"              AT time zone sessiontimezone) AS DATE),                     " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"             AT time zone sessiontimezone) AS DATE),                      " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),                      " &
 "          taskdetail.addwho,                                              " &
 "          subStr( tu.usr_name,4,                                          " &
 "                  inStr(tu.usr_name, ',')-4 ),                            " &
@@ -499,7 +499,7 @@
 "  PL_DB.DB_ALIAS                DSC_PLANTA,                               " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"      AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                DATA_COL,                                 " &
 "  OS.SCHEDULEDSHIPDATE          DATA_LIM,                                 " &
 "  (select a.t$pecl$c PEDIDO                                               " &
@@ -511,11 +511,11 @@
 "  WD.WAVEKEY                    ONDA,                                     " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_INICIO,                                " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_FIM,                                   " &
 "  taskdetail.addwho             OPERADOR,                                 " &
 "  subStr( tu.usr_name, 4,                                                 " &
@@ -552,7 +552,7 @@
 "                                                                          " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"          AT time zone sessiontimezone) AS DATE))                         " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  between '" + Parameters!DataDe.Value + "'                               " &
 "      and '" + Parameters!DataAte.Value + "'                              " &
 "                                                                          " &
@@ -564,10 +564,10 @@
 "          WD.WAVEKEY,                                                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,        " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"              AT time zone sessiontimezone) AS DATE),                     " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"             AT time zone sessiontimezone) AS DATE),                      " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),                      " &
 "          taskdetail.addwho,                                              " &
 "          subStr( tu.usr_name,4,                                          " &
 "                  inStr(tu.usr_name, ',')-4 ),                            " &
@@ -581,7 +581,7 @@
 "  PL_DB.DB_ALIAS                DSC_PLANTA,                               " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,            " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE), 'DD')                       " &
+"      AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                       " &
 "                                DATA_COL,                                 " &
 "  OS.SCHEDULEDSHIPDATE          DATA_LIM,                                 " &
 "  (select a.t$pecl$c PEDIDO                                               " &
@@ -593,11 +593,11 @@
 "  WD.WAVEKEY                    ONDA,                                     " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_INICIO,                                " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')          " &
-"      AT time zone sessiontimezone) AS DATE)                              " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                              " &
 "                                HR_FIM,                                   " &
 "  taskdetail.addwho             OPERADOR,                                 " &
 "  subStr( tu.usr_name, 4,                                                 " &
@@ -634,7 +634,7 @@
 "                                                                          " &
 "  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      " &
-"          AT time zone sessiontimezone) AS DATE))                         " &
+"          AT time zone 'America/Sao_Paulo') AS DATE))                         " &
 "  between '" + Parameters!DataDe.Value + "'                               " &
 "      and '" + Parameters!DataAte.Value + "'                              " &
 "                                                                          " &
@@ -646,10 +646,10 @@
 "          WD.WAVEKEY,                                                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.STARTTIME,        " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"              AT time zone sessiontimezone) AS DATE),                     " &
+"              AT time zone 'America/Sao_Paulo') AS DATE),                     " &
 "          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,          " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"             AT time zone sessiontimezone) AS DATE),                      " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),                      " &
 "          taskdetail.addwho,                                              " &
 "          subStr( tu.usr_name,4,                                          " &
 "                  inStr(tu.usr_name, ',')-4 ),                            " &

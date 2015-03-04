@@ -38,11 +38,11 @@ SELECT
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                                          DATE_INCL,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)
+        AT time zone 'America/Sao_Paulo') AS DATE)
                                          DATA_ALTER         
 
 FROM       baandb.ttccom100301 tccom100
@@ -128,5 +128,5 @@ LEFT JOIN baandb.ttcmcs018301 tcmcs018
 WHERE tcibd001.T$OKFI$C != 1
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) BETWEEN :DataInclusaoDe AND :DataInclusaoAte
+        AT time zone 'America/Sao_Paulo') AS DATE)) BETWEEN :DataInclusaoDe AND :DataInclusaoAte
   AND ( (tcibd001.t$citg = :Depto) or (:Depto = 0) )

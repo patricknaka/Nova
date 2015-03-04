@@ -12,11 +12,11 @@
 "  CS.DESCRIPTION                    DESCR_SITUACAO,                 " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_SITUACAO,                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_INICIO,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_INICIO,                      " &
 "   ROUND(Q1.DT_SITUACAO - Q1.DT_INICIO,2) DURACAO                   " &
 "FROM (select IV.WHSEID              ID_PLANTA,                      " &
@@ -72,11 +72,11 @@
 "  CS.DESCRIPTION                    DESCR_SITUACAO,                 " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_SITUACAO,                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_INICIO,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_INICIO,                      " &
 "   ROUND(Q1.DT_SITUACAO - Q1.DT_INICIO,2) DURACAO                   " &
 "FROM (select IV.WHSEID              ID_PLANTA,                      " &
@@ -131,11 +131,11 @@
 "  CS.DESCRIPTION                    DESCR_SITUACAO,                 " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_SITUACAO,                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_INICIO,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_INICIO,                      " &
 "   ROUND(Q1.DT_SITUACAO - Q1.DT_INICIO,2) DURACAO                   " &
 "FROM (select IV.WHSEID              ID_PLANTA,                      " &
@@ -190,11 +190,11 @@
 "  CS.DESCRIPTION                    DESCR_SITUACAO,                 " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_SITUACAO,                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_INICIO,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_INICIO,                      " &
 "   ROUND(Q1.DT_SITUACAO - Q1.DT_INICIO,2) DURACAO                   " &
 "FROM (select IV.WHSEID              ID_PLANTA,                      " &
@@ -249,11 +249,11 @@
 "  CS.DESCRIPTION                    DESCR_SITUACAO,                 " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_SITUACAO,                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_INICIO,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_INICIO,                      " &
 "   ROUND(Q1.DT_SITUACAO - Q1.DT_INICIO,2) DURACAO                   " &
 "FROM (select IV.WHSEID              ID_PLANTA,                      " &
@@ -308,11 +308,11 @@
 "  CS.DESCRIPTION                    DESCR_SITUACAO,                 " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_SITUACAO,                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_INICIO,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_INICIO,                      " &
 "   ROUND(Q1.DT_SITUACAO - Q1.DT_INICIO,2) DURACAO                   " &
 "FROM (select IV.WHSEID              ID_PLANTA,                      " &
@@ -367,11 +367,11 @@
 "  CS.DESCRIPTION                    DESCR_SITUACAO,                 " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_SITUACAO,                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_INICIO,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_INICIO,                      " &
 "   ROUND(Q1.DT_SITUACAO - Q1.DT_INICIO,2) DURACAO                   " &
 "FROM (select IV.WHSEID              ID_PLANTA,                      " &
@@ -426,11 +426,11 @@
 "  CS.DESCRIPTION                    DESCR_SITUACAO,                 " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_SITUACAO,                " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_SITUACAO,                    " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Q1.DT_INICIO,                  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'),'GMT')     " &
-"      AT time zone sessiontimezone) AS DATE)                        " &
+"      AT time zone 'America/Sao_Paulo') AS DATE)                        " &
 "                                    DT_INICIO,                      " &
 "   ROUND(Q1.DT_SITUACAO - Q1.DT_INICIO,2) DURACAO                   " &
 "FROM (select IV.WHSEID              ID_PLANTA,                      " &

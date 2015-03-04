@@ -7,7 +7,7 @@
 "  CODELKUP.UDF2                                        DESCR_FILIAL,                          " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                              " &
-"      AT time zone sessiontimezone) AS DATE),'DD')     DATA_LIMITE,                           " &
+"      AT time zone 'America/Sao_Paulo') AS DATE),'DD')     DATA_LIMITE,                           " &
 "  ORDERS.SUSR4               UNEG,                                                            " &
 "  nvl(OH.STATUS, ORDERS.STATUS)                        ULT_EVENTO,                            " &
 "  OS.DESCRIPTION                                       ULT_EVENTO_DESCR,                      " &
@@ -15,7 +15,7 @@
 "  CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'                    " &
 "   WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"            AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
 "   ELSE ' ' END                                        DIF_ATRASO_TERCEIRO,                   " &
 "  ORDERS.ADDDATE                                       DATA_REGISTRO                          " &
 "                                                                                              " &
@@ -52,14 +52,14 @@
 "         CODELKUP.UDF2,                                                                       " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"             AT time zone sessiontimezone) AS DATE),'DD'),                                    " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),'DD'),                                    " &
 "         ORDERS.SUSR4,                                                                        " &
 "         nvl(OH.STATUS, ORDERS.STATUS),                                                       " &
 "         OS.DESCRIPTION,                                                                      " &
 "         CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'             " &
 "          WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                   AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
+"                   AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
 "           ELSE ' ' END,                                                                      " &
 "         ORDERS.ADDDATE                                                                       " &
 "                                                                                              " & 
@@ -74,7 +74,7 @@
 "  CODELKUP.UDF2                                        DESCR_FILIAL,                          " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                              " &
-"      AT time zone sessiontimezone) AS DATE),'DD')     DATA_LIMITE,                           " &
+"      AT time zone 'America/Sao_Paulo') AS DATE),'DD')     DATA_LIMITE,                           " &
 "  ORDERS.SUSR4               UNEG,                                                            " &
 "  nvl(OH.STATUS, ORDERS.STATUS)                        ULT_EVENTO,                            " &
 "  OS.DESCRIPTION                                       ULT_EVENTO_DESCR,                      " &
@@ -82,7 +82,7 @@
 "  CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'                    " &
 "   WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"            AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
 "   ELSE ' ' END                                        DIF_ATRASO_TERCEIRO,                   " &
 "  ORDERS.ADDDATE                                       DATA_REGISTRO                          " &
 "                                                                                              " &
@@ -119,14 +119,14 @@
 "         CODELKUP.UDF2,                                                                       " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"             AT time zone sessiontimezone) AS DATE),'DD'),                                    " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),'DD'),                                    " &
 "         ORDERS.SUSR4,                                                                        " &
 "         nvl(OH.STATUS, ORDERS.STATUS),                                                       " &
 "         OS.DESCRIPTION,                                                                      " &
 "         CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'             " &
 "          WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                   AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
+"                   AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
 "           ELSE ' ' END,                                                                      " &
 "         ORDERS.ADDDATE                                                                       " &
 "                                                                                              " &
@@ -139,7 +139,7 @@
 "  CODELKUP.UDF2                                        DESCR_FILIAL,                          " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                              " &
-"      AT time zone sessiontimezone) AS DATE),'DD')     DATA_LIMITE,                           " &
+"      AT time zone 'America/Sao_Paulo') AS DATE),'DD')     DATA_LIMITE,                           " &
 "  ORDERS.SUSR4               UNEG,                                                            " &
 "  nvl(OH.STATUS, ORDERS.STATUS)                        ULT_EVENTO,                            " &
 "  OS.DESCRIPTION                                       ULT_EVENTO_DESCR,                      " &
@@ -147,7 +147,7 @@
 "  CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'                    " &
 "   WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"            AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
 "   ELSE ' ' END                                        DIF_ATRASO_TERCEIRO,                   " &
 "  ORDERS.ADDDATE                                       DATA_REGISTRO                          " &
 "                                                                                              " &
@@ -184,14 +184,14 @@
 "         CODELKUP.UDF2,                                                                       " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"             AT time zone sessiontimezone) AS DATE),'DD'),                                    " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),'DD'),                                    " &
 "         ORDERS.SUSR4,                                                                        " &
 "         nvl(OH.STATUS, ORDERS.STATUS),                                                       " &
 "         OS.DESCRIPTION,                                                                      " &
 "         CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'             " &
 "          WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                   AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
+"                   AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
 "           ELSE ' ' END,                                                                      " &
 "         ORDERS.ADDDATE                                                                       " &
 "                                                                                              " &
@@ -204,7 +204,7 @@
 "  CODELKUP.UDF2                                        DESCR_FILIAL,                          " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                              " &
-"      AT time zone sessiontimezone) AS DATE),'DD')     DATA_LIMITE,                           " &
+"      AT time zone 'America/Sao_Paulo') AS DATE),'DD')     DATA_LIMITE,                           " &
 "  ORDERS.SUSR4               UNEG,                                                            " &
 "  nvl(OH.STATUS, ORDERS.STATUS)                        ULT_EVENTO,                            " &
 "  OS.DESCRIPTION                                       ULT_EVENTO_DESCR,                      " &
@@ -212,7 +212,7 @@
 "  CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'                    " &
 "   WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"            AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
 "   ELSE ' ' END                                        DIF_ATRASO_TERCEIRO,                   " &
 "  ORDERS.ADDDATE                                       DATA_REGISTRO                          " &
 "                                                                                              " &
@@ -249,14 +249,14 @@
 "         CODELKUP.UDF2,                                                                       " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"             AT time zone sessiontimezone) AS DATE),'DD'),                                    " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),'DD'),                                    " &
 "         ORDERS.SUSR4,                                                                        " &
 "         nvl(OH.STATUS, ORDERS.STATUS),                                                       " &
 "         OS.DESCRIPTION,                                                                      " &
 "         CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'             " &
 "          WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                   AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
+"                   AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
 "           ELSE ' ' END,                                                                      " &
 "         ORDERS.ADDDATE                                                                       " &
 "                                                                                              " &
@@ -269,7 +269,7 @@
 "  CODELKUP.UDF2                                        DESCR_FILIAL,                          " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                              " &
-"      AT time zone sessiontimezone) AS DATE),'DD')     DATA_LIMITE,                           " &
+"      AT time zone 'America/Sao_Paulo') AS DATE),'DD')     DATA_LIMITE,                           " &
 "  ORDERS.SUSR4               UNEG,                                                            " &
 "  nvl(OH.STATUS, ORDERS.STATUS)                        ULT_EVENTO,                            " &
 "  OS.DESCRIPTION                                       ULT_EVENTO_DESCR,                      " &
@@ -277,7 +277,7 @@
 "  CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'                    " &
 "   WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"            AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
 "   ELSE ' ' END                                        DIF_ATRASO_TERCEIRO,                   " &
 "  ORDERS.ADDDATE                                       DATA_REGISTRO                          " &
 "                                                                                              " &
@@ -314,14 +314,14 @@
 "         CODELKUP.UDF2,                                                                       " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"             AT time zone sessiontimezone) AS DATE),'DD'),                                    " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),'DD'),                                    " &
 "         ORDERS.SUSR4,                                                                        " &
 "         nvl(OH.STATUS, ORDERS.STATUS),                                                       " &
 "         OS.DESCRIPTION,                                                                      " &
 "         CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'             " &
 "          WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                   AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
+"                   AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
 "           ELSE ' ' END,                                                                      " &
 "         ORDERS.ADDDATE                                                                       " &
 "                                                                                              " &
@@ -334,7 +334,7 @@
 "  CODELKUP.UDF2                                        DESCR_FILIAL,                          " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                              " &
-"      AT time zone sessiontimezone) AS DATE),'DD')     DATA_LIMITE,                           " &
+"      AT time zone 'America/Sao_Paulo') AS DATE),'DD')     DATA_LIMITE,                           " &
 "  ORDERS.SUSR4               UNEG,                                                            " &
 "  nvl(OH.STATUS, ORDERS.STATUS)                        ULT_EVENTO,                            " &
 "  OS.DESCRIPTION                                       ULT_EVENTO_DESCR,                      " &
@@ -342,7 +342,7 @@
 "  CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'                    " &
 "   WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"            AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
 "   ELSE ' ' END                                        DIF_ATRASO_TERCEIRO,                   " &
 "  ORDERS.ADDDATE                                       DATA_REGISTRO                          " &
 "                                                                                              " &
@@ -379,14 +379,14 @@
 "         CODELKUP.UDF2,                                                                       " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"             AT time zone sessiontimezone) AS DATE),'DD'),                                    " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),'DD'),                                    " &
 "         ORDERS.SUSR4,                                                                        " &
 "         nvl(OH.STATUS, ORDERS.STATUS),                                                       " &
 "         OS.DESCRIPTION,                                                                      " &
 "         CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'             " &
 "          WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                   AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
+"                   AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
 "           ELSE ' ' END,                                                                      " &
 "         ORDERS.ADDDATE                                                                       " &
 "                                                                                              " &
@@ -399,7 +399,7 @@
 "  CODELKUP.UDF2                                        DESCR_FILIAL,                          " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                              " &
-"      AT time zone sessiontimezone) AS DATE),'DD')     DATA_LIMITE,                           " &
+"      AT time zone 'America/Sao_Paulo') AS DATE),'DD')     DATA_LIMITE,                           " &
 "  ORDERS.SUSR4               UNEG,                                                            " &
 "  nvl(OH.STATUS, ORDERS.STATUS)                        ULT_EVENTO,                            " &
 "  OS.DESCRIPTION                                       ULT_EVENTO_DESCR,                      " &
@@ -407,7 +407,7 @@
 "  CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'                    " &
 "   WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"            AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
 "   ELSE ' ' END                                        DIF_ATRASO_TERCEIRO,                   " &
 "  ORDERS.ADDDATE                                       DATA_REGISTRO                          " &
 "                                                                                              " &
@@ -444,14 +444,14 @@
 "         CODELKUP.UDF2,                                                                       " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"             AT time zone sessiontimezone) AS DATE),'DD'),                                    " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),'DD'),                                    " &
 "         ORDERS.SUSR4,                                                                        " &
 "         nvl(OH.STATUS, ORDERS.STATUS),                                                       " &
 "         OS.DESCRIPTION,                                                                      " &
 "         CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'             " &
 "          WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                   AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
+"                   AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
 "           ELSE ' ' END,                                                                      " &
 "         ORDERS.ADDDATE                                                                       " &
 "                                                                                              " &
@@ -464,7 +464,7 @@
 "  CODELKUP.UDF2                                        DESCR_FILIAL,                          " &
 "  TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                              " &
-"      AT time zone sessiontimezone) AS DATE),'DD')     DATA_LIMITE,                           " &
+"      AT time zone 'America/Sao_Paulo') AS DATE),'DD')     DATA_LIMITE,                           " &
 "  ORDERS.SUSR4               UNEG,                                                            " &
 "  nvl(OH.STATUS, ORDERS.STATUS)                        ULT_EVENTO,                            " &
 "  OS.DESCRIPTION                                       ULT_EVENTO_DESCR,                      " &
@@ -472,7 +472,7 @@
 "  CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'                    " &
 "   WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                          " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                        " &
-"            AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'                   " &
 "   ELSE ' ' END                                        DIF_ATRASO_TERCEIRO,                   " &
 "  ORDERS.ADDDATE                                       DATA_REGISTRO                          " &
 "                                                                                              " &
@@ -509,14 +509,14 @@
 "         CODELKUP.UDF2,                                                                       " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                       " &
-"             AT time zone sessiontimezone) AS DATE),'DD'),                                    " &
+"             AT time zone 'America/Sao_Paulo') AS DATE),'DD'),                                    " &
 "         ORDERS.SUSR4,                                                                        " &
 "         nvl(OH.STATUS, ORDERS.STATUS),                                                       " &
 "         OS.DESCRIPTION,                                                                      " &
 "         CASE WHEN ORDERS.SCHEDULEDSHIPDATE<ORDERS.ADDDATE THEN 'ATRASO TERCEIRO'             " &
 "          WHEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,                   " &
 "                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                 " &
-"                   AT time zone sessiontimezone) AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
+"                   AT time zone 'America/Sao_Paulo') AS DATE)<SYSDATE THEN 'ATRASO OP'            " &
 "           ELSE ' ' END,                                                                      " &
 "         ORDERS.ADDDATE                                                                       " &
 "                                                                                              " &

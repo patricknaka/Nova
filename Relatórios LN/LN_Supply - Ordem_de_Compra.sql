@@ -1,7 +1,7 @@
 SELECT
   ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(tdpur450.t$trdt), 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-               AT time zone sessiontimezone) AS DATE) 
+               AT time zone 'America/Sao_Paulo') AS DATE) 
       from baandb.ttdpur450301 tdpur450
      where tdpur450.t$orno = tdpur400.t$orno) 
                                        DATA_GERACAO,
@@ -26,12 +26,12 @@ SELECT
   tdpur401.t$pric * tdpur401.t$qoor    VALO_ORDEM,  
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$odat, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)
+      AT time zone 'America/Sao_Paulo') AS DATE)
                                        DATA_ORDEM,   
             
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$ddta, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)
+      AT time zone 'America/Sao_Paulo') AS DATE)
                                        DATA_PLANEJADA,     
   tdpur400.t$cdec                      CONDICAO_ENTREGA,
   tcibd001.t$csig                      SINALIZACAO_ITEM,
@@ -92,7 +92,7 @@ WHERE tdpur400.t$orno = tdpur401.t$orno
   
   AND tcemm030.t$euca = NVL(:Filial, tcemm030.t$euca)
   AND Trunc( (SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(tdpur450.t$trdt), 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) 
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
                 FROM baandb.ttdpur450301 tdpur450
                 WHERE tdpur450.t$orno = tdpur400.t$orno)) BETWEEN :DtGeraOCDe AND :DtGeraOCAte
   AND tcibd001.t$csig = (CASE WHEN :Situacao = 'T' THEN tcibd001.t$csig ELSE :Situacao END)

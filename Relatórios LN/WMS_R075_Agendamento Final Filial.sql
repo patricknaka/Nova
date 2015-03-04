@@ -15,7 +15,7 @@ SELECT QWMS.                                     ASN,
        QWMS.                                     NF,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,
+        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_EMISSAO,
        TDREC940.T$FOVN$L                         CNPJ_FORNCEDOR,
        TDREC940.T$OPFC$L                         CFOP,
        TDREC940.T$OPOR$L                         SEQ_CFOP,
@@ -74,7 +74,7 @@ INNER JOIN ( select RC.RECEIPTKEY        ASN,  -- NR
                     RC.SUPPLIERCODE, 
                     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, 
                       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE)  
+                        AT time zone 'America/Sao_Paulo') AS DATE)  
                                          DT_NR  
                from WMWHSE5.RECEIPT  RC
          inner join WMWHSE5.RECEIPTDETAIL RD
@@ -101,7 +101,7 @@ INNER JOIN ( select RC.RECEIPTKEY        ASN,  -- NR
                     RC.SUPPLIERCODE,
                     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, 
                       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone sessiontimezone) AS DATE) ) QWMS
+                        AT time zone 'America/Sao_Paulo') AS DATE) ) QWMS
         ON QWMS.NF = TDREC940.T$DOCN$L || '/' || TDREC940.T$SERI$L
        AND QWMS.SUPPLIERCODE  = TDREC940.T$BPID$L
 
@@ -114,7 +114,7 @@ INNER JOIN BAANDB.TTCIBD936301@PLN01 TCIBD936
 WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)              
   AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
       Between :DataDe
           And :DataAte
   AND CASE WHEN NVL(TDREC940.T$STAT$L, 0) not in (1,3,4,5,6,200,201)
@@ -143,7 +143,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "       QWMS.NF,                                                        " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L,           " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_EMISSAO,         " &
 "       TDREC940.T$FOVN$L                         CNPJ_FORNCEDOR,       " &
 "       TDREC940.T$OPFC$L                         CFOP,                 " &
 "       TDREC940.T$OPOR$L                         SEQ_CFOP,             " &
@@ -202,7 +202,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,                                    " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE,      " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE)  " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                         DT_NR                  " &
 "               from " + Parameters!Table.Value + ".RECEIPT  RC  " &
 "         inner join " + Parameters!Table.Value + ".RECEIPTDETAIL RD " &
@@ -229,7 +229,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,     " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE) ) QWMS " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE) ) QWMS " &
 "        ON QWMS.NF = TDREC940.T$DOCN$L || '/' || TDREC940.T$SERI$L " &
 "       AND QWMS.SUPPLIERCODE  = TDREC940.T$BPID$L " &
 "                                                  " &
@@ -269,7 +269,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "       QWMS.NF,                                                        " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L,           " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_EMISSAO,         " &
 "       TDREC940.T$FOVN$L                         CNPJ_FORNCEDOR,       " &
 "       TDREC940.T$OPFC$L                         CFOP,                 " &
 "       TDREC940.T$OPOR$L                         SEQ_CFOP,             " &
@@ -328,7 +328,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,                                    " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE,      " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE)  " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                         DT_NR                  " &
 "               from WMWHSE1.RECEIPT  RC  " &
 "         inner join WMWHSE1.RECEIPTDETAIL RD " &
@@ -355,7 +355,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,     " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE) ) QWMS " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE) ) QWMS " &
 "        ON QWMS.NF = TDREC940.T$DOCN$L || '/' || TDREC940.T$SERI$L " &
 "       AND QWMS.SUPPLIERCODE  = TDREC940.T$BPID$L " &
 "                                                  " &
@@ -391,7 +391,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "       QWMS.NF,                                                        " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L,           " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_EMISSAO,         " &
 "       TDREC940.T$FOVN$L                         CNPJ_FORNCEDOR,       " &
 "       TDREC940.T$OPFC$L                         CFOP,                 " &
 "       TDREC940.T$OPOR$L                         SEQ_CFOP,             " &
@@ -450,7 +450,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,                                    " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE,      " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE)  " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                         DT_NR                  " &
 "               from WMWHSE2.RECEIPT  RC  " &
 "         inner join WMWHSE2.RECEIPTDETAIL RD " &
@@ -477,7 +477,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,     " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE) ) QWMS " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE) ) QWMS " &
 "        ON QWMS.NF = TDREC940.T$DOCN$L || '/' || TDREC940.T$SERI$L " &
 "       AND QWMS.SUPPLIERCODE  = TDREC940.T$BPID$L " &
 "                                                  " &
@@ -513,7 +513,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "       QWMS.NF,                                                        " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L,           " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_EMISSAO,         " &
 "       TDREC940.T$FOVN$L                         CNPJ_FORNCEDOR,       " &
 "       TDREC940.T$OPFC$L                         CFOP,                 " &
 "       TDREC940.T$OPOR$L                         SEQ_CFOP,             " &
@@ -572,7 +572,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,                                    " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE,      " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE)  " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                         DT_NR                  " &
 "               from WMWHSE3.RECEIPT  RC  " &
 "         inner join WMWHSE3.RECEIPTDETAIL RD " &
@@ -599,7 +599,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,     " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE) ) QWMS " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE) ) QWMS " &
 "        ON QWMS.NF = TDREC940.T$DOCN$L || '/' || TDREC940.T$SERI$L " &
 "       AND QWMS.SUPPLIERCODE  = TDREC940.T$BPID$L " &
 "                                                  " &
@@ -635,7 +635,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "       QWMS.NF,                                                        " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L,           " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_EMISSAO,         " &
 "       TDREC940.T$FOVN$L                         CNPJ_FORNCEDOR,       " &
 "       TDREC940.T$OPFC$L                         CFOP,                 " &
 "       TDREC940.T$OPOR$L                         SEQ_CFOP,             " &
@@ -694,7 +694,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,                                    " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE,      " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE)  " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                         DT_NR                  " &
 "               from WMWHSE4.RECEIPT  RC  " &
 "         inner join WMWHSE4.RECEIPTDETAIL RD " &
@@ -721,7 +721,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,     " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE) ) QWMS " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE) ) QWMS " &
 "        ON QWMS.NF = TDREC940.T$DOCN$L || '/' || TDREC940.T$SERI$L " &
 "       AND QWMS.SUPPLIERCODE  = TDREC940.T$BPID$L " &
 "                                                  " &
@@ -757,7 +757,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "       QWMS.NF,                                                        " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L,           " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_EMISSAO,         " &
 "       TDREC940.T$FOVN$L                         CNPJ_FORNCEDOR,       " &
 "       TDREC940.T$OPFC$L                         CFOP,                 " &
 "       TDREC940.T$OPOR$L                         SEQ_CFOP,             " &
@@ -816,7 +816,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,                                    " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE,      " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE)  " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                         DT_NR                  " &
 "               from WMWHSE5.RECEIPT  RC  " &
 "         inner join WMWHSE5.RECEIPTDETAIL RD " &
@@ -843,7 +843,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,     " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE) ) QWMS " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE) ) QWMS " &
 "        ON QWMS.NF = TDREC940.T$DOCN$L || '/' || TDREC940.T$SERI$L " &
 "       AND QWMS.SUPPLIERCODE  = TDREC940.T$BPID$L " &
 "                                                  " &
@@ -879,7 +879,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "       QWMS.NF,                                                        " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L,           " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_EMISSAO,         " &
 "       TDREC940.T$FOVN$L                         CNPJ_FORNCEDOR,       " &
 "       TDREC940.T$OPFC$L                         CFOP,                 " &
 "       TDREC940.T$OPOR$L                         SEQ_CFOP,             " &
@@ -938,7 +938,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,                                    " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE,      " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE)  " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                         DT_NR                  " &
 "               from WMWHSE6.RECEIPT  RC  " &
 "         inner join WMWHSE6.RECEIPTDETAIL RD " &
@@ -965,7 +965,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,     " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE) ) QWMS " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE) ) QWMS " &
 "        ON QWMS.NF = TDREC940.T$DOCN$L || '/' || TDREC940.T$SERI$L " &
 "       AND QWMS.SUPPLIERCODE  = TDREC940.T$BPID$L " &
 "                                                  " &
@@ -1001,7 +1001,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "       QWMS.NF,                                                        " &
 "       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L,           " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"        AT time zone sessiontimezone) AS DATE)   DATA_EMISSAO,         " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_EMISSAO,         " &
 "       TDREC940.T$FOVN$L                         CNPJ_FORNCEDOR,       " &
 "       TDREC940.T$OPFC$L                         CFOP,                 " &
 "       TDREC940.T$OPOR$L                         SEQ_CFOP,             " &
@@ -1060,7 +1060,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,                                    " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE,      " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE)  " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                         DT_NR                  " &
 "               from WMWHSE7.RECEIPT  RC  " &
 "         inner join WMWHSE7.RECEIPTDETAIL RD " &
@@ -1087,7 +1087,7 @@ WHERE TDREC940.T$RFDT$L IN (1,2,5,10,28)
 "                    RC.SUPPLIERCODE,     " &
 "                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RC.ADDDATE, " &
 "                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"                        AT time zone sessiontimezone) AS DATE) ) QWMS " &
+"                        AT time zone 'America/Sao_Paulo') AS DATE) ) QWMS " &
 "        ON QWMS.NF = TDREC940.T$DOCN$L || '/' || TDREC940.T$SERI$L " &
 "       AND QWMS.SUPPLIERCODE  = TDREC940.T$BPID$L " &
 "                                                  " &

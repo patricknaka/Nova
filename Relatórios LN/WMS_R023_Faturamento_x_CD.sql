@@ -2,7 +2,7 @@ SELECT wmsCODE.FILIAL                                                 WHSEID,
        wmsCODE.ID_FILIAL                                              FILIAL,
        Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone sessiontimezone) AS DATE), 'DD')        DAT,
+                 AT time zone 'America/Sao_Paulo') AS DATE), 'DD')        DAT,
        Count(Distinct sli245.t$slso)                                  PEDIDOS,
        Count(sli245.t$item)                                           ITENS,
        Round(Count(sli245.t$item) /
@@ -61,12 +61,12 @@ INNER JOIN baandb.ttdsls400301 sls400
        AND ( (:Filial = 'AAA') OR (wmsCODE.FILIAL = :Filial) )
        AND trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-               AT time zone sessiontimezone) AS DATE), 'DD')
+               AT time zone 'America/Sao_Paulo') AS DATE), 'DD')
            Between :DataDe
                And :DataAte
      
   GROUP BY trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone sessiontimezone) AS DATE), 'DD'),
+                     AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),
            wmsCODE.FILIAL,     
            wmsCODE.ID_FILIAL

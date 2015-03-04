@@ -27,7 +27,7 @@
   
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whwmd215.t$rcd_utc, 
            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-             AT time zone sessiontimezone) AS DATE) 
+             AT time zone 'America/Sao_Paulo') AS DATE) 
                              as ULTIMAATUAL,
    
          Q1.mauc             as VL_CMV,
@@ -113,7 +113,7 @@ UNION
     int1.T$NCIA$C                                    AS ID_CIA,  
     TO_NUMBER(est.T$CWAR$C)                          AS ESTABELECIMENTO,  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS'),
-      'YYYY-MM-DD HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)       
+      'YYYY-MM-DD HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)       
                                                      AS ULTIMAATUAL,                
     ' '                                              AS RESTRICAO,  
     CASE  
@@ -175,7 +175,7 @@ UNION
            int1.T$NCIA$C,
            TO_NUMBER(est.T$CWAR$C),
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS'),
-             'YYYY-MM-DD HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE),
+             'YYYY-MM-DD HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE),
            CASE  
              WHEN dipu.PRAZO_NEW > est.T$PRIT$C THEN  dipu.PRAZO_NEW   
              ELSE est.T$PRIT$C END,

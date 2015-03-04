@@ -7,7 +7,7 @@ SELECT
        tdrec941.t$fire$l        REF_FIS_ENTR,    
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 
-        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE) 
+        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
                                 DT_APRV,   
        tdrec940.t$docn$l        NR_NF,
        tdrec940.t$seri$l        SERIE_NF,
@@ -51,7 +51,7 @@ INNER JOIN baandb.ttccom100301 tccom100
 WHERE cisli940.t$fdty$l = 5
   AND tdrec940.t$cofc$l IN (:Filial)
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 
-      'DD-MON-YYYY HH24:MI:SS'),'GMT') AT time zone sessiontimezone) AS DATE) ) 
+      'DD-MON-YYYY HH24:MI:SS'),'GMT') AT time zone 'America/Sao_Paulo') AS DATE) ) 
 	  BETWEEN :DataAprovacaoDe 
 	      AND :DataAprovacaoAte
   AND ( (Trim(tdrec940.t$fovn$l) Like '%' || :CNPJ_FORN || '%') OR (:CNPJ_FORN IS NULL) )

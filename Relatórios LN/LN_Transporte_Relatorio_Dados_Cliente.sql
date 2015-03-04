@@ -9,7 +9,7 @@ SELECT
     tcibd001.t$dsca          ITEM_DESC,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
                              DATA_PROMETIDA,
         
     znsls401.t$ufen$c        UF,
@@ -22,10 +22,10 @@ SELECT
     znsls410.PT_CONTR        STATUS_ATUAL,
     znmcs002.t$desc$c        DESC_STATUS,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
                              DATA_STATUS,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_PROC, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
                              DATA_PROC
     
 FROM       baandb.tznsls401301 znsls401

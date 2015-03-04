@@ -16,11 +16,11 @@
        RECEIPTDETAIL.QTYRECEIVED  QT_REC,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE) 
+           AT time zone 'America/Sao_Paulo') AS DATE) 
                                   DT_ENT_RT,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE) 
+           AT time zone 'America/Sao_Paulo') AS DATE) 
                                   DT_SAID_RT
 	   
 FROM       WMWHSE5.TASKDETAIL
@@ -54,12 +54,12 @@ WHERE TASKDETAIL.STATUS = 9
   
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE))
+           AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataEntradaDe
           And :DataEntradaAte  
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone sessiontimezone) AS DATE))
+           AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataSaidaDe
           And :DataSaidaAte
 
@@ -84,11 +84,11 @@ WHERE TASKDETAIL.STATUS = 9
 "        RECEIPTDETAIL.QTYRECEIVED  QT_REC,                                    " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,        " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_ENT_RT,                                 " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_SAID_RT                                 " &
 " 	                                                                           " &
 " FROM       " + Parameters!Table.Value + ".TASKDETAIL                         " &
@@ -123,12 +123,12 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                              " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataEntradaDe.Value + "'                        " &
 "           And '"+ Parameters!DataEntradaAte.Value + "'                       " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,           " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataSaidaDe.Value + "'                          " &
 "           And '"+ Parameters!DataSaidaAte.Value + "'                         " &
 " 	                                                                           " &
@@ -154,11 +154,11 @@ WHERE TASKDETAIL.STATUS = 9
 "        RECEIPTDETAIL.QTYRECEIVED  QT_REC,                                    " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,        " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_ENT_RT,                                 " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_SAID_RT                                 " &
 " 	                                                                           " &
 " FROM       WMWHSE1.TASKDETAIL                                                " &
@@ -193,12 +193,12 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                              " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataEntradaDe.Value + "'                        " &
 "           And '"+ Parameters!DataEntradaAte.Value + "'                       " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,           " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataSaidaDe.Value + "'                          " &
 "           And '"+ Parameters!DataSaidaAte.Value + "'                         " &
 " 	                                                                           " &
@@ -222,11 +222,11 @@ WHERE TASKDETAIL.STATUS = 9
 "        RECEIPTDETAIL.QTYRECEIVED  QT_REC,                                    " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,        " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_ENT_RT,                                 " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_SAID_RT                                 " &
 " 	                                                                           " &
 " FROM       WMWHSE2.TASKDETAIL                                                " &
@@ -261,12 +261,12 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                              " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataEntradaDe.Value + "'                        " &
 "           And '"+ Parameters!DataEntradaAte.Value + "'                       " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,           " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataSaidaDe.Value + "'                          " &
 "           And '"+ Parameters!DataSaidaAte.Value + "'                         " &
 " 	                                                                           " &
@@ -290,11 +290,11 @@ WHERE TASKDETAIL.STATUS = 9
 "        RECEIPTDETAIL.QTYRECEIVED  QT_REC,                                    " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,        " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_ENT_RT,                                 " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_SAID_RT                                 " &
 " 	                                                                           " &
 " FROM       WMWHSE3.TASKDETAIL                                                " &
@@ -329,12 +329,12 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                              " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataEntradaDe.Value + "'                        " &
 "           And '"+ Parameters!DataEntradaAte.Value + "'                       " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,           " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataSaidaDe.Value + "'                          " &
 "           And '"+ Parameters!DataSaidaAte.Value + "'                         " &
 " 	                                                                           " &
@@ -358,11 +358,11 @@ WHERE TASKDETAIL.STATUS = 9
 "        RECEIPTDETAIL.QTYRECEIVED  QT_REC,                                    " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,        " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_ENT_RT,                                 " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_SAID_RT                                 " &
 " 	                                                                           " &
 " FROM       WMWHSE4.TASKDETAIL                                                " &
@@ -397,12 +397,12 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                              " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataEntradaDe.Value + "'                        " &
 "           And '"+ Parameters!DataEntradaAte.Value + "'                       " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,           " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataSaidaDe.Value + "'                          " &
 "           And '"+ Parameters!DataSaidaAte.Value + "'                         " &
 " 	                                                                           " &
@@ -426,11 +426,11 @@ WHERE TASKDETAIL.STATUS = 9
 "        RECEIPTDETAIL.QTYRECEIVED  QT_REC,                                    " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,        " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_ENT_RT,                                 " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_SAID_RT                                 " &
 " 	                                                                           " &
 " FROM       WMWHSE5.TASKDETAIL                                                " &
@@ -465,12 +465,12 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                              " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataEntradaDe.Value + "'                        " &
 "           And '"+ Parameters!DataEntradaAte.Value + "'                       " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,           " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataSaidaDe.Value + "'                          " &
 "           And '"+ Parameters!DataSaidaAte.Value + "'                         " &
 " 	                                                                           " &
@@ -494,11 +494,11 @@ WHERE TASKDETAIL.STATUS = 9
 "        RECEIPTDETAIL.QTYRECEIVED  QT_REC,                                    " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,        " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_ENT_RT,                                 " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_SAID_RT                                 " &
 " 	                                                                           " &
 " FROM       WMWHSE6.TASKDETAIL                                                " &
@@ -533,12 +533,12 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                              " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataEntradaDe.Value + "'                        " &
 "           And '"+ Parameters!DataEntradaAte.Value + "'                       " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,           " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataSaidaDe.Value + "'                          " &
 "           And '"+ Parameters!DataSaidaAte.Value + "'                         " &
 " 	                                                                           " &
@@ -562,11 +562,11 @@ WHERE TASKDETAIL.STATUS = 9
 "        RECEIPTDETAIL.QTYRECEIVED  QT_REC,                                    " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,        " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_ENT_RT,                                 " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE)                            " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)                            " &
 "                                   DT_SAID_RT                                 " &
 " 	                                                                           " &
 " FROM       WMWHSE7.TASKDETAIL                                                " &
@@ -601,12 +601,12 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                              " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(RECEIPTDETAIL.DATERECEIVED,   " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataEntradaDe.Value + "'                        " &
 "           And '"+ Parameters!DataEntradaAte.Value + "'                       " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,           " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"            AT time zone sessiontimezone) AS DATE))                           " &
+"            AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "       Between '"+ Parameters!DataSaidaDe.Value + "'                          " &
 "           And '"+ Parameters!DataSaidaAte.Value + "'                         " &
 " 	                                                                           " &

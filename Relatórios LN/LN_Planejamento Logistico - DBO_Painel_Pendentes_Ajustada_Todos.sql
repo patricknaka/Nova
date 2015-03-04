@@ -38,7 +38,7 @@ SELECT
                        DESCRICAO,
         
     ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 
-          'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE)
+          'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
         FROM BAANDB.tznfmd640301 znfmd640
        WHERE znfmd640.t$date$c = ( select max(znfmd640.t$date$c)
                                      from BAANDB.tznfmd640301 znfmd640
@@ -56,15 +56,15 @@ SELECT
     znsls401.t$nome$c  DESTINATARIO,
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE) 
+      AT time zone 'America/Sao_Paulo') AS DATE) 
                        DATA_PROMETIDA,
         
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)  
+      AT time zone 'America/Sao_Paulo') AS DATE)  
                        DATA_EXPEDICAO,                      
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l-znsls401.t$pzcd$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone sessiontimezone) AS DATE)
+      AT time zone 'America/Sao_Paulo') AS DATE)
                        DATA_PREVISTA,
     
     cisli940.t$amnt$l  VALOR
@@ -123,7 +123,7 @@ WHERE  ( SELECT znfmd640.t$coci$c
     AND cisli940.t$fdty$l = 1
   
     AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone sessiontimezone) AS DATE))
+    AT time zone 'America/Sao_Paulo') AS DATE))
     BETWEEN :DataPlanejadaDe
         AND :DataPlanejadaAte
 	AND tcmcs080.t$cfrw IN (:Transportadora)

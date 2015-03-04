@@ -4,11 +4,11 @@ SELECT
     PL_DB.DB_ALIAS                              DSC_PLANTA,                  
     TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE), 'DD')             
+        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')             
                                                 DIA,                         
     TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE), 'HH24')         
+        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')         
                                                 HORA,                        
     USERACTIVITY.USERID                          OPERADOR,                    
     subStr( tu.usr_name,4,
@@ -41,7 +41,7 @@ WHERE taskdetail.status = 9
 
 -- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
 --     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---       AT time zone sessiontimezone) AS DATE)) 
+--       AT time zone 'America/Sao_Paulo') AS DATE)) 
 --     Between :DataDe 
 --         And :DataAte
 
@@ -49,10 +49,10 @@ GROUP BY taskdetail.whseid,
          PL_DB.DB_ALIAS,                                                     
          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE), 'DD'),
+              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),
          TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone sessiontimezone) AS DATE), 'HH24'), 
+              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'), 
          USERACTIVITY.USERID,                                                  
          subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ), 
          taskdetail.wavekey, 
@@ -69,11 +69,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                              DSC_PLANTA,              " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                    " &
 "                                                DIA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                  " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                  " &
 "                                                HORA,                    " &
 "    PICKDETAIL.EDITWHO                          OPERADOR,                " &
 "    subStr( tu.usr_name,4,                                               " &
@@ -106,7 +106,7 @@ ORDER BY 2
 "                                                                         " &
 " AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"       AT time zone sessiontimezone) AS DATE))                           " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "     Between '" + Parameters!DataDe.Value + "'                           " &
 "         And '" + Parameters!DataAte.Value + "'                          " &
 "                                                                         " &
@@ -114,10 +114,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                 " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,    " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,  " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),           " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),           " &
 "         PICKDETAIL.EDITWHO,                                             " &
 "         subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ),          " &
 "         taskdetail.wavekey,                                             " &
@@ -132,11 +132,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                              DSC_PLANTA,              " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                    " &
 "                                                DIA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                  " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                  " &
 "                                                HORA,                    " &
 "    PICKDETAIL.EDITWHO                          OPERADOR,                " &
 "    subStr( tu.usr_name,4,                                               " &
@@ -169,7 +169,7 @@ ORDER BY 2
 "                                                                         " &
 " AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"       AT time zone sessiontimezone) AS DATE))                           " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "     Between '" + Parameters!DataDe.Value + "'                           " &
 "         And '" + Parameters!DataAte.Value + "'                          " &
 "                                                                         " &
@@ -177,10 +177,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                 " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,    " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,  " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),           " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),           " &
 "         PICKDETAIL.EDITWHO,                                             " &
 "         subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ),          " &
 "         taskdetail.wavekey,                                             " &
@@ -195,11 +195,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                              DSC_PLANTA,              " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                    " &
 "                                                DIA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                  " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                  " &
 "                                                HORA,                    " &
 "    PICKDETAIL.EDITWHO                          OPERADOR,                " &
 "    subStr( tu.usr_name,4,                                               " &
@@ -232,7 +232,7 @@ ORDER BY 2
 "                                                                         " &
 " AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"       AT time zone sessiontimezone) AS DATE))                           " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "     Between '" + Parameters!DataDe.Value + "'                           " &
 "         And '" + Parameters!DataAte.Value + "'                          " &
 "                                                                         " &
@@ -240,10 +240,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                 " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,    " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,  " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),           " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),           " &
 "         PICKDETAIL.EDITWHO,                                             " &
 "         subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ),          " &
 "         taskdetail.wavekey,                                             " &
@@ -258,11 +258,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                              DSC_PLANTA,              " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                    " &
 "                                                DIA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                  " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                  " &
 "                                                HORA,                    " &
 "    PICKDETAIL.EDITWHO                          OPERADOR,                " &
 "    subStr( tu.usr_name,4,                                               " &
@@ -295,7 +295,7 @@ ORDER BY 2
 "                                                                         " &
 " AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"       AT time zone sessiontimezone) AS DATE))                           " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "     Between '" + Parameters!DataDe.Value + "'                           " &
 "         And '" + Parameters!DataAte.Value + "'                          " &
 "                                                                         " &
@@ -303,10 +303,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                 " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,    " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,  " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),           " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),           " &
 "         PICKDETAIL.EDITWHO,                                             " &
 "         subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ),          " &
 "         taskdetail.wavekey,                                             " &
@@ -321,11 +321,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                              DSC_PLANTA,              " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                    " &
 "                                                DIA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                  " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                  " &
 "                                                HORA,                    " &
 "    PICKDETAIL.EDITWHO                          OPERADOR,                " &
 "    subStr( tu.usr_name,4,                                               " &
@@ -358,7 +358,7 @@ ORDER BY 2
 "                                                                         " &
 " AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"       AT time zone sessiontimezone) AS DATE))                           " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "     Between '" + Parameters!DataDe.Value + "'                           " &
 "         And '" + Parameters!DataAte.Value + "'                          " &
 "                                                                         " &
@@ -366,10 +366,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                 " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,    " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,  " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),           " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),           " &
 "         PICKDETAIL.EDITWHO,                                             " &
 "         subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ),          " &
 "         taskdetail.wavekey,                                             " &
@@ -384,11 +384,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                              DSC_PLANTA,              " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                    " &
 "                                                DIA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                  " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                  " &
 "                                                HORA,                    " &
 "    PICKDETAIL.EDITWHO                          OPERADOR,                " &
 "    subStr( tu.usr_name,4,                                               " &
@@ -421,7 +421,7 @@ ORDER BY 2
 "                                                                         " &
 " AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"       AT time zone sessiontimezone) AS DATE))                           " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "     Between '" + Parameters!DataDe.Value + "'                           " &
 "         And '" + Parameters!DataAte.Value + "'                          " &
 "                                                                         " &
@@ -429,10 +429,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                 " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,    " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,  " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),           " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),           " &
 "         PICKDETAIL.EDITWHO,                                             " &
 "         subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ),          " &
 "         taskdetail.wavekey,                                             " &
@@ -447,11 +447,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                              DSC_PLANTA,              " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                    " &
 "                                                DIA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                  " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                  " &
 "                                                HORA,                    " &
 "    PICKDETAIL.EDITWHO                          OPERADOR,                " &
 "    subStr( tu.usr_name,4,                                               " &
@@ -484,7 +484,7 @@ ORDER BY 2
 "                                                                         " &
 " AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"       AT time zone sessiontimezone) AS DATE))                           " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "     Between '" + Parameters!DataDe.Value + "'                           " &
 "         And '" + Parameters!DataAte.Value + "'                          " &
 "                                                                         " &
@@ -492,10 +492,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                 " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,    " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,  " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),           " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),           " &
 "         PICKDETAIL.EDITWHO,                                             " &
 "         subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ),          " &
 "         taskdetail.wavekey,                                             " &
@@ -510,11 +510,11 @@ ORDER BY 2
 "    PL_DB.DB_ALIAS                              DSC_PLANTA,              " &
 "    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,         " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'DD')                    " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'DD')                    " &
 "                                                DIA,                     " &
 "    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,       " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')       " &
-"        AT time zone sessiontimezone) AS DATE), 'HH24')                  " &
+"        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')                  " &
 "                                                HORA,                    " &
 "    PICKDETAIL.EDITWHO                          OPERADOR,                " &
 "    subStr( tu.usr_name,4,                                               " &
@@ -547,7 +547,7 @@ ORDER BY 2
 "                                                                         " &
 " AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,        " &
 "     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        " &
-"       AT time zone sessiontimezone) AS DATE))                           " &
+"       AT time zone 'America/Sao_Paulo') AS DATE))                           " &
 "     Between '" + Parameters!DataDe.Value + "'                           " &
 "         And '" + Parameters!DataAte.Value + "'                          " &
 "                                                                         " &
@@ -555,10 +555,10 @@ ORDER BY 2
 "         PL_DB.DB_ALIAS,                                                 " &
 "         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,    " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'DD'),             " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),             " &
 "         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,  " &
 "            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') " &
-"              AT time zone sessiontimezone) AS DATE), 'HH24'),           " &
+"              AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),           " &
 "         PICKDETAIL.EDITWHO,                                             " &
 "         subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ),          " &
 "         taskdetail.wavekey,                                             " &

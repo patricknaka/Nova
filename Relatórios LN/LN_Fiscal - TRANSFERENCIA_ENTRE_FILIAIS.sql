@@ -8,7 +8,7 @@ select
     whinh200.t$otyp             Tipo_de_Ordem,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
+        AT time zone 'America/Sao_Paulo') AS DATE) 
                                 Data_de_Emissao,
 
     cisli940.t$stat$l           Status_da_NF,
@@ -39,7 +39,7 @@ select
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
+        AT time zone 'America/Sao_Paulo') AS DATE) 
                                 Data_Entrada,
         
     tdrec940.t$fire$l           Ref_Fiscal_Entrada,  
@@ -168,7 +168,7 @@ where whinh200.t$oorg = 3
   
   and Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) 
+        AT time zone 'America/Sao_Paulo') AS DATE)) 
       Between :EmissaoDe 
           And :EmissaoAte
   and tcemm124.t$grid in (:Filial)

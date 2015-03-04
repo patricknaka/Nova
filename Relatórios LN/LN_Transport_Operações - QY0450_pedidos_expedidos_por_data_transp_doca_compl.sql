@@ -4,7 +4,7 @@ SELECT
     znfmd001.t$dsca$c         DESC_PLANTA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) -       
+        AT time zone 'America/Sao_Paulo') AS DATE) -       
     znsls401.t$pzcd$c         DATA_LIMITE,
     znfmd630.t$pecl$c         PEDIDO,
     znfmd630.t$orno$c         ORDEM_VENDA,
@@ -17,11 +17,11 @@ SELECT
     znsls401.t$ufen$c         ESTADO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dten$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
+        AT time zone 'America/Sao_Paulo') AS DATE) 
                               DT_FECHA_GAIOLA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE) 
+        AT time zone 'America/Sao_Paulo') AS DATE) 
                               DT_LIQ,
     znfmd170.t$fovn$c         CNPJ_TRANSP,
     tcmcs080.t$dsca           TRANSP_NOME,
@@ -77,13 +77,13 @@ INNER JOIN baandb.ttcibd001301  tcibd001
 WHERE znfmd630.t$fili$c = :Planta
   AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone sessiontimezone) AS DATE) ) 
+                 AT time zone 'America/Sao_Paulo') AS DATE) ) 
       BETWEEN :DataLiqDe 
           AND :DataLiqAte
 		  
   -- AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dten$c, 
                -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 -- AT time zone sessiontimezone) AS DATE) ) 
+                 -- AT time zone 'America/Sao_Paulo') AS DATE) ) 
       -- BETWEEN :DataLiqDe 
           -- AND :DataLiqAte		  
 		  

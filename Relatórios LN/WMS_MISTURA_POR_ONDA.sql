@@ -12,7 +12,7 @@ SELECT
     SKU.DESCR                           ID_ITEM_DESC,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)                     
+        AT time zone 'America/Sao_Paulo') AS DATE)                     
                                         DT_LIQUID_ROM,
     TASKDETAIL.FROMLOC                  ID_LOCAL,
     LOC.PUTAWAYZONE                     ID_CLA_LOC,
@@ -39,7 +39,7 @@ WHERE TASKDETAIL.STATUS = 9
   
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone sessiontimezone) AS DATE)) Between :DataFimPickingDe AND :DataFimPickingAte
+        AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataFimPickingDe AND :DataFimPickingAte
 
 
 "SELECT                                                                                " &
@@ -56,7 +56,7 @@ WHERE TASKDETAIL.STATUS = 9
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                        " &                     
 "                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
@@ -83,7 +83,7 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                                      " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
 "  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 
 -- Query com UNION ***********************************************************************
@@ -102,7 +102,7 @@ WHERE TASKDETAIL.STATUS = 9
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                        " &                     
 "                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
@@ -129,7 +129,7 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                                      " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
 "  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
@@ -148,7 +148,7 @@ WHERE TASKDETAIL.STATUS = 9
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                        " &                     
 "                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
@@ -175,7 +175,7 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                                      " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
 "  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
@@ -194,7 +194,7 @@ WHERE TASKDETAIL.STATUS = 9
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                        " &                     
 "                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
@@ -221,7 +221,7 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                                      " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
 "  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
@@ -240,7 +240,7 @@ WHERE TASKDETAIL.STATUS = 9
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                        " &                     
 "                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
@@ -267,7 +267,7 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                                      " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
 "  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
@@ -286,7 +286,7 @@ WHERE TASKDETAIL.STATUS = 9
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                        " &                     
 "                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
@@ -313,7 +313,7 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                                      " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
 "  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
@@ -332,7 +332,7 @@ WHERE TASKDETAIL.STATUS = 9
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                        " &                     
 "                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
@@ -359,7 +359,7 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                                      " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
 "  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "Union                                                                                 " &
@@ -378,7 +378,7 @@ WHERE TASKDETAIL.STATUS = 9
 "    SKU.DESCR                           ID_ITEM_DESC,                                 " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                            " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)                                        " &                     
+"        AT time zone 'America/Sao_Paulo') AS DATE)                                        " &                     
 "                                        DT_LIQUID_ROM,                                " &
 "    TASKDETAIL.FROMLOC                  ID_LOCAL,                                     " &
 "    LOC.PUTAWAYZONE                     ID_CLA_LOC,                                   " &
@@ -405,7 +405,7 @@ WHERE TASKDETAIL.STATUS = 9
 "                                                                                      " &
 "  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TASKDETAIL.ENDTIME,                    " &
 "      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')                    " &
-"        AT time zone sessiontimezone) AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
+"        AT time zone 'America/Sao_Paulo') AS DATE)) Between '" + Parameters!DataFimPickingDe.Value + "'   " &
 "  AND '" + Parameters!DataFimPickingAte.Value + "'                                    "
 "                                                                                      " &
 "order by ID_PLANTA                                                                    "

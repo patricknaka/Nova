@@ -53,7 +53,7 @@ select *
                    
                       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(est.t$rcd_utc, 
                         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                          AT time zone sessiontimezone) AS DATE) AS ULTIMAATUAL,
+                          AT time zone 'America/Sao_Paulo') AS DATE) AS ULTIMAATUAL,
                       Q1.mauc               VL_CMV 
                  FROM baandb.TWHWMD215301 est
                  
@@ -148,7 +148,7 @@ select *
              
                      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(est.t$rcd_utc), 
                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                         AT time zone sessiontimezone) AS DATE) AS ULTIMAATUAL,
+                         AT time zone 'America/Sao_Paulo') AS DATE) AS ULTIMAATUAL,
                      MAX(Q1.mauc)        VL_CMV
 
              

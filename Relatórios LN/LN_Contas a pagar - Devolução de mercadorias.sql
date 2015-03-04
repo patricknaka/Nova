@@ -1,11 +1,11 @@
 SELECT DISTINCT
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
                                  DT_EMISSAO_NFD,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli945.t$iutd$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
                                  DT_VENCTO_NFD,
  
     cisli940.t$fire$l            REF_FISCAL_NFD,
@@ -47,11 +47,11 @@ SELECT DISTINCT
     tdrec940.t$seri$l            SERIE_ORIGEM,
 	
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
                                  DT_EMISSAO_NF_ORIGEM,
 	
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec943.t$icad$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone sessiontimezone) AS DATE)
+          AT time zone 'America/Sao_Paulo') AS DATE)
                                  DT_VENCTO_NF_ORIGEM,
 	
     tdrec940.t$stat$l            SITUACAO_NF_ORIGEM,

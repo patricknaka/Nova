@@ -3,10 +3,10 @@ DISTINCT
   znfmd630.t$pecl$c   ENTREGA,
   znfmd640.t$coci$c	  PONTO,
   CAST((FROM_TZ(CAST(TO_CHAR(znfmd640.t$date$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-                      AT time zone sessiontimezone) AS DATE)     
+                      AT time zone 'America/Sao_Paulo') AS DATE)     
                       DATA_PONTO,
   CAST((FROM_TZ(CAST(TO_CHAR(znfmd640.t$udat$c, 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 
-                      AT time zone sessiontimezone) AS DATE)
+                      AT time zone 'America/Sao_Paulo') AS DATE)
                       DATA_PROCESSAMENTO
                       
 FROM
