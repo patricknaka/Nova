@@ -26,7 +26,8 @@ SELECT
                              DATA_STATUS,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_PROC, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
-                             DATA_PROC
+                             DATA_PROC,
+	znsls401.t$pztr$c		 TransitTime_CClinente
     
 FROM       baandb.tznsls401301 znsls401
 
@@ -36,15 +37,15 @@ INNER JOIN baandb.ttcibd001301 tcibd001
 INNER JOIN baandb.ttcmcs023301 tcmcs023              
         ON tcmcs023.t$citg = tcibd001.t$citg
   
-LEFT JOIN baandb.tcisli245301 cisli245
-       ON cisli245.t$slcp=301
-      AND cisli245.t$ortp=1
-      AND cisli245.t$koor=3
-      AND cisli245.t$slso=znsls401.t$orno$c
-      AND cisli245.t$pono=znsls401.t$pono$c
-      
-LEFT JOIN baandb.tcisli940301 cisli940
-       ON cisli940.t$fire$l=cisli245.t$fire$l
+ LEFT JOIN baandb.tcisli245301 cisli245
+        ON cisli245.t$slcp = 301 
+       AND cisli245.t$ortp = 1
+       AND cisli245.t$koor = 3
+       AND cisli245.t$slso = znsls401.t$orno$c
+       AND cisli245.t$pono = znsls401.t$pono$c
+       
+ LEFT JOIN baandb.tcisli940301 cisli940
+        ON cisli940.t$fire$l = cisli245.t$fire$l
        
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -66,4 +67,8 @@ LEFT JOIN baandb.tcisli940301 cisli940
  LEFT JOIN baandb.tznmcs002301 znmcs002
         ON znmcs002.t$poco$c = znsls410.PT_CONTR
         
-WHERE ((znsls401.t$entr$c IN (:NumEntrega) AND :Todos = 1  )  OR :Todos = 0 ) 
+WHERE ((znsls401.t$entr$c IN (:NumEntrega) AND :Todos = 1  )  OR :Todos = 0 )
+  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 
+        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone sessiontimezone) AS DATE))
+      BETWEEN :DataPrometidaDe
+          AND :DataPrometidaAte
