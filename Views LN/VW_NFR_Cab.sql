@@ -142,11 +142,12 @@ SELECT
 FROM
 	baandb.ttdrec940201 tdrec940
 	LEFT JOIN baandb.ttccom966201 tccom966 ON tccom966.t$comp$d=tdrec940.t$fovn$l
+	LEFT JOIN baandb.ttdrec940201 tdrec940r ON tdrec940r.t$fire$l=tdrec940.t$rref$l
 	LEFT JOIN (	select 	min(a.t$rfdv$c) rfdv,
 						a.t$fire$l
 				from baandb.ttdrec941201 a
 				where a.t$rfdv$c!=' '
-				group by a.t$fire$l) REFDEV	ON REFDEV.t$fire$l = tdrec940.t$fire$l
+				group by a.t$fire$l) REFDEV	ON REFDEV.t$fire$l = tdrec940r.t$fire$l
 	LEFT JOIN baandb.tcisli940201 cisli940 	ON cisli940.t$fire$l = REFDEV.rfdv
 WHERE tdrec940.t$rfdt$l not in (3,5,8,13,16,22,33)
 AND tdrec940.t$stat$l>3
