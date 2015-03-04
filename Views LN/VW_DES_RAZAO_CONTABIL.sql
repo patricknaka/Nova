@@ -15,6 +15,8 @@ SELECT
   tfgld106.t$dbcr                      NATU_LANCTO,
   tfgld106.t$obat                      LOTE,
   tfgld106.t$otyp                      TIPO_TRANSACAO,
+  tfgld106.t$odoc					   NR_DOCUMENTO,				
+  tfgld106.t$olin					   NR_LINHA_DOCUMENTO,
   CASE WHEN ( select count(*) 
                 from baandb.ttfgld106301 a1
                where a1.t$otyp = tfgld106.t$otyp
