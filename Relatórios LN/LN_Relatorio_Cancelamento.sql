@@ -112,4 +112,4 @@ WHERE znsls400.T$IDPO$C = 'TD'
   AND ( (zncmg015.t$nrem$c IN (:Remessa)) OR (:RemessaTodos = 1) )
   AND ( (zncmg015.t$pecl$c IN (:Pedido)) OR (:PedidoTodos = 1) )
     
-ORDER BY  znsls402.t$dtra$c --zncmg015.t$pecl$c
+ORDER BY znsls400.t$dtin$c
