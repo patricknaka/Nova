@@ -136,9 +136,17 @@ SELECT
 	tdrec940.t$fire$l NR_REFERENCIA_FISCAL,
 	nvl((select ca.t$recd$c from baandb.twhinh300201 ca														--#FAF.199.n
 		where ca.t$fire$c=tdrec940.t$fire$l
-		and rownum=1),' ') NR_RECEB_DOCTO_WMS
+		and rownum=1),' ') NR_RECEB_DOCTO_WMS,
+	cisli940.t$docn$l	NR_NF_DEVOLUCAO,
+	cisli940.t$seri$l	NR_SERIE_NF_DEVOLUCAO
 FROM
 	baandb.ttdrec940201 tdrec940
 	LEFT JOIN baandb.ttccom966201 tccom966 ON tccom966.t$comp$d=tdrec940.t$fovn$l
+	LEFT JOIN (	select 	min(a.t$rfdv$c) rfdv,
+						a.t$fire$l
+				from baandb.ttdrec941201 a
+				where a.t$rfdv$c!=' '
+				group by a.t$fire$l) REFDEV	ON REFDEV.t$fire$l = tdrec940.t$fire$l
+	LEFT JOIN baandb.tcisli940201 cisli940 	ON cisli940.t$fire$l = REFDEV.rfdv
 WHERE tdrec940.t$rfdt$l not in (3,5,8,13,16,22,33)
 AND tdrec940.t$stat$l>3
