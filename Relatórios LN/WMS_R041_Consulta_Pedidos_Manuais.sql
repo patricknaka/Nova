@@ -77,7 +77,9 @@ SELECT
     tccom130.t$enfs$l        EMAIL,
     cisli940.t$fdtc$l        ID_TIPO_DOC_FIS,
     tcmcs966.t$dsca$l        DESCR_TIPO_DOC_FIS,
-    FGET.DESC_TIPO_DOCTO     DESC_TIPO_DOCTO
+    FGET.DESC_TIPO_DOCTO     DESC_TIPO_DOCTO,
+	tccom130f.t$fovn$l		 CNPJ_FABRICANTE,
+	tcmcs060.t$dsca			 NOME_FABRICANTE
                              
 FROM       baandb.tcisli940301 cisli940
 
@@ -118,6 +120,13 @@ INNER JOIN baandb.ttccom130301 tccom130
   
 INNER JOIN baandb.ttcibd001301 tcibd001
         ON tcibd001.t$item  = cisli941.t$item$l
+		
+LEFT JOIN baandb.ttcmcs060301 tcmcs060
+        ON tcmcs060.t$cmnf  = tcibd001.t$cmnf
+
+LEFT JOIN baandb.ttccom130301 tccom130f
+        ON tccom130f.t$cadr  = tcmcs060.t$cadr		
+		
   
  LEFT JOIN baandb.ttcmcs966301 tcmcs966
         ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
