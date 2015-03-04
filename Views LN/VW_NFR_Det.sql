@@ -1,4 +1,4 @@
-﻿?-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
+﻿-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
 -- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
 -- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
 -- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)	
@@ -326,16 +326,31 @@ SELECT
   nvl((SELECT tdrec942.t$nmrg$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
-  AND tdrec942.t$brty$l=2),0) VL_IVA																				--#FAF.119.n
+  AND tdrec942.t$brty$l=2),0) VL_IVA,																				--#FAF.119.n
+	sli940d.t$docn$l	NR_NF_DEVOLUCAO,
+	sli940d.t$seri$l	NR_SERIE_NF_DEVOLUCAO
 FROM
-  baandb.ttdrec941201 tdrec941,
-  baandb.ttdrec940201 tdrec940,
+  baandb.ttdrec941201 tdrec941
+  INNER JOIN baandb.ttdrec940201 tdrec940	ON 	tdrec940.t$fire$l=tdrec941.t$fire$l
+  LEFT JOIN baandb.ttdrec947201 REFND	ON	REFND.t$fire$l	=	tdrec941.t$fire$l	
+                                        AND	REFND.t$line$l	=	tdrec941.t$line$l
+										
+  LEFT JOIN baandb.ttdrec947201 REFOR	ON	REFOR.t$ncmp$l	=	201
+										AND	REFOR.t$oorg$l	=	80
+										AND	REFOR.t$orno$l	=	REFND.t$orno$l
+										AND	REFOR.t$pono$l	=	REFND.t$pono$l
+										AND	REFOR.t$seqn$l	=	REFND.t$seqn$l
+										AND REFOR.t$fire$l	=	tdrec940.t$rref$l
+  LEFT JOIN baandb.ttdrec941201 rec941o	ON	rec941o.t$fire$l=	REFOR.t$fire$l
+										AND	rec941o.t$line$l=	REFOR.t$line$l
+  LEFT JOIN baandb.tcisli940201 sli940d ON	sli940d.t$fire$l=	rec941o.t$rfdv$c,
+  
   baandb.ttcibd001201 tcibd001,
   baandb.ttcibd936201 tcibd936
           
 WHERE
   tcibd001.t$item=tdrec941.t$item$l
 AND tcibd936.t$ifgc$l=tcibd001.t$ifgc$l
-AND tdrec940.t$fire$l=tdrec941.t$fire$l
+--AND tdrec940.t$fire$l=tdrec941.t$fire$l
 AND tdrec940.t$rfdt$l not in (3,5,8,13,16,22,33)
 AND tdrec940.t$stat$l>3
