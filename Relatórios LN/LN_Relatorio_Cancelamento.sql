@@ -9,9 +9,9 @@ SELECT
          
     znsls402.t$ncam$c      CARTAO,
 
-    znsls402.t$dtra$c DT_VENDA1,
+    znsls400.t$dtin$c DT_VENDA1,
 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'), 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                            DT_VENDA2,
 
