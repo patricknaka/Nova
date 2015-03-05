@@ -103,11 +103,11 @@ SELECT
          -- ELSE 0 
      -- END                                   VL,
   
-    CASE WHEN NVL(cisli941.t$amnt$l, 0) != 0 THEN cisli941.t$amnt$l
+    ABS(CASE WHEN NVL(cisli941.t$amnt$l, 0) != 0 THEN cisli941.t$amnt$l
          WHEN NVL(TDSLS400.T$OAMT, 0)   != 0 THEN TDSLS400.T$OAMT
          WHEN NVL(maucLN.mauc, 0)       != 0 THEN maucLN.mauc
          ELSE 0 
-     END                                   VL,  
+     END)                                   VL,  
   
     ORDERS.type                            COD_TIPO_PEDIDO,
     TIPO_PEDIDO.                           DSC_TIPO_PEDIDO,
