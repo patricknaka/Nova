@@ -22,9 +22,9 @@ SELECT
   Trim(pz.DESCR)                       CLAL,
   ll.loc                               LOCA,
 
-  CASE WHEN max(maucLN.mauc) IS NULL THEN
+
       nvl(max(maucLN_02.mauc),0)
-  ELSE nvl(max(maucLN.mauc),0) END     PRECO,
+										PRECO,
   
   CASE WHEN TO_CHAR(ll.holdreason) = ' ' 
          THEN 'OK'
@@ -32,12 +32,10 @@ SELECT
    END                                 WARR,
   sum(llid.qty)                        QTD_EST,
   
-  CASE WHEN max(maucLN.mauc) IS NULL THEN
+
     nvl(max(maucLN_02.mauc),0)*
       sum(llid.qty)
-  ELSE
-    nvl(max(maucLN.mauc),0)*
-      sum(llid.qty) END                VALOR,
+									VALOR,
       
   sum(llid.netwgt)                     PESO,
   sum(sku.STDCUBE*ll.qty)              M3,
@@ -86,22 +84,22 @@ INNER JOIN ENTERPRISE.CODELKUP cl
         ON UPPER(cl.UDF1) = llid.WHSEID
        AND cl.LISTNAME = 'SCHEMA'
      
- LEFT JOIN ( select trim(whina113.t$item)  item,
-                    whina113.t$cwar        cwar,
-                    sum(whina113.t$mauc$1) mauc
-               from BAANDB.Twhina113301@pln01 whina113
-              where (whina113.t$trdt, whina113.t$seqn) = ( select max(b.t$trdt), max(b.t$seqn) 
-                                                             from BAANDB.Twhina113301@pln01 b
-                                                            where b.t$item = whina113.t$item
-                                                              and b.t$cwar = whina113.t$cwar
-                                                              and b.t$trdt = ( select max(c.t$trdt) 
-                                                                                 from BAANDB.Twhina113301@pln01 c
-                                                                                where c.t$item = b.t$item
-                                                                                  and c.t$cwar = b.t$cwar ) )                                    
-           group by whina113.t$item,
-                    whina113.t$cwar ) maucLN   
-        ON maucLN.cwar = subStr(cl.DESCRIPTION,3,6)
-       AND maucLN.item = llid.sku
+ -- LEFT JOIN ( select trim(whina113.t$item)  item,
+                    -- whina113.t$cwar        cwar,
+                    -- sum(whina113.t$mauc$1) mauc
+               -- from BAANDB.Twhina113301@pln01 whina113
+              -- where (whina113.t$trdt, whina113.t$seqn) = ( select max(b.t$trdt), max(b.t$seqn) 
+                                                             -- from BAANDB.Twhina113301@pln01 b
+                                                            -- where b.t$item = whina113.t$item
+                                                              -- and b.t$cwar = whina113.t$cwar
+                                                              -- and b.t$trdt = ( select max(c.t$trdt) 
+                                                                                 -- from BAANDB.Twhina113301@pln01 c
+                                                                                -- where c.t$item = b.t$item
+                                                                                  -- and c.t$cwar = b.t$cwar ) )                                    
+           -- group by whina113.t$item,
+                    -- whina113.t$cwar ) maucLN   
+        -- ON maucLN.cwar = subStr(cl.DESCRIPTION,3,6)
+       -- AND maucLN.item = llid.sku
 
  LEFT JOIN ( select trim(whwmd217.t$item) item,                             
                     whwmd217.t$cwar cwar,                                   
@@ -167,8 +165,8 @@ INNER JOIN WMWHSE5.loc
         ON TIPO_ITEM.COD_TIPO = SKU.BOMITEMTYPE
        
 WHERE departSector.ID_DEPART IN (:Depto)
-  AND ( (Trim(ll.sku) IN (:Itens) And (:ItensTodos = 0)) OR (:ItensTodos = 1) )
---where BOM.sku='1766619'
+ AND ( (Trim(ll.sku) IN (:Itens) And (:ItensTodos = 0)) OR (:ItensTodos = 1) )
+-- where ll.sku='1678412'
 
 GROUP BY WMSADMIN.PL_DB.DB_ALIAS, 
          cl.DESCRIPTION, 
