@@ -20,8 +20,8 @@ SELECT
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_NFR,
 	tdrec940.t$rfdt$l CD_TIPO_OPERACAO,
 	tdrec940.t$bpid$l CD_FORNECEDOR,
-	tdrec940.t$docn$l NR_NF_RECEBIDA,
-	tdrec940.t$seri$l NR_SERIE_NF_RECEBIDA,
+	nvl(cisli940.t$docn$l, tdrec940.t$docn$l) NR_NF_RECEBIDA,
+	nvl(cisli940.t$seri$l, tdrec940.t$seri$l) NR_SERIE_NF_RECEBIDA,
 	tdrec940.t$doty$l CD_TIPO_NF,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_NF_RECEBIDA,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) DT_SAIDA_NF_RECEBIDA,	 
@@ -136,9 +136,9 @@ SELECT
 	tdrec940.t$fire$l NR_REFERENCIA_FISCAL,
 	nvl((select ca.t$recd$c from baandb.twhinh300201 ca														--#FAF.199.n
 		where ca.t$fire$c=tdrec940.t$fire$l
-		and rownum=1),' ') NR_RECEB_DOCTO_WMS,
-	cisli940.t$docn$l	NR_NF_DEVOLUCAO,
-	cisli940.t$seri$l	NR_SERIE_NF_DEVOLUCAO
+		and rownum=1),' ') NR_RECEB_DOCTO_WMS
+	-- cisli940.t$docn$l	NR_NF_DEVOLUCAO,
+	-- cisli940.t$seri$l	NR_SERIE_NF_DEVOLUCAO
 FROM
 	baandb.ttdrec940201 tdrec940
 	LEFT JOIN baandb.ttccom966201 tccom966 ON tccom966.t$comp$d=tdrec940.t$fovn$l
