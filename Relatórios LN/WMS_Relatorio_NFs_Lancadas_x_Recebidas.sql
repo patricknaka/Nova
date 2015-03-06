@@ -168,7 +168,8 @@ INNER JOIN ENTERPRISE.SKU SKU
         
   ORDER BY ASN, LINHA_ASN 
 
-  =IIF(Parameters!Table.Value <> "AAA",
+  
+=IIF(Parameters!Table.Value <> "AAA",
   
 "SELECT DISTINCT  " &
 "       d.WHSEID                      ARMAZEM,  " &
@@ -256,15 +257,7 @@ INNER JOIN ENTERPRISE.SKU SKU
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN (select	distinct  " &
-"					a.t$ncmp$l,  " &
-"					a.t$oorg$l,  " &
-"					a.t$orno$l,  " &
-"					a.t$pono$l,  " &
-"					a.t$seqn$l,  " &
-"                    a.t$fire$l,  " &
-"                    a.t$line$l  " &
-"			from baandb.ttdrec947301@pln01 a)  tdrec947  " &
+" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
@@ -428,15 +421,7 @@ INNER JOIN ENTERPRISE.SKU SKU
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN (select	distinct  " &
-"					a.t$ncmp$l,  " &
-"					a.t$oorg$l,  " &
-"					a.t$orno$l,  " &
-"					a.t$pono$l,  " &
-"					a.t$seqn$l,  " &
-"                   a.t$fire$l,  " &
-"                   a.t$line$l  " &
-"			from baandb.ttdrec947301@pln01 a)  tdrec947  " &
+" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
@@ -597,15 +582,7 @@ INNER JOIN ENTERPRISE.SKU SKU
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN (select	distinct  " &
-"					a.t$ncmp$l,  " &
-"					a.t$oorg$l,  " &
-"					a.t$orno$l,  " &
-"					a.t$pono$l,  " &
-"					a.t$seqn$l,  " &
-"                   a.t$fire$l,  " &
-"                   a.t$line$l  " &
-"			from baandb.ttdrec947301@pln01 a)  tdrec947  " &
+" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
@@ -766,15 +743,7 @@ INNER JOIN ENTERPRISE.SKU SKU
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN (select	distinct  " &
-"					a.t$ncmp$l,  " &
-"					a.t$oorg$l,  " &
-"					a.t$orno$l,  " &
-"					a.t$pono$l,  " &
-"				    a.t$seqn$l,  " &
-"                   a.t$fire$l,  " &
-"                   a.t$line$l  " &
-"			from baandb.ttdrec947301@pln01 a)  tdrec947  " &
+" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
@@ -935,15 +904,7 @@ INNER JOIN ENTERPRISE.SKU SKU
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN (select	distinct  " &
-"					a.t$ncmp$l,  " &
-"					a.t$oorg$l,  " &
-"					a.t$orno$l,  " &
-"					a.t$pono$l,  " &
-"					a.t$seqn$l,  " &
-"                   a.t$fire$l,  " &
-"                   a.t$line$l  " &
-"			from baandb.ttdrec947301@pln01 a)  tdrec947  " &
+" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
@@ -1104,15 +1065,7 @@ INNER JOIN ENTERPRISE.SKU SKU
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN (select	distinct  " &
-"					a.t$ncmp$l,  " &
-"					a.t$oorg$l,  " &
-"					a.t$orno$l,  " &
-"					a.t$pono$l,  " &
-"					a.t$seqn$l,  " &
-"                   a.t$fire$l,  " &
-"                   a.t$line$l  " &
-"			from baandb.ttdrec947301@pln01 a)  tdrec947  " &
+" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
@@ -1273,15 +1226,7 @@ INNER JOIN ENTERPRISE.SKU SKU
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN (select	distinct  " &
-"					a.t$ncmp$l,  " &
-"					a.t$oorg$l,  " &
-"					a.t$orno$l,  " &
-"					a.t$pono$l,  " &
-"					a.t$seqn$l,  " &
-"                   a.t$fire$l,  " &
-"                   a.t$line$l  " &
-"			from baandb.ttdrec947301@pln01 a)  tdrec947  " &
+" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
@@ -1442,15 +1387,7 @@ INNER JOIN ENTERPRISE.SKU SKU
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN (select	distinct  " &
-"					a.t$ncmp$l,  " &
-"					a.t$oorg$l,  " &
-"					a.t$orno$l,  " &
-"					a.t$pono$l,  " &
-"					a.t$seqn$l,  " &
-"                   a.t$fire$l,  " &
-"                   a.t$line$l  " &
-"			from baandb.ttdrec947301@pln01 a)  tdrec947  " &
+" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
