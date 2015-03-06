@@ -3,7 +3,6 @@ SELECT
     tfcmg101.t$btno         NR_LOTE,
     tfcmg101.t$ttyp         TRANS,
     tfcmg101.t$ninv         TITULO,
-    --tfcmg101.t$pdat         DATA_PAGTO,
     tfcmg101.t$plan         DATA_PAGTO,
     tccom130.t$fovn$l       CNPJ_PN,
     Trim(tccom100.t$nama)   R_SOCIAL_PN,
@@ -226,20 +225,20 @@ INNER JOIN baandb.ttfcmg109301 tfcmg109
         ON ttaad200.t$user = tfcmg109.t$user
         
   LEFT JOIN baandb.ttfcmg001301 tfcmg001
-         ON tfcmg001.t$bank=tfcmg104.t$bkre$l
+         ON tfcmg001.t$bank = tfcmg104.t$bkre$l
          
   LEFT JOIN baandb.ttfcmg102301 tfcmg102
-         ON tfcmg102.t$tpay=1
-        AND tfcmg102.t$ifbp=tfcmg101.t$ifbp
-        AND tfcmg102.t$orno=tfcmg101.t$ninv
-        AND tfcmg102.t$srno=tfcmg101.t$srno
+         ON tfcmg102.t$tpay = 1
+        AND tfcmg102.t$ifbp = tfcmg101.t$ifbp
+        AND tfcmg102.t$orno = tfcmg101.t$ninv
+        AND tfcmg102.t$srno = tfcmg101.t$srno
         
   LEFT JOIN baandb.ttfgld008301 tfgld008
-         ON tfgld008.t$leac=tfcmg102.t$leac
+         ON tfgld008.t$leac = tfcmg102.t$leac
          
 WHERE tfcmg101.t$tadv = 7
 
-  AND tfcmg101.t$pdat                                      
+  AND tfcmg101.t$plan
       BETWEEN :DataPgtoDe
           AND :DataPgtoAte
   
@@ -250,8 +249,10 @@ WHERE tfcmg101.t$tadv = 7
   AND NVL(TRIM(iPrgStat.DESCR), 'Não cadastrado') IN (:Situacao)
   
   AND NVL(CASE WHEN tflcb230.t$send$d = 0 
-                THEN tflcb230.t$stat$d
-                ELSE   tflcb230.t$send$d 
-          END, 0)IN (:StatusArquivo)  
+                 THEN tflcb230.t$stat$d
+               ELSE   tflcb230.t$send$d 
+           END, 0) IN (:StatusArquivo)
+
+  AND ( (:WorkFlowTodos = 0) OR (tfcmg104.t$docn$l in (:WorkFlow) AND (:WorkFlowTodos = 1)) )
 
 ORDER BY  DATA_PAGTO, NR_LOTE, TITULO
