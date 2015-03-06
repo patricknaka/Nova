@@ -168,8 +168,7 @@ INNER JOIN ENTERPRISE.SKU SKU
         
   ORDER BY ASN, LINHA_ASN 
 
-  
-=IIF(Parameters!Table.Value <> "AAA",
+  =IIF(Parameters!Table.Value <> "AAA",
   
 "SELECT DISTINCT  " &
 "       d.WHSEID                      ARMAZEM,  " &
@@ -252,36 +251,44 @@ INNER JOIN ENTERPRISE.SKU SKU
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "        ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
 "   " &
-" LEFT JOIN baandb.twhinh301301@pln01  whinh301   " &
+" LEFT JOIN baandb.twhinh301201@dln01  whinh301   " &
 "        ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
+" LEFT JOIN (select	distinct  " &
+"					a.t$ncmp$l,  " &
+"					a.t$oorg$l,  " &
+"					a.t$orno$l,  " &
+"					a.t$pono$l,  " &
+"					a.t$seqn$l,  " &
+"                    a.t$fire$l,  " &
+"                    a.t$line$l  " &
+"			from baandb.ttdrec947201@dln01 a)  tdrec947  " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
 "       AND tdrec947.t$pono$l = whinh301.t$wpon   " &
 "       AND tdrec947.t$seqn$l = whinh301.t$wsqn   " &
 "   " &
-" LEFT JOIN baandb.ttdrec941301@pln01  tdrec941   " &
+" LEFT JOIN baandb.ttdrec941201@dln01  tdrec941   " &
 "        ON tdrec941.t$fire$l = tdrec947.t$fire$l   " &
 "       AND tdrec941.t$line$l = tdrec947.t$line$l   " &
 "   " &
-" LEFT JOIN baandb.ttdrec940301@pln01  tdrec940   " &
+" LEFT JOIN baandb.ttdrec940201@dln01  tdrec940   " &
 "        ON tdrec940.t$fire$l = tdrec941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
+" LEFT JOIN baandb.ttcmcs080201@dln01 tcmcs080  " &
 "        ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l   " &
 "   " &
-" LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
+" LEFT JOIN baandb.tcisli941201@dln01 cisli941  " &
 "        ON cisli941.t$fire$l = tdrec941.t$dvrf$c   " &
 "       AND cisli941.t$line$l = tdrec941.t$dvln$c   " &
 "   " &
-" LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
+" LEFT JOIN baandb.tcisli940201@dln01 cisli940  " &
 "        ON cisli940.t$fire$l = cisli941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
+" LEFT JOIN baandb.ttccom130201@dln01 tccom130  " &
 "        ON tccom130.t$cadr = tdrec940.t$sfad$l   " &
 "   " &
 " LEFT JOIN " + Parameters!Table.Value + ".RECEIPTSTATUSHISTORY h  " &
@@ -416,36 +423,44 @@ INNER JOIN ENTERPRISE.SKU SKU
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "        ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
 "   " &
-" LEFT JOIN baandb.twhinh301301@pln01  whinh301   " &
+" LEFT JOIN baandb.twhinh301201@dln01  whinh301   " &
 "        ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
+" LEFT JOIN (select	distinct  " &
+"					a.t$ncmp$l,  " &
+"					a.t$oorg$l,  " &
+"					a.t$orno$l,  " &
+"					a.t$pono$l,  " &
+"					a.t$seqn$l,  " &
+"                   a.t$fire$l,  " &
+"                   a.t$line$l  " &
+"			from baandb.ttdrec947201@dln01 a)  tdrec947  " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
 "       AND tdrec947.t$pono$l = whinh301.t$wpon   " &
 "       AND tdrec947.t$seqn$l = whinh301.t$wsqn   " &
 "   " &
-" LEFT JOIN baandb.ttdrec941301@pln01  tdrec941   " &
+" LEFT JOIN baandb.ttdrec941201@dln01  tdrec941   " &
 "        ON tdrec941.t$fire$l = tdrec947.t$fire$l   " &
 "       AND tdrec941.t$line$l = tdrec947.t$line$l   " &
 "   " &
-" LEFT JOIN baandb.ttdrec940301@pln01  tdrec940   " &
+" LEFT JOIN baandb.ttdrec940201@dln01  tdrec940   " &
 "        ON tdrec940.t$fire$l = tdrec941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
+" LEFT JOIN baandb.ttcmcs080201@dln01 tcmcs080  " &
 "        ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l   " &
 "   " &
-" LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
+" LEFT JOIN baandb.tcisli941201@dln01 cisli941  " &
 "        ON cisli941.t$fire$l = tdrec941.t$dvrf$c   " &
 "       AND cisli941.t$line$l = tdrec941.t$dvln$c   " &
 "   " &
-" LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
+" LEFT JOIN baandb.tcisli940201@dln01 cisli940  " &
 "        ON cisli940.t$fire$l = cisli941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
+" LEFT JOIN baandb.ttccom130201@dln01 tccom130  " &
 "        ON tccom130.t$cadr = tdrec940.t$sfad$l   " &
 "   " &
 " LEFT JOIN WMWHSE1.RECEIPTSTATUSHISTORY h  " &
@@ -577,36 +592,44 @@ INNER JOIN ENTERPRISE.SKU SKU
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "        ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
 "   " &
-" LEFT JOIN baandb.twhinh301301@pln01  whinh301   " &
+" LEFT JOIN baandb.twhinh301201@dln01  whinh301   " &
 "        ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
+" LEFT JOIN (select	distinct  " &
+"					a.t$ncmp$l,  " &
+"					a.t$oorg$l,  " &
+"					a.t$orno$l,  " &
+"					a.t$pono$l,  " &
+"					a.t$seqn$l,  " &
+"                   a.t$fire$l,  " &
+"                   a.t$line$l  " &
+"			from baandb.ttdrec947201@dln01 a)  tdrec947  " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
 "       AND tdrec947.t$pono$l = whinh301.t$wpon   " &
 "       AND tdrec947.t$seqn$l = whinh301.t$wsqn   " &
 "   " &
-" LEFT JOIN baandb.ttdrec941301@pln01  tdrec941   " &
+" LEFT JOIN baandb.ttdrec941201@dln01  tdrec941   " &
 "        ON tdrec941.t$fire$l = tdrec947.t$fire$l   " &
 "       AND tdrec941.t$line$l = tdrec947.t$line$l   " &
 "   " &
-" LEFT JOIN baandb.ttdrec940301@pln01  tdrec940   " &
+" LEFT JOIN baandb.ttdrec940201@dln01  tdrec940   " &
 "        ON tdrec940.t$fire$l = tdrec941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
+" LEFT JOIN baandb.ttcmcs080201@dln01 tcmcs080  " &
 "        ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l   " &
 "   " &
-" LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
+" LEFT JOIN baandb.tcisli941201@dln01 cisli941  " &
 "        ON cisli941.t$fire$l = tdrec941.t$dvrf$c   " &
 "       AND cisli941.t$line$l = tdrec941.t$dvln$c   " &
 "   " &
-" LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
+" LEFT JOIN baandb.tcisli940201@dln01 cisli940  " &
 "        ON cisli940.t$fire$l = cisli941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
+" LEFT JOIN baandb.ttccom130201@dln01 tccom130  " &
 "        ON tccom130.t$cadr = tdrec940.t$sfad$l   " &
 "   " &
 " LEFT JOIN WMWHSE2.RECEIPTSTATUSHISTORY h  " &
@@ -738,36 +761,44 @@ INNER JOIN ENTERPRISE.SKU SKU
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "        ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
 "   " &
-" LEFT JOIN baandb.twhinh301301@pln01  whinh301   " &
+" LEFT JOIN baandb.twhinh301201@dln01  whinh301   " &
 "        ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
+" LEFT JOIN (select	distinct  " &
+"					a.t$ncmp$l,  " &
+"					a.t$oorg$l,  " &
+"					a.t$orno$l,  " &
+"					a.t$pono$l,  " &
+"				    a.t$seqn$l,  " &
+"                   a.t$fire$l,  " &
+"                   a.t$line$l  " &
+"			from baandb.ttdrec947201@dln01 a)  tdrec947  " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
 "       AND tdrec947.t$pono$l = whinh301.t$wpon   " &
 "       AND tdrec947.t$seqn$l = whinh301.t$wsqn   " &
 "   " &
-" LEFT JOIN baandb.ttdrec941301@pln01  tdrec941   " &
+" LEFT JOIN baandb.ttdrec941201@dln01  tdrec941   " &
 "        ON tdrec941.t$fire$l = tdrec947.t$fire$l   " &
 "       AND tdrec941.t$line$l = tdrec947.t$line$l   " &
 "   " &
-" LEFT JOIN baandb.ttdrec940301@pln01  tdrec940   " &
+" LEFT JOIN baandb.ttdrec940201@dln01  tdrec940   " &
 "        ON tdrec940.t$fire$l = tdrec941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
+" LEFT JOIN baandb.ttcmcs080201@dln01 tcmcs080  " &
 "        ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l   " &
 "   " &
-" LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
+" LEFT JOIN baandb.tcisli941201@dln01 cisli941  " &
 "        ON cisli941.t$fire$l = tdrec941.t$dvrf$c   " &
 "       AND cisli941.t$line$l = tdrec941.t$dvln$c   " &
 "   " &
-" LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
+" LEFT JOIN baandb.tcisli940201@dln01 cisli940  " &
 "        ON cisli940.t$fire$l = cisli941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
+" LEFT JOIN baandb.ttccom130201@dln01 tccom130  " &
 "        ON tccom130.t$cadr = tdrec940.t$sfad$l   " &
 "   " &
 " LEFT JOIN WMWHSE3.RECEIPTSTATUSHISTORY h  " &
@@ -899,36 +930,44 @@ INNER JOIN ENTERPRISE.SKU SKU
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "        ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
 "   " &
-" LEFT JOIN baandb.twhinh301301@pln01  whinh301   " &
+" LEFT JOIN baandb.twhinh301201@dln01  whinh301   " &
 "        ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
+" LEFT JOIN (select	distinct  " &
+"					a.t$ncmp$l,  " &
+"					a.t$oorg$l,  " &
+"					a.t$orno$l,  " &
+"					a.t$pono$l,  " &
+"					a.t$seqn$l,  " &
+"                   a.t$fire$l,  " &
+"                   a.t$line$l  " &
+"			from baandb.ttdrec947201@dln01 a)  tdrec947  " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
 "       AND tdrec947.t$pono$l = whinh301.t$wpon   " &
 "       AND tdrec947.t$seqn$l = whinh301.t$wsqn   " &
 "   " &
-" LEFT JOIN baandb.ttdrec941301@pln01  tdrec941   " &
+" LEFT JOIN baandb.ttdrec941201@dln01  tdrec941   " &
 "        ON tdrec941.t$fire$l = tdrec947.t$fire$l   " &
 "       AND tdrec941.t$line$l = tdrec947.t$line$l   " &
 "   " &
-" LEFT JOIN baandb.ttdrec940301@pln01  tdrec940   " &
+" LEFT JOIN baandb.ttdrec940201@dln01  tdrec940   " &
 "        ON tdrec940.t$fire$l = tdrec941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
+" LEFT JOIN baandb.ttcmcs080201@dln01 tcmcs080  " &
 "        ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l   " &
 "   " &
-" LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
+" LEFT JOIN baandb.tcisli941201@dln01 cisli941  " &
 "        ON cisli941.t$fire$l = tdrec941.t$dvrf$c   " &
 "       AND cisli941.t$line$l = tdrec941.t$dvln$c   " &
 "   " &
-" LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
+" LEFT JOIN baandb.tcisli940201@dln01 cisli940  " &
 "        ON cisli940.t$fire$l = cisli941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
+" LEFT JOIN baandb.ttccom130201@dln01 tccom130  " &
 "        ON tccom130.t$cadr = tdrec940.t$sfad$l   " &
 "   " &
 " LEFT JOIN WMWHSE4.RECEIPTSTATUSHISTORY h  " &
@@ -1060,36 +1099,44 @@ INNER JOIN ENTERPRISE.SKU SKU
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "        ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
 "   " &
-" LEFT JOIN baandb.twhinh301301@pln01  whinh301   " &
+" LEFT JOIN baandb.twhinh301201@dln01  whinh301   " &
 "        ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
+" LEFT JOIN (select	distinct  " &
+"					a.t$ncmp$l,  " &
+"					a.t$oorg$l,  " &
+"					a.t$orno$l,  " &
+"					a.t$pono$l,  " &
+"					a.t$seqn$l,  " &
+"                   a.t$fire$l,  " &
+"                   a.t$line$l  " &
+"			from baandb.ttdrec947201@dln01 a)  tdrec947  " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
 "       AND tdrec947.t$pono$l = whinh301.t$wpon   " &
 "       AND tdrec947.t$seqn$l = whinh301.t$wsqn   " &
 "   " &
-" LEFT JOIN baandb.ttdrec941301@pln01  tdrec941   " &
+" LEFT JOIN baandb.ttdrec941201@dln01  tdrec941   " &
 "        ON tdrec941.t$fire$l = tdrec947.t$fire$l   " &
 "       AND tdrec941.t$line$l = tdrec947.t$line$l   " &
 "   " &
-" LEFT JOIN baandb.ttdrec940301@pln01  tdrec940   " &
+" LEFT JOIN baandb.ttdrec940201@dln01  tdrec940   " &
 "        ON tdrec940.t$fire$l = tdrec941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
+" LEFT JOIN baandb.ttcmcs080201@dln01 tcmcs080  " &
 "        ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l   " &
 "   " &
-" LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
+" LEFT JOIN baandb.tcisli941201@dln01 cisli941  " &
 "        ON cisli941.t$fire$l = tdrec941.t$dvrf$c   " &
 "       AND cisli941.t$line$l = tdrec941.t$dvln$c   " &
 "   " &
-" LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
+" LEFT JOIN baandb.tcisli940201@dln01 cisli940  " &
 "        ON cisli940.t$fire$l = cisli941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
+" LEFT JOIN baandb.ttccom130201@dln01 tccom130  " &
 "        ON tccom130.t$cadr = tdrec940.t$sfad$l   " &
 "   " &
 " LEFT JOIN WMWHSE5.RECEIPTSTATUSHISTORY h  " &
@@ -1221,36 +1268,44 @@ INNER JOIN ENTERPRISE.SKU SKU
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "        ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
 "   " &
-" LEFT JOIN baandb.twhinh301301@pln01  whinh301   " &
+" LEFT JOIN baandb.twhinh301201@dln01  whinh301   " &
 "        ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
+" LEFT JOIN (select	distinct  " &
+"					a.t$ncmp$l,  " &
+"					a.t$oorg$l,  " &
+"					a.t$orno$l,  " &
+"					a.t$pono$l,  " &
+"					a.t$seqn$l,  " &
+"                   a.t$fire$l,  " &
+"                   a.t$line$l  " &
+"			from baandb.ttdrec947201@dln01 a)  tdrec947  " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
 "       AND tdrec947.t$pono$l = whinh301.t$wpon   " &
 "       AND tdrec947.t$seqn$l = whinh301.t$wsqn   " &
 "   " &
-" LEFT JOIN baandb.ttdrec941301@pln01  tdrec941   " &
+" LEFT JOIN baandb.ttdrec941201@dln01  tdrec941   " &
 "        ON tdrec941.t$fire$l = tdrec947.t$fire$l   " &
 "       AND tdrec941.t$line$l = tdrec947.t$line$l   " &
 "   " &
-" LEFT JOIN baandb.ttdrec940301@pln01  tdrec940   " &
+" LEFT JOIN baandb.ttdrec940201@dln01  tdrec940   " &
 "        ON tdrec940.t$fire$l = tdrec941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
+" LEFT JOIN baandb.ttcmcs080201@dln01 tcmcs080  " &
 "        ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l   " &
 "   " &
-" LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
+" LEFT JOIN baandb.tcisli941201@dln01 cisli941  " &
 "        ON cisli941.t$fire$l = tdrec941.t$dvrf$c   " &
 "       AND cisli941.t$line$l = tdrec941.t$dvln$c   " &
 "   " &
-" LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
+" LEFT JOIN baandb.tcisli940201@dln01 cisli940  " &
 "        ON cisli940.t$fire$l = cisli941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
+" LEFT JOIN baandb.ttccom130201@dln01 tccom130  " &
 "        ON tccom130.t$cadr = tdrec940.t$sfad$l   " &
 "   " &
 " LEFT JOIN WMWHSE6.RECEIPTSTATUSHISTORY h  " &
@@ -1382,36 +1437,44 @@ INNER JOIN ENTERPRISE.SKU SKU
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "        ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
 "   " &
-" LEFT JOIN baandb.twhinh301301@pln01  whinh301   " &
+" LEFT JOIN baandb.twhinh301201@dln01  whinh301   " &
 "        ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "       AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)   " &
 "       AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
 "   " &
-" LEFT JOIN baandb.ttdrec947301@pln01  tdrec947   " &
+" LEFT JOIN (select	distinct  " &
+"					a.t$ncmp$l,  " &
+"					a.t$oorg$l,  " &
+"					a.t$orno$l,  " &
+"					a.t$pono$l,  " &
+"					a.t$seqn$l,  " &
+"                   a.t$fire$l,  " &
+"                   a.t$line$l  " &
+"			from baandb.ttdrec947201@dln01 a)  tdrec947  " &
 "        ON tdrec947.t$ncmp$l = 301   " &
 "       AND tdrec947.t$oorg$l = whinh301.t$oorg   " &
 "       AND tdrec947.t$orno$l = whinh301.t$worn   " &
 "       AND tdrec947.t$pono$l = whinh301.t$wpon   " &
 "       AND tdrec947.t$seqn$l = whinh301.t$wsqn   " &
 "   " &
-" LEFT JOIN baandb.ttdrec941301@pln01  tdrec941   " &
+" LEFT JOIN baandb.ttdrec941201@dln01  tdrec941   " &
 "        ON tdrec941.t$fire$l = tdrec947.t$fire$l   " &
 "       AND tdrec941.t$line$l = tdrec947.t$line$l   " &
 "   " &
-" LEFT JOIN baandb.ttdrec940301@pln01  tdrec940   " &
+" LEFT JOIN baandb.ttdrec940201@dln01  tdrec940   " &
 "        ON tdrec940.t$fire$l = tdrec941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
+" LEFT JOIN baandb.ttcmcs080201@dln01 tcmcs080  " &
 "        ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l   " &
 "   " &
-" LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
+" LEFT JOIN baandb.tcisli941201@dln01 cisli941  " &
 "        ON cisli941.t$fire$l = tdrec941.t$dvrf$c   " &
 "       AND cisli941.t$line$l = tdrec941.t$dvln$c   " &
 "   " &
-" LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
+" LEFT JOIN baandb.tcisli940201@dln01 cisli940  " &
 "        ON cisli940.t$fire$l = cisli941.t$fire$l   " &
 "   " &
-" LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
+" LEFT JOIN baandb.ttccom130201@dln01 tccom130  " &
 "        ON tccom130.t$cadr = tdrec940.t$sfad$l   " &
 "   " &
 " LEFT JOIN WMWHSE7.RECEIPTSTATUSHISTORY h  " &
