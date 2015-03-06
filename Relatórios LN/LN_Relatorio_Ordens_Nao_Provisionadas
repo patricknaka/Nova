@@ -7,6 +7,8 @@ SELECT
     tfcmg101.t$plan         DATA_PAGTO,
     tccom130.t$fovn$l       CNPJ_PN,
     Trim(tccom100.t$nama)   R_SOCIAL_PN,
+    tfcmg102.t$leac         CONTA_CONTABIL,
+    tfgld008.t$desc         DESCRICAO_CONTA,
     tfcmg101.t$amnt$l       VALO_BRUTO,
     tfcmg101.t$amnt-
     tfcmg101.t$ramn$l       VALO_A_PAGAR,
@@ -14,6 +16,8 @@ SELECT
     iSTATUS.DESCR           STATUS_PAGTO,
     iStatArq.DESCR          STATUS_ARQUIVO,
     tfcmg101.t$paym         METODO_PAGTO,
+    tfcmg104.t$ptyp || ' '
+    || tfcmg104.t$pdoc      DOCUMENTO_PAGAMENTO,
     ACONSELHAMENTO.         DESCR_TIPO_ACONSELHAMENTO,
     tfcmg104.t$docn$l       ID_WORKFLOW,
     tfcmg104.t$seri$l       IMPOSTO,
@@ -223,6 +227,15 @@ INNER JOIN baandb.ttfcmg109301 tfcmg109
         
   LEFT JOIN baandb.ttfcmg001301 tfcmg001
          ON tfcmg001.t$bank=tfcmg104.t$bkre$l
+         
+  LEFT JOIN baandb.ttfcmg102301 tfcmg102
+         ON tfcmg102.t$tpay=1
+        AND tfcmg102.t$ifbp=tfcmg101.t$ifbp
+        AND tfcmg102.t$orno=tfcmg101.t$ninv
+        AND tfcmg102.t$srno=tfcmg101.t$srno
+        
+  LEFT JOIN baandb.ttfgld008301 tfgld008
+         ON tfgld008.t$leac=tfcmg102.t$leac
          
 WHERE tfcmg101.t$tadv = 7
 
