@@ -1,61 +1,68 @@
 SELECT                                                                       
   DISTINCT                                                                   
-    taskdetail.whseid                           PLANTA,                      
+    PD.whseid                           PLANTA,                      
     PL_DB.DB_ALIAS                              DSC_PLANTA,                  
-    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
+    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(IT.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE), 'DD')             
                                                 DIA,                         
-    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
+    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(IT.ADDDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')         
                                                 HORA,                        
-    USERACTIVITY.USERID                         OPERADOR,                    
+    IT.ADDWHO                         OPERADOR,                    
     subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',') - 4 )       NOME_OP,                              
-    taskdetail.wavekey                          PROGRAMA,                    
-    COUNT(DISTINCT taskdetail.orderkey)         PEDIDOS,                     
-    COUNT(taskdetail.sku)                       ITEM,                        
+    PD.wavekey                          PROGRAMA,                    
+    COUNT(DISTINCT PD.orderkey)         PEDIDOS,                     
+    COUNT(IT.sku)                       ITEM,                        
     LOC.LOGICALLOCATION                         ORDEM_COL,
-    SUM(taskdetail.qty)                         PEÇAS,                      
-    min(TASKDETAIL.ORDERKEY)                    PEDIDO_HOST                  
+    SUM(IT.qty)                         PEÇAS,                      
+    min(PD.ORDERKEY)                    PEDIDO_HOST                  
 
-FROM       WMWHSE5.taskdetail            
+FROM       WMWHSE5.PICKDETAIL PD
 
-INNER JOIN WMWHSE5.USERACTIVITY
-        ON USERACTIVITY.TASKDETAILKEY = TASKDETAIL.TASKDETAILKEY
+INNER JOIN WMWHSE5.ITRN	IT
+        ON 	IT.TRANTYPE	=	'MV'
+		AND	IT.SOURCEKEY = PD.PICKDETAILKEY
+		AND	IT.SOURCETYPE = 'PICKING'         
+
 
  LEFT JOIN WMWHSE5.taskmanageruser tu 
-        ON tu.userkey = USERACTIVITY.USERID
+        ON tu.userkey = IT.ADDWHO
     
 INNER JOIN WMSADMIN.PL_DB
-        ON UPPER(PL_DB.db_logid) = UPPER(taskdetail.whseid)
+        ON UPPER(PL_DB.db_logid) = UPPER(PD.whseid)
 
 INNER JOIN WMWHSE5.LOC
-        ON LOC.LOC = taskdetail.FROMLOC
+        ON LOC.LOC = IT.FROMLOC
 
-WHERE taskdetail.status = 9                                                  
-  AND taskdetail.tasktype = 'PK'                                             
-  AND PL_DB.ISACTIVE = 1                                                     
+-- WHERE taskdetail.status = 9                                                  
+  -- AND taskdetail.tasktype = 'PK'                                             
+WHERE   PL_DB.ISACTIVE = 1                                                     
   AND PL_DB.DB_ENTERPRISE = 0                                                
 
--- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
---     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---       AT time zone 'America/Sao_Paulo') AS DATE)) 
+ AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(IT.ADDDATE, 
+     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+       AT time zone 'America/Sao_Paulo') AS DATE)) 
 --     Between :DataDe 
 --         And :DataAte
 
-GROUP BY taskdetail.whseid,                                                  
+      Between TO_DATE('05/03/2015 00:00:00','DD/MM/YYYY HH24:MI:SS') 
+          And TO_DATE('05/03/2015 23:59:59','DD/MM/YYYY HH24:MI:SS')  
+    AND IT.ADDWHO = 'bianca.gimenes'--'diego.cardoso'--'c603789'
+
+GROUP BY PD.whseid,                                                  
          PL_DB.DB_ALIAS,                                                     
-         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
+         TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(IT.ADDDATE, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),
-         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime, 
+         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(IT.ADDDATE, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'), 
-         USERACTIVITY.USERID,                                                  
+         IT.ADDWHO,                                                  
          subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') - 4 ), 
-         taskdetail.wavekey, 
+         PD.wavekey, 
          LOC.LOGICALLOCATION         
    
 ORDER BY 2
