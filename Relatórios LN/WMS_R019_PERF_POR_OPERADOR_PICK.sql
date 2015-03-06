@@ -14,7 +14,7 @@ SELECT
     subStr( tu.usr_name,4,
             inStr(tu.usr_name, ',') - 4 )    NOME_OP,
     loc.putawayzone                          GRUPO_CLASSE_LOCAL,
-    count(IT.sku)                            ITEM,    
+    count(distinct IT.sku)                            ITEM,    
     count(distinct IT.fromloc)               LOCAL,
     count(distinct PD.orderkey )             ORDEM_COL,
     sum(IT.qty)                              PECAS
