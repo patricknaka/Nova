@@ -79,7 +79,9 @@ SELECT DISTINCT
                'Sim'  END                        PENDENTE_COLETA,
        CASE WHEN tdrec947.t$fire$l is NULL THEN
                'Sim'
-       ELSE    'Não' END                         PENDENTE_DEVOLUCAO
+       ELSE    'Não' END                         PENDENTE_DEVOLUCAO,
+	   
+	   znsls401.t$vlfr$c                         FRETE_SITE
     
 FROM       baandb.tznsls401301 znsls401
 
