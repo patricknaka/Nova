@@ -44,6 +44,7 @@ SELECT DISTINCT
                                               
        NULL                                      Status,
        cisli941.t$amnt$l                         VL_TOTAL_ITEM,
+	   znsls401.t$vlfr$c                         VL_FRETE_SITE,
        znsls401.t$ufen$c                         UF,
        znsls401.t$cide$c                         CIDADE,
        znsls401.t$tele$c                         TEL,
