@@ -6,8 +6,8 @@ SELECT DISTINCT
 	tfacp200.t$ttyp CD_TRANSACAO_TITULO,
 	tfacp200.t$tpay CD_TIPO_DOCUMENTO,
 	tfacp200.t$ifbp CD_PARCEIRO,
-	tfacp200.t$docn$l NR_NF_RECEBIDA,
-	tfacp200.t$seri$l NR_SERIE_NF_RECEBIDA,
+	nvl(cisli940.t$docn$l, tfacp200.t$docn$l) NR_NF_RECEBIDA,
+	nvl(cisli940.t$seri$l, tfacp200.t$seri$l) NR_SERIE_NF_RECEBIDA,
 	tfacp200.t$line$l SQ_NF_RECEBIDA,
 	tfacp200.t$docd DT_EMISSAO_TITULO,															--#FAF.001.n
 	tfacp200.t$dued DT_VENCIMENTO,															--#FAF.001.n
@@ -62,6 +62,15 @@ FROM
   AND tdrec940.t$seri$l=tfacp200.t$seri$l
   AND tdrec940.t$ttyp$l=tfacp200.t$ttyp
   AND tdrec940.t$invn$l=tfacp200.t$ninv
+  
+	LEFT JOIN baandb.ttdrec940201 tdrec940r ON tdrec940r.t$fire$l=tdrec940.t$rref$l
+	LEFT JOIN (	select 	min(a.t$rfdv$c) rfdv,
+						a.t$fire$l
+				from baandb.ttdrec941201 a
+				where a.t$rfdv$c!=' '
+				group by a.t$fire$l) REFDEV	ON REFDEV.t$fire$l = tdrec940r.t$fire$l
+	LEFT JOIN baandb.tcisli940201 cisli940 	ON cisli940.t$fire$l = REFDEV.rfdv  
+  
   LEFT JOIN baandb.ttdrec947201 tdrec947
   ON tdrec947.t$fire$l=tdrec940.t$fire$l
   LEFT JOIN baandb.ttccom125201 tccom125
@@ -88,3 +97,4 @@ WHERE
   tfacp201.t$ttyp=tfacp200.t$ttyp
 AND  tfacp201.t$ninv=tfacp200.t$ninv
 AND tfacp200.t$docn=0
+
