@@ -9,11 +9,17 @@
 --************************************************************************************************************************************************************
 SELECT
     1 CD_CIA,
-	(SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
+	CASE WHEN (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
 	AND tcemm030.t$eunt=tcemm124.t$grid
 	AND tcemm124.t$loco=201
-	AND rownum=1) CD_FILIAL,	
+	AND rownum=1) = ' ' THEN SUBSTR((SELECT tcemm124.t$grid FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
+	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
+	AND tcemm124.t$loco=201 AND rownum=1),5,2) ELSE (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
+	WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
+	AND tcemm030.t$eunt=tcemm124.t$grid
+	AND tcemm124.t$loco=201
+	AND rownum=1) END  CD_FILIAL,	
 	(SELECT tdrec947.t$rcno$l FROM baandb.ttdrec947201 tdrec947
 	WHERE tdrec947.t$fire$l=tdrec940.t$fire$l
 	AND rownum=1) NR_NFR,
