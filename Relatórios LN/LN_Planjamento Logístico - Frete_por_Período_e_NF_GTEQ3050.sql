@@ -225,3 +225,4 @@ INNER JOIN baandb.tznsls400301     znsls400
 		AND a.t$etiq$c = znfmd630.t$etiq$c
 		AND a.t$coci$c IN ('ETR', 'ENT')
 		AND rownum=1) IS NOT NULL
+  AND cisli940.t$fdty$l!=14
