@@ -38,7 +38,7 @@ SELECT
 									VALOR,
       
   sum(llid.netwgt)                     PESO,
-  sum(sku.STDCUBE*ll.qty)              M3,
+  sum(sku.STDCUBE*llid.qty)              M3,
   
   CASE WHEN SKU.BOMITEMTYPE = 0 
          THEN 'Não'
