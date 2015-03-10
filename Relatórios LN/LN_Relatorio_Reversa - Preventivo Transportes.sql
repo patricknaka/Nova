@@ -44,7 +44,9 @@ SELECT DISTINCT
                                               
        NULL                                      Status,
        cisli941.t$amnt$l                         VL_TOTAL_ITEM,
-	   znsls401.t$vlfr$c                         VL_FRETE_SITE,
+       znsls401.t$vlfr$c                         VL_FRETE_SITE,
+       NVL(cisli941.t$amnt$l,0)+NVL(znsls401.t$vlfr$c,0)
+                                                 VL_TOTAL_NF,
        znsls401.t$ufen$c                         UF,
        znsls401.t$cide$c                         CIDADE,
        znsls401.t$tele$c                         TEL,
@@ -66,7 +68,7 @@ SELECT DISTINCT
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                        AT time zone 'America/Sao_Paulo') AS DATE)
               ELSE NULL
-        END                                              DATA_EMISSAO_NF,
+        END                                      DATA_EMISSAO_NF,
        
        
        CUBAGEM.TOT                               CUBAGEM,
@@ -79,9 +81,7 @@ SELECT DISTINCT
                'Sim'  END                        PENDENTE_COLETA,
        CASE WHEN tdrec947.t$fire$l is NULL THEN
                'Sim'
-       ELSE    'Não' END                         PENDENTE_DEVOLUCAO,
-	   
-	   znsls401.t$vlfr$c                         FRETE_SITE
+       ELSE    'Não' END                         PENDENTE_DEVOLUCAO
     
 FROM       baandb.tznsls401301 znsls401
 
