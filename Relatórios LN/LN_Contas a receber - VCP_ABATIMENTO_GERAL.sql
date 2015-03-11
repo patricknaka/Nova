@@ -6,61 +6,69 @@ select Q1.* from (
       tfacr200.t$ninv         Numero_Titulo,
       tccom130.T$FOVN$L       CNPJ,
       tfacr200.t$itbp         Fornecedor,
+      tccom100.t$nama         Razao_Social,
       MIN(tfacr200.t$docd)    Emissao,
       tfacr301.t$acdt$l       Vencimento,
     
       CASE WHEN sum(tfacp200t.t$balc) = 0 
              THEN ( select max(a.t$docd) 
-                      from baandb.ttfacp200301 a 
+                      from baandb.ttfacp200201 a 
                      where a.t$ttyp = tfacp200t.t$ttyp 
                        and a.t$ninv = tfacp200t.t$ninv )
            ELSE NULL END      liquidacao,
        
       tfacp200t.t$ttyp        titulo_cap_tipo,
       tfacp200t.t$ninv        titulo_cap_numero,
-      tdrec940.t$docn$l       NF,
-      tdrec940.t$seri$l       Serie,
-      tdrec940.t$rfdt$l       ID_Transacao,
+      cisli940.t$docn$l       NF,
+      cisli940.t$seri$l       Serie,
+      cisli940.t$fdty$l       ID_Transacao,
       TIPO_OPERACAO.          Descr_ID_Transacao,       
       tfacr200.t$docd         Data_Transacao,
       tfacr200.t$amnt         Valor_Transacao,
     
       CASE WHEN sum(tfacp200t.t$balc) = 0 THEN 'Liquidado' 
            ELSE 'Aberto' 
-       END                    Situacao
+       END                    Situacao,
+       
+       znrec007.t$cvpc$c      NUM_CARTA,
+       znrec007.t$amnt$c      VALOR_CARTA
         
-  FROM       baandb.ttfacr200301 tfacr200
+  FROM       baandb.ttfacr200201 tfacr200
+
+  INNER JOIN baandb.tznrec007201 znrec007
+          ON  znrec007.t$ttyp$c = tfacr200.t$ttyp 
+          AND znrec007.t$docn$c = tfacr200.t$docn   
   
-  INNER JOIN baandb.ttccom100301 tccom100
+  INNER JOIN baandb.ttccom100201 tccom100
           ON tccom100.t$bpid = tfacr200.t$itbp
     
-  INNER JOIN baandb.ttccom130301 tccom130
+  INNER JOIN baandb.ttccom130201 tccom130
           ON tccom130.t$cadr = tccom100.t$cadr
   
-  INNER JOIN baandb.ttfacr201301 tfacr301
+  INNER JOIN baandb.ttfacr201201 tfacr301
           ON tfacr301.t$ttyp = tfacr200.t$ttyp
          AND tfacr301.t$ninv = tfacr200.t$ninv
   
-  INNER JOIN baandb.ttfacp200301 tfacp200
+  INNER JOIN baandb.ttfacp200201 tfacp200
           ON tfacp200.t$tdoc = tfacr200.t$tdoc
          AND tfacp200.t$docn = tfacr200.t$docn
   
-  INNER JOIN baandb.ttfacp200301 tfacp200t
+  INNER JOIN baandb.ttfacp200201 tfacp200t
           ON tfacp200t.t$ttyp = tfacp200.t$ttyp
          AND tfacp200t.t$ninv = tfacp200.t$ninv
   
-  INNER JOIN baandb.ttdrec940301 tdrec940
-          ON tdrec940.t$ttyp$l = tfacp200.t$ttyp
-         AND tdrec940.t$invn$l = tfacp200.t$ninv
+  INNER JOIN baandb.tcisli940201 cisli940
+          ON cisli940.t$fire$l = znrec007.t$fire$c
+
   
    LEFT JOIN ( SELECT l.t$desc Descr_ID_Transacao,
                    d.t$cnst
                  FROM baandb.tttadv401000 d,
                       baandb.tttadv140000 l
-                WHERE d.t$cpac = 'td'        
-                  AND d.t$cdom = 'rec.trfd.l'       
+                WHERE d.t$cpac = 'ci'        
+                  AND d.t$cdom = 'sli.tdff.l'       
                   AND l.t$clan = 'p'
-                  AND l.t$cpac = 'td' 
+                  AND l.t$cpac = 'ci' 
                   AND l.t$clab = d.t$za_clab
                   AND rpad(d.t$vers,4) ||
                       rpad(d.t$rele,2) ||
@@ -79,7 +87,7 @@ select Q1.* from (
                                             where l1.t$clab = l.t$clab 
                                               and l1.t$clan = l.t$clan 
                                               and l1.t$cpac = l.t$cpac )) TIPO_OPERACAO
-          ON TIPO_OPERACAO.t$cnst = tdrec940.t$rfdt$l
+          ON TIPO_OPERACAO.t$cnst = cisli940.t$fdty$l
   
   WHERE tfacr200.t$tdoc = 'ENC'
     AND tfacr200.t$amnt < 0
@@ -88,16 +96,19 @@ select Q1.* from (
   GROUP BY tfacr200.t$ttyp, 
            tfacr200.t$ninv, 
            tccom130.T$FOVN$L,
-           tfacr200.t$itbp, 
+           tfacr200.t$itbp,
+           tccom100.t$nama,
            tfacr301.t$acdt$l,
            tfacp200t.t$ttyp, 
            tfacp200t.t$ninv,
-           tdrec940.t$docn$l, 
-           tdrec940.t$seri$l,
-           tdrec940.t$rfdt$l,
+           cisli940.t$docn$l, 
+           cisli940.t$seri$l,
+           cisli940.t$fdty$l,
            TIPO_OPERACAO.Descr_ID_Transacao,
            tfacr200.t$docd, 
-           tfacr200.t$amnt ) Q1
+           tfacr200.t$amnt,
+           znrec007.t$cvpc$c,
+            znrec007.t$amnt$c ) Q1
 
 where Vencimento between nvl(:DataVenctoDe, Vencimento) and nvl(:DataVenctoAte, Vencimento)
   and ( (Numero_Titulo = Trim(:Docto)) or (Trim(:Docto) is null) )
