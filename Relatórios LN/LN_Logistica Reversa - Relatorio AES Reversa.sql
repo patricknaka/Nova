@@ -18,6 +18,7 @@ SELECT
     WHWMD400.T$WDTH *
     WHWMD400.T$DPTH *  
     TDSLS401.T$QOOR        M3_TOTAL,
+	TDSLS401.T$QOOR        QTDE,
     MAUC.MAUC              CMV_UNIT,
     MAUC.MAUC*
     TDSLS401.T$QOOR        CMV_TOTAL,
@@ -133,7 +134,7 @@ WHERE (TDSLS420.T$HREA IN ('AES', 'PRD', 'TNA', 'AEW')
   AND TDSLS094.T$RETO = 2
   AND TDSLS401.T$CLYN = 2
   AND wmsCODE.UDF1 = 'WMWHSE5'
-ORDER BY NUME_FILIAL, PEDIDO_SITE
+ORDER BY NUME_FILIAL, PEDIDO_SITE 
 
 
 =IIF(Parameters!Table.Value <> "AAA",                         
@@ -158,6 +159,7 @@ ORDER BY NUME_FILIAL, PEDIDO_SITE
 "    WHWMD400.T$WDTH *  " &
 "    WHWMD400.T$DPTH *  " &
 "    TDSLS401.T$QOOR        M3_TOTAL,  " &
+"    TDSLS401.T$QOOR        QTDE,  " &
 "    MAUC.MAUC              CMV_UNIT,  " &
 "    MAUC.MAUC*  " &
 "    TDSLS401.T$QOOR        CMV_TOTAL,  " &
@@ -298,6 +300,7 @@ ORDER BY NUME_FILIAL, PEDIDO_SITE
 "    WHWMD400.T$WDTH *  " &
 "    WHWMD400.T$DPTH *  " &
 "    TDSLS401.T$QOOR        M3_TOTAL,  " &
+"    TDSLS401.T$QOOR        QTDE,  " &
 "    MAUC.MAUC              CMV_UNIT,  " &
 "    MAUC.MAUC*  " &
 "    TDSLS401.T$QOOR        CMV_TOTAL,  " &
@@ -437,6 +440,7 @@ ORDER BY NUME_FILIAL, PEDIDO_SITE
 "    WHWMD400.T$WDTH *  " &
 "    WHWMD400.T$DPTH *  " &
 "    TDSLS401.T$QOOR        M3_TOTAL,  " &
+"    TDSLS401.T$QOOR        QTDE,  " &
 "    MAUC.MAUC              CMV_UNIT,  " &
 "    MAUC.MAUC*  " &
 "    TDSLS401.T$QOOR        CMV_TOTAL,  " &
@@ -576,6 +580,7 @@ ORDER BY NUME_FILIAL, PEDIDO_SITE
 "    WHWMD400.T$WDTH *  " &
 "    WHWMD400.T$DPTH *  " &
 "    TDSLS401.T$QOOR        M3_TOTAL,  " &
+"    TDSLS401.T$QOOR        QTDE,  " &
 "    MAUC.MAUC              CMV_UNIT,  " &
 "    MAUC.MAUC*  " &
 "    TDSLS401.T$QOOR        CMV_TOTAL,  " &
@@ -715,6 +720,7 @@ ORDER BY NUME_FILIAL, PEDIDO_SITE
 "    WHWMD400.T$WDTH *  " &
 "    WHWMD400.T$DPTH *  " &
 "    TDSLS401.T$QOOR        M3_TOTAL,  " &
+"    TDSLS401.T$QOOR        QTDE,  " &
 "    MAUC.MAUC              CMV_UNIT,  " &
 "    MAUC.MAUC*  " &
 "    TDSLS401.T$QOOR        CMV_TOTAL,  " &
@@ -854,6 +860,7 @@ ORDER BY NUME_FILIAL, PEDIDO_SITE
 "    WHWMD400.T$WDTH *  " &
 "    WHWMD400.T$DPTH *  " &
 "    TDSLS401.T$QOOR        M3_TOTAL,  " &
+"    TDSLS401.T$QOOR        QTDE,  " &
 "    MAUC.MAUC              CMV_UNIT,  " &
 "    MAUC.MAUC*  " &
 "    TDSLS401.T$QOOR        CMV_TOTAL,  " &
@@ -993,6 +1000,7 @@ ORDER BY NUME_FILIAL, PEDIDO_SITE
 "    WHWMD400.T$WDTH *  " &
 "    WHWMD400.T$DPTH *  " &
 "    TDSLS401.T$QOOR        M3_TOTAL,  " &
+"    TDSLS401.T$QOOR        QTDE,  " &
 "    MAUC.MAUC              CMV_UNIT,  " &
 "    MAUC.MAUC*  " &
 "    TDSLS401.T$QOOR        CMV_TOTAL,  " &
@@ -1132,6 +1140,7 @@ ORDER BY NUME_FILIAL, PEDIDO_SITE
 "    WHWMD400.T$WDTH *  " &
 "    WHWMD400.T$DPTH *  " &
 "    TDSLS401.T$QOOR        M3_TOTAL,  " &
+"    TDSLS401.T$QOOR        QTDE,  " &
 "    MAUC.MAUC              CMV_UNIT,  " &
 "    MAUC.MAUC*  " &
 "    TDSLS401.T$QOOR        CMV_TOTAL,  " &
