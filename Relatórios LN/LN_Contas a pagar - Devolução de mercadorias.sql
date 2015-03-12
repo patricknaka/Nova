@@ -1,22 +1,20 @@
-SELECT DISTINCT
-
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE)
+SELECT 
+  DISTINCT
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
                                  DT_EMISSAO_NFD,
 
     tfacp201.t$payd              DT_VENCTO_NFD,
- 
     tdrec940.t$fire$l            REF_FISCAL_NFD,
     tdrec940.t$fdtc$l            COD_TIPO_FISCAL,
-   
     tdrec940.t$ttyp$l            TRANSACAO,
     tdrec940.t$invn$l            NUMERO,
-
     FILIAL.t$euca                FILIAL,
     tdrec940.t$docn$l            NF,
     tdrec940.t$seri$l            SERIE,
     tdrec940.t$bpid$l            COD_PN,
-    tdrec940.t$fids$l            NOME_PN,
+    Trim(tdrec940.t$fids$l)      NOME_PN,
  
     CASE WHEN regexp_replace(tdrec940.t$fovn$l, '[^0-9]', '') IS NULL
            THEN '00000000000000' 
@@ -33,104 +31,104 @@ SELECT DISTINCT
     tfacp200.t$bloc              BLOQUEADO,
     ABS(tfacp200.t$amnt)         VLR_TITULO_NFD,
     tfacp200.t$balc              SALDO_TITULO_NFD,
-
     tdrec940.t$rref$l            REF_FISCAL_NF_ORIGEM,
     
     tdrec940o.t$ttyp$l ||          
-    tdrec940o.t$docn$l            TRANSACAO_ORIGEM,
+    tdrec940o.t$docn$l           TRANSACAO_ORIGEM,
 
-    tdrec940o.t$docn$l            NF_ORIGEM,
-    tdrec940o.t$seri$l            SERIE_ORIGEM,
-	
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940o.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE)
+    tdrec940o.t$docn$l           NF_ORIGEM,
+    tdrec940o.t$seri$l           SERIE_ORIGEM,
+
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940o.t$idat$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
                                  DT_EMISSAO_NF_ORIGEM,
-	
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec943.t$icad$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE)
+
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec943.t$icad$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
                                  DT_VENCTO_NF_ORIGEM,       --alterar
-	
+
     tdrec940o.t$stat$l           SITUACAO_NF_ORIGEM,        
     DESCR_SITUACAO.              DESCR_SITUACAO,            --alterar
 
     CASE WHEN tfacp201.t$pyst$l = 3 
            THEN 'Sim' 
-         ELSE 'Não' 
+         ELSE   'Não' 
      END                         PREPARADO_PAGTO_NF_ORIGEM,
   
     tfcmg101r.t$plan             DT_PLAN_PAGTO_NF,
     tfacp201.t$pyst$l            STATUS_PAG_NF,
     STATUS_PAG_NF.               DESCR_STATUS_PAG_NF,    
     tdrec940o.t$bpid$l           COD_PARCEIRO_NF_ORIG,
-    tdrec940o.t$fids$l           NOME_PARCEIRO_NF_ORIG,
+    Trim(tdrec940o.t$fids$l)     NOME_PARCEIRO_NF_ORIG,
     tfacp200o.t$amnt             VALOR_TITULO_ORIG,
     tfacp200o.t$balc             SALDO_TITULO_ORIG,
-    t.t$dsca$l                   DESCR_TIPO_DOC_FISCAL,
     cisli940.t$fire$l            REF_FISCAL_DEVOLUCAO,
     cisli940.T$DOCN$L            NFD,
     cisli940.T$SERI$L            SERIE_NFD,
     DESCR_TIPO_DOC_FIS           TIPO_DOCTO_FISCAL 
     
-FROM       baandb.ttdrec940201 tdrec940
+FROM       baandb.ttdrec940301 tdrec940
  
- LEFT JOIN baandb.ttdrec940201 tdrec940o
-         ON tdrec940o.t$fire$l=tdrec940.t$rref$l
+ LEFT JOIN baandb.ttdrec940301 tdrec940o
+        ON tdrec940o.t$fire$l=tdrec940.t$rref$l
  
- LEFT JOIN baandb.ttdrec941201  tdrec941o
-        ON tdrec941o.t$fire$l=tdrec940o.t$fire$l
+ LEFT JOIN baandb.ttdrec941301  tdrec941o
+        ON tdrec941o.t$fire$l = tdrec940o.t$fire$l
        AND tdrec941o.T$RFDV$C != ' '
-       AND ROWNUM=1
+       AND ROWNUM = 1
        
- LEFT JOIN baandb.tcisli940201 cisli940
+ LEFT JOIN baandb.tcisli940301 cisli940
         ON cisli940.t$fire$l=tdrec941o.T$RFDV$C
         
-    LEFT JOIN baandb.ttfacp200201 tfacp200
+ LEFT JOIN baandb.ttfacp200301 tfacp200
         ON tfacp200.t$ttyp = tdrec940.t$ttyp$l 
        AND tfacp200.t$ninv = tdrec940.t$invn$l 
   
- LEFT JOIN baandb.ttfacp200201 tfacp200o
+ LEFT JOIN baandb.ttfacp200301 tfacp200o
         ON tdrec940o.t$ttyp$l = tfacp200o.t$ttyp 
        AND tdrec940o.t$invn$l = tfacp200o.t$ninv
        AND tfacp200o.t$docn = 0 
     
- LEFT JOIN baandb.ttfacp201201 tfacp201
+ LEFT JOIN baandb.ttfacp201301 tfacp201
         ON tdrec940o.t$ttyp$l = tfacp201.t$ttyp 
        AND tdrec940o.t$invn$l = tfacp201.t$ninv
      
- LEFT JOIN baandb.ttfcmg101201 tfcmg101r
+ LEFT JOIN baandb.ttfcmg101301 tfcmg101r
         ON tfcmg101r.t$ttyp = tfacp201.t$ttyp
        AND tfcmg101r.t$ninv = tfacp201.t$ninv
      
- LEFT JOIN baandb.ttdrec943201 tdrec943
+ LEFT JOIN baandb.ttdrec943301 tdrec943
         ON tdrec943.t$fire$l = tdrec940o.t$fire$l
   
- LEFT JOIN baandb.ttfacp201201 tfacp201d
+ LEFT JOIN baandb.ttfacp201301 tfacp201d
         ON tfacp200.t$ttyp = tfacp201d.t$ttyp 
        AND tfacp200.t$ninv = tfacp201d.t$ninv
 
- LEFT JOIN baandb.ttfcmg101201 tfcmg101d
+ LEFT JOIN baandb.ttfcmg101301 tfcmg101d
         ON tfcmg101d.t$ttyp = tfacp201d.t$ttyp
        AND tfcmg101d.t$ninv = tfacp201d.t$ninv
     
- LEFT JOIN( SELECT tcemm030.t$euca,
-                   tcemm030.t$eunt,
-                   tcemm124.t$cwoc 
-              FROM baandb.ttcemm124201 tcemm124, 
-                   baandb.ttcemm030201 tcemm030
-             WHERE tcemm030.t$eunt = tcemm124.t$grid
-               AND tcemm124.t$loco = 201 ) FILIAL
+ LEFT JOIN ( select tcemm030.t$euca,
+                    tcemm030.t$eunt,
+                    tcemm124.t$cwoc 
+               from baandb.ttcemm124301 tcemm124, 
+                    baandb.ttcemm030301 tcemm030
+              where tcemm030.t$eunt = tcemm124.t$grid
+                and tcemm124.t$loco = 301 ) FILIAL
         ON FILIAL.t$cwoc = tdrec940.t$cofc$l
-		
- LEFT JOIN ( SELECT l.t$desc DESCR_STATUS_PAG_NFD,
+
+ LEFT JOIN ( select l.t$desc DESCR_STATUS_PAG_NFD,
                     d.t$cnst
-               FROM baandb.tttadv401000 d,
+               from baandb.tttadv401000 d,
                     baandb.tttadv140000 l
-              WHERE d.t$cpac = 'tf'
-                AND d.t$cdom = 'acp.pyst.l'
-                AND l.t$clan = 'p'
-                AND l.t$cpac = 'tf'
-                AND l.t$clab = d.t$za_clab
-                AND rpad(d.t$vers,4) || 
+              where d.t$cpac = 'tf'
+                and d.t$cdom = 'acp.pyst.l'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'tf'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) || 
                     rpad(d.t$rele,2) || 
                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
                                                     rpad(l1.t$rele,2) || 
@@ -138,7 +136,7 @@ FROM       baandb.ttdrec940201 tdrec940
                                            from baandb.tttadv401000 l1 
                                           where l1.t$cpac = d.t$cpac 
                                             and l1.t$cdom = d.t$cdom )
-                AND rpad(l.t$vers,4) || 
+                and rpad(l.t$vers,4) || 
                     rpad(l.t$rele,2) || 
                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
                                                     rpad(l1.t$rele,2) || 
@@ -149,16 +147,16 @@ FROM       baandb.ttdrec940201 tdrec940
                                             and l1.t$cpac = l.t$cpac) ) STATUS_PAG_NFD
         ON STATUS_PAG_NFD.t$cnst = tfacp201d.t$pyst$l
 
- LEFT JOIN ( SELECT l.t$desc DESCR_SITUACAO,
+ LEFT JOIN ( select l.t$desc DESCR_SITUACAO,
                     d.t$cnst
-               FROM baandb.tttadv401000 d,
+               from baandb.tttadv401000 d,
                     baandb.tttadv140000 l
-              WHERE d.t$cpac = 'td'
-                AND d.t$cdom = 'rec.stat.l'
-                AND l.t$clan = 'p'
-                AND l.t$cpac = 'td'
-                AND l.t$clab = d.t$za_clab
-                AND rpad(d.t$vers,4) ||
+              where d.t$cpac = 'td'
+                and d.t$cdom = 'rec.stat.l'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'td'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
                     rpad(d.t$rele,2) ||
                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
                                                     rpad(l1.t$rele,2) ||
@@ -166,7 +164,7 @@ FROM       baandb.ttdrec940201 tdrec940
                                            from baandb.tttadv401000 l1 
                                           where l1.t$cpac = d.t$cpac 
                                             and l1.t$cdom = d.t$cdom )
-                AND rpad(l.t$vers,4) ||
+                and rpad(l.t$vers,4) ||
                     rpad(l.t$rele,2) ||
                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
                                                     rpad(l1.t$rele,2) ||
@@ -177,16 +175,16 @@ FROM       baandb.ttdrec940201 tdrec940
                                             and l1.t$cpac = l.t$cpac ) ) DESCR_SITUACAO
         ON DESCR_SITUACAO.t$cnst = tdrec940o.t$stat$l
 
- LEFT JOIN ( SELECT l.t$desc DESCR_STATUS_PAG_NF,
+ LEFT JOIN ( select l.t$desc DESCR_STATUS_PAG_NF,
                     d.t$cnst
-               FROM baandb.tttadv401000 d,
+               from baandb.tttadv401000 d,
                     baandb.tttadv140000 l
-              WHERE d.t$cpac = 'tf'
-                AND d.t$cdom = 'acp.pyst.l'
-                AND l.t$clan = 'p'
-                AND l.t$cpac = 'tf'
-                AND l.t$clab = d.t$za_clab
-                AND rpad(d.t$vers,4) || 
+              where d.t$cpac = 'tf'
+                and d.t$cdom = 'acp.pyst.l'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'tf'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) || 
                     rpad(d.t$rele,2) || 
                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4)  || 
                                                     rpad(l1.t$rele, 2) || 
@@ -197,7 +195,7 @@ FROM       baandb.ttdrec940201 tdrec940
                 
                 
             
-                AND rpad(l.t$vers,4) || 
+                and rpad(l.t$vers,4) || 
                     rpad(l.t$rele,2) || 
                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
                                                     rpad(l1.t$rele,2) || 
@@ -208,19 +206,16 @@ FROM       baandb.ttdrec940201 tdrec940
                                             and l1.t$cpac = l.t$cpac) ) STATUS_PAG_NF
         ON STATUS_PAG_NF.t$cnst = tfacp201.t$pyst$l  
     
- LEFT JOIN baandb.ttcmcs966201 t
-        ON t.t$fdtc$l = tdrec940.t$fdtc$l
-  
-  LEFT JOIN ( SELECT l.t$desc DESCR_TIPO_DOC_FIS,
+ LEFT JOIN ( select l.t$desc DESCR_TIPO_DOC_FIS,
                     d.t$cnst
-               FROM baandb.tttadv401000 d,
+               from baandb.tttadv401000 d,
                     baandb.tttadv140000 l
-              WHERE d.t$cpac = 'td'
-                AND d.t$cdom = 'rec.trfd.l'
-                AND l.t$clan = 'p'
-                AND l.t$cpac = 'td'
-                AND l.t$clab = d.t$za_clab
-                AND rpad(d.t$vers,4) || 
+              where d.t$cpac = 'td'
+                and d.t$cdom = 'rec.trfd.l'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'td'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) || 
                     rpad(d.t$rele,2) || 
                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
                                                     rpad(l1.t$rele,2) || 
@@ -228,7 +223,7 @@ FROM       baandb.ttdrec940201 tdrec940
                                            from baandb.tttadv401000 l1 
                                           where l1.t$cpac = d.t$cpac 
                                             and l1.t$cdom = d.t$cdom )
-                AND rpad(l.t$vers,4) || 
+                and rpad(l.t$vers,4) || 
                     rpad(l.t$rele,2) || 
                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
                                                     rpad(l1.t$rele,2) || 
@@ -242,10 +237,14 @@ FROM       baandb.ttdrec940201 tdrec940
 WHERE tdrec940.t$rfdt$l = 14    --nota de débito
   AND tfacp200.t$lino   = 0
 
-  AND Trunc(tdrec940.t$idat$l) Between :DataEmissaoDe And :DataEmissaoAte
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE)) 
+      Between :DataEmissaoDe 
+          And :DataEmissaoAte
   AND FILIAL.t$eunt IN (:Filial)
   AND tfacp201d.t$pyst$l IN (:StatusNFD)
-  AND Trim(cisli940.t$ttyp$l) IN (:Docto)
+  AND Trim(tdrec940.t$ttyp$l) IN (:Docto)
   AND ( ( CASE WHEN tfacp201.t$pyst$l = 3 
                  THEN 1 
                ELSE   2 
