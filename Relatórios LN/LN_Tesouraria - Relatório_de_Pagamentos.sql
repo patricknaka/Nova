@@ -1,4 +1,4 @@
-SELECT
+SELECT DISTINCT
   tfcmg011.t$baoc$l  CODE_BANCO,
   tfcmg011.t$agcd$l  CODE_AGENCIA,
   tfcmg001.t$bano    CODE_CONTA,
@@ -6,7 +6,7 @@ SELECT
   NVL(tfcmg103.t$paym,'- Não Definido -')
                      CODE_METODO_PGTO, 
   tfcmg003.          t$desc,  
-  tfcmg103.t$docn    NUME_TITULO,    
+  tfcmg103.t$docn    NUME_TITULO,
   tfacp200a.t$tpay   TIPO_DOCTO,  
   tfacp200a.t$docd   DATA_EMISSAO,  
   tfcmg103.t$dued$l  DATA_VENCTO,
@@ -18,7 +18,14 @@ SELECT
                      SITUACAO_PAGTO, 
   iSTPP.             DESC_PAGTO,  
   tfacp200a.t$leac   CTA_CONTABIL,
-  tfcmg103.t$btno    NUME_LOTE  
+  tfcmg103.t$btno    NUME_LOTE,
+  
+  tfacp200.t$ttyp ||
+  tfacp200.t$ninv         TRANSACAO,
+  tfacp200.t$ninv         TITULO,
+  tdpur094.t$dsca         TIPO_ORDEM,
+  tdrec952.t$leac$l       COD_CONTA_DESTINO,
+  DESCR_CONTA_DESTINO.    DESCR_CONTA_DESTINO
   
 FROM       baandb.ttfacp200301 tfacp200
 
@@ -85,7 +92,36 @@ INNER JOIN baandb.ttfacp600301 tfacp600
                                            and l1.t$clan = l.t$clan 
                                            and l1.t$cpac = l.t$cpac )) iSTPP
         ON tfcmg109.t$stpp = iSTPP.CODE_PAGTO 
+
+  LEFT JOIN baandb.ttdrec940301 tdrec940
+         ON tdrec940.t$ttyp$l=tfacp200.t$ttyp
+        AND tdrec940.t$invn$l=tfacp200.t$ninv
+        
+  LEFT JOIN baandb.ttdrec947301 tdrec947
+         ON tdrec947.t$fire$l=tdrec940.t$fire$l
+        AND ROWNUM=1        -- o tipo de ordem de compra será igual para todas as ordens
   
+   LEFT JOIN baandb.ttdpur400301 tdpur400
+        ON tdpur400.t$orno = tdrec947.t$orno$l
+        
+   LEFT JOIN baandb.ttdpur094301 tdpur094
+        ON tdpur094.t$potp = tdpur400.t$cotp
+  
+   LEFT JOIN baandb.ttdrec952301 tdrec952
+        ON tdrec952.t$ttyp$l = tfacp200.t$ttyp
+       AND tdrec952.t$invn$l = tfacp200.t$ninv
+       AND tdrec952.t$fire$l = tdrec940.t$fire$l
+       AND tdrec952.t$dbcr$l = 1
+       AND tdrec952.t$trtp$l = 2
+       AND tdrec952.t$brty$l = 0
+
+   LEFT JOIN ( select a.t$leac,
+                    a.t$desc DESCR_CONTA_DESTINO
+               from baandb.ttfgld008301 a ) DESCR_CONTA_DESTINO
+        ON DESCR_CONTA_DESTINO.t$leac = tdrec952.t$leac$l
+        
+order by TRANSACAO
+
 WHERE tfcmg103.t$docd BETWEEN NVL(:DtPagtoDe, tfcmg103.t$docd) AND NVL(:DtPagtoAte, tfcmg103.t$docd)
       AND NVL(tfcmg103.t$paym,'- Não Definido -') IN (:Modalidade)
       AND NVL(tfcmg109.t$stpp,0) IN (:Situacao)
