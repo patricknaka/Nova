@@ -61,9 +61,9 @@ from ( SELECT DISTINCT
                                 wmd.t$dpth   * 
                                 sli.t$dqua$l * 
                                 znmcs.t$cuba$c)
-                       from baandb.tcisli941301 sli,
-                            baandb.twhwmd400301 wmd, 
-                            baandb.tznmcs080301 znmcs
+                       from baandb.tcisli941201 sli,
+                            baandb.twhwmd400201 wmd, 
+                            baandb.tznmcs080201 znmcs
                       where sli.t$fire$l = cisli940.t$fire$l
                         and wmd.t$item = sli.t$item$l
                         and znmcs.t$cfrw$c = znfmd630.t$cfrw$c ), 0 ) 
@@ -73,8 +73,8 @@ from ( SELECT DISTINCT
                                 wmd.t$wdth   * 
                                 wmd.t$dpth   * 
                                 sli.t$dqua$l )
-                       from baandb.tcisli941301 sli,
-                            baandb.twhwmd400301 wmd
+                       from baandb.tcisli941201 sli,
+                            baandb.twhwmd400201 wmd
                       where sli.t$fire$l = cisli940.t$fire$l
                         and wmd.t$item = sli.t$item$l), 0 ) 
                                              VOLUME_CUBICO,
@@ -82,27 +82,33 @@ from ( SELECT DISTINCT
               cisli940.t$amnt$l              VLR_TOTAL_NF,
               znfmd630.t$vlfr$c              VLR_FRETE_CLIENTE,
 
-              ( select al.t$pvat$l
-                  from baandb.tznfmd001301 fl
-            inner join baandb.ttcmcs065301 df 
+            nvl( ( select al.t$pvat$l
+                  from baandb.tznfmd001201 fl
+            inner join baandb.ttcmcs065201 df 
                     on df.t$cwoc = fl.t$cofc$c
-            inner join baandb.ttccom130301 ef 
-                    on ef.t$cadr = df.t$cadr, baandb.ttcmcs080301 tr
-            inner join baandb.ttccom130301 et 
-                    on et.t$cadr = tr.t$cadr$l, baandb.ttcmcs951301 al
+            inner join baandb.ttccom130201 ef 
+                    on ef.t$cadr = df.t$cadr, baandb.ttcmcs080201 tr
+            inner join baandb.ttccom130201 et 
+                    on et.t$cadr = tr.t$cadr$l, baandb.ttcmcs951201 al
                  where al.t$rfdt$l = 22
                    and al.t$stfr$l = et.t$cste
                    and al.t$stto$l = ef.t$cste
                    and fl.t$fili$c = znfmd630.t$fili$c
                    and TR.T$CFRW   = znfmd630.t$cfrw$c
-                   and rownum = 1 )          ALIQUOTA,           
+                   and rownum = 1 ) ,
+				nvl(( select al.t$pvat$l
+				  from baandb.ttcmcs951201 al
+                  where al.t$rfdt$l = 22
+                   and al.t$stfr$l = ' '
+                   and al.t$stto$l = ' '),0))  ALIQUOTA,           
                                              
               znfmd630.t$vlfc$c              PESO_VOLUME,
               znfmd068.t$adva$c *
               ( cisli940.t$amnt$l / 100 )    AD_VALOREM,
               znfmd068.t$peda$c              PEDAGIO, 
               NVL(znfmd660.valor_adic,0)     ADICIONAIS, 
-              znfmd170.t$fovn$c              CNPJ_TRANS, 
+              -- znfmd170.t$fovn$c              CNPJ_TRANS,
+			  TCCOM130T.T$FOVN$L			 CNPJ_TRANS,	
               tcmcs080.t$seak                APELIDO, 
               znfmd630.t$ncte$c              ID_CONHECIMENTO, 
               cisli940.t$fire$l              ID_NR,
@@ -118,8 +124,8 @@ from ( SELECT DISTINCT
               tccom130.t$cste                UF,
               
               ( select znfmd061.t$dzon$c
-                  from baandb.tznfmd062301 znfmd062, 
-                       baandb.tznfmd061301 znfmd061
+                  from baandb.tznfmd062201 znfmd062, 
+                       baandb.tznfmd061201 znfmd061
                  where znfmd062.t$cfrw$c = znfmd630.t$cfrw$c 
                    and znfmd062.t$cono$c = znfmd630.t$cono$c
                    and znfmd062.t$cepd$c <= tccom130.t$pstc
@@ -130,9 +136,9 @@ from ( SELECT DISTINCT
                    and rownum = 1 )          REGIAO,
            
               ( select max(znfmd640.t$coci$c)
-                  from BAANDB.tznfmd640301 znfmd640
+                  from BAANDB.tznfmd640201 znfmd640
                  where znfmd640.t$date$c = ( select max(znfmd640b.t$date$c) 
-                                               from BAANDB.tznfmd640301 znfmd640b
+                                               from BAANDB.tznfmd640201 znfmd640b
                                               where znfmd640b.t$fili$c = znfmd640.t$fili$c 
                                                 AND znfmd640b.t$etiq$c = znfmd640.t$etiq$c )
                    and znfmd640.t$fili$c = znfmd630.t$fili$c 
@@ -142,7 +148,7 @@ from ( SELECT DISTINCT
               ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znfmd640.t$date$c), 
                         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                           AT time zone 'America/Sao_Paulo') AS DATE)
-                  FROM baandb.tznfmd640301 znfmd640
+                  FROM baandb.tznfmd640201 znfmd640
                  WHERE znfmd640.t$fili$c = znfmd630.t$fili$c
                    AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )
                                              DATA_OCORRENCIA,
@@ -161,31 +167,34 @@ from ( SELECT DISTINCT
               cisli940.t$ccfo$l              CFO_ENTREGA,
               tcmcs940.t$dsca$l              DESC_CFO_ENTREGA  
     
-   FROM       BAANDB.tznfmd630301 znfmd630 
+   FROM       BAANDB.tznfmd630201 znfmd630 
   
-   INNER JOIN BAANDB.ttcmcs080301 tcmcs080
+   INNER JOIN BAANDB.ttcmcs080201 tcmcs080
            ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c 
+		   
+	INNER JOIN	BAANDB.TTCCOM130201 TCCOM130T
+			ON	TCCOM130T.T$CADR = TCMCS080.T$CADR$L
      
-    LEFT JOIN BAANDB.tcisli940301 cisli940
+    LEFT JOIN BAANDB.tcisli940201 cisli940
            ON cisli940.t$fire$l = znfmd630.t$fire$c
    
-    LEFT JOIN BAANDB.tznfmd060301 znfmd060
+    LEFT JOIN BAANDB.tznfmd060201 znfmd060
            ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
           AND znfmd060.t$cono$c = znfmd630.t$cono$c
               
-    LEFT JOIN BAANDB.tznfmd068301 znfmd068
+    LEFT JOIN BAANDB.tznfmd068201 znfmd068
            ON znfmd068.t$cfrw$c = znfmd630.t$cfrw$c 
           AND znfmd068.t$cono$c = znfmd630.t$cono$c
     
-    LEFT JOIN BAANDB.tznfmd170301 znfmd170
-           ON znfmd170.t$fili$c = znfmd630.t$fili$c 
-          AND znfmd170.t$cfrw$c = znfmd630.t$cfrw$c
-          AND znfmd170.t$nent$c = znfmd630.t$nent$c
+    -- LEFT JOIN BAANDB.tznfmd170201 znfmd170
+           -- ON znfmd170.t$fili$c = znfmd630.t$fili$c 
+          -- AND znfmd170.t$cfrw$c = znfmd630.t$cfrw$c
+          -- AND znfmd170.t$nent$c = znfmd630.t$nent$c
    
-    LEFT JOIN BAANDB.ttcmcs940301 tcmcs940
+    LEFT JOIN BAANDB.ttcmcs940201 tcmcs940
            ON tcmcs940.t$ofso$l = cisli940.t$ccfo$l 
                                     
-    LEFT JOIN BAANDB.ttccom130301 tccom130
+    LEFT JOIN BAANDB.ttccom130201 tccom130
            ON tccom130.t$cadr = cisli940.t$stoa$l
        
     LEFT JOIN ( SELECT l.t$desc DESCR_TIPO_DOC_FIS,
@@ -250,7 +259,7 @@ from ( SELECT DISTINCT
                        a.t$ngai$c,
                        a.t$etiq$c,
                        sum(a.t$vafr$c) valor_adic
-                  from baandb.tznfmd660301 a
+                  from baandb.tznfmd660201 a
               group by a.t$cfrw$c,
                        a.t$cono$c,
                        a.t$fili$c,
@@ -260,13 +269,17 @@ from ( SELECT DISTINCT
           AND ZNFMD660.t$cono$c = ZNFMD630.t$cono$c
           AND ZNFMD660.t$fili$c = ZNFMD630.t$fili$c
           AND ZNFMD660.t$ngai$c = ZNFMD630.t$ngai$c
-          AND ZNFMD660.t$etiq$c = ZNFMD630.t$etiq$c  )  Q1
+          AND ZNFMD660.t$etiq$c = ZNFMD630.t$etiq$c  
+          
+          -- where znfmd630.t$cfrw$c='T08'
+          -- and znfmd630.t$ngai$c='0000000013'
+          )  Q1
     
 WHERE TIPO_NF IN (:TipoNF)
-  AND TRUNC(DATA_EMISSAO)
-      BETWEEN :DataDe 
-          AND :DataAte
-  AND ( (CNPJ_TRANS like '%' || :CNPJ  || '%') OR (:CNPJ is null) )
+ AND TRUNC(DATA_EMISSAO)
+     BETWEEN :DataDe 
+         AND :DataAte
+ AND ( (CNPJ_TRANS like '%' || :CNPJ  || '%') OR (:CNPJ is null) )
 
 GROUP BY Q1.DATA_EMISSAO,
          Q1.FILIAL,
