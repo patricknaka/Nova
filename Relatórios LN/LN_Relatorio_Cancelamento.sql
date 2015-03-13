@@ -43,7 +43,9 @@ SELECT
         ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$rdat$c, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE) 
-    END                    DT_RETORNO_REMESSA
+    END                    DT_RETORNO_REMESSA,
+    zncmg015.t$rcod$c      COD_RETORNO,
+    zncmg019.t$dsca$c      DESC_COD_RETORNO
   
 FROM       baandb.tznsls402301 znsls402
 
@@ -97,6 +99,10 @@ INNER JOIN baandb.tzncmg009301 zncmg009
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) )  Situacao
         ON Situacao.COD_SITUACAO = zncmg015.t$situ$c
+        
+  LEFT JOIN baandb.tzncmg019301 zncmg019
+         ON zncmg019.t$idad$c=zncmg015.t$idad$c
+        AND zncmg019.t$rcod$c=zncmg015.t$rcod$c
         
 WHERE znsls400.T$IDPO$C = 'TD'
   AND znsls402.t$idmp$c = 1
