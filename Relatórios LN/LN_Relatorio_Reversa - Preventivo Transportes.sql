@@ -21,7 +21,7 @@ SELECT DISTINCT
        CASE WHEN cisli940.t$docn$l = 0 THEN
            NULL
        ELSE cisli940.t$seri$l END                Serie,
-       cisli940.t$stbn$l                         Nome_Cliente_Coleta,
+       znsls401.t$nome$c                         Nome_Cliente_Coleta,
        
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -33,7 +33,16 @@ SELECT DISTINCT
        
        znfmd001.t$fili$c                         Estabelecimento,
        znsls401.t$lmot$c                         Motivo_da_Coleta,
-       cisli940.t$cfrn$l                         Nome_Transportadora_Coleta,
+       NVL(cisli940.t$cfrn$l,
+	   (	SELECT A.T$NTRA$C
+			FROM BAANDB.TZNSLS410301 A
+			WHERE A.T$NCIA$C = ZNSLS401.T$NCIA$C
+      AND A.T$UNEG$C = ZNSLS401.T$UNEG$C
+      AND A.T$PECL$C = ZNSLS401.T$PECL$C
+      AND A.T$SQPD$C = ZNSLS401.T$SQPD$C
+      AND A.T$ENTR$C = ZNSLS401.T$ENTR$C
+      AND A.T$NTRA$C != ' '
+      AND ROWNUM=1))	   Nome_Transportadora_Coleta,
        NVL(znfmd030.t$dsci$c,znmcs002.t$desc$c)  Ocorrencia,
        
        NVL( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
