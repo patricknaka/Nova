@@ -1,4 +1,4 @@
-SELECT 
+SELECT
   DISTINCT
     tfacp200.t$docd              DT_EMISSAO_NFD,
 
@@ -193,15 +193,11 @@ FROM       baandb.ttdrec940201 tdrec940
 WHERE tdrec940.t$rfdt$l = 14    --nota de débito
   AND tfacp200.t$lino   = 0
 
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
-        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE)) 
-      Between :DataEmissaoDe 
-          And :DataEmissaoAte
+  AND tfacp200.t$docd Between :DataEmissaoDe And :DataEmissaoAte
   AND FILIAL.t$eunt IN (:Filial)
-  AND tfacp201d.t$pyst$l IN (:StatusNFD)
-  AND Trim(tdrec940.t$ttyp$l) IN (:Docto)
-  AND ( ( CASE WHEN tfacp201.t$pyst$l = 3 
+  AND tfacp201o.t$pyst$l IN (:StatusNFD)
+  AND Trim(tdrec940o.t$ttyp$l) IN (:Docto)
+  AND ( ( CASE WHEN tfacp201o.t$pyst$l = 3 
                  THEN 1 
                ELSE   2 
            END = :PreparadoPagto ) OR (:PreparadoPagto = 0) )
