@@ -17,7 +17,6 @@ SELECT
     WHWMD400.T$HGHT *
     WHWMD400.T$WDTH *
     WHWMD400.T$DPTH *  
-<<<<<<< HEAD
     TDSLS401.T$QOOR        M3_TOTAL,
 	TDSLS401.T$QOOR        QTDE,
     MAUC.MAUC              CMV_UNIT,
@@ -46,8 +45,6 @@ SELECT
           AND A.T$SQNB = TDSLS420.T$SQNB
           AND A.T$CSQN = TDSLS420.T$CSQN
           AND A.T$HREA = TDSLS420.T$HREA ), TDSLS400.T$ODAT)	DATA_ULTIMO_PONTO
-		   
-=======
     TDSLS401.T$QOOR                         M3_TOTAL,
     TDSLS401.T$QOOR                         QTDE,
     MAUC.MAUC                               CMV_UNIT,
@@ -78,8 +75,6 @@ SELECT
           AND A.T$SQNB = TDSLS420.T$SQNB
           AND A.T$CSQN = TDSLS420.T$CSQN
           AND A.T$HREA = TDSLS420.T$HREA )  DATA_ULTIMO_PONTO
-     
->>>>>>> origin/master
 FROM       BAANDB.TTDSLS400301 TDSLS400
 
 INNER JOIN BAANDB.TTDSLS401301 TDSLS401
