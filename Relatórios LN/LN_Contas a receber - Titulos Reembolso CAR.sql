@@ -11,7 +11,7 @@ SELECT
                       where c.t$styp = 'BL ATC'
                         AND c.t$ityp = tfacr200.t$ttyp
                         AND c.t$idoc = tfacr200.t$ninv
-                        AND rownum = 1 ),0 ) = 0 
+                        AND rownum = 1 ), '0' ) = '0' 
            THEN 'Varejo' 
          ELSE   'Atacado' 
      END                                          FILIAL,
@@ -127,7 +127,7 @@ INNER JOIN baandb.ttfacr201301 tfacr201
 WHERE tfacr201.t$docd Between :DataEmissaoDe AND :DataEmissaoAte
   AND tfacr201.t$recd Between :DataVenctoDe AND :DataVenctoAte
   AND znsls412.t$uneg$c IN (:UniNegocio)
-  AND tfacr200.t$itbp IN (:PN)
+  AND ((:PN = '000') or (tfacr200.t$itbp = :PN))  
   AND tfacr201.t$rpst$l IN (:Situacao)
   AND znsls402.t$idmp$c IN (:MeioPagto)
   AND znsls400.t$idca$c IN (:CanalVendas)
