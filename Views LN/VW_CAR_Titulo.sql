@@ -16,7 +16,7 @@
 --****************************************************************************************************************************************************************
 SELECT DISTINCT	
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,											--#FAF.193.n
-	tfacr200.t$ttyp CD_TRANSACAO_TITULO,																		--#FAF.193.o
+  tfacr200.t$ttyp CD_TRANSACAO_TITULO,																		--#FAF.193.o
     1 CD_CIA,
 	CASE WHEN nvl((	select c.t$styp from baandb.tcisli205201 c
 					where c.t$styp='BL ATC'
@@ -114,7 +114,7 @@ FROM
 	LEFT JOIN baandb.ttfcmg401201 tfcmg401
 	ON tfcmg401.t$ttyp=tfacr200.t$ttyp
 	AND tfcmg401.t$ninv=tfacr200.t$ninv
-	AND tfcmg401.t$ttyp=tfacr200.t$ttyp
+	--AND tfcmg401.t$ttyp=tfacr200.t$ttyp
 	LEFT JOIN baandb.ttfcmg409201 tfcmg409
 	ON  tfcmg409.t$btno=tfcmg401.t$btno,
   baandb.ttfgld100201 tfgld100
