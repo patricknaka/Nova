@@ -1,4 +1,4 @@
-SELECT
+SELECT DISTINCT
     tfcmg101.t$btno         NUME_LOTE,
  
     LOTE.                   VALO_LOTE,
@@ -339,6 +339,9 @@ LEFT JOIN ( SELECT iDOMAIN.t$cnst CODE_MODAL,
   LEFT JOIN baandb.ttfcmg103301 tfcmg103
          ON tfcmg103.t$btno=tfcmg101.t$btno
         AND tfcmg103.t$ptbp=tfcmg101.t$ifbp
+        AND ROWNUM=1
+
+order by nume_lote
 
 WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
   AND tfcmg101.t$bank = NVL(:Banco,tfcmg101.t$bank)
@@ -348,7 +351,7 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
   AND tfcmg101.t$paym = (CASE WHEN :TipoPagto = 'Todos' THEN tfcmg101.t$paym ELSE :TipoPagto END)
   AND tfcmg101.t$tadv IN (:TipoAconselhamento)
   AND tfcmg109.t$stpp IN (:Situacao)
-  AND NVL(iPrgStat.DESCR, 'Título não vinculado') IN (:StatusPagto)
+  AND iPrgStat.DESCR IN (:StatusPagto)
   AND NVL(CASE WHEN tflcb230.t$send$d = 0 
                  THEN tflcb230.t$stat$d
              ELSE     tflcb230.t$send$d 
