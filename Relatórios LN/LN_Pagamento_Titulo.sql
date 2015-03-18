@@ -30,11 +30,22 @@ SELECT
     tfcmg101.t$tadv         CODE_TIPO_ACONSELHAMENTO,
 
     ACONSELHAMENTO.         DESCR_TIPO_ACONSELHAMENTO,
-       
-    NVL(tfacp201.t$pyst$l, tfcmg104.t$stst) 
-                            CODE_STAT_PRG,
-       
-    iPrgStat.DESCR          DESCR_STAT_PRG,
+    
+    CASE WHEN tfcmg101.t$tadv=5 THEN     --Pagamento Adiantado
+        CASE WHEN tfcmg103.t$paid=1 THEN
+              5         --Pago
+        ELSE  99  END   --Criado
+    ELSE
+      NVL(tfacp201.t$pyst$l, tfcmg104.t$stst) 
+    END                        CODE_STAT_PRG,
+    
+    CASE WHEN tfcmg101.t$tadv=5 THEN     --Pagamento Adiantado
+        CASE WHEN tfcmg103.t$paid=1 THEN
+              'Pago'
+        ELSE  'Criado'  END
+    ELSE
+        iPrgStat.DESCR 
+    END                       DESCR_STAT_PRG,
  
     CASE WHEN tflcb230.t$send$d = 0 
            THEN tflcb230.t$stat$d
@@ -324,6 +335,10 @@ LEFT JOIN ( SELECT iDOMAIN.t$cnst CODE_MODAL,
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) ACONSELHAMENTO
         ON ACONSELHAMENTO.t$cnst = tfcmg101.t$tadv
+
+  LEFT JOIN baandb.ttfcmg103301 tfcmg103
+         ON tfcmg103.t$btno=tfcmg101.t$btno
+        AND tfcmg103.t$ptbp=tfcmg101.t$ifbp
 
 WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
   AND tfcmg101.t$bank = NVL(:Banco,tfcmg101.t$bank)
