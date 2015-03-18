@@ -1,7 +1,7 @@
 SELECT DISTINCT 
   znfmd630.t$fili$c    FILIAL,
   tcmcs031.t$dsca      MARCA,  
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE)      
                        DATA_EXPEDICAO,
@@ -10,13 +10,13 @@ SELECT DISTINCT
   cisli940.t$fdty$l    NUME_TIPO_DOCUMENTO, 
   FGET.                DESC_TIPO_DOCUMENTO,
   znsls401.t$pecl$c    NUME_PEDIDO,  
-  znsls401.t$entr$c    NUME_ENTREGA,
+  znfmd630.t$pecl$c    NUME_ENTREGA,
   znfmd630.t$qvol$c    QTDE_VOLUMES,
   znsls401.t$itpe$c    NUME_TIPO_ENTREGA_NOME,
   znsls002.t$dsca$c    DESC_TIPO_ENTREGA_NOME,
   znfmd630.t$wght$c    PESO,
   znfmd610.t$cube$c    ITEM_CUBAGEM,
-  znsls401.t$vlun$c    ITEM_VALOR,
+  znfmd630.t$vlmr$c    ITEM_VALOR,
   znfmd630.t$vlfc$c    FRETE_GTE,
   cisli940.t$fght$l    FRETE_NF,
   znsls401.t$vlfr$c    FRETE_SITE,
@@ -101,13 +101,13 @@ FROM       baandb.tznfmd630301  znfmd630
 INNER JOIN baandb.ttcmcs080301  tcmcs080
         ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
 
-INNER JOIN baandb.ttdsls400301  tdsls400
+LEFT JOIN baandb.ttdsls400301  tdsls400
         ON tdsls400.t$orno = znfmd630.t$orno$c
 
-INNER JOIN baandb.ttccom130301  tccom130
+LEFT JOIN baandb.ttccom130301  tccom130
         ON tccom130.t$cadr = tdsls400.t$stad
   
-INNER JOIN ( select a1.t$ncia$c,
+LEFT JOIN ( select a1.t$ncia$c,
                     a1.t$uneg$c,
                     a1.t$pecl$c,
                     a1.t$sqpd$c,
@@ -122,7 +122,7 @@ INNER JOIN ( select a1.t$ncia$c,
                     a1.t$orno$c ) znsls004
         ON znsls004.t$orno$c = znfmd630.t$orno$c
            
-INNER JOIN ( select e.t$ncia$c,
+LEFT JOIN ( select e.t$ncia$c,
                     e.t$uneg$c,
                     e.t$pecl$c,
                     e.t$sqpd$c,
@@ -148,7 +148,7 @@ INNER JOIN ( select e.t$ncia$c,
        AND znsls401.t$sqpd$c = znsls004.t$sqpd$c
        AND znsls401.t$entr$c = znsls004.t$entr$c
 
-INNER JOIN baandb.tznsls400301  znsls400
+LEFT JOIN baandb.tznsls400301  znsls400
         ON znsls400.t$ncia$c = znsls401.t$ncia$c 
        AND znsls400.t$uneg$c = znsls401.T$UNEG$c 
        AND znsls400.t$pecl$c = znsls401.T$pecl$c 
@@ -205,18 +205,18 @@ INNER JOIN baandb.tznsls400301  znsls400
                 AND l.t$clan = 'p'
                 AND l.t$cpac = 'ci'
                 AND l.t$clab = d.t$za_clab
-                AND rpad(d.t$vers,4) ||
-                    rpad(d.t$rele,2) ||
-                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) ||
+                AND rpad(d.t$vers,4) || '|' ||
+                    rpad(d.t$rele,2) || '|' ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' ||
                                                     rpad(l1.t$cust,4)) 
                                            from baandb.tttadv401000 l1 
                                           where l1.t$cpac = d.t$cpac 
                                             and l1.t$cdom = d.t$cdom )
-                AND rpad(l.t$vers,4) ||
-                    rpad(l.t$rele,2) ||
-                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) || 
+                AND rpad(l.t$vers,4) || '|' ||
+                    rpad(l.t$rele,2) || '|' ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' || 
                                                     rpad(l1.t$cust,4)) 
                                            from baandb.tttadv140000 l1 
                                           where l1.t$clab = l.t$clab 
@@ -231,6 +231,7 @@ INNER JOIN baandb.tznsls400301  znsls400
              and a.t$coci$c IN ('ETR', 'ENT')
              and rownum = 1 ) IS NOT NULL
     AND cisli940.t$fdty$l != 14
+
 	
     AND znsls401.t$itpe$c IN (:TipoEntrega)
     AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
