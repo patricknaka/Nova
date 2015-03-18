@@ -348,7 +348,7 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
   AND tfcmg101.t$paym = (CASE WHEN :TipoPagto = 'Todos' THEN tfcmg101.t$paym ELSE :TipoPagto END)
   AND tfcmg101.t$tadv IN (:TipoAconselhamento)
   AND tfcmg109.t$stpp IN (:Situacao)
-  AND iPrgStat.DESCR IN (:StatusPagto)
+  AND NVL(iPrgStat.DESCR, 'Título não vinculado') IN (:StatusPagto)
   AND NVL(CASE WHEN tflcb230.t$send$d = 0 
                  THEN tflcb230.t$stat$d
              ELSE     tflcb230.t$send$d 
