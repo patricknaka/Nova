@@ -50,7 +50,10 @@ SELECT
     cisli943b.t$base$l/       
     cisli941.t$dqua$l         VLR_BASE_RAT,
     cisli943b.t$amnt$l/       
-    cisli941.t$dqua$l         VLR_ICMS_RAT
+    cisli941.t$dqua$l         VLR_ICMS_RAT,
+	znsls400b.t$tped$c		  ID_TIPO_PEDIDO,
+	znsls407.t$dscs$c		  DESCR_TIPO_PEDIDO,
+	cisli940b.t$bpid$l		  COD_PARCEIRO
 
 FROM       baandb.ttfacr200201  tfacr200r 
 
@@ -77,18 +80,33 @@ LEFT JOIN baandb.tcisli941201   cisli941
 LEFT JOIN baandb.tcisli245201   cisli245b
        ON cisli245b.t$fire$l  = cisli941.t$fire$l
       AND cisli245b.t$line$l  = cisli941.t$line$l
-
+	  
 LEFT JOIN baandb.tcisli943201   cisli943b
        ON cisli943b.t$fire$l  = cisli941.t$fire$l
       AND cisli943b.t$line$l  = cisli941.t$line$l
+	  AND cisli943b.t$brty$l  = 1
+	  
+LEFT JOIN baandb.tznsls004201   znsls004
+       ON znsls004.t$orno$c   = cisli245b.t$slso
+      AND znsls004.t$pono$c   = cisli245b.t$pono
+--      AND cisli943b.t$brty$l  = 1
 
-LEFT JOIN baandb.tznsls401201   znsls401
-       ON znsls401.t$orno$c   = cisli245b.t$slso
-      AND znsls401.t$pono$c   = cisli245b.t$pono
-      AND cisli943b.t$brty$l  = 1   
+INNER JOIN baandb.tznsls401201   znsls401
+       ON znsls401.t$ncia$c   = znsls004.t$ncia$c
+      AND znsls401.t$uneg$c   = znsls004.t$uneg$c
+      AND znsls401.t$pecl$c   = znsls004.t$pecl$c
+      AND znsls401.t$sqpd$c   = znsls004.t$sqpd$c
+      AND znsls401.t$entr$c   = znsls004.t$entr$c
+      AND znsls401.t$sequ$c   = znsls004.t$sequ$c
 
- LEFT JOIN baandb.tznsls400201  znsls400b
-        ON znsls400b.t$pecl$c = znsls401.t$pecl$c
+INNER JOIN baandb.tznsls400201  znsls400b
+       ON znsls400b.t$ncia$c   = znsls004.t$ncia$c
+      AND znsls400b.t$uneg$c   = znsls004.t$uneg$c
+      AND znsls400b.t$pecl$c   = znsls004.t$pecl$c
+      AND znsls400b.t$sqpd$c   = znsls004.t$sqpd$c
+	  
+LEFT JOIN baandb.tznsls407201   znsls407
+       ON znsls407.t$tpst$c   = znsls400b.t$tped$c
 
  LEFT JOIN baandb.ttccom130201  tccom130a
         ON tccom130a.t$cadr   = cisli940b.t$sfra$l
@@ -99,6 +117,7 @@ LEFT JOIN baandb.tznsls401201   znsls401
 WHERE  tfacr200r.t$balc <> 0.00 AND tfacr200r.t$lino = 0
    AND tfacr200r.t$trec <> 4
    AND tcemm124.t$dtyp   = 1 
+   AND znsls400b.t$idca$c = 'B2B'
 
    AND TRUNC(tfacr200r.t$docd) BETWEEN :EmissaoDe AND :EmissaoAte
    AND ((tccom130a.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null))
