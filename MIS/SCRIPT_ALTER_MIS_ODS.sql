@@ -1378,3 +1378,93 @@ ALTER TABLE LN.ods_pev_cab
 ALTER COLUMN NR_SERIE_NF_CONSOLIDADA NVARCHAR(2)
 
 EXECUTE sp_rename 'ln.ods_gar_estendida.ID_CANCELADO', 'IN_CANCELADO', 'COLUMN'
+
+-----
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'ln.ods_gar_estendida') AND name = N'PK_ods_gar_estendida')
+ALTER TABLE ln.ods_gar_estendida DROP CONSTRAINT [PK_ods_gar_estendida]
+
+alter table ln.ods_gar_estendida
+alter column NR_ENTREGA nvarchar(15) not null
+
+--RECRIA OBJETO MODIFICADO
+ALTER TABLE ln.ods_gar_estendida ADD CONSTRAINT [PK_ods_gar_estendida] PRIMARY KEY NONCLUSTERED 
+(	[NR_ENTREGA] ASC,
+	[CD_ITEM] ASC,
+	[CD_ITEM_GARANTIA] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+------
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'ln.ods_pev_det') AND name = N'PK_ods_pev_det')
+ALTER TABLE ln.ods_pev_det DROP CONSTRAINT [PK_ods_pev_det]
+
+alter table ln.ods_pev_det
+alter column NR_ENTREGA nvarchar(15) not null
+
+--RECRIA OBJETO MODIFICADO
+ALTER TABLE ln.ods_pev_det ADD CONSTRAINT [PK_ods_pev_det] PRIMARY KEY CLUSTERED 
+(	[CD_CIA] ASC,
+	[CD_ITEM] ASC,
+	[NR_ORDEM] ASC,
+	[SQ_ORDEM] ASC,
+	[NR_ENTREGA] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+------
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'ln.ods_pev_cab') AND name = N'PK_ods_pev_cab')
+ALTER TABLE ln.ods_pev_cab DROP CONSTRAINT [PK_ods_pev_cab]
+
+alter table ln.ods_pev_cab
+alter column NR_ENTREGA nvarchar(15) not null
+
+--RECRIA OBJETO MODIFICADO
+ALTER TABLE ln.ods_pev_cab ADD CONSTRAINT [PK_ods_pev_cab] PRIMARY KEY CLUSTERED 
+(	[CD_CIA] ASC,
+	[NR_ORDEM] ASC,
+	[NR_ENTREGA] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+----
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'ln.ods_pev_cliente') AND name = N'PK_ods_pev_cliente')
+ALTER TABLE ln.ods_pev_cliente DROP CONSTRAINT [PK_ods_pev_cliente]
+
+alter table ln.ods_pev_cliente
+alter column NR_ENTREGA nvarchar(15) not null
+
+--RECRIA OBJETO MODIFICADO
+ALTER TABLE ln.ods_pev_cliente ADD CONSTRAINT [PK_ods_pev_cliente] PRIMARY KEY CLUSTERED 
+(	[CD_CIA] ASC,
+	[NR_ORDEM] ASC,
+	[NR_ENTREGA] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+----
+
+IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'ln.ods_pev_pagamento') AND name = N'PK_ods_pev_pagamento')
+ALTER TABLE ln.ods_pev_pagamento DROP CONSTRAINT [PK_ods_pev_pagamento]
+
+alter table ln.ods_pev_pagamento
+alter column NR_ENTREGA nvarchar(15) not null
+
+--RECRIA OBJETO MODIFICADO
+ALTER TABLE ln.ods_pev_pagamento ADD CONSTRAINT [PK_ods_pev_pagamento] PRIMARY KEY CLUSTERED 
+(	[CD_CIA] ASC,
+	[NR_ORDEM] ASC,
+	[SQ_PAGAMENTO] ASC,
+	[CD_MEIO_PAGAMENTO] ASC,
+	[NR_ENTREGA] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
+----
+alter table ln.ods_fat_faturamento
+alter column NR_ENTREGA nvarchar(15)
+
+alter table ln.ods_dump_nfv_cab
+alter column NR_ENTREGA nvarchar(15)
+
+alter table ln.ods_nfv_cab
+alter column NR_ENTREGA nvarchar(15)
+
+alter table ln.ods_pev_cab
+alter column NR_ENTREGA_CANCELADO nvarchar(15)

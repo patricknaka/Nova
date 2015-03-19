@@ -163,3 +163,50 @@ create table stg_flash_caixa_pedidos (
 
 --=====================================================
 EXECUTE sp_rename 'STG_GAR_ESTENDIDA.ID_CANCELADO', 'IN_CANCELADO', 'COLUMN'
+
+--
+alter table stg_gar_estendida
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_lis_situacao
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_fat_faturamento
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_fat_faturamento_proc
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_nfv_cab
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_pev_pagamento
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_trk_status_pedido
+alter column NR_ENTREGA_PEDIDO nvarchar(15)
+
+alter table stg_pev_det
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_fat_faturamento_teste
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_fat_faturamento_today
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_pev_cliente
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_flash_caixa_pedidos
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_trp_transporte
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_pev_cab
+alter column NR_ENTREGA nvarchar(15)
+
+alter table stg_pev_cab
+alter column NR_ENTREGA_CANCELADO nvarchar(15)
+
