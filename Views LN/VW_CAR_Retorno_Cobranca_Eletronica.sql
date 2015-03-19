@@ -23,4 +23,4 @@ FROM
 	ON  tfcmg001.t$bank=tfcmg949.t$bank$l
 	LEFT JOIN baandb.ttfcmg011201 tfcmg011
 	ON  tfcmg011.t$bank=tfcmg001.t$brch
-WHERE tfcmg949.t$ttyp$l>0 AND tfcmg949.t$ttyp$l IS NOT NULL 
+WHERE tfcmg949.t$ninv$l>0 AND tfcmg949.t$ttyp$l IS NOT NULL 
