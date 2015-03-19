@@ -67,12 +67,44 @@ SELECT
       AT time zone 'America/Sao_Paulo') AS DATE)
                        DATA_PREVISTA,
     
-    cisli940.t$amnt$l  VALOR
+    cisli940.t$amnt$l  VALOR,
+	
+	( select znfmd061.t$dzon$c
+	from 	baandb.tznfmd062301 znfmd062, 
+			baandb.tznfmd061301 znfmd061
+	where 	znfmd062.t$cfrw$c = znfmd630.t$cfrw$c 
+	and 	znfmd062.t$cono$c = znfmd630.t$cono$c
+	and 	znfmd062.t$cepd$c <= tccom130.t$pstc
+	and 	znfmd062.t$cepa$c >= tccom130.t$pstc
+	and 	znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
+	and 	znfmd061.t$cono$c = znfmd062.t$cono$c
+	and 	znfmd061.t$creg$c = znfmd062.t$creg$c
+	and 	rownum = 1 )          	REGIAO,
+	znsls400.t$tped$c				ID_TIPO_PEDIDO,
+	znsls407.t$dscs$c				DESCR_TIPO_PEDIDO,
+	znfmd630.t$orno$c				ORDEM_VENDA
  
-FROM       BAANDB.tznsls401301 znsls401
+FROM       BAANDB.tznfmd630301 znfmd630
 
-INNER JOIN BAANDB.tznfmd630301 znfmd630
-        ON znfmd630.t$orno$c = znsls401.t$orno$c
+INNER JOIN BAANDB.tznsls004301 znsls004
+        ON znsls004.t$orno$c = znfmd630.t$orno$c
+		
+INNER JOIN BAANDB.tznsls401301 znsls401
+        ON 	znsls401.t$ncia$c = znsls004.t$ncia$c
+		AND znsls401.t$uneg$c = znsls004.t$uneg$c
+		AND znsls401.t$pecl$c = znsls004.t$pecl$c
+		AND znsls401.t$sqpd$c = znsls004.t$sqpd$c
+		AND znsls401.t$entr$c = znsls004.t$entr$c
+		AND znsls401.t$sequ$c = znsls004.t$sequ$c
+		
+INNER JOIN BAANDB.tznsls400301 znsls400
+        ON 	znsls400.t$ncia$c = znsls004.t$ncia$c
+		AND znsls400.t$uneg$c = znsls004.t$uneg$c
+		AND znsls400.t$pecl$c = znsls004.t$pecl$c
+		AND znsls400.t$sqpd$c = znsls004.t$sqpd$c
+
+INNER JOIN BAANDB.tznsls407301 znsls407
+        ON 	znsls407.t$tpst$c = znsls400.t$tped$c
   
  LEFT JOIN BAANDB.tznfmd060301 znfmd060
         ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c 
@@ -84,8 +116,12 @@ INNER JOIN BAANDB.tznfmd630301 znfmd630
 INNER JOIN baandb.tcisli940301 cisli940
         ON cisli940.t$fire$l = znfmd630.t$fire$c
        AND cisli940.t$docn$l = znfmd630.t$docn$c 
-       AND cisli940.t$seri$l = znfmd630.t$seri$c         
-  
+       AND cisli940.t$seri$l = znfmd630.t$seri$c  
+
+LEFT JOIN baandb.ttccom130301 tccom130       
+		ON	tccom130.t$cadr = cisli940.t$stoa$l
+		
+		
 INNER JOIN (SELECT d.t$cnst CNST, 
                    l.t$desc DESC_TIPO_ORDEM
               FROM baandb.tttadv401000 d, baandb.tttadv140000 l 
