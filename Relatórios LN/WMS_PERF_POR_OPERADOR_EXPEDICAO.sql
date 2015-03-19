@@ -1,16 +1,16 @@
 SELECT  
     ORDERS.WHSEID                                        				ID_PLANTA,
-    cl.UDF2                                       				      DSC_PLANTA,
+    cl.UDF2                                       				      	DSC_PLANTA,
     ORDERS.ORDERKEY                                      				PEDIDO,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE), 
+    TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE)           				DATA,
-    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+        AT time zone 'America/Sao_Paulo') AS DATE))           				DATA,
+    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE), 'HH')    				HORA,
-    ORDERSTATUSHISTORY.ADDWHO                            				ID_USUARIO,
+        AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')    				HORA,
+    CAGE.ADDWHO                            				ID_USUARIO,
     subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   				NOME_USUARIO,
-    sum(ORDERDETAIL.SHIPPEDQTY)                          				QUANT,
+    sum(ORDERDETAIL.ORIGINALQTY)                          				QUANT,			-- Quantidade
     ORDERS.CARRIERCODE                                   				ID_TRANSP,
     ORDERS.CARRIERNAME                                   				TRANSP_NOME,
     ORDERS.DISCHARGEPLACE                                				ID_CONTRATO,
@@ -21,30 +21,39 @@ SELECT
 	max(WAVEDETAIL.WAVEKEY)												ONDA,
 	ORDERS.INVOICENUMBER												NF,
 	ORDERS.LANE															SERIE,
-	CAGE.ADDDATE														INCL_GAIOLA,
-	CAGE.CLOSEDATE														FECHA_GAIOLA,
-	CAGE.CAGEID															CARGA,
-	max(CAGE.QT_VOL)													NFCA_QT_VOLUMES
+	TRUNC(CAGE.ADDDATE)													INCL_GAIOLA,
+--	CAGE.CLOSEDATE														FECHA_GAIOLA,	-- Campo retirado pois o campo DATA já é a data de fechamento da gaiola
+	CAGE.CAGEID															CARGA,			-- Mesmo que gaiola		
+	max(CAGE.QT_VOL)													NFCA_QT_VOLUMES,	-- Volumes na gaiola
+	SUM(NVL(CISLI940.T$AMNT$L, TDSLS400.T$OAMT))						VALOR													
 
 FROM      			WMWHSE5.ORDERS
 		INNER JOIN	WMWHSE5.ORDERDETAIL			ON 	ORDERS.ORDERKEY = ORDERDETAIL.ORDERKEY
 		INNER JOIN	ENTERPRISE.CODELKUP	CL 		ON	UPPER(CL.UDF1) = ORDERS.WHSEID
 		INNER JOIN	WMWHSE5.SKU					ON	SKU.SKU = ORDERDETAIL.SKU
-		INNER JOIN	WMWHSE5.ORDERSTATUSHISTORY	ON 	ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY
-		                                        AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ' ' 
-		                                        AND ORDERSTATUSHISTORY.STATUS = 95
-		LEFT JOIN 	WMWHSE5.taskmanageruser tu 	ON 	tu.userkey = ORDERSTATUSHISTORY.ADDWHO
-		LEFT JOIN	WMWHSE5.WAVEDETAIL			ON	WAVEDETAIL.ORDERKEY = ORDERS.ORDERKEY
+		-- INNER JOIN	WMWHSE5.ORDERSTATUSHISTORY	ON 	ORDERSTATUSHISTORY.ORDERKEY = ORDERDETAIL.ORDERKEY
+		                                        -- AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ' ' 
+		                                        -- AND ORDERSTATUSHISTORY.STATUS = 95
 		INNER JOIN (select 	cg.cageid,
 							cd.orderid,
 							cg.closedate,
+							cg.addwho,
 							max(cd.adddate) adddate,
 							count(cd.volumeid) qt_vol
 					from	wmwhse5.cageid cg
 					inner join wmwhse5.cageiddetail cd on cd.cageid = cg.cageid
 					group by	cg.cageid,
 					            cd.orderid,
-					            cg.closedate) CAGE	ON CAGE.ORDERID = ORDERS.ORDERKEY
+					            cg.closedate,
+								cg.addwho) CAGE	ON CAGE.ORDERID = ORDERS.ORDERKEY
+							
+		LEFT JOIN	BAANDB.TCISLI940301@PLN01 CISLI940 	ON	CISLI940.T$DOCN$L	=	ORDERS.INVOICENUMBER
+														AND	CISLI940.T$SERI$L	=	ORDERS.LANE
+		LEFT JOIN	BAANDB.TTDSLS400301@PLN01 TDSLS400	ON	TDSLS400.T$ORNO		=	ORDERS.REFERENCEDOCUMENT
+								
+		LEFT JOIN 	WMWHSE5.taskmanageruser tu 	ON 	tu.userkey = CAGE.ADDWHO
+		LEFT JOIN	WMWHSE5.WAVEDETAIL			ON	WAVEDETAIL.ORDERKEY = ORDERS.ORDERKEY
+
 					
 							
 
@@ -59,17 +68,24 @@ WHERE ORDERS.STATUS > =  95
 GROUP BY 	ORDERS.WHSEID,                                        				
             CL.UDF2,                                     				
             ORDERS.ORDERKEY,                                      				
-            ORDERSTATUSHISTORY.ADDDATE,          				
-            ORDERS.ACTUALSHIPDATE,    				
-            ORDERSTATUSHISTORY.ADDWHO,                            				
+--            CAGE.CLOSEDATE,      
+
+			TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE, 
+			  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+				AT time zone 'America/Sao_Paulo') AS DATE)),
+			TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE, 
+			  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+				AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),
+
+
+            CAGE.ADDWHO,                            				
             subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 ),   				                        				
             ORDERS.CARRIERCODE,                                   				
 		    ORDERS.CARRIERNAME,                                   				
 		    ORDERS.DISCHARGEPLACE,                                				                                                 																	
 		    ORDERS.INVOICENUMBER,												
 		    ORDERS.LANE,															
-		    CAGE.ADDDATE,														
-		    CAGE.CLOSEDATE,														
+		    TRUNC(CAGE.ADDDATE),																												
 		    CAGE.CAGEID	
 ORDER BY ORDERS.ORDERKEY															
 			
