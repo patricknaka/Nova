@@ -2,6 +2,11 @@ select Q1.* from ( SELECT
                      DISTINCT
                        tfacr200.t$ttyp         Tipo_Transacao,
                        tfacr200.t$ninv         Numero_Titulo,
+                       
+                       tfacr200.t$tdoc         Tipo_Transacao_mov,
+                       tfacr200.t$docn         Numero_mov, 
+                       
+                       
                        tfacr200.t$ttyp ||
                        tfacr200.t$ninv         Transacao,
                        tccom130.T$FOVN$L       CNPJ,
@@ -12,7 +17,7 @@ select Q1.* from ( SELECT
                      
                        CASE WHEN sum(tfacp200t.t$balc) = 0 
                               THEN ( select max(a.t$docd) 
-                                       from baandb.ttfacp200301 a 
+                                       from baandb.ttfacp200201 a 
                                       where a.t$ttyp = tfacp200t.t$ttyp 
                                         and a.t$ninv = tfacp200t.t$ninv )
                             ELSE NULL END      liquidacao,
@@ -35,31 +40,31 @@ select Q1.* from ( SELECT
                         znrec007.t$amnt$c      VALOR_CARTA,
                         tfacp200.t$balc        SALDO_CAP
                          
-                   FROM baandb.ttfacr200301 tfacr200
+                   FROM baandb.ttfacr200201 tfacr200
                  
-              LEFT JOIN baandb.tznrec007301 znrec007
+             INNER JOIN baandb.tznrec007201 znrec007
                      ON znrec007.t$ttyp$c = tfacr200.t$ttyp 
                     AND znrec007.t$docn$c = tfacr200.t$docn   
              
-             INNER JOIN baandb.ttccom100301 tccom100
+             INNER JOIN baandb.ttccom100201 tccom100
                      ON tccom100.t$bpid = tfacr200.t$itbp
                
-             INNER JOIN baandb.ttccom130301 tccom130
+             INNER JOIN baandb.ttccom130201 tccom130
                      ON tccom130.t$cadr = tccom100.t$cadr
              
-             INNER JOIN baandb.ttfacr201301 tfacr301
+             LEFT JOIN baandb.ttfacr201201 tfacr301
                      ON tfacr301.t$ttyp = tfacr200.t$ttyp
                     AND tfacr301.t$ninv = tfacr200.t$ninv
              
-             INNER JOIN baandb.ttfacp200301 tfacp200
+             INNER JOIN baandb.ttfacp200201 tfacp200
                      ON tfacp200.t$tdoc = tfacr200.t$tdoc
                     AND tfacp200.t$docn = tfacr200.t$docn
              
-             INNER JOIN baandb.ttfacp200301 tfacp200t
+             INNER JOIN baandb.ttfacp200201 tfacp200t
                      ON tfacp200t.t$ttyp = tfacp200.t$ttyp
                     AND tfacp200t.t$ninv = tfacp200.t$ninv
              
-             INNER JOIN baandb.tcisli940301 cisli940
+             LEFT JOIN baandb.tcisli940201 cisli940
                      ON cisli940.t$fire$l = znrec007.t$fire$c
             
              
@@ -97,6 +102,10 @@ select Q1.* from ( SELECT
                    
                GROUP BY tfacr200.t$ttyp, 
                         tfacr200.t$ninv, 
+
+                        tfacr200.t$tdoc,
+                        tfacr200.t$docn,                         
+
                         tccom130.T$FOVN$L,
                         tfacr200.t$itbp,
                         tccom100.t$nama,
