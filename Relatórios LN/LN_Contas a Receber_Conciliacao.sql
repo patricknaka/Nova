@@ -2,7 +2,7 @@
   FROM ( SELECT
              301                                                CIA,
 
-             CASE WHEN nvl( ( FILIAL.t$styp), 0 ) = 0 
+             CASE WHEN nvl( (FILIAL.t$styp), '0' ) = '0' 
                     THEN 2 
                   ELSE 3 
              END                                                FILIAL, 
@@ -41,7 +41,7 @@
              prg_mov.t$brel                                     NR_BANCARIO,
              znsls412.t$uneg$c                                  UNID_NEGOCIO,
              znint002.t$desc$c                                  DESC_UNID_NEGOCIO,
-             nvl( (t.t$text),' ' )                              OBSERVACAO,
+--             nvl( (t.t$text),' ' )                              OBSERVACAO,
              znrec007.t$logn$c                                  USUARIO,
              znsls400.t$idcp$c                                  CAMPANHA,
              znrec007.t$cvpc$c                                  CONTRATO_VPC,
@@ -306,9 +306,9 @@
          LEFT JOIN baandb.tznint002301 znint002
                 ON znint002.t$uneg$c = znsls412.t$uneg$c
          
-         LEFT JOIN baandb.ttttxt010301 t 
-                ON t.t$ctxt = titulo.t$text  
-               AND t.t$clan = 'p' 
+--         LEFT JOIN baandb.ttttxt010301 t 
+--                ON t.t$ctxt = titulo.t$text  
+--               AND t.t$clan = 'p' 
             
          LEFT JOIN baandb.ttfgld011301 gld011
                 ON gld011.t$ttyp = titulo.t$tdoc
