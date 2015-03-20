@@ -80,8 +80,8 @@ SELECT
       and znfmd061.t$cono$c = znfmd062.t$cono$c
       and znfmd061.t$creg$c = znfmd062.t$creg$c
       and rownum = 1 ) REGIAO,
-    znsls400.t$tped$c  ID_TIPO_ENTREGA,
-    znsls407.t$dscs$c  DESCR_TIPO_ENTREGA,
+    znsls401.t$itpe$c  ID_TIPO_ENTREGA,
+    znsls002.t$dsca$c  DESCR_TIPO_ENTREGA,
     znfmd630.t$orno$c  ORDEM_VENDA,
     znint002.t$uneg$c  UNIDADE_NEG,
     znint002.t$desc$c  DESCR_UNIDADE_NEG
@@ -109,8 +109,8 @@ INNER JOIN BAANDB.tznsls400301 znsls400
       AND znsls400.t$pecl$c = znsls004.t$pecl$c
       AND znsls400.t$sqpd$c = znsls004.t$sqpd$c
 
-INNER JOIN BAANDB.tznsls407301 znsls407
-        ON znsls407.t$tpst$c = znsls400.t$tped$c
+INNER JOIN BAANDB.tznsls002301 znsls002
+        ON znsls002.t$tpen$c = znsls401.t$itpe$c
   
  LEFT JOIN BAANDB.tznfmd060301 znfmd060
         ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c 
