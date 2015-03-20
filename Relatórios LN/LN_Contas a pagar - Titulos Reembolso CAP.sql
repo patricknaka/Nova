@@ -13,7 +13,7 @@ SELECT
     tfacp200.t$dued                             DATA_VENCTO,
     tfacp200.t$amnt                             VALO_TITULO,  
     tfacp200.t$balc                             SALD_TITULO,
-    '201'                                       CODE_CIA,             
+    '301'                                       CODE_CIA,             
 
     CASE WHEN (tfacp200.t$balc - tfacp200.t$bala) = 0 
            THEN 1 
