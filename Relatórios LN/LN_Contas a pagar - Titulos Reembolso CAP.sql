@@ -429,8 +429,6 @@ INNER JOIN baandb.ttccom130301 tccom130
   
 WHERE tfacp200.t$docn = 0 
   AND tfacp200.t$ttyp in ('PKB','PKC','PKD','PKE','PKF','PRB','PRW','PKG')
-  AND tfacp200.t$ninv = 481
-  AND tfacp200.t$ttyp = 'PRB'
     
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND NVL(znsls412.t$uneg$c, 0) IN (:UniNegocio)
