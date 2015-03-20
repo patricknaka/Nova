@@ -391,13 +391,13 @@ INNER JOIN baandb.ttccom130301 tccom130
                                             and l1.t$cpac = l.t$cpac ) )  DESC_MODAL_PGTO_2
         ON DESC_MODAL_PGTO_2.COD_MODAL_PGTO_2 = tfacp201.t$mopa$d 
 
-  LEFT JOIN baandb.ttflcb230301 tflcb230p
-         ON tflcb230p.t$ptyp$d=tfcmg101.t$ptyp
-        AND tflcb230p.t$docn$d=tfcmg101.t$pdoc
-        AND tflcb230p.t$ttyp$d=tfcmg101.t$ttyp
-        AND tflcb230p.t$ninv$d=tfcmg101.t$ninv
-        AND tflcb230p.t$sern$d=tfcmg101.t$schn
-        AND tflcb230p.t$comp$d=tfcmg101.t$comp
+ LEFT JOIN baandb.ttflcb230301 tflcb230p
+        ON tflcb230p.t$ptyp$d = tfcmg101.t$ptyp
+       AND tflcb230p.t$docn$d = tfcmg101.t$pdoc
+       AND tflcb230p.t$ttyp$d = tfcmg101.t$ttyp
+       AND tflcb230p.t$ninv$d = tfcmg101.t$ninv
+       AND tflcb230p.t$sern$d = TO_CHAR(tfcmg101.t$schn)
+       AND tflcb230p.t$comp$d = tfcmg101.t$comp
   
   LEFT JOIN ( select d.t$cnst CODE,
                      l.t$desc DESCR_PAG
