@@ -24,9 +24,9 @@ select Q1.* from ( SELECT
                         
                        tfacp200t.t$ttyp        titulo_cap_tipo,
                        tfacp200t.t$ninv        titulo_cap_numero,
-                       cisli940.t$docn$l       NF,
-                       cisli940.t$seri$l       Serie,
-                       cisli940.t$fdty$l       ID_Transacao,
+                       tfacp200t.t$docn$l       NF,
+                       tfacp200t.t$seri$l       Serie,
+                       tfacp200t.t$tpay         ID_Transacao,
                        TIPO_OPERACAO.          Descr_ID_Transacao,       
                        tfacr200.t$docd         Data_Transacao,
                        tfacr200.t$amnt         Valor_Transacao,
@@ -38,7 +38,8 @@ select Q1.* from ( SELECT
                         
                         znrec007.t$cvpc$c      NUM_CARTA,
                         znrec007.t$amnt$c      VALOR_CARTA,
-                        tfacp200.t$balc        SALDO_CAP
+                        tfacp200t.t$balc        SALDO_CAP,
+                        tfacp200.t$line         PARCELA
                          
           FROM baandb.ttfacr200201 tfacr200
                  
@@ -64,18 +65,18 @@ select Q1.* from ( SELECT
                      ON tfacp200t.t$ttyp = tfacp200.t$ttyp
                     AND tfacp200t.t$ninv = tfacp200.t$ninv
              
-             LEFT JOIN baandb.tcisli940201 cisli940
-                     ON cisli940.t$fire$l = znrec007.t$fire$c
+--             LEFT JOIN baandb.tcisli940201 cisli940
+--                     ON cisli940.t$fire$l = znrec007.t$fire$c
             
              
               LEFT JOIN ( select l.t$desc Descr_ID_Transacao,
                                  d.t$cnst
                             from baandb.tttadv401000 d,
                                  baandb.tttadv140000 l
-                           where d.t$cpac = 'ci'        
-                             and d.t$cdom = 'sli.tdff.l'       
+                           where d.t$cpac = 'tf'        
+                             and d.t$cdom = 'acp.tpay'       
                              and l.t$clan = 'p'
-                             and l.t$cpac = 'ci' 
+                             and l.t$cpac = 'tf' 
                              and l.t$clab = d.t$za_clab
                              and rpad(d.t$vers,4) ||
                                  rpad(d.t$rele,2) ||
@@ -94,7 +95,7 @@ select Q1.* from ( SELECT
                                                        where l1.t$clab = l.t$clab 
                                                          and l1.t$clan = l.t$clan 
                                                          and l1.t$cpac = l.t$cpac )) TIPO_OPERACAO
-                     ON TIPO_OPERACAO.t$cnst = cisli940.t$fdty$l
+                     ON TIPO_OPERACAO.t$cnst = tfacp200t.t$tpay
                    
                   WHERE tfacr200.t$tdoc = 'ENC'
                     AND tfacr200.t$amnt < 0
@@ -112,15 +113,16 @@ select Q1.* from ( SELECT
                         tfacr301.t$acdt$l,
                         tfacp200t.t$ttyp, 
                         tfacp200t.t$ninv,
-                        cisli940.t$docn$l, 
-                        cisli940.t$seri$l,
-                        cisli940.t$fdty$l,
+                        tfacp200t.t$docn$l, 
+                        tfacp200t.t$seri$l,
+                        tfacp200t.t$tpay,
                         TIPO_OPERACAO.Descr_ID_Transacao,
                         tfacr200.t$docd, 
                         tfacr200.t$amnt,
                         znrec007.t$cvpc$c,
                         znrec007.t$amnt$c,
-                        tfacp200.t$balc) Q1
+                        tfacp200t.t$balc,
+                        tfacp200.t$line) Q1
                  
 where Q1.Vencimento between nvl(:DataVenctoDe, Q1.Vencimento) and nvl(:DataVenctoAte, Q1.Vencimento)
   and Q1.Emissao between nvl(:DataEmissaoDe, Q1.Emissao) and nvl(:DataEmissaoAte, Q1.Emissao)
