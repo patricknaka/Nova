@@ -40,11 +40,11 @@ select Q1.* from ( SELECT
                         znrec007.t$amnt$c      VALOR_CARTA,
                         tfacp200.t$balc        SALDO_CAP
                          
-                   FROM baandb.ttfacr200201 tfacr200
+          FROM baandb.ttfacr200201 tfacr200
                  
              INNER JOIN baandb.tznrec007201 znrec007
                      ON znrec007.t$ttyp$c = tfacr200.t$ttyp 
-                    AND znrec007.t$docn$c = tfacr200.t$docn   
+                    AND znrec007.t$docn$c = tfacr200.t$ninv   
              
              INNER JOIN baandb.ttccom100201 tccom100
                      ON tccom100.t$bpid = tfacr200.t$itbp
@@ -99,7 +99,7 @@ select Q1.* from ( SELECT
                   WHERE tfacr200.t$tdoc = 'ENC'
                     AND tfacr200.t$amnt < 0
                     AND tfacp200t.t$lino = 0
-                   
+
                GROUP BY tfacr200.t$ttyp, 
                         tfacr200.t$ninv, 
 
