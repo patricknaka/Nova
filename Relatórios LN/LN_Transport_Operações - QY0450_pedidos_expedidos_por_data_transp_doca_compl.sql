@@ -15,15 +15,16 @@ SELECT
     znsls401.t$mgrt$c         MEGA_ROTA,  
     znsls401.t$cide$c         CIDADE,
     znsls401.t$ufen$c         ESTADO,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dten$c, 
+
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd600.t$dtfe$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) 
                               DT_FECHA_GAIOLA,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCOR_ETR.data_etr, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) 
                               DT_LIQ,
-    znfmd170.t$fovn$c         CNPJ_TRANSP,
+    tccom130.t$fovn$l         CNPJ_TRANSP,
     tcmcs080.t$dsca           TRANSP_NOME,
     whwmd400.t$hght           ALTURA,
     whwmd400.t$wdth           LARGURA,
@@ -38,21 +39,29 @@ SELECT
   
 FROM       baandb.tznfmd630301 znfmd630
 
+INNER JOIN	baandb.tznfmd600301 znfmd600
+			ON	znfmd600.t$fili$c = znfmd630.t$fili$c
+			AND	znfmd600.t$cfrw$c = znfmd630.t$cfrw$c
+			AND	znfmd600.t$ngai$c = znfmd630.t$ngai$c
+			
+INNER JOIN (select	a.t$fili$c,
+					a.t$etiq$c,
+					max(a.t$date$c) data_etr
+			from baandb.tznfmd640301 a
+			where a.t$coci$c='ETR'
+			group by a.t$fili$c,
+                     a.t$etiq$c) OCOR_ETR
+				ON	OCOR_ETR.t$fili$c = znfmd630.t$fili$c
+				AND	OCOR_ETR.t$etiq$c = znfmd630.t$etiq$c
+
+INNER JOIN baandb.ttcmcs080301  tcmcs080
+        ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c		
+
+INNER JOIN	baandb.ttccom130301 tccom130
+				ON	tccom130.t$cadr = tcmcs080.t$cadr$l
+
  LEFT JOIN baandb.tznfmd001301 znfmd001
         ON znfmd001.t$fili$c = znfmd630.t$fili$c
- 
- LEFT JOIN baandb.ttcmcs080301  tcmcs080
-        ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
-	   
-INNER JOIN baandb.tznfmd171301 znfmd171
-        ON znfmd171.t$cfrw$c = znfmd630.t$cfrw$c 
-       AND znfmd171.t$fili$c = znfmd630.t$fili$c 
-       AND znfmd171.t$ncar$c = znfmd630.t$ncar$c 
-
-INNER JOIN baandb.tznfmd170301 znfmd170
-        ON znfmd171.t$cfrw$c = znfmd170.t$cfrw$c 
-       AND znfmd171.t$nent$c = znfmd170.t$nent$c 
-       AND znfmd171.t$fili$c = znfmd170.t$fili$c
 	   
 INNER JOIN baandb.tznsls004301 znsls004
         ON znsls004.t$orno$c = znfmd630.t$orno$c		
@@ -75,7 +84,7 @@ INNER JOIN baandb.ttcibd001301  tcibd001
         ON tcmcs023.t$citg = tcibd001.t$citg
 	   
 WHERE znfmd630.t$fili$c = :Planta
-  AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dtsa$c, 
+  AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCOR_ETR.data_etr, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone 'America/Sao_Paulo') AS DATE) ) 
       BETWEEN :DataLiqDe 
