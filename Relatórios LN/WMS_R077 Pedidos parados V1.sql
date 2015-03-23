@@ -3,7 +3,7 @@ SELECT wmsCODE.UDF1                        FILIAL,     -- *** FOI INCLUIDO PARA 
        ZNSLS004.T$PECL$C                   PEDC_ID_PEDIDO,
        TDSLS400.T$ORNO                     PEDIDO_LN,
        TDSLS400.T$OFBP                     PEDC_ID_CLIENTE,
-       TDSLS400.T$ODAT                     PEDC_DT_EMISSAO,
+       TDSLS400.T$DDAT                     PEDC_DT_LIMITE,
        ZNSLS004.T$SQPD$C                   PEDC_SEQ,
        TRIM(TDSLS401.T$ITEM)               PEDD_ID_ITEM,
      ( SELECT MAX(A.T$DTBL)
@@ -14,7 +14,7 @@ SELECT wmsCODE.UDF1                        FILIAL,     -- *** FOI INCLUIDO PARA 
           AND A.T$CSQN = TDSLS420.T$CSQN
           AND A.T$HREA = TDSLS420.T$HREA ) DT_SITUACAO,
        TDSLS420.T$HREA                     SITUACAO,
-       TDSLS401.T$QOOR                     QTDE
+       ABS(TDSLS401.T$QOOR)                QTDE
 	   
 FROM       BAANDB.TTDSLS400301 TDSLS400
 
