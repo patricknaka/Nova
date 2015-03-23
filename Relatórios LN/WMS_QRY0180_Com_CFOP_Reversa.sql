@@ -1,4 +1,4 @@
-SELECT 
+SELECT DISTINCT
     WMSADMIN.PL_DB.DB_ALIAS                PLANTA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -103,8 +103,8 @@ SELECT
          -- ELSE 0 
      -- END                                   VL,
   
-    ABS( CASE WHEN NVL(cisli941.t$amnt$l, 0) != 0 THEN cisli941.t$amnt$l
-              WHEN NVL(TDSLS400.T$OAMT, 0)   != 0 THEN TDSLS400.T$OAMT
+    ABS( CASE WHEN NVL(cisli941.t$pric$l, 0) != 0 THEN cisli941.t$pric$l
+              WHEN NVL(TDSLS401.T$PRIC, 0)   != 0 THEN TDSLS401.T$PRIC
               WHEN NVL(maucLN.mauc, 0)       != 0 THEN maucLN.mauc
               ELSE 0 
           END )                            VL,  
@@ -277,8 +277,8 @@ INNER JOIN WMSADMIN.PL_DB
                     t0.t$poco$c ) LNREF
         ON LNREF.t$orno$c = ORDERS.REFERENCEDOCUMENT
 
- LEFT JOIN BAANDB.TTDSLS400301@pln01 TDSLS400 
-        ON TDSLS400.T$ORNO = ORDERS.REFERENCEDOCUMENT
+ -- LEFT JOIN BAANDB.TTDSLS400301@pln01 TDSLS400 
+        -- ON TDSLS400.T$ORNO = ORDERS.REFERENCEDOCUMENT
  
  -- LEFT JOIN BAANDB.TTCMCS003301@pln01 TCMCS003 
         -- ON TCMCS003.T$CWAR = SUBSTR(CL.DESCRIPTION,3,10)
@@ -317,6 +317,11 @@ INNER JOIN WMSADMIN.PL_DB
 	   
  LEFT JOIN BAANDB.TCISLI940301@PLN01 CISLI940 
         ON CISLI940.T$FIRE$L = CISLI941.T$FIRE$L
+		
+ LEFT JOIN BAANDB.TTDSLS401301@PLN01 TDSLS401
+		ON	TDSLS401.T$ORNO = WHINH431.T$WORN
+		AND	TDSLS401.T$PONO = WHINH431.T$PONO
+		AND TDSLS401.T$SQNB	= WHINH431.T$WSEQ
 ---------------------------------------------------------------------------------------------------------------------------------
 
     
