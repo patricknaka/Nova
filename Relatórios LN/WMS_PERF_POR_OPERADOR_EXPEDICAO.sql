@@ -8,13 +8,13 @@ SELECT
     TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')    				HORA,
-    CAGE.ADDWHO                            				ID_USUARIO,
+    CAGE.ADDWHO                            								ID_USUARIO,
     subStr( tu.usr_name,4, inStr(tu.usr_name, ',')-4 )   				NOME_USUARIO,
     sum(ORDERDETAIL.ORIGINALQTY)                          				QUANT,			-- Quantidade
     ORDERS.CARRIERCODE                                   				ID_TRANSP,
     ORDERS.CARRIERNAME                                   				TRANSP_NOME,
     ORDERS.DISCHARGEPLACE                                				ID_CONTRATO,
-    CASE WHEN max(SKU.SUSR2) = 2 
+    CASE WHEN max(TO_CHAR(SKU.SUSR2)) = '2' 
            THEN 'PESADO' 
          ELSE   'LEVE' 
      END                                                 				TP_TRANSP_ITEM ,
@@ -42,6 +42,7 @@ FROM      			WMWHSE5.ORDERS
 							count(cd.volumeid) qt_vol
 					from	wmwhse5.cageid cg
 					inner join wmwhse5.cageiddetail cd on cd.cageid = cg.cageid
+          where cg.status in (3,4,5,6) 
 					group by	cg.cageid,
 					            cd.orderid,
 					            cg.closedate,
@@ -54,16 +55,13 @@ FROM      			WMWHSE5.ORDERS
 		LEFT JOIN 	WMWHSE5.taskmanageruser tu 	ON 	tu.userkey = CAGE.ADDWHO
 		LEFT JOIN	WMWHSE5.WAVEDETAIL			ON	WAVEDETAIL.ORDERKEY = ORDERS.ORDERKEY
 
-					
-							
 
-WHERE ORDERS.STATUS > =  95
 
   
-  -- AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(ORDERSTATUSHISTORY.ADDDATE), 
-      -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        -- AT time zone 'America/Sao_Paulo') AS DATE)) BETWEEN :DataDe
-  -- AND :DataAte
+--where  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CAGE.CLOSEDATE, 
+--      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--        AT time zone 'America/Sao_Paulo') AS DATE) BETWEEN 
+
   
 GROUP BY 	ORDERS.WHSEID,                                        				
             CL.UDF2,                                     				
