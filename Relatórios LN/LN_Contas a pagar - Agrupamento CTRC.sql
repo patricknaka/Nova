@@ -1,100 +1,88 @@
-SELECT DISTINCT
-  tfacp201.t$mopa$d                         CODE_MODAL_PGTO,
-  DESC_MODAL_PGTO.                          DESC_MODAL_PGTO,
-  tfacp201.t$payd                           DATA_VENCTO,
-  tfacp200.t$docd                           DATA_EMISSAO,
-  tcmcs065.t$dsca                           NOME_FILIAL,       
-  tccom130f.t$fovn$l                        CNPJ_FILIAL,     
-  tfacp200.t$ifbp                           CODE_PN,
-  tccom100.t$nama                           DESC_PN,
-  tccom130.t$fovn$l                         CNPJ_FORN,
-  tccom100.t$nama                           NOME_FORN,
-  Concat(tfacp200.t$ttyp, tfacp200.t$ninv)  TRANSCAO,
-  tfacp936.t$ttyp$l || tfacp936.t$ninv$l    TITULO_AGRUPADOR,
-  tfacp200.t$ninv                           NUME_TITULO,
-  tfacp200.t$ttyp                           CODE_TRANS,
-  tdrec940.t$fire$l                         CODE_REFER,
-  tfacp200.t$docn$l                         NUME_NF,
-  tfacp200.t$seri$l                         SERI_NF,
- 
-  CASE WHEN tfacp201.t$pyst$l !=  3 THEN 'Não' 
-    ELSE 'Sim' 
-  END                                       DESC_SITUA2,
+SELECT 
+  DISTINCT
+    tfacp201.t$mopa$d                  CODE_MODAL_PGTO,
+    DESC_MODAL_PGTO.                   DESC_MODAL_PGTO,
+    tfacp201.t$payd                    DATA_VENCTO,
+    tfacp200.t$docd                    DATA_EMISSAO,
+    tcmcs065.t$dsca                    NOME_FILIAL,       
+    tccom130f.t$fovn$l                 CNPJ_FILIAL,     
+    tfacp200.t$ifbp                    CODE_PN,
+    tccom100.t$nama                    DESC_PN,
+    tccom130.t$fovn$l                  CNPJ_FORN,
+    tccom100.t$nama                    NOME_FORN,
+    Concat(tfacp200.t$ttyp,            
+           tfacp200.t$ninv)            TRANSCAO,
+    tfacp936.t$ttyp$l ||               
+    tfacp936.t$ninv$l                  TITULO_AGRUPADOR,
+    tfacp200.t$ninv                    NUME_TITULO,
+    tfacp200.t$ttyp                    CODE_TRANS,
+    tdrec940.t$fire$l                  CODE_REFER,
+    tfacp200.t$docn$l                  NUME_NF,
+    tfacp200.t$seri$l                  SERI_NF,
     
-  
-  CASE WHEN (tfacp200.t$asst$l = 2 AND tfacp201.t$pyst$l IS NULL) THEN 97
-    ELSE NVL(tfacp201.t$pyst$l, 1)
-  END                                       STAT_PRG,
-  
-  CASE WHEN (tfacp200.t$asst$l = 2 AND tfacp201.t$pyst$l IS NULL) THEN 'Associado'
-    ELSE iSTAT.DESCR
-  END                                       DESCR_STAT_PRG,
-  
-/*CASE WHEN (tfacp200.t$balc - tfacp200.t$bala) = 0 THEN 1
-    ELSE 2 
-  END                                       DESC_SITUA1,
-
-  CASE WHEN tfacp201.t$pyst$l != 3 THEN 2
-    ELSE 1 
-  END                                       CODE_SITUA2,*/
-   
-  tfacp201.t$schn                           NO_PROGRAMACAO,
- 
-  NVL(Trim(tfacp200.t$bloc), '000')         STATUS_BLOQUEIO,
-  NVL(BLOQUEIO.DSC_STATUS_BLOQUEIO, 'Sem bloqueio') 
-                                            DESC_STATUS_BLOQUEIO,
-  tdrec947.t$orno$l                         NUM_ORDEM,            
-  tfacp200.t$amnt                           VALO_TITULO,  
-  tfacp200.t$balc                           SALD_TITULO,
-  tfacp201.t$balc-tfacp200.t$bala           VALOR_APAGAR,
---tfacp201.t$brel                           NUM_REL_BANCARIA, 
---tfcmg001.t$desc                           DESC_REL_BANCARIA,
- 
-  case when( (tfacp201.t$brel = null or trim(tfacp201.t$brel) = '') 
-              and (tfcmg001.t$desc = null or trim(tfcmg001.t$desc) = '') ) then ''
-        else Concat(Concat(tfacp201.t$brel, ' - '), tfcmg001.t$desc) 
-       end                                  REL_BANCARIA,
-  
-  NVL(TRIM(tfacp201.t$paym), 'N/A')         METODO_PAGTO,
+    CASE WHEN tfacp201.t$pyst$l !=  3 
+           THEN 'Não' 
+         ELSE   'Sim' 
+     END                               DESC_SITUA2,
+      
     
-/*tfacp201.t$bank                           BANCO_PARCEIRO,
-  tfcmg011.t$agcd$l                         NUME_AGENCIA,
-  tfcmg011.t$agdg$l                         DIGI_AGENCIA,
-  tfcmg011.t$desc                           DESC_AGENCIA,
-  tccom125.t$bano                           NUME_CONTA,
-  tccom125.t$dacc$d                         DIGI_CONTA,*/
-
-  Trim(tfcmg011.t$desc  || ' ' ||
-        'AG ' || tfcmg011.t$agcd$l || '-' || 
-                 tfcmg011.t$agdg$l || '   ' || 'CC ' || 
-                 tccom125.t$bano || '-' || 
-                 tccom125.t$dacc$d )        CONTA_PN,
-                   
-    tfcmg101.t$btno                         LOTE_PAGTO,
-  /*tdrec940.t$fire$l                       NUM_RFISCAL,
-    tdrec940.t$rfdt$l                       NUM_CFISCAL, */
-    tdrec940.t$fdtc$l                       COD_TIPO_DOC_FISCAL,
-    DTRFD.DESC_CODIGO_FISCAL                DESC_CODIGO_FISCAL,        
-    tcmcs966.t$dsca$l                       DESC_TIPO_DOC_FISCAL,
-    tfacp200.t$leac                         COD_CONTA_CONTROLE,
-    tfgld008.t$desc                         DESCR_CONTA_CONTROLE,
-    tdrec952.t$leac$l                       COD_CONTA_DESTINO,
-    DESCR_CONTA_DESTINO.                    DESCR_CONTA_DESTINO,
- 
- CASE WHEN tflcb230.t$send$d = 0 
-           THEN tflcb230.t$stat$d
-         ELSE tflcb230.t$send$d 
-     END                                    CODE_STAT_ARQ,
- 
- CASE WHEN tflcb230.t$send$d = 0 
-           THEN NVL(iStatArq.DESCR,  'Arquivo não vinculado') 
-         ELSE   NVL(iStatArq2.DESCR, 'Arquivo não vinculado') 
-     END                                    DESCR_STAT_ARQ,
+    CASE WHEN (tfacp200.t$asst$l = 2 AND tfacp201.t$pyst$l IS NULL) 
+           THEN 97
+         ELSE NVL(tfacp201.t$pyst$l, 1)
+     END                               STAT_PRG,
+    
+    CASE WHEN (tfacp200.t$asst$l = 2 AND tfacp201.t$pyst$l IS NULL) 
+           THEN 'Associado'
+         ELSE   iSTAT.DESCR
+     END                               DESCR_STAT_PRG,
    
-    tflcb230.t$lach$d                       DATA_STAT_ARQ
-
- /*Concat(Concat(tfacp200.t$ifbp, ' - '), 
-           tccom100.t$nama)                 COD_DESC_PEN,*/
+    tfacp201.t$schn                    NO_PROGRAMACAO,
+    
+    NVL(Trim(tfacp200.t$bloc), '000')  STATUS_BLOQUEIO,
+    NVL(BLOQUEIO.DSC_STATUS_BLOQUEIO, 
+        'Sem bloqueio')                DESC_STATUS_BLOQUEIO,
+    tdrec947.t$orno$l                  NUM_ORDEM,            
+    tfacp200.t$amnt                    VALO_TITULO,  
+    tfacp200.t$balc                    SALD_TITULO,
+    tfacp201.t$balc -
+    tfacp200.t$bala                    VALOR_APAGAR,
+ 
+    case when( (tfacp201.t$brel = null or trim(tfacp201.t$brel) = '') 
+                and (tfcmg001.t$desc = null or trim(tfcmg001.t$desc) = '') ) then ''
+          else Concat(Concat(tfacp201.t$brel, ' - '), tfcmg001.t$desc) 
+         end                           REL_BANCARIA,
+    
+    NVL(TRIM(tfacp201.t$paym), 'N/A')  METODO_PAGTO,
+      
+    
+    Trim(tfcmg011.t$desc   || ' '   ||
+         'AG '             || 
+         tfcmg011.t$agcd$l || '-'   || 
+         tfcmg011.t$agdg$l || '   ' || 'CC ' || 
+         tccom125.t$bano   || '-'   || 
+         tccom125.t$dacc$d )           CONTA_PN,
+                     
+      tfcmg101.t$btno                  LOTE_PAGTO,
+      tdrec940.t$fdtc$l                COD_TIPO_DOC_FISCAL,
+      DTRFD.DESC_CODIGO_FISCAL         DESC_CODIGO_FISCAL,        
+      tcmcs966.t$dsca$l                DESC_TIPO_DOC_FISCAL,
+      tfacp200.t$leac                  COD_CONTA_CONTROLE,
+      tfgld008.t$desc                  DESCR_CONTA_CONTROLE,
+      tdrec952.t$leac$l                COD_CONTA_DESTINO,
+      DESCR_CONTA_DESTINO.             DESCR_CONTA_DESTINO,
+ 
+      CASE WHEN tflcb230.t$send$d = 0 
+             THEN tflcb230.t$stat$d
+           ELSE tflcb230.t$send$d 
+       END                             CODE_STAT_ARQ,
+      
+      CASE WHEN tflcb230.t$send$d = 0 
+             THEN NVL(iStatArq.DESCR,  'Arquivo não vinculado') 
+           ELSE   NVL(iStatArq2.DESCR, 'Arquivo não vinculado') 
+          END                          DESCR_STAT_ARQ,
+        
+      tflcb230.t$lach$d                DATA_STAT_ARQ
+      
      
 FROM       baandb.ttfacp200301   tfacp200  
 
@@ -158,7 +146,7 @@ FROM       baandb.ttfacp200301   tfacp200
                                           where l1.t$clab = l.t$clab 
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iStatArq
-      ON iStatArq.CODE = tflcb230.t$stat$d
+        ON iStatArq.CODE = tflcb230.t$stat$d
     
  LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
@@ -326,21 +314,25 @@ FROM       baandb.ttfacp200301   tfacp200
        AND znacp004.t$tty1$c = tfacp200.t$ttyp
        AND znacp004.t$nin1$c = tfacp200.t$ninv
         
-LEFT JOIN baandb.ttfacp936301 tfacp936
-  ON tfacp936.t$tty2$l = tfacp200.t$ttyp
-  AND tfacp936.t$nin2$l = tfacp200.t$ninv
+ LEFT JOIN baandb.ttfacp936301 tfacp936
+        ON tfacp936.t$tty2$l = tfacp200.t$ttyp
+       AND tfacp936.t$nin2$l = tfacp200.t$ninv
 
 WHERE tfacp200.t$docn = 0
-AND tfacp200.t$ttyp IN ('P00', 'PRF', 'NCC', 'PZZ')
-AND not exists ( select tfacp601.t$payt, tfacp601.t$payd, tfacp601.t$payl, tfacp601.t$pays
-                   from  baandb.ttfacp601301  tfacp601
-                   where tfacp601.t$icom = 301  
-                     and tfacp601.t$ityp=tfacp200.t$ttyp
-                     and tfacp601.t$idoc=tfacp200.t$ninv
-                     and tfacp601.t$step = 20 )
+  AND tfacp200.t$ttyp IN ('P00', 'NCC', 'PZZ')
+  AND not exists ( select 1
+                     from baandb.ttfacp601301  tfacp601
+                    where tfacp601.t$icom = 301  
+                      and tfacp601.t$ityp = tfacp200.t$ttyp
+                      and tfacp601.t$idoc = tfacp200.t$ninv
+                      and tfacp601.t$step = 20 )
 
- AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
- AND tfacp201.t$payd between :VencimentoDe AND :VencimentoAte
+ AND tfacp200.t$docd Between :EmissaoDe And :EmissaoAte
+
+ AND NVL(tfacp201.t$payd, Trunc(CURRENT_DATE)) 
+     Between NVL(:VencimentoDe,  NVL(tfacp201.t$payd, Trunc(CURRENT_DATE)))
+         And NVL(:VencimentoAte, NVL(tfacp201.t$payd, Trunc(CURRENT_DATE)))
+
  AND tfacp200.t$ttyp IN (:TipoTransacao)
  AND NVL(Trim(tfacp200.t$bloc), '000') IN (:Bloqueado)
  AND tfacp200.t$ifbp IN (:ParceiroNegocio)
@@ -358,6 +350,6 @@ AND not exists ( select tfacp601.t$payt, tfacp601.t$payd, tfacp601.t$payl, tfacp
           END, -1) IN (:StatusArquivo)
  
  AND ((tdrec940.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null))
- AND ((Upper(Concat(Trim(tfacp200.t$ttyp), tfacp200.t$ninv)) =  Upper(Trim(:Transacao))) OR (:Transacao is null))
-
+ AND ((Upper(Concat(Trim(tfacp936.t$ttyp$l), tfacp936.t$ninv$l)) =  Upper(Trim(:Transacao))) OR (:Transacao is null))
+	
 ORDER BY DATA_EMISSAO, NUME_TITULO
