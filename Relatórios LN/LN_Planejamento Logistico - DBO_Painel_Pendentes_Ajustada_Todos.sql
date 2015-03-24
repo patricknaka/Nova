@@ -12,12 +12,12 @@ SELECT
     cisli940.t$gamt$l  VL_MERCADORIA,
     znsls401.t$uneg$c  UNINEG,
     
-    ( SELECT znfmd640.t$coct$c
-        FROM BAANDB.tznfmd640301 znfmd640
-       WHERE znfmd640.t$date$c = ( select max(znfmd640.t$date$c)  
-                                     from BAANDB.tznfmd640301 znfmd640
-                                    where znfmd640.t$fili$c = znfmd630.t$fili$c
-                                      and znfmd640.t$etiq$c = znfmd630.t$etiq$c )
+    ( SELECT  znfmd640.t$coct$c 
+      FROM    BAANDB.tznfmd640301 znfmd640
+      WHERE   znfmd640.t$coct$c = ( select  max(znfmd640.t$coct$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640.t$date$C,  znfmd640.t$udat$C)
+                                    from    BAANDB.tznfmd640301 znfmd640
+                                    where   znfmd640.t$fili$c = znfmd630.t$fili$c
+                                      and   znfmd640.t$etiq$c = znfmd630.t$etiq$c )
          AND ROWNUM = 1
          AND znfmd640.t$coct$c NOT IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD')
          AND znfmd640.t$fili$c = znfmd630.t$fili$c
@@ -27,10 +27,11 @@ SELECT
     ( SELECT znfmd040d.t$dotr$c
         FROM BAANDB.tznfmd640301 znfmd640d,
              BAANDB.tznfmd040301 znfmd040d
-       WHERE znfmd640d.t$date$c = ( select max(znfmd640x.t$date$c) 
+       WHERE znfmd640d.t$coct$c = ( select max(znfmd640x.t$coct$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640x.t$date$C,  znfmd640x.t$udat$C)
                                       from BAANDB.tznfmd640301 znfmd640x
                                      where znfmd640x.t$fili$c = znfmd630.t$fili$c                                        
                                        and znfmd640x.t$etiq$c = znfmd630.t$etiq$c
+                                       and znfmd040d.t$cfrw$c = znfmd630.t$cfrw$c
                                        and znfmd040d.t$octr$c = znfmd640d.t$coct$c )
          AND ROWNUM = 1  
          AND znfmd640d.t$fili$c = znfmd630.t$fili$c
