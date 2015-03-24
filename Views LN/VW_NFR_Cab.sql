@@ -111,12 +111,12 @@ SELECT
 		and (l.t$sour$l=2 or l.t$sour$l=8)),0) VL_ADICIONAL_IMPORTACAO,
 	nvl((select sum(li.t$amnt$l) from baandb.ttdrec942201 li, baandb.ttdrec941201 l
 		where	l.t$fire$l = tdrec940.t$fire$l
-		and li.t$fire$l=li.t$fire$l
+		and l.t$fire$l=li.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)
 		and li.t$brty$l=5),0) VL_PIS_IMPORTACAO,
 	nvl((select sum(li.t$amnt$l) from baandb.ttdrec942201 li, baandb.ttdrec941201 l
 		where	l.t$fire$l = tdrec940.t$fire$l
-		and li.t$fire$l=li.t$fire$l
+		and l.t$fire$l=li.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)
 		and li.t$brty$l=6),0) VL_COFINS_IMPORTACAO,	
 	/*nvl((select sum(l.t$fght$l) from baandb.ttdrec941201 l
