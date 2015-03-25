@@ -39,7 +39,7 @@ select Q1.* from ( SELECT
                         znrec007.t$cvpc$c      NUM_CARTA,
                         znrec007.t$amnt$c      VALOR_CARTA,
                         tfacp200t.t$balc       SALDO_CAP,
-                        tfacp200.t$line        PARCELA
+                        tfacp200.t$schn        PARCELA
                          
                    FROM baandb.ttfacr200201 tfacr200
 
@@ -104,8 +104,8 @@ select Q1.* from ( SELECT
                     AND tfacp200t.t$lino = 0
                     AND tfacr200t.t$lino = 0
                     
-                    AND tfacr200.t$ttyp='RVA'
-                    AND tfacr200.t$ninv=2677
+--                    AND tfacr200.t$ttyp='RVA'
+--                    AND tfacr200.t$ninv=2675
                     
 					
                  HAVING SUM(tfacr200t.t$balc) = 0 
@@ -129,7 +129,7 @@ select Q1.* from ( SELECT
                         znrec007.t$cvpc$c,
                         znrec007.t$amnt$c,
                         tfacp200t.t$balc,
-                        tfacp200.t$line ) Q1
+                        tfacp200.t$schn		) Q1
                  
 where Q1.Vencimento between nvl(:DataVenctoDe, Q1.Vencimento) and nvl(:DataVenctoAte, Q1.Vencimento)
   and Q1.Emissao between nvl(:DataEmissaoDe, Q1.Emissao) and nvl(:DataEmissaoAte, Q1.Emissao)
