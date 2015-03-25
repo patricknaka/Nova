@@ -17,7 +17,7 @@ select Q1.* from ( SELECT
                      
                        CASE WHEN sum(tfacp200t.t$balc) = 0 
                               THEN ( select max(a.t$docd) 
-                                       from baandb.ttfacp200301 a 
+                                       from baandb.ttfacp200201 a 
                                       where a.t$ttyp = tfacp200t.t$ttyp 
                                         and a.t$ninv = tfacp200t.t$ninv )
                             ELSE NULL END      liquidacao,
@@ -41,27 +41,32 @@ select Q1.* from ( SELECT
                         tfacp200t.t$balc       SALDO_CAP,
                         tfacp200.t$line        PARCELA
                          
-                   FROM baandb.ttfacr200301 tfacr200
+                   FROM baandb.ttfacr200201 tfacr200
+
+             INNER JOIN baandb.ttfacr200201 tfacr200t
+                     ON tfacr200t.t$ttyp = tfacr200.t$ttyp
+                    AND tfacr200t.t$ninv = tfacr200.t$ninv				   
+			 
                  
-             INNER JOIN baandb.tznrec007301 znrec007
+             INNER JOIN baandb.tznrec007201 znrec007
                      ON znrec007.t$ttyp$c = tfacr200.t$ttyp 
                     AND znrec007.t$docn$c = tfacr200.t$ninv   
              
-             INNER JOIN baandb.ttccom100301 tccom100
+             INNER JOIN baandb.ttccom100201 tccom100
                      ON tccom100.t$bpid = tfacr200.t$itbp
                
-             INNER JOIN baandb.ttccom130301 tccom130
+             INNER JOIN baandb.ttccom130201 tccom130
                      ON tccom130.t$cadr = tccom100.t$cadr
              
-              LEFT JOIN baandb.ttfacr201301 tfacr301
+              LEFT JOIN baandb.ttfacr201201 tfacr301
                      ON tfacr301.t$ttyp = tfacr200.t$ttyp
                     AND tfacr301.t$ninv = tfacr200.t$ninv
              
-             INNER JOIN baandb.ttfacp200301 tfacp200
+             INNER JOIN baandb.ttfacp200201 tfacp200
                      ON tfacp200.t$tdoc = tfacr200.t$tdoc
                     AND tfacp200.t$docn = tfacr200.t$docn
              
-             INNER JOIN baandb.ttfacp200301 tfacp200t
+             INNER JOIN baandb.ttfacp200201 tfacp200t
                      ON tfacp200t.t$ttyp = tfacp200.t$ttyp
                     AND tfacp200t.t$ninv = tfacp200.t$ninv
              
@@ -97,8 +102,13 @@ select Q1.* from ( SELECT
                   WHERE tfacr200.t$tdoc = 'ENC'
                     AND tfacr200.t$amnt < 0
                     AND tfacp200t.t$lino = 0
+                    AND tfacr200t.t$lino = 0
+                    
+                    AND tfacr200.t$ttyp='RVA'
+                    AND tfacr200.t$ninv=2677
+                    
 					
-                 HAVING SUM(tfacp200t.t$balc) = 0 
+                 HAVING SUM(tfacr200t.t$balc) = 0 
 
                GROUP BY tfacr200.t$ttyp, 
                         tfacr200.t$ninv, 
