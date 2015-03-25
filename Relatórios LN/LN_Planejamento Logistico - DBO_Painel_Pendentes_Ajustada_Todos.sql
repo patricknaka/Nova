@@ -1,5 +1,5 @@
-SELECT
-  DISTINCT
+SELECT Q1.* 
+FROM (SELECT DISTINCT
     tcmcs080.t$dsca    DESC_TRANSP, 
     znfmd060.t$cdes$c  DESC_CONTRATO,
     znsls401.t$entr$c  NUME_ENTREGA,
@@ -12,14 +12,14 @@ SELECT
     cisli940.t$gamt$l  VL_MERCADORIA,
     znsls401.t$uneg$c  UNINEG,
     
-    ( SELECT  znfmd640.t$coct$c 
+    ( SELECT  znfmd640.t$coci$c 
       FROM    BAANDB.tznfmd640301 znfmd640
-      WHERE   znfmd640.t$coct$c = ( select  max(znfmd640.t$coct$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640.t$date$C,  znfmd640.t$udat$C)
+      WHERE   znfmd640.t$coci$c = ( select  max(znfmd640.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640.t$date$C,  znfmd640.t$udat$C)
                                     from    BAANDB.tznfmd640301 znfmd640
                                     where   znfmd640.t$fili$c = znfmd630.t$fili$c
                                       and   znfmd640.t$etiq$c = znfmd630.t$etiq$c )
          AND ROWNUM = 1
-         AND znfmd640.t$coct$c NOT IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD')
+         AND znfmd640.t$coci$c NOT IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD')
          AND znfmd640.t$fili$c = znfmd630.t$fili$c
          AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )
                        OCORRENCIA,
@@ -27,12 +27,12 @@ SELECT
     ( SELECT znfmd040d.t$dotr$c
         FROM BAANDB.tznfmd640301 znfmd640d,
              BAANDB.tznfmd040301 znfmd040d
-       WHERE znfmd640d.t$coct$c = ( select max(znfmd640x.t$coct$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640x.t$date$C,  znfmd640x.t$udat$C)
+       WHERE znfmd640d.t$coci$c = ( select max(znfmd640x.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640x.t$date$C,  znfmd640x.t$udat$C)
                                       from BAANDB.tznfmd640301 znfmd640x
                                      where znfmd640x.t$fili$c = znfmd630.t$fili$c                                        
                                        and znfmd640x.t$etiq$c = znfmd630.t$etiq$c
                                        and znfmd040d.t$cfrw$c = znfmd630.t$cfrw$c
-                                       and znfmd040d.t$octr$c = znfmd640d.t$coct$c )
+                                       and znfmd040d.t$ocin$c = znfmd640d.t$coci$c )
          AND ROWNUM = 1  
          AND znfmd640d.t$fili$c = znfmd630.t$fili$c
          AND znfmd640d.t$etiq$c = znfmd630.t$etiq$c )
@@ -157,16 +157,21 @@ INNER JOIN (SELECT d.t$cnst CNST,
          
 WHERE ( SELECT znfmd640.t$coci$c 
           FROM BAANDB.tznfmd640301 znfmd640
-         WHERE znfmd640.t$coct$c = 'ETR'          
+         WHERE znfmd640.t$coci$c = 'ETR'          
            AND znfmd640.t$fili$c = znfmd630.t$fili$c
            AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
-           AND ROWNUM = 1 ) IS NOT NULL
-  
-  AND cisli940.t$fdty$l = 1
-  
-  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 
-        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
+           AND ROWNUM = 1 ) IS NOT NULL 
+AND cisli940.t$fdty$l = 1) Q1
+           
+WHERE Q1.OCORRENCIA IS NOT NULL
+AND Q1.DATA_PROMETIDA
       BETWEEN :DataPlanejadaDe
           AND :DataPlanejadaAte
-  AND tcmcs080.t$cfrw IN (:Transportadora)
-  AND NVL(TRIM(znfmd630.t$stat$c),'P') IN (:Situacao)
+AND Q1.t$cfrw IN (:Transportadora)
+AND NVL(TRIM(Q1.t$stat$c),'P') IN (:Situacao) 
+  
+--  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 
+--        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
+--  AND tcmcs080.t$cfrw IN (:Transportadora)
+--  AND NVL(TRIM(znfmd630.t$stat$c),'P') IN (:Situacao)
+
