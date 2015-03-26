@@ -12,7 +12,7 @@ select Q1.* from ( SELECT
                        tccom130.T$FOVN$L       CNPJ,
                        tfacr200.t$itbp         Fornecedor,
                        tccom100.t$nama         Razao_Social,
-                       MIN(tfacr200.t$docd)    Emissao,
+                       MIN(tfacr200t.t$docd)    Emissao,
                        tfacr301.t$acdt$l       Vencimento,
                      
                        CASE WHEN sum(tfacp200t.t$balc) = 0 
