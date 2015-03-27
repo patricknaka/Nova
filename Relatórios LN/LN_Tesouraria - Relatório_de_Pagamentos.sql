@@ -27,13 +27,37 @@ SELECT DISTINCT
               tdpur094a.t$dsca
           ELSE
               tdpur094.t$dsca END  TIPO_ORDEM,
+              
           CASE WHEN tdrec952.t$leac$l IS NULL THEN
-              tdrec952a.t$leac$l
-          ELSE
-              tdrec952.t$leac$l 
-          END                       COD_CONTA_DESTINO,
+              CASE WHEN tdrec952a.t$leac$l IS NULL THEN
+                    CASE WHEN ( select count(*) 
+                                from  baandb.ttfgld106301 a1
+                                where a1.t$otyp = tfacp200a.t$ttyp
+                                and   a1.t$odoc = tfacp200a.t$ninv ) = 2 
+                    THEN (  select  a2.t$leac 
+                            from    baandb.ttfgld106301 a2
+                            where   a2.t$otyp = tfacp200a.t$ttyp
+                            and     a2.t$odoc = tfacp200a.t$ninv
+                            and     a2.t$leac != tfacp200a.t$leac )
+                    ELSE NULL END                                
+              ELSE tdrec952a.t$leac$l END
+          ELSE tdrec952.t$leac$l END COD_CONTA_DESTINO,
+            
           CASE WHEN tdrec952.t$leac$l IS NULL THEN
-            DESCR_CONTA_DESTINOa.DESCR
+            CASE WHEN tdrec952a.t$leac$l IS NULL THEN
+                    CASE WHEN ( select count(*) 
+                                from  baandb.ttfgld106301 a1
+                                where a1.t$otyp = tfacp200a.t$ttyp
+                                and   a1.t$odoc = tfacp200a.t$ninv ) = 2 
+                    THEN (  select  b1.t$desc 
+                            from    baandb.ttfgld106301 a2,
+                                    baandb.ttfgld008301 b1
+                            where   a2.t$otyp = tfacp200a.t$ttyp
+                            and     a2.t$odoc = tfacp200a.t$ninv
+                            and     a2.t$leac != tfacp200a.t$leac 
+                            and     a2.t$leac = b1.t$leac)
+                    ELSE NULL END                                
+            ELSE DESCR_CONTA_DESTINOa.DESCR END
           ELSE
             DESCR_CONTA_DESTINO.DESCR 
           END                       DESCR_CONTA_DESTINO
@@ -162,7 +186,7 @@ INNER JOIN baandb.ttfacp600301 tfacp600
                     a.t$desc DESCR
                from baandb.ttfgld008301 a ) DESCR_CONTA_DESTINOa
           ON DESCR_CONTA_DESTINOa.t$leac = tdrec952a.t$leac$l
-        
+   
 order by TRANSACAO
 
 WHERE tfcmg103.t$docd BETWEEN NVL(:DtPagtoDe, tfcmg103.t$docd) AND NVL(:DtPagtoAte, tfcmg103.t$docd)
