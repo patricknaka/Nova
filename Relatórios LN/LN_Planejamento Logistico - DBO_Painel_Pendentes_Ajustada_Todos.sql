@@ -64,7 +64,7 @@ FROM (SELECT DISTINCT
       AT time zone 'America/Sao_Paulo') AS DATE)  
                        DATA_EXPEDICAO,                      
     
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l-znsls401.t$pzcd$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l+znsls401.t$pzcd$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE)
                        DATA_PREVISTA,
     
