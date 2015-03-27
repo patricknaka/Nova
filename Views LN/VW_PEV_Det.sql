@@ -18,12 +18,9 @@
 -- #FAF.314 - 04-sep-2014, Fabio Ferreira, 	Correção valor do juros
 --***************************************************************************************************************************************************************
 SELECT DISTINCT
-        (SELECT 
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(ttdsls451201.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone 'America/Sao_Paulo') AS DATE)
-        FROM  baandb.ttdsls451201
-        WHERE ttdsls451201.t$orno=tdsls401.t$orno
-        AND   ttdsls451201.t$pono=tdsls401.t$pono) DT_ULT_ATUALIZACAO,
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, tdsls401.t$rcd_utc), 
+        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
 		  znsls400.t$ncia$c CD_CIA,
           znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
           tdsls401.t$orno NR_ORDEM,
