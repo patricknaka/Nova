@@ -28,12 +28,15 @@ SELECT DISTINCT
     AT time zone 'America/Sao_Paulo') AS DATE) DT_COMPRA,			
 		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE) DT_ENTREGA,
-          CASE WHEN tdsls401.t$clyn=1 THEN 30
-			WHEN tdsls401.t$term=1 THEN 25
-			WHEN tdsls401.t$modi=1 THEN 35
-			WHEN tdsls400.t$hdst=20 THEN CASE WHEN nvl((Select max(atv.t$xcsq) From baandb.ttdsls413201 atv
-                                                  where atv.t$orno=tdsls401.t$orno and atv.t$pono=tdsls401.t$pono and atv.t$xcst>=15),99)=99 THEN 10 
-										 ELSE 20 END
+          CASE WHEN tdsls401.t$clyn=1 THEN 35 -- cancelado
+			WHEN tdsls401.t$term=1 THEN 30	  -- finalizado
+			WHEN tdsls401.t$modi=1 THEN 25	  -- modificado
+			WHEN tdsls400.t$hdst=20 THEN	  --
+				CASE WHEN nvl((Select max(atv.t$xcsq) 
+					From baandb.ttdsls413201 atv 
+					where atv.t$orno=tdsls401.t$orno 
+					and   atv.t$pono=tdsls401.t$pono 
+					and   atv.t$xcst>=15),99)=99 THEN 10 ELSE 20 END
 			ELSE tdsls400.t$hdst END CD_SITUACAO_PEDIDO,
           znsls400.t$idca$c CD_CANAL_VENDAS,
           ltrim(rtrim(tdsls401.t$item)) CD_ITEM,
