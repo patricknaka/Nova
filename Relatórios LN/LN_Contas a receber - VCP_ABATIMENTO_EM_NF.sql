@@ -12,7 +12,7 @@ select Q1.* from ( SELECT
                        tccom130.T$FOVN$L       CNPJ,
                        tfacr200.t$itbp         Fornecedor,
                        tccom100.t$nama         Razao_Social,
-                       MIN(tfacr200t.t$docd)    Emissao,
+                       MIN(tfacr200t.t$docd)   Emissao,
                        tfacr301.t$acdt$l       Vencimento,
                      
                        CASE WHEN sum(tfacp200t.t$balc) = 0 
@@ -20,16 +20,16 @@ select Q1.* from ( SELECT
                                        from baandb.ttfacp200201 a 
                                       where a.t$ttyp = tfacp200t.t$ttyp 
                                         and a.t$ninv = tfacp200t.t$ninv )
-                            ELSE NULL END      liquidacao,
-                        
+                            ELSE NULL 
+                       END                     liquidacao,
                        tfacp200t.t$ttyp        titulo_cap_tipo,
                        tfacp200t.t$ninv        titulo_cap_numero,
-                       tfacp200t.t$docn$l       NF,
-                       tfacp200t.t$seri$l       Serie,
-                       tfacp200t.t$tpay         ID_Transacao,
+                       tfacp200t.t$docn$l      NF,
+                       tfacp200t.t$seri$l      Serie,
+                       tfacp200t.t$tpay        ID_Transacao,
                        TIPO_OPERACAO.          Descr_ID_Transacao,       
                        tfacr200.t$docd         Data_Transacao,
-                       sum(tfacp200.t$amnt)/
+                       sum(tfacp200.t$amnt) /
                        count(tfacp200.t$amnt)   Valor_Transacao,
                      
                        CASE WHEN sum(tfacp200t.t$balc) = 0 
@@ -46,9 +46,8 @@ select Q1.* from ( SELECT
 
              INNER JOIN baandb.ttfacr200201 tfacr200t
                      ON tfacr200t.t$ttyp = tfacr200.t$ttyp
-                    AND tfacr200t.t$ninv = tfacr200.t$ninv				   
-			 
-                 
+                    AND tfacr200t.t$ninv = tfacr200.t$ninv       
+    
              INNER JOIN baandb.tznrec007201 znrec007
                      ON znrec007.t$ttyp$c = tfacr200.t$ttyp 
                     AND znrec007.t$docn$c = tfacr200.t$ninv   
@@ -70,7 +69,6 @@ select Q1.* from ( SELECT
              INNER JOIN baandb.ttfacp200201 tfacp200t
                      ON tfacp200t.t$ttyp = tfacp200.t$ttyp
                     AND tfacp200t.t$ninv = tfacp200.t$ninv
-             
              
               LEFT JOIN ( select l.t$desc Descr_ID_Transacao,
                                  d.t$cnst
@@ -104,11 +102,7 @@ select Q1.* from ( SELECT
                     AND tfacr200.t$amnt < 0
                     AND tfacp200t.t$lino = 0
                     AND tfacr200t.t$lino = 0
-                    
-                    AND tfacr200.t$ttyp='RVA'
-                    AND tfacr200.t$ninv=2677
-                    
-					
+     
                  HAVING SUM(tfacr200t.t$balc) = 0 
 
                GROUP BY tfacr200.t$ttyp, 
@@ -126,7 +120,6 @@ select Q1.* from ( SELECT
                         tfacp200t.t$tpay,
                         TIPO_OPERACAO.Descr_ID_Transacao,
                         tfacr200.t$docd, 
-                       -- tfacr200.t$amnt,
                         znrec007.t$cvpc$c,
                         znrec007.t$amnt$c,
                         tfacp200t.t$balc,
