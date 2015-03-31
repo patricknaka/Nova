@@ -39,64 +39,57 @@ SELECT
   
 FROM       baandb.tznfmd630301 znfmd630
 
-INNER JOIN	baandb.tznfmd600301 znfmd600
-			ON	znfmd600.t$fili$c = znfmd630.t$fili$c
-			AND	znfmd600.t$cfrw$c = znfmd630.t$cfrw$c
-			AND	znfmd600.t$ngai$c = znfmd630.t$ngai$c
-			
-INNER JOIN (select	a.t$fili$c,
-					a.t$etiq$c,
-					max(a.t$date$c) data_etr
-			from baandb.tznfmd640301 a
-			where a.t$coci$c='ETR'
-			group by a.t$fili$c,
-                     a.t$etiq$c) OCOR_ETR
-				ON	OCOR_ETR.t$fili$c = znfmd630.t$fili$c
-				AND	OCOR_ETR.t$etiq$c = znfmd630.t$etiq$c
+INNER JOIN baandb.tznfmd600301 znfmd600
+        ON znfmd600.t$fili$c = znfmd630.t$fili$c
+       AND znfmd600.t$cfrw$c = znfmd630.t$cfrw$c
+       AND znfmd600.t$ngai$c = znfmd630.t$ngai$c
+   
+INNER JOIN ( select a.t$fili$c,
+                    a.t$etiq$c,
+                    max(a.t$date$c) data_etr
+               from baandb.tznfmd640301 a
+              where a.t$coci$c='ETR'
+           group by a.t$fili$c,
+                    a.t$etiq$c ) OCOR_ETR
+        ON OCOR_ETR.t$fili$c = znfmd630.t$fili$c
+       AND OCOR_ETR.t$etiq$c = znfmd630.t$etiq$c
 
 INNER JOIN baandb.ttcmcs080301  tcmcs080
-        ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c		
+        ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c  
 
-INNER JOIN	baandb.ttccom130301 tccom130
-				ON	tccom130.t$cadr = tcmcs080.t$cadr$l
+INNER JOIN baandb.ttccom130301 tccom130
+        ON tccom130.t$cadr = tcmcs080.t$cadr$l
 
  LEFT JOIN baandb.tznfmd001301 znfmd001
         ON znfmd001.t$fili$c = znfmd630.t$fili$c
-	   
+    
 INNER JOIN baandb.tznsls004301 znsls004
-        ON znsls004.t$orno$c = znfmd630.t$orno$c		
-	   
+        ON znsls004.t$orno$c = znfmd630.t$orno$c  
+    
 INNER JOIN baandb.tznsls401301 znsls401
-        ON 	znsls401.t$ncia$c = znsls004.t$ncia$c
-		AND znsls401.t$uneg$c = znsls004.t$uneg$c
-		AND znsls401.t$pecl$c = znsls004.t$pecl$c
-		AND znsls401.t$sqpd$c = znsls004.t$sqpd$c
-		AND znsls401.t$entr$c = znsls004.t$entr$c
-		AND znsls401.t$sequ$c = znsls004.t$sequ$c
+        ON znsls401.t$ncia$c = znsls004.t$ncia$c
+       AND znsls401.t$uneg$c = znsls004.t$uneg$c
+       AND znsls401.t$pecl$c = znsls004.t$pecl$c
+       AND znsls401.t$sqpd$c = znsls004.t$sqpd$c
+       AND znsls401.t$entr$c = znsls004.t$entr$c
+       AND znsls401.t$sequ$c = znsls004.t$sequ$c
   
  LEFT JOIN baandb.twhwmd400301 whwmd400
         ON whwmd400.t$item = znsls401.t$itml$c
-	   
+    
 INNER JOIN baandb.ttcibd001301  tcibd001
         ON tcibd001.t$item = znsls401.t$itml$c
 
  LEFT JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
-	   
+        
 WHERE znfmd630.t$fili$c = :Planta
   AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCOR_ETR.data_etr, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone 'America/Sao_Paulo') AS DATE) ) 
-      BETWEEN :DataLiqDe 
-          AND :DataLiqAte
-		  
-  -- AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd170.t$dten$c, 
-               -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 -- AT time zone 'America/Sao_Paulo') AS DATE) ) 
-      -- BETWEEN :DataLiqDe 
-          -- AND :DataLiqAte		  
-		  
-  AND znsls401.t$mgrt$c in (:MegaRota)
+      Between :DataLiqDe 
+          And :DataLiqAte
+  AND NVL(Trim(znsls401.t$mgrt$c), 'SMR') in (:MegaRota)
   AND tcmcs080.t$cfrw in (:Transp)
   
 ORDER BY znfmd630.t$pecl$c,
