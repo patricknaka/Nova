@@ -57,3 +57,4 @@ LEFT JOIN
 															
 WHERE
 			TFGLD010.T$DTYP=2
+		AND	TFGLD010.T$DIMX!=' '
