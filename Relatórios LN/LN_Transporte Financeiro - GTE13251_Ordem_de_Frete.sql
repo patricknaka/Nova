@@ -11,10 +11,10 @@ select Q1.DATA_EMISSAO,
        Q1.VLR_TOTAL_NF,
        Q1.VLR_FRETE_CLIENTE,
        Q1.ALIQUOTA,
-       sum(Q1.PESO_VOLUME) PESO_VOLUME,
-       Q1.AD_VALOREM,
-       Q1.PEDAGIO,
-       Q1.ADICIONAIS,
+--       sum(Q1.PESO_VOLUME) PESO_VOLUME,
+       --Q1.AD_VALOREM,
+       --Q1.PEDAGIO,
+       --Q1.ADICIONAIS,
        Q1.CNPJ_TRANS,
        Q1.APELIDO,
        Q1.ID_CONHECIMENTO,
@@ -35,13 +35,10 @@ select Q1.DATA_EMISSAO,
        Q1.CFO_ENTREGA,
        DESC_CFO_ENTREGA,
 
-       Round( (sum(Q1.PESO_VOLUME) + Q1.AD_VALOREM + Q1.PEDAGIO + Q1.ADICIONAIS) /
+       Round(sum(Q1.PESO_VOLUME) /
               (1-(ALIQUOTA/100)) -
-              (sum(Q1.PESO_VOLUME) + Q1.AD_VALOREM + Q1.PEDAGIO + Q1.ADICIONAIS), 4 )   VLR_ICMS, 
-       Round( (sum(Q1.PESO_VOLUME) + Q1.AD_VALOREM + Q1.PEDAGIO + Q1.ADICIONAIS) /
-              (1-(ALIQUOTA/100)) -
-              (sum(Q1.PESO_VOLUME) + Q1.AD_VALOREM + Q1.PEDAGIO + Q1.ADICIONAIS) +
-              (Q1.AD_VALOREM + Q1.PEDAGIO + Q1.ADICIONAIS + sum(Q1.PESO_VOLUME)), 4 )   FRETE_TOTAL
+              (sum(Q1.PESO_VOLUME)), 4 )   VLR_ICMS, 
+       sum(Q1.PESO_VOLUME)   FRETE_TOTAL
   
 from ( SELECT DISTINCT
               CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
@@ -270,16 +267,24 @@ from ( SELECT DISTINCT
           AND ZNFMD660.t$fili$c = ZNFMD630.t$fili$c
           AND ZNFMD660.t$ngai$c = ZNFMD630.t$ngai$c
           AND ZNFMD660.t$etiq$c = ZNFMD630.t$etiq$c  
-          
+
+WHERE
+
+	( select max(znfmd640.t$coci$c)
+	  from BAANDB.tznfmd640201 znfmd640
+	  where znfmd640.t$coci$c='ETR'
+	   and znfmd640.t$fili$c = znfmd630.t$fili$c 
+	   and znfmd640.t$etiq$c = znfmd630.t$etiq$c )  IS NOT NULL
+
           -- where znfmd630.t$cfrw$c='T08'
           -- and znfmd630.t$ngai$c='0000000013'
           )  Q1
     
-WHERE TIPO_NF IN (:TipoNF)
- AND TRUNC(DATA_EMISSAO)
-     BETWEEN :DataDe 
-         AND :DataAte
- AND ( (CNPJ_TRANS like '%' || :CNPJ  || '%') OR (:CNPJ is null) )
+--WHERE TIPO_NF IN (:TipoNF)
+-- AND TRUNC(DATA_EMISSAO)
+--     BETWEEN :DataDe 
+--         AND :DataAte
+-- AND ( (CNPJ_TRANS like '%' || :CNPJ  || '%') OR (:CNPJ is null) )
 
 GROUP BY Q1.DATA_EMISSAO,
          Q1.FILIAL,
@@ -291,9 +296,9 @@ GROUP BY Q1.DATA_EMISSAO,
          Q1.VLR_TOTAL_NF,
          Q1.VLR_FRETE_CLIENTE,
          Q1.ALIQUOTA,
-         Q1.AD_VALOREM,
-         Q1.PEDAGIO,
-         Q1.ADICIONAIS,
+         -- Q1.AD_VALOREM,
+         -- Q1.PEDAGIO,
+         -- Q1.ADICIONAIS,
          Q1.CNPJ_TRANS,
          Q1.APELIDO,
          Q1.ID_CONHECIMENTO,
