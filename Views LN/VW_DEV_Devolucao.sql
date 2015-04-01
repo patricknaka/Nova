@@ -78,6 +78,7 @@ SELECT
 	q1.mauc VL_CMV,												
 	cisli940org.t$docn$l NR_NF_FATURA,												-- NF fatura entrega org
 	cisli940org.t$seri$l NR_SERIE_NF_FATURA,
+  cisli940dev.t$fire$l NR_REF_FISCAL_REMESSA,
 	cisli940dev.t$docn$l NR_NF_REMESSA,												-- NF devolução							
 	cisli940dev.t$seri$l NR_SERIE_NF_REMESSA,		
 	(SELECT a.t$amnt$l FROM baandb.tcisli943201 a
