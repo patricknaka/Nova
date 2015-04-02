@@ -81,7 +81,9 @@ SELECT
            ELSE   NVL(iStatArq2.DESCR, 'Arquivo não vinculado') 
           END                          DESCR_STAT_ARQ,
         
-      tflcb230.t$lach$d                DATA_STAT_ARQ
+      tflcb230.t$lach$d                DATA_STAT_ARQ,
+	  tfacp200ag.t$docd					DATA_EMISSAO_AGRUPADOR,
+	  tfacp200ag.t$dued					DATA_VENCIMENTO_AGRUPADOR
       
      
 FROM       baandb.ttfacp200301   tfacp200  
@@ -317,6 +319,11 @@ FROM       baandb.ttfacp200301   tfacp200
  LEFT JOIN baandb.ttfacp936301 tfacp936
         ON tfacp936.t$tty2$l = tfacp200.t$ttyp
        AND tfacp936.t$nin2$l = tfacp200.t$ninv
+	   
+ LEFT JOIN baandb.ttfacp200301 tfacp200ag
+        ON tfacp200ag.t$ttyp = tfacp936.t$ttyp$l 
+       AND tfacp200ag.t$ninv = tfacp936.t$ninv$l 
+       AND tfacp200ag.t$docn = 0
 
 WHERE tfacp200.t$docn = 0
   AND tfacp200.t$ttyp IN ('P00', 'NCC', 'PZZ')
