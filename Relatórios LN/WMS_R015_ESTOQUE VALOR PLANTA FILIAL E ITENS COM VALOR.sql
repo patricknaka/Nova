@@ -37,7 +37,7 @@ SELECT
       sum(llid.qty)
 									VALOR,
       
-  sum(llid.netwgt)                     PESO,
+  sum(sku.STDNETWGT*llid.qty)            PESO,
   sum(sku.STDCUBE*llid.qty)              M3,
   
   CASE WHEN SKU.BOMITEMTYPE = 0 
