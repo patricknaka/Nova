@@ -99,7 +99,7 @@ SELECT
          ELSE   'N/A' 
      END                                        TENTATIVA_PREP_PAGTO,
     tfcmg101.t$pdat                             TENTATIVA_PAGTO,
-    tflcb230p.t$stat$d                          TENTATIVA_STATUS_ARQUIVO,
+    NVL(tflcb230p.t$stat$d, 0)                  TENTATIVA_STATUS_ARQUIVO,
     iStatArqPag.DESCR_PAG                       DSC_TENTATIVA_STATUS_ARQUIVO,
     tfcmg101.t$bank                             NUME_BANCO,
     tfcmg011.t$agcd$l                           CODE_AGENCIA,
@@ -399,7 +399,13 @@ INNER JOIN baandb.ttccom130301 tccom130
        AND tflcb230p.t$sern$d = TO_CHAR(tfcmg101.t$schn)
        AND tflcb230p.t$comp$d = tfcmg101.t$comp
   
-  LEFT JOIN ( select d.t$cnst CODE,
+  LEFT JOIN ( select 0                         CODE_PAG,
+                     'Arquivo não vinculado'   DESCR_PAG
+                from Dual
+            
+               union
+               
+              select d.t$cnst CODE_PAG,
                      l.t$desc DESCR_PAG
                 from baandb.tttadv401000 d,
                      baandb.tttadv140000 l
@@ -425,18 +431,15 @@ INNER JOIN baandb.ttccom130301 tccom130
                                            where l1.t$clab = l.t$clab 
                                              and l1.t$clan = l.t$clan 
                                              and l1.t$cpac = l.t$cpac ) ) iStatArqPag 
-        ON iStatArqPag.CODE = tflcb230p.t$stat$d  
+        ON iStatArqPag.CODE_PAG = NVL(tflcb230p.t$stat$d, 0)
   
 WHERE tfacp200.t$docn = 0 
   AND tfacp200.t$ttyp in ('PKB','PKC','PKD','PKE','PKF','PRB','PRW','PKG')
-  AND tflcb230.t$send$d != 5      --rejeitado (estornado)
+  AND NVL(tflcb230.t$send$d, 999) != 5      --rejeitado (estornado)
   
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND NVL(znsls412.t$uneg$c, 0) IN (:UniNegocio)
   AND NVL(tfacp201.t$pyst$l, 1) IN (:Situacao)
-  AND NVL( CASE WHEN tflcb230.t$send$d = 0 
-                  THEN tflcb230.t$stat$d
-                ELSE   tflcb230.t$send$d
-            END, 0 ) IN (:StatusArquivo)  
+  AND NVL(tflcb230p.t$stat$d, 0) IN (:StatusArquivo)  
   AND ( (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(:CNPJ)) OR (Trim(:CNPJ) is null) )
   AND ( (znsls412.t$pecl$c IN (Trim(:Pedido))) OR (:Todos = 1) )
