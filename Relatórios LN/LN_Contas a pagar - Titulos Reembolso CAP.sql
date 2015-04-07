@@ -13,7 +13,7 @@ SELECT
     tfacp200.t$dued                             DATA_VENCTO,
     tfacp200.t$amnt                             VALO_TITULO,  
     tfacp200.t$balc                             SALD_TITULO,
-    '301'                                       CODE_CIA,             
+    301                                         CODE_CIA,             
 
     CASE WHEN (tfacp200.t$balc - tfacp200.t$bala) = 0 
            THEN 1 
@@ -121,80 +121,6 @@ INNER JOIN baandb.ttccom130301 tccom130
                     m.t$desc DSC_STATUS_BLOQUEIO
                from baandb.ttfacp002301 m ) BLOQUEIO
         ON BLOQUEIO.COD_STATUS_BLOQUEIO = tfacp200.t$bloc
-
- LEFT JOIN ( SELECT a.t$ttyp$d, 
-                    a.t$ninv$d,
-                    a.t$lach$d,
-                    max(a.t$stat$d) t$stat$d,
-                    max(a.t$send$d) t$send$d,
-                    max(a.t$btno$d) t$btno$d,
-                    max(a.t$payd$d) t$payd$d
-               FROM baandb.ttflcb230301 a
-              WHERE a.t$sern$d = ( select max(b.t$sern$d)
-                                     from baandb.ttflcb230301 b
-                                    where b.t$ttyp$d = a.t$ttyp$d
-                                      and b.t$ninv$d = a.t$ninv$d )
-           GROUP BY a.t$ttyp$d, 
-                    a.t$ninv$d, 
-                    a.t$lach$d ) tflcb230
-        ON tflcb230.t$ttyp$d = tfacp200.t$ttyp
-       AND tflcb230.t$ninv$d = tfacp200.t$ninv
-   
- LEFT JOIN ( SELECT d.t$cnst CODE,
-                    l.t$desc DESCR
-               FROM baandb.tttadv401000 d,
-                    baandb.tttadv140000 l
-              WHERE d.t$cpac = 'tf'
-                AND d.t$cdom = 'cmg.stat.l'
-                AND l.t$clan = 'p'
-                AND l.t$cpac = 'tf'
-                AND l.t$clab = d.t$za_clab
-                AND rpad(d.t$vers,4) ||
-                    rpad(d.t$rele,2) ||
-                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv401000 l1 
-                                          where l1.t$cpac = d.t$cpac 
-                                            and l1.t$cdom = d.t$cdom )
-                AND rpad(l.t$vers,4) ||
-                    rpad(l.t$rele,2) ||
-                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv140000 l1 
-                                          where l1.t$clab = l.t$clab 
-                                            and l1.t$clan = l.t$clan 
-                                            and l1.t$cpac = l.t$cpac ) ) iStatArq 
-        ON iStatArq.CODE = tflcb230.t$stat$d  
-    
- LEFT JOIN ( SELECT d.t$cnst CODE,
-                    l.t$desc DESCR
-               FROM baandb.tttadv401000 d,
-                    baandb.tttadv140000 l
-              WHERE d.t$cpac = 'tf'
-                AND d.t$cdom = 'cmg.stat.l'
-                AND l.t$clan = 'p'
-                AND l.t$cpac = 'tf'
-                AND l.t$clab = d.t$za_clab
-                AND rpad(d.t$vers,4) ||
-                    rpad(d.t$rele,2) ||
-                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv401000 l1 
-                                          where l1.t$cpac = d.t$cpac 
-                                            and l1.t$cdom = d.t$cdom )
-                AND rpad(l.t$vers,4) ||
-                    rpad(l.t$rele,2) ||
-                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv140000 l1 
-                                          where l1.t$clab = l.t$clab 
-                                            and l1.t$clan = l.t$clan 
-                                            and l1.t$cpac = l.t$cpac ) ) iSendArq 
-        ON iSendArq.CODE = tflcb230.t$send$d  
         
  LEFT JOIN baandb.ttdrec940301  tdrec940
         ON tdrec940.t$ttyp$l = tfacp200.t$ttyp
@@ -357,7 +283,7 @@ INNER JOIN baandb.ttccom130301 tccom130
         ON DESC_MODAL_PGTO.COD_MODAL_PGTO = tfacp201.t$mopa$d 
 
  LEFT JOIN baandb.ttfcmg101301 tfcmg101
-        ON tfcmg101.t$comp = 301
+        ON tfcmg101.t$comp = 301 
        AND tfcmg101.t$ifbp = tfacp200.t$ifbp
        AND tfcmg101.t$tadv = 1                 --Fatura de Compra
        AND tfcmg101.t$ttyp = tfacp200.t$ttyp
@@ -435,11 +361,10 @@ INNER JOIN baandb.ttccom130301 tccom130
   
 WHERE tfacp200.t$docn = 0 
   AND tfacp200.t$ttyp in ('PKB','PKC','PKD','PKE','PKF','PRB','PRW','PKG')
-  AND NVL(tflcb230.t$send$d, 999) != 5      --rejeitado (estornado)
   
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND NVL(znsls412.t$uneg$c, 0) IN (:UniNegocio)
   AND NVL(tfacp201.t$pyst$l, 1) IN (:Situacao)
   AND NVL(tflcb230p.t$stat$d, 0) IN (:StatusArquivo)  
   AND ( (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(:CNPJ)) OR (Trim(:CNPJ) is null) )
-  AND ( (znsls412.t$pecl$c IN (Trim(:Pedido))) OR (:Todos = 1) )
+  AND ( (znsls412.t$pecl$c IN (:Pedido) and :Todos = 0) OR (:Todos = 1) )
