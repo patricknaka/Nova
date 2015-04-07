@@ -1,4 +1,4 @@
-SELECT DISTINCT
+SELECT DISTINCT 
     WMSADMIN.PL_DB.DB_ALIAS                PLANTA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -297,16 +297,20 @@ INNER JOIN WMSADMIN.PL_DB
                
  LEFT JOIN BAANDB.TCISLI245301@PLN01 CISLI245 
         ON CISLI245.T$SLCP = 301
-       AND TO_CHAR(CISLI245.T$ORTP) = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '100'
-                                             THEN '1' 
-                                           ELSE   '2' 
+       AND TO_CHAR(CISLI245.T$ORTP) = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')
+                                             THEN '2' 
+                                           ELSE   '1' 
                                        END
-       AND TO_CHAR(CISLI245.T$KOOR) = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '100'
-                                             THEN '3' 
-                                           ELSE   TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,2)) 
+       AND TO_CHAR(CISLI245.T$KOOR) = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '34_'
+                                             THEN '34'
+                                           WHEN  TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '36_'
+                                            THEN '36'
+                                           ELSE   '3' 
                                        END
        AND CISLI245.T$SLSO = WHINH431.T$WORN
-       AND CISLI245.T$OSET = WHINH431.T$WSET
+       AND CISLI245.T$OSET = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')
+                              THEN WHINH431.T$WSET
+                              ELSE 0 END                              
        AND CISLI245.T$PONO = WHINH431.T$WPON
        AND CISLI245.T$SQNB = WHINH431.T$WSEQ
        AND CISLI245.T$SHPM = WHINH431.T$SHPM
@@ -352,6 +356,7 @@ INNER JOIN WMSADMIN.PL_DB
       
 WHERE cl.listname = 'SCHEMA'
   AND STORER.TYPE = 5
+  
 
   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
