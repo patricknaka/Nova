@@ -4,14 +4,15 @@ select
   trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE), 'DD')     DT_EMISSAO,  
   trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')   HR,
+          AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')    HR,
   sli940.t$seri$l                                           SERIE,
   
   
     count(distinct sli245.t$slso)         QTD_PEDIDO,
     count(distinct sli940.t$docn$l)    QTD_NOTA,
     count(sli941.t$item$l)                  QTD_ITENS,
-    sum(sli941.t$dqua$l)             QTD_PECAS
+    sum(sli941.t$dqua$l)             QTD_PECAS,
+	sum(sli941.t$amnt$l)			VALOR
 
 
 from
@@ -41,8 +42,8 @@ from
 where 
 
      sli940.t$stat$l IN (5,6) and sli940.t$nfes$l IN (1,2,5)
-		and   trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE), 'DD')  BETWEEN :DataDe AND :DataAte
+--		and   trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--          AT time zone 'America/Sao_Paulo') AS DATE), 'DD')  BETWEEN :DataDe AND :DataAte
 
     and sli941.t$item$l not in
           ( select a.t$itjl$c
