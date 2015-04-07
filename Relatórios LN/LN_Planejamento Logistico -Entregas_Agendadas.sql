@@ -177,3 +177,7 @@ WHERE znsls401.t$itpe$c = 5 --Agendado
                 AT time zone 'America/Sao_Paulo') AS DATE))
       BETWEEN :DataPrometida_De
           AND :DataPrometida_Ate
+  AND CASE WHEN ZNFMD630.T$STAT$C = 'F'
+             THEN 'F'
+           ELSE   'P'
+      END IN (:Status)
