@@ -110,7 +110,7 @@ FROM
 											where c.t$fire$l=b.t$fire$l
 											and c.t$opfc$l!=' ')
 						and b.t$opfc$l!=' ')) brnfe941,
-	ttcmcs940201 tcmcs940,
+	baandb.ttcmcs940201 tcmcs940,
 	(select distinct tdpur400.t$orno, znnfe007.t$fire$c, tdpur400.t$cofc, tdpur400.t$otbp, znnfe007.t$refr$c, tdpur400.t$rfdt$l, tdpur400.t$cpay, tdpur400.t$cwar, tdpur400.t$odat
 	 from 	baandb.tznnfe007201 znnfe007,
           baandb.ttdpur400201 tdpur400
