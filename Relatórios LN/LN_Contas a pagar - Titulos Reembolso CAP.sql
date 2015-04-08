@@ -99,8 +99,9 @@ SELECT
          ELSE   'N/A' 
      END                                        TENTATIVA_PREP_PAGTO,
     tfcmg101.t$pdat                             TENTATIVA_PAGTO,
-    NVL(tflcb230p.t$send$d, 0)                  TENTATIVA_STATUS_ENVIO,
+    NVL(tflcb230p.t$send$d, -1)                 TENTATIVA_STATUS_ENVIO,
     iStatusEnvio.DESC_ENVIO                     DSC_TENTATIVA_STATUS_ENVIO,
+    tflcb230p.t$erro$d                          DSC_ERRO,
     tfcmg101.t$bank                             NUME_BANCO,
     tfcmg011.t$agcd$l                           CODE_AGENCIA,
     tfcmg001.t$bano                             CODE_CONTA
@@ -325,12 +326,18 @@ INNER JOIN baandb.ttccom130301 tccom130
        AND tflcb230p.t$sern$d = TO_CHAR(tfcmg101.t$schn)
        AND tflcb230p.t$comp$d = tfcmg101.t$comp
   
-  LEFT JOIN ( select 0                         CODE_ENVIO,
-                     'Arquivo não vinculado'   DESC_ENVIO
+  LEFT JOIN ( select -1                        CODE_ENVIO,
+                     'Não disponível'          DESC_ENVIO
                 from Dual
             
                union
-               
+			   
+              select 0                         CODE_ENVIO,
+                     'Arquivo gerado'          DESC_ENVIO
+                from Dual
+            
+               union
+                
               select d.t$cnst                  CODE_ENVIO,
                      l.t$desc                  DESC_ENVIO
                 from baandb.tttadv401000 d,
@@ -357,7 +364,7 @@ INNER JOIN baandb.ttccom130301 tccom130
                                            where l1.t$clab = l.t$clab 
                                              and l1.t$clan = l.t$clan 
                                              and l1.t$cpac = l.t$cpac ) ) iStatusEnvio 
-        ON iStatusEnvio.CODE_ENVIO = NVL(tflcb230p.t$send$d, 0)
+        ON iStatusEnvio.CODE_ENVIO = NVL(Trim(tflcb230p.t$send$d), -1)
   
 WHERE tfacp200.t$docn = 0 
   AND tfacp200.t$ttyp in ('PKB','PKC','PKD','PKE','PKF','PRB','PRW','PKG')
@@ -365,6 +372,6 @@ WHERE tfacp200.t$docn = 0
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND NVL(znsls412.t$uneg$c, 0) IN (:UniNegocio)
   AND NVL(tfacp201.t$pyst$l, 1) IN (:Situacao)
-  AND NVL(tflcb230p.t$send$d, 0) IN (:StatusEnvio)  
+  AND NVL(Trim(tflcb230p.t$send$d), -1) IN (:StatusEnvio)  
   AND ( (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(:CNPJ)) OR (Trim(:CNPJ) is null) )
   AND ( (znsls412.t$pecl$c IN (:Pedido) and :Todos = 0) OR (:Todos = 1) )
