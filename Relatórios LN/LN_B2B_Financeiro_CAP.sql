@@ -1,5 +1,5 @@
 SELECT
-  DISTINCT
+  DISTINCT   
     tcemm030.t$euca     FILIAL,
     znsls400b.t$idco$c  CONTRATO,
     znsls400b.t$idcp$c  CAMPANHA,
@@ -10,68 +10,93 @@ SELECT
     tfacr200r.t$seri$l  SERIE,
     tfacr200r.t$docd    DTA_EMISSAO,
     tfacr200r.t$dued    VENCIMENTO_TITULO,
-    tfacr200r.t$docn    TITULO_CAR,
+    tfacr200r.t$ninv    TITULO_CAR,
     tfacr200r.t$amnt    VL_TITULO_CAR,
-    tfacr200r.t$tdoc    DOCTO_TRANSACAO,
+    tfacr200r.t$ttyp    DOCTO_TRANSACAO,
     --Não tem no LN     PEDIDO_GRUPO,
-    znsls400b.t$pecl$c  ID_PED_VENDA,
-    cisli940c.t$amnt$l  VL_INST_CANCELAMENTO,
-    tfacr200p.t$docn    TITULO_CAP,
-    tfacr200p.t$amnt    VL_TITULO_CAP,
-    tfacr200r.t$amnt-   
-    cisli940c.t$amnt$l  VL_BOLETO
+    ZNSLS004_ORG.t$pecl$c  ID_PED_VENDA,
+    --cisli940c.t$amnt$l  VL_INST_CANCELAMENTO,       -- EXCLUIR DO RELATÓRIO
+    CISLI940_ORG.T$CNFE$L CHAVE_ACESSO,
+    TDREC940_DEV.T$TTYP$L || TDREC940_DEV.T$INVN$L   TITULO_CAP,
+    TFACR200_DEV.t$amnt    VL_TITULO_CAP,
+   
+    TDREC940_DEV.VALOR  VL_BOLETO,
+    TCCOM100r.T$BPID     PARCEIRO
     --Não tem no LN     DESC_CAMPANHA
 
-FROM       baandb.ttfacr200301 tfacr200r
-  
- LEFT JOIN baandb.ttfacr200301 tfacr200p
-        ON tfacr200p.t$ttyp = tfacr200r.t$ttyp
-       AND tfacr200p.t$ninv = tfacr200r.t$ninv
-       AND tfacr200p.t$docn$l = tfacr200r.t$docn$l
-       AND tfacr200p.t$trec = 4
+FROM       baandb.ttfacr200201 tfacr200r
 
- LEFT JOIN baandb.tcisli940301 cisli940c
-        ON cisli940c.t$ityp$l = tfacr200r.t$ttyp
-       AND cisli940c.t$idoc$l = tfacr200r.t$ninv
-       AND cisli940c.t$docn$l = tfacr200r.t$docn$l
-       AND cisli940c.t$sfcp$l = 301
+LEFT JOIN BAANDB.TCISLI940201 CISLI940_ORG
+            ON  CISLI940_ORG.T$SFCP$L  = tfacr200r.t$loco$l
+            AND CISLI940_ORG.T$ITYP$L  = tfacr200r.t$ttyp
+            AND CISLI940_ORG.T$IDOC$L  = tfacr200r.t$ninv
+            AND CISLI940_ORG.T$DOCN$L  = tfacr200r.t$docn$l
+            AND CISLI940_ORG.T$SERI$L  = tfacr200r.t$seri$l
 
- LEFT JOIN baandb.tcisli940301 cisli940b
-        ON cisli940b.t$ityp$l = tfacr200r.t$ttyp
-       AND cisli940b.t$idoc$l = tfacr200r.t$ninv
-       AND cisli940b.t$docn$l = tfacr200r.t$docn$l
-   
-INNER JOIN baandb.ttcemm124301 tcemm124
-        ON tcemm124.t$cwoc = cisli940b.t$cofc$l
-           
-INNER JOIN baandb.ttcemm030301 tcemm030
-        ON tcemm030.t$eunt = tcemm124.t$grid
+LEFT JOIN BAANDB.TCISLI941201 CISLI941_ORG
+            ON  CISLI941_ORG.T$FIRE$L = CISLI940_ORG.T$FIRE$L
+            
+LEFT JOIN BAANDB.TCISLI941201 CISLI941_REM                      -- REMESSA OP TRIANGULAR
+            ON  CISLI941_REM.T$FIRE$L = CISLI941_ORG.T$REFR$L
+            AND CISLI941_REM.T$LINE$L = CISLI941_ORG.T$RFDL$L
+                        
+LEFT JOIN BAANDB.TCISLI245201 CISLI245_ORG
+            ON  CISLI245_ORG.T$FIRE$L = CISLI941_REM.T$FIRE$L
+            AND CISLI245_ORG.T$LINE$L = CISLI941_REM.T$LINE$L
+            
+LEFT JOIN BAANDB.TZNSLS004201 ZNSLS004_ORG
+            ON  ZNSLS004_ORG.T$ORNO$C = CISLI245_ORG.T$SLSO
+            AND ZNSLS004_ORG.T$PONO$C = CISLI245_ORG.T$PONO
 
- LEFT JOIN baandb.tcisli941301 cisli941b
-        ON cisli941b.t$fire$l = cisli940b.t$fire$l
+LEFT JOIN baandb.tznsls400201 znsls400b
+            ON  znsls400b.t$ncia$c  = ZNSLS004_ORG.T$NCIA$C
+            AND znsls400b.t$uneg$c  = ZNSLS004_ORG.T$UNEG$C
+            AND znsls400b.t$pecl$c  = ZNSLS004_ORG.T$PECL$C
+            AND znsls400b.t$sqpd$c  = ZNSLS004_ORG.T$SQPD$C
 
- LEFT JOIN baandb.tcisli245301 cisli245b
-        ON cisli245b.t$fire$l = cisli941b.t$fire$l
-       AND cisli245b.t$line$l = cisli941b.t$line$l
+LEFT JOIN BAANDB.TTCCOM100201 TCCOM100r
+            ON  TCCOM100r.T$BPID  = tfacr200r.t$itbp
 
- LEFT JOIN baandb.tznsls401301 znsls401b
-        ON znsls401b.t$orno$c = cisli245b.t$slso
-       AND znsls401b.t$pono$c = cisli245b.t$pono
- 
- LEFT JOIN baandb.tznsls400301 znsls400b
-        ON znsls400b.t$pecl$c = znsls401b.t$pecl$c
- 
- LEFT JOIN baandb.ttccom130301 tccom130r
-        ON tccom130r.t$cadr = tfacr200r.t$itbp
- 
- LEFT JOIN baandb.ttccom938301 tccom938
+LEFT JOIN baandb.ttccom130201 tccom130r
+        ON tccom130r.t$cadr = TCCOM100r.t$CADR
+
+LEFT JOIN baandb.ttccom938201 tccom938
         ON tccom938.t$ftyp$l = tccom130r.t$ftyp$l
        AND tccom938.t$fovn$l = tccom130r.t$fovn$l
+       
+LEFT JOIN (SELECT   A.T$SLIF$L,
+                    B.T$TTYP$L,
+                    B.T$INVN$L,
+                    SUM(A.T$TAMT$L) VALOR
+           FROM BAANDB.TTDREC941201 A
+           INNER JOIN BAANDB.TTDREC940201 B
+              ON  B.T$FIRE$L = A.T$FIRE$L
+           WHERE    A.T$SLIF$L IS NOT NULL
+           GROUP BY A.T$SLIF$L,
+                    B.T$TTYP$L,
+                    B.T$INVN$L) TDREC940_DEV
+            ON  TDREC940_DEV.T$SLIF$L = CISLI941_ORG.T$FIRE$L
+
+LEFT JOIN BAANDB.TTFACR200201 TFACR200_DEV
+            ON  TFACR200_DEV.T$TTYP = TDREC940_DEV.T$TTYP$L
+            AND TFACR200_DEV.T$NINV = TDREC940_DEV.T$INVN$L
+            AND TFACR200_DEV.T$LINO = 0
+
+LEFT JOIN BAANDB.TZNINT002201 ZNINT002
+            ON  ZNINT002.T$NCIA$C = znsls400b.T$NCIA$C
+            AND ZNINT002.T$UNEG$C = znsls400b.T$UNEG$C
+
+LEFT JOIN baandb.ttcemm124201 tcemm124
+        ON tcemm124.t$cwoc = cisli940_ORG.t$cofc$l
+
+LEFT JOIN baandb.ttcemm030201 tcemm030
+        ON tcemm030.t$eunt = tcemm124.t$grid
  
-WHERE tfacr200r.t$balc <> 0.00
-  AND tfacr200r.t$lino = 0
+WHERE --tfacr200r.t$balc <> 0.00
+   tfacr200r.t$lino = 0
   AND tfacr200r.t$trec <> 4
   AND tcemm124.t$dtyp = 1
+  AND ZNINT002.T$WSTP$C='B2B'
 
   AND tfacr200r.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND ((tccom130r.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null))
