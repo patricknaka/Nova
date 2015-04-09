@@ -22,7 +22,10 @@ SELECT WMSADMIN.DB_ALIAS                    PLANTA,
        CASE WHEN IT.FROMLOC IN ('STAGE', 'RETURN')
               THEN 'PUTAWAY'
             ELSE 'MOVE' 
-        END                                 TIPO
+        END                                 TIPO,
+		STORER.COMPANY						FORNECEDOR,
+		NVL(maucLN.mauc,0)*IT.QTY			VALOR
+		
   
 FROM       WMWHSE5.ITRN          IT
 
@@ -45,6 +48,31 @@ INNER JOIN WMWHSE5.SKU
 INNER JOIN WMSADMIN.PL_DB  WMSADMIN
         ON UPPER(WMSADMIN.DB_LOGID) = IT.WHSEID
 		
+ LEFT JOIN WMWHSE5.STORER 
+        ON STORER.STORERKEY = sku.SUSR5 
+       AND STORER.WHSEID = sku.WHSEID 
+       AND STORER.TYPE = 5
+
+LEFT JOIN ENTERPRISE.CODELKUP cl 
+        ON UPPER(cl.UDF1) = IT.WHSEID
+       AND cl.LISTNAME = 'SCHEMA'
+	   
+ LEFT JOIN ( select trim(whwmd217.t$item) item,                             
+                    whwmd217.t$cwar cwar,                                   
+                    case when sum(nvl(whwmd217.t$mauc$1,0)) = 0                             
+                           then sum(whwmd217.t$ftpa$1)                                              
+                         else   round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
+                    end mauc                                                
+               from baandb.twhwmd217301@pln01 whwmd217                      
+          left join baandb.twhinr140301@pln01 a                             
+                 on a.t$cwar = whwmd217.t$cwar                              
+                and a.t$item = whwmd217.t$item                              
+           group by whwmd217.t$item,                                        
+                    whwmd217.t$cwar ) maucLN                                
+        ON maucLN.cwar = subStr(CL.DESCRIPTION,3,6)                         
+       AND maucLN.item = IT.sku
+
+	   
 WHERE IT.TRANTYPE = 'MV'
   AND IT.SOURCETYPE != 'PICKING' 
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(IT.EDITDATE, 
