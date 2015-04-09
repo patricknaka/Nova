@@ -112,6 +112,81 @@ INNER JOIN ( SELECT A.LONG_VALUE,
 --   AND wmsCODE.UDF1 :Table
 
 
+------------------------------------------------------------------------------------------------------------------
+--		ORDENS DE ARMAZEM
+------------------------------------------------------------------------------------------------------------------
+
+UNION
+SELECT DISTINCT
+		wmsCODE.UDF1							FILIAL,
+		wmsCODE.UDF2							DSC_PLANTA,
+		WHINH200.T$ORNO							PEDIDO_LN,
+		NULL                    				PEDIDO_SITE,
+		NULL                        			ORDEM_WMS,
+		NULL			                    	ID_UNEG,
+		NULL			                    	DESCR_UNEG,
+		'NEN' 									ID_ULT_PONTO,
+		'NÃO ENVIADO PARA WMS E NF NÃO EMITIDA' DESCR_ULT_PONTO,
+		TRIM(WHINH220.T$ITEM)              		ITEM, 
+		SYSDATE -
+		WHINH200.T$ODAT							TEMPO_STAUS
+		
+FROM		BAANDB.TWHINH200301	WHINH200
+INNER JOIN	BAANDB.TWHINH220301	WHINH220	ON	WHINH220.T$OORG	=	WHINH200.T$OORG
+											AND	WHINH220.T$ORNO	=	WHINH200.T$ORNO
+
+INNER JOIN BAANDB.TTCEMM300301 TCEMM300
+        ON TCEMM300.T$COMP = 301
+       AND TCEMM300.T$TYPE = 20
+       AND TRIM(TCEMM300.T$CODE) = TRIM(WHINH220.T$CWAR)
+ 
+INNER JOIN ( SELECT A.LONG_VALUE,
+                    UPPER(A.UDF1) UDF1,
+                    A.UDF2
+               FROM ENTERPRISE.CODELKUP@DL_LN_WMS A
+              WHERE A.LISTNAME = 'SCHEMA') wmsCODE
+        ON wmsCODE.LONG_VALUE = TCEMM300.T$LCTN
+
+											
+LEFT JOIN
+				(	Select 3 koor, 1 oorg From DUAL
+					Union Select 7 koor, 2 oorg From DUAL
+					Union Select 34 koor, 3 oorg From DUAL
+					Union Select 2 koor, 80 oorg From DUAL
+					Union Select 6 koor, 81 oorg From DUAL
+					Union Select 33 koor, 82 oorg From DUAL
+					Union Select 17 koor, 11 oorg From DUAL
+					Union Select 35 koor, 12 oorg From DUAL
+					Union Select 37 koor, 31 oorg From DUAL
+					Union Select 39 koor, 32 oorg From DUAL
+					Union Select 38 koor, 33 oorg From DUAL
+					Union Select 42 koor, 34 oorg From DUAL
+					Union Select 1 koor, 50 oorg From DUAL
+					Union Select 32 koor, 51 oorg From DUAL
+					Union Select 56 koor, 53 oorg From DUAL
+					Union Select 9 koor, 55 oorg From DUAL
+					Union Select 46 koor, 56 oorg From DUAL
+					Union Select 57 koor, 58 oorg From DUAL
+					Union Select 22 koor, 71 oorg From DUAL
+					Union Select 36 koor, 72 oorg From DUAL
+					Union Select 58 koor, 75 oorg From DUAL
+					Union Select 59 koor, 76 oorg From DUAL
+					Union Select 60 koor, 90 oorg From DUAL
+					Union Select 21 koor, 61 oorg From DUAL) KOOR2OORG
+											ON	KOOR2OORG.OORG = WHINH200.T$OORG
+                      
+LEFT JOIN	BAANDB.TCISLI245301 CISLI245	ON	CISLI245.T$SLCP	=	301
+											AND	CISLI245.T$ORTP	=	2
+											AND	CISLI245.T$KOOR	=	KOOR2OORG.KOOR
+											AND	CISLI245.T$SLSO	=	WHINH220.T$ORNO
+											AND	CISLI245.T$OSET	=	WHINH200.T$OSET
+											AND	CISLI245.T$PONO =	WHINH220.T$PONO
+
+WHERE		WHINH220.T$WMSS	=	10
+		AND	CISLI245.T$FIRE$L 	IS NULL
+		AND WHINH200.T$OORG != 	1
+
+
 = IIF(Parameters!Table.Value <> "AAA",
 
 "SELECT DISTINCT                                                 " &
