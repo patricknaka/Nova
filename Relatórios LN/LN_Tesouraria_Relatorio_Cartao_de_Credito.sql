@@ -15,7 +15,8 @@ tccom100.t$nama							NOME_ADQUIRENTE,
 znsls402.t$cccd$c						ID_BANDEIRA,
 zncmg009.t$desc$c						DESCR_BANDEIRA,
 znsls402.t$auto$c						ID_AUTORIZACAO,
-znsls402.t$pecl$c						PEDIDO
+znsls402.t$pecl$c						PEDIDO,
+znsls402.t$ncam$c           CARTAO_MASCARADO
 
 FROM  baandb.ttfacr200301   tfacr200
 
@@ -42,7 +43,7 @@ LEFT JOIN baandb.ttccom100301 tccom100
 
 LEFT JOIN baandb.tzncmg009301 zncmg009
 		ON	zncmg009.t$cias$c = znsls402.t$ncia$c
-		AND	zncmg009.t$band$c = znsls402.t$cccd$c
+		AND	zncmg009.t$bnds$c = znsls402.t$cccd$c
 		
  LEFT JOIN ( SELECT l.t$desc DESCR,
                     d.t$cnst
