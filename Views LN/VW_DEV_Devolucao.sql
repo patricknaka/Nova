@@ -97,7 +97,8 @@ SELECT
 	AND		znsls401nr.t$uneg$c=znsls401dev.t$uneg$c
 	AND		znsls401nr.t$pecl$c=znsls401dev.t$pecl$c	 
 	AND		znsls401nr.t$sqpd$c=znsls401dev.t$sqpd$c
-	AND		znsls401nr.t$entr$c>znsls401dev.t$entr$c),1)=1 then 2
+	AND		znsls401nr.t$entr$c>znsls401dev.t$entr$c
+  AND   rownum=1),1)=1 then 2
 	ELSE 1																									--#FAF.227.2
 	END IN_REPOSICAO,
 	(SELECT tcemm124.t$grid FROM baandb.ttcemm124201 tcemm124
