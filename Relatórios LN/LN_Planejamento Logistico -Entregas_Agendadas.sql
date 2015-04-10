@@ -49,7 +49,15 @@ SELECT
        where znfmd640.t$fili$c = znfmd630.t$fili$c
          and znfmd640.t$etiq$c = znfmd630.t$etiq$c ) 
                                  DATA_OCORRENCIA,
-                      
+
+    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(znfmd640.t$udat$c), 
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone 'America/Sao_Paulo') AS DATE) 
+        from BAANDB.tznfmd640301 znfmd640
+       where znfmd640.t$fili$c = znfmd630.t$fili$c
+         and znfmd640.t$etiq$c = znfmd630.t$etiq$c ) 
+                                 DATA_PROCESSAMENTO,
+								 
     CASE WHEN ZNFMD630.T$STAT$C = 'F'
            THEN 'FINALIZADO'
          ELSE   'PENDENTE' 
