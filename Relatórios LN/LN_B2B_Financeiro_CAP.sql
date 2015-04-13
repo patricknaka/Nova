@@ -1,5 +1,5 @@
 SELECT
-  DISTINCT   
+  DISTINCT
     tcemm030.t$euca     FILIAL,
     znsls400b.t$idco$c  CONTRATO,
     znsls400b.t$idcp$c  CAMPANHA,
@@ -20,7 +20,9 @@ SELECT
     TDREC940_DEV.T$TTYP$L || TDREC940_DEV.T$INVN$L   TITULO_CAP,
     TFACR200_DEV.t$amnt    VL_TITULO_CAP,
    
-    TDREC940_DEV.VALOR  VL_BOLETO,
+    CASE WHEN tfacr200r.t$balc=0
+      THEN TDREC940_DEV.VALOR
+      ELSE tfacr200r.t$balc END VL_BOLETO,
     TCCOM100r.T$BPID     PARCEIRO
     --Não tem no LN     DESC_CAMPANHA
 
@@ -97,6 +99,7 @@ WHERE --tfacr200r.t$balc <> 0.00
   AND tfacr200r.t$trec <> 4
   AND tcemm124.t$dtyp = 1
   AND ZNINT002.T$WSTP$C='B2B'
+
 
   AND tfacr200r.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND ((tccom130r.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null))
