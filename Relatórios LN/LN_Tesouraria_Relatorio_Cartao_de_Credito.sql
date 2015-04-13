@@ -3,6 +3,7 @@ SELECT
     tfacr200.t$docd                       DATA_DE_VENDA,
     tfacr200.t$ninv                       TITULO,
     tfacr200.t$ttyp                       TIPO_TRANSACAO,
+    Trim(tfgld011.t$desc)                 DSC_TIPO_TRANSACAO,    
     znsls402.t$maqu$c                     MAQUINETA,
     tfacr201.t$schn                       PARCELA,
     tfacr201.t$amnt                       VALOR_TITULO,
@@ -28,6 +29,9 @@ LEFT JOIN baandb.ttfacr201301   tfacr201
 LEFT JOIN baandb.tznsls412301 znsls412
        ON znsls412.t$ttyp$c = tfacr200.t$ttyp
       AND znsls412.t$ninv$c = tfacr200.t$ninv
+      
+LEFT JOIN baandb.ttfgld011301 tfgld011
+       ON tfgld011.t$ttyp = tfacr200.t$ttyp
 
 LEFT JOIN baandb.tznsls402301   znsls402
        ON znsls402.t$ncia$c = znsls412.t$ncia$c
@@ -88,8 +92,8 @@ WHERE tfacr200.t$lino = 0
   AND ( (:AdquirenteTodos = 0) OR (znsls402.t$idad$c in (:Adquirente) and :AdquirenteTodos = 1))
   AND ( (:AutorizacaoTodos = 0) OR (znsls402.t$auto$c in (:Autorizacao) and :AutorizacaoTodos = 1))
   AND ( (:PedidoTodos = 0) OR (znsls402.t$pecl$c in (:Pedido) and :PedidoTodos = 1))
-  
+  AND tfacr200.t$ttyp IN (:TipoTransacao)
+
 ORDER BY tfacr200.T$TTYP, 
          tfacr200.T$NINV, 
          tfacr201.t$schn
-      
