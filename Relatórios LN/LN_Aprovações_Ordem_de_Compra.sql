@@ -95,7 +95,8 @@ SELECT
                 TO_CHAR(MOD(tfgld018.t$time,60),'FM00')
     END                                               HORA_APROVACAO_CONTABIL,
 	tttxt010a.t$text									TEXTO_CAB,
-	tttxt010b.t$text									TEXTO_RDP
+	tttxt010b.t$text									TEXTO_RDP,
+  tccom001.t$nama                   ENVIADO_PARA_APROVACAO_DE
     
 FROM       baandb.ttdpur400201 tdpur400
 
@@ -341,10 +342,13 @@ INNER JOIN baandb.ttdpur401201 tdpur401
        AND tttxt010b.t$clan = 'p'
 	   AND tttxt010b.t$seqe = 1
 
+ LEFT JOIN baandb.ttccom001201  tccom001
+        ON tccom001.t$emno = tdpur400.t$ccon
+        
 WHERE tdpur401.t$oltp IN (2,4)
   AND NVL(tdrec940.t$stat$l, 0) != 6
   AND NVL(tdrec940.t$rfdt$l, 0) != 13
-
+  
  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') AS DATE))
