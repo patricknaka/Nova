@@ -1,4 +1,5 @@
-SELECT DISTINCT 
+SELECT 
+  DISTINCT 
     WMSADMIN.PL_DB.DB_ALIAS                PLANTA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -277,19 +278,6 @@ INNER JOIN WMSADMIN.PL_DB
                     t0.t$poco$c ) LNREF
         ON LNREF.t$orno$c = ORDERS.REFERENCEDOCUMENT
 
- -- LEFT JOIN BAANDB.TTDSLS400301@pln01 TDSLS400 
-        -- ON TDSLS400.T$ORNO = ORDERS.REFERENCEDOCUMENT
- 
- -- LEFT JOIN BAANDB.TTCMCS003301@pln01 TCMCS003 
-        -- ON TCMCS003.T$CWAR = SUBSTR(CL.DESCRIPTION,3,10)
- 
- -- LEFT JOIN BAANDB.tcisli940301@pln01 CISLI940 
-        -- ON CISLI940.T$DOCN$L = ORDERS.INVOICENUMBER
-       -- AND CISLI940.T$SERI$L = ORDERS.LANE
-       -- AND CISLI940.T$SFRA$L = TCMCS003.T$CADR
-       -- AND CISLI940.T$DOCN$L != 0
-       -- AND CISLI940.T$FDTY$L != 11
-    
 ---------------------------------------------------------------------------------------------------------------------------------    
  LEFT JOIN BAANDB.TWHINH431301@PLN01 WHINH431 
         ON WHINH431.T$SHPM          = SUBSTR(ORDERDETAIL.EXTERNORDERKEY,5,9)
@@ -297,21 +285,21 @@ INNER JOIN WMSADMIN.PL_DB
                
  LEFT JOIN BAANDB.TCISLI245301@PLN01 CISLI245 
         ON CISLI245.T$SLCP = 301
-       AND TO_CHAR(CISLI245.T$ORTP) = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')
-                                             THEN '2' 
-                                           ELSE   '1' 
-                                       END
-       AND TO_CHAR(CISLI245.T$KOOR) = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '34_'
-                                             THEN '34'
-                                           WHEN  TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '36_'
-                                             THEN '36'
-                                           ELSE   '3' 
-                                       END
-       AND CISLI245.T$SLSO = WHINH431.T$WORN
+       AND CISLI245.T$ORTP = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')
+                                    THEN 2 
+                                  ELSE   1
+                              END
+       AND CISLI245.T$KOOR = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '34_'
+                                    THEN 34
+                                  WHEN  TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '36_'
+                                    THEN 36
+                                  ELSE   3
+                              END
        AND CISLI245.T$OSET = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')
                                     THEN WHINH431.T$WSET
-                                  ELSE 0 
+                                  ELSE   0 
                               END                              
+       AND CISLI245.T$SLSO = WHINH431.T$WORN
        AND CISLI245.T$PONO = WHINH431.T$WPON
        AND CISLI245.T$SQNB = WHINH431.T$WSEQ
        AND CISLI245.T$SHPM = WHINH431.T$SHPM
@@ -329,7 +317,6 @@ INNER JOIN WMSADMIN.PL_DB
        AND TDSLS401.T$SQNB = WHINH431.T$WSEQ
 ---------------------------------------------------------------------------------------------------------------------------------
 
-    
  LEFT JOIN BAANDB.ttcibd001301@pln01 TCIBD001 
         ON TRIM(TCIBD001.T$ITEM) = SKU.SKU
   
@@ -357,7 +344,6 @@ INNER JOIN WMSADMIN.PL_DB
       
 WHERE cl.listname = 'SCHEMA'
   AND STORER.TYPE = 5
-  
 
   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -638,22 +624,23 @@ ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10, '0')
 "         ON WHINH431.T$SHPM          = SUBSTR(ORDERDETAIL.EXTERNORDERKEY,5,9)  " &
 "        AND TO_CHAR(WHINH431.T$PONO) = TO_CHAR(ORDERDETAIL.EXTERNLINENO)  " &
 "  " &
-"  LEFT JOIN BAANDB.TCISLI245301@PLN01 CISLI245  " &
-"         ON CISLI245.T$SLCP = 301  " &
-"        AND TO_CHAR(CISLI245.T$ORTP) = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_') " &
-"                                              THEN '2'  " &
-"                                            ELSE   '1'  " &
-"                                        END  " &
-"        AND TO_CHAR(CISLI245.T$KOOR) = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '34_'  " &
-"                                              THEN '34'  " &
-"                                            WHEN  TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '36_'  " &
-"                                             THEN '36'  " &
-"                                            ELSE   '3'  " &
-"                                        END  " &
-"        AND CISLI245.T$SLSO = WHINH431.T$WORN  " &
-"        AND CISLI245.T$OSET = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')  " &
-"                               THEN WHINH431.T$WSET  " &
-"                               ELSE 0 END  " &
+" LEFT JOIN BAANDB.TCISLI245301@PLN01 CISLI245   " &
+"        ON CISLI245.T$SLCP = 301  " &
+"       AND CISLI245.T$ORTP = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')  " &
+"                                    THEN 2   " &
+"                                  ELSE   1  " &
+"                              END  " &
+"       AND CISLI245.T$KOOR = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '34_'  " &
+"                                    THEN 34  " &
+"                                  WHEN  TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '36_'  " &
+"                                    THEN 36  " &
+"                                  ELSE   3  " &
+"                              END  " &
+"       AND CISLI245.T$OSET = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')  " &
+"                                    THEN WHINH431.T$WSET  " &
+"                                  ELSE   0   " &
+"                              END  " &               
+"       AND CISLI245.T$SLSO = WHINH431.T$WORN  " &
 "        AND CISLI245.T$PONO = WHINH431.T$WPON  " &
 "        AND CISLI245.T$SQNB = WHINH431.T$WSEQ  " &
 "        AND CISLI245.T$SHPM = WHINH431.T$SHPM  " &
