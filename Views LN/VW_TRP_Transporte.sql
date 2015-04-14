@@ -8,7 +8,7 @@ select distinct
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(o.T$DATE$C), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE) 
   from BAANDB.TZNFMD640201 o
-  where o.T$COCI$C='ROT'
+  where o.T$COCI$C='ETR'
   and o.T$ETIQ$C=znfmd630.T$ETIQ$C) DT_SAIDA_ENTREGA, -- Fazer relacionamentoa
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE) DT_PROMETIDA,
