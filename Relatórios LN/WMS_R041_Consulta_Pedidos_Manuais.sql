@@ -1,85 +1,84 @@
 SELECT 
-  DISTINCT
-    FILIAL.DSC_FILIAL        FILIAL,
-    cisli940.t$docn$l        NF,
-    cisli940.t$seri$l        SERIE,
-    WMS_OA_ORDERS.ORDERKEY   PEDIDO_WMS,
-    CODELKUP_OA.DESCRIPTION  DESCRICAO_PEDIDO,
+    FILIAL.DSC_FILIAL        										FILIAL,
+    cisli940.t$docn$l        										NF,
+    cisli940.t$seri$l        										SERIE,
+    WMS_OA_ORDERS.ORDERKEY   										PEDIDO_WMS,
+    CODELKUP_OA.DESCRIPTION  										DESCRICAO_PEDIDO,
       
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) 
-                             DT_EMISSAO,
-    
-    cisli940.t$ccfo$l        CFO,
-    cisli940.t$opor$l        SEQ_CFO,    
-    tcmcs940.t$dsca$l        NOME_CFO,
-    znsls400.t$idca$c        CANAL,
-    TRIM(cisli941.t$item$l)  ID_ITEM,
-    tcibd001.t$dsca          NOME_ITEM,
-    cisli941.t$dqua$l        QTD_FATURADA,
+																	DT_EMISSAO,
+												
+    cisli940.t$ccfo$l        										CFO,
+    cisli940.t$opor$l        										SEQ_CFO,    
+    tcmcs940.t$dsca$l        										NOME_CFO,
+    znsls400.t$idca$c        										CANAL,
+    TRIM(cisli941.t$item$l)  										ID_ITEM,
+    tcibd001.t$dsca          										NOME_ITEM,
+    sum(cisli941.t$dqua$l)     										QTD_FATURADA,
 	
     CASE WHEN cisli941.t$iprt$l = 0 
            THEN tdsls401.t$pric 
          ELSE   cisli941.t$iprt$l
-     END                     VL_PRODUTO,
+     END                     										VL_PRODUTO,
 	 
-    CASE WHEN cisli941.t$amnt$l = 0 
-           THEN tdsls401.t$oamt 
-         ELSE   cisli941.t$amnt$l
-     END                     VL_TOTAL_ITEM,
+    CASE WHEN sum(cisli941.t$amnt$l) = 0 
+           THEN sum(tdsls401.t$oamt) 
+         ELSE   sum(cisli941.t$amnt$l)
+     END                     										VL_TOTAL_ITEM,
 	 
     CASE WHEN cisli941.t$gamt$l = 0 
            THEN tdsls401.t$pric 
          ELSE   cisli941.t$gamt$l
-     END                     VL_MERCADORIA,
+     END                     										VL_MERCADORIA,
 	 
-    CASE WHEN cisli941.t$fght$l = 0 
-           THEN znsls401.t$vlfr$c 
-         ELSE   cisli941.t$fght$l
-     END                     VL_FRETE,
+    CASE WHEN sum(cisli941.t$fght$l) = 0 
+           THEN sum(nvl(znsls401.t$vlfr$c,0)) 
+         ELSE   sum(cisli941.t$fght$l)
+     END                     										VL_FRETE,
  
-    CASE WHEN cisli941.t$ldam$l = 0 
-           THEN znsls401.t$vlde$c 
-         ELSE   cisli941.t$ldam$l 
-     END                     VL_DESC_INC,
+    CASE WHEN sum(cisli941.t$ldam$l) = 0 
+           THEN sum(nvl(znsls401.t$vlde$c,0)) 
+         ELSE   sum(cisli941.t$ldam$l) 
+     END                     										VL_DESC_INC,
     
-    NVL(( select cisli943.t$amnt$l 
+   SUM( NVL(( select sum(cisli943.t$amnt$l) 
+            from baandb.tcisli943301 cisli943
+           where cisli943.t$fire$l = cisli941.t$fire$l
+             and cisli943.t$LINE$l = cisli941.t$LINE$l
+             and cisli943.t$brty$l = 1 ), 0))
+																	VL_ICMS,
+    
+    sum(NVL(( select sum(cisli943.t$amnt$l) 
             from baandb.tcisli943301 cisli943
            where cisli943.t$fire$l = cisli941.t$fire$l
              and cisli943.t$line$l = cisli941.t$line$l
-             and cisli943.t$brty$l = 1 ), 0)
-                             VL_ICMS,
+             and cisli943.t$brty$l = 5 ), 0))
+																	VL_PIS,
     
-    NVL(( select cisli943.t$amnt$l 
+    sum(NVL(( select sum(cisli943.t$amnt$l) 
             from baandb.tcisli943301 cisli943
            where cisli943.t$fire$l = cisli941.t$fire$l
              and cisli943.t$line$l = cisli941.t$line$l
-             and cisli943.t$brty$l = 5 ), 0)
-                             VL_PIS,
-    
-    NVL(( select cisli943.t$amnt$l 
-            from baandb.tcisli943301 cisli943
-           where cisli943.t$fire$l = cisli941.t$fire$l
-             and cisli943.t$line$l = cisli941.t$line$l
-             and cisli943.t$brty$l = 6 ), 0)
-                             VL_COFINS,
+             and cisli943.t$brty$l = 6 ), 0))
+																	VL_COFINS,
        
-    cisli940.t$itbp$l        ID_CLIENTE,
-    cisli940.t$itbn$l        NOME_CLIENTE,
-    tccom130.t$namc          ENDERECO,
-    tccom130.t$dist$l        BAIRRO,
-    tccom130.t$pstc          CEP,
-    tccom130.t$ln03          MUNICIPIO,
-    tccom130.t$cste          UF,
-    tccom130.t$telp          TEL1,
-    tccom130.t$telx          TEL2,
-    tccom130.t$enfs$l        EMAIL,
-    cisli940.t$fdtc$l        ID_TIPO_DOC_FIS,
-    tcmcs966.t$dsca$l        DESCR_TIPO_DOC_FIS,
-    FGET.DESC_TIPO_DOCTO     DESC_TIPO_DOCTO,
-	tccom130f.t$fovn$l		 CNPJ_FABRICANTE,
-	tcmcs060.t$dsca			 NOME_FABRICANTE
+    cisli940.t$itbp$l        										ID_CLIENTE,
+    cisli940.t$itbn$l        										NOME_CLIENTE,
+    tccom130.t$namc          										ENDERECO,
+    tccom130.t$dist$l        										BAIRRO,
+    tccom130.t$pstc          										CEP,
+    tccom130.t$dsca          										MUNICIPIO,
+    tccom130.t$cste          										UF,
+    tccom130.t$telp          										TEL1,
+    tccom130.t$telx          										TEL2,
+    tccom130.t$enfs$l        										EMAIL,
+    cisli940.t$fdtc$l        										ID_TIPO_DOC_FIS,
+    tcmcs966.t$dsca$l        										DESCR_TIPO_DOC_FIS,
+    FGET.DESC_TIPO_DOCTO     										DESC_TIPO_DOCTO,
+	tccom130f.t$fovn$l		 										CNPJ_FABRICANTE,
+	tcmcs060.t$dsca			 										NOME_FABRICANTE
                              
 FROM       baandb.tcisli940301 cisli940
 
@@ -170,15 +169,79 @@ WHERE cisli940.t$fdty$l != 11
   AND cisli940.t$docn$l != 0
   AND cisli940.t$stat$l NOT IN (2, 101)
 
+--and cisli940.t$fire$l='000045005'
+
   -- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
                 -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                   -- AT time zone 'America/Sao_Paulo') AS DATE)) 
         -- Between :EmissaoDe
             -- And :EmissaoAte
 
-ORDER BY FILIAL, 
-         DT_EMISSAO, 
-         NF
+GROUP BY
+	FILIAL.DSC_FILIAL,        										
+    cisli940.t$docn$l,        										
+    cisli940.t$seri$l,        										
+    WMS_OA_ORDERS.ORDERKEY,   										
+    CODELKUP_OA.DESCRIPTION,  										
+      
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE), 
+    																
+    											
+    cisli940.t$ccfo$l,        										
+    cisli940.t$opor$l,        										
+    tcmcs940.t$dsca$l,        										
+    znsls400.t$idca$c,        										
+    TRIM(cisli941.t$item$l),  										
+    tcibd001.t$dsca ,         										
+    										
+    
+    CASE WHEN cisli941.t$iprt$l = 0 
+           THEN tdsls401.t$pric 
+         ELSE   cisli941.t$iprt$l
+     END,                     										
+                   										
+     
+    CASE WHEN cisli941.t$gamt$l = 0 
+           THEN tdsls401.t$pric 
+         ELSE   cisli941.t$gamt$l
+     END,                     										
+     
+
+	cisli940.t$itbp$l,        												
+	cisli940.t$itbn$l,        												
+	tccom130.t$namc,          												
+	tccom130.t$dist$l,        												
+	tccom130.t$pstc,          												
+	tccom130.t$dsca,          												
+	tccom130.t$cste,          												
+	tccom130.t$telp,          												
+	tccom130.t$telx,          												
+	tccom130.t$enfs$l,        												
+	cisli940.t$fdtc$l,        												
+	tcmcs966.t$dsca$l,        												
+	FGET.DESC_TIPO_DOCTO,     												
+	tccom130f.t$fovn$l,		 												
+	tcmcs060.t$dsca	
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+-- ORDER BY FILIAL, 
+         -- DT_EMISSAO, 
+         -- NF
 
 
 
