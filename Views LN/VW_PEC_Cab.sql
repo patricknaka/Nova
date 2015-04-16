@@ -80,19 +80,18 @@ FROM
       and b.t$trdt = (select min(c.t$trdt) from baandb.ttdpur450201 c where c.t$hdst=10 and c.t$orno=b.t$orno)
       group by b.t$orno, b.t$logn) apr
     ON apr.t$orno=tdpur400.t$orno
-    LEFT JOIN (SELECT br.t$opfc$l, a.t$orno 
-    from baandb.ttdpur401201 a,
-         baandb.tbrmcs941201 br
-    where br.t$txre$l=a.t$txre$l
-    and br.t$line$l=a.t$txli$l
-    and a.t$txre$l!=' '
-    and a.t$oltp!=2
-    and to_char(a.t$pono)+to_char(a.t$sqnb)=
-            (select to_char(c.t$pono)+to_char(c.t$sqnb) from baandb.ttdpur401201 c
-             where c.t$orno=a.t$orno
-             and rownum=1
-             and c.t$oamt=(select max(b.t$oamt) from baandb.ttdpur401201 b
-                          where b.t$orno=c.t$orno))) qopfc ON qopfc.t$orno=tdpur400.t$orno				  
+    
+    LEFT JOIN ( SELECT a.t$orno,
+                      max(br.t$opfc$l)
+                        KEEP (DENSE_RANK LAST ORDER BY A.T$OAMT, a.t$pono)  t$opfc$l
+                from  baandb.ttdpur401201 a,
+                      baandb.tbrmcs941201 br
+                where br.t$txre$l=a.t$txre$l
+                and br.t$line$l=a.t$txli$l
+                and a.t$txre$l!=' '
+                and a.t$oltp!=2
+                group by a.t$orno) qopfc  ON qopfc.t$orno=tdpur400.t$orno
+                
 	LEFT JOIN (	select 	a.t$orno, sum(br.t$fght$l) fght, sum(br.t$insr$l) insr								--#FAF.228.sn
 				from 	baandb.ttdpur401201 a,
               baandb.tbrmcs941201 br
@@ -108,3 +107,4 @@ and tcemm124.t$loco=201
 and tcemm124.T$DTYP=2
 AND tcemm030.t$eunt=tcemm124.t$grid
 AND (select count(*) from baandb.ttdpur401201 l where l.t$orno=tdpur400.T$orno)>0
+
