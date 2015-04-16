@@ -2,7 +2,8 @@ SELECT
   tfgld106.t$dcdt                      DT_TRANSACAO,
   tfgld106.t$oyer                      NR_ANO_FISCAL,
   tfgld106.T$FPRD                      NR_MES_FISCAL,
-  Filial.COD_FILIAL                    NR_FILIAL,
+  -- Filial.COD_FILIAL                    NR_FILIAL,
+  tfgld106.t$dim2					   NR_FILIAL,
   tfgld106.t$dbcr                      NR_NATUREZA_LANCAMENTO,
   tfgld106.t$obat                      NR_LOTE,
   tfgld106.t$otyp                      NR_TIPO_TRANSACAO,
@@ -55,14 +56,14 @@ SELECT
    END                                 VL_CREDITO
 FROM       baandb.ttfgld106301  tfgld106
 
- LEFT JOIN ( select distinct 
-                    a.t$dim2 COD_FILIAL,
-                    a.t$otyp,
-                    a.t$odoc
-               from baandb.ttfgld106301 a
-              where a.t$dim2 !=  ' ' ) Filial
-        ON Filial.t$otyp = tfgld106.t$otyp
-       AND Filial.t$odoc = tfgld106.t$odoc
+ -- LEFT JOIN ( select distinct 
+                    -- a.t$dim2 COD_FILIAL,
+                    -- a.t$otyp,
+                    -- a.t$odoc
+               -- from baandb.ttfgld106301 a
+              -- where a.t$dim2 !=  ' ' ) Filial
+        -- ON Filial.t$otyp = tfgld106.t$otyp
+       -- AND Filial.t$odoc = tfgld106.t$odoc
        
 INNER JOIN baandb.ttfgld100301 tfgld100
         ON tfgld100.t$year = tfgld106.t$oyer 
