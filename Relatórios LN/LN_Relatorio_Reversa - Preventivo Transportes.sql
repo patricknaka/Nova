@@ -90,7 +90,11 @@ SELECT DISTINCT
                'Sim'  END                        PENDENTE_COLETA,
        CASE WHEN tdrec947.t$fire$l is NULL THEN
                'Sim'
-       ELSE    'Não' END                         PENDENTE_DEVOLUCAO
+       ELSE    'Não' END                         PENDENTE_DEVOLUCAO,
+	   CASE WHEN
+		znsls409.t$lbrd$c=1 THEN 'SIM'	-- FORÇADO
+		ELSE 'NÃO' 						-- NÃO FORÇADO
+		END										 IN_FORÇADO
     
 FROM       baandb.tznsls401301 znsls401
 
@@ -111,7 +115,28 @@ FROM       baandb.tznsls401301 znsls401
        AND znsls004.t$entr$c = znsls401.t$entr$c
        AND znsls004.t$sequ$c = znsls401.t$sequ$c
        AND ROWNUM = 1
-                        
+
+	   
+ LEFT JOIN	(	SELECT 	F.t$ncia$c,
+                        F.t$uneg$c,
+                        F.t$pecl$c,
+                        F.t$sqpd$c,
+                        F.t$entr$c,
+                        MAX(F.T$LBRD$C) T$LBRD$C,
+						MAX(F.T$DVED$C) T$DVED$C
+				FROM BAANDB.TZNSLS409301 F
+				GROUP BY
+						F.t$ncia$c,
+						F.t$uneg$c,
+						F.t$pecl$c,
+						F.t$sqpd$c,
+						F.t$entr$c)	ZNSLS409		ON	ZNSLS409.t$ncia$c		=	znsls401.t$ncia$c
+													AND ZNSLS409.t$uneg$c       =	znsls401.t$uneg$c
+                                                    AND ZNSLS409.t$pecl$c       =	znsls401.t$pecl$c
+                                                    AND ZNSLS409.t$sqpd$c       =	znsls401.t$sqpd$c
+                                                    AND ZNSLS409.t$entr$c       =	znsls401.t$entr$c
+
+	   
  LEFT JOIN baandb.tcisli245301 cisli245
         ON cisli245.t$slso = znsls004.t$orno$c
        AND cisli245.t$pono = znsls004.t$pono$c
