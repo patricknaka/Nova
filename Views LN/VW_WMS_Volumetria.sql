@@ -1,5 +1,4 @@
 SELECT
- ZNFMD001.T$FILI$C FILIAL,
  ll.sku CD_SKU,
  ll.sku CD_ITEM,
  CASE WHEN TO_CHAR(ll.holdreason)=' '
@@ -18,12 +17,6 @@ FROM WMWHSE1.lotxloc ll,
  WMWHSE1.loc
  LEFT JOIN WMWHSE1.PUTAWAYZONE pz on pz.PUTAWAYZONE=loc.PUTAWAYZONE,
  ENTERPRISE.CODELKUP cl
- LEFT JOIN BAANDB.TTCEMM300301@PLN01 TCEMM300 ON  TCEMM300.T$LCTN = CL.LONG_VALUE
-                                              AND TCEMM300.T$COMP = 301
-                                              AND TCEMM300.T$TYPE = 20
- LEFT JOIN BAANDB.TTCMCS003301@PLN01 TCMCS003 ON  TCMCS003.T$CWAR = TCEMM300.T$CODE
- LEFT JOIN BAANDB.TTCCOM130301@PLN01 TCCOM130 ON  TCCOM130.T$CADR = TCMCS003.T$CADR
- LEFT JOIN BAANDB.TZNFMD001301@PLN01 ZNFMD001 ON  ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 WHERE llid.sku=ll.sku
 AND llid.loc=ll.loc
 AND sku.SKU=ll.SKU
@@ -32,7 +25,6 @@ AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
 AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
- ZNFMD001.T$FILI$C,
  ll.sku,
  ll.sku,
  ll.holdreason,
@@ -42,7 +34,6 @@ GROUP BY
 --******************************************************************************************
 UNION
 SELECT
- ZNFMD001.T$FILI$C FILIAL,
  ll.sku CD_SKU,
  ll.sku CD_ITEM,
  CASE WHEN TO_CHAR(ll.holdreason)=' '
@@ -61,12 +52,6 @@ FROM WMWHSE2.lotxloc ll,
  WMWHSE2.loc
  LEFT JOIN WMWHSE2.PUTAWAYZONE pz on pz.PUTAWAYZONE=loc.PUTAWAYZONE,
  ENTERPRISE.CODELKUP cl
- LEFT JOIN BAANDB.TTCEMM300301@PLN01 TCEMM300 ON  TCEMM300.T$LCTN = CL.LONG_VALUE
-                                              AND TCEMM300.T$COMP = 301
-                                              AND TCEMM300.T$TYPE = 20
- LEFT JOIN BAANDB.TTCMCS003301@PLN01 TCMCS003 ON  TCMCS003.T$CWAR = TCEMM300.T$CODE
- LEFT JOIN BAANDB.TTCCOM130301@PLN01 TCCOM130 ON  TCCOM130.T$CADR = TCMCS003.T$CADR
- LEFT JOIN BAANDB.TZNFMD001301@PLN01 ZNFMD001 ON  ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 WHERE llid.sku=ll.sku
 AND llid.loc=ll.loc
 AND sku.SKU=ll.SKU
@@ -75,7 +60,6 @@ AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
 AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
- ZNFMD001.T$FILI$C,
  ll.sku,
  ll.sku,
  ll.holdreason,
@@ -85,7 +69,6 @@ GROUP BY
 --******************************************************************************************
 UNION
 SELECT
- ZNFMD001.T$FILI$C FILIAL,
  ll.sku CD_SKU,
  ll.sku CD_ITEM,
  CASE WHEN TO_CHAR(ll.holdreason)=' '
@@ -104,12 +87,6 @@ FROM WMWHSE3.lotxloc ll,
  WMWHSE3.loc
  LEFT JOIN WMWHSE3.PUTAWAYZONE pz on pz.PUTAWAYZONE=loc.PUTAWAYZONE,
  ENTERPRISE.CODELKUP cl
- LEFT JOIN BAANDB.TTCEMM300301@PLN01 TCEMM300 ON  TCEMM300.T$LCTN = CL.LONG_VALUE
-                                              AND TCEMM300.T$COMP = 301
-                                              AND TCEMM300.T$TYPE = 20
- LEFT JOIN BAANDB.TTCMCS003301@PLN01 TCMCS003 ON  TCMCS003.T$CWAR = TCEMM300.T$CODE
- LEFT JOIN BAANDB.TTCCOM130301@PLN01 TCCOM130 ON  TCCOM130.T$CADR = TCMCS003.T$CADR
- LEFT JOIN BAANDB.TZNFMD001301@PLN01 ZNFMD001 ON  ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 WHERE llid.sku=ll.sku
 AND llid.loc=ll.loc
 AND sku.SKU=ll.SKU
@@ -118,7 +95,6 @@ AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
 AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
- ZNFMD001.T$FILI$C,
  ll.sku,
  ll.sku,
  ll.holdreason,
@@ -128,7 +104,6 @@ GROUP BY
 --******************************************************************************************
 UNION
 SELECT
- ZNFMD001.T$FILI$C FILIAL,
  ll.sku CD_SKU,
  ll.sku CD_ITEM,
  CASE WHEN TO_CHAR(ll.holdreason)=' '
@@ -147,12 +122,6 @@ FROM WMWHSE4.lotxloc ll,
  WMWHSE4.loc
  LEFT JOIN WMWHSE4.PUTAWAYZONE pz on pz.PUTAWAYZONE=loc.PUTAWAYZONE,
  ENTERPRISE.CODELKUP cl
- LEFT JOIN BAANDB.TTCEMM300301@PLN01 TCEMM300 ON  TCEMM300.T$LCTN = CL.LONG_VALUE
-                                              AND TCEMM300.T$COMP = 301
-                                              AND TCEMM300.T$TYPE = 20
- LEFT JOIN BAANDB.TTCMCS003301@PLN01 TCMCS003 ON  TCMCS003.T$CWAR = TCEMM300.T$CODE
- LEFT JOIN BAANDB.TTCCOM130301@PLN01 TCCOM130 ON  TCCOM130.T$CADR = TCMCS003.T$CADR
- LEFT JOIN BAANDB.TZNFMD001301@PLN01 ZNFMD001 ON  ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 WHERE llid.sku=ll.sku
 AND llid.loc=ll.loc
 AND sku.SKU=ll.SKU
@@ -161,7 +130,6 @@ AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
 AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
- ZNFMD001.T$FILI$C,
  ll.sku,
  ll.sku,
  ll.holdreason,
@@ -171,7 +139,6 @@ GROUP BY
  --******************************************************************************************
 UNION
 SELECT
- ZNFMD001.T$FILI$C FILIAL,
  ll.sku CD_SKU,
  ll.sku CD_ITEM,
  CASE WHEN TO_CHAR(ll.holdreason)=' '
@@ -190,12 +157,6 @@ FROM WMWHSE5.lotxloc ll,
  WMWHSE5.loc
  LEFT JOIN WMWHSE5.PUTAWAYZONE pz on pz.PUTAWAYZONE=loc.PUTAWAYZONE,
  ENTERPRISE.CODELKUP cl
- LEFT JOIN BAANDB.TTCEMM300301@PLN01 TCEMM300 ON  TCEMM300.T$LCTN = CL.LONG_VALUE
-                                              AND TCEMM300.T$COMP = 301
-                                              AND TCEMM300.T$TYPE = 20
- LEFT JOIN BAANDB.TTCMCS003301@PLN01 TCMCS003 ON  TCMCS003.T$CWAR = TCEMM300.T$CODE
- LEFT JOIN BAANDB.TTCCOM130301@PLN01 TCCOM130 ON  TCCOM130.T$CADR = TCMCS003.T$CADR
- LEFT JOIN BAANDB.TZNFMD001301@PLN01 ZNFMD001 ON  ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 WHERE llid.sku=ll.sku
 AND llid.loc=ll.loc
 AND sku.SKU=ll.SKU
@@ -204,7 +165,6 @@ AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
 AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
- ZNFMD001.T$FILI$C,
  ll.sku,
  ll.sku,
  ll.holdreason,
@@ -214,7 +174,6 @@ GROUP BY
  --******************************************************************************************
 UNION
 SELECT
- ZNFMD001.T$FILI$C FILIAL,
  ll.sku CD_SKU,
  ll.sku CD_ITEM,
  CASE WHEN TO_CHAR(ll.holdreason)=' '
@@ -233,12 +192,6 @@ FROM WMWHSE6.lotxloc ll,
  WMWHSE6.loc
  LEFT JOIN WMWHSE6.PUTAWAYZONE pz on pz.PUTAWAYZONE=loc.PUTAWAYZONE,
  ENTERPRISE.CODELKUP cl
- LEFT JOIN BAANDB.TTCEMM300301@PLN01 TCEMM300 ON  TCEMM300.T$LCTN = CL.LONG_VALUE
-                                              AND TCEMM300.T$COMP = 301
-                                              AND TCEMM300.T$TYPE = 20
- LEFT JOIN BAANDB.TTCMCS003301@PLN01 TCMCS003 ON  TCMCS003.T$CWAR = TCEMM300.T$CODE
- LEFT JOIN BAANDB.TTCCOM130301@PLN01 TCCOM130 ON  TCCOM130.T$CADR = TCMCS003.T$CADR
- LEFT JOIN BAANDB.TZNFMD001301@PLN01 ZNFMD001 ON  ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 WHERE llid.sku=ll.sku
 AND llid.loc=ll.loc
 AND sku.SKU=ll.SKU
@@ -247,7 +200,6 @@ AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
 AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
- ZNFMD001.T$FILI$C,
  ll.sku,
  ll.sku,
  ll.holdreason,
@@ -257,7 +209,6 @@ GROUP BY
  --******************************************************************************************
 UNION
 SELECT
- ZNFMD001.T$FILI$C FILIAL,
  ll.sku CD_SKU,
  ll.sku CD_ITEM,
  CASE WHEN TO_CHAR(ll.holdreason)=' '
@@ -276,12 +227,6 @@ FROM WMWHSE7.lotxloc ll,
  WMWHSE7.loc
  LEFT JOIN WMWHSE7.PUTAWAYZONE pz on pz.PUTAWAYZONE=loc.PUTAWAYZONE,
  ENTERPRISE.CODELKUP cl
- LEFT JOIN BAANDB.TTCEMM300301@PLN01 TCEMM300 ON  TCEMM300.T$LCTN = CL.LONG_VALUE
-                                              AND TCEMM300.T$COMP = 301
-                                              AND TCEMM300.T$TYPE = 20
- LEFT JOIN BAANDB.TTCMCS003301@PLN01 TCMCS003 ON  TCMCS003.T$CWAR = TCEMM300.T$CODE
- LEFT JOIN BAANDB.TTCCOM130301@PLN01 TCCOM130 ON  TCCOM130.T$CADR = TCMCS003.T$CADR
- LEFT JOIN BAANDB.TZNFMD001301@PLN01 ZNFMD001 ON  ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 WHERE llid.sku=ll.sku
 AND llid.loc=ll.loc
 AND sku.SKU=ll.SKU
@@ -290,7 +235,6 @@ AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
 AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
- ZNFMD001.T$FILI$C,
  ll.sku,
  ll.sku,
  ll.holdreason,
@@ -300,7 +244,6 @@ GROUP BY
  --******************************************************************************************
 UNION
 SELECT
- ZNFMD001.T$FILI$C FILIAL,
  ll.sku CD_SKU,
  ll.sku CD_ITEM,
  CASE WHEN TO_CHAR(ll.holdreason)=' '
@@ -319,12 +262,6 @@ FROM WMWHSE8.lotxloc ll,
  WMWHSE8.loc
  LEFT JOIN WMWHSE8.PUTAWAYZONE pz on pz.PUTAWAYZONE=loc.PUTAWAYZONE,
  ENTERPRISE.CODELKUP cl
- LEFT JOIN BAANDB.TTCEMM300301@PLN01 TCEMM300 ON  TCEMM300.T$LCTN = CL.LONG_VALUE
-                                              AND TCEMM300.T$COMP = 301
-                                              AND TCEMM300.T$TYPE = 20
- LEFT JOIN BAANDB.TTCMCS003301@PLN01 TCMCS003 ON  TCMCS003.T$CWAR = TCEMM300.T$CODE
- LEFT JOIN BAANDB.TTCCOM130301@PLN01 TCCOM130 ON  TCCOM130.T$CADR = TCMCS003.T$CADR
- LEFT JOIN BAANDB.TZNFMD001301@PLN01 ZNFMD001 ON  ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 WHERE llid.sku=ll.sku
 AND llid.loc=ll.loc
 AND sku.SKU=ll.SKU
@@ -333,7 +270,6 @@ AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
 AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
- ZNFMD001.T$FILI$C,
  ll.sku,
  ll.sku,
  ll.holdreason,
@@ -343,7 +279,6 @@ GROUP BY
  --******************************************************************************************
 UNION
 SELECT
- ZNFMD001.T$FILI$C FILIAL,
  ll.sku CD_SKU,
  ll.sku CD_ITEM,
  CASE WHEN TO_CHAR(ll.holdreason)=' '
@@ -362,12 +297,6 @@ FROM WMWHSE9.lotxloc ll,
  WMWHSE9.loc
  LEFT JOIN WMWHSE9.PUTAWAYZONE pz on pz.PUTAWAYZONE=loc.PUTAWAYZONE,
  ENTERPRISE.CODELKUP cl
- LEFT JOIN BAANDB.TTCEMM300301@PLN01 TCEMM300 ON  TCEMM300.T$LCTN = CL.LONG_VALUE
-                                              AND TCEMM300.T$COMP = 301
-                                              AND TCEMM300.T$TYPE = 20
- LEFT JOIN BAANDB.TTCMCS003301@PLN01 TCMCS003 ON  TCMCS003.T$CWAR = TCEMM300.T$CODE
- LEFT JOIN BAANDB.TTCCOM130301@PLN01 TCCOM130 ON  TCCOM130.T$CADR = TCMCS003.T$CADR
- LEFT JOIN BAANDB.TZNFMD001301@PLN01 ZNFMD001 ON  ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 WHERE llid.sku=ll.sku
 AND llid.loc=ll.loc
 AND sku.SKU=ll.SKU
@@ -376,7 +305,6 @@ AND ll.loc=loc.loc
 AND cl.LISTNAME = 'SCHEMA'
 AND UPPER(cl.UDF1)=llid.WHSEID
 GROUP BY
- ZNFMD001.T$FILI$C,
  ll.sku,
  ll.sku,
  ll.holdreason,
