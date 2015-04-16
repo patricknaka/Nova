@@ -96,7 +96,9 @@ SELECT
     END                                               HORA_APROVACAO_CONTABIL,
 	tttxt010a.t$text									TEXTO_CAB,
 	tttxt010b.t$text									TEXTO_RDP,
-  tccom001.t$nama                   ENVIADO_PARA_APROVACAO_DE
+  tccom001.t$nama                   ENVIADO_PARA_APROVACAO_DE,
+  tdpur401.t$cpay                   COD_CONDICAO_PAGTO_LINHA,
+  tcmcs013L.t$dsca                  DESC_COND_PAGTO_LINHA
     
 FROM       baandb.ttdpur400201 tdpur400
 
@@ -344,6 +346,9 @@ INNER JOIN baandb.ttdpur401201 tdpur401
 
  LEFT JOIN baandb.ttccom001201  tccom001
         ON tccom001.t$emno = tdpur400.t$ccon
+        
+ LEFT JOIN baandb.ttcmcs013201 tcmcs013L
+        ON tcmcs013L.t$cpay = tdpur401.t$cpay
         
 WHERE tdpur401.t$oltp IN (2,4)
   AND NVL(tdrec940.t$stat$l, 0) != 6
