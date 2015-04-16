@@ -25,5 +25,5 @@ INNER JOIN  baandb.ttfacr201201 tfacr201 ON  tfacr201.t$ttyp=tfcmg401.t$ttyp
 LEFT JOIN  baandb.ttfcmg948201 tfcmg948 ON  tfcmg948.t$ttyp$l=tfcmg401.t$ttyp    --#FAF.294.sn
                      AND tfcmg948.t$ninv$l=tfcmg401.t$ninv
                      AND tfcmg948.t$btno$l=tfcmg401.t$btno    --#FAF.294.en
-                     and tfcmg401.t$schn = tfcmg948.t$sern$l
+
 ORDER BY 2,5
