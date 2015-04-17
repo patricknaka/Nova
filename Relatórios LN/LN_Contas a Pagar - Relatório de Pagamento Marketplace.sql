@@ -37,7 +37,10 @@ SELECT
   TFCMG101.T$PDOC                           DOC_PAGAMENTO,
   TFACP200T.T$REFR                          REFERENCIA,
   TFACR200M.T$TDOC || ' ' || 
-  TFACR200M.T$DOCN							TRANSCAO_ENC
+  TFACR200M.T$DOCN							TRANSCAO_ENC,
+  NVL(TFGLD106R.T$LEAC, TFGLD102R.T$LEAC) 	CONTA_CONTABIL_CAR,
+  NVL(TFGLD008FR.T$DESC, TFGLD008NR.T$DESC)	DESCR_CONTA_CONTABIL_CAR
+  
   
 FROM       BAANDB.TTFACR200201 TFACR200T
 
@@ -125,12 +128,44 @@ INNER JOIN (SELECT A.T$TTYP,
         ON TFGLD102.T$TTYP  = TFACP200T.T$TTYP
        AND TFGLD102.T$DOCN  = TFACP200T.T$NINV
 
+ LEFT JOIN ( SELECT A.T$OTYP,
+                    A.T$ODOC,
+                    A.T$LEAC
+               FROM BAANDB.TTFGLD106201 A
+              WHERE A.T$DBCR = 2
+                AND A.T$OLIN = ( SELECT MIN(B.T$OLIN)
+                                   FROM BAANDB.TTFGLD106201 B
+                                  WHERE B.T$OTYP = A.T$OTYP
+                                    AND B.T$ODOC = A.T$ODOC
+                                    AND B.T$DBCR = 2 ) ) TFGLD106R
+        ON TFGLD106R.T$OTYP = TFACR200T.T$TTYP
+       AND TFGLD106R.T$ODOC = TFACR200T.T$NINV
+
+ LEFT JOIN ( SELECT A.T$TTYP,
+                    A.T$DOCN,
+                    A.T$LEAC
+               FROM BAANDB.TTFGLD102201 A
+              WHERE A.T$DBCR = 2
+                AND A.T$LINO = ( SELECT MIN(B.T$LINO)
+                                   FROM BAANDB.TTFGLD102201 B
+                                  WHERE B.T$TTYP = A.T$TTYP
+                                    AND B.T$DOCN = A.T$DOCN
+                                    AND B.T$DBCR = 2 ) ) TFGLD102R
+        ON TFGLD102R.T$TTYP  = TFACR200T.T$TTYP
+       AND TFGLD102R.T$DOCN  = TFACR200T.T$NINV
+	   
  LEFT JOIN BAANDB.TTFGLD008201 TFGLD008F  
         ON TFGLD008F.T$LEAC = TFGLD106.T$LEAC
+
+ LEFT JOIN BAANDB.TTFGLD008201 TFGLD008FR
+        ON TFGLD008FR.T$LEAC = TFGLD106R.T$LEAC
 		
  LEFT JOIN BAANDB.TTFGLD008201 TFGLD008N  
         ON TFGLD008N.T$LEAC = TFGLD102.T$LEAC
-           
+
+ LEFT JOIN BAANDB.TTFGLD008201 TFGLD008NR
+        ON TFGLD008NR.T$LEAC = TFGLD102R.T$LEAC
+		
  LEFT JOIN ( select d.t$cnst CODE,
                     l.t$desc DSCA
                from baandb.tttadv401000 d,
