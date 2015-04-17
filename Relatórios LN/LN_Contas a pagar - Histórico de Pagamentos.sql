@@ -10,6 +10,7 @@ SELECT
          ELSE   'Aberto' 
      END                          SITUACAO,
     iStatSend.DESCR               STATUS_ARQUIVO,
+    tflcb230.t$erro$d             DSC_ERRO,
     tfacp200.t$ttyp ||              
     tfacp200.t$ninv               TRANSACAO,
     tfacp200.t$ninv               TITULO,
@@ -85,8 +86,14 @@ FROM  baandb.ttfcmg103301 tfcmg103
                                                  and l1.t$cpac = iLABEL.t$cpac ) ) iTABLE
         ON tfcmg103.t$mopa$d = iTABLE.CODE_MODAL
         
- LEFT JOIN ( select d.t$cnst CODE,
-                    l.t$desc DESCR
+ LEFT JOIN ( select -1                        CODE,
+                    'Não disponível'          DESCR
+               from Dual
+           
+              union
+
+             select d.t$cnst                  CODE,
+                    l.t$desc                  DESCR
                from baandb.tttadv401000 d,
                     baandb.tttadv140000 l
               where d.t$cpac = 'tf'
@@ -111,7 +118,7 @@ FROM  baandb.ttfcmg103301 tfcmg103
                                           where l1.t$clab = l.t$clab 
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iStatSend
-        ON iStatSend.CODE = tflcb230.t$send$d
+        ON iStatSend.CODE = NVL(Trim(tflcb230.T$STAT$D), -1)
  
  LEFT JOIN ( select znsls412.t$ttyp$c,
                     znsls412.t$ninv$c,
