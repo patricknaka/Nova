@@ -86,7 +86,7 @@ FROM  baandb.ttfcmg103301 tfcmg103
                                                  and l1.t$cpac = iLABEL.t$cpac ) ) iTABLE
         ON tfcmg103.t$mopa$d = iTABLE.CODE_MODAL
         
- LEFT JOIN ( select -1                        CODE,
+ LEFT JOIN ( select 0                         CODE,
                     'Não disponível'          DESCR
                from Dual
            
@@ -118,7 +118,10 @@ FROM  baandb.ttfcmg103301 tfcmg103
                                           where l1.t$clab = l.t$clab 
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iStatSend
-        ON iStatSend.CODE = NVL(Trim(tflcb230.T$STAT$D), -1)
+        ON iStatSend.CODE = NVL(CASE WHEN tflcb230.T$send$D = 0 AND tflcb230.T$STAT$D = 5
+                                       THEN 5 
+                                     ELSE tflcb230.T$send$D
+                                 END, 0)
  
  LEFT JOIN ( select znsls412.t$ttyp$c,
                     znsls412.t$ninv$c,
@@ -148,7 +151,7 @@ WHERE tfacp200.t$ttyp IN ('SFA','PFA','PSG','SFS','PFS','PAG','SFT','PRB','PBG',
                                      THEN PEDIDO.NUMERO                 
                                    ELSE   'N/A'  
                                END IN (:Pedido) AND :PedidoTodos = 0))
-  
+
 ORDER BY COD_PN, 
          TRANSACAO, 
          LOTE_PAGTO, 
