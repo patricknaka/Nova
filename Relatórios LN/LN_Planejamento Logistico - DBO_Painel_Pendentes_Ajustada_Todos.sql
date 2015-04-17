@@ -88,7 +88,8 @@ select Q1.*
              znsls002.t$dsca$c  DESCR_TIPO_ENTREGA,
              znfmd630.t$orno$c  ORDEM_VENDA,
              znint002.t$uneg$c  UNIDADE_NEG,
-             znint002.t$desc$c  DESCR_UNIDADE_NEG
+             znint002.t$desc$c  DESCR_UNIDADE_NEG,
+			 znsls004.t$sqpd$c	SEQ_PEDIDO
  
 FROM       BAANDB.tznfmd630301 znfmd630
 
