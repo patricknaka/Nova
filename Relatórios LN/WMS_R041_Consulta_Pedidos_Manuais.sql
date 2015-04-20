@@ -106,8 +106,8 @@ INNER JOIN baandb.tcisli245301 cisli245
        AND znsls401.t$pono$c = cisli245.t$pono
     
  LEFT JOIN baandb.ttdsls401301 tdsls401 
-        ON  tdsls401.t$orno = cisli245.t$slso 
-        AND tdsls401.t$pono = cisli245.t$pono 
+        ON tdsls401.t$orno = cisli245.t$slso 
+       AND tdsls401.t$pono = cisli245.t$pono 
         
  LEFT JOIN baandb.tznsls400301 znsls400
         ON znsls400.t$ncia$c = znsls401.t$ncia$c
@@ -314,6 +314,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "        AND znsls401.t$pono$c = cisli245.t$pono  " &
 "  LEFT JOIN baandb.ttdsls401301 tdsls401  " &
 "         ON tdsls401.t$orno = cisli245.t$slso  " &
+"        AND tdsls401.t$pono = cisli245.t$pono  " &
 "  LEFT JOIN baandb.tznsls400301 znsls400  " &
 "         ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &
 "        AND znsls400.t$uneg$c = znsls401.t$uneg$c  " &
@@ -500,6 +501,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "        AND znsls401.t$pono$c = cisli245.t$pono  " &
 "  LEFT JOIN baandb.ttdsls401301 tdsls401  " &
 "         ON tdsls401.t$orno = cisli245.t$slso  " &
+"        AND tdsls401.t$pono = cisli245.t$pono  " &
 "  LEFT JOIN baandb.tznsls400301 znsls400  " &
 "         ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &
 "        AND znsls400.t$uneg$c = znsls401.t$uneg$c  " &
@@ -683,6 +685,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "        AND znsls401.t$pono$c = cisli245.t$pono  " &
 "  LEFT JOIN baandb.ttdsls401301 tdsls401  " &
 "         ON tdsls401.t$orno = cisli245.t$slso  " &
+"        AND tdsls401.t$pono = cisli245.t$pono  " &
 "  LEFT JOIN baandb.tznsls400301 znsls400  " &
 "         ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &
 "        AND znsls400.t$uneg$c = znsls401.t$uneg$c  " &
@@ -866,6 +869,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "        AND znsls401.t$pono$c = cisli245.t$pono  " &
 "  LEFT JOIN baandb.ttdsls401301 tdsls401  " &
 "         ON tdsls401.t$orno = cisli245.t$slso  " &
+"        AND tdsls401.t$pono = cisli245.t$pono  " &
 "  LEFT JOIN baandb.tznsls400301 znsls400  " &
 "         ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &
 "        AND znsls400.t$uneg$c = znsls401.t$uneg$c  " &
@@ -1049,6 +1053,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "        AND znsls401.t$pono$c = cisli245.t$pono  " &
 "  LEFT JOIN baandb.ttdsls401301 tdsls401  " &
 "         ON tdsls401.t$orno = cisli245.t$slso  " &
+"        AND tdsls401.t$pono = cisli245.t$pono  " &
 "  LEFT JOIN baandb.tznsls400301 znsls400  " &
 "         ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &
 "        AND znsls400.t$uneg$c = znsls401.t$uneg$c  " &
@@ -1232,6 +1237,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "        AND znsls401.t$pono$c = cisli245.t$pono  " &
 "  LEFT JOIN baandb.ttdsls401301 tdsls401  " &
 "         ON tdsls401.t$orno = cisli245.t$slso  " &
+"        AND tdsls401.t$pono = cisli245.t$pono  " &
 "  LEFT JOIN baandb.tznsls400301 znsls400  " &
 "         ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &
 "        AND znsls400.t$uneg$c = znsls401.t$uneg$c  " &
@@ -1415,6 +1421,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "        AND znsls401.t$pono$c = cisli245.t$pono  " &
 "  LEFT JOIN baandb.ttdsls401301 tdsls401  " &
 "         ON tdsls401.t$orno = cisli245.t$slso  " &
+"        AND tdsls401.t$pono = cisli245.t$pono  " &
 "  LEFT JOIN baandb.tznsls400301 znsls400  " &
 "         ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &
 "        AND znsls400.t$uneg$c = znsls401.t$uneg$c  " &
@@ -1598,6 +1605,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "        AND znsls401.t$pono$c = cisli245.t$pono  " &
 "  LEFT JOIN baandb.ttdsls401301 tdsls401  " &
 "         ON tdsls401.t$orno = cisli245.t$slso  " &
+"        AND tdsls401.t$pono = cisli245.t$pono  " &
 "  LEFT JOIN baandb.tznsls400301 znsls400  " &
 "         ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &
 "        AND znsls400.t$uneg$c = znsls401.t$uneg$c  " &
