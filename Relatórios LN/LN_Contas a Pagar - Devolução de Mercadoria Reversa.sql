@@ -9,7 +9,8 @@ SELECT
   TP_DOCFIS.DSCA             DESCR_TIPO_DOC_FISCAL,
   ZNFMD001.T$FILI$C          FILIAL,
   TFACP200.T$IFBP            COD_PN,
-  TCCOM130.T$FOVN$L          CNPJ,
+  regexp_replace(TCCOM130.T$FOVN$L, '[^0-9]', '')
+                             CNPJ,
   TCCOM100.T$NAMA            PN,
   TFACP200.T$TTYP            TRANSACAO,
   TFACP200.T$NINV            NUMERO_TRANSACAO,
@@ -273,3 +274,9 @@ INNER JOIN ( select A.T$TTYP,
              
 WHERE TFACP200.T$DOCN = 0
   AND TFACP200o.T$DOCN = 0
+
+  AND TFACP200.T$DOCD Between :DataEmissaoNFD_De And :DataEmissaoNFD_Ate
+  AND ZNFMD001.T$FILI$C IN (:Filial)
+  AND TFACP200.T$IFBP IN (:ParceiroNegocio)
+  AND TFACP201.T$PYST$L IN (:SituacaoNFD)
+  AND TFACP200.T$TTYP IN (:Transacao)
