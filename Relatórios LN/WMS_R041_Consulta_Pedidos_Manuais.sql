@@ -106,8 +106,9 @@ INNER JOIN baandb.tcisli245301 cisli245
        AND znsls401.t$pono$c = cisli245.t$pono
     
  LEFT JOIN baandb.ttdsls401301 tdsls401 
-        ON tdsls401.t$orno = cisli245.t$slso 
-
+        ON  tdsls401.t$orno = cisli245.t$slso 
+        AND tdsls401.t$pono = cisli245.t$pono 
+        
  LEFT JOIN baandb.tznsls400301 znsls400
         ON znsls400.t$ncia$c = znsls401.t$ncia$c
        AND znsls400.t$uneg$c = znsls401.t$uneg$c
@@ -168,6 +169,7 @@ INNER JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_OA_ORDERS
 WHERE cisli940.t$fdty$l != 11
   AND cisli940.t$docn$l != 0
   AND cisli940.t$stat$l NOT IN (2, 101)
+  
 
   -- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
                 -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
