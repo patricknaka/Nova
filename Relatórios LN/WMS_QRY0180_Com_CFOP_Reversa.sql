@@ -106,6 +106,7 @@ SELECT
   
     ABS( CASE WHEN NVL(cisli941.t$pric$l, 0) != 0 THEN cisli941.t$pric$l
               WHEN NVL(TDSLS401.T$PRIC, 0)   != 0 THEN TDSLS401.T$PRIC
+			  WHEN NVL(OPRIC.T$PRIC,0)		 != 0 THEN OPRIC.T$PRIC
               WHEN NVL(maucLN.mauc, 0)       != 0 THEN maucLN.mauc
               ELSE 0 
           END )                            VL,  
@@ -315,6 +316,17 @@ INNER JOIN WMSADMIN.PL_DB
         ON TDSLS401.T$ORNO = WHINH431.T$WORN
        AND TDSLS401.T$PONO = WHINH431.T$PONO
        AND TDSLS401.T$SQNB = WHINH431.T$WSEQ
+	   
+ LEFT JOIN (SELECT 	MAX(A.T$PRIC) T$PRIC,
+					TRIM(A.T$ITEM) T$ITEM,
+					A.T$ORNO
+			FROM BAANDB.TTDSLS401301@PLN01 A
+			GROUP BY TRIM(A.T$ITEM),
+			         A.T$ORNO) OPRIC
+		ON	OPRIC.T$ITEM = SKU.SKU
+		AND	OPRIC.T$ORNO = ORDERS.REFERENCEDOCUMENT
+	   
+	   
 ---------------------------------------------------------------------------------------------------------------------------------
 
  LEFT JOIN BAANDB.ttcibd001301@pln01 TCIBD001 
