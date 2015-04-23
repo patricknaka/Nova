@@ -65,9 +65,10 @@ SELECT
     tdrec940.t$fdtc$l                           TIPO_ORDEM,
     tcmcs966.t$dsca$l                           DESC_TIPO_ORDEM,       
     tdrec947.t$orno$l                           NUM_ORDEM,
-    tfacp201.t$mopa$d                           CODE_MODAL_PGTO,
-    
-    DESC_MODAL_PGTO.                            DESC_MODAL_PGTO,
+--    tfacp201.t$mopa$d                           CODE_MODAL_PGTO,
+    CMG103.t$mopa$d                             CODE_MODAL_PAGTO,
+--    DESC_MODAL_PGTO.                            DESC_MODAL_PGTO,
+    MODAL_PGTO_HIST.DESC_MODAL                  DESC_MODAL_PAGTO,
     OCORRENCIA.                                 OCORRENCIA1,
     OCORRENCIA.                                 OCORRENCIA2,
     OCORRENCIA.                                 OCORRENCIA3,
@@ -99,12 +100,18 @@ SELECT
          ELSE   'N/A' 
      END                                        TENTATIVA_PREP_PAGTO,
     tfcmg101.t$pdat                             TENTATIVA_PAGTO,
-    NVL(tflcb230p.t$send$d, -1)                 TENTATIVA_STATUS_ENVIO,
-    iStatusEnvio.DESC_ENVIO                     DSC_TENTATIVA_STATUS_ENVIO,
-    tflcb230p.t$erro$d                          DSC_ERRO,
+--    NVL(tflcb230p.t$send$d, -1)                 TENTATIVA_STATUS_ENVIO,
+    NVL(tflcb230_HIST.t$send$d, -1)             TENTATIVA_STATUS_ENVIO,
+--    iStatusEnvio.DESC_ENVIO                     DSC_TENTATIVA_STATUS_ENVIO,
+    iStatsend.DESCR                             DSC_TENTATIVA_STATUS_ENVIO,
+--    tflcb230p.t$erro$d                          DSC_ERRO,
+    tflcb230_HIST.t$erro$d                      DSC_ERRO,
     tfcmg101.t$bank                             NUME_BANCO,
     tfcmg011.t$agcd$l                           CODE_AGENCIA,
-    tfcmg001.t$bano                             CODE_CONTA
+    tfcmg001.t$bano                             CODE_CONTA,
+    tfcmg011_HIST.t$desc                        BANCO_PN,
+    CMG103.t$basu                               COD_CONTA,
+    TENT.RN                                     TENTATIVA_PAGTO                              
 
 FROM       baandb.ttfacp200301  tfacp200  
 
@@ -326,48 +333,155 @@ INNER JOIN baandb.ttccom130301 tccom130
        AND tflcb230p.t$sern$d = TO_CHAR(tfcmg101.t$schn)
        AND tflcb230p.t$comp$d = tfcmg101.t$comp
   
-  LEFT JOIN ( select -1                        CODE_ENVIO,
-                     'Não disponível'          DESC_ENVIO
-                from Dual
-            
-               union
-			   
-              select 0                         CODE_ENVIO,
-                     'Arquivo gerado'          DESC_ENVIO
-                from Dual
-            
-               union
-                
-              select d.t$cnst                  CODE_ENVIO,
-                     l.t$desc                  DESC_ENVIO
-                from baandb.tttadv401000 d,
-                     baandb.tttadv140000 l
-               where d.t$cpac = 'tf'
-                 and d.t$cdom = 'cmg.stat.l'
-                 and l.t$clan = 'p'
-                 and l.t$cpac = 'tf'
-                 and l.t$clab = d.t$za_clab
-                 and rpad(d.t$vers,4) ||
-                     rpad(d.t$rele,2) ||
-                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                     rpad(l1.t$rele,2) ||
-                                                     rpad(l1.t$cust,4)) 
-                                            from baandb.tttadv401000 l1 
-                                           where l1.t$cpac = d.t$cpac 
-                                             and l1.t$cdom = d.t$cdom )
-                 and rpad(l.t$vers,4) ||
-                     rpad(l.t$rele,2) ||
-                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                     rpad(l1.t$rele,2) ||
-                                                     rpad(l1.t$cust,4)) 
-                                            from baandb.tttadv140000 l1 
-                                           where l1.t$clab = l.t$clab 
-                                             and l1.t$clan = l.t$clan 
-                                             and l1.t$cpac = l.t$cpac ) ) iStatusEnvio 
-        ON iStatusEnvio.CODE_ENVIO = NVL(Trim(tflcb230p.t$send$d), -1)
+--  LEFT JOIN ( select -1                        CODE_ENVIO,
+--                     'Não disponível'          DESC_ENVIO
+--                from Dual
+--            
+--               union
+--			   
+--              select 0                         CODE_ENVIO,
+--                     'Arquivo gerado'          DESC_ENVIO
+--                from Dual
+--            
+--               union
+--                
+--              select d.t$cnst                  CODE_ENVIO,
+--                     l.t$desc                  DESC_ENVIO
+--                from baandb.tttadv401000 d,
+--                     baandb.tttadv140000 l
+--               where d.t$cpac = 'tf'
+--                 and d.t$cdom = 'cmg.stat.l'
+--                 and l.t$clan = 'p'
+--                 and l.t$cpac = 'tf'
+--                 and l.t$clab = d.t$za_clab
+--                 and rpad(d.t$vers,4) ||
+--                     rpad(d.t$rele,2) ||
+--                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+--                                                     rpad(l1.t$rele,2) ||
+--                                                     rpad(l1.t$cust,4)) 
+--                                            from baandb.tttadv401000 l1 
+--                                           where l1.t$cpac = d.t$cpac 
+--                                             and l1.t$cdom = d.t$cdom )
+--                 and rpad(l.t$vers,4) ||
+--                     rpad(l.t$rele,2) ||
+--                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+--                                                     rpad(l1.t$rele,2) ||
+--                                                     rpad(l1.t$cust,4)) 
+--                                            from baandb.tttadv140000 l1 
+--                                           where l1.t$clab = l.t$clab 
+--                                             and l1.t$clan = l.t$clan 
+--                                             and l1.t$cpac = l.t$cpac ) ) iStatusEnvio 
+--        ON iStatusEnvio.CODE_ENVIO = NVL(Trim(tflcb230p.t$send$d), -1)
   
+  LEFT JOIN ( select  a.t$mopa$d,
+                      a.t$btno,
+                      a.t$basu,
+                      a.t$ptbp,
+                      a.t$ttyp,
+                      a.t$docn
+              from    baandb.ttfcmg103301 a ) CMG103
+         ON CMG103.t$btno = tfcmg101.t$btno
+        AND CMG103.t$basu = tfcmg101.t$basu
+        AND CMG103.t$ptbp = tfcmg101.t$ifbp
+        AND CMG103.t$ttyp = tfcmg101.t$ptyp
+        AND CMG103.t$docn = tfcmg101.t$pdoc
+        
+ LEFT JOIN ( select l.t$desc DESC_MODAL,
+                    d.t$cnst COD_MODAL
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'tf'
+                and d.t$cdom = 'cmg.mopa.d'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'tf'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) )  MODAL_PGTO_HIST
+        ON MODAL_PGTO_HIST.COD_MODAL = CMG103.t$mopa$d
+
+ LEFT JOIN baandb.ttccom125301  tccom125_HIST
+        ON tccom125_HIST.t$ptbp = CMG103.t$ptbp
+       AND tccom125_HIST.t$cban = CMG103.t$basu
+       
+ LEFT JOIN baandb.ttfcmg011301  tfcmg011_HIST
+        ON tfcmg011_HIST.t$bank = tccom125_HIST.t$brch
+      
+  LEFT JOIN baandb.ttflcb230301 tflcb230_HIST
+        ON tflcb230_HIST.t$ptyp$d = CMG103.t$ttyp
+       AND tflcb230_HIST.t$docn$d = CMG103.t$docn
+       AND tflcb230_HIST.t$ttyp$d = tfacp200.t$ttyp
+       AND tflcb230_HIST.t$ninv$d = tfacp200.t$ninv
+
+ LEFT JOIN ( select 0                         CODE,
+                    'Não disponível'          DESCR
+               from Dual
+           
+              union
+
+             select d.t$cnst                  CODE,
+                    l.t$desc                  DESCR
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'tf'
+                and d.t$cdom = 'cmg.stat.l'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'tf'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) iStatSend
+        ON iStatSend.CODE = NVL(CASE WHEN tflcb230_HIST.T$send$D = 0 AND tflcb230_HIST.T$STAT$D = 5
+                                       THEN 5 
+                                     ELSE tflcb230_HIST.T$send$D
+                                 END, 0)
+  LEFT JOIN ( SELECT D.T$TTYP$D,
+                    D.T$NINV$D,
+                    D.T$PTYP$D,
+                    D.T$DOCN$D,
+                    ROW_NUMBER() OVER 
+                    ( PARTITION BY D.T$TTYP$D,
+                                   D.T$NINV$D
+                          ORDER BY D.T$PAYD$D )  RN
+              FROM BAANDB.TTFLCB230301 D )  TENT
+        ON TENT.T$TTYP$D = TFACP200.T$TTYP
+       AND TENT.T$NINV$D = TFACP200.T$NINV
+       AND TENT.T$PTYP$D = CMG103.T$TTYP
+       AND TENT.T$DOCN$D = CMG103.T$DOCN
+       
 WHERE tfacp200.t$docn = 0 
   AND tfacp200.t$ttyp in ('PKB','PKC','PKD','PKE','PKF','PRB','PRW','PKG')
+  
+--  AND TFACP200.T$NINV = 269
+--  AND TFACP200.T$TTYP = 'PRB'
   
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND NVL(znsls412.t$uneg$c, 0) IN (:UniNegocio)
