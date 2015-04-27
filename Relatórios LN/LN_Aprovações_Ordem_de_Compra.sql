@@ -98,7 +98,8 @@ SELECT
 	tttxt010b.t$text									TEXTO_RDP,
   tccom001.t$nama                   ENVIADO_PARA_APROVACAO_DE,
   tdpur401.t$cpay                   COD_CONDICAO_PAGTO_LINHA,
-  tcmcs013L.t$dsca                  DESC_COND_PAGTO_LINHA
+  tcmcs013L.t$dsca                  DESC_COND_PAGTO_LINHA,
+  tdpur401.t$pono POS
     
 FROM       baandb.ttdpur400201 tdpur400
 
