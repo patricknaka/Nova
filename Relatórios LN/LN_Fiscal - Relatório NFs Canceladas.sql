@@ -81,7 +81,10 @@ LEFT JOIN ( select A.T$NCMP$L,
                                            AND l1.t$cpac = l.t$cpac)) DESC_NFE_STAT
         ON DESC_NFE_STAT.CODE = BRNFE020.t$stat$l
   
-WHERE   CISLI940.T$STAT$L=2
+WHERE   (CISLI940.T$STAT$L=2 
+		 OR BRNFE020.T$STAT$L IN (4,3,8,5))
+
+
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
                 AT time zone 'America/Sao_Paulo') AS DATE) )
