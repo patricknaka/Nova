@@ -92,7 +92,7 @@ select Q1.*
              znfmd630.t$orno$c  ORDEM_VENDA,
              znint002.t$uneg$c  UNIDADE_NEG,
              znint002.t$desc$c  DESCR_UNIDADE_NEG,
-			 znsls004.t$sqpd$c	SEQ_PEDIDO
+             znsls004.t$sqpd$c  SEQ_PEDIDO
  
 FROM       BAANDB.tznfmd630301 znfmd630
 
@@ -170,3 +170,4 @@ where Q1.OCORRENCIA IS NOT NULL
           And :DataPlanejadaAte
   and Q1.CODI_TRANSP IN (:Transportadora)
   and NVL(TRIM(Q1.SITUACAO), 'P') IN (:Situacao)
+  and Q1.ID_TIPO_ENTREGA IN (:TipoEntrega)
