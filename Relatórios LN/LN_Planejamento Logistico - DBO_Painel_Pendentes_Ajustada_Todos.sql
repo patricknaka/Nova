@@ -61,10 +61,13 @@ select Q1.*
              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 
                      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
                                 DATA_PROMETIDA,
-                 
-             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 'DD-MON-YYYY HH24:MI:SS'), 
-                     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  
-                                DATA_EXPEDICAO,                      
+             
+			(SELECT MAX(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 
+                     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
+			 FROM BAANDB.tznfmd640301 A	 
+			 WHERE A.T$FILI$C = ZNFMD630.T$FILI$C
+			 AND A.T$ETIQ$C = ZNFMD630.T$ETIQ$C
+			 AND A.T$COCI$C='ETR')	DATA_EXPEDICAO,                      
              
              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l + znsls401.t$pzcd$c, 'DD-MON-YYYY HH24:MI:SS'), 
                      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
