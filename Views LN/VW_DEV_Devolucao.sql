@@ -1,4 +1,4 @@
--- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
+- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
 -- #FAF.227 - 16-jul-2014, Fabio Ferreira, 	Correções	
 -- #FAF.227.1 - 17-jul-2014, Fabio Ferreira, 	Correções campo disconto
 -- #FAF.227.2 - 17-jul-2014, Fabio Ferreira, 	Correções campo IN_REPOSICAO e DT_STATUS
@@ -53,7 +53,7 @@ SELECT
 		AND znsls410.t$sqpd$c=znsls401dev.t$sqpd$c
 		AND znsls410.t$entr$c=znsls401dev.t$entr$c) DT_STATUS,									--#FAF.227.2
 	tdrec940rec.t$rfdt$l CD_TIPO_NF,
-	tdrec940rec.t$fire$l NR_NFR_DEVOLUCAO,										-- Ref. Fiscal recebimento devolção
+	tdrec940rec.t$fire$l NR_REFERENCIA_FISCAL_DEVOLUCAO,										-- Ref. Fiscal recebimento devolção
 	ltrim(rtrim(znsls401dev.t$item$c)) CD_ITEM,
 	znsls401dev.t$qtve$c QT_DEVOLUCAO,
 	(SELECT a.t$amnt$l FROM baandb.tcisli943201 a
@@ -70,7 +70,7 @@ SELECT
 	znsls401org.t$orno$c NR_PEDIDO_ORIGINAL,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone 'America/Sao_Paulo') AS DATE) DT_PEDIDO,
-	znsls400org.t$idca$c CD_CANAL_VENDA,
+	znsls400org.t$idca$c CD_CANAL_VENDAS,
 	tccom130.t$ftyp$l CD_TIPO_CLIENTE,
 	tccom130.t$ccit CD_CIDADE,
 	tccom130.t$ccty CD_PAIS,
