@@ -106,10 +106,18 @@ SELECT
   
     ABS( CASE WHEN NVL(cisli941.t$pric$l, 0) != 0 THEN cisli941.t$pric$l
               WHEN NVL(TDSLS401.T$PRIC, 0)   != 0 THEN TDSLS401.T$PRIC
-			  WHEN NVL(OPRIC.T$PRIC,0)		 != 0 THEN OPRIC.T$PRIC
+              WHEN NVL(OPRIC.T$PRIC,0)       != 0 THEN OPRIC.T$PRIC
               WHEN NVL(maucLN.mauc, 0)       != 0 THEN maucLN.mauc
               ELSE 0 
-          END )                            VL,  
+          END )                            VALOR_UNITARIO,
+		  
+    NVL(ORDERDETAIL.ORIGINALQTY, 0) * 		  
+    ABS( CASE WHEN NVL(cisli941.t$pric$l, 0) != 0 THEN cisli941.t$pric$l
+              WHEN NVL(TDSLS401.T$PRIC, 0)   != 0 THEN TDSLS401.T$PRIC
+              WHEN NVL(OPRIC.T$PRIC,0)       != 0 THEN OPRIC.T$PRIC
+              WHEN NVL(maucLN.mauc, 0)       != 0 THEN maucLN.mauc
+              ELSE 0 
+          END )                            VALOR_TOTAL,
   
     ORDERS.type                            COD_TIPO_PEDIDO,
     TIPO_PEDIDO.                           DSC_TIPO_PEDIDO,
@@ -286,17 +294,17 @@ INNER JOIN WMSADMIN.PL_DB
                
  LEFT JOIN BAANDB.TCISLI245301@PLN01 CISLI245 
         ON CISLI245.T$SLCP = 301
-       AND CISLI245.T$ORTP = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')
+       AND CISLI245.T$ORTP = CASE WHEN SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3) IN ('34_', '36_')
                                     THEN 2 
                                   ELSE   1
                               END
-       AND CISLI245.T$KOOR = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '34_'
+       AND CISLI245.T$KOOR = CASE WHEN SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3) = '34_'
                                     THEN 34
-                                  WHEN  TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) = '36_'
+                                  WHEN SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3) = '36_'
                                     THEN 36
                                   ELSE   3
                               END
-       AND CISLI245.T$OSET = CASE WHEN TO_CHAR(SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3)) IN ('34_', '36_')
+       AND CISLI245.T$OSET = CASE WHEN SUBSTR(ORDERS.REFERENCEDOCUMENT,0,3) IN ('34_', '36_')
                                     THEN WHINH431.T$WSET
                                   ELSE   0 
                               END                              
@@ -316,17 +324,16 @@ INNER JOIN WMSADMIN.PL_DB
         ON TDSLS401.T$ORNO = WHINH431.T$WORN
        AND TDSLS401.T$PONO = WHINH431.T$PONO
        AND TDSLS401.T$SQNB = WHINH431.T$WSEQ
-	   
- LEFT JOIN (SELECT 	MAX(A.T$PRIC) T$PRIC,
-					TRIM(A.T$ITEM) T$ITEM,
-					A.T$ORNO
-			FROM BAANDB.TTDSLS401301@PLN01 A
-			GROUP BY TRIM(A.T$ITEM),
-			         A.T$ORNO) OPRIC
-		ON	OPRIC.T$ITEM = SKU.SKU
-		AND	OPRIC.T$ORNO = ORDERS.REFERENCEDOCUMENT
-	   
-	   
+    
+ LEFT JOIN ( select MAX(A.T$PRIC)  T$PRIC,
+                    TRIM(A.T$ITEM) T$ITEM,
+                    A.T$ORNO
+               from BAANDB.TTDSLS401301@PLN01 A
+           group by TRIM(A.T$ITEM),
+                    A.T$ORNO ) OPRIC
+        ON OPRIC.T$ITEM = SKU.SKU
+       AND OPRIC.T$ORNO = ORDERS.REFERENCEDOCUMENT
+   
 ---------------------------------------------------------------------------------------------------------------------------------
 
  LEFT JOIN BAANDB.ttcibd001301@pln01 TCIBD001 
@@ -370,7 +377,7 @@ ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10, '0')
     
 
 
-	
+ 
 " SELECT DISTINCT  " &
 "     WMSADMIN.PL_DB.DB_ALIAS                PLANTA,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,  " &
@@ -464,7 +471,14 @@ ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10, '0')
 "               WHEN NVL(TDSLS401.T$PRIC, 0)   != 0 THEN TDSLS401.T$PRIC  " &
 "               WHEN NVL(maucLN.mauc, 0)       != 0 THEN maucLN.mauc  " &
 "               ELSE 0  " &
-"           END )                            VL,  " &
+"           END )                            VALOR_UNITARIO,  " &
+"     NVL(ORDERDETAIL.ORIGINALQTY, 0) *  " &
+"     ABS( CASE WHEN NVL(cisli941.t$pric$l, 0) != 0 THEN cisli941.t$pric$l  " &
+"               WHEN NVL(TDSLS401.T$PRIC, 0)   != 0 THEN TDSLS401.T$PRIC  " &
+"               WHEN NVL(OPRIC.T$PRIC,0)       != 0 THEN OPRIC.T$PRIC  " &
+"               WHEN NVL(maucLN.mauc, 0)       != 0 THEN maucLN.mauc  " &
+"               ELSE 0  " &
+"           END )                            VALOR_TOTAL,  " &
 "     ORDERS.type                            COD_TIPO_PEDIDO,  " &
 "     TIPO_PEDIDO.                           DSC_TIPO_PEDIDO,  " &
 "     CISLI940.T$BPID$L                      PARCEIRO_NEG,  " &
@@ -565,7 +579,7 @@ ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10, '0')
 "  " &
 "  LEFT JOIN " + Parameters!Table.Value + ".ORDERSTATUSSETUP  " &
 "         ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS  " &
-" 			  " &
+"      " &
 "  LEFT JOIN ( select max(a.TASKDETAILKEY) keep (dense_rank last order by a.ENDTIME) TASKDETAILKEY,  " &
 "                     a.ORDERKEY,  " &
 "                     a.ORDERLINENUMBER,  " &
@@ -656,18 +670,18 @@ ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10, '0')
 "        AND CISLI245.T$PONO = WHINH431.T$WPON  " &
 "        AND CISLI245.T$SQNB = WHINH431.T$WSEQ  " &
 "        AND CISLI245.T$SHPM = WHINH431.T$SHPM  " &
-" 	  " &
+"    " &
 "  LEFT JOIN BAANDB.TCISLI941301@PLN01 CISLI941  " &
 "         ON CISLI941.T$FIRE$L = CISLI245.T$FIRE$L  " &
 "        AND CISLI941.T$LINE$L = CISLI245.T$LINE$L  " &
-" 	  " &
+"    " &
 "  LEFT JOIN BAANDB.TCISLI940301@PLN01 CISLI940  " &
 "         ON CISLI940.T$FIRE$L = CISLI941.T$FIRE$L  " &
-" 		  " &
+"     " &
 "  LEFT JOIN BAANDB.TTDSLS401301@PLN01 TDSLS401  " &
-" 		ON	TDSLS401.T$ORNO = WHINH431.T$WORN  " &
-" 		AND	TDSLS401.T$PONO = WHINH431.T$PONO  " &
-" 		AND TDSLS401.T$SQNB	= WHINH431.T$WSEQ  " &
+"   ON TDSLS401.T$ORNO = WHINH431.T$WORN  " &
+"   AND TDSLS401.T$PONO = WHINH431.T$PONO  " &
+"   AND TDSLS401.T$SQNB = WHINH431.T$WSEQ  " &
 "  " &
 "  LEFT JOIN BAANDB.ttcibd001301@pln01 TCIBD001  " &
 "         ON TRIM(TCIBD001.T$ITEM) = SKU.SKU  " &
