@@ -53,7 +53,8 @@ select
 	znsls402.t$txrp$c  DS_MOTIVO_REPROVACAO,															--#FAF.076.n
     znsls402.t$idag$c  NR_AGENCIA,
     znsls402.t$idct$c  NR_CONTA_CORRENTE,
-	znsls402.t$idad$c CD_ADQUIRENTE																		--#FAF.085.n
+	znsls402.t$idad$c CD_ADQUIRENTE,																		--#FAF.085.n
+	znsls402.t$bopg$c NR_BPAG
 FROM  baandb.tznsls400201 znsls400,
     (select distinct 
 		znsls401.t$ncia$c      	t$ncia$c,
