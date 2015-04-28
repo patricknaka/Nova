@@ -70,7 +70,7 @@ SELECT
 	znsls401org.t$orno$c NR_PEDIDO_ORIGINAL,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone 'America/Sao_Paulo') AS DATE) DT_PEDIDO,
-	znsls400org.t$idca$c CD_CANAL_VENDAS,
+	znsls400org.t$idca$c CD_CANAL_VENDA,
 	tccom130.t$ftyp$l CD_TIPO_CLIENTE,
 	tccom130.t$ccit CD_CIDADE,
 	tccom130.t$ccty CD_PAIS,
