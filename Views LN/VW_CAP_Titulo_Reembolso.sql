@@ -15,7 +15,7 @@ SELECT DISTINCT
             znsls412.t$ninv$c NR_ID_TITULO,
             znsls412.t$bpid$c CD_PARCEIRO,
 			
-			znsls400o.t$idca$c CD_CANAL_VENDAS,															--#FAF.250.n
+			znsls400o.t$idca$c CD_CANAL_VENDA,															--#FAF.250.n
 			znsls402.t$idmp$c CD_MEIO_PAGAMENTO															--#FAF.250.n
 			
 FROM        baandb.tznsls412201 znsls412
