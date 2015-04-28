@@ -26,7 +26,7 @@ SELECT  DISTINCT
         znsls400.t$vlfr$c VL_FRETE_CLIENTE,
         nvl((select sum(f.t$vlft$c) from baandb.tznfmd630201 f
              where f.T$PECL$C=TO_CHAR(sls401q.t$entr$c)),0) VL_FRETE_CIA,
-        znsls400.t$idca$c CD_CANAL_VENDAS,
+        znsls400.t$idca$c CD_CANAL_VENDA,
         znsls004.t$orig$c CD_ORIGEM_PEDIDO,
         znsls400.t$ipor$c NR_IP_CLIENTE,
         tdsls400.t$oamt VL_PEDIDO,                                  --#FAF.311

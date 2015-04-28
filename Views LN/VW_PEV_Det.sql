@@ -38,7 +38,7 @@ SELECT DISTINCT
 					and   atv.t$pono=tdsls401.t$pono 
 					and   atv.t$xcst>=15),99)=99 THEN 10 ELSE 20 END
 			ELSE tdsls400.t$hdst END CD_SITUACAO_PEDIDO,
-          znsls400.t$idca$c CD_CANAL_VENDAS,
+          znsls400.t$idca$c CD_CANAL_VENDA,
           ltrim(rtrim(tdsls401.t$item)) CD_ITEM,
           tdsls401.t$qoor QT_ITENS,
           tdsls401.t$pric*tdsls401.t$qoor VL_ITEM,																		--#FAF.123.n
