@@ -1,5 +1,5 @@
 SELECT  1 CD_CIA,
-        SubStr(tdsta200.t$ATVS, 7, 3) CD_CANAL_VENDAS,
+        SubStr(tdsta200.t$ATVS, 7, 3) CD_CANAL_VENDA,
         SubStr(tdsta200.t$ATVS, 1, 6) CD_DEPARTAMENTO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcccp070.t$stdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE) DT_ORCAMENTO,
