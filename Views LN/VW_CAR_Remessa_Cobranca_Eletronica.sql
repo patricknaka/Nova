@@ -7,7 +7,7 @@ SELECT DISTINCT																							--#FAF.224.o
 	tfcmg948.t$btno$l NR_REMESSA,
 	tfcmg948.t$occ2$l CD_COMANDO,
 	CONCAT(tfcmg948.t$ttyp$l, TO_CHAR(tfcmg948.t$ninv$l)) CD_CHAVE_PRIMARIA,
-	'CAR' CD_MODALIDADE,
+	'CAR' CD_MODULO,
 	tfcmg948.t$stat$l CD_SITUACAO_PAGAMENTO,
   GREATEST(                                                                               --#MAT.271.sn      
 	nvl(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfcmg948.t$lach$l, 'DD-MON-YYYY HH24:MI:SS'), 
