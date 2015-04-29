@@ -92,7 +92,31 @@ select Q1.*
              znfmd630.t$orno$c  ORDEM_VENDA,
              znint002.t$uneg$c  UNIDADE_NEG,
              znint002.t$desc$c  DESCR_UNIDADE_NEG,
-             znsls004.t$sqpd$c  SEQ_PEDIDO
+             znsls004.t$sqpd$c  SEQ_PEDIDO,
+			 
+			 
+			(SELECT 
+				CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(A.T$DTOC$C), 'DD-MON-YYYY HH24:MI:SS'), 
+                'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)			
+			 FROM	BAANDB.TZNSLS410301 A
+			 WHERE	A.t$ncia$c = ZNSLS004.t$ncia$c
+			 AND    A.t$uneg$c = ZNSLS004.t$uneg$c
+			 AND    A.t$pecl$c = ZNSLS004.t$pecl$c
+			 AND    A.t$sqpd$c = ZNSLS004.t$sqpd$c
+			 AND    A.t$entr$c = ZNSLS004.t$entr$c)	DT_EMISSAO,
+			 
+			 ZNSLS401.T$PZTR$C		TRANSIT_TIME,
+			 ZNSLS401.T$PZCD$C		PRAZO_CD,
+			 CASE WHEN
+				ZNSLS400.T$SIGE$C=1
+				THEN 'SIM'
+				ELSE 'NÃO' END		PEDIDO_SIGE,
+				
+			CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 
+                'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) DT_INSERCAO
+							  
+					
+			 
  
 FROM       BAANDB.tznfmd630301 znfmd630
 
@@ -107,6 +131,12 @@ INNER JOIN BAANDB.tznsls401301 znsls401
        AND znsls401.t$entr$c = znsls004.t$entr$c
        AND znsls401.t$sequ$c = znsls004.t$sequ$c
 
+INNER JOIN BAANDB.tznsls400301 znsls400
+        ON znsls400.t$ncia$c = znsls004.t$ncia$c
+       AND znsls400.t$uneg$c = znsls004.t$uneg$c
+       AND znsls400.t$pecl$c = znsls004.t$pecl$c
+       AND znsls400.t$sqpd$c = znsls004.t$sqpd$c
+	   
 INNER JOIN BAANDB.tznint002301 znint002
         ON znint002.t$ncia$c = znsls401.t$ncia$c
        AND znint002.t$uneg$c = znsls401.t$uneg$c
@@ -165,6 +195,7 @@ WHERE ( SELECT znfmd640.t$coci$c
   AND cisli940.t$fdty$l = 1 ) Q1
            
 where Q1.OCORRENCIA IS NOT NULL
+
   and Q1.DATA_PROMETIDA
       Between :DataPlanejadaDe
           And :DataPlanejadaAte
