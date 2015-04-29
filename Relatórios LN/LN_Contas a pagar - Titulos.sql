@@ -6,14 +6,15 @@ SELECT
     tdrec940.t$fire$l                           CODE_REFER,
     tfacp200.t$docn$l                           NUME_NF,
     tfacp200.t$seri$l                           SERI_NF,
-    tccom130.t$fovn$l                           CNPJ_FORN,
+    regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
+                                                CNPJ_FORN,
     tccom100.t$nama                             NOME_FORN,
     tfacp200.t$docd                             DATA_EMISSAO,
     tfacp201.t$schn                             NO_PROGRAMACAO,
     tfacp201.t$payd                             DATA_VENCTO,
     tfacp200.t$amnt                             VALO_TITULO,  
     tfacp200.t$balc                             SALD_TITULO,
-    '201 '                                       CODE_CIA,             
+    '301 '                                       CODE_CIA,             
 
     CASE WHEN (tfacp200.t$balc - tfacp200.t$bala) = 0 
            THEN 1
@@ -119,14 +120,14 @@ SELECT
          ELSE   NVL(iStatArq2.DESCR, 'Arquivo não vinculado') 
      END                                        DESCR_STAT_ARQ 
   
-FROM       baandb.ttfacp200201   tfacp200  
+FROM       baandb.ttfacp200301   tfacp200  
 
  LEFT JOIN ( select m.t$bloc COD_STATUS_BLOQUEIO,
                     m.t$desc DSC_STATUS_BLOQUEIO
-               from baandb.ttfacp002201 m ) BLOQUEIO
+               from baandb.ttfacp002301 m ) BLOQUEIO
         ON BLOQUEIO.COD_STATUS_BLOQUEIO = tfacp200.t$bloc
 
- LEFT JOIN baandb.ttfgld008201 tfgld008
+ LEFT JOIN baandb.ttfgld008301 tfgld008
         ON tfgld008.t$leac = tfacp200.t$leac
    
  LEFT JOIN ( SELECT a.t$ptyp$d,
@@ -136,9 +137,9 @@ FROM       baandb.ttfacp200201   tfacp200
                     a.t$lach$d,
                     max(a.t$stat$d) t$stat$d,
                     max(a.t$send$d) t$send$d
-               FROM baandb.ttflcb230201 a
+               FROM baandb.ttflcb230301 a
               WHERE a.t$sern$d = ( select max(b.t$sern$d)
-                                     from baandb.ttflcb230201 b
+                                     from baandb.ttflcb230301 b
                                     where b.t$ttyp$d = a.t$ttyp$d
                                       and b.t$ninv$d = a.t$ninv$d )
            GROUP BY a.t$ptyp$d,
@@ -149,7 +150,7 @@ FROM       baandb.ttfacp200201   tfacp200
         ON tflcb230.t$ttyp$d = tfacp200.t$ttyp
        AND tflcb230.t$ninv$d = tfacp200.t$ninv
 
- LEFT JOIN baandb.ttfcmg101201 tfcmg101
+ LEFT JOIN baandb.ttfcmg101301 tfcmg101
         ON tfcmg101.t$ttyp = tfacp200.t$ttyp
        AND tfcmg101.t$ninv = tfacp200.t$ninv
        AND tfcmg101.t$ptyp = tflcb230.t$ptyp$d
@@ -211,17 +212,17 @@ FROM       baandb.ttfacp200201   tfacp200
                                             and l1.t$cpac = l.t$cpac ) ) iStatArq2
         ON iStatArq2.CODE = tflcb230.t$send$d
 
-  LEFT JOIN baandb.ttccom100201 tccom100
+  LEFT JOIN baandb.ttccom100301 tccom100
          ON tccom100.t$bpid = tfacp200.t$ifbp
     
- LEFT JOIN baandb.ttccom130201 tccom130
+ LEFT JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
           
- LEFT JOIN baandb.ttdrec940201  tdrec940
+ LEFT JOIN baandb.ttdrec940301  tdrec940
         ON tdrec940.t$ttyp$l = tfacp200.t$ttyp
        AND tdrec940.t$invn$l = tfacp200.t$ninv
  
- LEFT JOIN baandb.ttdrec952201 tdrec952
+ LEFT JOIN baandb.ttdrec952301 tdrec952
         ON tdrec952.t$ttyp$l = tfacp200.t$ttyp
        AND tdrec952.t$invn$l = tfacp200.t$ninv
        AND tdrec952.t$fire$l = tdrec940.t$fire$l
@@ -257,24 +258,24 @@ FROM       baandb.ttfacp200201   tfacp200
         ON tdrec940.t$rfdt$l = DTRFD.iCODE 
          
    
- LEFT JOIN baandb.ttdrec947201  tdrec947
+ LEFT JOIN baandb.ttdrec947301  tdrec947
         ON tdrec947.t$fire$l = tdrec940.t$fire$l
  
- LEFT JOIN baandb.ttcmcs966201  tcmcs966
+ LEFT JOIN baandb.ttcmcs966301  tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
            
- LEFT JOIN baandb.ttfacp201201  tfacp201
+ LEFT JOIN baandb.ttfacp201301  tfacp201
         ON tfacp201.t$ttyp = tfacp200.t$ttyp
        AND tfacp201.t$ninv = tfacp200.t$ninv
 
- LEFT JOIN baandb.ttfcmg001201  tfcmg001
+ LEFT JOIN baandb.ttfcmg001301  tfcmg001
         ON tfcmg001.t$bank = tfacp201.t$brel
  
- LEFT JOIN baandb.ttccom125201  tccom125
+ LEFT JOIN baandb.ttccom125301  tccom125
         ON tccom125.t$ptbp = tfacp201.t$ifbp
        AND tccom125.t$cban = tfacp201.t$bank
  
- LEFT JOIN baandb.ttfcmg011201  tfcmg011
+ LEFT JOIN baandb.ttfcmg011301  tfcmg011
         ON tfcmg011.t$bank = tccom125.t$brch
  
  LEFT JOIN ( SELECT d.t$cnst CODE,
@@ -335,7 +336,7 @@ FROM       baandb.ttfacp200201   tfacp200
    
  LEFT JOIN ( select a.t$leac,
                     a.t$desc DESCR_CONTA_DESTINO
-               from baandb.ttfgld008201 a ) DESCR_CONTA_DESTINO
+               from baandb.ttfgld008301 a ) DESCR_CONTA_DESTINO
         ON DESCR_CONTA_DESTINO.t$leac = tdrec952.t$leac$l
         
  LEFT JOIN ( SELECT tflcb231a.t$ocr1$d OCORRENCIA1,
@@ -344,20 +345,20 @@ FROM       baandb.ttfacp200201   tfacp200
                     tflcb231a.t$ocr4$d OCORRENCIA4,
                     tflcb231a.t$ttyp$d,
                     tflcb231a.t$ninv$d
-               FROM baandb.ttflcb231201  tflcb231a
+               FROM baandb.ttflcb231301  tflcb231a
               WHERE tflcb231a.t$dare$d = ( SELECT MAX(tflcb231b.t$dare$d)
-                                             FROM baandb.ttflcb231201  tflcb231b
+                                             FROM baandb.ttflcb231301  tflcb231b
                                             WHERE tflcb231b.t$ttyp$d = tflcb231a.t$ttyp$d
                                               AND tflcb231b.t$ninv$d = tflcb231a.t$ninv$d ) ) OCORRENCIA
         ON OCORRENCIA.t$ttyp$d = tfacp200.t$ttyp
        AND OCORRENCIA.t$ninv$d = tfacp200.t$ninv
 
- LEFT JOIN baandb.tznacp004201 znacp004
+ LEFT JOIN baandb.tznacp004301 znacp004
         ON znacp004.t$bpid$c = tfacp200.t$ifbp
        AND znacp004.t$tty1$c = tfacp200.t$ttyp
        AND znacp004.t$nin1$c = tfacp200.t$ninv
       
- LEFT JOIN baandb.tznacp005201 znacp005
+ LEFT JOIN baandb.tznacp005301 znacp005
         ON znacp005.t$bpid$c = tfacp200.t$ifbp
        AND znacp005.t$ttyp$c = znacp004.t$ttyp$c
        AND znacp005.t$ninv$c = znacp004.t$ninv$c
@@ -367,15 +368,15 @@ FROM       baandb.ttfacp200201   tfacp200
                     tdpur400.t$orno,
                     tdpur400.t$cotp,
                     tdpur094.t$potp
-               from baandb.ttdpur400201  tdpur400
-          left join baandb.ttdpur094201  tdpur094
+               from baandb.ttdpur400301  tdpur400
+          left join baandb.ttdpur094301  tdpur094
                  on tdpur094.t$potp = tdpur400.t$cotp ) OrdemCompra
         ON OrdemCompra.t$orno = tdrec947.t$orno$l
 
 WHERE tfacp200.t$docn = 0
 AND not exists (  select tfacp601.t$payt, tfacp601.t$payd, tfacp601.t$payl, tfacp601.t$pays
-                    from  baandb.ttfacp601201  tfacp601
-                    where tfacp601.t$icom=201 
+                    from  baandb.ttfacp601301  tfacp601
+                    where tfacp601.t$icom=301 
                       and tfacp601.t$ityp=tfacp200.t$ttyp
                       and tfacp601.t$idoc=tfacp200.t$ninv
                       and tfacp601.t$step=20 )
