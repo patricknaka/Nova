@@ -1,15 +1,18 @@
-SELECT DISTINCT
+SELECT 
+  DISTINCT
     tfcmg101.t$btno         NUME_LOTE,
+ 
+    LOTE.                   VALO_LOTE,
+       
     tfcmg101.t$ninv         NUME_TITULO,
     tfcmg101.t$ttyp         CODE_TRANSAC,
     tfcmg101.t$dued$l       DATA_VENC,
-    tccom130.t$fovn$l       CNPJ_FORN,
+    regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
+                            CNPJ_FORN,
     Trim(tccom100.t$nama)   NOME_FORN,
     tfcmg101.t$amnt-
-    tfcmg101.t$ramn$l -
-    NVL(ACP200.JUROS,0)     VALO_PAGA,
-    tfcmg101.t$amnt$l -
-    NVL(ACP200.JUROS,0)     VALO_BRUTO,
+    tfcmg101.t$ramn$l       VALO_PAGA,
+    tfcmg101.t$amnt$l       VALO_BRUTO,
     tfcmg101.t$post         CODE_LIQUID, 
     tfcmg101.t$paym         CODE_METPGTO,
  
@@ -97,15 +100,14 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
         ON tfcmg104.t$orno = tfcmg101.t$ninv
        AND tfcmg104.t$ifbp = tfcmg101.t$ifbp
     
- LEFT JOIN ( select   sum(a.t$amti) JUROS,
-                      a.t$ttyp, 
-                      a.t$ninv
-             from     baandb.ttfacp200301  a
-             where    a.t$tpay = 5    --correção 
-             group by a.t$ttyp, a.t$ninv )  ACP200
-       ON ACP200.t$ttyp = tfcmg101.t$ttyp
-      AND ACP200.t$ninv = tfcmg101.t$ninv
-        
+ LEFT JOIN ( select sum(a.t$amti) JUROS,
+                    a.t$ttyp, 
+                    a.t$ninv
+               from baandb.ttfacp200301  a
+              where a.t$tpay = 5    --correção 
+           group by a.t$ttyp, a.t$ninv )  ACP200
+        ON ACP200.t$ttyp = tfcmg101.t$ttyp
+       AND ACP200.t$ninv = tfcmg101.t$ninv
  
  LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
@@ -363,3 +365,4 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
                  THEN tflcb230.t$stat$d
              ELSE     tflcb230.t$send$d 
            END, 0) IN (:StatusArquivo)
+  AND ((:LoteTodos = 1) OR ((tfcmg101.t$btno IN (:Lote)) And :LoteTodos = 0))
