@@ -31,11 +31,11 @@ SELECT
   WHWMD400.T$HGHT * 
   WHWMD400.T$WDTH * 
   WHWMD400.T$DPTH              M3_UNITARIO,
-  WHINH220.T$QORO              QTD_PEDIDO,
-  WHINH220.T$QORO              QTD_CANCELADA,     -- Será sempre o mesmo que a quantidade do pedido pois no Ln não temos entrega parcial
-  NVL(CISLI941.T$DQUA$L,0)     QTD_FATURADA,
-  ABS(CISLI941.T$PRIC$L)       VALOR_NF_UNITARIO,
-  ABS(CISLI941.T$AMNT$L)       VALOR_NF_TOTAL,
+  SUM(WHINH220.T$QORO)              QTD_PEDIDO,
+  SUM(WHINH220.T$QORO)              QTD_CANCELADA,     -- Será sempre o mesmo que a quantidade do pedido pois no Ln não temos entrega parcial
+  NVL(SUM(CISLI941.T$DQUA$L),0)     QTD_FATURADA,
+  ABS(MAX(CISLI941.T$PRIC$L))       VALOR_NF_UNITARIO,
+  ABS(SUM(CISLI941.T$AMNT$L))       VALOR_NF_TOTAL,
   WSOR.EDITWHO                 USUARIO_CANCELAMENTO,
   DIVS.DESCRIPTION             SITUACAO_FATUTAMENTO
 
@@ -164,7 +164,42 @@ WHERE WSOR.STATUS = '100'
       Between :DataRegistroDe
           And :DataRegistroAte
   AND ((:PedidoTodos = 1)OR(WHINH200.T$ORNO IN (:Pedido) AND :PedidoTodos = 0))
+
   
+GROUP BY
+  
+  WSOR.WHSEID     ,
+  wmsCODE.UDF2    ,
+  WHINH200.T$ORNO ,
+  WSOR.ORDERKEY   ,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(WSOR.ADDDATE, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone 'America/Sao_Paulo') AS DATE),
+  WOSS.DESCRIPTION,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(WSOR.EDITDATE, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone 'America/Sao_Paulo') AS DATE),
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$DATE$L, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone 'America/Sao_Paulo') AS DATE),
+  WSOR.INVOICENUMBER     ,
+  WSOR.LANE              ,
+  NVL(TCMCS966.T$DSCA$L, 
+      TCMCS966x.T$DSCA$L),
+  WHINH010.T$DSCA        ,
+  TRIM(WHINH220.T$ITEM)  ,
+  TCIBD001.T$DSCA        ,
+  TCMCS023.T$DSCA        ,
+  LNCF.T$FOVN$L          ,
+  LNFB.T$DSCA            ,
+  LNCC.T$FOVN$L          ,
+  LNCC.T$NAMA            ,
+  WHWMD400.T$HGHT *      
+  WHWMD400.T$WDTH *      
+  WHWMD400.T$DPTH        ,
+  WSOR.EDITWHO,
+  DIVS.DESCRIPTION
+
 ORDER BY PEDIDO_WMS, DATA_REGISTRO
 
 
