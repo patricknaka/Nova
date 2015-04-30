@@ -53,14 +53,24 @@ SELECT
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
         AT time zone 'America/Sao_Paulo') AS DATE)
                            DT_PROMET,  
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS410.T$DTOC$C, 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS410_ENT.T$DTOC$C, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
         AT time zone 'America/Sao_Paulo') AS DATE)
-                           DT_ETR,
+                           DT_ENT,													--	DATA DE ENTREGA
     ZNFMD630.T$NCAR$C      CARGA,
     znfmd062.t$creg$c      CAPITAL_INTERIOR,
     znfmd061.t$dzon$c      REGIAO,
-    SKU.DESCR              DESCRICAO
+    SKU.DESCR              DESCRICAO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS410.T$DTOC$C, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+        AT time zone 'America/Sao_Paulo') AS DATE)
+                           DT_ETR,													--	DATA ETR (ENTREGUE A TRANSPORTADORA)
+	ZNSLS410_ULT.PT_CONTR  ULTUMO_PONTO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS410_ULT.T$DTOC$C, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+        AT time zone 'America/Sao_Paulo') AS DATE)
+                           DT_ULTUMO_PONTO											--	DATA ULTIMO PONTO
+
 
 FROM       WMWHSE5.ORDERDETAIL SHD
 
@@ -116,6 +126,44 @@ INNER JOIN WMWHSE5.SKU SKU
        AND ZNSLS410.T$SQPD$C = ZNSLS004.T$SQPD$C
        AND ZNSLS410.T$ENTR$C = ZNSLS004.T$ENTR$C
 
+ LEFT JOIN ( select A.T$NCIA$C, 
+                    A.T$UNEG$C, 
+                    A.T$PECL$C,
+                    A.T$SQPD$C, 
+                    A.T$ENTR$C, 
+                    MIN(A.T$DTOC$C) T$DTOC$C
+               from BAANDB.TZNSLS410301@pLN01 A
+              where A.T$POCO$C = 'ENT'
+           group by A.T$NCIA$C, 
+                    A.T$UNEG$C, 
+                    A.T$PECL$C, 
+                    A.T$SQPD$C, 
+                    A.T$ENTR$C ) ZNSLS410_ENT 
+        ON ZNSLS410_ENT.T$NCIA$C = ZNSLS004.T$NCIA$C
+       AND ZNSLS410_ENT.T$UNEG$C = ZNSLS004.T$UNEG$C
+       AND ZNSLS410_ENT.T$PECL$C = ZNSLS004.T$PECL$C
+       AND ZNSLS410_ENT.T$SQPD$C = ZNSLS004.T$SQPD$C
+       AND ZNSLS410_ENT.T$ENTR$C = ZNSLS004.T$ENTR$C	   
+
+ LEFT JOIN ( select A.T$NCIA$C, 
+                    A.T$UNEG$C, 
+                    A.T$PECL$C,
+                    A.T$SQPD$C, 
+                    A.T$ENTR$C, 
+                    MAX(A.T$DTOC$C) T$DTOC$C,
+					MAX(A.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY A.T$DTOC$C,  A.T$SEQN$C) PT_CONTR
+               from BAANDB.TZNSLS410301@pLN01 A
+			group by A.T$NCIA$C, 
+                    A.T$UNEG$C, 
+                    A.T$PECL$C, 
+                    A.T$SQPD$C, 
+                    A.T$ENTR$C ) ZNSLS410_ULT
+        ON ZNSLS410_ULT.T$NCIA$C = ZNSLS004.T$NCIA$C
+       AND ZNSLS410_ULT.T$UNEG$C = ZNSLS004.T$UNEG$C
+       AND ZNSLS410_ULT.T$PECL$C = ZNSLS004.T$PECL$C
+       AND ZNSLS410_ULT.T$SQPD$C = ZNSLS004.T$SQPD$C
+       AND ZNSLS410_ULT.T$ENTR$C = ZNSLS004.T$ENTR$C	   
+	   
  LEFT JOIN BAANDB.TZNFMD630301@pLN01 ZNFMD630 
         ON ZNFMD630.T$ORNO$C = WHINH431.T$WORN
 
@@ -154,6 +202,7 @@ INNER JOIN ENTERPRISE.CODELKUP CL
         
 WHERE ZNSLS410.T$DTOC$C IS NOT NULL 
   AND OXV.NOTES1 IS NOT NULL
+  
   AND NVL(TCMCS080.t$cfrw, 'N/A') IN (:Transportadora)
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS410.T$DTOC$C, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
