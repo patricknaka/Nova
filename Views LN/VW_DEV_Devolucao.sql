@@ -1,4 +1,4 @@
-- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
+-- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
 -- #FAF.227 - 16-jul-2014, Fabio Ferreira, 	Correções	
 -- #FAF.227.1 - 17-jul-2014, Fabio Ferreira, 	Correções campo disconto
 -- #FAF.227.2 - 17-jul-2014, Fabio Ferreira, 	Correções campo IN_REPOSICAO e DT_STATUS
@@ -126,7 +126,8 @@ SELECT
   tdsls400.t$orno NR_ORDEM_VENDA_DEVOLUCAO,
   tdsls400.t$hdst CD_STATUS_ORDEM_VDA_DEV,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE) DT_ORDEM_VENDA_DEVOLUCAO
+        AT time zone 'America/Sao_Paulo') AS DATE) DT_ORDEM_VENDA_DEVOLUCAO,
+	tcmcs080.t$suno		PARCEIRO_TRANSPORTADORA_FAT
 FROM
 				baandb.tznsls401201 znsls401dev								-- Pedido de devolução
    
@@ -163,6 +164,8 @@ FROM
 			ON	cisli940org.t$fire$l=cisli245org.t$fire$l
 	INNER JOIN	baandb.ttccom130201 tccom130
 			ON	tccom130.t$cadr=cisli940org.t$stoa$l
+	LEFT JOIN	baandb.ttcmcs080201 tcmcs080
+			ON	tcmcs080.t$cfrw = cisli940org.t$cfrw$L			
 	LEFT JOIN	baandb.ttdsls406201 tdsls406rec								-- Rec da devolução
 			ON	tdsls406rec.t$orno=znsls401dev.t$orno$c
 			AND	tdsls406rec.t$pono=znsls401dev.t$pono$c
