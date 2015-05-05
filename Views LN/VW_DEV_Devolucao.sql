@@ -127,7 +127,8 @@ SELECT
   tdsls400.t$hdst CD_STATUS_ORDEM_VDA_DEV,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_ORDEM_VENDA_DEVOLUCAO,
-	tcmcs080.t$suno		PARCEIRO_TRANSPORTADORA_FAT
+	tcmcs080.t$suno			PARCEIRO_TRANSPORTADORA_FAT,
+	cisli941org.t$refr$l 	NR_REFERENCIA_FISCAL 
 FROM
 				baandb.tznsls401201 znsls401dev								-- Pedido de devolução
    
@@ -162,6 +163,11 @@ FROM
 			AND	cisli245org.t$pono=znsls401org.t$pono$c
 	INNER JOIN	baandb.tcisli940201 cisli940org
 			ON	cisli940org.t$fire$l=cisli245org.t$fire$l
+
+	INNER JOIN	baandb.tcisli941201 cisli941org
+			ON	cisli941org.t$fire$l=cisli245org.t$fire$l
+			AND	cisli941org.t$line$l=cisli245org.t$line$l
+			
 	INNER JOIN	baandb.ttccom130201 tccom130
 			ON	tccom130.t$cadr=cisli940org.t$stoa$l
 	LEFT JOIN	baandb.ttcmcs080201 tcmcs080
