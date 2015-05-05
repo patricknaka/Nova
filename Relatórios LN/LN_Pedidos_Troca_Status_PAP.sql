@@ -6,7 +6,11 @@ SELECT DISTINCT
     ZNSLS410.PT_CONTR                           STATUS_PEDIDO,
     ZNMCS002.T$DESC$C                           DESC_STATUS,
     ZNSLS400.T$DTIN$C                           DATA_PEDIDO,
-    ZNSLS401.T$VLUN$C * ZNSLS401.T$QTVE$C       VALOR_PEDIDO
+    ZNSLS401.T$VLUN$C * ZNSLS401.T$QTVE$C       VALOR_PEDIDO,
+    CASE WHEN znsls409.t$dved$c = 1 THEN
+      'Sim' ELSE 'Não' END                      DEVOLVIDO,
+    CASE WHEN znsls409.t$lbrd$c = 1 THEN
+      'Sim' ELSE 'Não' END                      LIBERADO
 
 FROM BAANDB.TZNSLS401301  ZNSLS401
 
@@ -37,6 +41,13 @@ FROM BAANDB.TZNSLS401301  ZNSLS401
 
  LEFT JOIN baandb.tznmcs002301 znmcs002
         ON znmcs002.t$poco$c = znsls410.PT_CONTR
-        
+  
+ LEFT JOIN baandb.tznsls409301 znsls409
+        ON znsls409.t$orno$c = znsls401.t$orno$c
+       AND znsls409.t$ncia$c = znsls401.t$ncia$c
+       AND znsls409.t$uneg$c = znsls401.t$uneg$c
+       AND znsls409.t$pecl$c = znsls401.t$pecl$c
+       AND znsls409.t$sqpd$c = znsls401.t$sqpd$c
+  
 WHERE ZNSLS401.T$IDOR$C = 'TD'
 AND   ZNSLS401.T$QTVE$C > 0         --Troca
