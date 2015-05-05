@@ -20,7 +20,7 @@ select
     znsls402.t$idmp$c  CD_MEIO_PAGAMENTO,
     CASE WHEN (znsls402.t$idmp$c = 4) THEN 0 ELSE znsls402.t$cccd$c END CD_BANDEIRA,
     CASE WHEN (znsls402.t$idmp$c = 4) THEN 0 ELSE znsls402.t$idbc$c END CD_BANCO,
-    znsls402.t$nupa$c  NR_PARCELAS,
+    znsls402.t$nupa$c  NR_PARCELA,
     -- abs(znsls402.t$vlmr$c)  VL_PAGAMENTO,																						--#FAF.317.o
 	cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlmr$c as numeric(12,2)) VL_PAGAMENTO,														--#FAF.317.n																							--#FAF.317.n
     znsls402.t$stat$c  CD_STATUS_PAGAMENTO,
