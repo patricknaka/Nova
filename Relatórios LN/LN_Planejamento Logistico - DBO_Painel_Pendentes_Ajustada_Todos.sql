@@ -62,15 +62,18 @@ select Q1.*
                      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
                                 DATA_PROMETIDA,
              
-			(SELECT MAX(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 
-                     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
-			 FROM BAANDB.tznfmd640301 A	 
-			 WHERE A.T$FILI$C = ZNFMD630.T$FILI$C
-			 AND A.T$ETIQ$C = ZNFMD630.T$ETIQ$C
-			 AND A.T$COCI$C='ETR')	DATA_EXPEDICAO,                      
+             ( SELECT MAX(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.t$date$c, 
+                            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+                              AT time zone 'America/Sao_Paulo') AS DATE))
+                 FROM BAANDB.tznfmd640301 A  
+                WHERE A.T$FILI$C = ZNFMD630.T$FILI$C
+                  AND A.T$ETIQ$C = ZNFMD630.T$ETIQ$C
+                  AND A.T$COCI$C = 'ETR' ) 
+                                DATA_EXPEDICAO,                      
              
-             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l + znsls401.t$pzcd$c, 'DD-MON-YYYY HH24:MI:SS'), 
-                     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l + znsls401.t$pzcd$c, 
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+                 AT time zone 'America/Sao_Paulo') AS DATE)
                                 DATA_PREVISTA,
              
              cisli940.t$amnt$l  VALOR,
@@ -93,30 +96,37 @@ select Q1.*
              znint002.t$uneg$c  UNIDADE_NEG,
              znint002.t$desc$c  DESCR_UNIDADE_NEG,
              znsls004.t$sqpd$c  SEQ_PEDIDO,
-			 
-			 
-			(SELECT 
-				CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(A.T$DTOC$C), 'DD-MON-YYYY HH24:MI:SS'), 
-                'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)			
-			 FROM	BAANDB.TZNSLS410301 A
-			 WHERE	A.t$ncia$c = ZNSLS004.t$ncia$c
-			 AND    A.t$uneg$c = ZNSLS004.t$uneg$c
-			 AND    A.t$pecl$c = ZNSLS004.t$pecl$c
-			 AND    A.t$sqpd$c = ZNSLS004.t$sqpd$c
-			 AND    A.t$entr$c = ZNSLS004.t$entr$c)	DT_EMISSAO,
-			 
-			 ZNSLS401.T$PZTR$C		TRANSIT_TIME,
-			 ZNSLS401.T$PZCD$C		PRAZO_CD,
-			 CASE WHEN
-				ZNSLS400.T$SIGE$C=1
-				THEN 'SIM'
-				ELSE 'NÃO' END		PEDIDO_SIGE,
-				
-			CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 
-                'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) DT_INSERCAO
-							  
-					
-			 
+    
+             ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(A.T$DTOC$C), 
+                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+                          AT time zone 'America/Sao_Paulo') AS DATE)   
+                 FROM BAANDB.TZNSLS410301 A
+                WHERE A.t$ncia$c = ZNSLS004.t$ncia$c
+                  AND A.t$uneg$c = ZNSLS004.t$uneg$c
+                  AND A.t$pecl$c = ZNSLS004.t$pecl$c
+                  AND A.t$sqpd$c = ZNSLS004.t$sqpd$c
+                  AND A.t$entr$c = ZNSLS004.t$entr$c ) 
+                                DT_EMISSAO,
+              
+             ZNSLS401.T$PZTR$C  TRANSIT_TIME,
+             ZNSLS401.T$PZCD$C  PRAZO_CD,
+             CASE WHEN ZNSLS400.T$SIGE$C = 1
+                    THEN 'Sim'
+                  ELSE   'Não' 
+              END               PEDIDO_SIGE,
+    
+             ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'), 
+                              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+                 FROM BAANDB.tznfmd640301 znfmd640
+                WHERE znfmd640.t$date$c = ( select max(znfmd640.t$date$c)
+                                              from BAANDB.tznfmd640301 znfmd640
+                                             where znfmd640.t$fili$c = znfmd630.t$fili$c
+                                               and znfmd640.t$etiq$c = znfmd630.t$etiq$c ) 
+                  AND ROWNUM = 1
+                  AND znfmd640.t$fili$c = znfmd630.t$fili$c
+                  AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )
+                                DT_INSERCAO
+
  
 FROM       BAANDB.tznfmd630301 znfmd630
 
@@ -136,7 +146,7 @@ INNER JOIN BAANDB.tznsls400301 znsls400
        AND znsls400.t$uneg$c = znsls004.t$uneg$c
        AND znsls400.t$pecl$c = znsls004.t$pecl$c
        AND znsls400.t$sqpd$c = znsls004.t$sqpd$c
-	   
+    
 INNER JOIN BAANDB.tznint002301 znint002
         ON znint002.t$ncia$c = znsls401.t$ncia$c
        AND znint002.t$uneg$c = znsls401.t$uneg$c
