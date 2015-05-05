@@ -81,3 +81,4 @@ INNER JOIN  baandb.ttcmcs023201  tcmcs023  ON  tcmcs023.t$citg = tcibd001.t$citg
 
 WHERE Q_UPONTO.ID_ULTIMO_PONTO='WMS'
 AND Q_ENTREGA.QUANTIDADE>0
+AND tdsls400.t$hdst!=35
