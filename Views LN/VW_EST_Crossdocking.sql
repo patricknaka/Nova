@@ -1,5 +1,5 @@
 SELECT  1 CD_CIA,
-        tcemm030.t$euca CD_FILIAL,
+        case when tcemm030.t$euca =  ' ' then null else tcemm030.t$euca end CD_FILIAL,
         ltrim(rtrim(znwmd200.t$item$c)) CD_ITEM,
         znwmd200.t$qtdf$c - znwmd200.t$sald$c QT_RESERVADA,
         znwmd200.t$qtdf$c QT_ARQUIVO,
