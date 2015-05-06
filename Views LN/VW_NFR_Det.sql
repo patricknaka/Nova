@@ -11,11 +11,15 @@
 --************************************************************************************************************************************************************
 SELECT
   1 CD_CIA,
-  (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
+  CASE WHEN (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
   WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
   AND tcemm030.t$eunt=tcemm124.t$grid
   AND tcemm124.t$loco=201
-  AND rownum=1) CD_FILIAL,
+  AND rownum=1) = ' ' THEN NULL ELSE (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
+  WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
+  AND tcemm030.t$eunt=tcemm124.t$grid
+  AND tcemm124.t$loco=201
+  AND rownum=1) END CD_FILIAL,
   tdrec940.t$docn$l NR_NF_RECEBIDA,
   tdrec941.t$line$l SQ_ITEM_NF_RECEBIDA,
   rtrim(ltrim(tdrec941.t$item$l)) CD_ITEM,

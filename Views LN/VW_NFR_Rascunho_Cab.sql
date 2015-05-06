@@ -16,10 +16,13 @@ SELECT
 	tdpur400.t$otbp CD_FORNECEDOR,	
 	TO_CHAR(brnfe940.t$docn$l) NR_NF_REFERENCIA,															--#FAF.022.1.n																
 	brnfe940.t$seri$l NR_SERIE_NFR_REFERENCIA,											
-	--brnfe940.t$idat$l DT_EMISSAO_NF,													
---	brnfe940.t$iodt$l DT_SAIDA_NF,																			--#FAF.095.o
-	CASE WHEN brnfe940.t$iodt$l<TO_DATE('01-01-1990', 'DD-MM-YYYY') THEN
-	brnfe940.t$idat$l ELSE brnfe940.t$iodt$l END DT_SAIDA_NF,												--#FAF.095.n
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(brnfe940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone 'America/Sao_Paulo') AS DATE)DT_EMISSAO_NF,
+	--brnfe940.t$iodt$l DT_SAIDA_NF,																			--#FAF.095.o
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(brnfe940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone 'America/Sao_Paulo') AS DATE)DT_SAIDA_NF,
+	--CASE WHEN brnfe940.t$iodt$l<TO_DATE('01-01-1990', 'DD-MM-YYYY') THEN
+	--brnfe940.t$idat$l ELSE brnfe940.t$iodt$l END DT_SAIDA_NF,												--#FAF.095.n
 	tdpur400.t$orno NR_PEDIDO_COMPRA,
 	brnfe940.t$gtam$l VL_PRODUTO,
 	brnfe940.t$gexp$l VL_DESPESA,
