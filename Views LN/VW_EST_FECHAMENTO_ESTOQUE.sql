@@ -3,7 +3,7 @@
 --*********************************************************************************************************************************************
 SELECT  
         1                                 CD_CIA,
-        tcemm030.t$euca                   CD_FILIAL,
+        case when tcemm030.t$euca = ' ' then null else tcemm030.t$euca end  CD_FILIAL,
         tcemm112.t$grid                   CD_UNIDADE_EMPRESARIAL,
         whwmd215.t$cwar                   CD_DEPOSITO,
         ltrim(rtrim(whwmd215.t$item))     CD_ITEM,
