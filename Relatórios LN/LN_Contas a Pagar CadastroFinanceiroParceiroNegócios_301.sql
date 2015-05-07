@@ -43,8 +43,16 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) 
-                                            DATA_CRIACAO
-          
+                                            DATA_CRIACAO,
+    tccom124.t$cbtp || '-' || 
+    tcmcs029cr.t$dsca                       TIPO_NEG_PN_CREDOR,
+    tccom122.t$cbtp || '-' ||
+    tcmcs029ft.t$dsca                       TIPO_NEG_PN_FATURADOR,
+    CASE WHEN tccom100.t$okfi$c = 1 THEN
+      'Sim' ELSE 'Não' END                  OK_FISCAL,
+    CASE WHEN tccom100.t$okfe$c = 1 THEN
+      'Sim' ELSE 'Não' END                  OK_FISCAL_EXCECAO
+    
 FROM       baandb.ttccom100301  tccom100
 
  LEFT JOIN baandb.ttccom125301  tccom125
@@ -67,7 +75,19 @@ FROM       baandb.ttccom100301  tccom100
     
  LEFT JOIN baandb.ttfcmg011301 tfcmg011
         ON tfcmg011.t$bank = tccom125.t$brch
+        
+ LEFT JOIN baandb.ttccom124301 tccom124
+        ON tccom124.t$ptbp = tccom100.t$bpid
+
+ LEFT JOIN baandb.ttcmcs029301 tcmcs029cr
+        ON tcmcs029cr.t$cbtp = tccom124.t$cbtp
   
+ LEFT JOIN baandb.ttccom122301 tccom122
+        ON tccom122.t$ifbp = tccom100.t$bpid
+
+ LEFT JOIN baandb.ttcmcs029301 tcmcs029ft
+        ON tcmcs029ft.t$cbtp = tccom124.t$cbtp
+        
  LEFT JOIN ( SELECT d.t$cnst  ToacCode, 
                     l.t$desc  ToacDesc
                FROM baandb.tttadv401000 d, 
@@ -179,8 +199,11 @@ FROM       baandb.ttccom100301  tccom100
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iPRST
         ON tccom100.t$prst = iPRST.PrstCode
-   
-WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt, 
+        
+  WHERE tccom100.t$bprl = 4   --Cliente e Fornecedor
+  AND   (tccom125.t$toac = 1 OR tccom125.t$toac IS NULL)   --Normal ou Nulo
+  
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE)) 
       Between :DataEmissaoDe 
