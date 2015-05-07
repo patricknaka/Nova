@@ -1,7 +1,7 @@
 SELECT DISTINCT
 	ltrim(rtrim(q1.item)) CD_ITEM,
 	1 CD_CIA,
-	tcemm030.t$euca CD_FILIAL,
+	case when tcemm030.t$euca = ' ' then null else tcemm030.t$euca end CD_FILIAL,
 	q1.mauc VL_CMV,
 	q1.grid CD_UNIDADE_EMPRESARIAL
 FROM
