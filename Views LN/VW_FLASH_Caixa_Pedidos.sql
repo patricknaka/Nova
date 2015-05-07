@@ -54,7 +54,7 @@ INNER JOIN
           znsls410.T$PECL$C,
           znsls410.T$SQPD$C,
           znsls410.T$ENTR$C,
-          znsls410.t$ORNO$C,
+          --znsls410.t$ORNO$C,
           znsls410.T$POCO$C ID_ULTIMO_PONTO,
           ROW_NUMBER() OVER (PARTITION BY znsls410.T$NCIA$C,
                                           znsls410.T$UNEG$C,
@@ -68,8 +68,35 @@ INNER JOIN
                       AND Q_UPONTO.T$PECL$C = Q_ENTREGA.T$PECL$C
                       AND Q_UPONTO.T$SQPD$C = Q_ENTREGA.T$SQPD$C
                       AND Q_UPONTO.T$ENTR$C = Q_ENTREGA.T$ENTR$C
-        
-INNER JOIN  baandb.ttdsls400301 tdsls400  ON  tdsls400.t$orno = Q_UPONTO.t$ORNO$C
+
+INNER JOIN (SELECT
+				A.T$NCIA$C,
+                A.T$UNEG$C,
+                A.T$PECL$C,
+                A.T$SQPD$C,
+                A.T$ENTR$C,
+				MAX(A.T$ORNO$C) T$ORNO$C
+			FROM BAANDB.TZNSLS004301 A
+			WHERE A.T$DATE$C=(	SELECT MAX(B.T$DATE$C)
+								FROM BAANDB.TZNSLS004301 B
+								WHERE B.T$NCIA$C=A.T$NCIA$C
+								AND   B.T$UNEG$C=A.T$UNEG$C
+								AND   B.T$PECL$C=A.T$PECL$C
+								AND   B.T$SQPD$C=A.T$SQPD$C
+								AND   B.T$ENTR$C=A.T$ENTR$C)
+			GROUP BY	A.T$NCIA$C,
+			            A.T$UNEG$C,
+			            A.T$PECL$C,
+			            A.T$SQPD$C,
+			            A.T$ENTR$C) ZNSLS004
+					ON	ZNSLS004.T$NCIA$C	=	Q_UPONTO.T$NCIA$C
+					AND ZNSLS004.T$UNEG$C	=	Q_UPONTO.T$UNEG$C
+					AND ZNSLS004.T$PECL$C	=	Q_UPONTO.T$PECL$C
+			        AND ZNSLS004.T$SQPD$C	=	Q_UPONTO.T$SQPD$C
+                    AND ZNSLS004.T$ENTR$C	=	Q_UPONTO.T$ENTR$C
+			
+					  
+INNER JOIN  baandb.ttdsls400301 tdsls400  ON  tdsls400.t$orno = ZNSLS004.t$ORNO$C
 INNER JOIN  baandb.ttcmcs065301 tcmcs065  ON  tcmcs065.t$cwoc = tdsls400.t$cofc
 INNER JOIN  baandb.ttccom130301 tccom130  ON  tccom130.t$cadr = tcmcs065.t$cadr
 INNER JOIN  baandb.tznfmd001301 znfmd001  ON  znfmd001.t$fovn$c = tccom130.t$fovn$l
