@@ -36,24 +36,44 @@ SELECT
     PREST_CONTAS.VALOR            VALOR_TRANS_PREST_CONTAS,                 --29
     PREST_CONTAS.BALC -
     NVL(PREST_CONTAS.BALA,0)      SALDO_TRANS_PREST_CONTAS,                 --30
-    tfcmg101.t$refr               REFERENCIA                               --EXCEL
- 
-FROM       baandb.ttccom100301  tccom100
+    tfcmg101.t$refr               REFERENCIA,                               --EXCEL
+    TRANS_PREST_CONTAS.DT_LINK    EMISSAO_LINK,
+    tfgld011_LINK.t$desc          DESCRICAO_LINK,
 
- LEFT JOIN baandb.ttccom130301  tccom130
+    CASE WHEN GLD102.USUARIO IS NULL THEN
+          GLD106.USUARIO
+    ELSE  GLD102.USUARIO END      ULT_MODIF,
+    
+    CASE WHEN GLD102.DT_ALT IS NULL THEN
+          GLD106.DT_ALT
+    ELSE  GLD102.DT_ALT END       DATA_ULT_MOD,
+    
+    CASE WHEN GLD102.HR_ALT IS NULL THEN
+          TO_CHAR(TRUNC(GLD106.HR_ALT/3600),'FM9900') || ':' ||
+          TO_CHAR(TRUNC(MOD(GLD106.HR_ALT,3600)/60),'FM00') || ':' ||
+          TO_CHAR(MOD(GLD106.HR_ALT,60),'FM00')
+    ELSE  
+          TO_CHAR(TRUNC(GLD102.HR_ALT/3600),'FM9900') || ':' ||
+          TO_CHAR(TRUNC(MOD(GLD102.HR_ALT,3600)/60),'FM00') || ':' ||
+          TO_CHAR(MOD(GLD102.HR_ALT,60),'FM00')
+    END                         HORA_ULT_MOD
+ 
+FROM       baandb.ttccom100201  tccom100
+
+ LEFT JOIN baandb.ttccom130201  tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
  
- LEFT JOIN baandb.ttfcmg101301  tfcmg101  
+ LEFT JOIN baandb.ttfcmg101201  tfcmg101  
         ON tccom100.T$BPID = tfcmg101.t$ifbp
  
- LEFT JOIN baandb.ttccom125301 tccom125
+ LEFT JOIN baandb.ttccom125201 tccom125
         ON tccom125.t$ptbp = tfcmg101.t$ifbp
        AND tccom125.t$cban = tfcmg101.t$basu
  
- LEFT JOIN baandb.ttfcmg001301 tfcmg001 
+ LEFT JOIN baandb.ttfcmg001201 tfcmg001 
         ON tfcmg001.t$bank = tfcmg101.t$bank
         
- LEFT JOIN baandb.ttfcmg002301 tfcmg002
+ LEFT JOIN baandb.ttfcmg002201 tfcmg002
         ON tfcmg002.t$reas = tfcmg101.t$reas
    
  LEFT JOIN ( select a.t$docd DT_EMISSAO,
@@ -63,7 +83,7 @@ FROM       baandb.ttccom100301  tccom100
                     a.t$bala BALA,
                     a.t$ttyp,
                     a.t$ninv
-               from baandb.ttfacp200301 a
+               from baandb.ttfacp200201 a
               where a.t$tpay = 9 ) ADIANTAMENTO
         ON ADIANTAMENTO.t$ttyp = tfcmg101.t$ptyp
        AND ADIANTAMENTO.t$ninv = tfcmg101.t$pdoc
@@ -77,27 +97,54 @@ FROM       baandb.ttccom100301  tccom100
                     a.t$bala BALA,
                     a.t$ttyp,
                     a.t$ninv
-               from baandb.ttfacp200301 a
-              where a.t$tpay = 14 ) PREST_CONTAS
+               from baandb.ttfacp200201 a
+              where a.t$tpay = 14 
+              and   a.t$amnt != 0) PREST_CONTAS
         ON PREST_CONTAS.t$ttyp = tfcmg101.t$ptyp
        AND PREST_CONTAS.t$ninv = tfcmg101.t$pdoc
+       
+ LEFT JOIN baandb.ttfgld011201 tfgld011_LINK
+        ON tfgld011_LINK.t$ttyp = PREST_CONTAS.TRANS
  
- LEFT JOIN baandb.ttccom100301 tccom100pt        --PN de Prestação de Contas
+ LEFT JOIN baandb.ttccom100201 tccom100pt        --PN de Prestação de Contas
         ON tccom100pt.t$bpid = PREST_CONTAS.PN
         
- LEFT JOIN baandb.ttccom130301 tccom130pt    
+ LEFT JOIN baandb.ttccom130201 tccom130pt    
         ON tccom130pt.t$cadr = tccom100pt.t$cadr 
  
  LEFT JOIN ( select a.t$ttyp TRANS,
                     a.t$ninv DOCTO,
+                    a.t$docd DT_LINK,
                     a.t$tdoc,
                     a.t$docn
-               from baandb.ttfacp200301 a
+               from baandb.ttfacp200201 a
               where a.t$tpay = 14 ) TRANS_PREST_CONTAS
         ON TRANS_PREST_CONTAS.t$tdoc = PREST_CONTAS.TRANS
        AND TRANS_PREST_CONTAS.t$docn = PREST_CONTAS.DOCTO
        AND TRANS_PREST_CONTAS.TRANS != PREST_CONTAS.t$ttyp
        AND TRANS_PREST_CONTAS.DOCTO != PREST_CONTAS.t$ninv
+ 
+ LEFT JOIN ( select a.t$user  USUARIO,
+                    a.t$date  DT_ALT,
+                    a.t$time  HR_ALT,
+                    a.t$cono,
+                    a.t$ttyp,
+                    a.t$docn
+              from  baandb.ttfgld102201 a
+              where a.t$lino = 1 )  GLD102
+        ON GLD102.t$cono = 201
+       AND GLD102.t$ttyp = TRANS_PREST_CONTAS.t$tdoc
+       AND GLD102.t$docn = TRANS_PREST_CONTAS.t$docn
+       
+  LEFT JOIN ( select a.t$user   USUARIO,
+                    a.t$date    DT_ALT,
+                    a.t$time    HR_ALT,
+                    a.t$otyp,
+                    a.t$odoc
+              from  baandb.ttfgld106201  a
+              where a.t$olin = 1 )  GLD106
+        ON GLD106.t$otyp = TRANS_PREST_CONTAS.t$tdoc
+       AND GLD106.t$odoc = TRANS_PREST_CONTAS.t$docn
  
  LEFT JOIN ( SELECT iDOMAIN.t$cnst CODE_MODAL, 
                     iLABEL.t$desc DESC_MODAL  
