@@ -64,7 +64,9 @@ SELECT
 		ZNSLS400.T$ICLF$C				CPF_CLIENTE,
 		ZNSLS400.T$NOMF$C				NOME_CLIENTE,
 		ZNCOM005.T$PECL$C				NR_PEDIDO,
-		ZNSLS400.T$DTEM$C				DT_PEDIDO,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 
+		'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+										DT_PEDIDO,
 		TGAR.DSC						TIPO_PLANO,
 		ZNCOM005.T$ENGA$C				COD_PLANO_GAR
 			
@@ -188,4 +190,9 @@ LEFT JOIN ( SELECT d.t$cnst CNST,
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac)) TGAR
         ON TGAR.CNST = TCIBD001_G.T$TGAR$C
-        
+WHERE	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 
+		'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+		BETWEEN :DataPedidoDe AND :DataPedidoAte
+		AND ((:UNegocioTodos = 1) OR (TRIM(ZNCOM005.T$UNEG$C) IN (:UNegocio) AND (:UNegocioTodos = 0)))
+		AND TCMCS045.T$DSCA IN (:CanalVendas)
+		AND CASE WHEN ZNCOM005.T$CANC$C=1 THEN 'CANCELAMENTO' ELSE 'VENDA' END IN (:Status)
