@@ -10,8 +10,8 @@
   -- #FAF.043.3 - 11-jul-2014, Fabio Ferreira,   Ajustes NR_GARANTIA_ESTENDIDA
   -- #MAT.001 - 24-jul-2014, Marcia Amador R. Torres,   Adicionado campo QT_PRAZO_GARANTIA
   --********************************************************************************************************************************************************
- SELECT
-    zncom005.t$cdve$c NR_GARANTIA_ESTENDIDA,                              --#FAF.043.3.o
+SELECT
+    case when zncom005.t$cdve$c = ' ' then null else zncom005.t$cdve$c end NR_GARANTIA_ESTENDIDA,                              --#FAF.043.3.o
     tdsls400.t$hdst CD_STATUS_PEDIDO,                     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_GARANTIA,                      
