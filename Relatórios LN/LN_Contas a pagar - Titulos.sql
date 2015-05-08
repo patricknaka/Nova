@@ -1,5 +1,9 @@
 SELECT
   DISTINCT
+    
+    TFLCB230.T$PTYP$D,
+    TFLCB230.T$DOCN$D,
+    
     Concat(tfacp200.t$ttyp, tfacp200.t$ninv)    TRANSCAO,
     tfacp200.t$ninv                             NUME_TITULO,
     tfacp200.t$ttyp                             CODE_TRANS,
@@ -36,7 +40,8 @@ SELECT
     NVL(BLOQUEIO.DSC_STATUS_BLOQUEIO, 'Sem bloqueio') 
                                                 DESC_STATUS_BLOQUEIO,
     
-    tfacp201.t$balc-tfacp200.t$bala             VALOR_APAGAR,
+--    tfacp201.t$balc-tfacp200.t$bala             VALOR_APAGAR,
+    tfcmg101.t$amnt                             VALOR_APAGAR,
     tfacp201.t$brel                             NUM_REL_BANCARIA, 
     tfcmg001.t$desc                             DESC_REL_BANCARIA,
 
@@ -160,8 +165,8 @@ FROM       baandb.ttfacp200201   tfacp200
  LEFT JOIN baandb.ttfcmg101201 tfcmg101
         ON tfcmg101.t$ttyp = tfacp200.t$ttyp
        AND tfcmg101.t$ninv = tfacp200.t$ninv
-       AND tfcmg101.t$ptyp = tflcb230.t$ptyp$d
-       AND tfcmg101.t$pdoc = tflcb230.t$docn$d
+       --AND tfcmg101.t$ptyp = tflcb230.t$ptyp$d    --verificar
+       --AND tfcmg101.t$pdoc = tflcb230.t$docn$d    --verificar
     
  LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
@@ -422,6 +427,7 @@ AND not exists (  select tfacp601.t$payt, tfacp601.t$payd, tfacp601.t$payl, tfac
                       and tfacp601.t$ityp=tfacp200.t$ttyp
                       and tfacp601.t$idoc=tfacp200.t$ninv
                       and tfacp601.t$step=20 )
+
 
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND tfacp200.t$dued between :VencimentoDe AND :VencimentoAte
