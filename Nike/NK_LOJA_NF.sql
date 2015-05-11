@@ -260,7 +260,7 @@ SELECT DISTINCT
       tccom130entr.t$pstc
   ELSE ' ' END              ENTREGA_CEP,                             --66
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
-      tccom130entr.t$telp
+      SUBSTR(tccom130entr.t$telp,3,9)
   ELSE ' ' END              ENTREGA_TELEFONE,                        --67
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       SUBSTR(tccom130entr.t$telp,1,2)
@@ -269,7 +269,7 @@ SELECT DISTINCT
       SUBSTR(tccom130entr.t$telx,1,2)
   ELSE ' ' END              ENTREGA_DDD_CELULAR,                     --69
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
-      tccom130entr.t$telx
+      SUBSTR(tccom130entr.t$telx,3,9)
   ELSE ' ' END              ENTREGA_CELULAR,                         --70
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       tccom130entr.t$nama
