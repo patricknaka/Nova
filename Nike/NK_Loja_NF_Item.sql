@@ -36,7 +36,7 @@ SELECT DISTINCT
     ' '                         CONTA_CONTABIL,           --27
     '0'                         NAO_SOMA_VALOR,           --28
     tdrec941.t$gexp$l           VALOR_ENCARGOS,           --29
-    tdrec941.t$addc$l           VALOR_DESCONTOS,          --30
+    0                           VALOR_DESCONTOS,          --30
     tdrec941.t$fght$l           VALOR_RATEIO_FRETE,       --31
     tdrec941.t$insr$l           VALOR_RATEIO_SEGURO       --32
     
@@ -146,7 +146,7 @@ SELECT DISTINCT
     ' '                         CONTA_CONTABIL,           --27
     '0'                         NAO_SOMA_VALOR,           --28
     cisli941.t$gexp$l           VALOR_ENCARGOS,           --29
-    cisli941.t$tldm$l           VALOR_DESCONTOS,          --30
+    0                           VALOR_DESCONTOS,          --30
     cisli941.t$fght$l           VALOR_RATEIO_FRETE,       --31
     cisli941.t$insr$l           VALOR_RATEIO_SEGURO       --32
     
