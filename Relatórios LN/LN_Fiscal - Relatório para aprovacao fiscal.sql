@@ -9,7 +9,7 @@ SELECT TDREC940.T$FIRE$L,
 		TDPUR094.T$DSCA                                   					DESC_TIPO_OC,
 		TDREC940.T$DOCN$L													NOTA,
 		TDREC940.T$SERI$L													SERIE,
-		TCCOM100.T$NAMA													FORNECEDOR,
+		TCCOM100.T$NAMA														FORNECEDOR,
 		TDREC940.T$FOVN$L													CNPJ,
 		
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC943.T$ICAD$L, 
@@ -19,80 +19,73 @@ SELECT TDREC940.T$FIRE$L,
 		TDREC940.T$TFDA$L													VL_TOTAL,
 		USER_NAME.T$NAME													SOLICITANTE
 
-FROM
-		BAANDB.TTDPUR400301 TDPUR400
+FROM BAANDB.TTDPUR400201 TDPUR400
+INNER JOIN	BAANDB.TTCMCS065201 TCMCS065
+	ON	TCMCS065.T$CWOC		=	TDPUR400.T$COFC
+INNER JOIN	BAANDB.TTCCOM130201 TCCOM130
+	ON	TCCOM130.T$CADR		=	TCMCS065.T$CADR
+INNER JOIN	BAANDB.TZNFMD001201 ZNFMD001
+	ON	ZNFMD001.T$FOVN$C	=	TCCOM130.T$FOVN$L
+INNER JOIN 	BAANDB.TTDPUR094201 TDPUR094
+	ON TDPUR094.T$POTP = TDPUR400.T$COTP
 		
-INNER JOIN	BAANDB.TTCMCS065301	TCMCS065
-		ON	TCMCS065.T$CWOC		=	TDPUR400.T$COFC
-		
-INNER JOIN	BAANDB.TTCCOM130301	TCCOM130
-		ON	TCCOM130.T$CADR		=	TCMCS065.T$CADR
-		
-INNER JOIN	BAANDB.TZNFMD001301	ZNFMD001
-		ON	ZNFMD001.T$FOVN$C	=	TCCOM130.T$FOVN$L
-		
-INNER JOIN 	BAANDB.TTDPUR094301 TDPUR094
-        ON TDPUR094.T$POTP = TDPUR400.T$COTP
-		
-INNER JOIN (SELECT  A.T$NCMP$L,
-                    A.T$OORG$L,
-                    A.T$ORNO$L,
-                    A.T$FIRE$L
-			FROM 	BAANDB.TTDREC947301 A
-			GROUP BY	A.T$NCMP$L,
-			            A.T$OORG$L,
-			            A.T$ORNO$L,
-			            A.T$FIRE$L) TDREC947
-        ON 	TDREC947.T$NCMP$L = 301 
-		AND TDREC947.T$OORG$L = 80
-		AND TDREC947.T$ORNO$L = TDPUR400.T$ORNO
+INNER JOIN (SELECT  A.T$NCMP$L, A.T$OORG$L, A.T$ORNO$L, A.T$FIRE$L
+            FROM 	BAANDB.TTDREC947201 A
+            GROUP BY	A.T$NCMP$L, A.T$OORG$L, A.T$ORNO$L, A.T$FIRE$L
+            )TDREC947
+	ON 	TDREC947.T$NCMP$L = 201 
+	AND TDREC947.T$OORG$L = 80
+	AND TDREC947.T$ORNO$L = TDPUR400.T$ORNO
 
 
-INNER JOIN	BAANDB.TTDREC940301 TDREC940
-		ON	TDREC940.T$FIRE$L	=	TDREC947.T$FIRE$L
+INNER JOIN	BAANDB.TTDREC940201 TDREC940
+	ON	TDREC940.T$FIRE$L	=	TDREC947.T$FIRE$L
+LEFT JOIN BAANDB.TTCCOM100201 TCCOM100
+	ON 	TCCOM100.T$BPID = TDPUR400.T$OTBP
+LEFT JOIN BAANDB.TTDREC943201 TDREC943
+	ON 	TDREC943.T$FIRE$L = TDREC940.T$FIRE$L
 
-LEFT JOIN BAANDB.TTCCOM100301 TCCOM100
-		ON 	TCCOM100.T$BPID = TDPUR400.T$OTBP
-		
-LEFT JOIN BAANDB.TTDREC943301 TDREC943
-		ON 	TDREC943.T$FIRE$L = TDREC940.T$FIRE$L
-
-		
-LEFT JOIN ( SELECT d.t$cnst ,
-                   l.t$desc DSC
+LEFT JOIN ( SELECT d.t$cnst, l.t$desc DSC
             FROM baandb.tttadv401000 d,
                  baandb.tttadv140000 l
             WHERE d.t$cpac='td'
             AND d.t$cdom='rec.stat.l'
-            AND rpad(d.t$vers,4) || rpad(d.t$rele,2) || rpad(d.t$cust,4)=
-                                                 (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele, 2) || rpad(l1.t$cust,4) ) 
-                                                  from baandb.tttadv401000 l1 
-                                                  where l1.t$cpac=d.t$cpac 
-                                                  AND l1.t$cdom=d.t$cdom)
-            AND l.t$clab=d.t$za_clab
-            AND l.t$clan='p'
-            AND l.t$cpac='td'
-            AND rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
+            AND rpad(d.t$vers,4) 
+				|| rpad(d.t$rele,2) 
+				|| rpad(d.t$cust,4)= 	(select max(rpad(l1.t$vers,4) || rpad(l1.t$rele, 2) || rpad(l1.t$cust,4) ) 
+										  from baandb.tttadv401000 l1 
+										  where l1.t$cpac=d.t$cpac 
+											and l1.t$cdom=d.t$cdom)
+			AND l.t$clab=d.t$za_clab
+			AND l.t$clan='p'
+			AND l.t$cpac='td'
+      AND rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
                                                 (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele,2) || rpad(l1.t$cust,4) ) 
                                                   from baandb.tttadv140000 l1 
                                                   where l1.t$clab=l.t$clab 
                                                   AND l1.t$clan=l.t$clan 
-                                                  AND l1.t$cpac=l.t$cpac)) APROVACAO_FIS
-			ON APROVACAO_FIS.T$CNST = TDREC940.T$STAT$L
-			
-LEFT JOIN ( SELECT	A.T$ORNO,
-					A.T$LOGN
-			FROM	BAANDB.TTDPUR450301 A
+                                                  AND l1.t$cpac=l.t$cpac)
+			) APROVACAO_FIS
+	ON APROVACAO_FIS.T$CNST = TDREC940.T$STAT$L
+	
+LEFT JOIN ( SELECT	A.T$ORNO, A.T$LOGN
+			FROM	BAANDB.TTDPUR450201 A
 			WHERE 	A.T$TRDT=(	SELECT MIN(B.T$TRDT)
-								FROM BAANDB.TTDPUR450301 B
-								WHERE B.T$ORNO=A.T$ORNO)) TDPUR450
-			ON	TDPUR450.T$ORNO		=	TDPUR400.T$ORNO
+                        FROM BAANDB.TTDPUR450201 B
+                        WHERE B.T$ORNO=A.T$ORNO
+                       )
+          ) TDPUR450
+	ON	TDPUR450.T$ORNO		=	TDPUR400.T$ORNO
+	
+LEFT JOIN ( SELECT TTAAD200.T$USER, TTAAD200.T$NAME
+           FROM BAANDB.TTTAAD200000 TTAAD200 
+          ) USER_NAME
+	ON USER_NAME.T$USER 	= 	TDPUR450.T$LOGN
 			
-LEFT JOIN ( SELECT TTAAD200.T$USER,
-				TTAAD200.T$NAME
-		   FROM BAANDB.TTTAAD200000 TTAAD200 ) USER_NAME
-			ON USER_NAME.T$USER 	= 	TDPUR450.T$LOGN
-			
-WHERE
-
-		TDREC940.T$RFDT$L=3
+WHERE	TDREC940.T$RFDT$L=3 
+AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDPUR400.T$ODAT, 
+			'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE) )
+BETWEEN :DataOrdemDe AND :DataOrdemAte
+AND ((:FilialTodos = 1) OR (TRIM(ZNFMD001.T$FILI$C) IN (:Filial) AND (:FilialTodos = 0)))
+AND TRIM(APROVACAO_FIS.DSC) IN (:SituacaoNF)
