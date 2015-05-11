@@ -13,12 +13,12 @@ SELECT DISTINCT
   tdrec940.t$docn$l         NF_NUMERO,                              --11
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
-                            DATA_SAIDA,                             --12
+                            DATA_SAIDA_NF,                          --12
   tdrec940.t$opor$l         NATUREZA_OPERACAO_CODIGO,               --13
   '1'                       RECEBIMENTO,                            --14
   tdrec940.t$nwgt$l         PESO_LIQUIDO,                           --15
   tdrec940.t$gwgt$l         PESO_BRUTO,                             --16
-  TDREC941.QTDE             VOLUMES,                                --17
+  0                         VOLUMES,                                --17
   ' '                       TIPO_VOLUME,                            --18
   ' '                       MARCA_VOLUME,                           --19
   tdrec940.t$fght$l         FRETE,                                  --20
@@ -82,7 +82,7 @@ SELECT DISTINCT
   '0'                       TRANSP_PF_PJ,                            --58
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
-                            DATA_SAIDA,                              --59
+                            DATA_SAIDA_ETR,                              --59
   ' '                       ENTREGA_ENDERECO,                        --60
   ' '                       ENTREGA_NUMERO,                          --61
   ' '                       ENTREGA_COMPLEMENTO,                     --62
@@ -169,7 +169,7 @@ SELECT DISTINCT
   cisli940.t$docn$l         NF_NUMERO,                              --11
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
-                            DATA_SAIDA,                             --12
+                            DATA_SAIDA_NF,                             --12
   cisli940.t$ccfo$l         NATUREZA_OPERACAO_CODIGO,               --13
   '0'                       RECEBIMENTO,                            --14
   cisli940.t$nwgt$l         PESO_LIQUIDO,                           --15
@@ -235,9 +235,9 @@ SELECT DISTINCT
   'AGUARDANDO CONSULTOR'    JUSTIFICATIVA_CONTINGENCIA,              --56
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS410.DT_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
-                            DATA_SAIDA,                              --59
+                            DATA_SAIDA_ETR,                          --59
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
     tccom130entr.t$namc
   ELSE  ' ' END             ENTREGA_ENDERECO,                        --60
@@ -357,6 +357,13 @@ FROM  baandb.tcisli940301  cisli940
                 from    baandb.tznsls004301 znsls004
                 group by znsls004.t$orno$c ) SLS004
            ON   SLS004.OV = SLI245.OV
+    
+    LEFT JOIN ( select  MAX(a.t$dtoc$c)  DT_OCORR,
+                        a.t$entr$c
+                from    baandb.tznsls410301 a
+                where a.t$poco$c = 'ETR'  
+                group by a.t$entr$c ) SLS410
+           ON   SLS410.t$entr$c = SLS004.ENTREGA
            
     LEFT JOIN ( select  COUNT(znfmd610.t$etiq$c)  VOLUMES,
                         znfmd610.t$cnfe$c
