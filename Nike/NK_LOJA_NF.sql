@@ -174,7 +174,7 @@ SELECT DISTINCT
   '0'                       RECEBIMENTO,                            --14
   cisli940.t$nwgt$l         PESO_LIQUIDO,                           --15
   cisli940.t$gwgt$l         PESO_BRUTO,                             --16
-  NVL(FMD610.VOLUMES,CISLI941.QTDE)     VOLUMES,                    --17
+  NVL(FMD630.VOLUMES,CISLI941.QTDE)     VOLUMES,                    --17
   ' '                       TIPO_VOLUME,                            --18
   ' '                       MARCA_VOLUME,                           --19
   cisli940.t$fght$l         FRETE,                                  --20
@@ -365,11 +365,11 @@ FROM  baandb.tcisli940301  cisli940
                 group by a.t$entr$c ) SLS410
            ON   SLS410.t$entr$c = SLS004.ENTREGA
            
-    LEFT JOIN ( select  COUNT(znfmd610.t$etiq$c)  VOLUMES,
-                        znfmd610.t$cnfe$c
-                from    baandb.tznfmd610301 znfmd610
-                group by znfmd610.t$cnfe$c )  FMD610
-           ON   FMD610.t$cnfe$c = cisli940.t$cnfe$l
+    LEFT JOIN ( select  COUNT(a.t$etiq$c)  VOLUMES,
+                        a.t$fire$c
+                from    baandb.tznfmd630301 a
+                group by a.t$fire$c )  FMD630
+           ON   FMD630.t$fire$c = cisli940.t$fire$l
            
     LEFT JOIN baandb.ttttxt010301 tttxt010f 
            ON tttxt010f.t$ctxt = cisli940.t$obse$l
