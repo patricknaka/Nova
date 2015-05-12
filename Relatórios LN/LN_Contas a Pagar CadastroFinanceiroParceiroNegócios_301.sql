@@ -9,8 +9,8 @@ SELECT
     tccom125.t$brch                         FILIAL_BANCARIA,
     tfcmg011.t$baoc$l                       CODE_BANCO,
     tfcmg011.t$bnam                         NOME_BANCO,
-	CONCAT(CONCAT(tfcmg011.t$baoc$l, '  '),  
-             tfcmg011.t$bnam)               BANCO,
+    CONCAT(CONCAT(tfcmg011.t$baoc$l, '  '),  
+           tfcmg011.t$bnam)                 BANCO,
     tccom125.t$bano                         COD_CONTA_BANCARIA,
     tccom125.t$dacc$d                       DIG_CONTA_BANCARIA,
     tccom125.t$toac                         COD_TIPO_CONTA_BANCARIA,
@@ -20,7 +20,7 @@ SELECT
     tccom122.t$mopa$d                       COD_MODALIDADE_PAGAMENTO,
     iMOPA.MopaDesc                          DSC_MODALIDADE_PAGAMENTO,
     CONCAT(CONCAT(tccom130.t$namc, ', '),  
-             tccom130.t$hono)               ENDERECO,
+           tccom130.t$hono)                 ENDERECO,
     tccom130.t$dist$l                       BAIRRO,
     tccom130.t$pstc                         CEP,       
     tccom130.t$ccit                         COD_CIDADE,
@@ -44,14 +44,25 @@ SELECT
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) 
                                             DATA_CRIACAO,
-    tccom124.t$cbtp || '-' || 
-    tcmcs029cr.t$dsca                       TIPO_NEG_PN_CREDOR,
-    tccom122.t$cbtp || '-' ||
-    tcmcs029ft.t$dsca                       TIPO_NEG_PN_FATURADOR,
-    CASE WHEN tccom100.t$okfi$c = 1 THEN
-      'Sim' ELSE 'Não' END                  OK_FISCAL,
-    CASE WHEN tccom100.t$okfe$c = 1 THEN
-      'Sim' ELSE 'Não' END                  OK_FISCAL_EXCECAO
+    CASE WHEN tccom124.t$cbtp IS NOT NULL
+           THEN tccom124.t$cbtp || ' - ' || 
+                tcmcs029cr.t$dsca
+         ELSE NULL
+    END		                                TIPO_NEG_PN_CREDOR,
+
+    CASE WHEN tccom122.t$cbtp IS NOT NULL
+           THEN tccom122.t$cbtp || ' - ' || 
+                tcmcs029ft.t$dsca        
+         ELSE NULL
+    END		                                TIPO_NEG_PN_FATURADOR,
+    CASE WHEN tccom100.t$okfi$c = 1 
+           THEN 'Sim' 
+         ELSE   'Não' 
+    END                                     OK_FISCAL,
+    CASE WHEN tccom100.t$okfe$c = 1 
+           THEN 'Sim' 
+         ELSE   'Não' 
+    END                                     OK_FISCAL_EXCECAO
     
 FROM       baandb.ttccom100301  tccom100
 
@@ -69,7 +80,7 @@ FROM       baandb.ttccom100301  tccom100
   
  LEFT JOIN baandb.ttcmcs010301 tcmcs010
         ON tcmcs010.t$ccty = tccom130.t$ccty
-		
+  
  LEFT JOIN baandb.ttccom139301 tccom139
         ON tccom139.t$city = tccom130.t$ccit
     
@@ -86,7 +97,7 @@ FROM       baandb.ttccom100301  tccom100
         ON tccom122.t$ifbp = tccom100.t$bpid
 
  LEFT JOIN baandb.ttcmcs029301 tcmcs029ft
-        ON tcmcs029ft.t$cbtp = tccom124.t$cbtp
+        ON tcmcs029ft.t$cbtp = tccom122.t$cbtp
         
  LEFT JOIN ( SELECT d.t$cnst  ToacCode, 
                     l.t$desc  ToacDesc
@@ -200,9 +211,9 @@ FROM       baandb.ttccom100301  tccom100
                                             and l1.t$cpac = l.t$cpac ) ) iPRST
         ON tccom100.t$prst = iPRST.PrstCode
         
-  WHERE tccom100.t$bprl = 4   --Cliente e Fornecedor
-  AND   (tccom125.t$toac = 1 OR tccom125.t$toac IS NULL)   --Normal ou Nulo
-  
+WHERE tccom100.t$bprl = 4   --Cliente e Fornecedor
+  AND (tccom125.t$toac = 1 OR tccom125.t$toac IS NULL)   --Normal ou Nulo
+
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE)) 
@@ -212,5 +223,11 @@ FROM       baandb.ttccom100301  tccom100
   AND tccom130.t$ftyp$l IN (:IdentificadorFiscal)
   AND NVL(tfcmg011.t$baoc$l, '0') IN (:Banco)
   AND ( (:CNPJTodos = 0) OR (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IN (:CNPJ) AND (:CNPJTodos = 1)) )
+
+  AND CASE WHEN tccom100.t$okfi$c = 1
+             THEN 1 
+           ELSE   0 
+      END IN (:OkFiscal)
+  AND tccom124.t$cbtp IN (:TipoNegocioPnCredor)
   
 ORDER BY DATA_CRIACAO
