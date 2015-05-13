@@ -194,16 +194,16 @@ SELECT DISTINCT
   tccom130ft.t$namc || ' ' ||
   tccom130ft.t$hono || ' ' ||
   tccom130ft.t$namd         TRANSP_ENDERECO,                        --32
-  CASE WHEN cisli940.t$stat$l = 101 THEN  --ESTORNADO
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
     DATA_FAT.ESTORNADO
   ELSE  NULL END            DATA_CANCELAMENTO,                      --33
-  CASE WHEN cisli940.t$stat$l = 101 THEN  --ESTORNADO
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
     SLI941.QTDE
   ELSE 0.00 END             QTDE_CANCELADA,                         --34
-  CASE WHEN cisli940.t$stat$l = 101 THEN  --ESTORNADO
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
     cisli940.t$amnt$l
   ELSE 0.00 END             VALOR_CANCELADO,                        --35
-  CASE WHEN cisli940.t$stat$l = 101 THEN  --ESTORNADO
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
     '1'
   ELSE '0' END              NOTA_CANCELADA,                          --36
   ' '                       INDICA_CONSUMIDOR_FINAL,                 --37
@@ -298,13 +298,27 @@ FROM  baandb.tcisli940301  cisli940
            
     LEFT JOIN baandb.ttccom130301 tccom130c
            ON tccom130c.t$cadr = tccom100f.t$cadr
-    
+
+--    LEFT JOIN ( Select znsls000.t$indt$c,
+--                       znsls000.t$itmf$c IT_FRETE,
+--                       znsls000.t$itmd$c IT_DESP,
+--                       znsls000.t$itjl$c IT_JUROS
+--                from baandb.tznsls000301   znsls000
+--                where rownum = 1 )    PARAM
+--           ON PARAM.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+                  
     LEFT JOIN ( select sum(a.t$ldam$l) DESCONTO,
                        sum(a.t$dqua$l) QTDE,
                         a.t$fire$l
-                from  baandb.tcisli941301 a
+                from  baandb.tcisli941301 a,
+                      baandb.tznsls000301 b
+                where b.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+                and   a.t$item$l != b.t$itmf$c      --ITEM FRETE
+                and   a.t$item$l != b.t$itmd$c      --ITEM DESPESAS
+                and   a.t$item$l != b.t$itjl$c      --ITEM JUROS
                 group by a.t$fire$l ) SLI941
            ON SLI941.t$fire$l = cisli940.t$fire$l
+  
     
     LEFT JOIN baandb.ttccom130301 tccom130ft         --transportadora faturamento
            ON tccom130ft.t$cadr=cisli940.t$cfra$l
