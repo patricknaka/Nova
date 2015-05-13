@@ -31,7 +31,7 @@ SELECT
 		' '									LANCAMENTO_CAIXA,
 		0									VALOR_CANCELADO,
 		0									TOTAL_QTDE_CANCELADA,
-		CISLI941.T$DQUA$L							QTDE_ITEM,
+		ZNSLS401.QITM						QTDE_ITEM,						-- alt1
 		' '									MOTIVO_CANCELAMENTO,
 		CASE WHEN ZNSLS400.T$FTYP$C='PF'			
 		 THEN ZNSLS400.T$ICLF$C			
@@ -78,7 +78,8 @@ INNER JOIN (SELECT	C.T$NCIA$C,
                     C.T$SQPD$C,
                     C.T$ENTR$C,
                     SUM(C.T$QTVE$C) T$QTVE$C,
-					MAX(C.T$PZTR$C) T$PZTR$C
+					MAX(C.T$PZTR$C) T$PZTR$C,
+					COUNT(DISTINCT C.T$ITEM$C) QITM
 			FROM	BAANDB.TZNSLS401301 C
 			GROUP BY C.T$NCIA$C,
 			         C.T$UNEG$C,
@@ -157,7 +158,7 @@ SELECT
 		TDREC940.T$TFDA$L*-1									VALOR_PAGO,
 		(TDREC940.T$TFDA$L + TDREC940.T$FGHT$L)*-1				VALOR_VENDA_BRUTA,
 		(TDREC940.T$TFDA$L + TDREC940.T$FGHT$L)*-1				VALOR_TROCA,
-		TDREC941.T$QNTY$L										QTDE_TROCA_TOTAL,
+		ZNSLS401.T$QTVE$C										QTDE_TROCA_TOTAL,					--ALT2
 		' ' 													TICKET_IMPRESSO,
 		' '														TERMINAL,
 		' '														GERENTE_LOJA,
@@ -165,7 +166,7 @@ SELECT
 		' '														LANCAMENTO_CAIXA,
 		0														VALOR_CANCELADO,
 		0														TOTAL_QTDE_CANCELADA,
-		TDREC941.T$QNTY$L										QTDE_ITEM,
+		ZNSLS401.QITM											QTDE_ITEM,							-- ALT2
 		' '														MOTIVO_CANCELAMENTO,
 		CASE WHEN ZNSLS400.T$FTYP$C='PF'			
 		 THEN ZNSLS400.T$ICLF$C			
@@ -205,23 +206,24 @@ INNER JOIN	BAANDB.TZNSLS400301	ZNSLS400	ON	ZNSLS400.T$NCIA$C	=	ZNSLS004.T$NCIA$C
                                             AND ZNSLS400.T$PECL$C   =	ZNSLS004.T$PECL$C
                                             AND ZNSLS400.T$SQPD$C   =	ZNSLS004.T$SQPD$C
 											
---INNER JOIN (SELECT	C.T$NCIA$C,
---                    C.T$UNEG$C,
---                    C.T$PECL$C,
---                    C.T$SQPD$C,
---                    C.T$ENTR$C,
---                    SUM(C.T$QTVE$C) T$QTVE$C,
---					MAX(C.T$PZTR$C) T$PZTR$C
---			FROM	BAANDB.TZNSLS401301 C
---			GROUP BY C.T$NCIA$C,
---			         C.T$UNEG$C,
---			         C.T$PECL$C,
---			         C.T$SQPD$C,
---			         C.T$ENTR$C) ZNSLS401	ON	ZNSLS401.T$NCIA$C	=	ZNSLS004.T$NCIA$C
---					                        AND ZNSLS401.T$UNEG$C   =	ZNSLS004.T$UNEG$C
---					                        AND ZNSLS401.T$PECL$C   =	ZNSLS004.T$PECL$C
---					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS004.T$SQPD$C
---											AND ZNSLS401.T$ENTR$C   =	ZNSLS004.T$ENTR$C
+INNER JOIN (SELECT	C.T$NCIA$C,
+					C.T$UNEG$C,
+					C.T$PECL$C,
+					C.T$SQPD$C,
+					C.T$ENTR$C,
+					SUM(C.T$QTVE$C) T$QTVE$C,
+					-- MAX(C.T$PZTR$C) T$PZTR$C
+					COUNT(DISTINCT C.T$ITEM$C) QITM	
+			FROM	BAANDB.TZNSLS401301 C
+			GROUP BY C.T$NCIA$C,
+			         C.T$UNEG$C,
+			         C.T$PECL$C,
+			         C.T$SQPD$C,
+			         C.T$ENTR$C) ZNSLS401	ON	ZNSLS401.T$NCIA$C	=	ZNSLS004.T$NCIA$C
+					                        AND ZNSLS401.T$UNEG$C   =	ZNSLS004.T$UNEG$C
+					                        AND ZNSLS401.T$PECL$C   =	ZNSLS004.T$PECL$C
+					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS004.T$SQPD$C
+											AND ZNSLS401.T$ENTR$C   =	ZNSLS004.T$ENTR$C
 											
 --INNER JOIN (SELECT	D.T$NCIA$C,
 --                    D.T$UNEG$C,
@@ -239,11 +241,11 @@ INNER JOIN	BAANDB.TZNSLS400301	ZNSLS400	ON	ZNSLS400.T$NCIA$C	=	ZNSLS004.T$NCIA$C
 
 INNER JOIN	BAANDB.TTDREC940301	TDREC940	ON	TDREC940.T$FIRE$L	=	TDREC947.T$FIRE$L
 
-INNER JOIN (SELECT	E.T$FIRE$L,
-					SUM(E.T$ADDC$L) T$ADDC$L,
-					SUM(E.T$QNTY$L) T$QNTY$L
-			FROM	BAANDB.TTDREC941301 E
-			GROUP BY E.T$FIRE$L) TDREC941	ON	TDREC941.T$FIRE$L	=	TDREC940.T$FIRE$L
+-- INNER JOIN (SELECT	E.T$FIRE$L,
+					-- SUM(E.T$ADDC$L) T$ADDC$L,
+					-- SUM(E.T$QNTY$L) T$QNTY$L
+			-- FROM	BAANDB.TTDREC941301 E
+			-- GROUP BY E.T$FIRE$L) TDREC941	ON	TDREC941.T$FIRE$L	=	TDREC940.T$FIRE$L
 					 			
 LEFT JOIN (	SELECT	F.T$FIRE$L,
 					F.T$AMNT$L
