@@ -1,11 +1,12 @@
-
+﻿
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
 SELECT
 		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,	
 		'NIKE.COM'												FILIAL,
-		ZNSLS400.T$DTEM$C										DATA_VENDA,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
 		CISLI941.T$LINE$L										ITEM,
 		' '														CODIGO_BARRA,
 		CISLI941.T$DQUA$L										QTDE,
@@ -104,7 +105,8 @@ UNION
 SELECT
 		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,	
 		'NIKE.COM'												FILIAL,
-		ZNSLS400.T$DTEM$C										DATA_VENDA,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
 		ZNSLS401.T$SEQU$C										ITEM,
 		' '														CODIGO_BARRA,
 		ZNSLS401.T$QTVE$C										QTDE,

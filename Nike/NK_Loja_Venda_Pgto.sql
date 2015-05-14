@@ -1,4 +1,4 @@
-
+﻿
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
@@ -21,7 +21,8 @@ SELECT
 				15,	'  ')										COD_FORMA_PGTO,     --15	BNDES								' ' - Não existe
 		
 		' '														CAIXA_VENDEDOR,
-		ZNSLS402.T$DTRA$C										DATA,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		ZNSLS004.T$ENTR$C										NUMERO_CUPOM_FISCAL,
 		ZNSLS401.T$VLDI$C										DESCONTO_PGTO,
 		ZNSLS402.T$VLMR$C										TOTAL_VENDA,
@@ -39,7 +40,8 @@ SELECT
 		CASE WHEN CISLI940.T$FDTY$L=15
 		 THEN CISLI940_FAT.T$DOCN$L
 		 ELSE CISLI940.T$DOCN$L END								NUMERO_FISCAL_VENDA,
-		ZNSLS400.T$DTEM$C										DATA_VENDA
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA
 FROM
 		(	SELECT	A.T$FIRE$L,
 					A.T$SLSO
@@ -162,7 +164,8 @@ SELECT
 				15,	'  ')										COD_FORMA_PGTO,     --15	BNDES								' ' - Não existe
 		
 		' '														CAIXA_VENDEDOR,
-		TDREC940.T$DATE$L										DATA,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					NUMERO_CUPOM_FISCAL,
 		ZNSLS401.T$VLFR$C*-1									DESCONTO_PGTO,
 		TDREC940.T$TFDA$L*-1									TOTAL_VENDA,
@@ -176,7 +179,8 @@ SELECT
 		' '														SERIE_NF_SAIDA,
 		' '														SERIE_NF_CANCELAMENTO,
 		TDREC940.T$DOCN$L										NUMERO_FISCAL_VENDA,
-		TDREC940.T$DATE$L										DATA_VENDA
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA
 FROM
 		(	SELECT	A.T$FIRE$L,
 					A.T$ORNO$L
@@ -287,7 +291,8 @@ SELECT
 				15,	'  ')										COD_FORMA_PGTO,     --15	BNDES								' ' - Não existe
 		
 		' '														CAIXA_VENDEDOR,
-		ZNSLS400.T$DTIN$C										DATA,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					NUMERO_CUPOM_FISCAL,
 		ZNSLS401.VL_DSCONT									DESCONTO_PGTO,
 		ZNSLS402.T$VLMR$C										TOTAL_VENDA,
@@ -301,7 +306,8 @@ SELECT
 		' '														SERIE_NF_SAIDA,
 		' '														SERIE_NF_CANCELAMENTO,
 		' '														NUMERO_FISCAL_VENDA,
-		ZNSLS400.T$DTEM$C										DATA_VENDA
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA
 FROM
 			BAANDB.TZNSLS400301	ZNSLS400
 											
