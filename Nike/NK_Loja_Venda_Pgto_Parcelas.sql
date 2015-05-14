@@ -49,7 +49,7 @@ SELECT
 				12, '09',                                                           --12	Cartão de Débito (DB)				E - CARTAO DE DEBITO
 				13, '  ',                                                           --13	Pagamento Antecipado				' ' - Não existe
 				15,	'  ')	END									COD_FORMA_PGTO,     --15	BNDES								' ' - Não existe			
-		CISLI940.T$AMNT$L										VALOR,
+		ZNSLS402.T$VLPG$C										VALOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$PVEN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
@@ -68,7 +68,7 @@ SELECT
 		' '												ID_DOCUMENTO_ECF,
 		ZNSLS402.T$PECL$C || ZNSLS402.T$SQPD$C								TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,												
+		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA												
 
 FROM
 		(	SELECT	A.T$FIRE$L,
@@ -194,7 +194,7 @@ SELECT
 
 		
 		'D'														TIPO_PAGTO,
-		TDREC940.T$TFDA$L										VALOR,
+		ZNSLS402.T$VLPG$C											VALOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L+1, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
@@ -208,7 +208,7 @@ SELECT
 		' '														CHEQUE_CARTAO,
 		' '														NUMERO_LOTE,
 		0														TROCO,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
 		' '														ID_DOCUMENTO_ECF,
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,
@@ -322,9 +322,10 @@ SELECT
 
 		'6'														TIPO_PAGTO,
 			
-		ZNSLS401.VL_MERCD 
-		- ZNSLS401.VL_DSCONT 
-		+ ZNSLS401.VL_FRETE										VALOR,
+		-- ZNSLS401.VL_MERCD 
+		-- - ZNSLS401.VL_DSCONT 
+		-- + ZNSLS401.VL_FRETE										VALOR,
+		ZNSLS402.T$VLPG$C											VALOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C+1, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
@@ -338,7 +339,7 @@ SELECT
 		' '														CHEQUE_CARTAO,
 		' '														NUMERO_LOTE,
 		0														TROCO,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
 		' '														ID_DOCUMENTO_ECF,
 		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
