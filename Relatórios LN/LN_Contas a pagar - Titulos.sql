@@ -10,7 +10,7 @@ SELECT
     tdrec940.t$fire$l                           CODE_REFER,
     tfacp200.t$docn$l                           NUME_NF,
     tfacp200.t$seri$l                           SERI_NF,
-    regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
+    TO_NUMBER((regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')))
                                                 CNPJ_FORN,
     tccom100.t$nama                             NOME_FORN,
     tfacp200.t$docd                             DATA_EMISSAO,
@@ -18,7 +18,7 @@ SELECT
     tfacp201.t$payd                             DATA_VENCTO,
     tfacp200.t$amnt                             VALO_TITULO,  
     tfacp200.t$balc                             SALD_TITULO,
-    '201 '                                       CODE_CIA,             
+    '201 '                                      CODE_CIA,             
 
     CASE WHEN (tfacp200.t$balc - tfacp200.t$bala) = 0 
            THEN 1
@@ -39,31 +39,81 @@ SELECT
     NVL(Trim(tfacp200.t$bloc), '000')           STATUS_BLOQUEIO,
     NVL(BLOQUEIO.DSC_STATUS_BLOQUEIO, 'Sem bloqueio') 
                                                 DESC_STATUS_BLOQUEIO,
+
+    CASE WHEN tfcmg101.t$amnt IS NULL THEN
+        tfacp201.t$balc
+    ELSE tfcmg101.t$amnt END                      VALOR_APAGAR,
+
+    CASE WHEN tfacp201.t$brel = ' ' THEN
+          tfcmg101.t$bank
+    ELSE tfacp201.t$brel  END                     NUM_REL_BANCARIA,
     
---    tfacp201.t$balc-tfacp200.t$bala             VALOR_APAGAR,
-    tfcmg101.t$amnt                             VALOR_APAGAR,
-    tfacp201.t$brel                             NUM_REL_BANCARIA, 
-    tfcmg001.t$desc                             DESC_REL_BANCARIA,
+    CASE WHEN tfcmg001_CMG.t$desc IS NULL THEN
+        tfcmg001_ACP.t$desc
+    ELSE tfcmg001_CMG.t$desc END                  DESC_REL_BANCARIA,
 
-    case when (    (tfacp201.t$brel = null or trim(tfacp201.t$brel) = '') 
-               and (tfcmg001.t$desc = null or trim(tfcmg001.t$desc) = '') ) then ''
-         else Concat(Concat(tfacp201.t$brel, ' - '), tfcmg001.t$desc) 
-     end                                        REL_BANCARIA,
-
-    NVL(TRIM(tfacp201.t$paym), 'N/A')           METODO_PAGTO,
-    tfacp201.t$bank                             BANCO_PARCEIRO,
-    tfcmg011.t$agcd$l                           NUME_AGENCIA,
-    tfcmg011.t$agdg$l                           DIGI_AGENCIA,
-    tfcmg011.t$desc                             DESC_AGENCIA,
-    tccom125.t$bano                             NUME_CONTA,
-    tccom125.t$dacc$d                           DIGI_CONTA,
-
-    tfcmg101.t$basu                             COD_BANCO_PN,              
-    tfcmg011.t$desc                             BANCO_PN,
-    tfcmg011.t$agcd$l                           AG_BANCO_PN,
-    tfcmg011.t$agdg$l                           DIG_AG_PN,
-    tccom125.t$bano                             CONTA_BANCO_PN,
-    tccom125.t$dacc$d                           DIG_CONTA_BANCO_PN,
+    CASE WHEN tfcmg101.t$bank IS NULL THEN 
+      CASE WHEN tfacp201.t$brel IS NULL THEN
+          ' '
+      ELSE 
+          tfacp201.t$brel || '-' || tfcmg001_ACP.t$desc  
+      END
+    ELSE
+      tfcmg101.t$bank || '-' || tfcmg001_CMG.t$desc 
+    END                                           REL_BANCARIA,
+    
+    CASE WHEN tfcmg101.t$paym = ' ' THEN
+      NVL(TRIM(tfacp201.t$paym), 'N/A')
+    ELSE
+      NVL(TRIM(tfcmg101.t$paym), 'N/A') END       METODO_PAGTO,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+        tfacp201.t$bank
+    ELSE tfcmg101.t$basu END                      BANCO_PARCEIRO,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tfcmg011_ACP.t$agcd$l                           
+    ELSE  tfcmg011_CMG.t$agcd$l END             NUME_AGENCIA,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tfcmg011_ACP.t$agdg$l                           
+    ELSE  tfcmg011_CMG.t$agdg$l END             DIGI_AGENCIA,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tfcmg011_ACP.t$desc                         
+    ELSE  tfcmg011_CMG.t$desc END               DESC_AGENCIA,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tccom125_ACP.t$bano                             
+    ELSE  tccom125_CMG.t$bano END                NUME_CONTA,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tccom125_ACP.t$dacc$d                           
+    ELSE  tccom125_CMG.t$dacc$d END             DIGI_CONTA,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tfacp201.t$bank
+    ELSE  tfcmg101.t$basu END                   COD_BANCO_PN,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tfcmg011_ACP.t$desc                             
+    ELSE  tfcmg011_CMG.t$desc END               BANCO_PN,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tfcmg011_ACP.t$agcd$l                          
+    ELSE  tfcmg011_CMG.t$agcd$l END             AG_BANCO_PN,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tfcmg011_ACP.t$agdg$l                     
+    ELSE  tfcmg011_CMG.t$agdg$l END             DIG_AG_PN,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tccom125_ACP.t$bano                   
+    ELSE  tccom125_CMG.t$bano END               CONTA_BANCO_PN,
+    
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+          tccom125_ACP.t$dacc$d                 
+    ELSE  tccom125_CMG.t$dacc$d END             DIG_CONTA_BANCO_PN,
                    
     tfcmg101.t$btno                             LOTE_PAGTO,
     tdrec940.t$fire$l                           NUM_RFISCAL,
@@ -165,8 +215,6 @@ FROM       baandb.ttfacp200201   tfacp200
  LEFT JOIN baandb.ttfcmg101201 tfcmg101
         ON tfcmg101.t$ttyp = tfacp200.t$ttyp
        AND tfcmg101.t$ninv = tfacp200.t$ninv
-       --AND tfcmg101.t$ptyp = tflcb230.t$ptyp$d    --verificar
-       --AND tfcmg101.t$pdoc = tflcb230.t$docn$d    --verificar
     
  LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
@@ -280,15 +328,25 @@ FROM       baandb.ttfacp200201   tfacp200
         ON tfacp201.t$ttyp = tfacp200.t$ttyp
        AND tfacp201.t$ninv = tfacp200.t$ninv
 
- LEFT JOIN baandb.ttfcmg001201  tfcmg001
-        ON tfcmg001.t$bank = tfacp201.t$brel
+ LEFT JOIN baandb.ttfcmg001201  tfcmg001_ACP
+        ON tfcmg001_ACP.t$bank = tfacp201.t$brel
  
- LEFT JOIN baandb.ttccom125201  tccom125
-        ON tccom125.t$ptbp = tfacp201.t$ifbp
-       AND tccom125.t$cban = tfacp201.t$bank
+  LEFT JOIN baandb.ttfcmg001201  tfcmg001_CMG
+        ON tfcmg001_CMG.t$bank = tfcmg101.t$bank
+
+ LEFT JOIN baandb.ttccom125201  tccom125_ACP
+        ON tccom125_ACP.t$ptbp = tfacp201.t$ifbp
+       AND tccom125_ACP.t$cban = tfacp201.t$bank
  
- LEFT JOIN baandb.ttfcmg011201  tfcmg011
-        ON tfcmg011.t$bank = tccom125.t$brch
+  LEFT JOIN baandb.ttccom125201  tccom125_CMG
+        ON tccom125_CMG.t$ptbp = tfcmg101.t$ifbp
+       AND tccom125_CMG.t$cban = tfcmg101.t$basu
+       
+ LEFT JOIN baandb.ttfcmg011201  tfcmg011_ACP
+        ON tfcmg011_ACP.t$bank = tccom125_ACP.t$brch
+ 
+ LEFT JOIN baandb.ttfcmg011201  tfcmg011_CMG
+        ON tfcmg011_CMG.t$bank = tccom125_CMG.t$brch
  
  LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
@@ -428,6 +486,9 @@ AND not exists (  select tfacp601.t$payt, tfacp601.t$payd, tfacp601.t$payl, tfac
                       and tfacp601.t$idoc=tfacp200.t$ninv
                       and tfacp601.t$step=20 )
 
+AND tfacp200.t$ttyp = 'PFA'
+AND (tfacp200.t$ninv = 694 or tfacp200.t$ninv = 691 or tfacp200.t$ninv = 695 or tfacp200.t$ninv = 768 or
+      tfacp200.t$ninv = 771 )
 
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND tfacp200.t$dued between :VencimentoDe AND :VencimentoAte
