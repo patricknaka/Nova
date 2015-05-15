@@ -20,9 +20,10 @@ SELECT
 		0														NÃO_MOVIMENTA_ESTOQUE,
 		' '														INDICA_ENTREGA_FUTURA,
 		0														QTDE_CANCELADA,
-		NVL(Q_IPI.T$AMNT$L,0)									IPI,
+		NVL(Q_IPI.T$RATE$L,0)									IPI,
 		NVL(Q_ICMS.T$RATE$L,0)									ALIQUOTA,
-		NVL(CUSTO.MAUC,0)										CUSTO,
+		
+		TDSLS415.CTOT / CISLI941.T$DQUA$L  						CUSTO,
 		'01'													COR_PRODUTO,
 		TCIBD001.T$SIZE$C										TAMANHO
 FROM
@@ -54,21 +55,18 @@ LEFT JOIN	BAANDB.TTCIBD004301	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
 											AND	TCIBD004.T$BPID		=	' '
 											AND	TCIBD004.T$ITEM		=	TCIBD001.T$ITEM
 											
- LEFT JOIN ( 	select 		whwmd217.t$item item,                             
-							--whwmd217.t$cwar cwar,                                   
-							case when sum(nvl(whwmd217.t$mauc$1,0)) = 0                             
-							 then round(sum(whwmd217.t$ftpa$1*a.t$qhnd)/sum(a.t$qhnd), 4)                                           
-							 else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
-							 end mauc                                                
-				from baandb.twhwmd217301 whwmd217                      
-				left join baandb.twhinr140301 a                             
-								on a.t$cwar = whwmd217.t$cwar                              
-								and a.t$item = whwmd217.t$item                              
-				group by 	whwmd217.t$item                                        
-							--whwmd217.t$cwar 
-											 ) custo           						-- Custo médio do item em todos os armazens                     
-											--ON custo.cwar = TDSLS401.T$CWAR                         
-											ON	custo.item 			= 	TCIBD001.T$ITEM
+LEFT JOIN (	SELECT	A.T$ORNO,
+					A.T$PONO,
+					A.T$SQNB,
+					SUM(A.T$COGS$1) CTOT
+			FROM	BAANDB.TTDSLS415301 A
+			WHERE 	A.T$CSTO = 2
+			GROUP BY A.T$ORNO,
+			         A.T$PONO,
+			         A.T$SQNB)	TDSLS415	ON	TDSLS415.T$ORNO		=	CISLI245.T$SLSO
+											AND	TDSLS415.T$PONO		=	CISLI245.T$PONO
+			                                AND	TDSLS415.T$SQNB		=	CISLI245.T$SQNB
+			
 
 LEFT JOIN (	SELECT 	A.T$FIRE$L,
 					A.T$LINE$L,
@@ -93,7 +91,19 @@ WHERE
 		AND	CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
 		AND	CISLI940.T$FDTY$L != 14
 		
-		
+		AND CISLI941.T$ITEM$L NOT IN 
+
+		(select a.t$itjl$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmd$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b)
+		 UNION ALL
+		 select a.t$itmf$c 
+				from baandb.tznsls000201 a 
+				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))		
 
 
 		
@@ -122,7 +132,7 @@ SELECT
 		0														QTDE_CANCELADA,
 		0														IPI,
 		0														ALIQUOTA,
-		NVL(CUSTO.MAUC,0)										CUSTO,
+		TDSLS415.CTOT / ZNSLS401.T$QTVE$C						CUSTO,
 		'01'													COR_PRODUTO,
 		TCIBD001.T$SIZE$C										TAMANHO
 FROM
@@ -138,25 +148,22 @@ INNER JOIN	BAANDB.TTDSLS400301 TDSLS400	ON	TDSLS400.T$ORNO		=	ZNSLS401.T$ORNO$C
 											
 INNER JOIN	BAANDB.TTCIBD001301	TCIBD001	ON	TCIBD001.T$ITEM		=	ZNSLS401.T$ITML$C
 
+LEFT JOIN (	SELECT	A.T$ORNO,
+					A.T$PONO,
+					A.T$SQNB,
+					SUM(A.T$COGS$1) CTOT
+			FROM	BAANDB.TTDSLS415301 A
+			WHERE 	A.T$CSTO = 2
+			GROUP BY A.T$ORNO,
+			         A.T$PONO,
+			         A.T$SQNB)	TDSLS415	ON	TDSLS415.T$ORNO		=	ZNSLS401.T$ORNO$C
+											AND	TDSLS415.T$PONO		=	ZNSLS401.T$PONO$C
+
+
 LEFT JOIN	BAANDB.TTCIBD004301	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
 											AND	TCIBD004.T$BPID		=	' '
 											AND	TCIBD004.T$ITEM		=	TCIBD001.T$ITEM
 											
- LEFT JOIN ( 	select 		whwmd217.t$item item,                             
-							--whwmd217.t$cwar cwar,                                   
-							case when sum(nvl(whwmd217.t$mauc$1,0)) = 0                             
-							 then round(sum(whwmd217.t$ftpa$1*a.t$qhnd)/sum(a.t$qhnd), 4)                                           
-							 else round(sum(whwmd217.t$mauc$1) / sum(a.t$qhnd), 4)  
-							 end mauc                                                
-				from baandb.twhwmd217301 whwmd217                      
-				left join baandb.twhinr140301 a                             
-								on a.t$cwar = whwmd217.t$cwar                              
-								and a.t$item = whwmd217.t$item                              
-				group by 	whwmd217.t$item                                        
-							--whwmd217.t$cwar 
-											 ) custo           						-- Custo médio do item em todos os armazens                     
-											--ON custo.cwar = TDSLS401.T$CWAR                         
-											ON	custo.item 			= 	TCIBD001.T$ITEM
 
 											
 
