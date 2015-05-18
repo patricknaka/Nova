@@ -1,4 +1,4 @@
---***************************************************************************************************************************
+﻿--***************************************************************************************************************************
 --				COLETA
 --***************************************************************************************************************************
 
@@ -6,9 +6,10 @@ SELECT
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,	
 		'NIKE.COM'												FILIAL,
 		TDREC941.T$LINE$L										ITEM,
-		ZNSLS400.T$DTEM$C										DATA_VENDA,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		' '														CODIGO_BARRA,
-		NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM) 					PRODUTO,				-- Estamos usando a tabela de código alternativo de item mas ainda esperamos a resposta dos consultores para confirmar se será usado este conveito na Nike
+		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))			PRODUTO,				-- Estamos usando a tabela de código alternativo de item mas ainda esperamos a resposta dos consultores para confirmar se será usado este conveito na Nike
 		'01'													COR_PRODUTO,
 		TCIBD001.T$SIZE$C										TAMANHO,
 		TDREC941.T$QNTY$L										QTDE,		
