@@ -19,8 +19,8 @@ SELECT
     sum(cisli941.t$dqua$l)             QTD_FATURADA,
  
     CASE WHEN cisli941.t$iprt$l = 0 
-           THEN tdsls401.t$pric 
-         ELSE   cisli941.t$pric$l
+           THEN round(tdsls401.t$pric,2) 
+         ELSE   round(cisli941.t$pric$l,2)
      END                               VL_PRODUTO,
   
     CASE WHEN sum(cisli941.t$amnt$l) = 0 
@@ -29,8 +29,8 @@ SELECT
      END                               VL_TOTAL_ITEM,
   
     CASE WHEN cisli941.t$gamt$l = 0 
-           THEN tdsls401.t$pric 
-         ELSE   cisli941.t$gamt$l
+           THEN round(tdsls401.t$pric,2) 
+         ELSE   round(cisli941.t$gamt$l,2)
      END                               VL_MERCADORIA,
   
     CASE WHEN sum(cisli941.t$fght$l) = 0 
@@ -169,7 +169,6 @@ INNER JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_OA_ORDERS
 WHERE cisli940.t$fdty$l != 11
   AND cisli940.t$docn$l != 0
   AND cisli940.t$stat$l NOT IN (2, 101)
-  
 
   -- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
                 -- 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -192,12 +191,12 @@ GROUP BY FILIAL.DSC_FILIAL,
          TRIM(cisli941.t$item$l),            
          tcibd001.t$dsca ,                   
          CASE WHEN cisli941.t$iprt$l = 0 
-                THEN tdsls401.t$pric 
-              ELSE   cisli941.t$pric$l
+                THEN round(tdsls401.t$pric,2) 
+              ELSE   round(cisli941.t$pric$l,2)
           END,                               
          CASE WHEN cisli941.t$gamt$l = 0 
-                THEN tdsls401.t$pric 
-              ELSE   cisli941.t$gamt$l
+                THEN round(tdsls401.t$pric,2) 
+              ELSE   round(cisli941.t$gamt$l,2)
           END,                               
          cisli940.t$itbp$l,                    
          cisli940.t$itbn$l,                    
