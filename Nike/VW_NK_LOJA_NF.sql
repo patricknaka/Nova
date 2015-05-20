@@ -8,7 +8,7 @@ SELECT DISTINCT
   tdrec940.t$tfda$l         VALOR_TOTAL,                            --06
   ' '                       CGC_CPF,                                --07
   tdrec940.t$fovn$l         COD_CLIFOR,                             --08
-  tttxt010r.t$text          OBS,                                    --09
+  cast(NVL(tttxt010r.t$text,' ') as varchar(100))        OBS,                --09
   tdrec940.t$seri$l         SERIE_NF,                               --10
   tdrec940.t$docn$l         NF_NUMERO,                              --11
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -96,7 +96,8 @@ SELECT DISTINCT
   ' '                       ENTREGA_CELULAR,                         --70
   ' '                       ENTREGA_NOME_DESTINATARIO,               --71
   '0'                       ENTREGA_DEST_COMPR,                      --72
-  ' '                       NUMERO_PEDIDO_VENDA                      --73
+  ' '                       NUMERO_PEDIDO_VENDA,                     --73
+  'E'                       TP_MOVTO                                 -- Criado para separar na tabela as entradas e saídas
   
 FROM  baandb.ttdrec940201  tdrec940
 
@@ -140,7 +141,7 @@ FROM  baandb.ttdrec940201  tdrec940
                 from    baandb.tbrnfe020201 brnfe020
                 where   brnfe020.t$stat$l = 1 
                 group by brnfe020.t$ncmp$l, brnfe020.t$refi$l) DT_NFE_REC
-           ON DT_NFE_REC.t$ncmp$l = 301
+           ON DT_NFE_REC.t$ncmp$l = 201
           AND DT_NFE_REC.t$refi$l = tdrec940.t$fire$l
           
      LEFT JOIN baandb.ttttxt010201 tttxt010r 
@@ -164,7 +165,7 @@ SELECT DISTINCT
     tccom130c.t$fovn$l
   ELSE ' ' END              CGC_CPF,                                --07
   tccom130c.t$fovn$l        COD_CLIFOR,                             --08
-  tttxt010f.t$text          OBS,                                    --09
+  cast(NVL(tttxt010f.t$text,' ') as varchar(100))         OBS,               --09
   cisli940.t$seri$l         SERIE_NF,                               --10
   cisli940.t$docn$l         NF_NUMERO,                              --11
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -282,7 +283,8 @@ SELECT DISTINCT
   CASE WHEN SLS004.ENTREGA = 0 THEN
       TO_CHAR(cisli940.t$docn$l) || cisli940.t$seri$l
   ELSE TO_CHAR(SLS004.ENTREGA) END   
-                            NUMERO_PEDIDO_VENDA                      --73
+                            NUMERO_PEDIDO_VENDA,                     --73
+  'S'                       TP_MOVTO                                 -- Criado para separar na tabela as entradas e saídas
   
 FROM  baandb.tcisli940201  cisli940
 
@@ -339,7 +341,7 @@ FROM  baandb.tcisli940201  cisli940
                 from    baandb.tbrnfe020201 brnfe020
                 where   brnfe020.t$stat$l = 1 
                 group by brnfe020.t$ncmp$l, brnfe020.t$refi$l) DT_NFE_FAT
-           ON DT_NFE_FAT.t$ncmp$l = 301
+           ON DT_NFE_FAT.t$ncmp$l = 201
           AND DT_NFE_FAT.t$refi$l = cisli940.t$fire$l
           
     LEFT JOIN baandb.tcisli959201 cisli959
@@ -384,5 +386,3 @@ FROM  baandb.tcisli940201  cisli940
           AND tttxt010f.t$seqe = 1
       
     WHERE cisli940.t$stat$l IN (5,6,101)
-
- 

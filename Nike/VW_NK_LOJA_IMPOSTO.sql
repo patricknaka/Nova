@@ -4,9 +4,9 @@ SELECT  DISTINCT
   TO_CHAR(tdrec940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --03
   tdrec940.t$seri$l             SERI_NF,                  --04
-  tdrec942.t$line$l             ITEM_IMPRESSAO,           --05
+  to_char(tdrec942.t$line$l)    ITEM_IMPRESSAO,           --05
   '1'                           SUB_ITEM_TAMANHO,         --06
-  tdrec942.t$brty$l             ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
+  to_char(tdrec942.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
   tdrec942.t$rate$l             TAXA_IMPOSTO,             --08
   '??????'                      INCIDENCIA,               --09
   tdrec942.t$amnt$l             VALOR_IMPOSTO,            --10
@@ -17,7 +17,8 @@ SELECT  DISTINCT
   ' '                           AGREGA_APOS_DESCONTO,     --13
   ' '                           CTB_LANCAMENTO_FINANCEIRO,--14
   ' '                           CTB_ITEM_FINANCEIRO,      --15
-  ' '                           EMPRESA
+  ' '                           EMPRESA,
+  'E'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
   
 FROM  baandb.ttdrec942201   tdrec942
 
@@ -34,9 +35,9 @@ SELECT  DISTINCT
   TO_CHAR(cisli940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --03
   cisli940.t$seri$l             SERI_NF,                  --04
-  cisli943.t$line$l             ITEM_IMPRESSAO,           --05
+  to_char(cisli943.t$line$l)    ITEM_IMPRESSAO,           --05
   '1'                           SUB_ITEM_TAMANHO,         --06
-  cisli943.t$brty$l             ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
+  to_char(cisli943.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
   cisli943.t$rate$l             TAXA_IMPOSTO,             --08
   '??????'                      INCIDENCIA,               --09
   cisli943.t$amnt$l             VALOR_IMPOSTO,            --10
@@ -47,7 +48,8 @@ SELECT  DISTINCT
   ' '                           AGREGA_APOS_DESCONTO,     --13
   ' '                           CTB_LANCAMENTO_FINANCEIRO,--14
   ' '                           CTB_ITEM_FINANCEIRO,      --15
-  ' '                           EMPRESA
+  ' '                           EMPRESA,
+  'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
   
 FROM  baandb.tcisli943201   cisli943
 
