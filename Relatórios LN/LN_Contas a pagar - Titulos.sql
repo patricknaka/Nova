@@ -221,9 +221,14 @@ FROM       baandb.ttfacp200301   tfacp200
         ON tflcb230.t$ttyp$d = tfacp200.t$ttyp
        AND tflcb230.t$ninv$d = tfacp200.t$ninv
 
+ LEFT JOIN baandb.ttfacp201301  tfacp201
+        ON tfacp201.t$ttyp = tfacp200.t$ttyp
+       AND tfacp201.t$ninv = tfacp200.t$ninv
+
  LEFT JOIN baandb.ttfcmg101301 tfcmg101
-        ON tfcmg101.t$ttyp = tfacp200.t$ttyp
-       AND tfcmg101.t$ninv = tfacp200.t$ninv
+        ON tfcmg101.t$ttyp = tfacp201.t$ttyp
+       AND tfcmg101.t$ninv = tfacp201.t$ninv
+       AND tfcmg101.t$schn = tfacp201.t$schn
     
  LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
@@ -333,10 +338,6 @@ FROM       baandb.ttfacp200301   tfacp200
  LEFT JOIN baandb.ttcmcs966301  tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
            
- LEFT JOIN baandb.ttfacp201301  tfacp201
-        ON tfacp201.t$ttyp = tfacp200.t$ttyp
-       AND tfacp201.t$ninv = tfacp200.t$ninv
-
  LEFT JOIN baandb.ttfcmg001301  tfcmg001_ACP
         ON tfcmg001_ACP.t$bank = tfacp201.t$brel
  
