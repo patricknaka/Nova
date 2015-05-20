@@ -1,6 +1,5 @@
-﻿
---***************************************************************************************************************************
---				VENDA
+﻿--***************************************************************************************************************************
+--				SAIDA
 --***************************************************************************************************************************
 SELECT
 		'NIKE.COM'								FILIAL,
@@ -41,8 +40,9 @@ SELECT
 		Q_IPI.T$AMNT$L								VALOR_IPI,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				EMISSAO,
-		ZNSLS401.T$PZTR$C							TRANSIT_TIME
-		
+		TO_CHAR(ZNSLS401.T$PZTR$C)							TRANSIT_TIME,
+    'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+
 FROM
 		(	SELECT	A.T$FIRE$L,
 					A.T$SLSO
@@ -132,10 +132,6 @@ WHERE
 		CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
 AND 	CISLI940.T$FDTY$L != 14
 
-
-
-
-
 --***************************************************************************************************************************
 --				COLETA
 --***************************************************************************************************************************
@@ -176,7 +172,8 @@ SELECT
 		Q_IPI.T$AMNT$L											VALOR_IPI,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$IDAT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				EMISSAO,
-		0														TRANSIT_TIME
+		TO_CHAR(0)														TRANSIT_TIME,
+    'C'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
 		
 FROM
 		(	SELECT	A.T$FIRE$L,
@@ -225,40 +222,16 @@ INNER JOIN (SELECT	C.T$NCIA$C,
 					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS004.T$SQPD$C
 											AND ZNSLS401.T$ENTR$C   =	ZNSLS004.T$ENTR$C
 											
---INNER JOIN (SELECT	D.T$NCIA$C,
---                    D.T$UNEG$C,
---                    D.T$PECL$C,
---                    D.T$SQPD$C,
---                    SUM(D.T$VLMR$C) T$VLMR$C
---			FROM	BAANDB.TZNSLS402201 D
---			GROUP BY D.T$NCIA$C,
---			         D.T$UNEG$C,
---			         D.T$PECL$C,
---			         D.T$SQPD$C) ZNSLS402	ON	ZNSLS402.T$NCIA$C	=	ZNSLS004.T$NCIA$C
---					                        AND ZNSLS402.T$UNEG$C   =	ZNSLS004.T$UNEG$C
---					                        AND ZNSLS402.T$PECL$C   =	ZNSLS004.T$PECL$C
---					                        AND ZNSLS402.T$SQPD$C   =	ZNSLS004.T$SQPD$C
-
 INNER JOIN	BAANDB.TTDREC940201	TDREC940	ON	TDREC940.T$FIRE$L	=	TDREC947.T$FIRE$L
-
--- INNER JOIN (SELECT	E.T$FIRE$L,
-					-- SUM(E.T$ADDC$L) T$ADDC$L,
-					-- SUM(E.T$QNTY$L) T$QNTY$L
-			-- FROM	BAANDB.TTDREC941201 E
-			-- GROUP BY E.T$FIRE$L) TDREC941	ON	TDREC941.T$FIRE$L	=	TDREC940.T$FIRE$L
 					 			
 LEFT JOIN (	SELECT	F.T$FIRE$L,
 					F.T$AMNT$L
 			FROM	BAANDB.TTDREC949201 F
 			WHERE	F.T$BRTY$L=3) Q_IPI		ON	Q_IPI.T$FIRE$L		=	TDREC940.T$FIRE$L
-
 											
 WHERE
 		TDREC940.T$STAT$L IN (4, 5)			-- APROVADO, APROVADO COM PROBLEMAS
 AND 	TDREC940.T$RFDT$L = 10
-
-
-
 
 --***************************************************************************************************************************
 --				INSTANCIA
@@ -303,7 +276,8 @@ SELECT
 		0														VALOR_IPI,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				EMISSAO,
-		0														TRANSIT_TIME
+		TO_CHAR(0)														TRANSIT_TIME,
+    'I'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
 		
 FROM
 			BAANDB.TZNSLS400201	ZNSLS400
@@ -330,7 +304,6 @@ INNER JOIN (SELECT	C.T$NCIA$C,
 					                        AND ZNSLS401.T$PECL$C   =	ZNSLS400.T$PECL$C
 					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS400.T$SQPD$C
 
-											
 INNER JOIN	BAANDB.TTDSLS400201 TDSLS400	ON	TDSLS400.T$ORNO		=	ZNSLS401.T$ORNO$C
 											
 INNER JOIN (SELECT	D.T$NCIA$C,
@@ -351,4 +324,3 @@ WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
 		AND TDSLS400.T$FDTY$L 	NOT IN (0,14)
-		
