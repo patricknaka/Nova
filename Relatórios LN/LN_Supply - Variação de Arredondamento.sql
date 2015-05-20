@@ -21,8 +21,11 @@ SELECT
 	   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone 'America/Sao_Paulo') AS DATE)					DT_REC,
 	
-	TDPUR451.LOGN													LOGIN
-			
+	TDPUR451.LOGN													LOGIN,
+  tdpur400.t$cotp                       TIPO_ORDEM_COMPRA,
+  tdpur094.t$dsca                       DESC_TIPO_ORDEM,
+  tdrec936.t$tldr$l                     TOLER_DIF_ARRED
+  
 FROM BAANDB.TTDPUR401301 TDPUR401
 			
 INNER JOIN	BAANDB.TTDPUR400301 TDPUR400
@@ -74,6 +77,11 @@ LEFT JOIN (	SELECT
 		AND	TDPUR451.T$PONO = TDPUR401.T$PONO
 		AND TDPUR451.T$SQNB = TDPUR401.T$SQNB	
 			
-			
+LEFT JOIN baandb.ttdpur094301 tdpur094
+       ON tdpur094.t$potp = tdpur400.t$cotp
+ 
+LEFT JOIN baandb.ttdrec936301 tdrec936
+       ON tdrec936.t$sern$l = 0
+       
 WHERE 	ABS(ABS(TDPUR401.T$PRIC) - ABS(NVL(TDREC941.T$PRIC$L, NVL(BRNEF941.T$PRIC$L, TDPUR401.T$PRIC))))>=0.5
 		AND TCMCS023.T$DSCA IN (:Departamento)
