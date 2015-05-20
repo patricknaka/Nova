@@ -11,7 +11,7 @@ SELECT DISTINCT
     '1'                         SUB_ITEM_TAMANHO,         --09
     tdrec941.t$dsca$l           DESCRICAO_ITEM,           --10
     ltrim(rtrim(nvl(tcibd004.t$item,tdrec941.t$item$l)))             
-				CODIGO_ITEM,              --11
+                                CODIGO_ITEM,              --11
     tcibd001.t$cuni             UNIDADE,                  --12
     tdrec941.t$pric$l           PRECO_UNITARIO,           --13
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
@@ -39,7 +39,7 @@ SELECT DISTINCT
     0                           VALOR_DESCONTOS,          --30
     tdrec941.t$fght$l           VALOR_RATEIO_FRETE,       --31
     tdrec941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
-    'E'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+    'E'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saÃ­das
     
 FROM  baandb.ttdrec941201 tdrec941
 
@@ -104,8 +104,14 @@ FROM  baandb.ttdrec941201 tdrec941
               ON REC942.t$fire$l = tdrec941.t$fire$l
              AND REC942.t$line$l = tdrec941.t$line$l
              AND REC942.t$brty$l = 2  --ICMS_ST
+         
+          LEFT JOIN baandb.tznsls000201 znsls000
+                 ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
                 
 WHERE tdrec940.t$stat$l IN (4,5,6)
+   AND tdrec941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
+   AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
+   AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS       
     
 UNION
 
@@ -150,7 +156,7 @@ SELECT DISTINCT
     0                           VALOR_DESCONTOS,          --30
     cisli941.t$fght$l           VALOR_RATEIO_FRETE,       --31
     cisli941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
-    'S'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+    'S'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saÃ­das
     
 FROM  baandb.tcisli941201 cisli941
 
@@ -215,5 +221,11 @@ FROM  baandb.tcisli941201 cisli941
               ON SLI943.t$fire$l = cisli941.t$fire$l
              AND SLI943.t$line$l = cisli941.t$line$l
              AND SLI943.t$brty$l = 2  --ICMS_ST
+              
+          LEFT JOIN baandb.tznsls000201 znsls000
+                 ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
                 
  WHERE cisli940.t$stat$l IN (5,6,101)
+   AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
+   AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
+   AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
