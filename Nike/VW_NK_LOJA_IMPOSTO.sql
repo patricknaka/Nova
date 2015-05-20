@@ -19,9 +19,9 @@ SELECT  DISTINCT
   ' '                           CTB_ITEM_FINANCEIRO,      --15
   ' '                           EMPRESA
   
-FROM  baandb.ttdrec942301   tdrec942
+FROM  baandb.ttdrec942201   tdrec942
 
-  LEFT JOIN baandb.ttdrec940301 tdrec940
+  LEFT JOIN baandb.ttdrec940201 tdrec940
          ON tdrec940.t$fire$l = tdrec942.t$fire$l
 
 WHERE tdrec940.t$stat$l IN (4,5,6)
@@ -49,9 +49,9 @@ SELECT  DISTINCT
   ' '                           CTB_ITEM_FINANCEIRO,      --15
   ' '                           EMPRESA
   
-FROM  baandb.tcisli943301   cisli943
+FROM  baandb.tcisli943201   cisli943
 
-  LEFT JOIN baandb.tcisli940301 cisli940
+  LEFT JOIN baandb.tcisli940201 cisli940
          ON cisli940.t$fire$l = cisli943.t$fire$l
          
  WHERE cisli940.t$stat$l IN (5,6,101)

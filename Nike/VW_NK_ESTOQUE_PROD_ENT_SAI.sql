@@ -48,7 +48,6 @@ WHERE
 			FROM BAANDB.TWHINH521201 A
 			WHERE A.T$ORNO = WHINH520.T$ORNO
 			AND A.T$QVRR>0) > 0
-      --and WHINH520.T$ORNO in ( 'A00015363')
 			
 -------------------------------------------------------------------------------------------------------------------
 UNION
@@ -102,4 +101,3 @@ WHERE
 			FROM BAANDB.TWHINH521201 A
 			WHERE A.T$ORNO = WHINH520.T$ORNO
 			AND A.T$QVRR<0) > 0
-      --and WHINH520.T$ORNO in ( 'A00015812')

@@ -10,11 +10,11 @@ SELECT DISTINCT
     tdrec941.t$line$l           ITEM_IMPRESSAO,           --08
     '1'                         SUB_ITEM_TAMANHO,         --09
     tdrec941.t$dsca$l           DESCRICAO_ITEM,           --10
-    nvl(tcibd004.t$item,tdrec941.t$item$l)             
+    ltrim(rtrim(nvl(tcibd004.t$item,tdrec941.t$item$l)))             
 				CODIGO_ITEM,              --11
     tcibd001.t$cuni             UNIDADE,                  --12
     tdrec941.t$pric$l           PRECO_UNITARIO,           --13
-    ' '                         PORCENTAGEM_ITEM_RATEIO,  --14
+    0                           PORCENTAGEM_ITEM_RATEIO,  --14
     tdrec941.t$addc$l           DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
     tttxt010r.t$text            OBS_ITEM,                 --17
@@ -40,20 +40,20 @@ SELECT DISTINCT
     tdrec941.t$fght$l           VALOR_RATEIO_FRETE,       --31
     tdrec941.t$insr$l           VALOR_RATEIO_SEGURO       --32
     
-FROM  baandb.ttdrec941301 tdrec941
+FROM  baandb.ttdrec941201 tdrec941
 
-  INNER JOIN baandb.ttdrec940301  tdrec940
+  INNER JOIN baandb.ttdrec940201  tdrec940
           ON tdrec940.t$fire$l = tdrec941.t$fire$l
           
-  INNER JOIN baandb.ttcibd001301  tcibd001
+  INNER JOIN baandb.ttcibd001201  tcibd001
           ON tcibd001.t$item = tdrec941.t$item$l
           
-  LEFT JOIN baandb.ttcibd004301   tcibd004
+  LEFT JOIN baandb.ttcibd004201   tcibd004
          ON tcibd004.t$citt = '000'
         AND tcibd004.t$bpid = ' '
         AND tcibd004.t$item = tdrec941.t$item$l
         
-  LEFT JOIN baandb.ttttxt010301 tttxt010r
+  LEFT JOIN baandb.ttttxt010201 tttxt010r
        ON tttxt010r.t$ctxt = tcibd001.t$txtf$c
       AND tttxt010r.t$clan = 'p'
 	    AND tttxt010r.t$seqe = 1
@@ -90,7 +90,7 @@ FROM  baandb.ttdrec941301 tdrec941
                             a.t$fire$l,
                             a.t$line$l,
                             a.t$brty$l
-                    from baandb.ttdrec942301 a ) REC942
+                    from baandb.ttdrec942201 a ) REC942
               ON REC942.t$fire$l = tdrec941.t$fire$l
              AND REC942.t$line$l = tdrec941.t$line$l
              AND REC942.t$brty$l = 1  --ICMS
@@ -99,7 +99,7 @@ FROM  baandb.ttdrec941301 tdrec941
                             a.t$fire$l,
                             a.t$line$l,
                             a.t$brty$l
-                    from baandb.ttdrec942301 a ) REC942
+                    from baandb.ttdrec942201 a ) REC942
               ON REC942.t$fire$l = tdrec941.t$fire$l
              AND REC942.t$line$l = tdrec941.t$line$l
              AND REC942.t$brty$l = 2  --ICMS_ST
@@ -120,11 +120,11 @@ SELECT DISTINCT
     cisli941.t$line$l           ITEM_IMPRESSAO,           --08
     '1'                         SUB_ITEM_TAMANHO,         --09
     cisli941.t$desc$l           DESCRICAO_ITEM,           --10
-    NVL(tcibd004.t$item,tcibd001.t$item)             
+    ltrim(rtrim(NVL(tcibd004.t$item,tcibd001.t$item)))             
                                 CODIGO_ITEM,              --11
     tcibd001.t$cuni             UNIDADE,                  --12
     cisli941.t$pric$l           PRECO_UNITARIO,           --13
-    ' '                         PORCENTAGEM_ITEM_RATEIO,  --14
+    0                           PORCENTAGEM_ITEM_RATEIO,  --14
     cisli941.t$ldam$l           DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
     tttxt010r.t$text            OBS_ITEM,                 --17
@@ -150,20 +150,20 @@ SELECT DISTINCT
     cisli941.t$fght$l           VALOR_RATEIO_FRETE,       --31
     cisli941.t$insr$l           VALOR_RATEIO_SEGURO       --32
     
-FROM  baandb.tcisli941301 cisli941
+FROM  baandb.tcisli941201 cisli941
 
-  INNER JOIN baandb.tcisli940301 cisli940
+  INNER JOIN baandb.tcisli940201 cisli940
           ON cisli940.t$fire$l = cisli941.t$fire$l
           
-  INNER JOIN baandb.ttcibd001301  tcibd001
+  INNER JOIN baandb.ttcibd001201  tcibd001
           ON tcibd001.t$item = cisli941.t$item$l
           
-  LEFT JOIN baandb.ttcibd004301   tcibd004
+  LEFT JOIN baandb.ttcibd004201   tcibd004
          ON tcibd004.t$citt = '000'
         AND tcibd004.t$bpid = ' '
         AND tcibd004.t$item = cisli941.t$item$l
         
-  LEFT JOIN baandb.ttttxt010301 tttxt010r
+  LEFT JOIN baandb.ttttxt010201 tttxt010r
        ON tttxt010r.t$ctxt = tcibd001.t$txtf$c
       AND tttxt010r.t$clan = 'p'
 	    AND tttxt010r.t$seqe = 1
@@ -200,7 +200,7 @@ FROM  baandb.tcisli941301 cisli941
                             a.t$fire$l,
                             a.t$line$l,
                             a.t$brty$l
-                    from baandb.tcisli943301 a ) SLI943
+                    from baandb.tcisli943201 a ) SLI943
               ON SLI943.t$fire$l = cisli941.t$fire$l
              AND SLI943.t$line$l = cisli941.t$line$l
              AND SLI943.t$brty$l = 1  --ICMS
@@ -209,7 +209,7 @@ FROM  baandb.tcisli941301 cisli941
                             a.t$fire$l,
                             a.t$line$l,
                             a.t$brty$l
-                    from baandb.tcisli943301 a ) SLI943
+                    from baandb.tcisli943201 a ) SLI943
               ON SLI943.t$fire$l = cisli941.t$fire$l
              AND SLI943.t$line$l = cisli941.t$line$l
              AND SLI943.t$brty$l = 2  --ICMS_ST

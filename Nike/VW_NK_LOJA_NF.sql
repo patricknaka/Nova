@@ -15,7 +15,7 @@ SELECT DISTINCT
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_SAIDA_NF,                          --12
   tdrec940.t$opor$l         NATUREZA_OPERACAO_CODIGO,               --13
-  '1'                       RECEBIMENTO,                            --14
+  1                         RECEBIMENTO,                            --14
   tdrec940.t$nwgt$l         PESO_LIQUIDO,                           --15
   tdrec940.t$gwgt$l         PESO_BRUTO,                             --16
   0                         VOLUMES,                                --17
@@ -23,7 +23,7 @@ SELECT DISTINCT
   ' '                       MARCA_VOLUME,                           --19
   tdrec940.t$fght$l         FRETE,                                  --20
   tdrec940.t$insr$l         SEGURO,                                 --21
-  'AGUARDANDO CONSULTOR'    FRETE_A_PAGAR,                          --22
+  0                         FRETE_A_PAGAR,                          --22 'AGUARDANDO CONSULTOR'
   tdrec940.t$gtam$l         VALOR_TOTAL_ITENS,                      --23
   tdrec940.t$addc$l         DESCONTO,                               --24
   tdrec940.t$gexp$l         ENCARGO,                                --25
@@ -74,15 +74,15 @@ SELECT DISTINCT
   'AGUARDANDO CONSULTOR'    FIN_EMISSAO_NFE,                         --50
   'AGUARDANDO CONSULTOR'    REGISTRO_DPEC,                           --51
   ' '                       PIN,                                     --52
-  'AGUARDANDO CONSULTOR'    DATA_REGISTRO_DPEC,                      --53
+  ' '                       DATA_REGISTRO_DPEC,                      --53 AGUARDANDO CONSULTOR
   ' '                       PROTOCOLO_CANCELAMENTO_NFE,              --54
-  'AGUARDANDO CONSULTOR'    DATA_CONTINGENCIA,                       --55
+  ' '                       DATA_CONTINGENCIA,                       --55 AGUARDANDO CONSULTOR
   'AGUARDANDO CONSULTOR'    JUSTIFICATIVA_CONTINGENCIA,              --56
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
-                            DATA_SAIDA_ETR,                              --59
+                            DATA_SAIDA_ETR,                          --59
   ' '                       ENTREGA_ENDERECO,                        --60
   ' '                       ENTREGA_NUMERO,                          --61
   ' '                       ENTREGA_COMPLEMENTO,                     --62
@@ -171,7 +171,7 @@ SELECT DISTINCT
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_SAIDA_NF,                             --12
   cisli940.t$ccfo$l         NATUREZA_OPERACAO_CODIGO,               --13
-  '0'                       RECEBIMENTO,                            --14
+  0                         RECEBIMENTO,                            --14
   cisli940.t$nwgt$l         PESO_LIQUIDO,                           --15
   cisli940.t$gwgt$l         PESO_BRUTO,                             --16
   NVL(FMD630.VOLUMES,SLI941.QTDE)     VOLUMES,                      --17
@@ -179,7 +179,7 @@ SELECT DISTINCT
   ' '                       MARCA_VOLUME,                           --19
   cisli940.t$fght$l         FRETE,                                  --20
   cisli940.t$insr$l         SEGURO,                                 --21
-  'AGUARDANDO CONSULTOR'    FRETE_A_PAGAR,                          --22
+  0                         FRETE_A_PAGAR,                          --22 'AGUARDANDO CONSULTOR'
   cisli940.t$amnt$l         VALOR_TOTAL_ITENS,                      --23
   SLI941.DESCONTO           DESCONTO,                               --24
   cisli940.t$gexp$l         ENCARGO,                                --25
@@ -229,11 +229,11 @@ SELECT DISTINCT
   'AGUARDANDO CONSULTOR'    FIN_EMISSAO_NFE,                         --50
   'AGUARDANDO CONSULTOR'    REGISTRO_DPEC,                           --51
   ' '                       PIN,                                     --52
-  'AGUARDANDO CONSULTOR'    DATA_REGISTRO_DPEC,                      --53
+  ' '                       DATA_REGISTRO_DPEC,                      --53 AGUARDANDO CONSULTOR
   CASE WHEN cisli940.t$nfes$l = 3 THEN    --Pedido Cancelamento
         cisli940.t$prot$l         
   ELSE ' ' END              PROTOCOLO_CANCELAMENTO_NFE,              --54
-  'AGUARDANDO CONSULTOR'    DATA_CONTINGENCIA,                       --55
+  ' '                       DATA_CONTINGENCIA,                       --55 AGUARDANDO CONSULTOR
   'AGUARDANDO CONSULTOR'    JUSTIFICATIVA_CONTINGENCIA,              --56
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
@@ -385,4 +385,4 @@ FROM  baandb.tcisli940201  cisli940
       
     WHERE cisli940.t$stat$l IN (5,6,101)
 
-    AND CISLI940.T$FIRE$L = 'F20000746'
+ 
