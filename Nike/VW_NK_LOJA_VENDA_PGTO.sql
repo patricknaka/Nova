@@ -38,10 +38,11 @@ SELECT
 		 ELSE CISLI940.T$SERI$L END								SERIE_NF_SAIDA,
 		' '														SERIE_NF_CANCELAMENTO,
 		CASE WHEN CISLI940.T$FDTY$L=15
-		 THEN CISLI940_FAT.T$DOCN$L
-		 ELSE CISLI940.T$DOCN$L END								NUMERO_FISCAL_VENDA,
+		 THEN TO_CHAR(CISLI940_FAT.T$DOCN$L)
+		 ELSE TO_CHAR(CISLI940.T$DOCN$L) END								NUMERO_FISCAL_VENDA,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
+    'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
 FROM
 		(	SELECT	A.T$FIRE$L,
 					A.T$SLSO
@@ -124,22 +125,10 @@ INNER JOIN (SELECT	E.T$FIRE$L,
 					 
 LEFT JOIN	BAANDB.TCISLI940201	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
 											AND	CISLI940_FAT.T$FDTY$L =	16
-			
--- LEFT JOIN (	SELECT	F.T$FIRE$L,
-					-- F.T$AMNT$L
-			-- FROM	BAANDB.TCISLI942201 F
-			-- WHERE	F.T$BRTY$L=3) Q_IPI		ON	Q_IPI.T$FIRE$L		=	CISLI940.T$FIRE$L
-
-											
+														
 WHERE
 		CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
 AND 	CISLI940.T$FDTY$L != 14
-
-		
-		
-
-
-
 
 --***************************************************************************************************************************
 --				COLETA
@@ -178,9 +167,10 @@ SELECT
 		TDREC940.T$SERI$L										SERIE_NF_ENTRADA,
 		' '														SERIE_NF_SAIDA,
 		' '														SERIE_NF_CANCELAMENTO,
-		TDREC940.T$DOCN$L										NUMERO_FISCAL_VENDA,
+		TO_CHAR(TDREC940.T$DOCN$L)										NUMERO_FISCAL_VENDA,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
+    'C'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
 FROM
 		(	SELECT	A.T$FIRE$L,
 					A.T$ORNO$L
@@ -222,11 +212,6 @@ INNER JOIN (SELECT	D.T$NCIA$C,
 					                        AND ZNSLS402.T$PECL$C   =	ZNSLS004.T$PECL$C
 					                        AND ZNSLS402.T$SQPD$C   =	ZNSLS004.T$SQPD$C
 
--- INNER JOIN	BAANDB.TZNSLS400201	ZNSLS400	ON	ZNSLS400.T$NCIA$C	=	ZNSLS004.T$NCIA$C
-                                            -- AND ZNSLS400.T$UNEG$C   =	ZNSLS004.T$UNEG$C
-                                            -- AND ZNSLS400.T$PECL$C   =	ZNSLS004.T$PECL$C
-                                            -- AND ZNSLS400.T$SQPD$C   =	ZNSLS004.T$SQPD$C
-											
 INNER JOIN (SELECT	C.T$NCIA$C,
 					C.T$UNEG$C,
 					C.T$PECL$C,
@@ -255,18 +240,10 @@ INNER JOIN (SELECT	L.T$FIRE$L,
 			
 
 INNER JOIN  BAANDB.TCISLI940201 CISLI940  ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
-
 											
 WHERE
 		TDREC940.T$STAT$L IN (4, 5)			-- APROVADO, APROVADO COM PROBLEMAS
 AND 	TDREC940.T$RFDT$L = 10
-
-
-
-
-
-
-
 
 --***************************************************************************************************************************
 --				INSTANCIA
@@ -307,7 +284,8 @@ SELECT
 		' '														SERIE_NF_CANCELAMENTO,
 		NULL														NUMERO_FISCAL_VENDA,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
+    'I'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
 FROM
 			BAANDB.TZNSLS400201	ZNSLS400
 											
