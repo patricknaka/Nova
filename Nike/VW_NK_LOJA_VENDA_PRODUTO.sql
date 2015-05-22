@@ -1,8 +1,7 @@
-﻿
+﻿SELECT
 --***************************************************************************************************************************
---				VENDA
+--				SAIDA
 --***************************************************************************************************************************
-SELECT
 		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,	
 		'NIKE.COM'												FILIAL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
@@ -25,7 +24,9 @@ SELECT
 		
 		CASE CISLI941.T$DQUA$L WHEN 0 THEN 0 ELSE (TDSLS415.CTOT / CISLI941.T$DQUA$L) END CUSTO,
 		'01'													COR_PRODUTO,
-		TCIBD001.T$SIZE$C										TAMANHO
+		TCIBD001.T$SIZE$C							TAMANHO,
+    'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+
 FROM
 			BAANDB.TCISLI245201	CISLI245
 
@@ -67,7 +68,6 @@ LEFT JOIN (	SELECT	A.T$ORNO,
 											AND	TDSLS415.T$PONO		=	CISLI245.T$PONO
 			                                AND	TDSLS415.T$SQNB		=	CISLI245.T$SQNB
 			
-
 LEFT JOIN (	SELECT 	A.T$FIRE$L,
 					A.T$LINE$L,
 					A.T$AMNT$L,
@@ -105,9 +105,6 @@ WHERE
 				from baandb.tznsls000201 a 
 				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000201 b))		
 
-
-		
-
 --***************************************************************************************************************************
 --				INSTANCIA
 --***************************************************************************************************************************
@@ -134,7 +131,9 @@ SELECT
 		0														ALIQUOTA,
 		CASE ZNSLS401.T$QTVE$C WHEN 0 THEN 0 ELSE (TDSLS415.CTOT / ZNSLS401.T$QTVE$C) END						CUSTO,
 		'01'													COR_PRODUTO,
-		TCIBD001.T$SIZE$C										TAMANHO
+		TCIBD001.T$SIZE$C							TAMANHO,
+    'I'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+
 FROM
 
 			BAANDB.TZNSLS400201	ZNSLS400	
@@ -159,16 +158,11 @@ LEFT JOIN (	SELECT	A.T$ORNO,
 			         A.T$SQNB)	TDSLS415	ON	TDSLS415.T$ORNO		=	ZNSLS401.T$ORNO$C
 											AND	TDSLS415.T$PONO		=	ZNSLS401.T$PONO$C
 
-
 LEFT JOIN	BAANDB.TTCIBD004201	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
 											AND	TCIBD004.T$BPID		=	' '
 											AND	TCIBD004.T$ITEM		=	TCIBD001.T$ITEM
-											
-
-											
 
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
 		AND TDSLS400.T$FDTY$L 	NOT IN (0,14)
-		

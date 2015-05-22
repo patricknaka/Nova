@@ -68,8 +68,8 @@ SELECT
 		' '												ID_DOCUMENTO_ECF,
 		ZNSLS402.T$PECL$C || ZNSLS402.T$SQPD$C								TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA												
-
+		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
+    'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
 FROM
 		(	SELECT	A.T$FIRE$L,
 					A.T$SLSO
@@ -140,21 +140,10 @@ INNER JOIN (SELECT	E.T$FIRE$L,
 LEFT JOIN	BAANDB.TCISLI940201	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
 											AND	CISLI940_FAT.T$FDTY$L =	16
 			
--- LEFT JOIN (	SELECT	F.T$FIRE$L,
-					-- F.T$AMNT$L
-			-- FROM	BAANDB.TCISLI942201 F
-			-- WHERE	F.T$BRTY$L=3) Q_IPI		ON	Q_IPI.T$FIRE$L		=	CISLI940.T$FIRE$L
-
-											
 WHERE
 		CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
 AND 	CISLI940.T$FDTY$L != 14
 
-
-		
-		
-		
-		
 --***************************************************************************************************************************
 --				COLETA
 --***************************************************************************************************************************
@@ -213,8 +202,8 @@ SELECT
 		' '														ID_DOCUMENTO_ECF,
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA												
-
+		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,												
+    'C'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
 FROM
 		(	SELECT	A.T$FIRE$L,
 					A.T$ORNO$L
@@ -242,11 +231,6 @@ INNER JOIN BAANDB.TZNSLS402201 ZNSLS402		ON	ZNSLS402.T$NCIA$C	=	ZNSLS004.T$NCIA$
 					                        AND ZNSLS402.T$UNEG$C   =	ZNSLS004.T$UNEG$C
 					                        AND ZNSLS402.T$PECL$C   =	ZNSLS004.T$PECL$C
 					                        AND ZNSLS402.T$SQPD$C   =	ZNSLS004.T$SQPD$C
-
--- INNER JOIN	BAANDB.TZNSLS400201	ZNSLS400	ON	ZNSLS400.T$NCIA$C	=	ZNSLS004.T$NCIA$C
-                                            -- AND ZNSLS400.T$UNEG$C   =	ZNSLS004.T$UNEG$C
-                                            -- AND ZNSLS400.T$PECL$C   =	ZNSLS004.T$PECL$C
-                                            -- AND ZNSLS400.T$SQPD$C   =	ZNSLS004.T$SQPD$C
 											
 INNER JOIN (SELECT	C.T$NCIA$C,
 					C.T$UNEG$C,
@@ -344,7 +328,8 @@ SELECT
 		' '														ID_DOCUMENTO_ECF,
 		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA
+		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
+    'I'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
 
 FROM
 			BAANDB.TZNSLS400201	ZNSLS400
@@ -383,4 +368,4 @@ INNER JOIN BAANDB.TZNSLS402201 ZNSLS402		ON	ZNSLS402.T$NCIA$C	=	ZNSLS400.T$NCIA$
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
-		AND TDSLS400.T$FDTY$L 	NOT IN (0,14)	
+		AND TDSLS400.T$FDTY$L 	NOT IN (0,14)
