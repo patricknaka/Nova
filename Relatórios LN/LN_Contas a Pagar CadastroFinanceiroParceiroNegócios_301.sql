@@ -66,11 +66,11 @@ SELECT
     
 FROM       baandb.ttccom100301  tccom100
 
+ LEFT JOIN baandb.ttccom122301 tccom122
+        ON tccom122.t$ifbp = tccom100.t$bpid
+
  LEFT JOIN baandb.ttccom125301  tccom125
         ON tccom100.t$bpid = tccom125.t$ptbp
-
- LEFT JOIN baandb.ttccom122301 tccom122
-        ON tccom122.t$ifbp = tccom125.t$ptbp
 
  LEFT JOIN baandb.ttfcmg003301 tfcmg003
         ON tfcmg003.t$paym = tccom122.t$paym
@@ -93,9 +93,6 @@ FROM       baandb.ttccom100301  tccom100
  LEFT JOIN baandb.ttcmcs029301 tcmcs029cr
         ON tcmcs029cr.t$cbtp = tccom124.t$cbtp
   
- LEFT JOIN baandb.ttccom122301 tccom122
-        ON tccom122.t$ifbp = tccom100.t$bpid
-
  LEFT JOIN baandb.ttcmcs029301 tcmcs029ft
         ON tcmcs029ft.t$cbtp = tccom122.t$cbtp
         
@@ -221,7 +218,7 @@ WHERE tccom100.t$bprl = 4   --Cliente e Fornecedor
           And :DataEmissaoAte
   AND ( (:TodosPN = 0) or (tccom100.t$bpid in (:PN) and :TodosPN = 1  ) )
   AND tccom130.t$ftyp$l IN (:IdentificadorFiscal)
-  AND NVL(tfcmg011.t$baoc$l, '0') IN (:Banco)
+  AND NVL(Trim(tfcmg011.t$baoc$l), '0') IN (:Banco)
   AND ( (:CNPJTodos = 0) OR (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IN (:CNPJ) AND (:CNPJTodos = 1)) )
 
   AND CASE WHEN tccom100.t$okfi$c = 1
