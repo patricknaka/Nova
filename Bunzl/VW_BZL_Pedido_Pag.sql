@@ -1,9 +1,8 @@
+﻿SELECT
 --*********************************************************************************************************************
 --	LISTA TODOS OS PEDIDOS INTEGRADOS INCLUSIVE TROCAS E DEVOLUÇÕES IDEPENDDDENTE DO STATUS
 --*********************************************************************************************************************
-SELECT
-			
-			ZNSLS401.T$ENTR$C													PEDIDO,
+			to_char(ZNSLS401.T$ENTR$C)												PEDIDO,
 			TO_CHAR(ZNSLS402.T$NUPA$C,'000')									COND_PGTO,
 			DECODE(ZNSLS402.T$IDMP$C,																--	LN								
 				1,	'CC',                                                           				--1	Cartão de Crédito				
@@ -31,11 +30,8 @@ SELECT
 				AT time zone 'America/Sao_Paulo') AS DATE)						DT_APROV,
 			ZNSLS402.T$VLMR$C													VL_PAGAMENTO
 			
-
-				
 FROM
-
-			BAANDB.TZNSLS402301	ZNSLS402
+			BAANDB.TZNSLS402201	ZNSLS402
 			
 INNER JOIN (SELECT	C.T$NCIA$C,
                     C.T$UNEG$C,
@@ -43,7 +39,7 @@ INNER JOIN (SELECT	C.T$NCIA$C,
                     C.T$SQPD$C,
 					MIN(C.T$ENTR$C) T$ENTR$C,
 					MIN(C.T$DTAP$C) T$DTAP$C
-			FROM	BAANDB.TZNSLS401301 C
+			FROM	BAANDB.TZNSLS401201 C
 			GROUP BY C.T$NCIA$C,
 			         C.T$UNEG$C,
 			         C.T$PECL$C,
