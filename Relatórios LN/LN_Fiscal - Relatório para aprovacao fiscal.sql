@@ -1,92 +1,107 @@
 SELECT TDREC940.T$FIRE$L,
-		ZNFMD001.T$FILI$C													ID_FILIAL,
-		ZNFMD001.T$DSCA$C													DESCR_FILIAL,
-		TDPUR400.T$ORNO														ORDEM_COMPRA,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDPUR400.T$ODAT, 
-			'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE)    					DATA_ORDEM,		
-		TDPUR400.T$COTP                                   					TIPO_OC,
-		TDPUR094.T$DSCA                                   					DESC_TIPO_OC,
-		TDREC940.T$DOCN$L													NOTA,
-		TDREC940.T$SERI$L													SERIE,
-		TCCOM100.T$NAMA														FORNECEDOR,
-		TDREC940.T$FOVN$L													CNPJ,
+  ZNFMD001.T$FILI$C                                  ID_FILIAL,
+  ZNFMD001.T$DSCA$C                                  DESCR_FILIAL,
+  TDPUR400.T$ORNO                                    ORDEM_COMPRA,
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDPUR400.T$ODAT, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE)     DATA_ORDEM,  
+  TDPUR400.T$COTP                                    TIPO_OC,
+  TDPUR094.T$DSCA                                    DESC_TIPO_OC,
+  TDREC940.T$DOCN$L                                  NOTA,
+  TDREC940.T$SERI$L                                  SERIE,
+  TCCOM100.T$NAMA                                    FORNECEDOR,
+  TDREC940.T$FOVN$L                                  CNPJ,
+  
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC943.T$ICAD$L, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+     AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE)      DATA_VENCTO,
+  NVL(TRIM(APROVACAO_FIS.STATUS_APROVACAO_FIS), 
+      'Não definido')                                SITUACAO_NF,
+  TDREC940.T$TFDA$L                                  VL_TOTAL,
+  USER_NAME.T$NAME                                   SOLICITANTE
+
+FROM       BAANDB.TTDPUR400201 TDPUR400
+ 
+INNER JOIN BAANDB.TTCMCS065201 TCMCS065
+        ON TCMCS065.T$CWOC  = TDPUR400.T$COFC
 		
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC943.T$ICAD$L, 
-			'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE)						DATA_VENCTO,
-		APROVACAO_FIS.DSC													SITUACAO_NF, 
-		TDREC940.T$TFDA$L													VL_TOTAL,
-		USER_NAME.T$NAME													SOLICITANTE
+INNER JOIN BAANDB.TTCCOM130201 TCCOM130
+        ON TCCOM130.T$CADR  = TCMCS065.T$CADR
 
-FROM BAANDB.TTDPUR400201 TDPUR400
-INNER JOIN	BAANDB.TTCMCS065201 TCMCS065
-	ON	TCMCS065.T$CWOC		=	TDPUR400.T$COFC
-INNER JOIN	BAANDB.TTCCOM130201 TCCOM130
-	ON	TCCOM130.T$CADR		=	TCMCS065.T$CADR
-INNER JOIN	BAANDB.TZNFMD001201 ZNFMD001
-	ON	ZNFMD001.T$FOVN$C	=	TCCOM130.T$FOVN$L
-INNER JOIN 	BAANDB.TTDPUR094201 TDPUR094
-	ON TDPUR094.T$POTP = TDPUR400.T$COTP
+INNER JOIN BAANDB.TZNFMD001201 ZNFMD001
+        ON ZNFMD001.T$FOVN$C = TCCOM130.T$FOVN$L
 		
-INNER JOIN (SELECT  A.T$NCMP$L, A.T$OORG$L, A.T$ORNO$L, A.T$FIRE$L
-            FROM 	BAANDB.TTDREC947201 A
-            GROUP BY	A.T$NCMP$L, A.T$OORG$L, A.T$ORNO$L, A.T$FIRE$L
-            )TDREC947
-	ON 	TDREC947.T$NCMP$L = 201 
-	AND TDREC947.T$OORG$L = 80
-	AND TDREC947.T$ORNO$L = TDPUR400.T$ORNO
+INNER JOIN  BAANDB.TTDPUR094201 TDPUR094
+        ON TDPUR094.T$POTP = TDPUR400.T$COTP
+  
+INNER JOIN ( SELECT  A.T$NCMP$L, 
+                     A.T$OORG$L, 
+                     A.T$ORNO$L, 
+                     A.T$FIRE$L
+                FROM BAANDB.TTDREC947201 A
+            GROUP BY A.T$NCMP$L, 
+                     A.T$OORG$L, 
+                     A.T$ORNO$L,
+                     A.T$FIRE$L ) TDREC947
+        ON TDREC947.T$NCMP$L = 201 
+       AND TDREC947.T$OORG$L = 80
+       AND TDREC947.T$ORNO$L = TDPUR400.T$ORNO
 
+INNER JOIN BAANDB.TTDREC940201 TDREC940
+        ON TDREC940.T$FIRE$L = TDREC947.T$FIRE$L
 
-INNER JOIN	BAANDB.TTDREC940201 TDREC940
-	ON	TDREC940.T$FIRE$L	=	TDREC947.T$FIRE$L
-LEFT JOIN BAANDB.TTCCOM100201 TCCOM100
-	ON 	TCCOM100.T$BPID = TDPUR400.T$OTBP
-LEFT JOIN BAANDB.TTDREC943201 TDREC943
-	ON 	TDREC943.T$FIRE$L = TDREC940.T$FIRE$L
+ LEFT JOIN BAANDB.TTCCOM100201 TCCOM100
+        ON TCCOM100.T$BPID = TDPUR400.T$OTBP
 
-LEFT JOIN ( SELECT d.t$cnst, l.t$desc DSC
-            FROM baandb.tttadv401000 d,
-                 baandb.tttadv140000 l
-            WHERE d.t$cpac='td'
-            AND d.t$cdom='rec.stat.l'
-            AND rpad(d.t$vers,4) 
-				|| rpad(d.t$rele,2) 
-				|| rpad(d.t$cust,4)= 	(select max(rpad(l1.t$vers,4) || rpad(l1.t$rele, 2) || rpad(l1.t$cust,4) ) 
-										  from baandb.tttadv401000 l1 
-										  where l1.t$cpac=d.t$cpac 
-											and l1.t$cdom=d.t$cdom)
-			AND l.t$clab=d.t$za_clab
-			AND l.t$clan='p'
-			AND l.t$cpac='td'
-      AND rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
-                                                (select max(rpad(l1.t$vers,4) || rpad(l1.t$rele,2) || rpad(l1.t$cust,4) ) 
-                                                  from baandb.tttadv140000 l1 
-                                                  where l1.t$clab=l.t$clab 
-                                                  AND l1.t$clan=l.t$clan 
-                                                  AND l1.t$cpac=l.t$cpac)
-			) APROVACAO_FIS
-	ON APROVACAO_FIS.T$CNST = TDREC940.T$STAT$L
-	
-LEFT JOIN ( SELECT	A.T$ORNO, A.T$LOGN
-			FROM	BAANDB.TTDPUR450201 A
-			WHERE 	A.T$TRDT=(	SELECT MIN(B.T$TRDT)
-                        FROM BAANDB.TTDPUR450201 B
-                        WHERE B.T$ORNO=A.T$ORNO
-                       )
-          ) TDPUR450
-	ON	TDPUR450.T$ORNO		=	TDPUR400.T$ORNO
-	
-LEFT JOIN ( SELECT TTAAD200.T$USER, TTAAD200.T$NAME
-           FROM BAANDB.TTTAAD200000 TTAAD200 
-          ) USER_NAME
-	ON USER_NAME.T$USER 	= 	TDPUR450.T$LOGN
-			
-WHERE	(TDPUR400.T$COTP IN ('A01', 'A02', 'A03', 'A04', 'A05', 'A06') OR TDREC940.T$OPFC$L IN ('1102', '1300', '1303', '1253','1551', '1556', '1403', '1406', '1407', '1922', '1933', '2102', '2253', '2303', '2551', '2556', '2407', '2406', '2922'))
+ LEFT JOIN BAANDB.TTDREC943201 TDREC943
+        ON TDREC943.T$FIRE$L = TDREC940.T$FIRE$L
 
-AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDPUR400.T$ODAT, 
-			'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-			AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE) )
-BETWEEN :DataOrdemDe AND :DataOrdemAte
-AND ((:FilialTodos = 1) OR (TRIM(ZNFMD001.T$FILI$C) IN (:Filial) AND (:FilialTodos = 0)))
-AND TRIM(APROVACAO_FIS.DSC) IN (:SituacaoNF)
+ LEFT JOIN ( select l.t$desc STATUS_APROVACAO_FIS,
+                    d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'td'
+                and d.t$cdom = 'rec.stat.l'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'td'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) APROVACAO_FIS
+        ON APROVACAO_FIS.t$cnst = tdrec940.t$stat$l
+
+ LEFT JOIN ( SELECT A.T$ORNO, A.T$LOGN
+               FROM BAANDB.TTDPUR450201 A
+              WHERE A.T$TRDT = ( SELECT MIN(B.T$TRDT)
+                                   FROM BAANDB.TTDPUR450201 B
+                                  WHERE B.T$ORNO = A.T$ORNO ) ) TDPUR450
+        ON TDPUR450.T$ORNO  = TDPUR400.T$ORNO
+ 
+ LEFT JOIN ( SELECT TTAAD200.T$USER, 
+                    TTAAD200.T$NAME
+               FROM BAANDB.TTTAAD200000 TTAAD200 ) USER_NAME
+        ON USER_NAME.T$USER  =  TDPUR450.T$LOGN
+   
+WHERE (   TDPUR400.T$COTP IN ('A01', 'A02', 'A03', 'A04', 'A05', 'A06') 
+       OR TDREC940.T$OPFC$L IN ('1102', '1300', '1303', '1253','1551', '1556', '1403', '1406', '1407', '1922', '1933', '2102', '2253', '2303', '2551', '2556', '2407', '2406', '2922'))
+
+  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDPUR400.T$ODAT, 
+        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE) )
+      BETWEEN :DataOrdemDe AND :DataOrdemAte
+  AND ((:FilialTodos = 1) OR (TRIM(ZNFMD001.T$FILI$C) IN (:Filial) AND (:FilialTodos = 0)))
+  AND TRIM(APROVACAO_FIS.DSC) IN (:SituacaoNF)
