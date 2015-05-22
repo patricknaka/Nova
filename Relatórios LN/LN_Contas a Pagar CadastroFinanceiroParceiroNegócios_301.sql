@@ -62,7 +62,8 @@ SELECT
     CASE WHEN tccom100.t$okfe$c = 1 
            THEN 'Sim' 
          ELSE   'Não' 
-    END                                     OK_FISCAL_EXCECAO
+    END                                     OK_FISCAL_EXCECAO,
+    tccom122.T$CPAY                         CONDICAO_PAGTO
     
 FROM       baandb.ttccom100301  tccom100
 
@@ -211,11 +212,6 @@ FROM       baandb.ttccom100301  tccom100
 WHERE tccom100.t$bprl = 4   --Cliente e Fornecedor
   AND (tccom125.t$toac = 1 OR tccom125.t$toac IS NULL)   --Normal ou Nulo
 
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tccom100.t$crdt, 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone 'America/Sao_Paulo') AS DATE)) 
-      Between :DataEmissaoDe 
-          And :DataEmissaoAte
   AND ( (:TodosPN = 0) or (tccom100.t$bpid in (:PN) and :TodosPN = 1  ) )
   AND tccom130.t$ftyp$l IN (:IdentificadorFiscal)
   AND NVL(Trim(tfcmg011.t$baoc$l), '0') IN (:Banco)
