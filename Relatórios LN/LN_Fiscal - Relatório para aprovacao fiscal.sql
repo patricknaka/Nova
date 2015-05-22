@@ -104,4 +104,4 @@ WHERE (   TDPUR400.T$COTP IN ('A01', 'A02', 'A03', 'A04', 'A05', 'A06')
           AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE) )
       BETWEEN :DataOrdemDe AND :DataOrdemAte
   AND ((:FilialTodos = 1) OR (TRIM(ZNFMD001.T$FILI$C) IN (:Filial) AND (:FilialTodos = 0)))
-  AND TRIM(APROVACAO_FIS.DSC) IN (:SituacaoNF)
+  AND NVL(TRIM(APROVACAO_FIS.DSC, 0) IN (:SituacaoNF)
