@@ -74,7 +74,21 @@ SELECT
         FROM baandb.ttfcmg003301 a
        WHERE a.t$paym=tfacp201.t$paym )          DESCR_METODO_PGTO,
     
-    CMG101.LOTE                                  LOTE_PGTO
+    CMG101.LOTE                                  LOTE_PGTO,
+    CASE WHEN tfacp201.t$pyst$l = 5 THEN  --PAGO
+      'PAGO'
+    ELSE
+      CASE WHEN tfacp200.t$dued >= TRUNC(SYSDATE) THEN
+        'SIM' 
+      ELSE 'NAO' END                      
+    END                                          A_VENCER,
+    CASE WHEN tfacp201.t$pyst$l = 5 THEN  --PAGO
+      'PAGO'
+    ELSE
+      CASE WHEN tfacp200.t$dued < TRUNC(SYSDATE) THEN
+        'SIM' 
+      ELSE 'NAO' END                     
+    END                                          EM_ATRASO
 
 FROM       baandb.ttfacp200301  tfacp200
 
@@ -150,7 +164,7 @@ INNER JOIN baandb.ttfacp201301  tfacp201
                                           and l1.t$clan = l.t$clan 
                                           and l1.t$cpac = l.t$cpac ) ) DSTAP
     ON tfacp200.t$stap   = DSTAP.iCODE
-
+            
 WHERE tfacp200.t$lino = 0
   AND Trunc(tfacp200.t$docd) BETWEEN NVL(:EmissaoDe, tfacp200.t$docd) AND NVL(:EmissaoAte, tfacp200.t$docd)
   AND Trunc(tfacp200.t$dued) BETWEEN NVL(:VectoDe, tfacp200.t$dued) AND NVL(:VectoAte, tfacp200.t$dued)
