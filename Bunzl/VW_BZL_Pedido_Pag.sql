@@ -18,6 +18,7 @@
 				13, 'DEP',                                                           				--13	Pagamento Antecipado		
 				15,	'BNDS')														COD_FORMA_PGTO,     --15	BNDES						
 			DECODE(ZNSLS402.T$CCCD$C,
+        0,  '000',
 				1,	'001',																			--	VISA
 				2,	'002',																			--	MASTERCARD
 				3,	'003',																			--	AMEX
@@ -46,4 +47,5 @@ INNER JOIN (SELECT	C.T$NCIA$C,
 			         C.T$SQPD$C) ZNSLS401	ON	ZNSLS401.T$NCIA$C	=	ZNSLS402.T$NCIA$C
 					                        AND ZNSLS401.T$UNEG$C   =	ZNSLS402.T$UNEG$C
 					                        AND ZNSLS401.T$PECL$C   =	ZNSLS402.T$PECL$C
-					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS402.T$SQPD$C	
+					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS402.T$SQPD$C
+       
