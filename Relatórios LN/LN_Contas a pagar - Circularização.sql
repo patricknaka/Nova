@@ -29,12 +29,14 @@ SELECT
     tfacp200.t$dued                             DATA_VENCTO,
     tfacp200.t$amnt                             VLR_TITULO,
     tfacp200.t$balc                             SALD_TITULO,
-    tfacp200.t$balc-tfacp200.t$bala             VALOR_APAGAR,
+    CASE WHEN tfcmg101.t$amnt IS NULL or tfcmg101.t$amnt = 0 THEN
+          NVL(tfacp201.t$amnt,0)                             
+    ELSE  tfcmg101.t$amnt END                   VALOR_APAGAR,
     tfacp200.t$amnt+tfacp200.t$ramn$l           VALOR_COM_RETIMP,
  
     CASE WHEN tfacp201.t$pyst$l = 3 
            THEN 'SIM' 
-         ELSE   'N√O' 
+         ELSE   'N√ÉO' 
      END                                        STATUS_PREPARADO_PAGTO,
   
     tfacp201.t$pyst$l                           CODE_STATUS,
@@ -72,7 +74,7 @@ SELECT
         FROM baandb.ttfcmg003301 a
        WHERE a.t$paym=tfacp201.t$paym )          DESCR_METODO_PGTO,
     
-    tfcmg101.t$btno                              LOTE_PGTO
+    CMG101.LOTE                                  LOTE_PGTO
 
 FROM       baandb.ttfacp200301  tfacp200
 
@@ -104,13 +106,25 @@ INNER JOIN baandb.ttfacp201301  tfacp201
        AND tdrec940.t$invn$l = tfacp200.t$ninv
        AND tfacp200.t$docn$l = tdrec940.t$docn$l    
           
- LEFT JOIN baandb.ttfcmg101301  tfcmg101
-        ON tfcmg101.t$ttyp = tfacp201.t$ttyp 
-       AND tfcmg101.t$ninv = tfacp201.t$ninv
-       AND tfacp201.t$ifbp = tfcmg101.t$ifbp
-       AND tfcmg101.t$schn = tfcmg101.t$schn,
+ LEFT JOIN (select max(a.t$btno)  LOTE,
+                    a.t$ifbp,
+                    a.t$ttyp,
+                    a.t$ninv
+            from baandb.ttfcmg101301  a
+            group by  a.t$ifbp,
+                      a.t$ttyp,
+                      a.t$ninv ) CMG101
+        ON CMG101.t$ifbp = tfacp201.t$ifbp
+       AND CMG101.t$ttyp = tfacp201.t$ttyp 
+       AND CMG101.t$ninv = tfacp201.t$ninv
+       
+  LEFT JOIN baandb.ttfcmg101301 tfcmg101
+         ON tfcmg101.t$btno = CMG101.LOTE
+        AND tfcmg101.t$ifbp = tfacp201.t$ifbp
+        AND tfcmg101.t$ttyp = tfacp201.t$ttyp
+        AND tfcmg101.t$ninv = tfacp201.t$ninv
   
-         ( SELECT d.t$cnst iCODE, l.t$desc STATUS_PAGAMENTO 
+  LEFT JOIN ( SELECT d.t$cnst iCODE, l.t$desc STATUS_PAGAMENTO 
              FROM baandb.tttadv401000 d, 
                   baandb.tttadv140000 l 
             WHERE d.t$cpac = 'tf' 
@@ -135,10 +149,9 @@ INNER JOIN baandb.ttfacp201301  tfacp201
                                         where l1.t$clab = l.t$clab 
                                           and l1.t$clan = l.t$clan 
                                           and l1.t$cpac = l.t$cpac ) ) DSTAP
+    ON tfacp200.t$stap   = DSTAP.iCODE
 
 WHERE tfacp200.t$lino = 0
-  AND tfacp200.t$stap   = DSTAP.iCODE
-
   AND Trunc(tfacp200.t$docd) BETWEEN NVL(:EmissaoDe, tfacp200.t$docd) AND NVL(:EmissaoAte, tfacp200.t$docd)
   AND Trunc(tfacp200.t$dued) BETWEEN NVL(:VectoDe, tfacp200.t$dued) AND NVL(:VectoAte, tfacp200.t$dued)
   AND tfacp200.t$ifbp IN (:PN)

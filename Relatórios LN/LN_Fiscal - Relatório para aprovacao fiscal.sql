@@ -57,7 +57,7 @@ INNER JOIN ( SELECT  A.T$NCMP$L,
         ON TDREC943.T$FIRE$L = TDREC940.T$FIRE$L
 
  LEFT JOIN ( select l.t$desc STATUS_APROVACAO_FIS,
-                    d.t$cnst
+                    d.t$cnst Code
                from baandb.tttadv401000 d,
                     baandb.tttadv140000 l
               where d.t$cpac = 'td'
@@ -82,7 +82,7 @@ INNER JOIN ( SELECT  A.T$NCMP$L,
                                           where l1.t$clab = l.t$clab 
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) APROVACAO_FIS
-        ON APROVACAO_FIS.t$cnst = tdrec940.t$stat$l
+        ON APROVACAO_FIS.Code = tdrec940.t$stat$l
 
  LEFT JOIN ( SELECT A.T$ORNO, A.T$LOGN
                FROM BAANDB.TTDPUR450201 A
@@ -104,4 +104,4 @@ WHERE (   TDPUR400.T$COTP IN ('A01', 'A02', 'A03', 'A04', 'A05', 'A06')
           AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE) )
       BETWEEN :DataOrdemDe AND :DataOrdemAte
   AND ((:FilialTodos = 1) OR (TRIM(ZNFMD001.T$FILI$C) IN (:Filial) AND (:FilialTodos = 0)))
-  AND NVL(TRIM(APROVACAO_FIS.DSC, 0) IN (:SituacaoNF)
+  AND NVL(TRIM(APROVACAO_FIS.Code, 0) IN (:SituacaoNF)
