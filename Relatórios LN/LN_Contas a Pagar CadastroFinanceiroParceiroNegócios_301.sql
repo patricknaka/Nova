@@ -63,12 +63,16 @@ SELECT
            THEN 'Sim' 
          ELSE   'Não' 
     END                                     OK_FISCAL_EXCECAO,
-    tccom122.T$CPAY                         CONDICAO_PAGTO
+    tcmcs013.t$dsca                         CONDICAO_PAGTO
+    
     
 FROM       baandb.ttccom100301  tccom100
 
  LEFT JOIN baandb.ttccom122301 tccom122
         ON tccom122.t$ifbp = tccom100.t$bpid
+        
+ LEFT JOIN baandb.ttcmcs013301 tcmcs013
+        ON tcmcs013.t$cpay = tccom122.t$cpay
 
  LEFT JOIN baandb.ttccom125301  tccom125
         ON tccom100.t$bpid = tccom125.t$ptbp
