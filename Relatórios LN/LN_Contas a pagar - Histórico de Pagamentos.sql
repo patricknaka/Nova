@@ -30,12 +30,21 @@ SELECT
     tccom125.t$dacc$d             DIGITO_CC,
     tfcmg103.t$ttyp || '-' ||
     tfcmg103.t$docn               DOCUMENTO_PAGAMENTO,
-    tdrec940.t$fire$l             REFERENCIA_FISCAL
+    tdrec940.t$fire$l             REFERENCIA_FISCAL,
+   CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
+           THEN '00000000000000' 
+         WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')) < 11
+           THEN '00000000000000'
+    ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') 
+    END                           ENTIDADE_FISCAL
   
 FROM  baandb.ttfcmg103301 tfcmg103
 
  LEFT JOIN baandb.ttccom100301 tccom100
         ON tccom100.t$bpid = tfcmg103.t$ptbp
+
+ LEFT JOIN baandb.ttccom130301 tccom130
+        ON tccom130.t$cadr = tccom100.t$cadr
         
  LEFT JOIN baandb.ttfacp200301 tfacp200
         ON tfacp200.t$tdoc = tfcmg103.t$ttyp
