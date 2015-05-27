@@ -27,7 +27,12 @@ SELECT
   TDPUR451.LOGN                  LOGIN,
   tdpur400.t$cotp                TIPO_ORDEM_COMPRA,
   tdpur094.t$dsca                DESC_TIPO_ORDEM,
-  tdrec936.t$tldr$l              TOLER_DIF_ARRED
+  tdrec936.t$rndt$l              TOLER_DIF_ARRED,
+  
+  CASE WHEN   ABS(ABS(TDPUR401.T$PRIC) - 
+                  NVL(ABS(TDREC941.T$PRIC$L), ABS(BRNEF941.T$PRIC$L))) <= (tdrec936.t$rndt$l / 100) THEN
+        'Automático' 
+  ELSE  'Manual' END            TIPO_ARRED
   
 FROM       BAANDB.TTDPUR401301 TDPUR401
    
@@ -90,6 +95,6 @@ WHERE ABS(ABS(TDPUR401.T$PRIC) -
               NVL(BRNEF941.T$PRIC$L, 
                   TDPUR401.T$PRIC)))) >= 0.5
   
-  AND TCIBD001.T$CITG IN (:Departamento)
+--  AND TCIBD001.T$CITG IN (:Departamento)
 
 ORDER BY NOME_FORNECEDOR, DEPARTAMENTO, ITEM
