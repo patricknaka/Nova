@@ -29,11 +29,48 @@ INNER JOIN baandb.tcisli941301 sli941
         ON sli941.t$fire$l = sli245.t$fire$l
        AND sli941.t$line$l = sli245.t$line$l
  
-INNER JOIN baandb.ttdsls400301 sls400   
-        ON sls400.t$orno = sli245.t$slso
-    
- LEFT JOIN baandb.ttcemm124301 tcemm124 
-        ON  tcemm124.t$cwoc = sls400.t$cofc
+-- INNER JOIN baandb.ttdsls400301 sls400   
+        -- ON sls400.t$orno = sli245.t$slso
+
+LEFT JOIN
+				(	Select 3 koor, 1 oorg From DUAL
+					Union Select 7 koor, 2 oorg From DUAL
+					Union Select 34 koor, 3 oorg From DUAL
+					Union Select 2 koor, 80 oorg From DUAL
+					Union Select 6 koor, 81 oorg From DUAL
+					Union Select 33 koor, 82 oorg From DUAL
+					Union Select 17 koor, 11 oorg From DUAL
+					Union Select 35 koor, 12 oorg From DUAL
+					Union Select 37 koor, 31 oorg From DUAL
+					Union Select 39 koor, 32 oorg From DUAL
+					Union Select 38 koor, 33 oorg From DUAL
+					Union Select 42 koor, 34 oorg From DUAL
+					Union Select 1 koor, 50 oorg From DUAL
+					Union Select 32 koor, 51 oorg From DUAL
+					Union Select 56 koor, 53 oorg From DUAL
+					Union Select 9 koor, 55 oorg From DUAL
+					Union Select 46 koor, 56 oorg From DUAL
+					Union Select 57 koor, 58 oorg From DUAL
+					Union Select 22 koor, 71 oorg From DUAL
+					Union Select 36 koor, 72 oorg From DUAL
+					Union Select 58 koor, 75 oorg From DUAL
+					Union Select 59 koor, 76 oorg From DUAL
+					Union Select 60 koor, 90 oorg From DUAL
+					Union Select 21 koor, 61 oorg From DUAL) KOOR2OORG
+											ON	KOOR2OORG.koor = sli245.T$koor	
+		
+		
+		
+INNER JOIN baandb.twhinh200301 whinh200
+		ON	whinh200.t$oorg = KOOR2OORG.oorg
+        AND whinh200.t$orno = sli245.t$slso
+		
+LEFT JOIN baandb.ttccom100301 tccom100
+		ON	tccom100.t$cadr = whinh200.t$sfad
+		
+ LEFT JOIN baandb.ttcemm122301 tcemm122 
+		ON	tcemm122.t$loco = 301
+        AND tcemm122.t$bupa = tccom100.t$bpid
     
  LEFT JOIN ( select upper(wmsCODE.UDF1) Filial,
                     wmsCODE.UDF2 ID_FILIAL,
@@ -47,7 +84,7 @@ INNER JOIN baandb.ttdsls400301 sls400
            group by upper(wmsCODE.UDF1),
                     wmsCODE.UDF2,
                     b.t$grid )  wmsCODE 
-        ON wmsCODE.t$grid = tcemm124.t$grid
+        ON wmsCODE.t$grid = tcemm122.t$grid
 		
 WHERE sli940.t$stat$l IN (5,6) 
   AND sli940.t$nfes$l IN (1,2,5)
