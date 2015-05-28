@@ -1,13 +1,13 @@
 SELECT 
   DISTINCT
-    znfmd630.t$fili$c         PLANTA,
+    znfmd610.t$fili$c         PLANTA,
     znfmd001.t$dsca$c         DESC_PLANTA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) -       
     znsls401.t$pzcd$c         DATA_LIMITE,
-    znfmd630.t$pecl$c         PEDIDO,
-    znfmd630.t$orno$c         ORDEM_VENDA,
+    znfmd610.t$pecl$c         PEDIDO,
+	znsls004.t$orno$c         ORDEM_VENDA,
     Trim(znsls401.t$itml$c)   ITEM,  
     tcibd001.t$dsca           ITEM_DESCR,     
     tcibd001.t$citg           DEPARTAMENTO,  
@@ -32,39 +32,46 @@ SELECT
     znsls401.t$qtve$c         QTDE,
     znsls401.t$vlun$c *       
     znsls401.t$qtve$c         VALOR,
-    znfmd630.t$ncar$c         CARGA,  
+    znfmd610.t$ngai$c         CARGA,  
     whwmd400.t$hght *         
     whwmd400.t$wdth *         
     whwmd400.t$dpth           CUBO
   
-FROM       baandb.tznfmd630301 znfmd630
+FROM       baandb.tznfmd610301 znfmd610
 
 INNER JOIN baandb.tznfmd600301 znfmd600
-        ON znfmd600.t$fili$c = znfmd630.t$fili$c
-       AND znfmd600.t$cfrw$c = znfmd630.t$cfrw$c
-       AND znfmd600.t$ngai$c = znfmd630.t$ngai$c
+        ON znfmd600.t$fili$c = znfmd610.t$fili$c
+       AND znfmd600.t$cfrw$c = znfmd610.t$cfrw$c
+       AND znfmd600.t$ngai$c = znfmd610.t$ngai$c
    
-INNER JOIN ( select a.t$fili$c,
+LEFT JOIN ( select a.t$fili$c,
                     a.t$etiq$c,
                     max(a.t$date$c) data_etr
                from baandb.tznfmd640301 a
               where a.t$coci$c='ETR'
            group by a.t$fili$c,
                     a.t$etiq$c ) OCOR_ETR
-        ON OCOR_ETR.t$fili$c = znfmd630.t$fili$c
-       AND OCOR_ETR.t$etiq$c = znfmd630.t$etiq$c
+        ON OCOR_ETR.t$fili$c = znfmd610.t$fili$c
+       AND OCOR_ETR.t$etiq$c = znfmd610.t$etiq$c
 
 INNER JOIN baandb.ttcmcs080301  tcmcs080
-        ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c  
+        ON tcmcs080.t$cfrw = znfmd610.t$cfrw$c  
 
 INNER JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tcmcs080.t$cadr$l
 
  LEFT JOIN baandb.tznfmd001301 znfmd001
-        ON znfmd001.t$fili$c = znfmd630.t$fili$c
+        ON znfmd001.t$fili$c = znfmd610.t$fili$c
+		
+INNER JOIN baandb.tcisli940301 cisli940
+		ON	cisli940.t$cnfe$l = znfmd610.t$cnfe$c
+		
+INNER JOIN baandb.tcisli245301 cisli245
+		ON	cisli245.t$fire$l = cisli940.t$fire$l
     
 INNER JOIN baandb.tznsls004301 znsls004
-        ON znsls004.t$orno$c = znfmd630.t$orno$c  
+        ON 	znsls004.t$orno$c = cisli245.t$slso
+		AND	znsls004.t$pono$c = cisli245.t$pono
     
 INNER JOIN baandb.tznsls401301 znsls401
         ON znsls401.t$ncia$c = znsls004.t$ncia$c
@@ -83,7 +90,7 @@ INNER JOIN baandb.ttcibd001301  tcibd001
  LEFT JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
         
-WHERE znfmd630.t$fili$c = :Planta
+WHERE znfmd610.t$fili$c = :Planta
   AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCOR_ETR.data_etr, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone 'America/Sao_Paulo') AS DATE) ) 
@@ -92,6 +99,6 @@ WHERE znfmd630.t$fili$c = :Planta
   AND NVL(Trim(znsls401.t$mgrt$c), 'SMR') in (:MegaRota)
   AND tcmcs080.t$cfrw in (:Transp)
   
-ORDER BY znfmd630.t$pecl$c,
+ORDER BY znfmd610.t$pecl$c,
          tcmcs023.t$dsca,
          tcibd001.t$dsca
