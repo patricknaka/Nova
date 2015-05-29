@@ -44,7 +44,7 @@ SELECT DISTINCT
      WHEN cisli940dev.t$stat$l IS NULL THEN 'Não Emitida'
 	   ELSE 'Impressa/Lançada'
 	END  														sit_nfe,
-	cisli940dev.t$fire$l 										nr,
+	tdrec947.t$fire$l 											nr,
 	CASE WHEN cisli940orig.t$stat$l IN (1,3,4) THEN 'Aberta'
 	   WHEN cisli940orig.t$stat$l IN (2,101) THEN 'Cancelada'
 	   ELSE 'Impressa/Lançada'
@@ -135,6 +135,12 @@ LEFT JOIN		BAANDB.tcisli245301 cisli245dev 	ON	cisli245dev.t$slcp		=	301
                                                     AND cisli245dev.t$slso		=	tdsls401dev.t$orno
 													AND	cisli245dev.t$sqnb		=	tdsls401dev.t$sqnb
 	                                                AND	cisli245dev.t$pono		=	tdsls401dev.t$pono	
+													
+LEFT JOIN		BAANDB.ttdrec947301 tdrec947 		ON	tdrec947.t$ncmp$l		=	301
+                                                    AND tdrec947.t$oorg$l		=	1
+                                                    AND tdrec947.t$orno$l		=	tdsls401dev.t$orno
+													AND	tdrec947.t$pono$l		=	tdsls401dev.t$pono
+	                                                AND	tdrec947.t$seqn$l		=	tdsls401dev.t$sqnb													
                                                                                                       
 LEFT JOIN		BAANDB.tcisli941301 cisli941dev		ON	cisli941dev.t$fire$l	=	cisli245dev.t$fire$l
 													AND cisli941dev.t$line$l	=	cisli245dev.t$line$l
