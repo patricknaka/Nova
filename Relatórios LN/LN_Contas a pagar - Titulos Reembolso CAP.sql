@@ -47,18 +47,38 @@ SELECT
      end                                        REL_BANCARIA,
 
     NVL(TRIM(tfacp201.t$paym), 'N/A')           METODO_PAGTO,
-    tfacp201.t$bank                             BANCO_PARCEIRO,
-    tfcmg011.t$agcd$l                           NUME_AGENCIA,
-    tfcmg011.t$agdg$l                           DIGI_AGENCIA,
-    tfcmg011.t$desc                             DESC_AGENCIA,
-    tccom125.t$bano                             NUME_CONTA,
-    tccom125.t$dacc$d                           DIGI_CONTA,  
-    Trim(tfcmg011.t$desc  || ' ' ||
-          'AG ' || tfcmg011.t$agcd$l || '-' || 
-                   tfcmg011.t$agdg$l || '   ' || 'CC ' || 
-                   tccom125.t$bano || '-' || 
-                   tccom125.t$dacc$d )          CONTA_PN,
-                   
+
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+         tfacp201.t$bank
+    ELSE tfcmg101.t$basu END                    BANCO_PARCEIRO,
+    CASE WHEN tfcmg011_ac.t$agcd$l IS NULL THEN
+         tfcmg011_ag.t$agcd$l                           
+    ELSE tfcmg011_ac.t$agcd$l END               NUME_AGENCIA,
+    CASE WHEN tfcmg011_ac.t$agdg$l IS NULL THEN                           
+         tfcmg011_ag.t$agdg$l
+    ELSE tfcmg011_ac.t$agdg$l END               DIGI_AGENCIA,
+    CASE WHEN tfcmg011_ac.t$desc IS NULL THEN
+         tfcmg011_ag.t$desc 
+    ELSE tfcmg011_ac.t$desc END                 DESC_AGENCIA,
+    CASE WHEN tccom125_ac.t$bano IS NULL THEN   
+         tccom125_ag.t$bano
+    ELSE tccom125_ac.t$bano END                 NUME_CONTA,
+    CASE WHEN tccom125_ac.t$dacc$d IS NULL THEN                          
+         tccom125_ag.t$dacc$d
+    ELSE tccom125_ac.t$dacc$d END               DIGI_CONTA,  
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+        Trim(tfcmg011_ag.t$desc  || ' ' ||
+              'AG ' || tfcmg011_ag.t$agcd$l || '-' || 
+                       tfcmg011_ag.t$agdg$l || '   ' || 'CC ' || 
+                       tccom125_ag.t$bano || '-' || 
+                       tccom125_ag.t$dacc$d )          
+    ELSE                                        
+        Trim(tfcmg011_ac.t$desc  || ' ' ||
+              'AG ' || tfcmg011_ac.t$agcd$l || '-' || 
+                       tfcmg011_ac.t$agdg$l || '   ' || 'CC ' || 
+                       tccom125_ac.t$bano || '-' || 
+                       tccom125_ac.t$dacc$d )    
+    END                                         CONTA_PN,
     tdrec940.t$fire$l                           NUM_RFISCAL,
     tdrec940.t$rfdt$l                           NUM_CFISCAL, 
     DTRFD.DESC_CODIGO_FISCAL                    DESC_CODIGO_FISCAL,        
@@ -102,7 +122,9 @@ SELECT
     iStatsend.DESCR                             DSC_TENTATIVA_STATUS_ENVIO,
     tflcb230_HIST.t$erro$d                      DSC_ERRO,
     tfcmg101.t$bank                             NUME_BANCO,
-    tfcmg011.t$agcd$l                           CODE_AGENCIA,
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+        tfcmg011_ag.t$agcd$l                           
+    ELSE tfcmg011_ac.t$agcd$l END               CODE_AGENCIA,
     tfcmg001.t$bano                             CODE_CONTA,
     tfcmg011_HIST.t$desc                        BANCO_PN,
     CMG103.t$basu                               COD_CONTA,
@@ -208,13 +230,13 @@ INNER JOIN baandb.ttccom130301 tccom130
  LEFT JOIN baandb.ttfcmg001301  tfcmg001
         ON tfcmg001.t$bank = tfacp201.t$brel
 
- LEFT JOIN baandb.ttccom125301  tccom125
-        ON tccom125.t$ptbp = tfacp201.t$ifbp
-       AND tccom125.t$cban = tfacp201.t$bank
+ LEFT JOIN baandb.ttccom125301  tccom125_ag           --Banco PN da Agenda Pagto
+        ON tccom125_ag.t$ptbp = tfacp201.t$ifbp
+       AND tccom125_ag.t$cban = tfacp201.t$bank
 
- LEFT JOIN baandb.ttfcmg011301  tfcmg011
-        ON tfcmg011.t$bank = tccom125.t$brch
-
+ LEFT JOIN baandb.ttfcmg011301  tfcmg011_ag
+        ON tfcmg011_ag.t$bank = tccom125_ag.t$brch
+        
  LEFT JOIN ( select tflcb231a.t$ocr1$d OCORRENCIA1,
                     tflcb231a.t$ocr2$d OCORRENCIA2,
                     tflcb231a.t$ocr3$d OCORRENCIA3,
@@ -292,6 +314,13 @@ INNER JOIN baandb.ttccom130301 tccom130
        AND tfcmg101.t$ttyp = tfacp200.t$ttyp
        AND tfcmg101.t$ninv = tfacp200.t$ninv
 
+ LEFT JOIN baandb.ttccom125301  tccom125_ac           --Banco PN do Acons. Pagto
+        ON tccom125_ac.t$ptbp = tfcmg101.t$ifbp
+       AND tccom125_ac.t$cban = tfcmg101.t$basu
+
+ LEFT JOIN baandb.ttfcmg011301  tfcmg011_ac
+        ON tfcmg011_ac.t$bank = tccom125_ac.t$brch
+        
  LEFT JOIN ( select l.t$desc DESC_MODAL_PGTO_2,
                     d.t$cnst COD_MODAL_PGTO_2
                from baandb.tttadv401000 d,
