@@ -11,12 +11,24 @@ SELECT
     tfacp200.t$ttyp                             CODE_TRANS,
     CMG103.t$mopa$d                             CODE_MODAL_PAGTO,
     MODAL_PGTO_HIST.DESC_MODAL                  DESC_MODAL_PAGTO,
-    tfacp201.t$bank                             BANCO_PARCEIRO,
-    tfcmg011.t$agcd$l                           NUME_AGENCIA,
-    tfcmg011.t$agdg$l                           DIGI_AGENCIA,
-    tfcmg011.t$desc                             DESC_AGENCIA,
-    tccom125.t$bano                             NUME_CONTA,
-    tccom125.t$dacc$d                           DIGI_CONTA,  
+    CASE WHEN tfcmg101.t$basu IS NULL THEN
+         tfacp201.t$bank
+    ELSE tfcmg101.t$basu END                    BANCO_PARCEIRO,
+    CASE WHEN tfcmg011_ac.t$agcd$l IS NULL THEN
+         tfcmg011_ag.t$agcd$l                           
+    ELSE tfcmg011_ac.t$agcd$l END               NUME_AGENCIA,
+    CASE WHEN tfcmg011_ac.t$agdg$l IS NULL THEN                           
+         tfcmg011_ag.t$agdg$l
+    ELSE tfcmg011_ac.t$agdg$l END               DIGI_AGENCIA,
+    CASE WHEN tfcmg011_ac.t$desc IS NULL THEN
+         tfcmg011_ag.t$desc 
+    ELSE tfcmg011_ac.t$desc END                 DESC_AGENCIA,
+    CASE WHEN tccom125_ac.t$bano IS NULL THEN   
+         tccom125_ag.t$bano
+    ELSE tccom125_ac.t$bano END                 NUME_CONTA,
+    CASE WHEN tccom125_ac.t$dacc$d IS NULL THEN                          
+         tccom125_ag.t$dacc$d
+    ELSE tccom125_ac.t$dacc$d END               DIGI_CONTA,  
 	 
     TENT.RN                                     TENTATIVA_PAGTO,
     tfcmg101.t$plan                             DATA_TENTATIVA_PAGTO,
@@ -57,20 +69,27 @@ INNER JOIN baandb.ttccom130301 tccom130
        AND znsls401.t$pecl$c = znsls412.t$pecl$c
        AND znsls401.t$sqpd$c = znsls412.t$sqpd$c
         
- LEFT JOIN baandb.ttccom125301  tccom125
-        ON tccom125.t$ptbp = tfacp201.t$ifbp
-       AND tccom125.t$cban = tfacp201.t$bank
+ LEFT JOIN baandb.ttccom125301  tccom125_ag           --Banco PN da Agenda Pagto
+        ON tccom125_ag.t$ptbp = tfacp201.t$ifbp
+       AND tccom125_ag.t$cban = tfacp201.t$bank
 
- LEFT JOIN baandb.ttfcmg011301  tfcmg011
-        ON tfcmg011.t$bank = tccom125.t$brch
+ LEFT JOIN baandb.ttfcmg011301  tfcmg011_ag
+        ON tfcmg011_ag.t$bank = tccom125_ag.t$brch
 
  LEFT JOIN baandb.ttfcmg101301 tfcmg101
         ON tfcmg101.t$comp = 301 
        AND tfcmg101.t$ifbp = tfacp200.t$ifbp
-       AND tfcmg101.t$tadv = 1                 --Fatura de Compra
+       AND tfcmg101.t$tadv = 1                        --Fatura de Compra
        AND tfcmg101.t$ttyp = tfacp200.t$ttyp
        AND tfcmg101.t$ninv = tfacp200.t$ninv
 
+ LEFT JOIN baandb.ttccom125301  tccom125_ac           --Banco PN do Acons. Pagto
+        ON tccom125_ac.t$ptbp = tfcmg101.t$ifbp
+       AND tccom125_ac.t$cban = tfcmg101.t$basu
+
+ LEFT JOIN baandb.ttfcmg011301  tfcmg011_ac
+        ON tfcmg011_ac.t$bank = tccom125_ac.t$brch
+        
  LEFT JOIN ( select a.t$mopa$d,
                     a.t$btno,
                     a.t$basu,
