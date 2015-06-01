@@ -48,37 +48,49 @@ SELECT
 
     NVL(TRIM(tfacp201.t$paym), 'N/A')           METODO_PAGTO,
 
-    CASE WHEN tfcmg101.t$basu IS NULL THEN
-         tfacp201.t$bank
-    ELSE tfcmg101.t$basu END                    BANCO_PARCEIRO,
-    CASE WHEN tfcmg011_ac.t$agcd$l IS NULL THEN
-         tfcmg011_ag.t$agcd$l                           
-    ELSE tfcmg011_ac.t$agcd$l END               NUME_AGENCIA,
-    CASE WHEN tfcmg011_ac.t$agdg$l IS NULL THEN                           
-         tfcmg011_ag.t$agdg$l
-    ELSE tfcmg011_ac.t$agdg$l END               DIGI_AGENCIA,
-    CASE WHEN tfcmg011_ac.t$desc IS NULL THEN
-         tfcmg011_ag.t$desc 
-    ELSE tfcmg011_ac.t$desc END                 DESC_AGENCIA,
-    CASE WHEN tccom125_ac.t$bano IS NULL THEN   
-         tccom125_ag.t$bano
-    ELSE tccom125_ac.t$bano END                 NUME_CONTA,
-    CASE WHEN tccom125_ac.t$dacc$d IS NULL THEN                          
-         tccom125_ag.t$dacc$d
-    ELSE tccom125_ac.t$dacc$d END               DIGI_CONTA,  
-    CASE WHEN tfcmg101.t$basu IS NULL THEN
-        Trim(tfcmg011_ag.t$desc  || ' ' ||
-              'AG ' || tfcmg011_ag.t$agcd$l || '-' || 
-                       tfcmg011_ag.t$agdg$l || '   ' || 'CC ' || 
-                       tccom125_ag.t$bano || '-' || 
-                       tccom125_ag.t$dacc$d )          
-    ELSE                                        
-        Trim(tfcmg011_ac.t$desc  || ' ' ||
-              'AG ' || tfcmg011_ac.t$agcd$l || '-' || 
-                       tfcmg011_ac.t$agdg$l || '   ' || 'CC ' || 
-                       tccom125_ac.t$bano || '-' || 
-                       tccom125_ac.t$dacc$d )    
-    END                                         CONTA_PN,
+    CASE WHEN tfcmg101.t$basu IS NULL 
+           THEN tfacp201.t$bank
+         ELSE   tfcmg101.t$basu 
+     END                                        BANCO_PARCEIRO,
+		 
+    CASE WHEN tfcmg011_ac.t$agcd$l IS NULL 
+           THEN tfcmg011_ag.t$agcd$l                           
+         ELSE   tfcmg011_ac.t$agcd$l 
+     END                                        NUME_AGENCIA,
+		 
+    CASE WHEN tfcmg011_ac.t$agdg$l IS NULL 
+           THEN tfcmg011_ag.t$agdg$l
+         ELSE   tfcmg011_ac.t$agdg$l 
+     END                                        DIGI_AGENCIA,
+		 
+    CASE WHEN tfcmg011_ac.t$desc IS NULL 
+           THEN tfcmg011_ag.t$desc 
+         ELSE   tfcmg011_ac.t$desc 
+     END                                        DESC_AGENCIA,
+	
+    CASE WHEN tccom125_ac.t$bano IS NULL 
+           THEN tccom125_ag.t$bano
+         ELSE   tccom125_ac.t$bano 
+     END                 		 		 		NUME_CONTA,
+	
+    CASE WHEN tccom125_ac.t$dacc$d IS NULL 
+           THEN tccom125_ag.t$dacc$d
+         ELSE   tccom125_ac.t$dacc$d 
+     END                                        DIGI_CONTA,
+	 
+    CASE WHEN tfcmg101.t$basu IS NULL 
+           THEN Trim(tfcmg011_ag.t$desc  || ' ' ||
+                     'AG ' || tfcmg011_ag.t$agcd$l || '-' || 
+                     tfcmg011_ag.t$agdg$l || '   ' || 'CC ' || 
+                     tccom125_ag.t$bano || '-' || 
+                     tccom125_ag.t$dacc$d )          
+         ELSE   Trim(tfcmg011_ac.t$desc  || ' ' ||
+                     'AG ' || tfcmg011_ac.t$agcd$l || '-' || 
+                     tfcmg011_ac.t$agdg$l || '   ' || 'CC ' || 
+                     tccom125_ac.t$bano || '-' || 
+                     tccom125_ac.t$dacc$d )    
+     END                                        CONTA_PN,
+	 
     tdrec940.t$fire$l                           NUM_RFISCAL,
     tdrec940.t$rfdt$l                           NUM_CFISCAL, 
     DTRFD.DESC_CODIGO_FISCAL                    DESC_CODIGO_FISCAL,        
@@ -151,15 +163,15 @@ INNER JOIN baandb.ttccom130301 tccom130
         ON tdrec940.t$ttyp$l = tfacp200.t$ttyp
        AND tdrec940.t$invn$l = tfacp200.t$ninv
         
- LEFT JOIN ( SELECT iDOMAIN.t$cnst iCODE, iLABEL.t$desc DESC_CODIGO_FISCAL 
-               FROM baandb.tttadv401000 iDOMAIN, 
+ LEFT JOIN ( select iDOMAIN.t$cnst iCODE, iLABEL.t$desc DESC_CODIGO_FISCAL 
+               from baandb.tttadv401000 iDOMAIN, 
                     baandb.tttadv140000 iLABEL 
-              WHERE iDOMAIN.t$cpac = 'td'
-                AND iDOMAIN.t$cdom = 'rec.trfiDOMAIN.l'
-                AND iLABEL.t$clan = 'p'
-                AND iLABEL.t$cpac = 'td'
-                AND iLABEL.t$clab = iDOMAIN.t$za_clab
-                AND rpad(iDOMAIN.t$vers,4) ||
+              where iDOMAIN.t$cpac = 'td'
+                and iDOMAIN.t$cdom = 'rec.trfiDOMAIN.l'
+                and iLABEL.t$clan = 'p'
+                and iLABEL.t$cpac = 'td'
+                and iLABEL.t$clab = iDOMAIN.t$za_clab
+                and rpad(iDOMAIN.t$vers,4) ||
                     rpad(iDOMAIN.t$rele,2) ||
                     rpad(iDOMAIN.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
                                                           rpad(l1.t$rele,2) ||
@@ -167,7 +179,7 @@ INNER JOIN baandb.ttccom130301 tccom130
                                                  from baandb.tttadv401000 l1 
                                                 where l1.t$cpac = iDOMAIN.t$cpac 
                                                   and l1.t$cdom = iDOMAIN.t$cdom )
-                AND rpad(iLABEL.t$vers,4) ||
+                and rpad(iLABEL.t$vers,4) ||
                     rpad(iLABEL.t$rele,2) ||
                     rpad(iLABEL.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
                                                          rpad(l1.t$rele,2) ||
@@ -314,7 +326,7 @@ INNER JOIN baandb.ttccom130301 tccom130
        AND tfcmg101.t$ttyp = tfacp200.t$ttyp
        AND tfcmg101.t$ninv = tfacp200.t$ninv
 
- LEFT JOIN baandb.ttccom125301  tccom125_ac           --Banco PN do Acons. Pagto
+ LEFT JOIN baandb.ttccom125301  tccom125_ac    --Banco PN do Acons. Pagto
         ON tccom125_ac.t$ptbp = tfcmg101.t$ifbp
        AND tccom125_ac.t$cban = tfcmg101.t$basu
 
@@ -447,7 +459,7 @@ INNER JOIN baandb.ttccom130301 tccom130
                                        THEN 5 
                                      ELSE tflcb230_HIST.T$send$D
                                  END, 0)
- LEFT JOIN ( SELECT D.T$TTYP$D,
+ LEFT JOIN ( select D.T$TTYP$D,
                     D.T$NINV$D,
                     D.T$PTYP$D,
                     D.T$DOCN$D,
@@ -455,7 +467,7 @@ INNER JOIN baandb.ttccom130301 tccom130
                     ( PARTITION BY D.T$TTYP$D,
                                    D.T$NINV$D
                           ORDER BY D.T$PAYD$D )  RN
-               FROM BAANDB.TTFLCB230301 D )  TENT
+               from BAANDB.TTFLCB230301 D )  TENT
         ON TENT.T$TTYP$D = TFACP200.T$TTYP
        AND TENT.T$NINV$D = TFACP200.T$NINV
        AND TENT.T$PTYP$D = CMG103.T$TTYP
