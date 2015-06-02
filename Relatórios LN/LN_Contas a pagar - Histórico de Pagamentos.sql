@@ -35,10 +35,10 @@ SELECT
            THEN '00000000000000' 
          WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')) < 11
            THEN '00000000000000'
-    ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') 
+        ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') 
     END                           ENTIDADE_FISCAL
   
-FROM  baandb.ttfcmg103301 tfcmg103
+FROM       baandb.ttfcmg103301 tfcmg103
 
  LEFT JOIN baandb.ttccom100301 tccom100
         ON tccom100.t$bpid = tfcmg103.t$ptbp
@@ -160,6 +160,8 @@ WHERE tfacp200.t$ttyp IN ('SFA','PFA','PSG','SFS','PFS','PAG','SFT','PRB','PBG',
                                      THEN PEDIDO.NUMERO                 
                                    ELSE   'N/A'  
                                END IN (:Pedido) AND :PedidoTodos = 0))
+							   
+  AND ( (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = Trim(:CNPJ)) OR (Trim(:CNPJ) is null) )
 
 ORDER BY COD_PN, 
          TRANSACAO, 
