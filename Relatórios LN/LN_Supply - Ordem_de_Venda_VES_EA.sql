@@ -1,10 +1,11 @@
-SELECT
+SELECT DISTINCT
    tcemm030.t$euca       NUME_FILIAL,
    tcemm030.T$EUNT       CHAVE_FILIAL,
    tccom130b.t$fovn$l    CNPJ_FILIAL,
    
    znsls401.t$entr$c     NUME_OV,
    znsls401.t$orno$c     NUME_OV_LN,
+   znsls401.t$pono$c     POSI_OV_LN,
    znsls401.t$sequ$c     NUME_ITEM,
    znsls400.t$pecl$c     NUME_PEDIDO,
    znsls401.t$ufen$c     UF,
@@ -27,7 +28,7 @@ SELECT
    
    CASE WHEN znsls401.t$tpes$c = 'X' THEN 'Crossdocking'
         WHEN znsls401.t$tpes$c = 'F' THEN 'Fingido'
-        WHEN znsls401.t$tpes$c = 'P' THEN 'Pré-Venda'
+        WHEN znsls401.t$tpes$c = 'P' THEN 'PrÃ©-Venda'
         ELSE 'NORMAL' 
       END                TIPO_ESTOQ,
     
@@ -247,7 +248,6 @@ INNER JOIN baandb.tznsls002301 znsls002
 WHERE tcemm124.t$dtyp = 1 
   AND whinp100.t$koor = 3 
   AND whinp100.t$kotr = 2
-
  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone 'America/Sao_Paulo') AS DATE)) Between NVL(:DataEntregaDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                                                                                             AT time zone 'America/Sao_Paulo') AS DATE)) 
