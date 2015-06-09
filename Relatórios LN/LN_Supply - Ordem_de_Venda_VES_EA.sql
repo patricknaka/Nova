@@ -1,101 +1,101 @@
-SELECT DISTINCT
-   tcemm030.t$euca       NUME_FILIAL,
-   tcemm030.T$EUNT       CHAVE_FILIAL,
-   tccom130b.t$fovn$l    CNPJ_FILIAL,
-   
-   znsls401.t$entr$c     NUME_OV,
-   znsls401.t$orno$c     NUME_OV_LN,
-   znsls401.t$pono$c     POSI_OV_LN,
-   znsls401.t$sequ$c     NUME_ITEM,
-   znsls400.t$pecl$c     NUME_PEDIDO,
-   znsls401.t$ufen$c     UF,
-   znsls401.t$idor$c     ORIGEM,
-   
-   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtap$c, 
-     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone 'America/Sao_Paulo') AS DATE)
-                         DATA_APR, 
-       
-   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
-     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone 'America/Sao_Paulo') AS DATE)
-                         DATA_PLANENT,   
-       
-   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
-     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone 'America/Sao_Paulo') AS DATE)
-                         DATA_PLANREC,   
-   
-   CASE WHEN znsls401.t$tpes$c = 'X' THEN 'Crossdocking'
-        WHEN znsls401.t$tpes$c = 'F' THEN 'Fingido'
-        WHEN znsls401.t$tpes$c = 'P' THEN 'Pré-Venda'
-        ELSE 'NORMAL' 
-      END                TIPO_ESTOQ,
+SELECT 
+  DISTINCT
+    tcemm030.t$euca       NUME_FILIAL,
+    tcemm030.T$EUNT       CHAVE_FILIAL,
+    tccom130b.t$fovn$l    CNPJ_FILIAL,
+    znsls401.t$entr$c     NUME_OV,
+    znsls401.t$orno$c     NUME_OV_LN,
+    znsls401.t$pono$c     POSI_OV_LN,
+    znsls401.t$sequ$c     NUME_ITEM,
+    znsls400.t$pecl$c     NUME_PEDIDO,
+    znsls401.t$ufen$c     UF,
+    znsls401.t$idor$c     ORIGEM,
     
-   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
-     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-       AT time zone 'America/Sao_Paulo') AS DATE)
-                         DATA_ORDEM,
-       
-   Trim(tdsls401.t$item) CODE_ITEM,
-   tcibd001.t$dsca       DECR_ITEM,
-   tdipu001.t$suti       TEMP_REPOS,
-   znsls401.t$qtve$c     QUAN_ORD,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtap$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
+                          DATA_APR, 
+        
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
+                          DATA_PLANENT,   
+        
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
+                          DATA_PLANREC,   
+    
+    CASE WHEN znsls401.t$tpes$c = 'X' THEN 'Crossdocking'
+         WHEN znsls401.t$tpes$c = 'F' THEN 'Fingido'
+         WHEN znsls401.t$tpes$c = 'P' THEN 'Pré-Venda'
+         ELSE 'NORMAL' 
+       END                TIPO_ESTOQ,
+    
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
+                          DATA_ORDEM,
+        
+    Trim(tdsls401.t$item) CODE_ITEM,
+    tcibd001.t$dsca       DECR_ITEM,
+    tdipu001.t$suti       TEMP_REPOS,
+    znsls401.t$qtve$c     QUAN_ORD,
+    
+    CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
+           THEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) 
+         ELSE znsls401.t$qtve$c 
+     END                  QUAN_ALOC,
+    
+    CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
+           THEN znsls401.t$qtve$c - (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0))
+         ELSE 0 
+     END                  QUAN_FALT,
+    
+    nvl(tdpur401.oqua,0)  QUAN_EMPED,
+    
+    tttxt010.t$text       TEXT_ORD,
+    tccom130.t$fovn$l     CNPJ_FORN,
+    tccom130.t$nama       NOME_FORNEC,
+    
+    ( select sum(a.t$tamt$l) 
+        from baandb.tbrmcs941301 a
+  inner join baandb.tbrmcs940301 b 
+          on a.t$txre$l = b.t$txre$l 
+       where a.t$txre$l = tdsls401.t$txre$l 
+         and a.t$line$l = tdsls401.t$txli$l 
+         and b.t$txor$l = 2 ) 
+                          VALO_PREVIMP,
+ 
+    ( select case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)) = 0 
+                    then 0
+                  else   round(sum(a.t$mauc$1) /(max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)),4) 
+              end mauc
+        from baandb.twhwmd217301 a
+  inner join baandb.ttcemm112301 tcemm112
+          on tcemm112.t$waid = a.t$cwar
+  inner join baandb.twhwmd215301 whwmd215
+          on whwmd215.t$cwar = a.t$cwar
+         and whwmd215.t$item = a.t$item
+       where tcemm112.t$loco = 301
+         and a.t$item = tdsls401.t$item
+         and tcemm112.t$grid = tcemm124.t$grid
+    group by a.t$item,
+             tcemm112.t$grid) 
+                          VALOR_CMV_UNITARIO,
+                                    
+    znsls400.t$idli$c     CODE_LISTA,
+    tcmcs023.t$dsca       NOME_DEPART,
+    znsls401.t$itpe$c     COD_TIPO_ENTREGA,
+    znint002.t$uneg$c     CODE_UNIDADE_NEGOCIO,
+    tcmcs031.t$dsca       NOME_RAMOATV,
+    znsls400.t$nomf$c     NOME_COBR,
+    znsls400.t$emaf$c     EMAIL,
+    znsls002.t$dsca$c     DECR_TIPO_ENTREGA,
+    iTIPOXD.DESCR         DESCR_XD,
+    ULT_PONTO.t$poco$c    COD_ULT_PONTO,
+    znmcs002.t$desc$c     DESCR_ULT_PONTO
    
-   CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
-          THEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) 
-        ELSE znsls401.t$qtve$c 
-    END                  QUAN_ALOC,
-
-   CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
-          THEN znsls401.t$qtve$c - (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0))
-        ELSE 0 
-    END                  QUAN_FALT,
-   
-   nvl(tdpur401.oqua,0)  QUAN_EMPED,
-   
-   tttxt010.t$text       TEXT_ORD,
-   tccom130.t$fovn$l     CNPJ_FORN,
-   tccom130.t$nama       NOME_FORNEC,
-   
-   ( select sum(a.t$tamt$l) 
-       from baandb.tbrmcs941301 a
- inner join baandb.tbrmcs940301 b 
-         on a.t$txre$l = b.t$txre$l 
-      where a.t$txre$l = tdsls401.t$txre$l 
-        and a.t$line$l = tdsls401.t$txli$l 
-        and b.t$txor$l = 2 ) 
-                         VALO_PREVIMP,
-
-   ( select case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)) = 0 
-                   then 0
-                 else   round(sum(a.t$mauc$1) /(max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)),4) 
-             end mauc
-       from baandb.twhwmd217301 a
- inner join baandb.ttcemm112301 tcemm112
-         on tcemm112.t$waid = a.t$cwar
- inner join baandb.twhwmd215301 whwmd215
-         on whwmd215.t$cwar = a.t$cwar
-        and whwmd215.t$item = a.t$item
-      where tcemm112.t$loco = 301
-        and a.t$item = tdsls401.t$item
-        and tcemm112.t$grid = tcemm124.t$grid
-   group by a.t$item,
-            tcemm112.t$grid) 
-                         VALOR_CMV_UNITARIO,
-                                   
-   znsls400.t$idli$c     CODE_LISTA,
-   tcmcs023.t$dsca       NOME_DEPART,
-   znsls401.t$itpe$c     COD_TIPO_ENTREGA,
-   znint002.t$uneg$c     CODE_UNIDADE_NEGOCIO,
-   tcmcs031.t$dsca       NOME_RAMOATV,
-   znsls400.t$nomf$c     NOME_COBR,
-   znsls400.t$emaf$c     EMAIL,
-   znsls002.t$dsca$c     DECR_TIPO_ENTREGA,
-   iTIPOXD.DESCR         DESCR_XD,
-   ULT_PONTO.t$poco$c    COD_ULT_PONTO,
-   znmcs002.t$desc$c     DESCR_ULT_PONTO
-  
 FROM       baandb.tznsls400301 znsls400
 
 INNER JOIN baandb.tznsls401301 znsls401
@@ -103,7 +103,7 @@ INNER JOIN baandb.tznsls401301 znsls401
        AND znsls400.t$uneg$c = znsls401.T$UNEG$c 
        AND znsls400.t$pecl$c = znsls401.T$pecl$c 
        AND znsls400.t$sqpd$c = znsls401.T$sqpd$c
-    
+     
 INNER JOIN baandb.ttdsls400301 tdsls400 
         ON znsls401.t$orno$c = tdsls400.t$orno
   
@@ -248,16 +248,27 @@ INNER JOIN baandb.tznsls002301 znsls002
 WHERE tcemm124.t$dtyp = 1 
   AND whinp100.t$koor = 3 
   AND whinp100.t$kotr = 2
- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') AS DATE)) Between NVL(:DataEntregaDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                            AT time zone 'America/Sao_Paulo') AS DATE)) 
-                                                             And NVL(:DataEntregaAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                            AT time zone 'America/Sao_Paulo') AS DATE))
- AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') AS DATE)) Between NVL(:DataRecebeDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                           AT time zone 'America/Sao_Paulo') AS DATE)) 
-                                                             And NVL(:DataRecebeAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                                                           AT time zone 'America/Sao_Paulo') AS DATE))
- AND tcemm030.T$EUNT IN (:Filial)
- AND Trim(tcmcs023.t$citg) IN (:Depto)
- AND ULT_PONTO.t$poco$c IN (:Status)  
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone 'America/Sao_Paulo') AS DATE))
+      Between NVL(:DataEntregaDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
+                                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                       AT time zone 'America/Sao_Paulo') AS DATE)) 
+          And NVL(:DataEntregaAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
+                                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                       AT time zone 'America/Sao_Paulo') AS DATE))
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone 'America/Sao_Paulo') AS DATE)) 
+      Between NVL(:DataRecebeDe,  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
+                                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                      AT time zone 'America/Sao_Paulo') AS DATE)) 
+          And NVL(:DataRecebeAte, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
+                                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                      AT time zone 'America/Sao_Paulo') AS DATE))
+  AND tcemm030.T$EUNT IN (:Filial)
+  AND Trim(tcmcs023.t$citg) IN (:Depto)
+  AND ULT_PONTO.t$poco$c IN (:Status)  
+
+ORDER BY NUME_OV_LN,
+         POSI_OV_LN
