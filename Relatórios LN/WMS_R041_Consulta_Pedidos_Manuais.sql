@@ -128,7 +128,6 @@ INNER JOIN baandb.ttcibd001301 tcibd001
  LEFT JOIN baandb.ttccom130301 tccom130f
         ON tccom130f.t$cadr  = tcmcs060.t$cadr  
   
-  
  LEFT JOIN baandb.ttcmcs966301 tcmcs966
         ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
   
@@ -229,6 +228,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "     cisli940.t$docn$l          NF,  " &
 "     cisli940.t$seri$l          SERIE,  " &
 "     WMS_OA_ORDERS.ORDERKEY     PEDIDO_WMS,  " &
+"     WMS_OA_ORDERS.REFERENCEDOCUMENT    ORDEM_MOVIMENTACAO,  " &
 "     CODELKUP_OA.DESCRIPTION    DESCRICAO_PEDIDO,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -374,6 +374,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "  cisli940.t$docn$l,  " &
 "  cisli940.t$seri$l,  " &
 "  WMS_OA_ORDERS.ORDERKEY,  " &
+"  WMS_OA_ORDERS.REFERENCEDOCUMENT,  " &
 "  CODELKUP_OA.DESCRIPTION,  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -416,6 +417,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "     cisli940.t$docn$l          NF,  " &
 "     cisli940.t$seri$l          SERIE,  " &
 "     WMS_OA_ORDERS.ORDERKEY     PEDIDO_WMS,  " &
+"     WMS_OA_ORDERS.REFERENCEDOCUMENT    ORDEM_MOVIMENTACAO,  " &
 "     CODELKUP_OA.DESCRIPTION    DESCRICAO_PEDIDO,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -561,6 +563,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "  cisli940.t$docn$l,  " &
 "  cisli940.t$seri$l,  " &
 "  WMS_OA_ORDERS.ORDERKEY,  " &
+"  WMS_OA_ORDERS.REFERENCEDOCUMENT,  " &
 "  CODELKUP_OA.DESCRIPTION,  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -600,6 +603,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "     cisli940.t$docn$l          NF,  " &
 "     cisli940.t$seri$l          SERIE,  " &
 "     WMS_OA_ORDERS.ORDERKEY     PEDIDO_WMS,  " &
+"     WMS_OA_ORDERS.REFERENCEDOCUMENT    ORDEM_MOVIMENTACAO,  " &
 "     CODELKUP_OA.DESCRIPTION    DESCRICAO_PEDIDO,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -745,6 +749,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "  cisli940.t$docn$l,  " &
 "  cisli940.t$seri$l,  " &
 "  WMS_OA_ORDERS.ORDERKEY,  " &
+"  WMS_OA_ORDERS.REFERENCEDOCUMENT,  " &
 "  CODELKUP_OA.DESCRIPTION,  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -784,6 +789,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "     cisli940.t$docn$l          NF,  " &
 "     cisli940.t$seri$l          SERIE,  " &
 "     WMS_OA_ORDERS.ORDERKEY     PEDIDO_WMS,  " &
+"     WMS_OA_ORDERS.REFERENCEDOCUMENT    ORDEM_MOVIMENTACAO,  " &
 "     CODELKUP_OA.DESCRIPTION    DESCRICAO_PEDIDO,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -929,6 +935,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "  cisli940.t$docn$l,  " &
 "  cisli940.t$seri$l,  " &
 "  WMS_OA_ORDERS.ORDERKEY,  " &
+"  WMS_OA_ORDERS.REFERENCEDOCUMENT,  " &
 "  CODELKUP_OA.DESCRIPTION,  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -968,6 +975,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "     cisli940.t$docn$l          NF,  " &
 "     cisli940.t$seri$l          SERIE,  " &
 "     WMS_OA_ORDERS.ORDERKEY     PEDIDO_WMS,  " &
+"     WMS_OA_ORDERS.REFERENCEDOCUMENT    ORDEM_MOVIMENTACAO,  " &
 "     CODELKUP_OA.DESCRIPTION    DESCRICAO_PEDIDO,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -1113,6 +1121,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "  cisli940.t$docn$l,  " &
 "  cisli940.t$seri$l,  " &
 "  WMS_OA_ORDERS.ORDERKEY,  " &
+"  WMS_OA_ORDERS.REFERENCEDOCUMENT,  " &
 "  CODELKUP_OA.DESCRIPTION,  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -1152,6 +1161,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "     cisli940.t$docn$l          NF,  " &
 "     cisli940.t$seri$l          SERIE,  " &
 "     WMS_OA_ORDERS.ORDERKEY     PEDIDO_WMS,  " &
+"     WMS_OA_ORDERS.REFERENCEDOCUMENT    ORDEM_MOVIMENTACAO,  " &
 "     CODELKUP_OA.DESCRIPTION    DESCRICAO_PEDIDO,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -1297,6 +1307,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "  cisli940.t$docn$l,  " &
 "  cisli940.t$seri$l,  " &
 "  WMS_OA_ORDERS.ORDERKEY,  " &
+"  WMS_OA_ORDERS.REFERENCEDOCUMENT,  " &
 "  CODELKUP_OA.DESCRIPTION,  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -1336,6 +1347,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "     cisli940.t$docn$l          NF,  " &
 "     cisli940.t$seri$l          SERIE,  " &
 "     WMS_OA_ORDERS.ORDERKEY     PEDIDO_WMS,  " &
+"     WMS_OA_ORDERS.REFERENCEDOCUMENT    ORDEM_MOVIMENTACAO,  " &
 "     CODELKUP_OA.DESCRIPTION    DESCRICAO_PEDIDO,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -1481,6 +1493,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "  cisli940.t$docn$l,  " &
 "  cisli940.t$seri$l,  " &
 "  WMS_OA_ORDERS.ORDERKEY,  " &
+"  WMS_OA_ORDERS.REFERENCEDOCUMENT,  " &
 "  CODELKUP_OA.DESCRIPTION,  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -1520,6 +1533,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "     cisli940.t$docn$l          NF,  " &
 "     cisli940.t$seri$l          SERIE,  " &
 "     WMS_OA_ORDERS.ORDERKEY     PEDIDO_WMS,  " &
+"     WMS_OA_ORDERS.REFERENCEDOCUMENT    ORDEM_MOVIMENTACAO,  " &
 "     CODELKUP_OA.DESCRIPTION    DESCRICAO_PEDIDO,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -1665,6 +1679,7 @@ GROUP BY FILIAL.DSC_FILIAL,
 "  cisli940.t$docn$l,  " &
 "  cisli940.t$seri$l,  " &
 "  WMS_OA_ORDERS.ORDERKEY,  " &
+"  WMS_OA_ORDERS.REFERENCEDOCUMENT,  " &
 "  CODELKUP_OA.DESCRIPTION,  " &
 "  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
