@@ -1,5 +1,4 @@
 SELECT 
-SELECT 
     FILIAL.DSC_FILIAL                  FILIAL,
     cisli940.t$docn$l                  NF,
     cisli940.t$seri$l                  SERIE,
