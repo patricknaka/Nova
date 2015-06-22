@@ -1,4 +1,4 @@
-SELECT DISTINCT
+﻿SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
     ' '                         CODIGO_BARRA,             --03
@@ -41,20 +41,20 @@ SELECT DISTINCT
     tdrec941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
     'E'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
     
-FROM  baandb.ttdrec941201 tdrec941
+FROM  baandb.ttdrec941601 tdrec941
 
-  INNER JOIN baandb.ttdrec940201  tdrec940
+  INNER JOIN baandb.ttdrec940601  tdrec940
           ON tdrec940.t$fire$l = tdrec941.t$fire$l
           
-  INNER JOIN baandb.ttcibd001201  tcibd001
+  INNER JOIN baandb.ttcibd001601  tcibd001
           ON tcibd001.t$item = tdrec941.t$item$l
           
-  LEFT JOIN baandb.ttcibd004201   tcibd004
+  LEFT JOIN baandb.ttcibd004601   tcibd004
          ON tcibd004.t$citt = '000'
         AND tcibd004.t$bpid = ' '
         AND tcibd004.t$item = tdrec941.t$item$l
         
-  LEFT JOIN baandb.ttttxt010201 tttxt010r
+  LEFT JOIN baandb.ttttxt010601 tttxt010r
        ON tttxt010r.t$ctxt = tcibd001.t$txtf$c
       AND tttxt010r.t$clan = 'p'
 	    AND tttxt010r.t$seqe = 1
@@ -91,7 +91,7 @@ FROM  baandb.ttdrec941201 tdrec941
                             a.t$fire$l,
                             a.t$line$l,
                             a.t$brty$l
-                    from baandb.ttdrec942201 a ) REC942
+                    from baandb.ttdrec942601 a ) REC942
               ON REC942.t$fire$l = tdrec941.t$fire$l
              AND REC942.t$line$l = tdrec941.t$line$l
              AND REC942.t$brty$l = 1  --ICMS
@@ -100,12 +100,12 @@ FROM  baandb.ttdrec941201 tdrec941
                             a.t$fire$l,
                             a.t$line$l,
                             a.t$brty$l
-                    from baandb.ttdrec942201 a ) REC942
+                    from baandb.ttdrec942601 a ) REC942
               ON REC942.t$fire$l = tdrec941.t$fire$l
              AND REC942.t$line$l = tdrec941.t$line$l
              AND REC942.t$brty$l = 2  --ICMS_ST
          
-          LEFT JOIN baandb.tznsls000201 znsls000
+          LEFT JOIN baandb.tznsls000601 znsls000
                  ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
                 
 WHERE tdrec940.t$stat$l IN (4,5,6)
@@ -158,20 +158,20 @@ SELECT DISTINCT
     cisli941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
     'S'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
     
-FROM  baandb.tcisli941201 cisli941
+FROM  baandb.tcisli941601 cisli941
 
-  INNER JOIN baandb.tcisli940201 cisli940
+  INNER JOIN baandb.tcisli940601 cisli940
           ON cisli940.t$fire$l = cisli941.t$fire$l
           
-  INNER JOIN baandb.ttcibd001201  tcibd001
+  INNER JOIN baandb.ttcibd001601  tcibd001
           ON tcibd001.t$item = cisli941.t$item$l
           
-  LEFT JOIN baandb.ttcibd004201   tcibd004
+  LEFT JOIN baandb.ttcibd004601   tcibd004
          ON tcibd004.t$citt = '000'
         AND tcibd004.t$bpid = ' '
         AND tcibd004.t$item = cisli941.t$item$l
         
-  LEFT JOIN baandb.ttttxt010201 tttxt010r
+  LEFT JOIN baandb.ttttxt010601 tttxt010r
        ON tttxt010r.t$ctxt = tcibd001.t$txtf$c
       AND tttxt010r.t$clan = 'p'
 	    AND tttxt010r.t$seqe = 1
@@ -208,7 +208,7 @@ FROM  baandb.tcisli941201 cisli941
                             a.t$fire$l,
                             a.t$line$l,
                             a.t$brty$l
-                    from baandb.tcisli943201 a ) SLI943
+                    from baandb.tcisli943601 a ) SLI943
               ON SLI943.t$fire$l = cisli941.t$fire$l
              AND SLI943.t$line$l = cisli941.t$line$l
              AND SLI943.t$brty$l = 1  --ICMS
@@ -217,12 +217,12 @@ FROM  baandb.tcisli941201 cisli941
                             a.t$fire$l,
                             a.t$line$l,
                             a.t$brty$l
-                    from baandb.tcisli943201 a ) SLI943
+                    from baandb.tcisli943601 a ) SLI943
               ON SLI943.t$fire$l = cisli941.t$fire$l
              AND SLI943.t$line$l = cisli941.t$line$l
              AND SLI943.t$brty$l = 2  --ICMS_ST
               
-          LEFT JOIN baandb.tznsls000201 znsls000
+          LEFT JOIN baandb.tznsls000601 znsls000
                  ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
                 
  WHERE cisli940.t$stat$l IN (5,6,101)

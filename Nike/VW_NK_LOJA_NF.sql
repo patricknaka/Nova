@@ -99,24 +99,24 @@ SELECT DISTINCT
   ' '                       NUMERO_PEDIDO_VENDA,                     --73
   'E'                       TP_MOVTO                                 -- Criado para separar na tabela as entradas e saídas
   
-FROM  baandb.ttdrec940201  tdrec940
+FROM  baandb.ttdrec940601  tdrec940
 
-    LEFT JOIN baandb.ttccom130201 tccom130r
+    LEFT JOIN baandb.ttccom130601 tccom130r
            ON tccom130r.t$cadr=tdrec940.t$sfra$l
            
     LEFT JOIN ( select  sum(a.t$qnty$l)  QTDE,
                         a.t$fire$l
-                from    baandb.ttdrec941201 a
+                from    baandb.ttdrec941601 a
                 group by a.t$fire$l ) TDREC941
            ON TDREC941.t$fire$l=tdrec940.t$fire$l
            
-    LEFT JOIN baandb.ttccom130201 tccom130t         --transportadora
+    LEFT JOIN baandb.ttccom130601 tccom130t         --transportadora
            ON tccom130t.t$cadr=tdrec940.t$cfra$l
            
-    LEFT JOIN baandb.ttccom966201 tccom966r       
+    LEFT JOIN baandb.ttccom966601 tccom966r       
            ON tccom966r.t$comp$d = tccom130t.t$comp$d
     
-    LEFT JOIN baandb.ttccom139201 tccom139r
+    LEFT JOIN baandb.ttccom139601 tccom139r
            ON tccom139r.t$ccty = tccom130t.t$ccty
           AND tccom139r.t$cste = tccom130t.t$cste
           AND tccom139r.t$city = tccom130t.t$ccit
@@ -125,26 +125,26 @@ FROM  baandb.ttdrec940201  tdrec940
                         a.t$fire$c,
                         a.t$stre$c,
                         MIN(a.t$data$c) ESTORNO
-                from    baandb.tznnfe011201 a
+                from    baandb.tznnfe011601 a
                 where   a.t$stre$c = 6          --estornado
                 group by a.t$oper$c, a.t$fire$c, a.t$stre$c ) DATA_REC       
            ON DATA_REC.t$oper$c = 2
           AND DATA_REC.t$fire$c = tdrec940.t$fire$l
           
-    LEFT JOIN baandb.ttdrec949201 tdrec949
+    LEFT JOIN baandb.ttdrec949601 tdrec949
            ON tdrec949.t$fire$l = tdrec940.t$fire$l
           AND tdrec949.t$brty$l = 3   -- IPI
            
     LEFT JOIN ( select  MIN(brnfe020.t$date$l)  AUTORIZADA,
                         brnfe020.t$ncmp$l,
                         brnfe020.t$refi$l
-                from    baandb.tbrnfe020201 brnfe020
+                from    baandb.tbrnfe020601 brnfe020
                 where   brnfe020.t$stat$l = 1 
                 group by brnfe020.t$ncmp$l, brnfe020.t$refi$l) DT_NFE_REC
-           ON DT_NFE_REC.t$ncmp$l = 201
+           ON DT_NFE_REC.t$ncmp$l = 301
           AND DT_NFE_REC.t$refi$l = tdrec940.t$fire$l
           
-     LEFT JOIN baandb.ttttxt010201 tttxt010r 
+     LEFT JOIN baandb.ttttxt010601 tttxt010r 
        ON tttxt010r.t$ctxt = tdrec940.t$obse$l
       AND tttxt010r.t$clan = 'p'
 	    AND tttxt010r.t$seqe = 1
@@ -286,22 +286,22 @@ SELECT DISTINCT
                             NUMERO_PEDIDO_VENDA,                     --73
   'S'                       TP_MOVTO                                 -- Criado para separar na tabela as entradas e saídas
   
-FROM  baandb.tcisli940201  cisli940
+FROM  baandb.tcisli940601  cisli940
 
-    LEFT JOIN baandb.ttccom130201 tccom130f           --filial emitente
+    LEFT JOIN baandb.ttccom130601 tccom130f           --filial emitente
            ON tccom130f.t$cadr=cisli940.t$sfra$l
 
-    LEFT JOIN baandb.ttccom100201 tccom100f
+    LEFT JOIN baandb.ttccom100601 tccom100f
            ON tccom100f.t$bpid = cisli940.t$bpid$l
            
-    LEFT JOIN baandb.ttccom130201 tccom130c
+    LEFT JOIN baandb.ttccom130601 tccom130c
            ON tccom130c.t$cadr = tccom100f.t$cadr
                   
     LEFT JOIN ( select sum(a.t$ldam$l) DESCONTO,
                        sum(a.t$dqua$l) QTDE,
                         a.t$fire$l
-                from  baandb.tcisli941201 a,
-                      baandb.tznsls000201 b
+                from  baandb.tcisli941601 a,
+                      baandb.tznsls000601 b
                 where b.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
                 and   a.t$item$l != b.t$itmf$c      --ITEM FRETE
                 and   a.t$item$l != b.t$itmd$c      --ITEM DESPESAS
@@ -310,13 +310,13 @@ FROM  baandb.tcisli940201  cisli940
            ON SLI941.t$fire$l = cisli940.t$fire$l
   
     
-    LEFT JOIN baandb.ttccom130201 tccom130ft         --transportadora faturamento
+    LEFT JOIN baandb.ttccom130601 tccom130ft         --transportadora faturamento
            ON tccom130ft.t$cadr=cisli940.t$cfra$l
            
-    LEFT JOIN baandb.ttccom966201 tccom966f       
+    LEFT JOIN baandb.ttccom966601 tccom966f       
            ON tccom966f.t$comp$d = tccom130ft.t$comp$d
     
-    LEFT JOIN baandb.ttccom139201 tccom139f
+    LEFT JOIN baandb.ttccom139601 tccom139f
            ON tccom139f.t$ccty = tccom130ft.t$ccty
           AND tccom139f.t$cste = tccom130ft.t$cste
           AND tccom139f.t$city = tccom130ft.t$ccit
@@ -325,62 +325,62 @@ FROM  baandb.tcisli940201  cisli940
                         a.t$fire$c,
                         a.t$stfa$c,
                         MIN(a.t$data$c) ESTORNADO
-                from    baandb.tznnfe011201 a
+                from    baandb.tznnfe011601 a
                 where   a.t$stfa$c = 101  --ESTORNADO
                 group by a.t$oper$c, a.t$fire$c, a.t$stfa$c ) DATA_FAT       
            ON DATA_FAT.t$oper$c = 1
           AND DATA_FAT.t$fire$c = cisli940.t$fire$l
           
-    LEFT JOIN baandb.tcisli942201 cisli942
+    LEFT JOIN baandb.tcisli942601 cisli942
            ON cisli942.t$fire$l = cisli940.t$fire$l
           AND cisli942.t$brty$l = 3   -- IPI
            
     LEFT JOIN ( select  MIN(brnfe020.t$date$l)  AUTORIZADA,
                         brnfe020.t$ncmp$l,
                         brnfe020.t$refi$l
-                from    baandb.tbrnfe020201 brnfe020
+                from    baandb.tbrnfe020601 brnfe020
                 where   brnfe020.t$stat$l = 1 
                 group by brnfe020.t$ncmp$l, brnfe020.t$refi$l) DT_NFE_FAT
-           ON DT_NFE_FAT.t$ncmp$l = 201
+           ON DT_NFE_FAT.t$ncmp$l = 301
           AND DT_NFE_FAT.t$refi$l = cisli940.t$fire$l
           
-    LEFT JOIN baandb.tcisli959201 cisli959
+    LEFT JOIN baandb.tcisli959601 cisli959
            ON cisli959.t$rscd$l = cisli940.t$rscd$l
            
-    LEFT JOIN baandb.ttccom130201 tccom130entr
+    LEFT JOIN baandb.ttccom130601 tccom130entr
            ON tccom130entr.t$cadr = cisli940.t$stoa$l
            
-    LEFT JOIN baandb.ttccom139201  tccom139entr
+    LEFT JOIN baandb.ttccom139601  tccom139entr
            ON tccom139entr.t$ccty = tccom130entr.t$ccty
           AND tccom139entr.t$cste = tccom130entr.t$cste
           AND tccom139entr.t$city = tccom130entr.t$ccit
            
     LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
                         cisli245.t$fire$l
-                from    baandb.tcisli245201 cisli245
+                from    baandb.tcisli245601 cisli245
                 group by cisli245.t$fire$l )  SLI245
            ON SLI245.t$fire$l = cisli940.t$fire$l
            
     LEFT JOIN ( select  MIN(znsls004.t$entr$c)  ENTREGA,
                         znsls004.t$orno$c OV
-                from    baandb.tznsls004201 znsls004
+                from    baandb.tznsls004601 znsls004
                 group by znsls004.t$orno$c ) SLS004
            ON   SLS004.OV = SLI245.OV
     
     LEFT JOIN ( select  MAX(a.t$dtoc$c)  DT_OCORR,
                         a.t$entr$c
-                from    baandb.tznsls410201 a
+                from    baandb.tznsls410601 a
                 where a.t$poco$c = 'ETR'  
                 group by a.t$entr$c ) SLS410
            ON   SLS410.t$entr$c = SLS004.ENTREGA
            
     LEFT JOIN ( select  COUNT(a.t$etiq$c)  VOLUMES,
                         a.t$fire$c
-                from    baandb.tznfmd630201 a
+                from    baandb.tznfmd630601 a
                 group by a.t$fire$c )  FMD630
            ON   FMD630.t$fire$c = cisli940.t$fire$l
            
-    LEFT JOIN baandb.ttttxt010201 tttxt010f 
+    LEFT JOIN baandb.ttttxt010601 tttxt010f 
            ON tttxt010f.t$ctxt = cisli940.t$obse$l
           AND tttxt010f.t$clan = 'p'
           AND tttxt010f.t$seqe = 1

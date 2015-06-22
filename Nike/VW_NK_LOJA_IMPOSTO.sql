@@ -20,9 +20,9 @@ SELECT  DISTINCT
   ' '                           EMPRESA,
   'E'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
   
-FROM  baandb.ttdrec942201   tdrec942
+FROM  baandb.ttdrec942601   tdrec942
 
-  LEFT JOIN baandb.ttdrec940201 tdrec940
+  LEFT JOIN baandb.ttdrec940601 tdrec940
          ON tdrec940.t$fire$l = tdrec942.t$fire$l
 
 WHERE tdrec940.t$stat$l IN (4,5,6)
@@ -51,9 +51,9 @@ SELECT  DISTINCT
   ' '                           EMPRESA,
   'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
   
-FROM  baandb.tcisli943201   cisli943
+FROM  baandb.tcisli943601   cisli943
 
-  LEFT JOIN baandb.tcisli940201 cisli940
+  LEFT JOIN baandb.tcisli940601 cisli940
          ON cisli940.t$fire$l = cisli943.t$fire$l
          
  WHERE cisli940.t$stat$l IN (5,6,101)

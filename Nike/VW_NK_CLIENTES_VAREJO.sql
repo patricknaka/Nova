@@ -55,19 +55,19 @@ SELECT DISTINCT
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),1,2),' ') DDD_CELULAR,        --24
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),3,13),' ') CELULAR             --25
    
-FROM  baandb.ttccom100201 tccom100
+FROM  baandb.ttccom100601 tccom100
 
-  LEFT JOIN baandb.ttccom130201 tccom130
+  LEFT JOIN baandb.ttccom130601 tccom130
          ON tccom130.t$cadr = tccom100.t$cadr
          
-  LEFT JOIN baandb.ttccom966201 tccom966
+  LEFT JOIN baandb.ttccom966601 tccom966
          ON tccom966.t$comp$d = tccom130.t$comp$d
          
   LEFT JOIN ( select  MAX(a.t$dtem$c)  DT_ULT_COMP,
                       a.t$ofbp$c,
 					  a.t$te1f$c,
 					  a.t$te2f$c
-              from    baandb.tznsls400201  a
+              from    baandb.tznsls400601  a
               group by 	a.t$ofbp$c,
 						a.t$te1f$c,
 						a.t$te2f$c) ZNSLS400

@@ -1,10 +1,10 @@
 select  
--- O campo CD_CIA foi incluido para diferenciar NIKE(2) E BUNZL(3)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
 --**********************************************************************************************************************************************************
        d.t$cnst CD_SITUACAO_PEDIDO,
        l.t$desc DS_SITUACAO_PEDIDO,
        'PEC' CD_MODULO,
-       CAST(2 AS INT) CD_CIA
+       CAST(601 AS INT) CD_CIA
 FROM baandb.tttadv401000 d,
      baandb.tttadv140000 l
 WHERE d.t$cpac='td'
@@ -27,7 +27,7 @@ UNION
 SELECT d.t$cnst CD_SITUACAO_PEDIDO,
        l.t$desc DS_SITUACAO_PEDIDO,
        'PEV' CD_MODULO,
-       CAST(2 AS INT) CD_CIA
+       CAST(601 AS INT) CD_CIA
 FROM baandb.tttadv401000 d,
      baandb.tttadv140000 l
 WHERE d.t$cpac='td'

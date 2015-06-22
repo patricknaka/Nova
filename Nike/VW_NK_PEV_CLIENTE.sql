@@ -1,7 +1,7 @@
 SELECT
--- O campo CD_CIA foi incluido para diferenciar NIKE(2) E BUNZL(3)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
 --**********************************************************************************************************************************************************
-    2 AS  CD_CIA, --znsls400.t$ncia$c																							
+    601 AS  CD_CIA, --znsls400.t$ncia$c																							
     znsls401.t$pecl$c NR_PEDIDO,
     TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,																	
     tdsls400.t$orno NR_ORDEM,
@@ -33,8 +33,8 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
     znsls400.t$idli$c NR_LISTA_CASAMENTO																		
-FROM baandb.tznsls401201 znsls401 
-INNER JOIN baandb.tznsls400201 znsls400 
+FROM baandb.tznsls401601 znsls401 
+INNER JOIN baandb.tznsls400601 znsls400 
       ON  znsls400.t$ncia$c = znsls401.t$ncia$c
       AND znsls400.t$uneg$c = znsls401.t$uneg$c
       AND znsls400.t$pecl$c = znsls401.t$pecl$c
@@ -46,8 +46,8 @@ INNER JOIN (select 	znsls004q.t$ncia$c,
                     znsls004q.t$entr$c,
                     znsls004q.t$sequ$c,
 					znsls004q.t$orno$c
-			from baandb.tznsls004201 znsls004q
-			where znsls004q.t$date$c=(select max(q004.t$date$c) from baandb.tznsls004201 q004
+			from baandb.tznsls004601 znsls004q
+			where znsls004q.t$date$c=(select max(q004.t$date$c) from baandb.tznsls004601 q004
 									 where 	q004.t$ncia$c=znsls004q.t$ncia$c
 									 and	q004.t$uneg$c=znsls004q.t$uneg$c
 									 and	q004.t$pecl$c=znsls004q.t$pecl$c	
@@ -60,9 +60,9 @@ INNER JOIN (select 	znsls004q.t$ncia$c,
         AND znsls004.t$sqpd$c = znsls401.t$sqpd$c
 		AND znsls004.t$entr$c = znsls401.t$entr$c
 		AND znsls004.t$sequ$c = znsls401.t$sequ$c		
-INNER JOIN baandb.ttdsls400201 tdsls400  on tdsls400.t$orno = znsls004.t$orno$c
-INNER JOIN baandb.ttccom130201 tccom130  on tccom130.t$cadr = tdsls400.t$itad
-INNER JOIN baandb.ttccom130201 tccom130c on tccom130c.t$cadr = tdsls400.t$stad
+INNER JOIN baandb.ttdsls400601 tdsls400  on tdsls400.t$orno = znsls004.t$orno$c
+INNER JOIN baandb.ttccom130601 tccom130  on tccom130.t$cadr = tdsls400.t$itad
+INNER JOIN baandb.ttccom130601 tccom130c on tccom130c.t$cadr = tdsls400.t$stad
 GROUP BY 
 znsls400.t$ncia$c,
 znsls401.t$pecl$c,

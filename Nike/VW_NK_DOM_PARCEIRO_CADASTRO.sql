@@ -1,5 +1,5 @@
 select DISTINCT 
--- O campo CD_CIA foi incluido para diferenciar NIKE(2) E BUNZL(3)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
 --**********************************************************************************************************************************************************
        bspt.t$bpid CD_PARCEIRO,
         CASE WHEN regexp_replace(addr.t$fovn$l, '[^0-9]', '') IS NULL
@@ -22,10 +22,10 @@ select DISTINCT
 			AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,										
        bspt.t$okfi$c IN_IDONEO,
 	   bspt.t$prst CD_STATUS,
-	   (select pf.t$cpay from baandb.ttccom122201 pf 
+	   (select pf.t$cpay from baandb.ttccom122601 pf 
 	    where pf.t$ifbp=bspt.t$bpid and rownum=1) CD_CONDICAO_PAGAMENTO,									
-    cast(2 as int) CD_CIA
-FROM baandb.ttccom100201 bspt
-LEFT JOIN baandb.ttccom130201 addr ON addr.t$cadr = bspt.t$cadr											
-LEFT JOIN baandb.ttcmcs080201 trnp ON trnp.t$suno = bspt.t$bpid -- rel com transportadoras
-LEFT JOIN baandb.ttcmcs060201 fabr ON fabr.t$otbp = bspt.t$bpid -- rel com fabricantes
+    cast(601 as int) CD_CIA
+FROM baandb.ttccom100601 bspt
+LEFT JOIN baandb.ttccom130601 addr ON addr.t$cadr = bspt.t$cadr											
+LEFT JOIN baandb.ttcmcs080601 trnp ON trnp.t$suno = bspt.t$bpid -- rel com transportadoras
+LEFT JOIN baandb.ttcmcs060601 fabr ON fabr.t$otbp = bspt.t$bpid -- rel com fabricantes

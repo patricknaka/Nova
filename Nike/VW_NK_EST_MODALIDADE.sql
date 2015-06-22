@@ -1,8 +1,9 @@
 SELECT
--- O campo CD_CIA foi incluido para diferenciar NIKE(2) E BUNZL(3)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+--**********************************************************************************************************************************************************
        d.t$cnst CD_MODALIDADE,
        l.t$desc DS_MODALIDADE,
-       cast(2 as int) CD_CIA
+       cast(601 as int) CD_CIA
 FROM baandb.tttadv401000 d,
      baandb.tttadv140000 l
 WHERE d.t$cpac='tc'
@@ -24,6 +25,6 @@ AND rpad(l.t$vers,4) || rpad(l.t$rele,2) || rpad(l.t$cust,4)=
 UNION
 SELECT 0 CD_ESTOQUE_MODALIDADE,
        'NORMAL' DS_MODALIDADE,
-       cast(2 as int) CD_CIA
+       cast(601 as int) CD_CIA
 FROM DUAL
 order by 1
