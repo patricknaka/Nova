@@ -13,7 +13,7 @@ select
     addr.t$hono NR_NUMERO,
     addr.t$ccit CD_MUNICIPIO,                                      
     addr.t$pstc CD_CEP,
-    addr.t$bldg DS_COMPLEMENTO, 										
+    to_char(addr.t$bldg) DS_COMPLEMENTO, 										
     addr.t$telp NR_TELEFONE_PRINCIPAL,                                  
     addr.t$telx NR_TELEFONE_SECUNDARIO,                                  
     addr.t$tefx NR_FAX,                                          
