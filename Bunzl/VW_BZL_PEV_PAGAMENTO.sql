@@ -1,9 +1,9 @@
 ﻿SELECT
--- O campo CD_CIA foi incluido para diferenciar NIKE(2) E BUNZL(3)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
 --**********************************************************************************************************************************************************
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
-    3 AS CD_CIA, --znsls400.t$ncia$c
+    602 AS CD_CIA, --znsls400.t$ncia$c
     tdsls400.t$orno NR_ORDEM,
     TRIM(sls401q.t$pecl$c) NR_PEDIDO,
     TO_CHAR(sls401q.t$entr$c) NR_ENTREGA, 																
@@ -28,7 +28,7 @@
     (select 
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(a.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
-        from baandb.ttdsls451201 a
+        from baandb.ttdsls451602 a
         where a.t$orno=tdsls400.t$orno) DT_APROVACAO_PAGAMENTO_ERP,
     cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c  as numeric(12,2))  VL_JUROS,
     ' ' CD_CICLO_PAGAMENTO,            -- *** NÃO EXISTE ESTA INFORMAÇÃO NO LN / PENDENTE DE DUVIDA ***
@@ -45,7 +45,7 @@
     znsls402.t$idct$c  NR_CONTA_CORRENTE,
 	znsls402.t$idad$c CD_ADQUIRENTE,																		
 	znsls402.t$bopg$c NR_BPAG
-FROM  baandb.tznsls400201 znsls400,
+FROM  baandb.tznsls400602 znsls400,
     (select distinct 
 		znsls401.t$ncia$c      	t$ncia$c,
 		znsls401.t$uneg$c       t$uneg$c,
@@ -54,7 +54,7 @@ FROM  baandb.tznsls400201 znsls400,
 		znsls401.t$entr$c       t$entr$c,
 		znsls401.t$orno$c      	t$orno$c,
 		sum((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c) VL_PGTO_ENTR		
-    from baandb.tznsls401201 znsls401
+    from baandb.tznsls401602 znsls401
 	group by
 		znsls401.t$ncia$c,																								
 		znsls401.t$uneg$c,
@@ -69,14 +69,14 @@ FROM  baandb.tznsls400201 znsls400,
 		znsls401.t$pecl$c       t$pecl$c,
 		znsls401.t$sqpd$c       t$sqpd$c,
 		sum((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c) VL_PGTO_PED		
-    from baandb.tznsls401201 znsls401
+    from baandb.tznsls401602 znsls401
 	group by
 		znsls401.t$ncia$c,																				
 		znsls401.t$uneg$c,
 		znsls401.t$pecl$c,
 		znsls401.t$sqpd$c) sls401p,																						
-    baandb.ttdsls400201 tdsls400,
-    baandb.tznsls402201 znsls402
+    baandb.ttdsls400602 tdsls400,
+    baandb.tznsls402602 znsls402
 where
 	   sls401q.t$ncia$c=znsls400.t$ncia$c
 and    sls401q.t$uneg$c=znsls400.t$uneg$c

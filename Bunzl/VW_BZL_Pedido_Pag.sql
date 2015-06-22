@@ -1,6 +1,6 @@
 ﻿SELECT
 --*********************************************************************************************************************
---	LISTA TODOS OS PEDIDOS INTEGRADOS INCLUSIVE TROCAS E DEVOLUÇÕES IDEPENDDDENTE DO STATUS
+--	LISTA TODOS OS PEDIDOS INTEGRADOS INCLUSIVE TROCAS E DEVOLUÇÕES INDEPENDENTE DO STATUS
 --*********************************************************************************************************************
 			to_char(ZNSLS401.T$ENTR$C)												PEDIDO,
 			TO_CHAR(ZNSLS402.T$NUPA$C,'000')									COND_PGTO,
@@ -32,7 +32,7 @@
 			ZNSLS402.T$VLMR$C													VL_PAGAMENTO
 			
 FROM
-			BAANDB.TZNSLS402201	ZNSLS402
+			BAANDB.TZNSLS402602	ZNSLS402
 			
 INNER JOIN (SELECT	C.T$NCIA$C,
                     C.T$UNEG$C,
@@ -40,7 +40,7 @@ INNER JOIN (SELECT	C.T$NCIA$C,
                     C.T$SQPD$C,
 					MIN(C.T$ENTR$C) T$ENTR$C,
 					MIN(C.T$DTAP$C) T$DTAP$C
-			FROM	BAANDB.TZNSLS401201 C
+			FROM	BAANDB.TZNSLS401602 C
 			GROUP BY C.T$NCIA$C,
 			         C.T$UNEG$C,
 			         C.T$PECL$C,
@@ -48,4 +48,3 @@ INNER JOIN (SELECT	C.T$NCIA$C,
 					                        AND ZNSLS401.T$UNEG$C   =	ZNSLS402.T$UNEG$C
 					                        AND ZNSLS401.T$PECL$C   =	ZNSLS402.T$PECL$C
 					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS402.T$SQPD$C
-       

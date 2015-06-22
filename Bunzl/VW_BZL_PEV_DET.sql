@@ -1,10 +1,10 @@
 ﻿SELECT DISTINCT
--- O campo CD_CIA foi incluido para diferenciar NIKE(2) E BUNZL(3)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
 --**********************************************************************************************************************************************************
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, tdsls401.t$rcd_utc), 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
-		  3 AS CD_CIA, --znsls400.t$ncia$c 
+		  602 AS CD_CIA, --znsls400.t$ncia$c 
       znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
       tdsls401.t$orno NR_ORDEM,
 		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -16,7 +16,7 @@
         WHEN tdsls401.t$modi=1 THEN 25	  -- modificado
         WHEN tdsls400.t$hdst=20 THEN	  --
 				CASE WHEN nvl((Select max(atv.t$xcsq) 
-					From baandb.ttdsls413201 atv 
+					From baandb.ttdsls413602 atv 
 					where atv.t$orno=tdsls401.t$orno 
 					and   atv.t$pono=tdsls401.t$pono 
 					and   atv.t$xcst>=15),99)=99 THEN 10 ELSE 20 END
@@ -27,7 +27,7 @@
           tdsls401.t$pric*tdsls401.t$qoor VL_ITEM,																	
           znsls401.t$vldi$c VL_DESCONTO_INCONDICIONAL,
           znsls401.t$vlfr$c VL_FRETE_CLIENTE,
-          nvl((select sum(f.t$vlft$c) from baandb.tznfmd630201 f
+          nvl((select sum(f.t$vlft$c) from baandb.tznfmd630602 f
           where f.t$pecl$c=znsls400.t$pecl$c),0) VL_FRETE_CIA,
           CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR,
           znsls400.t$idli$c NR_LISTA_CASAMENTO,
@@ -44,7 +44,7 @@
 		  (((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c)
 				/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c as numeric(18,2)) VL_TOTAL_ITEM,														
           (SELECT Count(lc.t$pono)
-           FROM  baandb.ttdsls401201 lc
+           FROM  baandb.ttdsls401602 lc
            WHERE lc.t$orno=tdsls401.t$orno
            AND   lc.t$pono=tdsls401.t$pono
            AND   lc.t$clyn=1) QT_ITENS_CANCELADOS,
@@ -57,7 +57,7 @@
 	  znsls400.t$idCP$c CD_CAMPANHA_B2B,
 	  znsls004.t$orig$c CD_ORIGEM_PEDIDO,															
 	  (select min(cisli940.t$stat$l) 
-	   from baandb.tcisli940201 cisli940, baandb.tcisli245201 cisli245
+	   from baandb.tcisli940602 cisli940, baandb.tcisli245602 cisli245
 	   where cisli245.t$slso=tdsls401.t$orno
 	   and cisli245.t$pono=tdsls401.t$pono
 	   and cisli245.t$ortp=1
@@ -70,10 +70,10 @@
 	case when znsls401.t$qtve$c<0 then 2 else 1 end IN_CANCELADO									
   
 FROM
-        baandb.ttdsls401201 tdsls401,
-        baandb.tznsls401201 znsls401
+        baandb.ttdsls401602 tdsls401,
+        baandb.tznsls401602 znsls401
 		
-				LEFT JOIN baandb.tznsls004201 znsls004 													
+				LEFT JOIN baandb.tznsls004602 znsls004 													
 										ON	znsls004.t$ncia$c=znsls401.t$ncia$c
 										AND znsls004.t$uneg$c=znsls401.t$uneg$c
 										AND znsls004.t$pecl$c=znsls401.t$pecl$c
@@ -83,17 +83,17 @@ FROM
 										AND znsls004.t$orno$c=znsls401.t$orno$c  						
 										AND znsls004.t$pono$c=znsls401.t$pono$c,											
 		
-        baandb.ttdsls400201 tdsls400,
-        baandb.ttcemm124201 tcemm124,
-        baandb.ttcemm030201 tcemm030,
-        baandb.tznsls400201 znsls400,
+        baandb.ttdsls400602 tdsls400,
+        baandb.ttcemm124602 tcemm124,
+        baandb.ttcemm030602 tcemm030,
+        baandb.tznsls400602 znsls400,
 		(select distinct 																									
 			znsls401t.t$ncia$c      	t$ncia$c,
 			znsls401t.t$uneg$c       t$uneg$c,
 			znsls401t.t$pecl$c       t$pecl$c,
 			znsls401t.t$sqpd$c       t$sqpd$c,
 			sum((znsls401t.t$vlun$c*znsls401t.t$qtve$c)+znsls401t.t$vlfr$c-znsls401t.t$vldi$c+znsls401t.t$vlde$c) VL_PGTO_PED		
-		from baandb.tznsls401201 znsls401t
+		from baandb.tznsls401602 znsls401t
 		group by
 			znsls401t.t$ncia$c,																				
 			znsls401t.t$uneg$c,
@@ -104,7 +104,7 @@ FROM
 				znsls402t.t$uneg$c,
 				znsls402t.t$pecl$c,
                 znsls402t.t$sqpd$c
-		from baandb.tznsls402201 znsls402t
+		from baandb.tznsls402602 znsls402t
 		group by
 				znsls402t.t$ncia$c,
 				znsls402t.t$uneg$c,

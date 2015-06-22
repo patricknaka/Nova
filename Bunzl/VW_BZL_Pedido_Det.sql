@@ -1,6 +1,6 @@
 SELECT
 --*********************************************************************************************************************
---	LISTA TODOS AS ENTREGAS INTEGRADAS E OS PRODUTOS IDEPENDDDENTE DO STATUS
+--	LISTA TODOS AS ENTREGAS INTEGRADAS E OS PRODUTOS INDEPENDENTE DO STATUS
 --*********************************************************************************************************************
 			to_char(ZNSLS401.T$ENTR$C)								PEDIDO_WEB,
 			to_char(ZNSLS401.T$SEQU$C)								SEQUENCIAL,
@@ -16,9 +16,9 @@ SELECT
 
 FROM
 
-			BAANDB.TZNSLS400201	ZNSLS400
+			BAANDB.TZNSLS400602	ZNSLS400
 			
-INNER JOIN	BAANDB.TZNSLS401201 ZNSLS401	ON	ZNSLS401.T$NCIA$C	=	ZNSLS400.T$NCIA$C
+INNER JOIN	BAANDB.TZNSLS401602 ZNSLS401	ON	ZNSLS401.T$NCIA$C	=	ZNSLS400.T$NCIA$C
                                             AND ZNSLS401.T$UNEG$C   =	ZNSLS400.T$UNEG$C
                                             AND ZNSLS401.T$PECL$C   =	ZNSLS400.T$PECL$C
                                             AND ZNSLS401.T$SQPD$C   =	ZNSLS400.T$SQPD$C
@@ -29,12 +29,12 @@ INNER JOIN (SELECT	C.T$NCIA$C,
                     C.T$SQPD$C,
                     C.T$ENTR$C,
 					COUNT(DISTINCT TRUNC(C.T$DTEP$C)) CTDT
-			FROM	BAANDB.TZNSLS401201 C
+			FROM	BAANDB.TZNSLS401602 C
 			GROUP BY C.T$NCIA$C,
 			         C.T$UNEG$C,
 			         C.T$PECL$C,
 			         C.T$SQPD$C,
-               			 C.T$ENTR$C) COUNTDT	ON	COUNTDT.T$NCIA$C	=	ZNSLS400.T$NCIA$C
+               C.T$ENTR$C) COUNTDT	ON	COUNTDT.T$NCIA$C	=	ZNSLS400.T$NCIA$C
 					                        AND COUNTDT.T$UNEG$C   =	ZNSLS400.T$UNEG$C
 					                        AND COUNTDT.T$PECL$C   =	ZNSLS400.T$PECL$C
-					                        AND COUNTDT.T$SQPD$C   =	ZNSLS400.T$SQPD$C	
+					                        AND COUNTDT.T$SQPD$C   =	ZNSLS400.T$SQPD$C

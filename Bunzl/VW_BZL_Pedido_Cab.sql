@@ -1,6 +1,6 @@
 ﻿SELECT
 --*********************************************************************************************************************
---	LISTA TODOS OS PEDIDOS INTEGRADOS INCLUSIVE TROCAS E DEVOLUÇÕES IDEPENDDDENTE DO STATUS
+--	LISTA TODOS OS PEDIDOS INTEGRADOS INCLUSIVE TROCAS E DEVOLUÇÕES INDEPENDENTE DO STATUS
 --*********************************************************************************************************************
 		to_char(ZNSLS401.T$ENTR$C)								PEDIDO_WEB,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 
@@ -27,7 +27,7 @@
 
 FROM
 
-			BAANDB.TZNSLS400201	ZNSLS400
+			BAANDB.TZNSLS400602	ZNSLS400
 			
 INNER JOIN (SELECT	C.T$NCIA$C,
                     C.T$UNEG$C,
@@ -43,7 +43,7 @@ INNER JOIN (SELECT	C.T$NCIA$C,
 					C.T$CEPE$C,
 					C.T$DTEP$C,
 					C.T$IDTR$C
-			FROM	BAANDB.TZNSLS401201 C
+			FROM	BAANDB.TZNSLS401602 C
 			GROUP BY C.T$NCIA$C,
 			         C.T$UNEG$C,
 			         C.T$PECL$C,
