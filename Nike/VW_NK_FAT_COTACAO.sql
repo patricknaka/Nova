@@ -11,7 +11,7 @@ SELECT
   CASE WHEN (select MAX(b.t$stdt) From baandb.ttcmcs008601 b
     where b.t$rtyp=tcmcs008.t$rtyp
     and   b.t$ccur=tcmcs008.t$ccur)=tcmcs008.t$stdt THEN 1 ELSE 2 END IN_EFETIVA,
-  CAST(2 AS INT) AS CD_CIA
+  CAST(601 AS INT) AS CD_CIA
 FROM    baandb.ttcmcs008601 tcmcs008
 WHERE	tcmcs008.t$bcur='BRL'
 AND		tcmcs008.t$rapr=1

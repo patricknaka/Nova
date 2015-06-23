@@ -89,7 +89,7 @@ AND 	(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0
            
 UNION
 
-SELECT  2 CD_CIA,
+SELECT  601 CD_CIA,
         tcemm030.t$euca CD_FILIAL,
         whwmd630.t$cwar CD_DEPOSITO,
         ltrim(rtrim(whwmd630.t$item)) CD_ITEM,
