@@ -3,7 +3,8 @@
 --**********************************************************************************************************************************************************
 	ltrim(rtrim(q1.item)) CD_ITEM,
 	602 CD_CIA,
-	case when tcemm030.t$euca = ' ' then null else tcemm030.t$euca end CD_FILIAL,
+	case when tcemm030.t$euca = ' ' then '0' --null (coloquei zero pq na tabela ln.ods_sku_cmv o campo filial é not null)
+  else tcemm030.t$euca end CD_FILIAL,
 	q1.mauc VL_CMV,
 	q1.grid CD_UNIDADE_EMPRESARIAL
 FROM
