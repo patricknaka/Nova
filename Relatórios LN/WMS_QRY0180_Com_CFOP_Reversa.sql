@@ -122,7 +122,8 @@ SELECT
     ORDERS.type                            COD_TIPO_PEDIDO,
     TIPO_PEDIDO.                           DSC_TIPO_PEDIDO,
     CISLI940.T$BPID$L                      PARCEIRO_NEG,
-    ORDERS.REFERENCEDOCUMENT               DOC_INICIAL
+    ORDERS.REFERENCEDOCUMENT               DOC_INICIAL,
+    ORDERS.CAGE                            ID_GAIOLA
 
 FROM       WMWHSE5.ORDERS
 
