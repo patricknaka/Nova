@@ -123,7 +123,7 @@ SELECT
     TIPO_PEDIDO.                           DSC_TIPO_PEDIDO,
     CISLI940.T$BPID$L                      PARCEIRO_NEG,
     ORDERS.REFERENCEDOCUMENT               DOC_INICIAL,
-    ORDERS.CAGE                            ID_GAIOLA
+    ORDERS.CAGE                            ID_GAIOLA   
 
 FROM       WMWHSE5.ORDERS
 
@@ -376,7 +376,7 @@ WHERE cl.listname = 'SCHEMA'
       Between :DataUltimoEventoDe
           And :DataUltimoEventoAte
     
-ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10, '0')
+ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10,  '0')
     
 
 
