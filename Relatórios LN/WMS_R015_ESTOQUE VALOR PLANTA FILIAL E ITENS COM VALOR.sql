@@ -3,8 +3,20 @@ SELECT
   subStr(cl.DESCRIPTION,3,6) || 
   ll.sku                               CHAVE,
   subStr(cl.DESCRIPTION,3,6)           ARMAZEM_LN,
-  sku.SUSR5                            COD_FORN,
-  STORER.COMPANY                       FORNECEDOR,
+  CASE WHEN sku.SUSR5 IS NULL THEN
+    LN_IPU001.t$otbp
+  ELSE
+    TO_CHAR(sku.SUSR5) END             COD_FORN,
+  CASE WHEN SKU.SUSR5 IS NULL THEN
+        LN_COM100.T$NAMA
+  ELSE 
+    CASE WHEN STORER.COMPANY IS NULL THEN
+        LN_COM100_WMS.T$NAMA
+    ELSE
+        TO_CHAR(STORER.COMPANY) 
+    END  
+  END                                  FORNECEDOR,
+  
   ll.sku                               ITEM,
   sku.DESCR                            DECR_ITEM,
   ( select asku.altsku 
@@ -128,6 +140,15 @@ INNER JOIN WMWHSE5.loc
        AND LN_FAM.T$SETO$C = LN_ITM.T$SETO$C
        AND LN_FAM.T$FAMI$C = LN_ITM.T$FAMI$C
 
+  LEFT JOIN BAANDB.TTDIPU001301@PLN01 LN_IPU001
+         ON TRIM(LN_IPU001.T$ITEM) = TRIM(SKU.SKU)
+
+  LEFT JOIN BAANDB.ttccom100301@PLN01 LN_COM100
+         ON LN_COM100.T$BPID = LN_IPU001.T$OTBP
+
+  LEFT JOIN BAANDB.ttccom100301@PLN01 LN_COM100_WMS
+         ON LN_COM100_WMS.T$BPID = sku.SUSR5
+         
  LEFT JOIN ( select clkp.code          COD_TIPO, 
                     NVL(trans.description, 
                     clkp.description)  DSC_TIPO
@@ -143,7 +164,7 @@ INNER JOIN WMWHSE5.loc
        
 WHERE departSector.ID_DEPART IN (:Depto)
   AND ( (Trim(ll.sku) IN (:Itens) And (:ItensTodos = 0)) OR (:ItensTodos = 1) )
-
+  
 GROUP BY WMSADMIN.PL_DB.DB_ALIAS, 
          cl.DESCRIPTION, 
          STORER.COMPANY, 
@@ -172,7 +193,10 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
          BOM.SKU,
          SKP.DESCR,
          TIPO_ITEM.DSC_TIPO,
-         BOM.SEQUENCE
+         BOM.SEQUENCE,
+         LN_IPU001.t$otbp,
+         LN_COM100.T$NAMA,
+         LN_COM100_WMS.T$NAMA
 
 		 
 		 
