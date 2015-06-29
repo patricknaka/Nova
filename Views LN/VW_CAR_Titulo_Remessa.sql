@@ -4,7 +4,7 @@
 -- #MAR.315 - 08-set-2014, Marcia Amador R. Torres, Trazer o ultimo registro da tfcmg948.
 --***************************************************************************************************************************************************
 
-SELECT distinct   201 CD_CIA,
+SELECT distinct   1 CD_CIA,
     tfcmg401.t$ttyp || tfcmg401.t$ninv CD_CHAVE_PRIMARIA,
           tfcmg401.t$btno NR_REMESSA,
           tfcmg409.t$date DT_REMESSA,
@@ -13,7 +13,7 @@ SELECT distinct   201 CD_CIA,
           tfcmg401.t$paym CD_METODO_RECEBIMENTO,
           tfacr201.t$rpst$l CD_SITUACAO_TITULO,
     'CAR' CD_MODULO,
-    tfcmg948.t$banu$l NR_BANCO,
+    nvl(tfcmg948.t$banu$l,' ') NR_BANCO,
     tfcmg948.t$stat$l CD_STATUS_ARQUIVO,
       tfcmg948.t$send$l CD_STATUS_ENVIO,
       tfcmg948.t$acco$l NR_CONTA                        --#FAF.294.n.
