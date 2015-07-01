@@ -17,10 +17,10 @@ SELECT
     AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_GARANTIA,                      
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE) DT_PEDIDO_PRODUTO,                        
-    ltrim(rtrim(tdsls401p.t$item)) CD_ITEM,              
-    ltrim(rtrim(tdsls401.t$item)) CD_ITEM_GARANTIA,                                  
+    NVL(cast(ltrim(rtrim(tdsls401p.t$item)) as varchar2(15)),' ') CD_ITEM,              
+    NVL(cast(ltrim(rtrim(tdsls401.t$item)) as varchar2(15)),' ') CD_ITEM_GARANTIA,                                  
     sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_CUSTO,                        --#FAF.043.2.n
-  max(tdsls401.t$pric) VL_GARANTIA,                                  --#FAF.043.2.n
+    max(tdsls401.t$pric) VL_GARANTIA,                                  --#FAF.043.2.n
     sum(zncom005.t$piof$c) VL_IOF,                    
     sum(zncom005.t$ppis$c) VL_PIS,
     sum(zncom005.t$pcof$c) VL_COFINS,
@@ -30,13 +30,13 @@ SELECT
     and a.t$brty$l=13),0) VL_CSLL,                            
     sum(zncom005.t$irrf$c) VL_IRPF,
     znsls400.T$PECL$C NR_PEDIDO,                                                           
-    znsls401.T$ENTR$C NR_ENTREGA,
+    to_char(znsls401.T$ENTR$C) NR_ENTREGA,
     tdsls400.T$ORNO NR_ORDEM,                                        
     avg(tdsls401.t$qoor) QT_GARANTIA,
-  znsls400.T$uneg$c CD_UNIDADE_NEGOCIO,                                --#FAF.134.n
-  znsls400.T$cven$c CD_VENDEDOR,
-  znsls400.T$idca$c CD_CANAL_VENDA,                                  --#FAF.134.sn
-  znsls400.t$idli$c NR_LISTA_CASAMENTO,
+    znsls400.T$uneg$c CD_UNIDADE_NEGOCIO,                                --#FAF.134.n
+    znsls400.T$cven$c CD_VENDEDOR,
+    znsls400.T$idca$c CD_CANAL_VENDA,                                  --#FAF.134.sn
+    znsls400.t$idli$c NR_LISTA_CASAMENTO,
   (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,    --#FAF.134.en
   
 
