@@ -1,4 +1,6 @@
-SELECT Trim(tcibd001.t$item)                 ID_ITEM, 
+SELECT      
+--           whinr140.t$cwar                   ARMAZEM,
+           Trim(tcibd001.t$item)             ID_ITEM, 
            tcibd001.t$dsca                   NOME, 
            tcibd001.t$csig                   ITEG_SITUACAO, 
            tcibd001.t$citg                   COD_DEPTO, 
@@ -11,12 +13,12 @@ SELECT Trim(tcibd001.t$item)                 ID_ITEM,
            znmcs032.t$dsca$c                 SUB, 
            tcemm030.t$euca                   ID_FILIAL, 
            tcemm030.T$EUNT                   CHAVE_FILIAL, 
-           CASE WHEN tcmcs003.t$tpar$l = 2 
+           CASE WHEN (tcmcs003.t$tpar$l = 2 ) 
                   THEN 'AT' 
                 ELSE   'WN' 
             END                              TIPDEP, 
            sum(whinr140.t$qhnd -  
-               nvl(Q2.bloc,0))               QT_FISICA, 
+               nvl(Q2.bloc,0))               QT_FISICA,
       
            CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN 0
@@ -26,7 +28,7 @@ SELECT Trim(tcibd001.t$item)                 ID_ITEM,
            CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN 0
                 ELSE   sum(nvl(reserva.quan, 0))
-            END                              QT_RESERVADA, 
+            END                              QT_RESERVADA,
            
 		   GREATEST ( CASE WHEN tcmcs003.t$tpar$l = 2 
                              THEN sum(whinr140.t$qhnd - nvl(Q2.bloc,0))
@@ -65,7 +67,7 @@ INNER JOIN baandb.twhinr140301 whinr140
                     a.t$cwar,
                     sum(a.t$qana) quan
                from baandb.twhinp100301 a
-              where a.t$koor = 3
+              where a.t$koor IN (3, 34, 36)
                 and a.t$kotr = 2
                 and a.t$cdis$c = ' '
            group by a.t$item,
@@ -154,8 +156,7 @@ INNER JOIN baandb.tznmcs032301 znmcs032
        AND znmcs032.t$fami$c = tcibd001.t$fami$c 
        AND znmcs032.t$subf$c = tcibd001.t$subf$c 
                 
-     WHERE tcemm112.t$loco = 301  
-
+     WHERE tcemm112.t$loco = 301
       AND tcemm030.T$EUNT IN (:Filial)
       AND tcibd001.t$citg IN (:Depto)
       AND CASE WHEN tcmcs003.t$tpar$l = 2 
@@ -164,7 +165,11 @@ INNER JOIN baandb.tznmcs032301 znmcs032
            END IN (:TipRestricao)
       AND tcmcs003.t$tpar$l IN (:TipoArmazem)
 
+--     AND (LTRIM(RTRIM(tcibd001.t$item)) = '2063315' )
+--      AND (LTRIM(RTRIM(tcibd001.t$item)) = '1804966')
     HAVING sum(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0 
+   
+
       
   GROUP BY CASE WHEN tcmcs003.t$tpar$l = 2 
                   THEN 'AT' 
@@ -190,10 +195,12 @@ INNER JOIN baandb.tznmcs032301 znmcs032
            whwmd400.t$hght, 
            whwmd400.t$wdth, 
            whwmd400.t$dpth
-      
+--           whinr140.t$cwar
 UNION 
       
-    SELECT Trim(tcibd001.t$item)             ID_ITEM, 
+    SELECT 
+--           whwmd630.t$cwar                   ARMAZEM,
+           Trim(tcibd001.t$item)             ID_ITEM, 
            tcibd001.t$dsca                   NOME, 
            tcibd001.t$csig                   ITEG_SITUACAO, 
            tcibd001.t$citg                   COD_DEPTO, 
@@ -207,9 +214,9 @@ UNION
            tcemm030.t$euca                   ID_FILIAL, 
            tcemm030.T$EUNT                   CHAVE_FILIAL, 
            whwmd630.t$bloc                   TIPDEP, 
-           sum(whwmd630.t$qbls)              QT_FISICA, 
+           sum(whwmd630.t$qbls)              QT_FISICA,
            0                                 QT_ROMANEADA, 
-           sum(nvl(reserva.quan,0))          QT_RESERVADA, 
+           sum(nvl(reserva.quan,0))          QT_RESERVADA,
            GREATEST ( sum(whwmd630.t$qbls) -
                       sum(nvl(reserva.quan,0)), 0 )
                                              QT_SALDO, 
@@ -253,7 +260,7 @@ INNER JOIN baandb.twhwmd630301 whwmd630
                     a.t$cdis$c,
                     sum(a.t$qana) quan
                from baandb.twhinp100301 a
-              where a.t$koor = 3
+              where a.t$koor IN(3, 34, 36)
                 and a.t$kotr = 2
            group by a.t$item,
                     a.t$cwar,
@@ -314,7 +321,9 @@ INNER JOIN baandb.tznmcs032301 znmcs032
                            and tcmcs095.t$sumd = 0  
                            and tcmcs095.t$prcd = 9999 
                            and tcmcs095.t$koda = whwmd630.t$bloc ) 
-
+--        AND (LTRIM(RTRIM(tcibd001.t$item)) = '2063315')
+--         AND (LTRIM(RTRIM(tcibd001.t$item)) = '1804966')
+       
       AND tcemm030.T$EUNT IN (:Filial)
       AND tcibd001.t$citg IN (:Depto)
       AND whwmd630.t$bloc IN (:TipRestricao)
@@ -339,4 +348,6 @@ INNER JOIN baandb.tznmcs032301 znmcs032
            tccom100.t$seak,
            whwmd400.t$hght, 
            whwmd400.t$wdth, 
-           whwmd400.t$dpth
+           whwmd400.t$dpth,
+           whwmd630.t$item
+--           whwmd630.t$cwar
