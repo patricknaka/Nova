@@ -242,7 +242,6 @@ select Q1.*
            WHERE tdrec940.t$stat$l IN (4)   -- Aprovado
            AND   tdrec940.t$rfdt$l != 13      -- Estorno
            
-           
         ORDER BY tdrec940.t$fire$l ) Q1
 
  WHERE Trunc(DT_EMISSAO) BETWEEN (:DataEmissaoDe) AND (:DataEmissaoAte)
