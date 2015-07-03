@@ -365,7 +365,6 @@ INNER JOIN WMSADMIN.PL_DB
       
 WHERE cl.listname = 'SCHEMA'
   AND ORDERS.status NOT IN ('100', '95', '96', '97') --Expedicao_concluida e Perda_Logistica 
-  AND sq2.status != 6
   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                   AT time zone 'America/Sao_Paulo') AS DATE),
