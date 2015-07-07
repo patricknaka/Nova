@@ -29,6 +29,8 @@ SELECT
                   THEN 0
                 ELSE   sum(nvl(reserva.quan, 0))
             END                              QT_RESERVADA,
+            
+            ALOCADO.qtde                      QTD_ALOCADA,
            
 		   GREATEST ( CASE WHEN tcmcs003.t$tpar$l = 2 
                              THEN sum(whinr140.t$qhnd - nvl(Q2.bloc,0))
@@ -53,7 +55,7 @@ SELECT
            whwmd400.t$wdth * 
            whwmd400.t$dpth *
            (sum(whinr140.t$qhnd - 
-                nvl(Q2.bloc,0)))             M3_TOTAL 
+                nvl(Q2.bloc,0)))             M3_TOTAL
               
       FROM baandb.ttcibd001301 tcibd001
      
@@ -155,7 +157,22 @@ INNER JOIN baandb.tznmcs032301 znmcs032
        AND znmcs032.t$seto$c = tcibd001.t$seto$c  
        AND znmcs032.t$fami$c = tcibd001.t$fami$c 
        AND znmcs032.t$subf$c = tcibd001.t$subf$c 
-                
+
+  LEFT JOIN ( select  inh200.t$cdis$c restricao,
+                      inh225.t$cwar   filial,
+                      inh225.t$item   item,
+                      sum(inh225.t$qads) qtde
+              from    baandb.twhinh225301 inh225,
+                      baandb.twhinh200301 inh200
+              where   inh225.t$oorg = inh200.t$oorg
+              and     inh225.t$orno = inh200.t$orno
+              and     inh225.t$oset = inh200.t$oset 
+              and     inh225.t$pckd = 2
+              and     inh200.t$cdis$c = ' '
+              group by inh200.t$cdis$c, inh225.t$cwar, inh225.t$item) ALOCADO
+       ON   ALOCADO.item = whinr140.t$item
+       AND  ALOCADO.filial = whinr140.t$cwar
+       
      WHERE tcemm112.t$loco = 301
       AND tcemm030.T$EUNT IN (:Filial)
       AND tcibd001.t$citg IN (:Depto)
@@ -165,8 +182,6 @@ INNER JOIN baandb.tznmcs032301 znmcs032
            END IN (:TipRestricao)
       AND tcmcs003.t$tpar$l IN (:TipoArmazem)
 
---     AND (LTRIM(RTRIM(tcibd001.t$item)) = '2063315' )
---      AND (LTRIM(RTRIM(tcibd001.t$item)) = '1804966')
     HAVING sum(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0 
    
 
@@ -194,7 +209,8 @@ INNER JOIN baandb.tznmcs032301 znmcs032
            tccom100.t$seak,
            whwmd400.t$hght, 
            whwmd400.t$wdth, 
-           whwmd400.t$dpth
+           whwmd400.t$dpth,
+           ALOCADO.qtde
 --           whinr140.t$cwar
 UNION 
       
@@ -217,6 +233,7 @@ UNION
            sum(whwmd630.t$qbls)              QT_FISICA,
            0                                 QT_ROMANEADA, 
            sum(nvl(reserva.quan,0))          QT_RESERVADA,
+           ALOCADO.qtde                      QTD_ALOCADA,
            GREATEST ( sum(whwmd630.t$qbls) -
                       sum(nvl(reserva.quan,0)), 0 )
                                              QT_SALDO, 
@@ -312,7 +329,23 @@ INNER JOIN baandb.tznmcs032301 znmcs032
        AND znmcs032.t$seto$c = tcibd001.t$seto$c  
        AND znmcs032.t$fami$c = tcibd001.t$fami$c 
        AND znmcs032.t$subf$c = tcibd001.t$subf$c 
-     
+
+  LEFT JOIN ( select  inh200.t$cdis$c restricao,
+                      inh225.t$cwar   filial,
+                      inh225.t$item   item,
+                      sum(inh225.t$qads) qtde
+              from    baandb.twhinh225301 inh225,
+                      baandb.twhinh200301 inh200
+              where   inh225.t$oorg = inh200.t$oorg
+              and     inh225.t$orno = inh200.t$orno
+              and     inh225.t$oset = inh200.t$oset 
+              and     inh225.t$pckd = 2
+              and     inh200.t$cdis$c != ' '
+              group by inh200.t$cdis$c, inh225.t$cwar, inh225.t$item) ALOCADO
+       ON   ALOCADO.item = whwmd630.t$item      
+       AND  ALOCADO.filial = whwmd630.t$cwar
+       AND  ALOCADO.restricao = whwmd630.t$bloc
+
      WHERE tcemm112.t$loco = 301 
        AND (whwmd630.t$qbls > 0) 
        AND NOT EXISTS ( select *  
@@ -321,8 +354,6 @@ INNER JOIN baandb.tznmcs032301 znmcs032
                            and tcmcs095.t$sumd = 0  
                            and tcmcs095.t$prcd = 9999 
                            and tcmcs095.t$koda = whwmd630.t$bloc ) 
---        AND (LTRIM(RTRIM(tcibd001.t$item)) = '2063315')
---         AND (LTRIM(RTRIM(tcibd001.t$item)) = '1804966')
        
       AND tcemm030.T$EUNT IN (:Filial)
       AND tcibd001.t$citg IN (:Depto)
@@ -349,5 +380,6 @@ INNER JOIN baandb.tznmcs032301 znmcs032
            whwmd400.t$hght, 
            whwmd400.t$wdth, 
            whwmd400.t$dpth,
-           whwmd630.t$item
+           whwmd630.t$item,
+           ALOCADO.qtde
 --           whwmd630.t$cwar
