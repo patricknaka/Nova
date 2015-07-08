@@ -250,7 +250,9 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
     ELSE NULL END 
   AS	NR_ITEM_NF_FATURA,	
   tdsls400.t$sotp CD_TIPO_ORDEM_VENDA 
+
   --INICIO DO FROM
+  
 FROM baandb.tcisli940601 cisli940,
      baandb.tcisli941601 cisli941,	
      baandb.tcisli941601 cisli941f 
@@ -295,7 +297,7 @@ LEFT JOIN ( select c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE
 baandb.ttccom130601 endfat,
 baandb.ttccom130601 endent,
 baandb.ttcibd001601 tcibd001,
-baandb.ttdsls094601 tdsls094 
+baandb.ttdsls094201 tdsls094    --tabela compartilhada
 WHERE cisli941f.t$fire$l=cisli940.t$fire$l
   AND cisli245.t$fire$l=cisli941.t$fire$l
   AND cisli245.t$line$l=cisli941.t$line$l

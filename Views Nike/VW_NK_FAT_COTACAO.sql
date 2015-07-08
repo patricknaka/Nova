@@ -8,10 +8,10 @@ SELECT
   AT time zone 'America/Sao_Paulo') AS DATE) DT_COTACAO,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcmcs008.t$apdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
   AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
-  CASE WHEN (select MAX(b.t$stdt) From baandb.ttcmcs008601 b
+  CASE WHEN (select MAX(b.t$stdt) From baandb.ttcmcs008201 b
     where b.t$rtyp=tcmcs008.t$rtyp
     and   b.t$ccur=tcmcs008.t$ccur)=tcmcs008.t$stdt THEN 1 ELSE 2 END IN_EFETIVA,
   CAST(601 AS INT) AS CD_CIA
-FROM    baandb.ttcmcs008601 tcmcs008
+FROM    baandb.ttcmcs008201 tcmcs008  --tabela compartilhada
 WHERE	tcmcs008.t$bcur='BRL'
 AND		tcmcs008.t$rapr=1
