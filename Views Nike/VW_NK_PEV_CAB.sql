@@ -1,7 +1,7 @@
 SELECT  DISTINCT
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
          AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                                                 --#MAR.265.en
-        znsls400.t$ncia$c CD_CIA,
+        /*znsls400.t$ncia$c*/ 601 CD_CIA,
         tdsls400.t$orno NR_ORDEM,
         tdsls400.t$ofbp CD_CLIENTE,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
