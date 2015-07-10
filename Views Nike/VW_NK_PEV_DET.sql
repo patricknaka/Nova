@@ -1,10 +1,10 @@
 SELECT DISTINCT
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, tdsls401.t$rcd_utc), 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
-		  601 AS CD_CIA, --znsls400.t$ncia$c 
+		  13 AS CD_CIA, --znsls400.t$ncia$c 
       znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
       tdsls401.t$orno NR_ORDEM,
 		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')

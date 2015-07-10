@@ -1,5 +1,5 @@
 select  
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
     adbp.t$bpid CD_PARCEIRO,
     adbp.t$cadr CD_ENDERECO,
@@ -24,7 +24,7 @@ select
     AT time zone 'America/Sao_Paulo') AS DATE) DT_CADASTRO,     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(addr.t$dtlm, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE)  DT_ATUALIZACAO,
-    cast(601 as int) CD_CIA
+    cast(13 as int) CD_CIA
       
 FROM  baandb.ttccom133601 adbp,
       baandb.ttccom100601 tccom100,                                        

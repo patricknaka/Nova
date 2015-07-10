@@ -1,8 +1,8 @@
 SELECT  
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
     ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
-    601 CD_CIA,
+    13 CD_CIA,
     CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
       THEN '00000000000000' 
       WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11

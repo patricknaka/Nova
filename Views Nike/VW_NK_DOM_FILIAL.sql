@@ -1,8 +1,8 @@
 select 
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
     cast(case when tcemm030.t$euca = ' ' then  substr(tcemm030.T$EUNT,5,2) else tcemm030.t$euca end as int) CD_FILIAL,
-    CAST(601 AS INT) CD_CIA,
+    CAST(13 AS INT) CD_CIA,
     tcemm030.t$dsca NM_FILIAL,
     CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
       THEN '00000000000000' 

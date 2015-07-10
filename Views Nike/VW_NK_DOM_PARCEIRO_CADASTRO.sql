@@ -1,5 +1,5 @@
 select DISTINCT 
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
        bspt.t$bpid CD_PARCEIRO,
         CASE WHEN regexp_replace(addr.t$fovn$l, '[^0-9]', '') IS NULL
@@ -24,7 +24,7 @@ select DISTINCT
 	   bspt.t$prst CD_STATUS,
 	   (select pf.t$cpay from baandb.ttccom122601 pf 
 	    where pf.t$ifbp=bspt.t$bpid and rownum=1) CD_CONDICAO_PAGAMENTO,									
-    cast(601 as int) CD_CIA
+    cast(13 as int) CD_CIA
 FROM baandb.ttccom100601 bspt
 LEFT JOIN baandb.ttccom130601 addr ON addr.t$cadr = bspt.t$cadr											
 LEFT JOIN baandb.ttcmcs080601 trnp ON trnp.t$suno = bspt.t$bpid -- rel com transportadoras

@@ -1,6 +1,8 @@
 SELECT  
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
+-- a tabela ttcmcs008 é compartilhada com a 201
+
   tcmcs008.t$rtyp COD_COTACAO,
   tcmcs008.t$ccur CD_MOEDA,
   tcmcs008.t$rate VL_COTACAO,
@@ -11,7 +13,7 @@ SELECT
   CASE WHEN (select MAX(b.t$stdt) From baandb.ttcmcs008201 b
     where b.t$rtyp=tcmcs008.t$rtyp
     and   b.t$ccur=tcmcs008.t$ccur)=tcmcs008.t$stdt THEN 1 ELSE 2 END IN_EFETIVA,
-  CAST(601 AS INT) AS CD_CIA
-FROM    baandb.ttcmcs008201 tcmcs008  --tabela compartilhada
+  CAST(13 AS INT) AS CD_CIA
+FROM    baandb.ttcmcs008201 tcmcs008  -- tabela compartilhada
 WHERE	tcmcs008.t$bcur='BRL'
 AND		tcmcs008.t$rapr=1

@@ -1,7 +1,7 @@
 SELECT
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
-  CAST(601 AS INT) AS CD_CIA,
+  CAST(13 AS INT) AS CD_CIA,
   tcmcs013.t$cpay CD_CONDICAO_PAGAMENTO,
   tcmcs013.t$dsca DS_CONDICAO_PAGAMENTO,
   CASE WHEN tcmcs220.t$ptyp=1 THEN 'DIAS' ELSE 'MESES' END CD_TIPO_PERIODO,				

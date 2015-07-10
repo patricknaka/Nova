@@ -1,5 +1,5 @@
 SELECT
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
     Q_ENTREGA.t$UNEG$C      CD_UNIDADE_NEGOCIO,
     Q_ENTREGA.t$PECL$C      NR_PEDIDO,
@@ -20,7 +20,7 @@ SELECT
     Q_ENTREGA.QUANTIDADE) as numeric(15,4))    VL_VOLUME_M3,
     tcibd001.t$citg          CD_DEPARTAMENTO,
     tcmcs023.t$dsca          DS_DEPARTAMENTO,
-    CAST(601 AS INT) CD_CIA
+    CAST(13 AS INT) CD_CIA
 FROM
 (SELECT
 

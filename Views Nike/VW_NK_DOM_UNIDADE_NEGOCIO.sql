@@ -1,8 +1,8 @@
 select  
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
 	znint002.t$uneg$c CD_UNIDADE_NEGOCIO,
-	CAST(601 AS INT) IN_SITE_CIA,
+	CAST(13 AS INT) IN_SITE_CIA,
 	znint002.t$desc$c NM_UNIDADE_NEGOCIO,
 	CASE WHEN InStr(znint002.t$desc$c, 'B2B', 1, 1)>0 THEN 'B2B'
       WHEN InStr(znint002.t$desc$c, 'B2C', 1, 1)>0 THEN 'B2C'
