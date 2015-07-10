@@ -1,6 +1,7 @@
 ﻿SELECT 
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
-      602 CD_CIA,
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
+--***************************************************************************
+      15 CD_CIA,
 			tcemm030.t$euca CD_FILIAL,
 			whinr140.t$cwar CD_DEPOSITO,
 			ltrim(rtrim(whinr140.t$item)) CD_ITEM,
@@ -88,7 +89,7 @@ AND 	(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0
            
 UNION
 
-SELECT  3 CD_CIA,
+SELECT  15 CD_CIA,
         tcemm030.t$euca CD_FILIAL,
         whwmd630.t$cwar CD_DEPOSITO,
         ltrim(rtrim(whwmd630.t$item)) CD_ITEM,

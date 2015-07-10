@@ -1,5 +1,5 @@
 ﻿select DISTINCT 
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
   tcmcs940.t$ocfo$l CD_NATUREZA_OPERACAO,																		
   tcmcs940.t$dsca$l DS_NATUREZA_OPERACAO,																		
@@ -8,7 +8,7 @@
   END SQ_NATUREZA_OPERACAO,								
   tcmcs964.t$desc$d DS_SEQUENCIA_NATUREZA_OPERACAO,																
   ' ' DS_OBJETIVO_NATUREZA_OPERACAO,
-  CAST(602 AS INT) CD_CIA
+  CAST(15 AS INT) CD_CIA
 FROM  baandb.ttcmcs940602 tcmcs940,
       baandb.ttcmcs964602 tcmcs964
 WHERE 	tcmcs964.T$OPOR$D=tcmcs940.T$OPOR$L

@@ -1,9 +1,10 @@
 ﻿SELECT
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
+-- a tabela ttdsls094 é compartilhada com a 201
 --**********************************************************************************************************************************************************
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
   AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
-  3 CD_CIA, --znsls400.t$ncia$c
+  15 CD_CIA, --znsls400.t$ncia$c
   CASE WHEN (	SELECT tcemm030.t$euca FROM baandb.ttcemm124602 tcemm124, baandb.ttcemm030602 tcemm030	
   WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
   AND tcemm030.t$eunt=tcemm124.t$grid
@@ -295,7 +296,7 @@ LEFT JOIN ( select c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE
 baandb.ttccom130602 endfat,
 baandb.ttccom130602 endent,
 baandb.ttcibd001602 tcibd001,
-baandb.ttdsls094602 tdsls094 
+baandb.ttdsls094201 tdsls094 
 WHERE cisli941f.t$fire$l=cisli940.t$fire$l
   AND cisli245.t$fire$l=cisli941.t$fire$l
   AND cisli245.t$line$l=cisli941.t$line$l

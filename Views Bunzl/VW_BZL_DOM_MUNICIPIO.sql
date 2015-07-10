@@ -1,5 +1,5 @@
 ﻿select  
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
         a.t$city CD_MUNICIPIO,
         a.t$dsca DS_MUNICIPIO,
@@ -7,7 +7,7 @@
         p.t$dsca DS_PAIS,
         a.t$cste CD_ESTADO,
         e.t$dsca DS_ESTADO,
-        CAST(602 AS INT) CD_CIA
+        CAST(15 AS INT) CD_CIA
 from  baandb.ttccom139602 a,
       baandb.ttcmcs143602 e,
       baandb.ttcmcs010602 p

@@ -1,8 +1,8 @@
 ﻿SELECT DISTINCT
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
 	ltrim(rtrim(q1.item)) CD_ITEM,
-	602 CD_CIA,
+	15 CD_CIA,
 	case when tcemm030.t$euca = ' ' then '0' --null (coloquei zero pq na tabela ln.ods_sku_cmv o campo filial é not null)
   else tcemm030.t$euca end CD_FILIAL,
 	q1.mauc VL_CMV,

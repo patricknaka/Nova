@@ -1,9 +1,9 @@
 ﻿SELECT DISTINCT
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
          AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                                                 --#MAR.265.en
-        602 CD_CIA, --znsls400.t$ncia$c 
+        15 CD_CIA, --znsls400.t$ncia$c 
         tdsls400.t$orno NR_ORDEM,
         tdsls400.t$ofbp CD_CLIENTE,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -141,7 +141,7 @@ FROM    baandb.ttdsls400602 tdsls400
         baandb.ttcemm030602 tcemm030,
         baandb.ttccom130602 endfat,
         baandb.ttccom130602 endent,
-        baandb.ttdsls094602 tdsls094,                                        
+        baandb.ttdsls094201 tdsls094,  --- essa tabela não existe na 602. Está compartilhada com a 201                                      
     ( SELECT Max(tznsls410602.t$poco$c) poco,
                  tznsls410602.t$ncia$c ncia,
                  tznsls410602.t$uneg$c uneg,

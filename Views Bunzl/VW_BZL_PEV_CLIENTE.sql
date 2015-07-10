@@ -1,7 +1,7 @@
 ﻿SELECT
--- O campo CD_CIA foi incluido para diferenciar NIKE(601) E BUNZL(602)
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
-    602 AS  CD_CIA, --znsls400.t$ncia$c																							
+    15 AS  CD_CIA, --znsls400.t$ncia$c																							
     znsls401.t$pecl$c NR_PEDIDO,
     TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,																	
     tdsls400.t$orno NR_ORDEM,
