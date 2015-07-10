@@ -1,12 +1,12 @@
--- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	Inclusão das informações de motivo e forçado		
--- #FAF.227 - 16-jul-2014, Fabio Ferreira, 	Correções	
--- #FAF.227.1 - 17-jul-2014, Fabio Ferreira, 	Correções campo disconto
--- #FAF.227.2 - 17-jul-2014, Fabio Ferreira, 	Correções campo IN_REPOSICAO e DT_STATUS
+-- #FAF.140 - 14-jun-2014, Fabio Ferreira, 	InclusÃ£o das informaÃ§Ãµes de motivo e forÃ§ado		
+-- #FAF.227 - 16-jul-2014, Fabio Ferreira, 	CorreÃ§Ãµes	
+-- #FAF.227.1 - 17-jul-2014, Fabio Ferreira, 	CorreÃ§Ãµes campo disconto
+-- #FAF.227.2 - 17-jul-2014, Fabio Ferreira, 	CorreÃ§Ãµes campo IN_REPOSICAO e DT_STATUS
 -- #FAF.227.3 - 18-jul-2014, Fabio Ferreira, 	Diversos ajustes #227
--- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ULTIMA_ATUALIZ_NF
--- 21/08/2014   Atualização timezone
--- 04/12/2014   Inclusão NR_REFERENCIA_FISCAL_FATURA
--- 05/12/2014	Inclusão dos campos: CD_MOTIVO_CATEGORIA, CD_MOTIVO_ASSUNTO, CD_MOTIVO_ETIQUETA, NR_ORDEM_VENDA_DEVOLUCAO, CD_STATUS_ORDEM_VDA_DEV e DT_ORDEM_VENDA_DEVOLUCAO
+-- #MAT.001 - 31-jul-2014, Marcia A. Torres, CorreÃ§Ã£o do campo DT_ULTIMA_ATUALIZ_NF
+-- 21/08/2014   AtualizaÃ§Ã£o timezone
+-- 04/12/2014   InclusÃ£o NR_REFERENCIA_FISCAL_FATURA
+-- 05/12/2014	InclusÃ£o dos campos: CD_MOTIVO_CATEGORIA, CD_MOTIVO_ASSUNTO, CD_MOTIVO_ETIQUETA, NR_ORDEM_VENDA_DEVOLUCAO, CD_STATUS_ORDEM_VDA_DEV e DT_ORDEM_VENDA_DEVOLUCAO
 
 --*************************************************************************************************************************************************************
 SELECT
@@ -18,8 +18,8 @@ SELECT
 	AND tcemm030.t$eunt=tcemm124.t$grid
 	AND tcemm124.t$loco=201
 	AND rownum=1) CD_FILIAL, 
-	tdrec940rec.t$docn$l NR_NF,													-- Nota fiscal recebimento devolução
-	tdrec940rec.t$seri$l NR_SERIE_NF,											-- Serie NF rec. devolucção
+	tdrec940rec.t$docn$l NR_NF,													-- Nota fiscal recebimento devoluÃ§Ã£o
+	tdrec940rec.t$seri$l NR_SERIE_NF,											-- Serie NF rec. devolucÃ§Ã£o
 	tdrec940rec.t$opfc$l CD_NATUREZA_OPERACAO,
 	tdrec940rec.t$opor$l SQ_NATUREZA_OPERACAO,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940org.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -53,7 +53,7 @@ SELECT
 		AND znsls410.t$sqpd$c=znsls401dev.t$sqpd$c
 		AND znsls410.t$entr$c=znsls401dev.t$entr$c) DT_STATUS,									--#FAF.227.2
 	tdrec940rec.t$rfdt$l CD_TIPO_NF,
-	tdrec940rec.t$fire$l NR_REFERENCIA_FISCAL_DEVOLUCAO,										-- Ref. Fiscal recebimento devolção
+	tdrec940rec.t$fire$l NR_REFERENCIA_FISCAL_DEVOLUCAO,										-- Ref. Fiscal recebimento devolÃ§Ã£o
 	ltrim(rtrim(znsls401dev.t$item$c)) CD_ITEM,
 	znsls401dev.t$qtve$c QT_DEVOLUCAO,
 	(SELECT a.t$amnt$l FROM baandb.tcisli943201 a
@@ -79,7 +79,7 @@ SELECT
 	cisli940org.t$docn$l NR_NF_FATURA,												-- NF fatura entrega org
 	cisli940org.t$seri$l NR_SERIE_NF_FATURA,
   cisli940dev.t$fire$l NR_REF_FISCAL_REMESSA,
-	cisli940dev.t$docn$l NR_NF_REMESSA,												-- NF devolução							
+	cisli940dev.t$docn$l NR_NF_REMESSA,												-- NF devoluÃ§Ã£o							
 	cisli940dev.t$seri$l NR_SERIE_NF_REMESSA,		
 	(SELECT a.t$amnt$l FROM baandb.tcisli943201 a
 	WHERE a.t$fire$l=cisli941dev.t$fire$l
@@ -130,7 +130,7 @@ SELECT
 	tcmcs080.t$suno			CD_PARCEIRO_TRANSPORTADORA_FAT,
 	cisli941org.t$refr$l 	NR_REFERENCIA_FISCAL 
 FROM
-				baandb.tznsls401201 znsls401dev								-- Pedido de devolução
+				baandb.tznsls401201 znsls401dev								-- Pedido de devoluÃ§Ã£o
    
   INNER JOIN  baandb.ttdsls400201 tdsls400
   ON tdsls400.t$orno = znsls401dev.t$orno$c
@@ -146,7 +146,7 @@ FROM
 			AND	znsls400org.t$uneg$c=znsls401org.t$uneg$c
 			AND	znsls400org.t$pecl$c=znsls401org.t$pecl$c
 			AND	znsls400org.t$sqpd$c=znsls401org.t$sqpd$c
-	INNER JOIN 	baandb.tcisli245201 cisli245dev								-- Rel Devolução
+	INNER JOIN 	baandb.tcisli245201 cisli245dev								-- Rel DevoluÃ§Ã£o
 			ON	cisli245dev.t$ortp=1
 			AND	cisli245dev.t$koor=3
 			AND	cisli245dev.t$slso=znsls401dev.t$orno$c
@@ -172,13 +172,15 @@ FROM
 			ON	tccom130.t$cadr=cisli940org.t$stoa$l
 	LEFT JOIN	baandb.ttcmcs080201 tcmcs080
 			ON	tcmcs080.t$cfrw = cisli940org.t$cfrw$L			
-	LEFT JOIN	baandb.ttdsls406201 tdsls406rec								-- Rec da devolução
+	LEFT JOIN	baandb.ttdsls406201 tdsls406rec								-- Rec da devoluÃ§Ã£o
 			ON	tdsls406rec.t$orno=znsls401dev.t$orno$c
 			AND	tdsls406rec.t$pono=znsls401dev.t$pono$c
+			AND 	tdsls406rec.t$sqnb=1
 	LEFT JOIN	baandb.ttdrec947201 tdrec947rec
 			ON	tdrec947rec.t$oorg$l=1
 			AND	tdrec947rec.t$orno$l=znsls401dev.t$orno$c
 			AND	tdrec947rec.t$pono$l=znsls401dev.t$pono$c
+			AND  	tdrec947rec.t$seri$l=1
 	LEFT JOIN	baandb.ttdrec940201 tdrec940rec
 			ON	tdrec940rec.t$fire$l=tdrec947rec.t$fire$l
 	LEFT JOIN	baandb.ttdrec941201 tdrec941rec
