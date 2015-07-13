@@ -1,5 +1,6 @@
 ﻿--
--- #FAF.005, 14-mai-2014, Fabio Ferreira,	Retirado convers�o de timezone do campo data de atualizacao
+-- #FAF.005, 14-mai-2014, Fabio Ferreira,	Retirado conversao de timezone do campo data de atualizacao
+-- Tratamento do CD_FILIAL - Rosana 13/07/2015
 --							
 --**********************************************************************************************************************************************************
 --
@@ -14,7 +15,7 @@ SELECT
 	tfgld205.t$dim4 ||
 	tfgld205.t$dim5  CHAVE,
 	tfgld205.t$ptyp CD_BALANCETE_GERENCIAL,
-	tfgld205.t$dim2 CD_FILIAL,
+	case when tfgld205.t$dim2 = ' ' then '000' else tfgld205.t$dim2 end CD_FILIAL,
 	tfgld205.t$cono CD_CIA,
 	tfgld205.t$year NR_ANO, 
 	tfgld205.t$prno DT_BALANCETE,
@@ -40,7 +41,7 @@ SELECT
 	tfgld205.t$fcam VL_CREDITO,
 	(SELECT 
 --	CAST((FROM_TZ(CAST(TO_CHAR(MAX(tfgld100.t$trdt), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') 		--#FAF.005.o
---			AT time zone 'America/Sao_Paulo') AS DATE)															--#FAF.005.o
+--			AT time zone sessiontimezone) AS DATE)															--#FAF.005.o
 	MAX(tfgld100.t$trdt)																					--#FAF.005.n
 	FROM baandb.ttfgld100201 tfgld100
 	WHERE tfgld100.t$year=tfgld205.t$year

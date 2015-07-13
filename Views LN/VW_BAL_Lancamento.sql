@@ -1,5 +1,6 @@
 -- #FAF.005, 14-mai-2014, Fabio Ferreira,	Aterado o campo Natureza do lançamento para relacionar com a cat. Transação
---							
+-- Tratamento CD_FILIAL - Rosana 13/07/2015
+-- 						
 --**********************************************************************************************************************************************************
 SELECT
  tfgld106.t$ocmp || tfgld106.t$leac || tfgld106.t$fyer || tfgld106.t$fprd || tfgld106.t$dim1 || 
@@ -7,7 +8,7 @@ SELECT
  tfgld106.t$dcdt DT_LANCAMENTO,
  tfgld106.t$leac CD_CONTA_CONTABIL,
  tfgld106.t$dim1 CD_CENTRO_CUSTO,
- tfgld106.t$dim2 CD_FILIAL,
+ case when tfgld106.t$dim2 = ' ' then '000' else tfgld106.t$dim2 end CD_FILIAL,
  (Select u.t$eunt From baandb.ttcemm030201 u where u.t$euca!=' '
   AND TO_NUMBER(u.t$euca)=CASE WHEN tfgld106.t$dim2=' ' then 999
    WHEN tfgld106.t$dim2<=to_char(0) then 999 else TO_NUMBER(tfgld106.t$dim2) END and rownum = 1) CD_UNIDADE_EMPRESARIAL,
