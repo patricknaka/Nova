@@ -272,7 +272,7 @@ WHERE
 
 	( select max(znfmd640.t$coci$c)
 	  from BAANDB.tznfmd640201 znfmd640
-	  where znfmd640.t$coci$c='ETR'
+	  where znfmd640.t$coci$c IN ('ETR', 'COL','CTR', 'POS')
 	   and znfmd640.t$fili$c = znfmd630.t$fili$c 
 	   and znfmd640.t$etiq$c = znfmd630.t$etiq$c )  IS NOT NULL
 
