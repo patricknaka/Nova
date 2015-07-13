@@ -176,16 +176,26 @@ FROM
 			ON	tdsls406rec.t$orno=znsls401dev.t$orno$c
 			AND	tdsls406rec.t$pono=znsls401dev.t$pono$c
 			AND 	tdsls406rec.t$sqnb=1
-	LEFT JOIN	baandb.ttdrec947201 tdrec947rec
-			ON	tdrec947rec.t$oorg$l=1
-			AND	tdrec947rec.t$orno$l=znsls401dev.t$orno$c
-			AND	tdrec947rec.t$pono$l=znsls401dev.t$pono$c
-			AND  	tdrec947rec.t$seri$l=1
-	LEFT JOIN	baandb.ttdrec940201 tdrec940rec
-			ON	tdrec940rec.t$fire$l=tdrec947rec.t$fire$l
+	LEFT JOIN (	SELECT 	A.t$orno$l,
+						A.t$pono$l,
+						A.t$fire$l,
+						A.t$line$l,
+						B.t$docn$l,
+						B.t$seri$l,
+	                    B.t$rfdt$l,
+	                    B.t$opfc$l,
+	                    B.t$opor$l
+				FROM baandb.ttdrec947201 A
+				INNER JOIN baandb.ttdrec940201 B
+					ON	A.t$fire$l = B.t$fire$l
+				WHERE b.t$rfdt$l=10
+				AND A.t$oorg$l=1
+				AND A.t$seri$l=1)	tdrec940rec
+			ON	tdrec940rec.t$orno$l=znsls401dev.t$orno$c
+			AND	tdrec940rec.t$pono$l=znsls401dev.t$pono$c
 	LEFT JOIN	baandb.ttdrec941201 tdrec941rec
-			ON	tdrec941rec.t$fire$l=tdrec947rec.t$fire$l
-			AND	tdrec941rec.t$line$l=tdrec947rec.t$line$l
+			ON	tdrec941rec.t$fire$l=tdrec940rec.t$fire$l
+			AND	tdrec941rec.t$line$l=tdrec940rec.t$line$l
 	LEFT JOIN ( SELECT 
 				 whwmd217.t$item,
 				 whwmd217.t$cwar,
