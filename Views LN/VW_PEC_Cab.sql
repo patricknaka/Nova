@@ -5,10 +5,11 @@
 -- #FAF.236, 23-jul-2014, Fabio Ferreira, 	Campo data da criação
 -- #FAF.246, 29-jul-2014, Fabio Ferreira, 	Tratamento timezone
 -- SQ_NATUREZA_OPERACAO e CD_DEPARTAMENTO	Eliminado com autorização do Patrick em 20/08/2014
+-- Tratamento do CD_FILIAL de nulo para zero	Rosana - 13/07/2015
 --*********************************************************************************************************************************************
 SELECT DISTINCT
     1 CD_CIA,
-    tcemm030.t$euca CD_FILIAL,      
+    case when tcemm030.t$euca = ' ' then '000' else tcemm030.t$euca end CD_FILIAL,      
     tdpur400.t$orno NR_PEDIDO_COMPRA,
     tdpur400.t$otbp CD_FORNECEDOR,
     qopfc.t$opfc$l CD_NATUREZA_OPERACAO,
