@@ -9,7 +9,7 @@ select DISTINCT
   tcmcs964.t$desc$d DS_SEQUENCIA_NATUREZA_OPERACAO,																
   ' ' DS_OBJETIVO_NATUREZA_OPERACAO,
   CAST(13 AS INT) CD_CIA
-FROM  baandb.ttcmcs940601 tcmcs940,
-      baandb.ttcmcs964601 tcmcs964
+FROM  baandb.ttcmcs940201 tcmcs940, --tabela compartilhada
+      baandb.ttcmcs964201 tcmcs964  --tabela compartilhada
 WHERE 	tcmcs964.T$OPOR$D=tcmcs940.T$OPOR$L
 order by 1
