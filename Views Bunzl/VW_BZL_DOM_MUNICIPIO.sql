@@ -8,9 +8,9 @@
         a.t$cste CD_ESTADO,
         e.t$dsca DS_ESTADO,
         CAST(15 AS INT) CD_CIA
-from  baandb.ttccom139602 a,
-      baandb.ttcmcs143602 e,
-      baandb.ttcmcs010602 p
+from  baandb.ttccom139201 a,  --tabela compartilhada
+      baandb.ttcmcs143201 e,  --tabela compartilhada
+      baandb.ttcmcs010201 p   --tabela compartilhada
 where e.t$cste=a.t$cste
 and   p.t$ccty=a.t$ccty
 order by 1,3,4
