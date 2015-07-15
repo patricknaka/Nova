@@ -1,7 +1,7 @@
 SELECT
   DISTINCT
     Trim(tcibd001.t$item)     NUM_ITEM,
-    tcibd001.t$dsca           DESC_ITEM,
+    tcibd001.t$dscb$c         DESC_ITEM,
     tdipu001.t$prip           PRECO_COMPRA,
     tcibd001.t$citg           NUM_GRUPO_ITEM,
     tcmcs023.t$dsca           DESC_GRUPO_ITEM,
@@ -35,7 +35,7 @@ SELECT
     whwmd400.t$pmex$c         PRAZO_EXPEDICAO,
     tcibd001.t$nwgt$l         PESO_LIQUIDO,
     tcibd001.t$kitm           TIPO_ITEM, 
-    ( SELECT d.t$cnst CODE_KITM
+    ( SELECT l.t$desc DESC_KITM
         FROM baandb.tttadv401000 d, 
              baandb.tttadv140000 l 
        WHERE d.t$cpac = 'tc' 
