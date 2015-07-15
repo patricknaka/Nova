@@ -73,11 +73,12 @@ INNER JOIN baandb.ttcemm122301  tcemm122
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,  
        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
          AT time zone 'America/Sao_Paulo') AS DATE)) 
-      BETWEEN :DtAprovacaoDe 
-          AND :DtAprovacaoAte 
-   AND tcemm122.T$grid IN (:Filial) 
-   AND tdrec940.t$stat$l IN (:StatusRefFiscal) 
-   AND tdrec940.t$opfc$l IN (:COD_CFOP) 
-   AND tdrec940.t$fdtc$l IN (:TipoDocFiscal) 
+      between :DtAprovacaoDe 
+          and :DtAprovacaoAte 
+  AND tcemm122.T$grid IN (:Filial) 
+  AND tdrec940.t$stat$l IN (:StatusRefFiscal) 
+  AND tdrec940.t$opfc$l IN (:COD_CFOP) 
+  AND NVL(Trim(tdrec940.t$fdtc$l), '000') IN (:TipoDocFiscal) 
 
-ORDER BY Trunc(DATA_APROV), REFE_FISCAL
+ORDER BY Trunc(DATA_APROV), 
+         REFE_FISCAL
