@@ -1,4 +1,4 @@
-select  
+select distinct 
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
         a.t$city CD_MUNICIPIO,

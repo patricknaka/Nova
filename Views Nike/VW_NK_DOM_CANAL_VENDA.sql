@@ -1,5 +1,4 @@
-﻿
-SELECT
+﻿SELECT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
 -- a tabela ttcmcs066 é compartilhada com a 201

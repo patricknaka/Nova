@@ -1,5 +1,4 @@
 SELECT  DISTINCT
-<<<<<<< HEAD
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
 -- a tabela ttdsls094201 é compartilhada com a 201
@@ -7,11 +6,6 @@ SELECT  DISTINCT
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
          AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                                                 --#MAR.265.en
         /*znsls400.t$ncia$c*/ 13 CD_CIA,
-=======
-         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                                                 --#MAR.265.en
-        /*znsls400.t$ncia$c*/ 601 CD_CIA,
->>>>>>> origin/master
         tdsls400.t$orno NR_ORDEM,
         tdsls400.t$ofbp CD_CLIENTE,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -184,8 +178,4 @@ AND     endent.t$cadr=tdsls400.t$stad
 AND     ulttrc.ncia=sls401q.t$ncia$c
 AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
-<<<<<<< HEAD
 AND    tdsls094.t$sotp=tdsls400.t$sotp                                --#FAF.006.n
-=======
-AND    tdsls094.t$sotp=tdsls400.t$sotp                                --#FAF.006.n
->>>>>>> origin/master
