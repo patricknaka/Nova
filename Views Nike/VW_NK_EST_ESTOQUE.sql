@@ -21,7 +21,14 @@ SELECT
 			CASE WHEN tcmcs003.t$tpar$l=2 THEN 'AT' ELSE 'WN' END CD_TIPO_BLOQUEIO,
 			tcemm112.t$grid CD_UNIDADE_EMPRESARIAL
       
-FROM    baandb.twhinr140601 whinr140
+FROM    (SELECT	A.T$ITEM,
+				A.T$CWAR,
+				A.T$LOCA,
+				SUM(A.t$qhnd) t$qhnd
+		 FROM baandb.twhinr140601 A
+		 GROUP BY A.T$ITEM,
+		          A.T$CWAR,
+		          A.T$LOCA) whinr140
 
          LEFT JOIN ( select a.t$item,
                     a.t$cwar,
@@ -52,11 +59,11 @@ FROM    baandb.twhinr140601 whinr140
                             whwmd630.t$cwar,
                             whwmd630.t$loca,                                  --ok
                             sum(whwmd630.t$qbls) bloc
-					 FROM baandb.twhwmd630601 whwmd630, baandb.twhinr140601 whinr140
-					 WHERE whinr140.t$cwar = whwmd630.t$cwar
-					 AND   whinr140.t$item = whwmd630.t$item
-           AND   whinr140.t$loca = whwmd630.t$loca                            --ok
-					 AND NOT EXISTS (SELECT * FROM baandb.ttcmcs095601 tcmcs095
+					 FROM baandb.twhwmd630601 whwmd630--, baandb.twhinr140601 whinr140
+					 --WHERE whinr140.t$cwar = whwmd630.t$cwar
+					 --AND   whinr140.t$item = whwmd630.t$item
+           --AND   whinr140.t$loca = whwmd630.t$loca                            --ok
+					 WHERE NOT EXISTS (SELECT * FROM baandb.ttcmcs095601 tcmcs095
                            WHERE  tcmcs095.t$modu = 'BOD' 
                            AND    tcmcs095.t$sumd = 0 
                            AND    tcmcs095.t$prcd = 9999
@@ -69,10 +76,11 @@ FROM    baandb.twhinr140601 whinr140
           LEFT JOIN ( SELECT  whinh220.t$item, 
                               whinh220.t$cwar, 
                               sum(whinh220.t$qord) roma
-                      FROM baandb.twhinh220601 whinh220, baandb.twhinr140601 whinr140
-                      WHERE whinr140.t$cwar = whinh220.t$cwar
-                      AND   whinr140.t$item = whinh220.t$item
-                      AND   whinh220.t$wmss = 40
+                      FROM baandb.twhinh220601 whinh220--, baandb.twhinr140601 whinr140
+                      WHERE --whinr140.t$cwar = whinh220.t$cwar
+                      --AND   whinr140.t$item = whinh220.t$item
+                      whinh220.t$wmss = 40
+					  AND	whinh220.t$oorg NOT IN (50,51)					--	NÃO CONSIDERA ORDEM DE PRODUÇÃO COMO ROMANEADA
                       group by whinh220.t$item, whinh220.t$cwar) q3 
            ON   q3.t$item = whinr140.t$item 
            AND  q3.t$cwar = whinr140.t$cwar,
