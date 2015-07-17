@@ -8,7 +8,14 @@ SELECT  DISTINCT
   '1'                           SUB_ITEM_TAMANHO,         --06
   to_char(tdrec942.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
   tdrec942.t$rate$l             TAXA_IMPOSTO,             --08
-  '??????'                      INCIDENCIA,               --09
+  
+  CASE
+	WHEN tdrec942.t$brty$l=1 THEN 3
+	WHEN tdrec942.t$brty$l=3 THEN 1
+	WHEN tdrec942.t$brty$l=5 THEN 3
+	WHEN tdrec942.t$brty$l=6 THEN 3
+	WHEN tdrec942.t$brty$l=2 THEN 1
+	ELSE 0 END					INCIDENCIA,               --09
   tdrec942.t$amnt$l             VALOR_IMPOSTO,            --10
   CASE WHEN tdrec942.t$amnt$l = 0 THEN
     0
@@ -39,7 +46,13 @@ SELECT  DISTINCT
   '1'                           SUB_ITEM_TAMANHO,         --06
   to_char(cisli943.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
   cisli943.t$rate$l             TAXA_IMPOSTO,             --08
-  '??????'                      INCIDENCIA,               --09
+  CASE
+	WHEN cisli943.t$brty$l=1 THEN 3
+	WHEN cisli943.t$brty$l=3 THEN 1
+	WHEN cisli943.t$brty$l=5 THEN 3
+	WHEN cisli943.t$brty$l=6 THEN 3
+	WHEN cisli943.t$brty$l=2 THEN 1
+	ELSE 0 END                  INCIDENCIA,               --09
   cisli943.t$amnt$l             VALOR_IMPOSTO,            --10
   CASE WHEN cisli943.t$amnt$l = 0 THEN
     0

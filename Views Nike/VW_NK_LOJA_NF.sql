@@ -23,7 +23,7 @@ SELECT DISTINCT
   ' '                       MARCA_VOLUME,                           --19
   tdrec940.t$fght$l         FRETE,                                  --20
   tdrec940.t$insr$l         SEGURO,                                 --21
-  0                         FRETE_A_PAGAR,                          --22 'AGUARDANDO CONSULTOR'
+  0                         FRETE_A_PAGAR,                          --22 'NÃO FOI MODELADO NO LN'
   tdrec940.t$gtam$l         VALOR_TOTAL_ITENS,                      --23
   tdrec940.t$addc$l         DESCONTO,                               --24
   tdrec940.t$gexp$l         ENCARGO,                                --25
@@ -70,13 +70,17 @@ SELECT DISTINCT
   ELSE '99' END             LOG_STATUS_NFE,                          --46      
   '      '                  MOTIVO_CANCELAMENTO_NFE,                 --47
   ' '                       PRIORIZACAO,                             --48
-  'AGUARDANDO CONSULTOR'    TIPO_EMISSAO_NFE,                        --49
-  'AGUARDANDO CONSULTOR'    FIN_EMISSAO_NFE,                         --50
-  'AGUARDANDO CONSULTOR'    REGISTRO_DPEC,                           --51
+  SUBSTR(tdrec940.t$cnfe$l,35,1) TIPO_EMISSAO_NFE,                   --49
+  CASE WHEN tdrec940.t$rfdt$l IN (6,7)
+		THEN  2
+	WHEN tdrec940.t$rfdt$l = 8 
+		THEN 3
+	ELSE 1 END 				FIN_EMISSAO_NFE,                         --50	CONSIDERANDO NOTAS FISCAIS DE DEVOLUÇÃO COMO "TIPO NORMAL"
+  ' '    					REGISTRO_DPEC,                           --51	HOJE É EXPORTADO COMO NULL
   ' '                       PIN,                                     --52
-  ' '                       DATA_REGISTRO_DPEC,                      --53 AGUARDANDO CONSULTOR
+  ' '                       DATA_REGISTRO_DPEC,                      --53 	NO RECEBIMENTO NÃO TEMOS ESTA DATA
   ' '                       PROTOCOLO_CANCELAMENTO_NFE,              --54
-  ' '                       DATA_CONTINGENCIA,                       --55 AGUARDANDO CONSULTOR
+  ' '                       DATA_CONTINGENCIA,                       --55 	NO RECEBIMENTO NÃO TEMOS ESTA DATA
   'AGUARDANDO CONSULTOR'    JUSTIFICATIVA_CONTINGENCIA,              --56
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
@@ -226,16 +230,33 @@ SELECT DISTINCT
   ELSE '99' END             LOG_STATUS_NFE,                          --46      
   cisli959.t$rsds$l         MOTIVO_CANCELAMENTO_NFE,                 --47
   ' '                       PRIORIZACAO,                             --48
-  'AGUARDANDO CONSULTOR'    TIPO_EMISSAO_NFE,                        --49
-  'AGUARDANDO CONSULTOR'    FIN_EMISSAO_NFE,                         --50
+  SUBSTR(cisli940.t$cnfe$l,35,1)    TIPO_EMISSAO_NFE,                        --49
+    CASE WHEN cisli940.t$fdty$l IN (6,7)
+		THEN  2
+	WHEN cisli940.t$fdty$l = 8 
+		THEN 3
+	ELSE 1 END     			FIN_EMISSAO_NFE,                         --50
   'AGUARDANDO CONSULTOR'    REGISTRO_DPEC,                           --51
   ' '                       PIN,                                     --52
-  ' '                       DATA_REGISTRO_DPEC,                      --53 AGUARDANDO CONSULTOR
+  (SELECT 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(A.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE) 
+   FROM baandb.tbrnfe020601 A
+   WHERE A.t$ncmp$l = cisli940.t$sfcp$l
+   AND A.t$refi$l = cisli940.t$fire$l
+   AND A.t$ioin$l=2)		DATA_REGISTRO_DPEC,                      --53 
   CASE WHEN cisli940.t$nfes$l = 3 THEN    --Pedido Cancelamento
         cisli940.t$prot$l         
   ELSE ' ' END              PROTOCOLO_CANCELAMENTO_NFE,              --54
-  ' '                       DATA_CONTINGENCIA,                       --55 AGUARDANDO CONSULTOR
-  'AGUARDANDO CONSULTOR'    JUSTIFICATIVA_CONTINGENCIA,              --56
+  (SELECT 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(A.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE) 
+   FROM baandb.tbrnfe020601 A
+   WHERE A.t$ncmp$l = cisli940.t$sfcp$l
+   AND A.t$refi$l = cisli940.t$fire$l
+   AND A.t$ioin$l=1
+   AND A.t$actn$l'IN')      DATA_CONTINGENCIA,                       --55 
+  ' '    					JUSTIFICATIVA_CONTINGENCIA,              --56	É ENVIADO COMO BRANCO
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS410.DT_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
