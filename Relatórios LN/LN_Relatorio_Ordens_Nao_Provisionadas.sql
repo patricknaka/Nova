@@ -3,14 +3,16 @@ SELECT
     tfcmg101.t$btno         NR_LOTE,
     tfcmg101.t$ttyp         TRANS,
     tfcmg101.t$ninv         TITULO,
+	tfcmg102.t$lino			LINHA,
     tfcmg101.t$plan         DATA_PAGTO,
     tccom130.t$fovn$l       CNPJ_PN,
     Trim(tccom100.t$nama)   R_SOCIAL_PN,
     tfcmg102.t$leac         CONTA_CONTABIL,
     tfgld008.t$desc         DESCRICAO_CONTA,
     tfcmg101.t$amnt$l       VALO_BRUTO,
-    tfcmg101.t$amnt-
-    tfcmg101.t$ramn$l       VALO_A_PAGAR,
+--    tfcmg101.t$amnt-
+--    tfcmg101.t$ramn$l       VALO_A_PAGAR,
+	tfcmg102.t$amnt			VALO_A_PAGAR,
     iPrgStat.DESCR          SITUACAO,
     iSTATUS.DESCR           STATUS_PAGTO,
     iStatArq.DESCR          STATUS_ARQUIVO,
