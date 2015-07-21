@@ -78,9 +78,9 @@ SELECT DISTINCT
 	ELSE 1 END 				FIN_EMISSAO_NFE,                         --50	CONSIDERANDO NOTAS FISCAIS DE DEVOLUÇÃO COMO "TIPO NORMAL"
   ' '    					REGISTRO_DPEC,                           --51	HOJE É EXPORTADO COMO NULL
   ' '                       PIN,                                     --52
-  ' '                       DATA_REGISTRO_DPEC,                      --53 	NO RECEBIMENTO NÃO TEMOS ESTA DATA
+  NULL                      DATA_REGISTRO_DPEC,                      --53 	NO RECEBIMENTO NÃO TEMOS ESTA DATA
   ' '                       PROTOCOLO_CANCELAMENTO_NFE,              --54
-  ' '                       DATA_CONTINGENCIA,                       --55 	NO RECEBIMENTO NÃO TEMOS ESTA DATA
+  NULL                      DATA_CONTINGENCIA,                       --55 	NO RECEBIMENTO NÃO TEMOS ESTA DATA
   'AGUARDANDO CONSULTOR'    JUSTIFICATIVA_CONTINGENCIA,              --56
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
@@ -255,7 +255,7 @@ SELECT DISTINCT
    WHERE A.t$ncmp$l = cisli940.t$sfcp$l
    AND A.t$refi$l = cisli940.t$fire$l
    AND A.t$ioin$l=1
-   AND A.t$actn$l'IN')      DATA_CONTINGENCIA,                       --55 
+   AND A.t$actn$l='IN')      DATA_CONTINGENCIA,                       --55 
   ' '    					JUSTIFICATIVA_CONTINGENCIA,              --56	É ENVIADO COMO BRANCO
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
