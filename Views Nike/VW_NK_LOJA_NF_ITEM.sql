@@ -39,7 +39,9 @@
     0                           VALOR_DESCONTOS,          --30
     tdrec941.t$fght$l           VALOR_RATEIO_FRETE,       --31
     tdrec941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
-    'E'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+    'E'                         TP_MOVTO,                 --33 Criado para separar na tabela as entradas e saídas
+    tdrec940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado juntamente com o CFOP
+    tcmcs966.t$dsca$l           DESCR_TIPO_DOC_FISCAL     --35
     
 FROM  baandb.ttdrec941601 tdrec941
 
@@ -107,7 +109,10 @@ FROM  baandb.ttdrec941601 tdrec941
          
           LEFT JOIN baandb.tznsls000601 znsls000
                  ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
-                
+
+    LEFT JOIN baandb.ttcmcs966301 tcmcs966
+           ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
+           
 WHERE tdrec940.t$stat$l IN (4,5,6)
    AND tdrec941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
    AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
@@ -156,8 +161,10 @@ SELECT DISTINCT
     0                           VALOR_DESCONTOS,          --30
     cisli941.t$fght$l           VALOR_RATEIO_FRETE,       --31
     cisli941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
-    'S'                         TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
-    
+    'S'                         TP_MOVTO,                 --33 Criado para separar na tabela as entradas e saídas
+    cisli940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado junto com o CFOP
+    tcmcs966.t$dsca$l           DESCR_COD_TIPO_DOC_FISCAL --35
+  
 FROM  baandb.tcisli941601 cisli941
 
   INNER JOIN baandb.tcisli940601 cisli940
@@ -224,7 +231,10 @@ FROM  baandb.tcisli941601 cisli941
               
           LEFT JOIN baandb.tznsls000601 znsls000
                  ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
-                
+
+    LEFT JOIN baandb.ttcmcs966301 tcmcs966
+           ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
+           
  WHERE cisli940.t$stat$l IN (5,6,101)
    AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
    AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
