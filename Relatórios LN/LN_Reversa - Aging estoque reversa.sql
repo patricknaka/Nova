@@ -38,7 +38,8 @@ SELECT 	Trim(tcibd001.t$item)             										ID_ITEM,
 		  AT time zone 'America/Sao_Paulo') AS DATE)
 																				DATA_ULTIMA_SAIDA,
 
-		TRUNC(sysdate-max(whinr110.t$trdt))										AGING
+		TRUNC(sysdate-max(whinr110.t$trdt))										AGING,
+    TIPO_ORDEM.DESCR                                      TIPO_SAIDA
      
 FROM       baandb.ttcibd001301 tcibd001
 
@@ -106,6 +107,7 @@ INNER JOIN ( select A.LONG_VALUE,
 
 LEFT JOIN	(	select 	a.t$item,
 						a.t$cwar,
+            a.t$koor,
 						sum(a.t$qstk) t$qstk,
 						max(a.t$trdt) t$trdt
 				from	baandb.twhinr110301 a
@@ -118,11 +120,38 @@ LEFT JOIN	(	select 	a.t$item,
 									and b.t$kost = 5
 									and b.t$koor != 52)
 				group by a.t$item,
-				         a.t$cwar) whinr110
+				         a.t$cwar,
+                 a.t$koor) whinr110
 			ON	whinr110.t$cwar = whinr140.t$cwar
 			AND	whinr110.t$item = whinr140.t$item
 
- 
+  LEFT JOIN ( select l.t$desc DESCR,
+                    d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'tc'
+                and d.t$cdom = 'koor'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'tc'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) TIPO_ORDEM
+        ON TIPO_ORDEM.t$cnst = whinr110.t$koor
  
 --WHERE 
 -- ( (:Filial = 'AAA') OR (WHSE.WHSEID = :Filial) )
@@ -144,6 +173,7 @@ GROUP BY Trim(tcibd001.t$item),  tcibd001.t$dsca,
          tccom100.t$seak,
 		 WHWMD400.T$HGHT *
 		 WHWMD400.T$WDTH *
-		 WHWMD400.T$DPTH  
+		 WHWMD400.T$DPTH,
+     TIPO_ORDEM.DESCR
 
 ORDER BY ID_FILIAL, NOME
