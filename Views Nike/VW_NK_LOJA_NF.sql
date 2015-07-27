@@ -23,7 +23,7 @@ SELECT DISTINCT
   ' '                       MARCA_VOLUME,                           --19
   tdrec940.t$fght$l         FRETE,                                  --20
   tdrec940.t$insr$l         SEGURO,                                 --21
-  0                         FRETE_A_PAGAR,                          --22 'N√O FOI MODELADO NO LN'
+  0                         FRETE_A_PAGAR,                          --22 'N√ÉO FOI MODELADO NO LN'
   tdrec940.t$gtam$l         VALOR_TOTAL_ITENS,                      --23
   tdrec940.t$addc$l         DESCONTO,                               --24
   tdrec940.t$gexp$l         ENCARGO,                                --25
@@ -75,12 +75,12 @@ SELECT DISTINCT
 		THEN  2
 	WHEN tdrec940.t$rfdt$l = 8 
 		THEN 3
-	ELSE 1 END 				FIN_EMISSAO_NFE,                         --50	CONSIDERANDO NOTAS FISCAIS DE DEVOLU«√O COMO "TIPO NORMAL"
-  ' '    					REGISTRO_DPEC,                           --51	HOJE … EXPORTADO COMO NULL
+	ELSE 1 END 				FIN_EMISSAO_NFE,                         --50	CONSIDERANDO NOTAS FISCAIS DE DEVOLU√á√ÉO COMO "TIPO NORMAL"
+  ' '    					REGISTRO_DPEC,                           --51	HOJE √â EXPORTADO COMO NULL
   ' '                       PIN,                                     --52
-  NULL                      DATA_REGISTRO_DPEC,                      --53 	NO RECEBIMENTO N√O TEMOS ESTA DATA
+  NULL                      DATA_REGISTRO_DPEC,                      --53 	NO RECEBIMENTO N√ÉO TEMOS ESTA DATA
   ' '                       PROTOCOLO_CANCELAMENTO_NFE,              --54
-  NULL                      DATA_CONTINGENCIA,                       --55 	NO RECEBIMENTO N√O TEMOS ESTA DATA
+  NULL                      DATA_CONTINGENCIA,                       --55 	NO RECEBIMENTO N√ÉO TEMOS ESTA DATA
   'AGUARDANDO CONSULTOR'    JUSTIFICATIVA_CONTINGENCIA,              --56
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
@@ -101,7 +101,9 @@ SELECT DISTINCT
   ' '                       ENTREGA_NOME_DESTINATARIO,               --71
   '0'                       ENTREGA_DEST_COMPR,                      --72
   ' '                       NUMERO_PEDIDO_VENDA,                     --73
-  'E'                       TP_MOVTO                                 -- Criado para separar na tabela as entradas e saÌdas
+  'E'                       TP_MOVTO,                                --74 Criado para separar na tabela as entradas e sa√≠das
+  tdrec940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
+  tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL
   
 FROM  baandb.ttdrec940601  tdrec940
 
@@ -153,6 +155,9 @@ FROM  baandb.ttdrec940601  tdrec940
       AND tttxt010r.t$clan = 'p'
 	    AND tttxt010r.t$seqe = 1
     
+    LEFT JOIN baandb.ttcmcs966301 tcmcs966
+           ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
+           
     WHERE tdrec940.t$stat$l IN (4,5,6)      
     
 UNION
@@ -169,12 +174,12 @@ SELECT DISTINCT
     tccom130c.t$fovn$l
   ELSE ' ' END              CGC_CPF,                                --07
   tccom130c.t$fovn$l        COD_CLIFOR,                             --08
-  cast(NVL(tttxt010f.t$text,' ') as varchar(100))         OBS,               --09
+  cast(NVL(tttxt010f.t$text,' ') as varchar(100))         OBS,      --09
   cisli940.t$seri$l         SERIE_NF,                               --10
   cisli940.t$docn$l         NF_NUMERO,                              --11
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
-                            DATA_SAIDA_NF,                             --12
+                            DATA_SAIDA_NF,                          --12
   cisli940.t$ccfo$l         NATUREZA_OPERACAO_CODIGO,               --13
   0                         RECEBIMENTO,                            --14
   cisli940.t$nwgt$l         PESO_LIQUIDO,                           --15
@@ -230,12 +235,12 @@ SELECT DISTINCT
   ELSE '99' END             LOG_STATUS_NFE,                          --46      
   cisli959.t$rsds$l         MOTIVO_CANCELAMENTO_NFE,                 --47
   ' '                       PRIORIZACAO,                             --48
-  SUBSTR(cisli940.t$cnfe$l,35,1)    TIPO_EMISSAO_NFE,                        --49
+  SUBSTR(cisli940.t$cnfe$l,35,1)    TIPO_EMISSAO_NFE,                --49
     CASE WHEN cisli940.t$fdty$l IN (6,7)
 		THEN  2
 	WHEN cisli940.t$fdty$l = 8 
 		THEN 3
-	ELSE 1 END     			FIN_EMISSAO_NFE,                         --50
+	ELSE 1 END     			FIN_EMISSAO_NFE,                               --50
   'AGUARDANDO CONSULTOR'    REGISTRO_DPEC,                           --51
   ' '                       PIN,                                     --52
   (SELECT 
@@ -244,7 +249,7 @@ SELECT DISTINCT
    FROM baandb.tbrnfe020601 A
    WHERE A.t$ncmp$l = cisli940.t$sfcp$l
    AND A.t$refi$l = cisli940.t$fire$l
-   AND A.t$ioin$l=2)		DATA_REGISTRO_DPEC,                      --53 
+   AND A.t$ioin$l=2)		DATA_REGISTRO_DPEC,                          --53 
   CASE WHEN cisli940.t$nfes$l = 3 THEN    --Pedido Cancelamento
         cisli940.t$prot$l         
   ELSE ' ' END              PROTOCOLO_CANCELAMENTO_NFE,              --54
@@ -256,7 +261,7 @@ SELECT DISTINCT
    AND A.t$refi$l = cisli940.t$fire$l
    AND A.t$ioin$l=1
    AND A.t$actn$l='IN')      DATA_CONTINGENCIA,                       --55 
-  ' '    					JUSTIFICATIVA_CONTINGENCIA,              --56	… ENVIADO COMO BRANCO
+  ' '    					JUSTIFICATIVA_CONTINGENCIA,              --56	√â ENVIADO COMO BRANCO
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS410.DT_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -305,7 +310,9 @@ SELECT DISTINCT
       TO_CHAR(cisli940.t$docn$l) || cisli940.t$seri$l
   ELSE TO_CHAR(SLS004.ENTREGA) END   
                             NUMERO_PEDIDO_VENDA,                     --73
-  'S'                       TP_MOVTO                                 -- Criado para separar na tabela as entradas e saÌdas
+  'S'                       TP_MOVTO,                                --74 Criado para separar na tabela as entradas e sa√≠das
+  cisli940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
+  tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL                --76
   
 FROM  baandb.tcisli940601  cisli940
 
@@ -406,4 +413,7 @@ FROM  baandb.tcisli940601  cisli940
           AND tttxt010f.t$clan = 'p'
           AND tttxt010f.t$seqe = 1
       
+    LEFT JOIN baandb.ttcmcs966301 tcmcs966
+           ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
+           
     WHERE cisli940.t$stat$l IN (5,6,101)
