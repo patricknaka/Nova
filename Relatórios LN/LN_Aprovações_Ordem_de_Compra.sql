@@ -11,7 +11,7 @@ SELECT
     TRIM(tdpur401.t$item)                             ITEM,
     tcibd001.t$dsca                                   DESC_ITEM,
     crd.t$logn                                        LOGIN,
-    nome_crd.t$name                                   NOME_LOGIN,
+    -- nome_crd.t$name                                   NOME_LOGIN,
    
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -566,7 +566,7 @@ ORDER BY DATA_ORDEM,
 " 		ON tfcmg101.t$ttyp = tdrec940.t$ttyp$l  " &
 " 	   AND tfcmg101.t$ninv = tdrec940.t$invn$l  " &
 " 	   AND tfcmg101.t$ninv !=  0  " &
-"  LEFT JOIN baandb.ttfacp201" + Parameters!Compania.Value +  "      tfacp301  " &
+"  LEFT JOIN baandb.ttfacp201" + Parameters!Compania.Value +  "      tfacp201  " &
 " 		ON tfacp201.t$ttyp = tdrec940.t$ttyp$l  " &
 " 	   AND tfacp201.t$ninv = tdrec940.t$invn$l  " &
 "  LEFT JOIN ( select l.t$desc STATUS_ORDEM,  " &
