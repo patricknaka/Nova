@@ -59,8 +59,18 @@ SELECT
          AND A.T$ENTR$C = ZNSLS401.T$ENTR$C
          AND A.T$NTRA$C != ' '
          AND ROWNUM = 1 ) )                   Nome_Transportadora_Coleta,
+--    tcmcs080.t$dsca                           Nome_Transportadora_Coleta,
     Trim(tcmcs080.t$seak)                     APELIDO_TRANSP_COLETA,
-    tccom130transp.t$fovn$l                   CNPJ_TRANSP_COLETA,
+    NVL(tccom130transp.t$fovn$l,                   
+          ( SELECT Trim(A.T$FOVT$C)
+        FROM BAANDB.TZNSLS410301 A
+       WHERE A.T$NCIA$C = ZNSLS401.T$NCIA$C
+         AND A.T$UNEG$C = ZNSLS401.T$UNEG$C
+         AND A.T$PECL$C = ZNSLS401.T$PECL$C
+         AND A.T$SQPD$C = ZNSLS401.T$SQPD$C
+         AND A.T$ENTR$C = ZNSLS401.T$ENTR$C
+         AND A.T$NTRA$C != ' '
+         AND ROWNUM = 1 ) )                   CNPJ_TRANSP_COLETA,
     Trim(znsls401.t$nome$c)                   Nome_Cliente_Coleta,       
     znsls401.t$fovn$c                         CPF_Cliente,
     znsls401.t$cepe$c                         CEP,
@@ -89,8 +99,10 @@ SELECT
     Trim(znmcs030.t$dsca$c)                   SETOR,
     Trim(tcmcs060.t$dsca)                     FABRICANTE,
     tdipu001.t$manu$c                         MARCA,
-    cisli941.t$dqua$l                         QTDE_ITEM,
-    cisli941.t$dqua$l*tcibd001.t$wght         PESO_KG,
+    NVL(cisli941.t$dqua$l, 
+        ABS(znsls401.t$qtve$c) )              QTDE_ITEM,
+    NVL(cisli941.t$dqua$l, ABS(znsls401.t$qtve$c))*
+        tcibd001.t$wght                       PESO_KG,
     CUBAGEM.TOT                               CUBAGEM,
     CASE WHEN cisli940.t$docn$l = 0 
            THEN NULL
@@ -449,24 +461,25 @@ WHERE TRIM(znsls401.t$idor$c) = 'TD'
   AND tdsls094.t$reto in (1, 3)
   AND znsls401.t$itpe$c in (9, 15)
   
+--  and znsls401.t$entr$c = '4790512802'
   
-  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-                AT time zone 'America/Sao_Paulo') AS DATE))
-      Between :DataColetaDe
-          And :DataColetaAte
-  AND znsls401.t$ccat$c IN (:Categoria)    --BAANDB.TZNSLS010301 RETIRAR DO RELATÓRIO, PRECISA VERIFICAR JUNTO A EQUIPE DE FRONTE
-  AND znsls401.t$cass$c IN (:Assunto)      --BAANDB.TZNSLS011301
-  AND znsls401.t$cmot$c IN (:MotivoColeta) --BAANDB.TZNSLS012301
-  AND CASE WHEN znsls409.t$lbrd$c = 1 
-             THEN 1 -- FORÇADO
-           ELSE   0 -- NÃO FORÇADO
-      END IN (:Forcado)
-  AND znsls401.t$uneg$c IN (:UnidNegocio)
-  AND tcibd001.t$citg IN (:Depto)
- Estato da Instancia  
-  AND znfmd001.t$fili$c IN (:Filial)
-  AND znsls401.t$itpe$c IN (:TipoEntrega)
+--  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 
+--              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+--                AT time zone 'America/Sao_Paulo') AS DATE))
+--      Between :DataColetaDe
+--          And :DataColetaAte
+--  AND znsls401.t$ccat$c IN (:Categoria)    --BAANDB.TZNSLS010301 RETIRAR DO RELATÓRIO, PRECISA VERIFICAR JUNTO A EQUIPE DE FRONTE
+--  AND znsls401.t$cass$c IN (:Assunto)      --BAANDB.TZNSLS011301
+--  AND znsls401.t$cmot$c IN (:MotivoColeta) --BAANDB.TZNSLS012301
+--  AND CASE WHEN znsls409.t$lbrd$c = 1 
+--             THEN 1 -- FORÇADO
+--           ELSE   0 -- NÃO FORÇADO
+--      END IN (:Forcado)
+--  AND znsls401.t$uneg$c IN (:UnidNegocio)
+--  AND tcibd001.t$citg IN (:Depto)
+-- Estato da Instancia  
+--  AND znfmd001.t$fili$c IN (:Filial)
+--  AND znsls401.t$itpe$c IN (:TipoEntrega)
   
 ORDER BY DATA_SOLICITACAO_COLETA, DATA_PEDIDO, PEDIDO
 
