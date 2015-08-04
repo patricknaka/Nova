@@ -389,7 +389,7 @@ FROM  baandb.tcisli940601  cisli940
                 group by cisli245.t$fire$l )  SLI245
            ON SLI245.t$fire$l = cisli940.t$fire$l
            
-    LEFT JOIN ( select  MIN(znsls004.t$entr$c)  ENTREGA,
+    INNER JOIN ( select  MIN(znsls004.t$entr$c)  ENTREGA,
                         znsls004.t$orno$c OV
                 from    baandb.tznsls004601 znsls004
                 group by znsls004.t$orno$c ) SLS004
