@@ -235,6 +235,12 @@ FROM  baandb.tcisli941601 cisli941
     LEFT JOIN baandb.ttcmcs966301 tcmcs966
            ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
            
+        INNER JOIN ( select  MIN(cisli245.t$slso)  OV,
+                        cisli245.t$fire$l
+                from    baandb.tcisli245601 cisli245
+                group by cisli245.t$fire$l )  SLI245
+           ON SLI245.t$fire$l = cisli940.t$fire$l
+           
  WHERE cisli940.t$stat$l IN (5,6,101)
    AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
    AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
