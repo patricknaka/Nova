@@ -6,7 +6,7 @@ SELECT  DISTINCT
   tdrec940.t$seri$l             SERI_NF,                  --04
   to_char(tdrec942.t$line$l)    ITEM_IMPRESSAO,           --05
   '1'                           SUB_ITEM_TAMANHO,         --06
-  to_char(tdrec942.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
+  to_char(tdrec942.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÃ“DIGOS DIFERENTES DA NIKE
   tdrec942.t$rate$l             TAXA_IMPOSTO,             --08
   
   CASE
@@ -25,7 +25,7 @@ SELECT  DISTINCT
   ' '                           CTB_LANCAMENTO_FINANCEIRO,--14
   ' '                           CTB_ITEM_FINANCEIRO,      --15
   ' '                           EMPRESA,
-  'E'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+  'E'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saÃ­das
   
 FROM  baandb.ttdrec942601   tdrec942
 
@@ -44,7 +44,7 @@ SELECT  DISTINCT
   cisli940.t$seri$l             SERI_NF,                  --04
   to_char(cisli943.t$line$l)    ITEM_IMPRESSAO,           --05
   '1'                           SUB_ITEM_TAMANHO,         --06
-  to_char(cisli943.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
+  to_char(cisli943.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÃ“DIGOS DIFERENTES DA NIKE
   cisli943.t$rate$l             TAXA_IMPOSTO,             --08
   CASE
 	WHEN cisli943.t$brty$l=1 THEN 3
@@ -62,11 +62,17 @@ SELECT  DISTINCT
   ' '                           CTB_LANCAMENTO_FINANCEIRO,--14
   ' '                           CTB_ITEM_FINANCEIRO,      --15
   ' '                           EMPRESA,
-  'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+  'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saÃ­das
   
 FROM  baandb.tcisli943601   cisli943
 
   LEFT JOIN baandb.tcisli940601 cisli940
          ON cisli940.t$fire$l = cisli943.t$fire$l
          
+    INNER JOIN ( select  MIN(cisli245.t$slso)  OV,
+                        cisli245.t$fire$l
+                from    baandb.tcisli245601 cisli245
+                group by cisli245.t$fire$l )  SLI245
+           ON SLI245.t$fire$l = cisli943.t$fire$l
+           
  WHERE cisli940.t$stat$l IN (5,6,101)
