@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -22,7 +22,8 @@
 		NVL(Q_IPI.T$RATE$L,0)									IPI,
 		NVL(Q_ICMS.T$RATE$L,0)									ALIQUOTA,
 		
-		CASE CISLI941.T$DQUA$L WHEN 0 THEN 0 ELSE (TDSLS415.CTOT / CISLI941.T$DQUA$L) END CUSTO,
+		CAST((CASE CISLI941.T$DQUA$L WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / CISLI941.T$DQUA$L) END) AS NUMERIC(38,4))
+                                  CUSTO,
 		'01'													COR_PRODUTO,
 		TCIBD001.T$SIZE$C							TAMANHO,
     'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
@@ -132,7 +133,8 @@ SELECT
 		0														QTDE_CANCELADA,
 		0														IPI,
 		0														ALIQUOTA,
-		CASE ZNSLS401.T$QTVE$C WHEN 0 THEN 0 ELSE (TDSLS415.CTOT / ZNSLS401.T$QTVE$C) END						CUSTO,
+		CAST ((CASE ZNSLS401.T$QTVE$C WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / ZNSLS401.T$QTVE$C) END)	AS NUMERIC(38,4))					
+                                  CUSTO,
 		'01'													COR_PRODUTO,
 		TCIBD001.T$SIZE$C							TAMANHO,
     'I'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
