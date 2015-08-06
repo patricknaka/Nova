@@ -33,6 +33,7 @@ FROM  baandb.ttdrec942601   tdrec942
          ON tdrec940.t$fire$l = tdrec942.t$fire$l
 
 WHERE tdrec940.t$stat$l IN (4,5,6)
+AND   tdrec940.t$cnfe$l != ' '
 
 UNION
 
@@ -76,3 +77,4 @@ FROM  baandb.tcisli943601   cisli943
            ON SLI245.t$fire$l = cisli943.t$fire$l
            
  WHERE cisli940.t$stat$l IN (5,6,101)
+ AND   cisli940.t$cnfe$l != ' '
