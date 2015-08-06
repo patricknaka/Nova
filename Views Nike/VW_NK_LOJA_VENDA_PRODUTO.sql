@@ -84,26 +84,29 @@ LEFT JOIN (	SELECT 	A.T$FIRE$L,
 			WHERE	A.T$BRTY$L=1) Q_ICMS	ON	Q_ICMS.T$FIRE$L		=	CISLI941.T$FIRE$L
 											AND	Q_ICMS.T$LINE$L		=	CISLI941.T$LINE$L											
 
-WHERE
-			CISLI245.T$SLCP=601
-		AND	CISLI245.T$ORTP=1
-        AND	CISLI245.T$KOOR=3
-		AND	CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
-		AND	CISLI940.T$FDTY$L != 14
-		
-		AND CISLI941.T$ITEM$L NOT IN 
+LEFT JOIN baandb.tznsls000601 znsls000
+       ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+                 
+WHERE CISLI245.T$SLCP=601
+  AND	CISLI245.T$ORTP=1
+  AND	CISLI245.T$KOOR=3
+  AND	CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
+  AND	CISLI940.T$FDTY$L != 14
+  AND CISLI941.T$ITEM$L != znsls000.t$itjl$c      -- item juros lojista
+  AND CISLI941.T$ITEM$L != znsls000.t$itmd$c      -- item despesa
+  AND CISLI941.T$ITEM$L != znsls000.t$itmf$c      -- item frete
 
-		(select a.t$itjl$c 
-				from baandb.tznsls000601 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
-		 UNION ALL
-		 select a.t$itmd$c 
-				from baandb.tznsls000601 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
-		 UNION ALL
-		 select a.t$itmf$c 
-				from baandb.tznsls000601 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))		
+--		(select a.t$itjl$c 
+--				from baandb.tznsls000601 a 
+--				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
+--		 UNION ALL
+--		 select a.t$itmd$c 
+--				from baandb.tznsls000601 a 
+--				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
+--		 UNION ALL
+--		 select a.t$itmf$c 
+--				from baandb.tznsls000601 a 
+--				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))		
 
 --***************************************************************************************************************************
 --				INSTANCIA
