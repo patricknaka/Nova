@@ -116,7 +116,8 @@ FROM  baandb.ttdrec941601 tdrec941
 WHERE tdrec940.t$stat$l IN (4,5,6)
    AND tdrec941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
    AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
-   AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS       
+   AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
+   AND tdrec940.t$cnfe$l != ' '
     
 UNION
 
@@ -245,3 +246,4 @@ FROM  baandb.tcisli941601 cisli941
    AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
    AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
    AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
+   AND cisli940.t$cnfe$l != ' '
