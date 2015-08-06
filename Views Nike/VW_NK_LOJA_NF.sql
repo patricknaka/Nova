@@ -158,7 +158,8 @@ FROM  baandb.ttdrec940601  tdrec940
     LEFT JOIN baandb.ttcmcs966301 tcmcs966
            ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
            
-    WHERE tdrec940.t$stat$l IN (4,5,6)      
+    WHERE tdrec940.t$stat$l IN (4,5,6)
+    AND	  tdrec940.t$cnfe$l != ' '
     
 UNION
 
@@ -417,3 +418,4 @@ FROM  baandb.tcisli940601  cisli940
            ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
            
     WHERE cisli940.t$stat$l IN (5,6,101)
+    AND   cisli940.t$cnfe$l != ' '
