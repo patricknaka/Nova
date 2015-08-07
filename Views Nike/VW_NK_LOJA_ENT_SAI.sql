@@ -41,6 +41,7 @@ INNER JOIN	BAANDB.TTCCOM130601 TCCOM130_TRN	ON	TCCOM130_TRN.T$CADR	=	CISLI940.T$
 
 WHERE
 			CISLI940.T$FDTY$L IN (2,4,5,9,17,18,19,22,23,26,32,33)
+AND	  CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
 			
 --***************************************************************************************************************************
 --				ENTRADA
@@ -87,3 +88,4 @@ LEFT JOIN	BAANDB.TTCEMM122601	TCEMM122		ON	TCEMM122.T$LOCO		=	601
 
 WHERE
 			TDREC940.T$RFDT$L IN (1,2,4,5,10,26,27,28,32,33,35,36,37,40)
+AND   TDREC940.T$STAT$L IN (4,5)  --Aprovado, Aprovado com Problemas

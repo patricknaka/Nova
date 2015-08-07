@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -22,7 +22,8 @@
 		NVL(Q_IPI.T$RATE$L,0)									IPI,
 		NVL(Q_ICMS.T$RATE$L,0)									ALIQUOTA,
 		
-		CASE CISLI941.T$DQUA$L WHEN 0 THEN 0 ELSE (TDSLS415.CTOT / CISLI941.T$DQUA$L) END CUSTO,
+		CAST((CASE CISLI941.T$DQUA$L WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / CISLI941.T$DQUA$L) END) AS NUMERIC(38,4))
+                                  CUSTO,
 		'01'													COR_PRODUTO,
 		TCIBD001.T$SIZE$C							TAMANHO,
     'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
@@ -84,26 +85,29 @@ LEFT JOIN (	SELECT 	A.T$FIRE$L,
 			WHERE	A.T$BRTY$L=1) Q_ICMS	ON	Q_ICMS.T$FIRE$L		=	CISLI941.T$FIRE$L
 											AND	Q_ICMS.T$LINE$L		=	CISLI941.T$LINE$L											
 
-WHERE
-			CISLI245.T$SLCP=601
-		AND	CISLI245.T$ORTP=1
-        AND	CISLI245.T$KOOR=3
-		AND	CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
-		AND	CISLI940.T$FDTY$L != 14
-		
-		AND CISLI941.T$ITEM$L NOT IN 
+LEFT JOIN baandb.tznsls000601 znsls000
+       ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+                 
+WHERE CISLI245.T$SLCP=601
+  AND	CISLI245.T$ORTP=1
+  AND	CISLI245.T$KOOR=3
+  AND	CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
+  AND	CISLI940.T$FDTY$L != 14
+  AND CISLI941.T$ITEM$L != znsls000.t$itjl$c      -- item juros lojista
+  AND CISLI941.T$ITEM$L != znsls000.t$itmd$c      -- item despesa
+  AND CISLI941.T$ITEM$L != znsls000.t$itmf$c      -- item frete
 
-		(select a.t$itjl$c 
-				from baandb.tznsls000601 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
-		 UNION ALL
-		 select a.t$itmd$c 
-				from baandb.tznsls000601 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
-		 UNION ALL
-		 select a.t$itmf$c 
-				from baandb.tznsls000601 a 
-				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))		
+--		(select a.t$itjl$c 
+--				from baandb.tznsls000601 a 
+--				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
+--		 UNION ALL
+--		 select a.t$itmd$c 
+--				from baandb.tznsls000601 a 
+--				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
+--		 UNION ALL
+--		 select a.t$itmf$c 
+--				from baandb.tznsls000601 a 
+--				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))		
 
 --***************************************************************************************************************************
 --				INSTANCIA
@@ -129,7 +133,8 @@ SELECT
 		0														QTDE_CANCELADA,
 		0														IPI,
 		0														ALIQUOTA,
-		CASE ZNSLS401.T$QTVE$C WHEN 0 THEN 0 ELSE (TDSLS415.CTOT / ZNSLS401.T$QTVE$C) END						CUSTO,
+		CAST ((CASE ZNSLS401.T$QTVE$C WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / ZNSLS401.T$QTVE$C) END)	AS NUMERIC(38,4))					
+                                  CUSTO,
 		'01'													COR_PRODUTO,
 		TCIBD001.T$SIZE$C							TAMANHO,
     'I'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
