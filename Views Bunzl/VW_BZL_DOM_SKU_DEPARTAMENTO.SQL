@@ -1,8 +1,9 @@
-﻿select  
+﻿SELECT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
-  A.T$TPEN$C CD_TIPO_ENTREGA,
-  A.T$DSCA$C DS_TIPO_ENTREGA,
-  CAST(15 AS INT) CD_CIA
-FROM baandb.tznsls002201 a
+  tcmcs023.t$citg CD_DEPARTAMENTO,
+  tcmcs023.t$dsca DS_DEPARTAMENTO,
+  cast(15 as int) CD_CIA
+FROM    baandb.ttcmcs023602 tcmcs023
+WHERE   tcmcs023.T$tpit$c=1
 order by 1
