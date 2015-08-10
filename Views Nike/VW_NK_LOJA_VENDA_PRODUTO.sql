@@ -26,8 +26,10 @@ SELECT
                                   CUSTO,
 		'01'													COR_PRODUTO,
 		TCIBD001.T$SIZE$C							TAMANHO,
-    'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
-
+    'S'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
+    cisli940.t$fire$l             REF_FISCAL,
+    cisli940.t$rcd_utc            DT_ULT_ALTERACAO
+    
 FROM
 			BAANDB.TCISLI245601	CISLI245
 
@@ -137,7 +139,9 @@ SELECT
                                   CUSTO,
 		'01'													COR_PRODUTO,
 		TCIBD001.T$SIZE$C							TAMANHO,
-    'I'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+    'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
+    cisli940.t$fire$l             REF_FISCAL,
+    cisli940.t$rcd_utc            DT_ULT_ALTERACAO
 
 FROM
 
@@ -167,6 +171,19 @@ LEFT JOIN	BAANDB.TTCIBD004601	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
 											AND	TCIBD004.T$BPID		=	' '
 											AND	TCIBD004.T$ITEM		=	TCIBD001.T$ITEM
 
+LEFT JOIN ( 	SELECT	A.T$FIRE$L,
+                A.T$SLSO
+        FROM	BAANDB.TCISLI245601 A
+        WHERE	A.T$SLCP=601
+        AND		A.T$ORTP=1
+        AND		A.T$KOOR=3
+        GROUP BY A.T$FIRE$L,
+		             A.T$SLSO ) SLS245
+      ON SLS245.T$SLSO = TDSLS400.T$ORNO
+      
+LEFT JOIN BAANDB.TCISLI940601 CISLI940
+       ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
+       
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
