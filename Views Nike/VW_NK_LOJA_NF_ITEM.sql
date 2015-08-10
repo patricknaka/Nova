@@ -1,4 +1,4 @@
-﻿SELECT DISTINCT
+?SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
     ' '                         CODIGO_BARRA,             --03
@@ -41,7 +41,10 @@
     tdrec941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
     'E'                         TP_MOVTO,                 --33 Criado para separar na tabela as entradas e saídas
     tdrec940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado juntamente com o CFOP
-    tcmcs966.t$dsca$l           DESCR_TIPO_DOC_FISCAL     --35
+    tcmcs966.t$dsca$l           DESCR_TIPO_DOC_FISCAL,    --35
+    tdrec941.t$fire$l           REF_FISCAL,               --36
+    tdrec941.t$line$l           LIN_REF_FIS,              --37
+    tdrec941.t$rcd_utc          DT_ULT_ALTERACAO          --38
     
 FROM  baandb.ttdrec941601 tdrec941
 
@@ -164,8 +167,11 @@ SELECT DISTINCT
     cisli941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
     'S'                         TP_MOVTO,                 --33 Criado para separar na tabela as entradas e saídas
     cisli940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado junto com o CFOP
-    tcmcs966.t$dsca$l           DESCR_COD_TIPO_DOC_FISCAL --35
-  
+    tcmcs966.t$dsca$l           DESCR_COD_TIPO_DOC_FISCAL,--35
+    cisli941.t$fire$l           REF_FISCAL,               --36
+    cisli941.t$line$l           LIN_REF_FIS,              --37
+    cisli941.t$rcd_utc          DT_ULT_ALTERACAO          --38
+    
 FROM  baandb.tcisli941601 cisli941
 
   INNER JOIN baandb.tcisli940601 cisli940
