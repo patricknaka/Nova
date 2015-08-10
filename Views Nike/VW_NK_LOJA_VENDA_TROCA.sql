@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -20,7 +20,9 @@
 		' '														ID_VENDEDOR,
 		0														ITEM_EXCLUIDO,
 		0														NÃO_MOVIMENTA_ESTOQUE,		
-		' '														INDICA_ENTREGA_FUTURA
+		' '														INDICA_ENTREGA_FUTURA,
+    tdrec940.t$fire$l             REF_FISCAL,
+    tdrec940.t$rcd_utc            DT_ULT_ALTERACAO
 
 FROM
 			BAANDB.TTDREC947601	TDREC947
