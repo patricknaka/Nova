@@ -53,7 +53,8 @@ SELECT DISTINCT
     --SUBSTR(ZNSLS400.t$te1f$c,1,2) DDD_CELULAR,        --24
     --SUBSTR(ZNSLS400.t$te1f$c,3,13)CELULAR             --25
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),1,2),' ') DDD_CELULAR,        --24
-    nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),3,13),' ') CELULAR             --25
+    nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),3,13),' ') CELULAR,           --25
+    tccom139.t$ibge$l           COD_IBGE            --26
    
 FROM  baandb.ttccom100601 tccom100
 
@@ -72,5 +73,10 @@ FROM  baandb.ttccom100601 tccom100
 						a.t$te1f$c,
 						a.t$te2f$c) ZNSLS400
          ON   ZNSLS400.t$ofbp$c = tccom100.t$bpid
+         
+  LEFT JOIN baandb.ttccom139301 tccom139
+        ON  tccom139.t$ccty = tccom130.t$ccty
+       AND  tccom139.t$cste = tccom130.t$cste
+       AND  tccom139.t$city = tccom130.t$ccit
      
 WHERE tccom100.t$bprl = 2     --Cliente
