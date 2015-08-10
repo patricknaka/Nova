@@ -103,7 +103,9 @@ SELECT DISTINCT
   ' '                       NUMERO_PEDIDO_VENDA,                     --73
   'E'                       TP_MOVTO,                                --74 Criado para separar na tabela as entradas e saídas
   tdrec940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
-  tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL
+  tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL,               --76
+  tdrec940.t$fire$l         REF_FISCAL,                              --77
+  tdrec940.t$rcd_utc        DT_ULT_ALTERACAO                         --78
   
 FROM  baandb.ttdrec940601  tdrec940
 
@@ -313,7 +315,9 @@ SELECT DISTINCT
                             NUMERO_PEDIDO_VENDA,                     --73
   'S'                       TP_MOVTO,                                --74 Criado para separar na tabela as entradas e saídas
   cisli940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
-  tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL                --76
+  tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL,               --76
+  cisli940.t$fire$l         REF_FISCAL,                              --77
+  cisli940.t$rcd_utc        DT_ULT_ALTERACAO                         --78
   
 FROM  baandb.tcisli940601  cisli940
 
