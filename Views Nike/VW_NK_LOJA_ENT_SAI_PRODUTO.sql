@@ -13,7 +13,9 @@ SELECT
 		' '														                CODIGO_BARRA,
 		CISLI941.T$AMNT$L										          VALOR ,
 		CISLI941.T$PRIC$L										          PRECO1,
-		CISLI941.T$DQUA$L										          QTDE_ITEM
+		CISLI941.T$DQUA$L										          QTDE_ITEM,
+    cisli940.t$fire$l                             REF_FISCAL,
+    cisli940.t$rcd_utc                            DT_ULT_ALTERACAO
 FROM
 			BAANDB.TCISLI940601	CISLI940
 INNER JOIN	BAANDB.TCISLI941601 CISLI941	ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
@@ -46,7 +48,9 @@ SELECT
 		' '														                CODIGO_BARRA,
 		TDREC941.T$TAMT$L										          VALOR ,
 		TDREC941.T$PRIC$L										          PRECO1,
-		TDREC941.T$QNTY$L										          QTDE_ITEM
+		TDREC941.T$QNTY$L										          QTDE_ITEM,
+    tdrec940.t$fire$l                             REF_FISCAL,
+    tdrec940.t$rcd_utc                            DT_ULT_ALTERACAO
 FROM
 			BAANDB.TTDREC940601	TDREC940
 INNER JOIN	BAANDB.TTDREC941601 TDREC941	ON	TDREC941.T$FIRE$L	=	TDREC940.T$FIRE$L
