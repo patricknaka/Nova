@@ -69,15 +69,17 @@
 		ZNSLS402.T$PECL$C || ZNSLS402.T$SQPD$C								TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
-    'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
-FROM
-		(	SELECT	A.T$FIRE$L,
-					A.T$SLSO
-			FROM	BAANDB.TCISLI245601 A
-			WHERE	A.T$SLCP=601
-			AND		A.T$ORTP=1
-			AND		A.T$KOOR=3
-			GROUP BY A.T$FIRE$L,
+    'S'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
+    cisli940.t$fire$l             REF_FISCAL,
+    cisli940.t$rcd_utc            DT_ULT_ALTERACAO
+    
+FROM (	SELECT	A.T$FIRE$L,
+                A.T$SLSO
+        FROM	BAANDB.TCISLI245601 A
+        WHERE	A.T$SLCP=601
+        AND		A.T$ORTP=1
+        AND		A.T$KOOR=3
+        GROUP BY A.T$FIRE$L,
 		             A.T$SLSO)	CISLI245
 					 
 INNER JOIN (SELECT	B.T$NCIA$C,
@@ -203,7 +205,9 @@ SELECT
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,												
-    'C'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+    'C'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
+    tdrec940.t$fire$l             REF_FISCAL,
+    tdrec940.t$rcd_utc            DT_ULT_ALTERACAO
 FROM
 		(	SELECT	A.T$FIRE$L,
 					A.T$ORNO$L
@@ -329,7 +333,9 @@ SELECT
 		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
-    'I'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+    'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
+    cisli940.t$fire$l             REF_FISCAL,
+    cisli940.t$rcd_utc            DT_ULT_ALTERACAO
 
 FROM
 			BAANDB.TZNSLS400601	ZNSLS400
@@ -364,7 +370,19 @@ INNER JOIN BAANDB.TZNSLS402601 ZNSLS402		ON	ZNSLS402.T$NCIA$C	=	ZNSLS400.T$NCIA$
 					                        AND ZNSLS402.T$PECL$C   =	ZNSLS400.T$PECL$C
 					                        AND ZNSLS402.T$SQPD$C   =	ZNSLS400.T$SQPD$C	
 		
-
+LEFT JOIN ( 	SELECT	A.T$FIRE$L,
+                A.T$SLSO
+        FROM	BAANDB.TCISLI245601 A
+        WHERE	A.T$SLCP=601
+        AND		A.T$ORTP=1
+        AND		A.T$KOOR=3
+        GROUP BY A.T$FIRE$L,
+		             A.T$SLSO ) SLS245
+      ON SLS245.T$SLSO = TDSLS400.T$ORNO
+      
+LEFT JOIN BAANDB.TCISLI940601 CISLI940
+       ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
+       
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
