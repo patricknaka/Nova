@@ -24,8 +24,10 @@ SELECT  DISTINCT
   ' '                           AGREGA_APOS_DESCONTO,     --13
   ' '                           CTB_LANCAMENTO_FINANCEIRO,--14
   ' '                           CTB_ITEM_FINANCEIRO,      --15
-  ' '                           EMPRESA,
-  'E'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+  ' '                           EMPRESA,                  --16
+  'E'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
+  tdrec940.t$fire$l             REF_FISCAL,               --18
+  tdrec940.t$rcd_utc            DT_ULT_ALTERACAO          --19
   
 FROM  baandb.ttdrec942601   tdrec942
 
@@ -62,8 +64,10 @@ SELECT  DISTINCT
   ' '                           AGREGA_APOS_DESCONTO,     --13
   ' '                           CTB_LANCAMENTO_FINANCEIRO,--14
   ' '                           CTB_ITEM_FINANCEIRO,      --15
-  ' '                           EMPRESA,
-  'S'                           TP_MOVTO                  -- Criado para separar na tabela as entradas e saídas
+  ' '                           EMPRESA,                  --16
+  'S'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
+  cisli940.t$fire$l             REF_FISCAL,               --18
+  cisli940.t$rcd_utc            DT_ULT_ALTERACAO          --19
   
 FROM  baandb.tcisli943601   cisli943
 
