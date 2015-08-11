@@ -36,12 +36,22 @@ SELECT
 		2														                          TIPO_TRANSACAO,
     cisli940.t$fire$l                                     REF_FISCAL,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE)            DT_ULT_ALTERACAO
+		AT time zone 'America/Sao_Paulo') AS DATE)            DT_ULT_ALTERACAO,
+    cisli940.t$ccfo$l                                     CFOP,
+    tcmcs940.t$dsca$l                                     DESC_CFOP,
+    cisli940.t$fdtc$l                                     COD_TIPO_DOC_FISCAL,
+    tcmcs966.t$dsca$l                                     DESC_COD_TIPO_DOC_FIS
     
 FROM  BAANDB.TCISLI940601	CISLI940
 INNER JOIN	BAANDB.TTCCOM130601	TCCOM130_ORG	ON	TCCOM130_ORG.T$CADR	=	CISLI940.T$SFRA$L
 INNER JOIN	BAANDB.TTCCOM130601 TCCOM130_TRN	ON	TCCOM130_TRN.T$CADR	=	CISLI940.T$ITOA$L
 
+LEFT JOIN baandb.ttcmcs940601 tcmcs940
+       ON tcmcs940.t$ofso$l = cisli940.t$ccfo$l
+       
+LEFT JOIN baandb.ttcmcs966601 tcmcs966
+       ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
+       
 WHERE
 			CISLI940.T$FDTY$L IN (2,4,5,9,17,18,19,22,23,26,32,33)
 AND	  CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
@@ -85,7 +95,11 @@ SELECT
 		1														                          TIPO_TRANSACAO,
     tdrec940.t$fire$l                                     REF_FISCAL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE)            DT_ULT_ALTERACAO
+		AT time zone 'America/Sao_Paulo') AS DATE)            DT_ULT_ALTERACAO,
+    tdrec940.t$opfc$l                                     CFOP,
+    tcmcs940.t$dsca$l                                     DESC_CFOP,
+    tdrec940.t$fdtc$l                                     COD_TIPO_DOC_FISCAL,
+    tcmcs966.t$dsca$l                                     DESC_COD_TIPO_DOC_FIS
     
 FROM  BAANDB.TTDREC940601	TDREC940
 
@@ -95,6 +109,12 @@ LEFT JOIN	BAANDB.TTCEMM122601	TCEMM122
        ON	TCEMM122.T$LOCO		=	601
       AND	TCEMM122.T$BUPA		=	TDREC940.T$BPID$L
 
+LEFT JOIN baandb.ttcmcs940601 tcmcs940
+       ON tcmcs940.t$ofso$l = tdrec940.t$opfc$l
+       
+LEFT JOIN baandb.ttcmcs966601 tcmcs966
+       ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
+       
 WHERE
 			TDREC940.T$RFDT$L IN (1,2,4,5,10,26,27,28,32,33,35,36,37,40)
 AND   TDREC940.T$STAT$L IN (4,5)  --Aprovado, Aprovado com Problemas
