@@ -1,4 +1,4 @@
-SELECT DISTINCT
+﻿SELECT DISTINCT
   'NIKE.COM'                FILIAL,                                 --02
   tccom130r.t$fovn$l        CGC_FILIAL_DESTINO,                     --03
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -105,7 +105,9 @@ SELECT DISTINCT
   tdrec940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
   tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL,               --76
   tdrec940.t$fire$l         REF_FISCAL,                              --77
-  tdrec940.t$rcd_utc        DT_ULT_ALTERACAO                         --78
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE)
+                            DT_ULT_ALTERACAO                         --78
   
 FROM  baandb.ttdrec940601  tdrec940
 
@@ -317,7 +319,9 @@ SELECT DISTINCT
   cisli940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
   tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL,               --76
   cisli940.t$fire$l         REF_FISCAL,                              --77
-  cisli940.t$rcd_utc        DT_ULT_ALTERACAO                         --78
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE)
+                            DT_ULT_ALTERACAO                         --78
   
 FROM  baandb.tcisli940601  cisli940
 

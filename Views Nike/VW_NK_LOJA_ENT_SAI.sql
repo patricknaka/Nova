@@ -1,4 +1,4 @@
-SELECT 
+﻿SELECT 
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -35,7 +35,9 @@ SELECT
 		' '														FORNECEDOR,
 		2														TIPO_TRANSACAO,
     cisli940.t$fire$l           REF_FISCAL,
-    cisli940.t$rcd_utc          DT_ULT_ALTERACAO
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ALTERACAO
+    
 FROM
 			BAANDB.TCISLI940601	CISLI940
 INNER JOIN	BAANDB.TTCCOM130601	TCCOM130_ORG	ON	TCCOM130_ORG.T$CADR	=	CISLI940.T$SFRA$L
@@ -83,7 +85,9 @@ SELECT
 		' '														FORNECEDOR,
 		1														TIPO_TRANSACAO,
     tdrec940.t$fire$l           REF_FISCAL,
-    tdrec940.t$rcd_utc          DT_ULT_ALTERACAO
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ALTERACAO
+    
 FROM
 			BAANDB.TTDREC940601	TDREC940
 INNER JOIN	BAANDB.TTCCOM130601	TCCOM130_ORG	ON	TCCOM130_ORG.T$CADR	=	TDREC940.T$SFRA$L

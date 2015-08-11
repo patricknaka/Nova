@@ -1,4 +1,4 @@
-SELECT
+﻿SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -21,8 +21,9 @@ SELECT
 		0														ITEM_EXCLUIDO,
 		0														NÃO_MOVIMENTA_ESTOQUE,		
 		' '														INDICA_ENTREGA_FUTURA,
-    tdrec940.t$fire$l             REF_FISCAL,
-    tdrec940.t$rcd_utc            DT_ULT_ALTERACAO
+    		tdrec940.t$fire$l             REF_FISCAL,
+    		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 	DT_ULT_ALTERACAO
 
 FROM
 			BAANDB.TTDREC947601	TDREC947

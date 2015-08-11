@@ -1,4 +1,4 @@
-SELECT
+﻿SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -15,7 +15,8 @@ SELECT
 		CISLI941.T$PRIC$L										          PRECO1,
 		CISLI941.T$DQUA$L										          QTDE_ITEM,
     cisli940.t$fire$l                             REF_FISCAL,
-    cisli940.t$rcd_utc                            DT_ULT_ALTERACAO
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO
 FROM
 			BAANDB.TCISLI940601	CISLI940
 INNER JOIN	BAANDB.TCISLI941601 CISLI941	ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
@@ -50,7 +51,9 @@ SELECT
 		TDREC941.T$PRIC$L										          PRECO1,
 		TDREC941.T$QNTY$L										          QTDE_ITEM,
     tdrec940.t$fire$l                             REF_FISCAL,
-    tdrec940.t$rcd_utc                            DT_ULT_ALTERACAO
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO
+    
 FROM
 			BAANDB.TTDREC940601	TDREC940
 INNER JOIN	BAANDB.TTDREC941601 TDREC941	ON	TDREC941.T$FIRE$L	=	TDREC940.T$FIRE$L

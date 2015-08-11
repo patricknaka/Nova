@@ -1,4 +1,4 @@
-SELECT  DISTINCT
+﻿SELECT  DISTINCT
 
   'NIKE.COM'                    FILIAL,                   --02
   TO_CHAR(tdrec940.t$docn$l,'000000000')           
@@ -27,7 +27,8 @@ SELECT  DISTINCT
   ' '                           EMPRESA,                  --16
   'E'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
   tdrec940.t$fire$l             REF_FISCAL,               --18
-  tdrec940.t$rcd_utc            DT_ULT_ALTERACAO          --19
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO  --19
   
 FROM  baandb.ttdrec942601   tdrec942
 
@@ -67,8 +68,9 @@ SELECT  DISTINCT
   ' '                           EMPRESA,                  --16
   'S'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
   cisli940.t$fire$l             REF_FISCAL,               --18
-  cisli940.t$rcd_utc            DT_ULT_ALTERACAO          --19
-  
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO  --19
+
 FROM  baandb.tcisli943601   cisli943
 
   LEFT JOIN baandb.tcisli940601 cisli940

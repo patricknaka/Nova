@@ -43,7 +43,8 @@
 		TO_CHAR(ZNSLS401.T$PZTR$C)							TRANSIT_TIME,
     'S'                           TP_MOVTO,                 -- Criado para separar na tabela as entradas e saídas
     cisli940.t$fire$l             REF_FISCAL,
-    cisli940.t$rcd_utc            DT_ULT_ALTERACAO
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO
 
 FROM (	SELECT	A.T$FIRE$L,
                 A.T$SLSO
@@ -177,7 +178,8 @@ SELECT
 		TO_CHAR(0)														TRANSIT_TIME,
     'C'                         TP_MOVTO,                 -- Criado para separar na tabela as entradas e saídas
     tdrec940.t$fire$l           REF_FISCAL,
-    tdrec940.t$rcd_utc          DT_ULT_ALTERACAO
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO
 		
 FROM
 		(	SELECT	A.T$FIRE$L,
@@ -284,7 +286,8 @@ SELECT
 		TO_CHAR(0)														TRANSIT_TIME,
     'I'                         TP_MOVTO,                 -- Criado para separar na tabela as entradas e saídas
     CISLI940.T$FIRE$L           REF_FISCAL,
-    CISLI940.T$RCD_UTC          DT_ULT_ALTERACAO
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$RCD_UTC, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO
 		
 FROM
 			BAANDB.TZNSLS400601	ZNSLS400
