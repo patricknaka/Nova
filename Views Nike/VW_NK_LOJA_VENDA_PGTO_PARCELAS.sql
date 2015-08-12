@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
@@ -57,7 +57,7 @@
 		' '														AGENCIA,
 		' '														BANCO,
 		' '														CONTA_CORRENTE,
-		ZNSLS402.T$NSUA$C										NUMERO_APROVACAO_CARTAO,
+		ABS(ZNSLS402.T$NSUA$C)					NUMERO_APROVACAO_CARTAO,
 		ZNSLS402.T$NUPA$C										PARCELAS_CARTAO,
 		0														VALOR_CANCELADO,
 		' '														CHEQUE_CARTAO,
@@ -194,8 +194,8 @@ SELECT
 		' '														AGENCIA,
 		' '														BANCO,
 		' '														CONTA_CORRENTE,
-		ZNSLS402.T$NSUA$C										NUMERO_APROVACAO_CARTAO,
-		ZNSLS402.T$NUPA$C										PARCELAS_CARTAO,
+		ABS(ZNSLS402.T$NSUA$C)				NUMERO_APROVACAO_CARTAO,
+		ZNSLS402.T$NUPA$C							PARCELAS_CARTAO,
 		0														VALOR_CANCELADO,
 		' '														CHEQUE_CARTAO,
 		' '														NUMERO_LOTE,
