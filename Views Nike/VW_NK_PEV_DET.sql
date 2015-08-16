@@ -1,5 +1,5 @@
-SELECT DISTINCT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
+SELECT
 --**********************************************************************************************************************************************************
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, tdsls401.t$rcd_utc), 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -25,23 +25,22 @@ SELECT DISTINCT
           ltrim(rtrim(tdsls401.t$item)) CD_ITEM,
           tdsls401.t$qoor QT_ITENS,
           tdsls401.t$pric*tdsls401.t$qoor VL_ITEM,																	
-          znsls401.t$vldi$c VL_DESCONTO_INCONDICIONAL,
-          znsls401.t$vlfr$c VL_FRETE_CLIENTE,
+          znsls401.TOT_VLDI                                           VL_DESCONTO_INCONDICIONAL,
+          znsls401.TOT_VLFR                                           VL_FRETE_CLIENTE,
           nvl((select sum(f.t$vlft$c) from baandb.tznfmd630601 f
           where f.t$pecl$c=znsls400.t$pecl$c),0) VL_FRETE_CIA,
           CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END CD_VENDEDOR,
           znsls400.t$idli$c NR_LISTA_CASAMENTO,
           'Aprovados' DS_STATUS_PAGAMENTO,        
-          ' ' DT_PAGAMENTO,                -- **** DESCONSIDERAR - SOMENTE PGTO APROVADOS EST√O NO LN
-          ' ' DS_UTM_PARCEIRO,                  -- **** DESCONSIDERAR - SER¡ EXTRAIDO DO SITE
-          ' ' DS_UTM_MIDIA,                     -- **** DESCONSIDERAR - SER¡ EXTRAIDO DO SITE
-          ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SER¡ EXTRAIDO DO SITE
-          znsls401.t$vlde$c VL_DESPESA_ACESSORIO,
-          -- znsls400.t$vldf$c VL_JUROS,																					
-		  cast((((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c)
+          ' ' DT_PAGAMENTO,                -- **** DESCONSIDERAR - SOMENTE PGTO APROVADOS EST√ÉO NO LN
+          ' ' DS_UTM_PARCEIRO,                  -- **** DESCONSIDERAR - SER√Å EXTRAIDO DO SITE
+          ' ' DS_UTM_MIDIA,                     -- **** DESCONSIDERAR - SER√Å EXTRAIDO DO SITE
+          ' ' DS_UTM_CAMPANHA,                  -- **** DESCONSIDERAR - SER√Å EXTRAIDO DO SITE
+          znsls401.TOT_VLDE                                            VL_DESPESA_ACESSORIO,          
+        cast((((znsls401.t$vlun$c*znsls401.TOT_QTVE)+znsls401.TOT_VLFR-znsls401.TOT_VLDI+znsls401.TOT_VLDE) 
 				/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c as numeric(12,2)) VL_JUROS,															
-		  cast((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c+
-		  (((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c)
+		    cast((znsls401.t$vlun$c*znsls401.TOT_QTVE)+znsls401.TOT_VLFR-znsls401.TOT_VLDI+znsls401.TOT_VLDE+   
+		    (((znsls401.t$vlun$c*znsls401.TOT_QTVE)+znsls401.TOT_VLFR-znsls401.TOT_VLDI+znsls401.TOT_VLDE)      
 				/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c as numeric(18,2)) VL_TOTAL_ITEM,														
           (SELECT Count(lc.t$pono)
            FROM  baandb.ttdsls401601 lc
@@ -67,22 +66,42 @@ SELECT DISTINCT
 	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,												
 	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM,													
 	   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                 						
-	case when znsls401.t$qtve$c<0 then 2 else 1 end IN_CANCELADO									
+  case when znsls401.TOT_QTVE<0 then 2 else 1 end                       IN_CANCELADO			
   
 FROM
         baandb.ttdsls401601 tdsls401,
-        baandb.tznsls401601 znsls401
-		
-				LEFT JOIN baandb.tznsls004601 znsls004 													
-										ON	znsls004.t$ncia$c=znsls401.t$ncia$c
-										AND znsls004.t$uneg$c=znsls401.t$uneg$c
-										AND znsls004.t$pecl$c=znsls401.t$pecl$c
-										AND znsls004.t$sqpd$c=znsls401.t$sqpd$c
-										AND znsls004.t$entr$c=znsls401.t$entr$c
-										AND znsls004.t$sequ$c=znsls401.t$sequ$c										
-										AND znsls004.t$orno$c=znsls401.t$orno$c  						
-										AND znsls004.t$pono$c=znsls401.t$pono$c,											
-		
+	
+		    ( select  a.t$ncia$c,                                  
+                  a.t$uneg$c,
+                  a.t$pecl$c,
+                  a.t$sqpd$c,
+                  a.t$entr$c,
+                  a.t$item$c,
+                  a.t$orno$c,
+                  a.t$pono$c,
+                  a.t$dtep$c,
+                  a.t$vlun$c,
+                  a.t$tpcb$c,
+                  a.t$igar$c,
+                  sum(a.t$qtve$c) TOT_QTVE,
+                  sum(a.t$vlfr$c) TOT_VLFR,
+                  sum(a.t$vldi$c) TOT_VLDI,
+                  sum(a.t$vlde$c) TOT_VLDE
+          from    baandb.tznsls401601 a
+          group by  a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    a.t$item$c,
+                    a.t$orno$c,
+                    a.t$pono$c,
+                    a.t$dtep$c,
+                    a.t$vlun$c,
+                    a.t$tpcb$c,
+                    a.t$igar$c ) znsls401,                    
+          
+          baandb.tznsls004601 znsls004,		
         baandb.ttdsls400601 tdsls400,
         baandb.ttcemm124601 tcemm124,
         baandb.ttcemm030601 tcemm030,
@@ -128,3 +147,9 @@ and	   znsls402.t$ncia$c=znsls401.t$ncia$c
 and    znsls402.t$uneg$c=znsls401.t$uneg$c
 and    znsls402.t$pecl$c=znsls401.t$pecl$c
 and    znsls402.t$sqpd$c=znsls401.t$sqpd$c
+and     znsls004.t$ncia$c=znsls401.t$ncia$c                                     
+and    znsls004.t$uneg$c=znsls401.t$uneg$c
+and     znsls004.t$pecl$c=znsls401.t$pecl$c			
+and     znsls004.t$orno$c=znsls401.t$orno$c  						
+and     znsls004.t$pono$c=znsls401.t$pono$c                                     
+and     tdsls401.t$sqnb = 0                                                     
