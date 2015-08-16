@@ -1,7 +1,7 @@
 SELECT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
--- a tabela ttdsls094 é compartilhada com a 201
+-- a tabela ttdsls094 Ã© compartilhada com a 201
 
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
   AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
@@ -254,10 +254,10 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
   tdsls400.t$sotp CD_TIPO_ORDEM_VENDA 
 
   --INICIO DO FROM
-  
+    
 FROM baandb.tcisli940601 cisli940,
-     baandb.tcisli941601 cisli941,	
-     baandb.tcisli941601 cisli941f 
+     baandb.tcisli941601 cisli941,
+     baandb.tcisli941601 cisli941f
 LEFT JOIN baandb.tcisli943601 ICMS	ON ICMS.t$fire$l=cisli941f.t$fire$l	
      AND	ICMS.t$line$l=cisli941f.t$line$l
      AND ICMS.t$brty$l=1
@@ -270,7 +270,13 @@ LEFT JOIN baandb.tcisli943601 PIS ON PIS.t$fire$l=cisli941f.t$fire$l
 LEFT JOIN baandb.tcisli943601 CSLL ON CSLL.t$fire$l=cisli941f.t$fire$l	
      AND	CSLL.t$line$l=cisli941f.t$line$l
      AND CSLL.t$brty$l=13,
-baandb.tcisli245601 cisli245,
+( select a.t$fire$l,
+         a.t$line$l,
+         max(a.t$slso) t$slso,
+         max(a.t$pono) t$pono
+  from   baandb.tcisli245601 a
+  group by a.t$fire$l, 
+           a.t$line$l ) cisli245,
 baandb.ttdsls401601 tdsls401,
 baandb.tznsls004601 znsls004,	--Origem OV
 baandb.tznsls401601 znsls401,
@@ -287,8 +293,8 @@ baandb.tznsls400601 znsls400,
     znsls402q.t$ncia$c,
     znsls402q.t$uneg$c,
     znsls402q.t$pecl$c,
-    znsls402q.t$sqpd$c) znsls402,	
-baandb.ttdsls400601 tdsls400 
+    znsls402q.t$sqpd$c) znsls402,
+baandb.ttdsls400601 tdsls400
 LEFT JOIN ( select c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE
             from baandb.tcisli245601 c245
             inner join baandb.tcisli941601 c941 on c941.t$fire$l=c245.T$FIRE$L   
@@ -301,10 +307,12 @@ baandb.ttccom130601 endent,
 baandb.ttcibd001601 tcibd001,
 baandb.ttdsls094201 tdsls094    --tabela compartilhada
 WHERE cisli941f.t$fire$l=cisli940.t$fire$l
-  AND cisli245.t$fire$l=cisli941.t$fire$l
+  and cisli941.t$fire$l = cisli940.t$fire$l
+  and  cisli245.t$fire$l=cisli941.t$fire$l
   AND cisli245.t$line$l=cisli941.t$line$l
   AND tdsls401.t$orno = cisli245.t$slso
   AND tdsls401.t$pono = cisli245.t$pono
+  AND tdsls401.t$sqnb = 0
   AND	znsls004.t$orno$c=tdsls401.t$orno	-- Origem OV
   AND	znsls004.t$pono$c=tdsls401.t$pono -- Origem OV
   AND	znsls401.t$ncia$c=znsls004.t$ncia$c	-- Origem OV
@@ -331,5 +339,6 @@ WHERE cisli941f.t$fire$l=cisli940.t$fire$l
         or cisli941.T$fire$L= cisli941f.T$fire$L) 
   and ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
         or cisli941.T$line$L= cisli941f.T$line$l) 
-  and cisli940.t$stat$l IN (5,6) ----Impresso, Lançado  
+  and cisli940.t$stat$l IN (5,6) ----Impresso, LanÃ§ado  
   and cisli940.t$nfes$l IN (1,2,5) --Nenhum, Transmitida, Processada
+  
