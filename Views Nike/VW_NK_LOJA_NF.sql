@@ -398,7 +398,7 @@ FROM  baandb.tcisli940601  cisli940
                 group by cisli245.t$fire$l )  SLI245
            ON SLI245.t$fire$l = cisli940.t$fire$l
            
-    INNER JOIN ( select  MIN(znsls004.t$entr$c)  ENTREGA,
+    LEFT JOIN ( select  MIN(znsls004.t$entr$c)  ENTREGA,
                         znsls004.t$orno$c OV
                 from    baandb.tznsls004601 znsls004
                 group by znsls004.t$orno$c ) SLS004
@@ -425,5 +425,13 @@ FROM  baandb.tcisli940601  cisli940
     LEFT JOIN baandb.ttcmcs966301 tcmcs966
            ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
            
-    WHERE cisli940.t$stat$l IN (5,6,101)
+    WHERE cisli940.t$stat$l IN (2,5,6,101)
     AND   cisli940.t$cnfe$l != ' '
+    AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5
+                  and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
+
+order by REF_FISCAL
