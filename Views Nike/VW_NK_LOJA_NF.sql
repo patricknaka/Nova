@@ -1,4 +1,4 @@
-﻿SELECT DISTINCT
+SELECT DISTINCT
   'NIKE.COM'                FILIAL,                                 --02
   tccom130r.t$fovn$l        CGC_FILIAL_DESTINO,                     --03
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -87,18 +87,18 @@
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_SAIDA_ETR,                          --59
-  ' '                       ENTREGA_ENDERECO,                        --60
-  ' '                       ENTREGA_NUMERO,                          --61
-  ' '                       ENTREGA_COMPLEMENTO,                     --62
-  ' '                       ENTREGA_UF,                              --63
-  ' '                       ENTREGA_CIDADE,                          --64
-  ' '                       ENTREGA_BAIRRO,                          --65
-  ' '                       ENTREGA_CEP,                             --66
-  ' '                       ENTREGA_TELEFONE,                        --67
-  ' '                       ENTREGA_DDD,                             --68
-  ' '                       ENTREGA_DDD_CELULAR,                     --69
-  ' '                       ENTREGA_CELULAR,                         --70
-  ' '                       ENTREGA_NOME_DESTINATARIO,               --71
+  tccom130fat.t$namc        ENTREGA_ENDERECO,                        --60
+  tccom130fat.t$hono        ENTREGA_NUMERO,                          --61
+  tccom130fat.t$bldg        ENTREGA_COMPLEMENTO,                     --62
+  tccom130fat.t$cste        ENTREGA_UF,                              --63
+  tccom139fat.t$dscb$c      ENTREGA_CIDADE,                          --64
+  tccom130fat.t$dist$l      ENTREGA_BAIRRO,                          --65
+  tccom130fat.t$pstc        ENTREGA_CEP,                             --66
+  SUBSTR(tccom130fat.t$telp,3,9)        ENTREGA_TELEFONE,            --67
+  SUBSTR(tccom130fat.t$telp,1,2)        ENTREGA_DDD,                 --68
+  SUBSTR(tccom130fat.t$telx,1,2)        ENTREGA_DDD_CELULAR,         --69
+  SUBSTR(tccom130fat.t$telx,3,9)        ENTREGA_CELULAR,             --70
+  tccom130fat.t$nama          ENTREGA_NOME_DESTINATARIO,             --71
   '0'                       ENTREGA_DEST_COMPR,                      --72
   ' '                       NUMERO_PEDIDO_VENDA,                     --73
   'E'                       TP_MOVTO,                                --74 Criado para separar na tabela as entradas e saídas
@@ -114,6 +114,9 @@ FROM  baandb.ttdrec940601  tdrec940
     LEFT JOIN baandb.ttccom130601 tccom130r
            ON tccom130r.t$cadr=tdrec940.t$sfra$l
            
+    LEFT JOIN baandb.ttccom130601 tccom130fat
+           ON tccom130fat.t$cadr = tdrec940.t$ifad$l
+
     LEFT JOIN ( select  sum(a.t$qnty$l)  QTDE,
                         a.t$fire$l
                 from    baandb.ttdrec941601 a
@@ -126,11 +129,16 @@ FROM  baandb.ttdrec940601  tdrec940
     LEFT JOIN baandb.ttccom966601 tccom966r       
            ON tccom966r.t$comp$d = tccom130t.t$comp$d
     
-    LEFT JOIN baandb.ttccom139601 tccom139r
+    LEFT JOIN baandb.ttccom139301 tccom139r
            ON tccom139r.t$ccty = tccom130t.t$ccty
           AND tccom139r.t$cste = tccom130t.t$cste
           AND tccom139r.t$city = tccom130t.t$ccit
           
+    LEFT JOIN baandb.ttccom139301 tccom139fat
+           ON tccom139fat.t$ccty = tccom130fat.t$ccty
+          AND tccom139fat.t$cste = tccom130fat.t$cste
+          AND tccom139fat.t$city = tccom130fat.t$ccit
+
     LEFT JOIN ( select  a.t$oper$c,
                         a.t$fire$c,
                         a.t$stre$c,
@@ -353,7 +361,7 @@ FROM  baandb.tcisli940601  cisli940
     LEFT JOIN baandb.ttccom966601 tccom966f       
            ON tccom966f.t$comp$d = tccom130ft.t$comp$d
     
-    LEFT JOIN baandb.ttccom139601 tccom139f
+    LEFT JOIN baandb.ttccom139301 tccom139f
            ON tccom139f.t$ccty = tccom130ft.t$ccty
           AND tccom139f.t$cste = tccom130ft.t$cste
           AND tccom139f.t$city = tccom130ft.t$ccit
@@ -387,7 +395,7 @@ FROM  baandb.tcisli940601  cisli940
     LEFT JOIN baandb.ttccom130601 tccom130entr
            ON tccom130entr.t$cadr = cisli940.t$stoa$l
            
-    LEFT JOIN baandb.ttccom139601  tccom139entr
+    LEFT JOIN baandb.ttccom139301  tccom139entr
            ON tccom139entr.t$ccty = tccom130entr.t$ccty
           AND tccom139entr.t$cste = tccom130entr.t$cste
           AND tccom139entr.t$city = tccom130entr.t$ccit
