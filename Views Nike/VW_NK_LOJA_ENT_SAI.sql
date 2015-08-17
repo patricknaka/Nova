@@ -2,10 +2,11 @@ SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
-    SUBSTR(TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE)),7,2)	
+    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		AT time zone 'America/Sao_Paulo') AS DATE), 'YY')
     || TO_CHAR(CISLI940.T$DOCN$L)
-		|| TO_CHAR(CISLI940.T$SERI$L)                         ROMANEIO_PRODUTO,
+		|| TO_CHAR(CISLI940.T$SERI$L)                 ROMANEIO_PRODUTO,
+    
 		'NIKE.COM'												                    FILIAL,	
 		21														                        CODIGO_TAB_PRECO,
 		CISLI940.T$CCFO$L										                  TIPO_ENTRADA_SAIDA,
@@ -61,8 +62,9 @@ AND	  CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
 --***************************************************************************************************************************
 UNION
 SELECT 
-    SUBSTR(TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-        AT time zone 'America/Sao_Paulo') AS DATE)),7,2) 
+
+    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		AT time zone 'America/Sao_Paulo') AS DATE), 'YY')
 		|| TO_CHAR(TDREC940.T$DOCN$L)
 		|| TO_CHAR(TDREC940.T$SERI$L)                         ROMANEIO_PRODUTO,
 		'NIKE.COM'												                    FILIAL,	
