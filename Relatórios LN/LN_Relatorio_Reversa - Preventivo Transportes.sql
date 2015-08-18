@@ -4,7 +4,7 @@ SELECT
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_SOLICITACAO_COLETA,
                               
-    znsls401.t$pecl$c                         Pedido,
+    znsls401.t$pecl$c                         PEDIDO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_PEDIDO,
@@ -22,7 +22,7 @@ SELECT
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_ORDEM_DEVOLUCAO,
 											  
-    znsls401.t$entr$c                         Entrega,
+    znsls401.t$entr$c                         ENTREGA,
     znsls002.t$dsca$c                         TIPO_ENTREGA,
     znsls401.t$lass$c                         ASSUNTO,
     znsls401.t$lmot$c                         Motivo_da_Coleta,
@@ -123,13 +123,13 @@ SELECT
     NVL(znsls401.t$vlfr$c,0)                  VL_TOTAL_NF,
     znsls401.t$vlfr$c                         VL_FRETE_SITE,
     cisli941.t$amnt$l                         VL_TOTAL_ITEM,
-    NVL(znfmd030.t$dsci$c,znmcs002.t$desc$c)  Ocorrencia,
+    NVL(znfmd030.t$dsci$c,znmcs002.t$desc$c)  OCORRENCIA,
 	
     NVL( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
           'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE),
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) )
-                                              Data_da_Ocorrencia,
+                                              DATA_DA_OCORRENCIA,
 --    NULL                                      Status,
     znmcs002.t$desc$c                         STATUS,
     znsls401.t$lcat$c                         CATEGORIA,
@@ -461,7 +461,11 @@ WHERE TRIM(znsls401.t$idor$c) = 'TD'
   AND tdsls094.t$reto in (1, 3)
   AND znsls401.t$itpe$c in (9, 15)
   
---  and znsls401.t$entr$c = '4790512802'
+--  and znsls401.t$entr$c = '5211627202'
+
+--and cisli940.t$fire$l IS NULL
+
+and znsls002.t$tpen$c = 15    -- Reversa
   
 --  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 
 --              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
