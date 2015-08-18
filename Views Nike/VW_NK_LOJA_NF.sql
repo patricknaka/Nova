@@ -441,5 +441,6 @@ FROM  baandb.tcisli940601  cisli940
                   and   znnfe011.t$fire$c = cisli940.t$fire$l
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
+    AND      cisli940.t$fdty$l != 2     --venda sem pedido
 
 order by REF_FISCAL
