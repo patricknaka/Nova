@@ -76,11 +76,18 @@ FROM  baandb.tcisli943601   cisli943
   LEFT JOIN baandb.tcisli940601 cisli940
          ON cisli940.t$fire$l = cisli943.t$fire$l
          
-    INNER JOIN ( select  MIN(cisli245.t$slso)  OV,
+    LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
                         cisli245.t$fire$l
                 from    baandb.tcisli245601 cisli245
                 group by cisli245.t$fire$l )  SLI245
            ON SLI245.t$fire$l = cisli943.t$fire$l
            
- WHERE cisli940.t$stat$l IN (5,6,101)
- AND   cisli940.t$cnfe$l != ' '
+    WHERE cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
+    AND   cisli940.t$cnfe$l != ' '
+    AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5
+                  and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
+   AND      cisli940.t$fdty$l != 2     --venda sem pedido
