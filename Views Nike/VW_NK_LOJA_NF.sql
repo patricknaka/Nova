@@ -57,8 +57,11 @@ SELECT DISTINCT
   ' '                       EMPRESA,                                 --40
   tdrec940.t$cnfe$l         CHAVE_NFE,                               --41
   tdrec940.t$prot$c         PROTOCOLO_AUTORIZACAO_NFE,               --42
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(DT_NFE_REC.AUTORIZADA, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE)
+  CASE WHEN tdrec940.t$sadt$c = TO_DATE('01-01-1970','DD-MM-YYYY') THEN
+      NULL
+  ELSE
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$sadt$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE) END
                             DATA_AUTORIZACAO_NFE,                    --43
   ' '                       GERAR_AUTOMATICO,                        --44
   CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
