@@ -55,8 +55,9 @@ SELECT DISTINCT
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),1,2),' ') DDD_CELULAR,        --24
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),3,13),' ') CELULAR,           --25
     tccom139.t$ibge$l           COD_IBGE,           --26
-    'S'                         TIPO_MOV,
-    SLI940.t$fire$l             REF_FISCAL
+    'S'                         TIPO_MOV,           --27
+    SLI940.t$fire$l             REF_FISCAL,         --28
+    SLI940.t$rcd_utc            DT_ULT_UPDATE       --29
    
 FROM  baandb.ttccom100601 tccom100
 
@@ -83,17 +84,18 @@ FROM  baandb.ttccom100601 tccom100
      
   INNER JOIN (  select  cisli940.t$fire$l,
                         cisli940.t$bpid$l,
-                        cisli940.t$stat$l
+                        cisli940.t$stat$l,
+                        cisli940.t$rcd_utc
                 from    baandb.tcisli940601 cisli940
                 where   exists (  select *
                               from  baandb.tznnfe011601 znnfe011
                               where znnfe011.t$oper$c = 1
                               and   znnfe011.t$fire$c = cisli940.t$fire$l
                               and   znnfe011.t$stfa$c = 5
-                              and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
-              and   TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                          AT time zone 'America/Sao_Paulo') AS DATE)) = TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                          AT time zone 'America/Sao_Paulo') AS DATE))) SLI940
+                              and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))) SLI940
+--              and   TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--                          AT time zone 'America/Sao_Paulo') AS DATE)) = TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--                          AT time zone 'America/Sao_Paulo') AS DATE))) SLI940
           ON SLI940.t$bpid$l = tccom100.t$bpid
          AND SLI940.t$stat$l IN (2,5,6,101)
                           
@@ -156,8 +158,9 @@ SELECT DISTINCT
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),1,2),' ') DDD_CELULAR,        --24
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),3,13),' ') CELULAR,           --25
     tccom139.t$ibge$l           COD_IBGE,           --26
-    'E'                         TIPO_MOV,
-    REC940.t$fire$l             REF_FISCAL
+    'E'                         TIPO_MOV,           --27
+    REC940.t$fire$l             REF_FISCAL,         --28
+    REC940.t$rcd_utc            DT_ULT_UPDATE       --29
    
 FROM  baandb.ttccom100601 tccom100
 
@@ -184,11 +187,12 @@ FROM  baandb.ttccom100601 tccom100
      
   INNER JOIN (    select  tdrec940.t$fire$l,
                           tdrec940.t$bpid$l,
-                          tdrec940.t$stat$l
-                  from    baandb.ttdrec940601 tdrec940
-                  where   TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                          AT time zone 'America/Sao_Paulo') AS DATE)) = TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                          AT time zone 'America/Sao_Paulo') AS DATE)) ) REC940
+                          tdrec940.t$stat$l,
+                          tdrec940.t$rcd_utc
+                  from    baandb.ttdrec940601 tdrec940 ) REC940
+--                  where   TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--                          AT time zone 'America/Sao_Paulo') AS DATE)) = TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--                          AT time zone 'America/Sao_Paulo') AS DATE)) ) REC940
           ON REC940.t$bpid$l = tccom100.t$bpid
          AND REC940.t$stat$l IN (4,5,6)
                           
