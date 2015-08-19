@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -89,5 +89,6 @@ LEFT JOIN (	SELECT 	A.T$FIRE$L,
 WHERE
 			TDREC947.T$NCMP$L=601
 		AND	TDREC947.T$OORG$L=1
-        AND	TDREC940.T$STAT$L IN (4, 5)
+    AND tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
+    AND	tdrec940.t$cnfe$l != ' '
 		AND	TDREC940.T$RFDT$L = 10
