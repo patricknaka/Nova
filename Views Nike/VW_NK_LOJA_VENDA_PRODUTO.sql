@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -94,23 +94,18 @@ LEFT JOIN baandb.tznsls000601 znsls000
 WHERE CISLI245.T$SLCP=601
   AND	CISLI245.T$ORTP=1
   AND	CISLI245.T$KOOR=3
-  AND	CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
-  AND	CISLI940.T$FDTY$L != 14
+  AND	CISLI940.T$STAT$L IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
+  AND	CISLI940.T$FDTY$L NOT IN (2,14)
   AND CISLI941.T$ITEM$L != znsls000.t$itjl$c      -- item juros lojista
   AND CISLI941.T$ITEM$L != znsls000.t$itmd$c      -- item despesa
   AND CISLI941.T$ITEM$L != znsls000.t$itmf$c      -- item frete
-
---		(select a.t$itjl$c 
---				from baandb.tznsls000601 a 
---				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
---		 UNION ALL
---		 select a.t$itmd$c 
---				from baandb.tznsls000601 a 
---				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
---		 UNION ALL
---		 select a.t$itmf$c 
---				from baandb.tznsls000601 a 
---				where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))		
+  AND   cisli940.t$cnfe$l != ' '
+  AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5
+                  and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
 
 --***************************************************************************************************************************
 --				INSTANCIA
@@ -189,4 +184,4 @@ LEFT JOIN BAANDB.TCISLI940601 CISLI940
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
-		AND TDSLS400.T$FDTY$L 	NOT IN (0,14)
+		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)
