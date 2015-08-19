@@ -172,7 +172,7 @@ FROM  baandb.ttdrec940601  tdrec940
            
     WHERE tdrec940.t$stat$l IN (4,5,6)
     AND	  tdrec940.t$cnfe$l != ' '
-    
+
 UNION
 
 SELECT DISTINCT
@@ -282,43 +282,43 @@ SELECT DISTINCT
                             DATA_SAIDA_ETR,                          --59
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
     tccom130entr.t$namc
-  ELSE  ' ' END             ENTREGA_ENDERECO,                        --60
+  ELSE tccom130fat.t$namc  END                            ENTREGA_ENDERECO,                        --60
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       tccom130entr.t$hono 
-  ELSE ' ' END              ENTREGA_NUMERO,                          --61
+  ELSE tccom130fat.t$hono END                             ENTREGA_NUMERO,                          --61
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
        tccom130entr.t$bldg
-  ELSE ' ' END              ENTREGA_COMPLEMENTO,                     --62
+  ELSE tccom130fat.t$bldg END                             ENTREGA_COMPLEMENTO,                     --62
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       tccom130entr.t$cste
-  ELSE ' ' END              ENTREGA_UF,                              --63
+  ELSE tccom130fat.t$cste END                             ENTREGA_UF,                              --63
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       tccom139entr.t$dscb$c
-  ELSE ' ' END              ENTREGA_CIDADE,                          --64
+  ELSE tccom139fat.t$dscb$c END                           ENTREGA_CIDADE,                          --64
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       tccom130entr.t$dist$l
-  ELSE ' ' END              ENTREGA_BAIRRO,                          --65
+  ELSE tccom130fat.t$dist$l END                           ENTREGA_BAIRRO,                          --65
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       tccom130entr.t$pstc
-  ELSE ' ' END              ENTREGA_CEP,                             --66
+  ELSE tccom130fat.t$pstc END                             ENTREGA_CEP,                             --66
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       SUBSTR(tccom130entr.t$telp,3,9)
-  ELSE ' ' END              ENTREGA_TELEFONE,                        --67
+  ELSE SUBSTR(tccom130fat.t$telp,3,9) END                 ENTREGA_TELEFONE,                        --67
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       SUBSTR(tccom130entr.t$telp,1,2)
-  ELSE ' ' END              ENTREGA_DDD,                             --68
+  ELSE SUBSTR(tccom130fat.t$telp,1,2) END                 ENTREGA_DDD,                             --68
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       SUBSTR(tccom130entr.t$telx,1,2)
-  ELSE ' ' END              ENTREGA_DDD_CELULAR,                     --69
+  ELSE SUBSTR(tccom130fat.t$telx,1,2) END                 ENTREGA_DDD_CELULAR,                     --69
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       SUBSTR(tccom130entr.t$telx,3,9)
-  ELSE ' ' END              ENTREGA_CELULAR,                         --70
+  ELSE SUBSTR(tccom130fat.t$telx,3,9) END                 ENTREGA_CELULAR,                         --70
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       tccom130entr.t$nama
-  ELSE ' ' END              ENTREGA_NOME_DESTINATARIO,               --71
+  ELSE tccom130fat.t$nama END                             ENTREGA_NOME_DESTINATARIO,               --71
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       '1'
-  ELSE '0' END              ENTREGA_DEST_COMPR,                      --72
+  ELSE '0' END                                            ENTREGA_DEST_COMPR,                      --72
   CASE WHEN SLS004.ENTREGA = 0 THEN
       TO_CHAR(cisli940.t$docn$l) || cisli940.t$seri$l
   ELSE TO_CHAR(SLS004.ENTREGA) END   
@@ -393,13 +393,21 @@ FROM  baandb.tcisli940601  cisli940
            ON cisli959.t$rscd$l = cisli940.t$rscd$l
            
     LEFT JOIN baandb.ttccom130601 tccom130entr
-           ON tccom130entr.t$cadr = cisli940.t$stoa$l
+           ON tccom130entr.t$cadr = cisli940.t$itoa$l
+    
+    LEFT JOIN baandb.ttccom130601 tccom130fat
+           ON tccom130fat.t$cadr = cisli940.t$stoa$l
            
     LEFT JOIN baandb.ttccom139301  tccom139entr
            ON tccom139entr.t$ccty = tccom130entr.t$ccty
           AND tccom139entr.t$cste = tccom130entr.t$cste
           AND tccom139entr.t$city = tccom130entr.t$ccit
-           
+    
+    LEFT JOIN baandb.ttccom139301  tccom139fat
+           ON tccom139fat.t$ccty = tccom130fat.t$ccty
+          AND tccom139fat.t$cste = tccom130fat.t$cste
+          AND tccom139fat.t$city = tccom130fat.t$ccit
+          
     LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
                         cisli245.t$fire$l
                 from    baandb.tcisli245601 cisli245
@@ -433,7 +441,7 @@ FROM  baandb.tcisli940601  cisli940
     LEFT JOIN baandb.ttcmcs966301 tcmcs966
            ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
            
-    WHERE cisli940.t$stat$l IN (2,5,6,101)
+    WHERE cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
     AND   cisli940.t$cnfe$l != ' '
     AND   exists (select *
                   from  baandb.tznnfe011601 znnfe011
@@ -441,6 +449,6 @@ FROM  baandb.tcisli940601  cisli940
                   and   znnfe011.t$fire$c = cisli940.t$fire$l
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
-    AND      cisli940.t$fdty$l != 2     --venda sem pedido
+   AND      cisli940.t$fdty$l != 2     --venda sem pedido
 
 order by REF_FISCAL
