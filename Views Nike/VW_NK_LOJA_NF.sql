@@ -159,7 +159,7 @@ FROM  baandb.ttdrec940601  tdrec940
                 from    baandb.tbrnfe020601 brnfe020
                 where   brnfe020.t$stat$l = 1 
                 group by brnfe020.t$ncmp$l, brnfe020.t$refi$l) DT_NFE_REC
-           ON DT_NFE_REC.t$ncmp$l = 301
+           ON DT_NFE_REC.t$ncmp$l = 601
           AND DT_NFE_REC.t$refi$l = tdrec940.t$fire$l
           
      LEFT JOIN baandb.ttttxt010601 tttxt010r 
@@ -386,7 +386,7 @@ FROM  baandb.tcisli940601  cisli940
                 from    baandb.tbrnfe020601 brnfe020
                 where   brnfe020.t$stat$l = 1 
                 group by brnfe020.t$ncmp$l, brnfe020.t$refi$l) DT_NFE_FAT
-           ON DT_NFE_FAT.t$ncmp$l = 301
+           ON DT_NFE_FAT.t$ncmp$l = 601
           AND DT_NFE_FAT.t$refi$l = cisli940.t$fire$l
           
     LEFT JOIN baandb.tcisli959601 cisli959
