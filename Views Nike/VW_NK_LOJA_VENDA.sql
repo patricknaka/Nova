@@ -133,7 +133,7 @@ LEFT JOIN (	SELECT	F.T$FIRE$L,
 											
 WHERE
 		CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
-AND 	CISLI940.T$FDTY$L != 14
+AND 	CISLI940.T$FDTY$L NOT IN (2,14)
 
 --***************************************************************************************************************************
 --				COLETA
@@ -346,4 +346,4 @@ LEFT JOIN BAANDB.TCISLI940601 CISLI940
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
-		AND TDSLS400.T$FDTY$L 	NOT IN (0,14)
+		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)
