@@ -5,7 +5,7 @@ SELECT
     TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE), 'YY')
     || TO_CHAR(CISLI940.T$DOCN$L)
-		|| TO_CHAR(CISLI940.T$SERI$L)                 ROMANEIO_PRODUTO,
+		|| TO_CHAR(CISLI940.T$SERI$L)                         ROMANEIO_PRODUTO,
     
 		'NIKE.COM'												                    FILIAL,	
 		21														                        CODIGO_TAB_PRECO,
@@ -54,8 +54,16 @@ LEFT JOIN baandb.ttcmcs966601 tcmcs966
        ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
        
 WHERE
-			CISLI940.T$FDTY$L IN (4,5,9,17,18,19,22,23,26,32,33)
-AND	  CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
+--			CISLI940.T$FDTY$L IN (4,5,9,17,18,19,22,23,26,32,33)
+   	  CISLI940.T$STAT$L IN (2, 5, 6, 101)			-- 2-CANCELADA, 5-IMPRESSO, 6-LANÇADO, 101-ESTORNADA
+AND   cisli940.t$cnfe$l != ' '
+AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1         
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5
+                  and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
+AND      cisli940.t$fdty$l != 2     --venda sem pedido
 			
 --***************************************************************************************************************************
 --				ENTRADA
@@ -118,5 +126,8 @@ LEFT JOIN baandb.ttcmcs966601 tcmcs966
        ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
        
 WHERE
-			TDREC940.T$RFDT$L IN (1,2,4,5,10,26,27,28,32,33,35,36,37,40)
-AND   TDREC940.T$STAT$L IN (4,5)  --Aprovado, Aprovado com Problemas
+--			TDREC940.T$RFDT$L IN (1,2,4,5,10,26,27,28,32,33,35,36,37,40)
+    TDREC940.T$STAT$L IN (4,5,6)  --4-Aprovado, 5-Aprovado com Problemas, 6-estornada
+    AND	  tdrec940.t$cnfe$l != ' '
+
+ORDER BY TIPO_TRANSACAO, REF_FISCAL
