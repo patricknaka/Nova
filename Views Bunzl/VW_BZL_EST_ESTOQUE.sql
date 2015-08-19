@@ -2,7 +2,7 @@
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
       15 CD_CIA,
-			tcemm030.t$euca CD_FILIAL,
+			case when tcemm030.t$euca = ' ' then '1' else tcemm030.t$euca end CD_FILIAL,
 			whinr140.t$cwar CD_DEPOSITO,
 			ltrim(rtrim(whinr140.t$item)) CD_ITEM,
 			tcmcs003.t$tpar$l CD_MODALIDADE,
@@ -98,7 +98,7 @@ AND 	(whinr140.t$qhnd - nvl(Q2.bloc,0)) > 0
 UNION
 
 SELECT  15 CD_CIA,
-        tcemm030.t$euca CD_FILIAL,
+        case when tcemm030.t$euca = ' ' then '1' else tcemm030.t$euca end CD_FILIAL,
         whwmd630.t$cwar CD_DEPOSITO,
         ltrim(rtrim(whwmd630.t$item)) CD_ITEM,
         tcmcs003.t$tpar$l CD_MODALIDADE,
