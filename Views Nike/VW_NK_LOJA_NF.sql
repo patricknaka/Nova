@@ -56,7 +56,7 @@ SELECT DISTINCT
   NVL(tdrec949.t$amnt$l,0)  VALOR_IMPOSTO_AGREGAR,                   --39
   ' '                       EMPRESA,                                 --40
   tdrec940.t$cnfe$l         CHAVE_NFE,                               --41
-  ' '                       PROTOCOLO_AUTORIZACAO_NFE,               --42
+  tdrec940.t$prot$c         PROTOCOLO_AUTORIZACAO_NFE,               --42
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(DT_NFE_REC.AUTORIZADA, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_AUTORIZACAO_NFE,                    --43
@@ -253,16 +253,12 @@ SELECT DISTINCT
 		THEN  2
 	WHEN cisli940.t$fdty$l = 8 
 		THEN 3
-	ELSE 1 END     			FIN_EMISSAO_NFE,                               --50
+	ELSE 1 END     			      FIN_EMISSAO_NFE,                         --50
   'AGUARDANDO CONSULTOR'    REGISTRO_DPEC,                           --51
   ' '                       PIN,                                     --52
-  (SELECT 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(A.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE) 
-   FROM baandb.tbrnfe020601 A
-   WHERE A.t$ncmp$l = cisli940.t$sfcp$l
-   AND A.t$refi$l = cisli940.t$fire$l
-   AND A.t$ioin$l=2)		DATA_REGISTRO_DPEC,                          --53 
+  CASE WHEN SUBSTR(cisli940.t$cnfe$l,35,1) != '1' THEN
+        DPEC.DT
+  ELSE  NULL END           DATA_REGISTRO_DPEC,                       --53
   CASE WHEN cisli940.t$nfes$l = 3 THEN    --Pedido Cancelamento
         cisli940.t$prot$l         
   ELSE ' ' END              PROTOCOLO_CANCELAMENTO_NFE,              --54
@@ -274,7 +270,7 @@ SELECT DISTINCT
    AND A.t$refi$l = cisli940.t$fire$l
    AND A.t$ioin$l=1
    AND A.t$actn$l='IN')      DATA_CONTINGENCIA,                       --55 
-  ' '    					JUSTIFICATIVA_CONTINGENCIA,              --56	É ENVIADO COMO BRANCO
+  ' '    					          JUSTIFICATIVA_CONTINGENCIA,              --56	É ENVIADO COMO BRANCO
   ' '                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS410.DT_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -440,7 +436,20 @@ FROM  baandb.tcisli940601  cisli940
       
     LEFT JOIN baandb.ttcmcs966301 tcmcs966
            ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
-           
+    
+    LEFT JOIN (SELECT A.t$ncmp$l,
+                      A.t$refi$l,
+                      A.t$ioin$l,
+                        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(A.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone 'America/Sao_Paulo') AS DATE) DT
+              FROM    baandb.tbrnfe020601 A 
+              GROUP BY A.t$ncmp$l,
+                       A.t$refi$l,
+                       A.t$ioin$l ) DPEC
+            ON DPEC.t$ncmp$l = cisli940.t$sfcp$l
+           AND DPEC.t$refi$l = cisli940.t$fire$l
+           AND DPEC.t$ioin$l = 2  --retorno
+     
     WHERE cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
     AND   cisli940.t$cnfe$l != ' '
     AND   exists (select *
@@ -450,5 +459,7 @@ FROM  baandb.tcisli940601  cisli940
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l != 2     --venda sem pedido
+   
+--   AND       CISLI940.T$DOCN$L IN (99,177)
 
 order by REF_FISCAL
