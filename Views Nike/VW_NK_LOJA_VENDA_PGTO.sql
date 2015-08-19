@@ -129,9 +129,18 @@ INNER JOIN (SELECT	E.T$FIRE$L,
 LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
 											AND	CISLI940_FAT.T$FDTY$L =	16
 														
-WHERE
-		CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
-AND 	CISLI940.T$FDTY$L != 14
+--WHERE
+--		CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
+--AND 	CISLI940.T$FDTY$L != 14
+    WHERE cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
+    AND   cisli940.t$cnfe$l != ' '
+    AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5
+                  and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
+   AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
 
 --***************************************************************************************************************************
 --				COLETA
@@ -249,9 +258,13 @@ INNER JOIN (SELECT	L.T$FIRE$L,
 
 INNER JOIN  BAANDB.TCISLI940601 CISLI940  ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
 											
+--WHERE
+--		TDREC940.T$STAT$L IN (4, 5)			-- APROVADO, APROVADO COM PROBLEMAS
+--AND 	TDREC940.T$RFDT$L = 10
 WHERE
-		TDREC940.T$STAT$L IN (4, 5)			-- APROVADO, APROVADO COM PROBLEMAS
-AND 	TDREC940.T$RFDT$L = 10
+      tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
+AND	  tdrec940.t$cnfe$l != ' '
+AND 	TDREC940.T$RFDT$L = 10        --10-retorno de mercadoria
 
 --***************************************************************************************************************************
 --				INSTANCIA
@@ -359,4 +372,6 @@ LEFT JOIN BAANDB.TCISLI940601 CISLI940
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
-		AND TDSLS400.T$FDTY$L 	NOT IN (0,14)   --branco, retorno de mercadoria de cliente
+		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)   --branco, venda sem pedido, retorno de mercadoria de cliente
+    
+ORDER BY TP_MOVTO, REF_FISCAL
