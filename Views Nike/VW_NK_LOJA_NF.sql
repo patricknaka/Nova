@@ -110,7 +110,8 @@ SELECT DISTINCT
   tdrec940.t$fire$l         REF_FISCAL,                              --77
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
-                            DT_ULT_ALTERACAO                         --78
+                            DT_ULT_ALTERACAO,                        --78
+  tccom139fat.t$ibge$l         COD_IBGE                                 --79
   
 FROM  baandb.ttdrec940601  tdrec940
 
@@ -214,7 +215,7 @@ SELECT DISTINCT
   ELSE  '0' END             NOTA_IMPRESSA,                          --26
   cisli940.t$cfrn$l         TRANSP_RAZAO_SOCIAL,                    --27
   tccom130ft.t$cste         TRANSP_UF,                              --28
-  tccom139f.t$dsca          TRANSP_CIDADE,                          --29
+  tccom139ft.t$dsca          TRANSP_CIDADE,                          --29
   tccom130ft.t$fovn$l       TRANSP_CGC,                             --30
   tccom966f.t$stin$d        TRANSP_INSCRICAO,                       --31
   tccom130ft.t$namc || ' ' ||
@@ -328,7 +329,8 @@ SELECT DISTINCT
   cisli940.t$fire$l         REF_FISCAL,                              --77
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
-                            DT_ULT_ALTERACAO                         --78
+                            DT_ULT_ALTERACAO,                        --78
+  tccom139c.t$ibge$l        COD_IBGE
   
 FROM  baandb.tcisli940601  cisli940
 
@@ -360,10 +362,20 @@ FROM  baandb.tcisli940601  cisli940
     LEFT JOIN baandb.ttccom966601 tccom966f       
            ON tccom966f.t$comp$d = tccom130ft.t$comp$d
     
+    LEFT JOIN baandb.ttccom139301 tccom139ft
+           ON tccom139ft.t$ccty = tccom130ft.t$ccty
+          AND tccom139ft.t$cste = tccom130ft.t$cste
+          AND tccom139ft.t$city = tccom130ft.t$ccit
+          
     LEFT JOIN baandb.ttccom139301 tccom139f
-           ON tccom139f.t$ccty = tccom130ft.t$ccty
-          AND tccom139f.t$cste = tccom130ft.t$cste
-          AND tccom139f.t$city = tccom130ft.t$ccit
+           ON tccom139f.t$ccty = tccom130f.t$ccty
+          AND tccom139f.t$cste = tccom130f.t$cste
+          AND tccom139f.t$city = tccom130f.t$ccit
+          
+   LEFT JOIN baandb.ttccom139301 tccom139c
+           ON tccom139c.t$ccty = tccom130c.t$ccty
+          AND tccom139c.t$cste = tccom130c.t$cste
+          AND tccom139c.t$city = tccom130c.t$ccit
           
     LEFT JOIN ( select  a.t$oper$c,
                         a.t$fire$c,
