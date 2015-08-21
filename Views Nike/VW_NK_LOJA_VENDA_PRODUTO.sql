@@ -25,7 +25,7 @@ SELECT
 		CAST((CASE CISLI941.T$DQUA$L WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / CISLI941.T$DQUA$L) END) AS NUMERIC(38,4))
                                   CUSTO,
 		'01'													COR_PRODUTO,
-		TCIBD001.T$SIZE$C							TAMANHO,
+		znibd005.t$desc$c							TAMANHO,
     'S'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
     cisli940.t$fire$l             REF_FISCAL,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
@@ -90,7 +90,10 @@ LEFT JOIN (	SELECT 	A.T$FIRE$L,
 
 LEFT JOIN baandb.tznsls000601 znsls000
        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
-                 
+
+LEFT JOIN baandb.tznibd005601 znibd005
+       ON znibd005.t$size$c = TCIBD001.T$SIZE$C
+       
 WHERE CISLI245.T$SLCP=601
   AND	CISLI245.T$ORTP=1
   AND	CISLI245.T$KOOR=3
@@ -134,7 +137,7 @@ SELECT
 		CAST ((CASE ZNSLS401.T$QTVE$C WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / ZNSLS401.T$QTVE$C) END)	AS NUMERIC(38,4))					
                                   CUSTO,
 		'01'													COR_PRODUTO,
-		TCIBD001.T$SIZE$C							TAMANHO,
+		znibd005.t$desc$c							TAMANHO,
     'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
     cisli940.t$fire$l             REF_FISCAL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
@@ -181,7 +184,9 @@ LEFT JOIN ( 	SELECT	A.T$FIRE$L,
 LEFT JOIN BAANDB.TCISLI940601 CISLI940
        ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
        
+LEFT JOIN baandb.tznibd005601 znibd005
+       ON znibd005.t$size$c = TCIBD001.T$SIZE$C       
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
-		AND	TDSLS400.T$HDST		=		35
+--		AND	TDSLS400.T$HDST		=		35
 		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)
