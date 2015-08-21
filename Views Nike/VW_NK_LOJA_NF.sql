@@ -118,8 +118,12 @@ FROM  baandb.ttdrec940601  tdrec940
     LEFT JOIN baandb.ttccom130601 tccom130r
            ON tccom130r.t$cadr=tdrec940.t$sfra$l
            
-    LEFT JOIN baandb.ttccom130601 tccom130fat
-           ON tccom130fat.t$cadr = tdrec940.t$ifad$l
+    LEFT JOIN baandb.ttccom100601 tccom100fat
+           ON tccom100fat.t$bpid = tdrec940.t$bpid$l
+           
+    LEFT JOIN baandb.ttccom130601 tccom130fat           --PN
+--           ON tccom130fat.t$cadr = tdrec940.t$ifad$l
+           ON tccom130fat.t$cadr = tccom100fat.t$cadr
 
     LEFT JOIN ( select  sum(a.t$qnty$l)  QTDE,
                         a.t$fire$l
