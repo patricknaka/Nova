@@ -30,7 +30,8 @@ SELECT DISTINCT
   CASE WHEN tdrec940.t$stat$l = 4 or tdrec940.t$stat$l = 5 THEN
         '1'       -- NF impressa
   ELSE  '0' END                  NOTA_IMPRESSA,                     --26
-  tdrec940.t$cfrn$l              TRANSP_RAZAO_SOCIAL,               --27
+--  tdrec940.t$cfrn$l              TRANSP_RAZAO_SOCIAL,               --27
+  tcmcs080.t$dsca                 TRANSP_RAZAO_SOCIAL,               --27
   NVL(tccom130t.t$cste,' ')      TRANSP_UF,                         --28
   NVL(tccom139r.t$dsca,' ')      TRANSP_CIDADE,                     --29
   NVL(tccom130t.t$fovn$l,' ')    TRANSP_CGC,                        --30
@@ -131,8 +132,12 @@ FROM  baandb.ttdrec940601  tdrec940
                 group by a.t$fire$l ) TDREC941
            ON TDREC941.t$fire$l=tdrec940.t$fire$l
            
+    LEFT JOIN baandb.ttcmcs080601 tcmcs080
+           ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l
+           
     LEFT JOIN baandb.ttccom130601 tccom130t         --transportadora
-           ON tccom130t.t$cadr=tdrec940.t$cfra$l
+--           ON tccom130t.t$cadr=tdrec940.t$cfra$l
+             ON tccom130t.t$cadr = tcmcs080.t$cadr$l
            
     LEFT JOIN baandb.ttccom966601 tccom966r       
            ON tccom966r.t$comp$d = tccom130t.t$comp$d
@@ -180,7 +185,7 @@ FROM  baandb.ttdrec940601  tdrec940
            
     WHERE tdrec940.t$stat$l IN (4,5,6)
     AND	  tdrec940.t$cnfe$l != ' '
-
+    
 UNION
 
 SELECT DISTINCT
@@ -479,6 +484,6 @@ FROM  baandb.tcisli940601  cisli940
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l != 2     --venda sem pedido
    
---   AND       CISLI940.T$DOCN$L IN (99,177)
+
 
 order by REF_FISCAL
