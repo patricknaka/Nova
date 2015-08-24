@@ -2,7 +2,8 @@ SELECT
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
-		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,
+--		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,
+    TO_CHAR(znsls004.t$entr$c)                      TICKET,
 		'NIKE.COM'												              FILIAL,
 		' '														                  TERMINAL,
 		DECODE(ZNSLS402.T$IDMP$C,													--	LN										NIKE
@@ -271,7 +272,8 @@ AND 	TDREC940.T$RFDT$L = 10        --10-retorno de mercadoria
 --***************************************************************************************************************************
 UNION
 SELECT
-		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					  TICKET,
+--		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					  TICKET,
+    TO_CHAR(znsls401.t$entr$c)                        TICKET,
 		'NIKE.COM'												                FILIAL,
 		' '														                    TERMINAL,
 		DECODE(ZNSLS402.T$IDMP$C,													--	LN										NIKE
