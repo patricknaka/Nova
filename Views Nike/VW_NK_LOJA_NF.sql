@@ -14,7 +14,7 @@ SELECT DISTINCT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_SAIDA_NF,                          --12
-  tdrec940.t$opor$l         NATUREZA_OPERACAO_CODIGO,               --13
+  tdrec940.t$opfc$l         CODIGO_FISCAL_OPERACAO,                 --13
   1                         RECEBIMENTO,                            --14
   tdrec940.t$nwgt$l         PESO_LIQUIDO,                           --15
   tdrec940.t$gwgt$l         PESO_BRUTO,                             --16
@@ -186,6 +186,7 @@ FROM  baandb.ttdrec940601  tdrec940
     WHERE tdrec940.t$stat$l IN (4,5,6)
     AND	  tdrec940.t$cnfe$l != ' '
     
+--    and tdrec940.t$prot$c = ' '
 UNION
 
 SELECT DISTINCT
@@ -206,7 +207,7 @@ SELECT DISTINCT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_SAIDA_NF,                          --12
-  cisli940.t$ccfo$l         NATUREZA_OPERACAO_CODIGO,               --13
+  cisli940.t$ccfo$l         CODIGO_FISCAL_OPERACAO,                 --13
   0                         RECEBIMENTO,                            --14
   cisli940.t$nwgt$l         PESO_LIQUIDO,                           --15
   cisli940.t$gwgt$l         PESO_BRUTO,                             --16
@@ -483,7 +484,5 @@ FROM  baandb.tcisli940601  cisli940
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l != 2     --venda sem pedido
-   
-
 
 order by REF_FISCAL
