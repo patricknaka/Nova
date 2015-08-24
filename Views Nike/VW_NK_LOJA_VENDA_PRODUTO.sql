@@ -2,7 +2,8 @@ SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
-		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,	
+--		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,	
+    znsls004.t$entr$c                 TICKET,
 		'NIKE.COM'												FILIAL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
@@ -115,7 +116,8 @@ WHERE CISLI245.T$SLCP=601
 --***************************************************************************************************************************
 UNION
 SELECT
-		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,	
+--		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,	
+    ZNSLS401.T$ENTR$C                 TICKET,
 		'NIKE.COM'												FILIAL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
@@ -188,5 +190,5 @@ LEFT JOIN baandb.tznibd005601 znibd005
        ON znibd005.t$size$c = TCIBD001.T$SIZE$C       
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
---		AND	TDSLS400.T$HDST		=		35
+		AND	TDSLS400.T$HDST		=		35
 		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)
