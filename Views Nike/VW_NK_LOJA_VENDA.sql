@@ -4,7 +4,7 @@ SELECT
 --***************************************************************************************************************************
 		'NIKE.COM'								FILIAL,
 --		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,
-    znsls401.t$entr$c         TICKET,
+    TO_CHAR(znsls401.t$entr$c)         TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		nvl(to_char(ZNSLS400.T$ICLF$C),' ')							CPF_CGC,		-- VERIFICAR FORMATAÇÃO
@@ -151,7 +151,7 @@ LEFT JOIN (	SELECT	F.T$FIRE$L,
 UNION
 SELECT
 		'NIKE.COM'												FILIAL,
-		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,
+		TDREC940.T$DOCN$L || TDREC940.T$SERI$L				TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		nvl(to_char(ZNSLS400.T$ICLF$C),' ')										CPF_CGC,		-- VERIFICAR FORMATAÇÃO
@@ -259,7 +259,7 @@ UNION
 SELECT
 		'NIKE.COM'												FILIAL,
 --		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
-    znsls401.t$entr$c                 TICKET,
+    TO_CHAR(znsls401.t$entr$c)                 TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		nvl(to_char(ZNSLS400.T$ICLF$C),' ')										CPF_CGC,		-- VERIFICAR FORMATAÇÃO
