@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
@@ -6,7 +6,7 @@
 		' '														LANCAMENTO_CAIXA,
 		'NIKE.COM'												FILIAL,		
 		ZNSLS402.T$NUPA$C										PARCELA,
-		DECODE(znsls402.t$cccd$c,
+		DECODE(ZNSLS402.T$IDAD$C,
 			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
 			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
 			3,	'01',                                                       				-- 3	Amex                            01- AMERICAN EXPRESS
@@ -66,7 +66,8 @@
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
 		' '												ID_DOCUMENTO_ECF,
-		ZNSLS402.T$PECL$C || ZNSLS402.T$SQPD$C								TICKET,
+--		ZNSLS402.T$PECL$C || ZNSLS402.T$SQPD$C								TICKET,
+    TO_CHAR(ZNSLS004.T$ENTR$C)         TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
     'S'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
@@ -155,7 +156,6 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
-		
 --***************************************************************************************************************************
 --				COLETA
 --***************************************************************************************************************************
@@ -165,7 +165,7 @@ SELECT
 		' '														LANCAMENTO_CAIXA,
 		'NIKE.COM'												FILIAL,		
 		ZNSLS402.T$NUPA$C										PARCELA,
-		DECODE(znsls402.t$cccd$c,
+		DECODE(ZNSLS402.T$IDAD$C,
 			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
 			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
 			3,	'01',                                                       				-- 3	Amex                            01- AMERICAN EXPRESS
@@ -294,7 +294,7 @@ SELECT
 		' '														LANCAMENTO_CAIXA,
 		'NIKE.COM'												FILIAL,		
 		ZNSLS402.T$NUPA$C										PARCELA,
-		DECODE(znsls402.t$cccd$c,
+		DECODE(ZNSLS402.T$IDAD$C,
 			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
 			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
 			3,	'01',                                                       				-- 3	Amex                            01- AMERICAN EXPRESS
@@ -344,7 +344,8 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
 		' '														ID_DOCUMENTO_ECF,
-		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
+--		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
+    TO_CHAR(znsls401.t$entr$c)             TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
     'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
