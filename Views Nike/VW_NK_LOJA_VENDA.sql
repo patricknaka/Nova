@@ -3,7 +3,8 @@ SELECT
 --				SAIDA
 --***************************************************************************************************************************
 		'NIKE.COM'								FILIAL,
-		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,
+--		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,
+    znsls401.t$entr$c         TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		nvl(to_char(ZNSLS400.T$ICLF$C),' ')							CPF_CGC,		-- VERIFICAR FORMATAÇÃO
@@ -257,7 +258,8 @@ AND 	TDREC940.T$RFDT$L = 10        --10-retorno de mercadoria
 UNION
 SELECT
 		'NIKE.COM'												FILIAL,
-		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
+--		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
+    znsls401.t$entr$c                 TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		nvl(to_char(ZNSLS400.T$ICLF$C),' ')										CPF_CGC,		-- VERIFICAR FORMATAÇÃO
