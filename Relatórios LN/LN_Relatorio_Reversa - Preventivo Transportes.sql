@@ -1,8 +1,13 @@
 SELECT 
   DISTINCT
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+    znsls401.t$itpe$c,
+    CASE WHEN znsls401.t$itpe$c = 15 THEN   --REVERSA
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                                              DATA_SOLICITACAO_COLETA,
+    WHEN  znsls401.t$itpe$c = 9 THEN        --POSTAGEM
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(POSTAGEM.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE NULL END                             DATA_SOL_COLETA_POSTAGEM,
                               
     znsls401.t$pecl$c                         PEDIDO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
@@ -28,9 +33,9 @@ SELECT
     znsls401.t$lmot$c                         Motivo_da_Coleta,
 
 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_ORDEM_DEV.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_PEDIDO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                                              DATA_CANCELAMENTO,
+                                              DATA_CANC_PEDIDO,
     CASE WHEN znsls409.t$lbrd$c = 1 
            THEN 'Sim' -- FORÇADO
          ELSE   'Não' -- NÃO FORÇADO
@@ -146,7 +151,7 @@ SELECT
     tdsls094.t$dsca,
     ZNSLS401.T$ORNO$C,
     cisli940.t$fire$l                         REF_FISCAL,
-    CANC_COLETA.DATA_OCORR                    DATA_CANCELAMENTO,
+    CANC_COLETA.DATA_OCORR                    DATA_CANC_COLETA,
     REC_COLETA.DATA_OCORR                     RETORNO_RDV,
     cisli940.t$cnfe$l                         CHAVE_DANFE
   
@@ -330,8 +335,8 @@ INNER JOIN baandb.tznsls400301 znsls400
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
-                    znsls410.t$entr$c,
-                    znsls410.t$sqpd$c,
+--                    znsls410.t$entr$c
+--                    znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR,
                     MAX(znsls410.t$dtpr$c) DATA_DTPR,
                     MAX(znsls410.t$dtcd$c) DATA_DTCD
@@ -339,14 +344,33 @@ INNER JOIN baandb.tznsls400301 znsls400
               where znsls410.t$poco$c = 'COS'
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
-                    znsls410.t$pecl$c,
-                    znsls410.t$entr$c,
-                    znsls410.t$sqpd$c ) SOLIC_COLETA
+                    znsls410.t$pecl$c ) SOLIC_COLETA
+--                    znsls410.t$entr$c,
+--                    znsls410.t$sqpd$c ) SOLIC_COLETA
         ON SOLIC_COLETA.t$ncia$c = znsls401.t$ncia$c
        AND SOLIC_COLETA.t$uneg$c = znsls401.t$uneg$c
        AND SOLIC_COLETA.t$pecl$c = znsls401.t$pecl$c
-       AND SOLIC_COLETA.t$entr$c = znsls401.t$entr$c
-       AND SOLIC_COLETA.t$sqpd$c = znsls401.t$sqpd$c
+--       AND SOLIC_COLETA.t$entr$c = znsls401.t$entr$c
+--       AND SOLIC_COLETA.t$sqpd$c = znsls401.t$sqpd$c
+
+ LEFT JOIN ( select znsls410.t$ncia$c,
+                    znsls410.t$uneg$c,
+                    znsls410.t$pecl$c,
+--                    znsls410.t$entr$c,
+--                    znsls410.t$sqpd$c,
+                    MAX(znsls410.t$dtoc$c) DATA_OCORR
+               from baandb.tznsls410301 znsls410
+              where znsls410.t$poco$c = 'POS'
+           group by znsls410.t$ncia$c,
+                    znsls410.t$uneg$c,
+                    znsls410.t$pecl$c ) POSTAGEM
+--                    znsls410.t$entr$c,
+--                    znsls410.t$sqpd$c ) POSTAGEM
+        ON POSTAGEM.t$ncia$c = znsls401.t$ncia$c
+       AND POSTAGEM.t$uneg$c = znsls401.t$uneg$c
+       AND POSTAGEM.t$pecl$c = znsls401.t$pecl$c
+--       AND POSTAGEM.t$entr$c = znsls401.t$entr$c
+--       AND POSTAGEM.t$sqpd$c = znsls401.t$sqpd$c
        
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -355,7 +379,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
                from baandb.tznsls410301 znsls410
-              where znsls410.t$poco$c = 'CAN'
+              where znsls410.t$poco$c = 'CPC'
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
@@ -404,17 +428,17 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
                from baandb.tznsls410301 znsls410
-              where znsls410.t$poco$c = 'CAN'    --CANCELADO
+              where znsls410.t$poco$c = 'CAN'      --PEDIDO CANCELADO
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
                     znsls410.t$entr$c,
-                    znsls410.t$sqpd$c ) CANC_ORDEM_DEV
-        ON CANC_ORDEM_DEV.t$ncia$c = znsls401.t$ncia$c
-       AND CANC_ORDEM_DEV.t$uneg$c = znsls401.t$uneg$c
-       AND CANC_ORDEM_DEV.t$pecl$c = znsls401.t$pecl$c
-       AND CANC_ORDEM_DEV.t$entr$c = znsls401.t$entr$c
-       AND CANC_ORDEM_DEV.t$sqpd$c = znsls401.t$sqpd$c
+                    znsls410.t$sqpd$c ) CANC_PEDIDO
+        ON CANC_PEDIDO.t$ncia$c = znsls401.t$ncia$c
+       AND CANC_PEDIDO.t$uneg$c = znsls401.t$uneg$c
+       AND CANC_PEDIDO.t$pecl$c = znsls401.t$pecl$c
+       AND CANC_PEDIDO.t$entr$c = znsls401.t$entr$c
+       AND CANC_PEDIDO.t$sqpd$c = znsls401.t$sqpd$c
        
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -456,17 +480,19 @@ INNER JOIN baandb.tznsls400301 znsls400
  LEFT JOIN baandb.ttdipu001301 tdipu001
         ON tdipu001.t$item = tcibd001.t$item
               
-WHERE TRIM(znsls401.t$idor$c) = 'TD'
-  AND znsls401.t$qtve$c < 0
-  AND tdsls094.t$reto in (1, 3)
-  AND znsls401.t$itpe$c in (9, 15)
+WHERE TRIM(znsls401.t$idor$c) = 'TD'  -- Troca / Devolução
+  AND znsls401.t$qtve$c < 0           -- Devolução
+  AND tdsls094.t$reto in (1, 3)       -- Ordem Devolução, Ordem Devolução Rejeitada
+  AND znsls401.t$itpe$c in (9, 15)    -- Postagem, Reversa
   
---  and znsls401.t$entr$c = '5211627202'
+--  and znsls401.t$pecl$c IN ('72931808','71178599')
 
 --and cisli940.t$fire$l IS NULL
 
-and znsls002.t$tpen$c = 15    -- Reversa
+--and znsls002.t$tpen$c = 15    -- Reversa
   
+--and CANC_PEDIDO.DATA_OCORR IS NOT NULL
+
 --  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 
 --              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 --                AT time zone 'America/Sao_Paulo') AS DATE))
@@ -485,5 +511,5 @@ and znsls002.t$tpen$c = 15    -- Reversa
 --  AND znfmd001.t$fili$c IN (:Filial)
 --  AND znsls401.t$itpe$c IN (:TipoEntrega)
   
-ORDER BY DATA_SOLICITACAO_COLETA, DATA_PEDIDO, PEDIDO
+ORDER BY DATA_SOL_COLETA_POSTAGEM, DATA_PEDIDO, PEDIDO
 
