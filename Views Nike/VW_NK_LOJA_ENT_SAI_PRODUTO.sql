@@ -17,7 +17,8 @@
     2														                  TIPO_TRANSACAO,     --Saídas
     cisli940.t$fire$l                             REF_FISCAL,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO
+		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO,
+    tcibd001.t$mdfb$c           MOD_FABR_ITEM
     
 FROM  BAANDB.TCISLI940601	CISLI940
 INNER JOIN	BAANDB.TCISLI941601 CISLI941	ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
@@ -64,7 +65,8 @@ SELECT
     1														                  TIPO_TRANSACAO,   --Entradas
     tdrec940.t$fire$l                             REF_FISCAL,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO
+		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO,
+    tcibd001.t$mdfb$c           MOD_FABR_ITEM
     
 FROM  BAANDB.TTDREC940601	TDREC940
 
