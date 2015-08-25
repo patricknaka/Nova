@@ -1,6 +1,5 @@
 SELECT 
   DISTINCT
-    znsls401.t$itpe$c,
     CASE WHEN znsls401.t$itpe$c = 15 THEN   --REVERSA
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -53,18 +52,23 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTCD, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_RETORNO_PROMETIDA,
-    EXPEDICAO.NOME_TRANSP                     NOME_TRANSP_ENTREGA,
-    NVL(cisli940.t$cfrn$l,
-    ( SELECT Trim(A.T$NTRA$C)
-        FROM BAANDB.TZNSLS410301 A
-       WHERE A.T$NCIA$C = ZNSLS401.T$NCIA$C
-         AND A.T$UNEG$C = ZNSLS401.T$UNEG$C
-         AND A.T$PECL$C = ZNSLS401.T$PECL$C
-         AND A.T$SQPD$C = ZNSLS401.T$SQPD$C
-         AND A.T$ENTR$C = ZNSLS401.T$ENTR$C
-         AND A.T$NTRA$C != ' '
-         AND ROWNUM = 1 ) )                   Nome_Transportadora_Coleta,
---    tcmcs080.t$dsca                           Nome_Transportadora_Coleta,
+    CASE WHEN EXPEDICAO.NOME_TRANSP IS NULL THEN
+      VENDA_TRANSP.t$dsca
+    ELSE
+      EXPEDICAO.NOME_TRANSP END               NOME_TRANSP_ENTREGA,
+      
+    CASE WHEN tcmcs080.t$dsca IS NULL THEN
+        NVL(cisli940.t$cfrn$l,
+        ( SELECT Trim(A.T$NTRA$C)
+            FROM BAANDB.TZNSLS410301 A
+           WHERE A.T$NCIA$C = ZNSLS401.T$NCIA$C
+             AND A.T$UNEG$C = ZNSLS401.T$UNEG$C
+             AND A.T$PECL$C = ZNSLS401.T$PECL$C
+             AND A.T$SQPD$C = ZNSLS401.T$SQPD$C
+             AND A.T$ENTR$C = ZNSLS401.T$ENTR$C
+             AND A.T$NTRA$C != ' '
+             AND ROWNUM = 1 ) )                   
+    ELSE tcmcs080.t$dsca END                  Nome_Transportadora_Coleta,
     Trim(tcmcs080.t$seak)                     APELIDO_TRANSP_COLETA,
     NVL(tccom130transp.t$fovn$l,                   
           ( SELECT Trim(A.T$FOVT$C)
@@ -214,7 +218,7 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND ZNSLS409.t$entr$c = znsls401.t$entr$c
     
  LEFT JOIN baandb.tcisli245301 cisli245
-        ON cisli245.t$slso = znsls004.t$orno$c
+        ON cisli245.t$slso = znsls004.t$orno$c        -- OV de Devolução
        AND cisli245.t$pono = znsls004.t$pono$c
        
  LEFT JOIN baandb.ttdsls401301  tdsls401
@@ -227,7 +231,7 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND tdrec947.t$oorg$l = 1
        
  LEFT JOIN baandb.tcisli940301 cisli940
-        ON cisli940.t$fire$l = cisli245.t$fire$l
+        ON cisli940.t$fire$l = cisli245.t$fire$l        --Nota de Retorno de Mercadoria ao Cliente
                   
  LEFT JOIN baandb.tcisli941301 cisli941
         ON cisli941.t$fire$l = cisli245.t$fire$l
@@ -461,7 +465,7 @@ INNER JOIN baandb.tznsls400301 znsls400
 --       AND EXPEDICAO.t$entr$c = znsls401.t$entr$c
 --       AND EXPEDICAO.t$sqpd$c = znsls401.t$sqpd$c
               
- LEFT JOIN baandb.ttcmcs080301 tcmcs080
+ LEFT JOIN baandb.ttcmcs080301 tcmcs080           --Transportadora da Coleta
         ON tcmcs080.t$cfrw = cisli940.t$cfrw$l
         
  LEFT JOIN baandb.ttccom130301 tccom130transp
@@ -479,7 +483,54 @@ INNER JOIN baandb.tznsls400301 znsls400
      
  LEFT JOIN baandb.ttdipu001301 tdipu001
         ON tdipu001.t$item = tcibd001.t$item
-              
+    
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    min(a.t$sqpd$c) t$sqpd$c,
+                    min(a.t$entr$c) t$entr$c
+             from   baandb.tznsls401301 a
+             where  a.t$idor$c = 'LJ'
+             group by a.t$ncia$c, 
+                      a.t$uneg$c,
+                      a.t$pecl$c ) VENDA_ENTR
+        ON  VENDA_ENTR.t$ncia$c = znsls401.t$ncia$c
+       AND  VENDA_ENTR.t$uneg$c = znsls401.t$uneg$c
+       AND  VENDA_ENTR.t$pecl$c = znsls401.t$pecl$c
+ 
+  LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    min(a.t$orno$c) t$orno$c,
+                    min(a.t$pono$c) t$pono$c
+             from   baandb.tznsls004301 a
+             group by a.t$ncia$c, 
+                      a.t$uneg$c,
+                      a.t$pecl$c,
+                      a.t$sqpd$c,
+                      a.t$entr$c ) VENDA_OV
+        ON  VENDA_OV.t$ncia$c = znsls401.t$ncia$c
+       AND  VENDA_OV.t$uneg$c = znsls401.t$uneg$c
+       AND  VENDA_OV.t$pecl$c = znsls401.t$pecl$c
+       AND  VENDA_OV.t$sqpd$c = VENDA_ENTR.t$sqpd$c
+       AND  VENDA_OV.t$entr$c = VENDA_ENTR.t$entr$c
+       
+  LEFT JOIN ( select  a.t$slso,
+                      a.t$pono,
+                      max(a.t$fire$l) t$fire$l
+              from    baandb.tcisli245301 a
+              group by  a.t$slso, a.t$pono ) SLI245
+         ON SLI245.t$slso = VENDA_OV.t$orno$c
+        AND SLI245.t$pono = VENDA_OV.t$pono$c
+ 
+  LEFT JOIN baandb.tcisli940301 VENDA_REF
+         ON VENDA_REF.t$fire$l = SLI245.t$fire$l
+         
+  LEFT JOIN baandb.ttcmcs080301  VENDA_TRANSP
+         ON VENDA_TRANSP.t$cfrw = VENDA_REF.t$cfrw$l
+ 
 WHERE TRIM(znsls401.t$idor$c) = 'TD'  -- Troca / Devolução
   AND znsls401.t$qtve$c < 0           -- Devolução
   AND tdsls094.t$reto in (1, 3)       -- Ordem Devolução, Ordem Devolução Rejeitada
