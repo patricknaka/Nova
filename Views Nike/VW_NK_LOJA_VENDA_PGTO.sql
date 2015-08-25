@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
@@ -7,24 +7,24 @@
 		'NIKE.COM'												              FILIAL,
 		''														                  TERMINAL,
 		DECODE(ZNSLS402.T$IDMP$C,													--	LN										NIKE
-				1,	'08',                                                           --1	Cartão de Crédito						08 - CARTAO DE CREDITO TEF
-				2,	'11',                                                           --2	Boleto B2C (BV)							11 - BOLETO BANCARIO
-				3,	'  ',                                                           --3	Boleto B2B Spot							' ' - Não existe
-				4,	'13',                                                           --4	Vale (VA)								13 - VOUCHER
-				5,	'12',                                                           --5	Debito/Transferência (BV)				12 - TRANSFERENCIA BANCARIA
-				8,	'  ',                                                           --8	Boleto à Prazo B2B (PZ)					' ' - Não existe
-				9,	'11',                                                           --9	Boleto a prazo Atacado (PZ)				11 - BOLETO BANCARIO
-				10,	'11',                                                           --10	Boleto à vista Atacado (BV)			11 - BOLETO BANCARIO
-				11, '  ',                                                           --11	Pagamento Complementar				' ' - Não existe
-				12, '09',                                                           --12	Cartão de Débito (DB)				09 - CARTAO DE DEBITO TEF
-				13, '  ',                                                           --13	Pagamento Antecipado				' ' - Não existe
-				15,	'  ')										                COD_FORMA_PGTO,     --15	BNDES								' ' - Não existe
+				1,	'A',                                                           --1	Cartão de Crédito						A - CARTAO DE CREDITO POS 
+				2,	'D',                                                           --2	Boleto B2C (BV)							J - DUPLICATA
+				3,	'D',                                                           --3	Boleto B2B Spot							J - DUPLICATA
+				4,	'1',                                                           --4	Vale (VA)								    R - VALE PRODUTO
+				5,	'5',                                                           --5	Debito/Transferência (BV)		5 - TRANSFERENCIA BANCARIA
+				8,	'D',                                                           --8	Boleto à Prazo B2B (PZ)					' ' - Não existe
+				9,	'D',                                                           --9	Boleto a prazo Atacado (PZ)				' ' - Não existe
+				10,	'D',                                                           --10	Boleto à vista Atacado (BV)			' ' - Não existe
+				11, '  ',                                                          --11	Pagamento Complementar				' ' - Não existe
+				12, '5',                                                           --12	Cartão de Débito (DB)				E - CARTAO DE DEBITO
+				13, '  ',                                                          --13	Pagamento Antecipado				' ' - Não existe
+				15,	'  ')										  COD_FORMA_PGTO,                      --15	BNDES								' ' - Não existe			
 		
 		''														                  CAIXA_VENDEDOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		TO_CHAR(ZNSLS004.T$ENTR$C)										  NUMERO_CUPOM_FISCAL,
-		ZNSLS401.T$VLDI$C										            DESCONTO_PGTO,
+		ZNSLS401.T$VLDI$C	* (-1)  					            DESCONTO_PGTO,
 		ZNSLS402.T$VLMR$C										            TOTAL_VENDA,
 		''														                  CANCELADO_FISCAL,
 		ZNSLS402.T$NUPA$C										            PARCELA,
