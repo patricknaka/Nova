@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -23,7 +23,8 @@
 		' '														                  INDICA_ENTREGA_FUTURA,
     		tdrec940.t$fire$l                            REF_FISCAL,
     		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 	    DT_ULT_ALTERACAO
+		AT time zone 'America/Sao_Paulo') AS DATE) 	    DT_ULT_ALTERACAO,
+    tcibd001.t$mdfb$c                               MOD_FABR_ITEM
 
 FROM
 			BAANDB.TTDREC947601	TDREC947
