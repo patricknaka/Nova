@@ -24,7 +24,7 @@ SELECT
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		TO_CHAR(ZNSLS004.T$ENTR$C)										  NUMERO_CUPOM_FISCAL,
 --		ZNSLS401.T$VLDI$C	* (-1)  					            DESCONTO_PGTO,
-    cisli940.t$fght$l * (1)                         DESCONTO_PGTO,
+    cisli940.t$fght$l * (-1)                         DESCONTO_PGTO,
 --		ZNSLS402.T$VLMR$C	                              TOTAL_VENDA,
     cisli940.t$amnt$l - cisli940.t$fght$l           TOTAL_VENDA,
 		''														                  CANCELADO_FISCAL,
