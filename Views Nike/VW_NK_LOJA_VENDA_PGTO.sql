@@ -2,7 +2,6 @@ SELECT
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
---		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,
     TO_CHAR(znsls004.t$entr$c)                      TICKET,
 		'NIKE.COM'												              FILIAL,
 		''														                  TERMINAL,
@@ -24,7 +23,8 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		TO_CHAR(ZNSLS004.T$ENTR$C)										  NUMERO_CUPOM_FISCAL,
-		ZNSLS401.T$VLDI$C	* (-1)  					            DESCONTO_PGTO,
+--		ZNSLS401.T$VLDI$C	* (-1)  					            DESCONTO_PGTO,
+    cisli940.t$fght$l * (1)                         DESCONTO_PGTO,
 --		ZNSLS402.T$VLMR$C	                              TOTAL_VENDA,
     cisli940.t$amnt$l - cisli940.t$fght$l           TOTAL_VENDA,
 		''														                  CANCELADO_FISCAL,
@@ -131,9 +131,7 @@ INNER JOIN (SELECT	E.T$FIRE$L,
 LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
 											AND	CISLI940_FAT.T$FDTY$L =	16
 														
---WHERE
---		CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
---AND 	CISLI940.T$FDTY$L != 14
+
     WHERE cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
     AND   cisli940.t$cnfe$l != ' '
     AND   exists (select *
@@ -144,6 +142,7 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
 
+--    AND cisli940.t$fire$l IN ('F00000280', 'F00000317')
 --***************************************************************************************************************************
 --				COLETA
 --***************************************************************************************************************************
