@@ -15,10 +15,10 @@ SELECT
     tfacp200.t$ninv                              TRANSACAO,
     tfacp200.t$ninv                              TITULO,
     tfacp200.t$schn                              NRO_PROGRAMACAO,
-    tfacp200.t$docd                              DATA_EMISSAO,
+    tfacp200b.t$docd                             DATA_EMISSAO,
     tfacp201.t$payd                              DATA_VENCTO,
-    tfacp200.t$docn$l                            NUME_NF,
-    tfacp200.t$seri$l                            SERI_NF,
+    tfacp200b.t$docn$l                           NUME_NF,
+    tfacp200b.t$seri$l                           SERI_NF,
     tfcmg103.t$amnt                              VALOR_TITULO,
     tfcmg101.t$amnt-                             
     tfcmg101.t$ramn$l                            VALO_PAGA,
@@ -89,6 +89,11 @@ FROM       baandb.ttfcmg103301 tfcmg103
  LEFT JOIN baandb.ttfacp200301 tfacp200
         ON tfacp200.t$tdoc = tfcmg103.t$ttyp
        AND tfacp200.t$docn = tfcmg103.t$docn
+
+ LEFT JOIN baandb.ttfacp200301 tfacp200b
+        ON tfacp200b.t$ttyp = tfacp200.t$ttyp
+       AND tfacp200b.t$ninv = tfacp200.t$ninv
+       AND tfacp200b.t$lino = 0
        
  LEFT JOIN baandb.ttfacp201301  tfacp201
         ON tfacp201.t$ttyp = tfacp200.t$ttyp
