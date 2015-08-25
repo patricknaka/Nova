@@ -2,7 +2,6 @@ SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
---		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,	
     znsls004.t$entr$c                 TICKET,
 		'NIKE.COM'												FILIAL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
@@ -10,7 +9,7 @@ SELECT
 		CISLI941.T$LINE$L										ITEM,
 		''														CODIGO_BARRA,
 		CISLI941.T$DQUA$L										QTDE,
-		CISLI941.T$PRIC$L										PRECO_LIQUIDO,
+		CISLI941.T$PRIC$L	- cisli941.t$tldm$l									PRECO_LIQUIDO,
 		CISLI941.T$TLDM$L										DESCONTO_ITEM,
 		''														ID_VENDEDOR,
 		''														TERMINAL,
@@ -112,12 +111,12 @@ WHERE CISLI245.T$SLCP=601
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
 
+--  AND cisli940.t$fire$l IN ('F00000269', 'F00000317')
 --***************************************************************************************************************************
 --				INSTANCIA
 --***************************************************************************************************************************
 UNION
 SELECT
---		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,	
     ZNSLS401.T$ENTR$C                 TICKET,
 		'NIKE.COM'												FILIAL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn

@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -15,13 +15,21 @@
 		0									COMISSAO,
 		0									DESCONTO,
 		ZNSLS401.T$QTVE$C							QTDE_TOTAL,
-		CASE WHEN CISLI940.T$FDTY$L=15			
-		 THEN CISLI940_FAT.T$AMNT$L			
-		 ELSE CISLI940.T$AMNT$L	END						VALOR_TIKET,
+    
+		CASE WHEN CISLI940.T$FDTY$L=15 THEN
+          CISLI940_FAT.T$GAMT$L - CISLI941.T$TLDM$L_FAT
+    ELSE  CISLI940.T$GAMT$L - CISLI941.T$TLDM$L END       VALOR_TIKET,
+--		 THEN CISLI940_FAT.T$AMNT$L			
+--		 ELSE CISLI940.T$AMNT$L	END						VALOR_TIKET,
+
 		ZNSLS402.T$VLMR$C							VALOR_PAGO,
+    
 		CASE WHEN CISLI940.T$FDTY$L=15
-		 THEN CISLI940_FAT.T$AMNT$L + CISLI941.T$TLDM$L_FAT
-		 ELSE CISLI940.T$AMNT$L + CISLI941.T$TLDM$L END				VALOR_VENDA_BRUTA,
+		 THEN CISLI940_FAT.T$GAMT$L - CISLI941.T$TLDM$L_FAT
+		 ELSE CISLI940.T$GAMT$L - CISLI941.T$TLDM$L END				VALOR_VENDA_BRUTA,    
+--		 THEN CISLI940_FAT.T$AMNT$L + CISLI941.T$TLDM$L_FAT
+--		 ELSE CISLI940.T$AMNT$L + CISLI941.T$TLDM$L END				VALOR_VENDA_BRUTA,
+     
 		0									VALOR_TROCA,
 		0									QTDE_TROCA_TOTAL,
 		'' 									TICKET_IMPRESSO,
@@ -144,6 +152,8 @@ LEFT JOIN (	SELECT	F.T$FIRE$L,
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
+   
+--   AND cisli940.t$fire$l IN ('F00000269', 'F00000305', 'F00000317')
 --***************************************************************************************************************************
 --				COLETA
 --***************************************************************************************************************************
@@ -163,7 +173,7 @@ SELECT
 		0														DESCONTO,
 		0														QTDE_TOTAL,
 		(TDREC940.T$TFDA$L + TDREC940.T$FGHT$L)*-1				VALOR_TIKET,
-		TDREC940.T$TFDA$L*-1									VALOR_PAGO,
+		TDREC940.T$TFDA$L*-1									            VALOR_PAGO,
 		(TDREC940.T$TFDA$L + TDREC940.T$FGHT$L)*-1				VALOR_VENDA_BRUTA,
 		(TDREC940.T$TFDA$L + TDREC940.T$FGHT$L)*-1				VALOR_TROCA,
 		ZNSLS401.T$QTVE$C							QTDE_TROCA_TOTAL,					--ALT2
@@ -258,7 +268,6 @@ AND 	TDREC940.T$RFDT$L = 10        --10-retorno de mercadoria
 UNION
 SELECT
 		'NIKE.COM'												FILIAL,
---		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
     TO_CHAR(znsls401.t$entr$c)                 TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
