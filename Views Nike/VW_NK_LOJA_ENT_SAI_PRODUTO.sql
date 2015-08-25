@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -28,6 +28,10 @@ INNER JOIN	BAANDB.TTCIBD001601	TCIBD001	ON	TCIBD001.T$ITEM		=	CISLI941.T$ITEM$L
 LEFT JOIN	BAANDB.TTCIBD004601	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
 											AND	TCIBD004.T$BPID		=	' '
 											AND	TCIBD004.T$ITEM		=	CISLI941.T$ITEM$L
+                      
+LEFT JOIN baandb.tznsls000601 znsls000
+       ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+                 
 --WHERE
 --			CISLI940.T$FDTY$L IN (4,5,9,17,18,19,22,23,26,32,33)
 --AND	  CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO			
@@ -40,7 +44,9 @@ AND   exists (select *
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
 AND      cisli940.t$fdty$l != 2     --venda sem pedido			
-			
+AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
+AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
+AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS			
 			
 			
 
@@ -77,10 +83,17 @@ INNER JOIN	BAANDB.TTCIBD001601	TCIBD001	ON	TCIBD001.T$ITEM		=	TDREC941.T$ITEM$L
 LEFT JOIN	BAANDB.TTCIBD004601	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
 											AND	TCIBD004.T$BPID		=	' '
 											AND	TCIBD004.T$ITEM		=	TDREC941.T$ITEM$L
+                      
+LEFT JOIN baandb.tznsls000601 znsls000
+       ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+       
 --WHERE
 --			TDREC940.T$RFDT$L IN (1,2,4,5,10,26,27,28,32,33,35,36,37,40)
 --AND   TDREC940.T$STAT$L IN (4,5)    --APROVADO, APROVADO COM PROBLEMAS
 WHERE TDREC940.T$STAT$L IN (4,5,6)  --4-Aprovado, 5-Aprovado com Problemas, 6-estornada
   AND	tdrec940.t$cnfe$l != ' '
+  AND tdrec941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
+  AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
+  AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS			
   
   ORDER BY TIPO_TRANSACAO, REF_FISCAL
