@@ -20,11 +20,11 @@
   CASE WHEN tdrec942.t$amnt$l = 0 THEN
     0
   ELSE tdrec942.t$base$l END    BASE_IMPOSTO,             --11
-  ' '                           AGREGA_APOS_ENCARGO,      --12
-  ' '                           AGREGA_APOS_DESCONTO,     --13
-  ' '                           CTB_LANCAMENTO_FINANCEIRO,--14
-  ' '                           CTB_ITEM_FINANCEIRO,      --15
-  ' '                           EMPRESA,                  --16
+  ''                           AGREGA_APOS_ENCARGO,      --12
+  ''                           AGREGA_APOS_DESCONTO,     --13
+  ''                           CTB_LANCAMENTO_FINANCEIRO,--14
+  ''                           CTB_ITEM_FINANCEIRO,      --15
+  ''                           EMPRESA,                  --16
   'E'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
   tdrec940.t$fire$l             REF_FISCAL,               --18
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
@@ -61,11 +61,11 @@ SELECT  DISTINCT
   CASE WHEN cisli943.t$amnt$l = 0 THEN
     0
   ELSE cisli943.t$base$l END    BASE_IMPOSTO,             --11
-  ' '                           AGREGA_APOS_ENCARGO,      --12
-  ' '                           AGREGA_APOS_DESCONTO,     --13
-  ' '                           CTB_LANCAMENTO_FINANCEIRO,--14
-  ' '                           CTB_ITEM_FINANCEIRO,      --15
-  ' '                           EMPRESA,                  --16
+  ''                           AGREGA_APOS_ENCARGO,      --12
+  ''                           AGREGA_APOS_DESCONTO,     --13
+  ''                           CTB_LANCAMENTO_FINANCEIRO,--14
+  ''                           CTB_ITEM_FINANCEIRO,      --15
+  ''                           EMPRESA,                  --16
   'S'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
   cisli940.t$fire$l             REF_FISCAL,               --18
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 

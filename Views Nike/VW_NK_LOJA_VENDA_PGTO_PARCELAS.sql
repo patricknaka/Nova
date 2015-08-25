@@ -1,9 +1,9 @@
-SELECT
+﻿SELECT
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
-		' '														TERMINAL,
-		' '														LANCAMENTO_CAIXA,
+		''														TERMINAL,
+		''														LANCAMENTO_CAIXA,
 		'NIKE.COM'												FILIAL,		
 		ZNSLS402.T$NUPA$C										PARCELA,
 		DECODE(ZNSLS402.T$IDAD$C,
@@ -19,7 +19,7 @@ SELECT
 			19,	'03',                                                       				-- 19	Extra Visa                      03 - VISA CREDITO
 			11,	'03',                                                       				-- 11	Ponto Frio Visa                 03 - VISA CREDITO
 			8,	'04',                                                       				-- 8	Ponto Frio Mastercard           04 - MASTERCARD
-			10,	'  ',                                                       				-- 10	Cartão Pão de Açúcar            
+			10,	'11',                                                       				-- 10	Cartão Pão de Açúcar            
 			7, 	'  ',                                                       				-- 7	Aura                            
 			37,	'08',                                                       				-- 37	Elo                             08 - ELO CREDITO
 			43,	'  ',                                                       				-- 43	Primeira Compra                 
@@ -53,19 +53,19 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$PVEN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
-		' '														MOEDA,
-		' '														AGENCIA,
-		' '														BANCO,
-		' '														CONTA_CORRENTE,
+		''														MOEDA,
+		''														AGENCIA,
+		''														BANCO,
+		''														CONTA_CORRENTE,
 		ABS(ZNSLS402.T$NSUA$C)					NUMERO_APROVACAO_CARTAO,
 		ZNSLS402.T$NUPA$C										PARCELAS_CARTAO,
 		0														VALOR_CANCELADO,
-		' '														CHEQUE_CARTAO,
-		' '														NUMERO_LOTE,
+		''														CHEQUE_CARTAO,
+		''														NUMERO_LOTE,
 		0														TROCO,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
-		' '												ID_DOCUMENTO_ECF,
+		''												ID_DOCUMENTO_ECF,
 --		ZNSLS402.T$PECL$C || ZNSLS402.T$SQPD$C								TICKET,
     TO_CHAR(ZNSLS004.T$ENTR$C)         TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
@@ -161,8 +161,8 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
 --***************************************************************************************************************************
 UNION
 SELECT
-		' '														TERMINAL,
-		' '														LANCAMENTO_CAIXA,
+		''														TERMINAL,
+		''														LANCAMENTO_CAIXA,
 		'NIKE.COM'												FILIAL,		
 		ZNSLS402.T$NUPA$C										PARCELA,
 		DECODE(ZNSLS402.T$IDAD$C,
@@ -178,7 +178,7 @@ SELECT
 			19,	'03',                                                       				-- 19	Extra Visa                      03 - VISA CREDITO
 			11,	'03',                                                       				-- 11	Ponto Frio Visa                 03 - VISA CREDITO
 			8,	'04',                                                       				-- 8	Ponto Frio Mastercard           04 - MASTERCARD
-			10,	'  ',                                                       				-- 10	Cartão Pão de Açúcar            
+			10,	'11',                                                       				-- 10	Cartão Pão de Açúcar            
 			7, 	'  ',                                                       				-- 7	Aura                            
 			37,	'08',                                                       				-- 37	Elo                             08 - ELO CREDITO
 			43,	'  ',                                                       				-- 43	Primeira Compra                 
@@ -199,19 +199,19 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L+1, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
-		' '														MOEDA,
-		' '														AGENCIA,
-		' '														BANCO,
-		' '														CONTA_CORRENTE,
+		''														MOEDA,
+		''														AGENCIA,
+		''														BANCO,
+		''														CONTA_CORRENTE,
 		ABS(ZNSLS402.T$NSUA$C)				NUMERO_APROVACAO_CARTAO,
 		ZNSLS402.T$NUPA$C							PARCELAS_CARTAO,
 		0														VALOR_CANCELADO,
-		' '														CHEQUE_CARTAO,
-		' '														NUMERO_LOTE,
+		''														CHEQUE_CARTAO,
+		''														NUMERO_LOTE,
 		0														TROCO,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
-		' '														ID_DOCUMENTO_ECF,
+		''														ID_DOCUMENTO_ECF,
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,												
@@ -290,8 +290,8 @@ AND 	TDREC940.T$RFDT$L = 10        --10-retorno de mercadoria
 --***************************************************************************************************************************
 UNION
 SELECT
-		' '														TERMINAL,
-		' '														LANCAMENTO_CAIXA,
+		''														TERMINAL,
+		''														LANCAMENTO_CAIXA,
 		'NIKE.COM'												FILIAL,		
 		ZNSLS402.T$NUPA$C										PARCELA,
 		DECODE(ZNSLS402.T$IDAD$C,
@@ -307,7 +307,7 @@ SELECT
 			19,	'03',                                                       				-- 19	Extra Visa                      03 - VISA CREDITO
 			11,	'03',                                                       				-- 11	Ponto Frio Visa                 03 - VISA CREDITO
 			8,	'04',                                                       				-- 8	Ponto Frio Mastercard           04 - MASTERCARD
-			10,	'  ',                                                       				-- 10	Cartão Pão de Açúcar            
+			10,	'11',                                                       				-- 10	Cartão Pão de Açúcar            
 			7, 	'  ',                                                       				-- 7	Aura                            
 			37,	'08',                                                       				-- 37	Elo                             08 - ELO CREDITO
 			43,	'  ',                                                       				-- 43	Primeira Compra                 
@@ -331,19 +331,19 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C+1, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
-		' '														MOEDA,
-		' '														AGENCIA,
-		' '														BANCO,
-		' '														CONTA_CORRENTE,
+		''														MOEDA,
+		''														AGENCIA,
+		''														BANCO,
+		''														CONTA_CORRENTE,
 		ZNSLS402.T$NSUA$C										NUMERO_APROVACAO_CARTAO,
 		ZNSLS402.T$NUPA$C										PARCELAS_CARTAO,
 		0														VALOR_CANCELADO,
-		' '														CHEQUE_CARTAO,
-		' '														NUMERO_LOTE,
+		''														CHEQUE_CARTAO,
+		''														NUMERO_LOTE,
 		0														TROCO,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
-		' '														ID_DOCUMENTO_ECF,
+		''														ID_DOCUMENTO_ECF,
 --		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
     TO_CHAR(znsls401.t$entr$c)             TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 

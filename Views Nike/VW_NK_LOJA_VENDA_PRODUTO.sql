@@ -1,4 +1,4 @@
-SELECT
+﻿SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -8,17 +8,17 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
 		CISLI941.T$LINE$L										ITEM,
-		' '														CODIGO_BARRA,
+		''														CODIGO_BARRA,
 		CISLI941.T$DQUA$L										QTDE,
 		CISLI941.T$PRIC$L										PRECO_LIQUIDO,
 		CISLI941.T$TLDM$L										DESCONTO_ITEM,
-		' '														ID_VENDEDOR,
-		' '														TERMINAL,
+		''														ID_VENDEDOR,
+		''														TERMINAL,
 		LTRIM(RTRIM(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM))) 					PRODUTO,				-- Estamos usando a tabela de código alternativo de item mas ainda esperamos a resposta dos consultores para confirmar se será usado este conveito na Nike
 		0														ITEM_EXCLUIDO,
 		0														QTDE_BRINDE,
 		0														NÃO_MOVIMENTA_ESTOQUE,
-		' '														INDICA_ENTREGA_FUTURA,
+		''														INDICA_ENTREGA_FUTURA,
 		0														QTDE_CANCELADA,
 		NVL(Q_IPI.T$RATE$L,0)									IPI,
 		NVL(Q_ICMS.T$RATE$L,0)									ALIQUOTA,
@@ -122,17 +122,17 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
 		ZNSLS401.T$SEQU$C										ITEM,
-		' '														CODIGO_BARRA,
+		''														CODIGO_BARRA,
 		ZNSLS401.T$QTVE$C										QTDE,
 		ZNSLS401.T$VLUN$C										PRECO_LIQUIDO,
 		ZNSLS401.T$VLDI$C										DESCONTO_ITEM,
-		' '														ID_VENDEDOR,
-		' '														TERMINAL,
+		''														ID_VENDEDOR,
+		''														TERMINAL,
 		LTRIM(RTRIM(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM))) 					PRODUTO,				-- Estamos usando a tabela de código alternativo de item mas ainda esperamos a resposta dos consultores para confirmar se será usado este conveito na Nike
 		0														ITEM_EXCLUIDO,
 		0														QTDE_BRINDE,
-		0														NÃO_MOVIMENTA_ESTOQUE,
-		' '														INDICA_ENTREGA_FUTURA,
+		0 													NÃO_MOVIMENTA_ESTOQUE,
+		''														INDICA_ENTREGA_FUTURA,
 		0														QTDE_CANCELADA,
 		0														IPI,
 		0														ALIQUOTA,

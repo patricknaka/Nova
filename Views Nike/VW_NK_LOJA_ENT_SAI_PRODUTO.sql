@@ -1,4 +1,4 @@
-SELECT
+﻿SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -10,7 +10,7 @@ SELECT
 		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))					PRODUTO,
 		'01'													                COR_PRODUTO,
 		TCIBD001.T$SIZE$C										          TAMANHO,
-		' '														                CODIGO_BARRA,
+		''														                CODIGO_BARRA,
 		CISLI941.T$AMNT$L										          VALOR ,
 		CISLI941.T$PRIC$L										          PRECO1,
 		CISLI941.T$DQUA$L										          QTDE_ITEM,
@@ -57,7 +57,7 @@ SELECT
 		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))					PRODUTO,
 		'01'													                COR_PRODUTO,
 		TCIBD001.T$SIZE$C										          TAMANHO,
-		' '														                CODIGO_BARRA,
+		''														                CODIGO_BARRA,
 		TDREC941.T$TAMT$L										          VALOR ,
 		TDREC941.T$PRIC$L										          PRECO1,
 		TDREC941.T$QNTY$L										          QTDE_ITEM,

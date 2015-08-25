@@ -1,4 +1,4 @@
-SELECT DISTINCT
+﻿SELECT DISTINCT
   'NIKE.COM'                FILIAL,                                 --02
   tccom130r.t$fovn$l        CGC_FILIAL_DESTINO,                     --03
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -6,7 +6,7 @@ SELECT DISTINCT
                             EMISSAO,                                --04
   TDREC941.QTDE             QTDE_TOTAL,                             --05
   tdrec940.t$tfda$l         VALOR_TOTAL,                            --06
-  ' '                       CGC_CPF,                                --07
+  ''                       CGC_CPF,                                --07
   tdrec940.t$fovn$l         COD_CLIFOR,                             --08
   cast(NVL(tttxt010r.t$text,' ') as varchar(100))        OBS,                --09
   tdrec940.t$seri$l         SERIE_NF,                               --10
@@ -19,8 +19,8 @@ SELECT DISTINCT
   tdrec940.t$nwgt$l         PESO_LIQUIDO,                           --15
   tdrec940.t$gwgt$l         PESO_BRUTO,                             --16
   0                         VOLUMES,                                --17
-  ' '                       TIPO_VOLUME,                            --18
-  ' '                       MARCA_VOLUME,                           --19
+  ''                       TIPO_VOLUME,                            --18
+  ''                       MARCA_VOLUME,                           --19
   tdrec940.t$fght$l         FRETE,                                  --20
   tdrec940.t$insr$l         SEGURO,                                 --21
   0                         FRETE_A_PAGAR,                          --22 'NÃO FOI MODELADO NO LN'
@@ -32,10 +32,10 @@ SELECT DISTINCT
   ELSE  '0' END                  NOTA_IMPRESSA,                     --26
 --  tdrec940.t$cfrn$l              TRANSP_RAZAO_SOCIAL,               --27
   tcmcs080.t$dsca                 TRANSP_RAZAO_SOCIAL,               --27
-  NVL(tccom130t.t$cste,' ')      TRANSP_UF,                         --28
-  NVL(tccom139r.t$dsca,' ')      TRANSP_CIDADE,                     --29
-  NVL(tccom130t.t$fovn$l,' ')    TRANSP_CGC,                        --30
-  NVL(tccom966r.t$stin$d,' ')    TRANSP_INSCRICAO,                  --31
+  NVL(tccom130t.t$cste,'')      TRANSP_UF,                         --28
+  NVL(tccom139r.t$dsca,'')      TRANSP_CIDADE,                     --29
+  NVL(tccom130t.t$fovn$l,'')    TRANSP_CGC,                        --30
+  NVL(tccom966r.t$stin$d,'')    TRANSP_INSCRICAO,                  --31
   tccom130t.t$namc || ' ' ||
   tccom130t.t$hono || ' ' ||
   tccom130t.t$namd               TRANSP_ENDERECO,                   --32
@@ -52,10 +52,10 @@ SELECT DISTINCT
   CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
     '1'
   ELSE '0' END              NOTA_CANCELADA,                          --36
-  ' '                       INDICA_CONSUMIDOR_FINAL,                 --37
-  ' '                       TIPO_ORIGEM,                             --38
+  ''                       INDICA_CONSUMIDOR_FINAL,                 --37
+  ''                       TIPO_ORIGEM,                             --38
   NVL(tdrec949.t$amnt$l,0)  VALOR_IMPOSTO_AGREGAR,                   --39
-  ' '                       EMPRESA,                                 --40
+  ''                       EMPRESA,                                 --40
   tdrec940.t$cnfe$l         CHAVE_NFE,                               --41
   tdrec940.t$prot$c         PROTOCOLO_AUTORIZACAO_NFE,               --42
   CASE WHEN tdrec940.t$sadt$c = TO_DATE('01-01-1970','DD-MM-YYYY') THEN
@@ -64,7 +64,7 @@ SELECT DISTINCT
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$sadt$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE) END
                             DATA_AUTORIZACAO_NFE,                    --43
-  ' '                       GERAR_AUTOMATICO,                        --44
+  ''                       GERAR_AUTOMATICO,                        --44
   CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
     '49'
   ELSE '5' END              STATUS_NFE,                              --45
@@ -72,21 +72,21 @@ SELECT DISTINCT
   CASE WHEN tdrec940.t$nfel$l = 1 THEN
     '0'
   ELSE '99' END             LOG_STATUS_NFE,                          --46      
-  '      '                  MOTIVO_CANCELAMENTO_NFE,                 --47
-  ' '                       PRIORIZACAO,                             --48
+  ''                  MOTIVO_CANCELAMENTO_NFE,                 --47
+  ''                       PRIORIZACAO,                             --48
   SUBSTR(tdrec940.t$cnfe$l,35,1) TIPO_EMISSAO_NFE,                   --49
   CASE WHEN tdrec940.t$rfdt$l IN (6,7)
 		THEN  2
 	WHEN tdrec940.t$rfdt$l = 8 
 		THEN 3
 	ELSE 1 END 				FIN_EMISSAO_NFE,                         --50	CONSIDERANDO NOTAS FISCAIS DE DEVOLUÇÃO COMO "TIPO NORMAL"
-  ' '    					REGISTRO_DPEC,                           --51	HOJE É EXPORTADO COMO NULL
-  ' '                       PIN,                                     --52
+  ''    					REGISTRO_DPEC,                           --51	HOJE É EXPORTADO COMO NULL
+  ''                       PIN,                                     --52
   NULL                      DATA_REGISTRO_DPEC,                      --53 	NO RECEBIMENTO NÃO TEMOS ESTA DATA
-  ' '                       PROTOCOLO_CANCELAMENTO_NFE,              --54
+  ''                       PROTOCOLO_CANCELAMENTO_NFE,              --54
   NULL                      DATA_CONTINGENCIA,                       --55 	NO RECEBIMENTO NÃO TEMOS ESTA DATA
-  'AGUARDANDO CONSULTOR'    JUSTIFICATIVA_CONTINGENCIA,              --56
-  ' '                       OBS_INTERESSE_FISCO,                     --57
+  ''    JUSTIFICATIVA_CONTINGENCIA,              --56
+  ''                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$odat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
@@ -104,7 +104,7 @@ SELECT DISTINCT
   SUBSTR(tccom130fat.t$telx,3,9)        ENTREGA_CELULAR,             --70
   tccom130fat.t$nama          ENTREGA_NOME_DESTINATARIO,             --71
   '0'                       ENTREGA_DEST_COMPR,                      --72
-  ' '                       NUMERO_PEDIDO_VENDA,                     --73
+  ''                       NUMERO_PEDIDO_VENDA,                     --73
   'E'                       TP_MOVTO,                                --74 Criado para separar na tabela as entradas e saídas
   tdrec940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
   tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL,               --76
@@ -199,9 +199,9 @@ SELECT DISTINCT
   cisli940.t$amnt$l         VALOR_TOTAL,                            --06
   CASE WHEN cisli940.t$fdty$l = 1 or cisli940.t$fdty$l = 14 THEN
     tccom130c.t$fovn$l
-  ELSE ' ' END              CGC_CPF,                                --07
+  ELSE '' END              CGC_CPF,                                --07
   tccom130c.t$fovn$l        COD_CLIFOR,                             --08
-  cast(NVL(tttxt010f.t$text,' ') as varchar(100))         OBS,      --09
+  cast(NVL(tttxt010f.t$text,'') as varchar(100))         OBS,      --09
   cisli940.t$seri$l         SERIE_NF,                               --10
   cisli940.t$docn$l         NF_NUMERO,                              --11
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -212,8 +212,8 @@ SELECT DISTINCT
   cisli940.t$nwgt$l         PESO_LIQUIDO,                           --15
   cisli940.t$gwgt$l         PESO_BRUTO,                             --16
   NVL(FMD630.VOLUMES,SLI941.QTDE)     VOLUMES,                      --17
-  ' '                       TIPO_VOLUME,                            --18
-  ' '                       MARCA_VOLUME,                           --19
+  ''                       TIPO_VOLUME,                            --18
+  ''                       MARCA_VOLUME,                           --19
   cisli940.t$fght$l         FRETE,                                  --20
   cisli940.t$insr$l         SEGURO,                                 --21
   0                         FRETE_A_PAGAR,                          --22 'AGUARDANDO CONSULTOR'
@@ -243,16 +243,16 @@ SELECT DISTINCT
   CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
     '1'
   ELSE '0' END              NOTA_CANCELADA,                          --36
-  ' '                       INDICA_CONSUMIDOR_FINAL,                 --37
-  ' '                       TIPO_ORIGEM,                             --38
+  ''                       INDICA_CONSUMIDOR_FINAL,                 --37
+  ''                       TIPO_ORIGEM,                             --38
   NVL(cisli942.t$amnt$l,0)  VALOR_IMPOSTO_AGREGAR,                   --39
-  ' '                       EMPRESA,                                 --40
+  ''                       EMPRESA,                                 --40
   cisli940.t$cnfe$l         CHAVE_NFE,                               --41
   cisli940.t$prot$l         PROTOCOLO_AUTORIZACAO_NFE,               --42
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(DT_NFE_FAT.AUTORIZADA, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_AUTORIZACAO_NFE,                    --43
-  ' '                       GERAR_AUTOMATICO,                        --44
+  ''                       GERAR_AUTOMATICO,                        --44
   CASE WHEN cisli940.t$stat$l = 2 THEN    --CANCELADO
     '49'
   ELSE '5' END              STATUS_NFE,                              --45
@@ -261,21 +261,21 @@ SELECT DISTINCT
     '0'
   ELSE '99' END             LOG_STATUS_NFE,                          --46      
   cisli959.t$rsds$l         MOTIVO_CANCELAMENTO_NFE,                 --47
-  ' '                       PRIORIZACAO,                             --48
+  ''                       PRIORIZACAO,                             --48
   SUBSTR(cisli940.t$cnfe$l,35,1)    TIPO_EMISSAO_NFE,                --49
     CASE WHEN cisli940.t$fdty$l IN (6,7)
 		THEN  2
 	WHEN cisli940.t$fdty$l = 8 
 		THEN 3
 	ELSE 1 END     			      FIN_EMISSAO_NFE,                         --50
-  'AGUARDANDO CONSULTOR'    REGISTRO_DPEC,                           --51
-  ' '                       PIN,                                     --52
+  ''    REGISTRO_DPEC,                           --51
+  ''                       PIN,                                     --52
   CASE WHEN SUBSTR(cisli940.t$cnfe$l,35,1) != '1' THEN
         DPEC.DT
   ELSE  NULL END           DATA_REGISTRO_DPEC,                       --53
   CASE WHEN cisli940.t$nfes$l = 3 THEN    --Pedido Cancelamento
         cisli940.t$prot$l         
-  ELSE ' ' END              PROTOCOLO_CANCELAMENTO_NFE,              --54
+  ELSE '' END              PROTOCOLO_CANCELAMENTO_NFE,              --54
   (SELECT 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MIN(A.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE) 
@@ -284,8 +284,8 @@ SELECT DISTINCT
    AND A.t$refi$l = cisli940.t$fire$l
    AND A.t$ioin$l=1
    AND A.t$actn$l='IN')      DATA_CONTINGENCIA,                       --55 
-  ' '    					          JUSTIFICATIVA_CONTINGENCIA,              --56	É ENVIADO COMO BRANCO
-  ' '                       OBS_INTERESSE_FISCO,                     --57
+  ''    					          JUSTIFICATIVA_CONTINGENCIA,              --56	É ENVIADO COMO BRANCO
+  ''                       OBS_INTERESSE_FISCO,                     --57
   '0'                       TRANSP_PF_PJ,                            --58
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS410.DT_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)

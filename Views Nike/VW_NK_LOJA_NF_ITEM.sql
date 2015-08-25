@@ -1,7 +1,7 @@
 ﻿SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
-    ' '                         CODIGO_BARRA,             --03
+    ''                         CODIGO_BARRA,             --03
     tdrec941.t$tamt$l           VALOR,                    --04
     tdrec941.t$qnty$l           QTDE_ITEM,                --05
     TO_CHAR(tdrec940.t$docn$l,'000000000')           
@@ -17,7 +17,7 @@
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
     tdrec941.t$addc$l           DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
-    nvl(tttxt010r.t$text,' ')   OBS_ITEM,                 --17
+    nvl(tttxt010r.t$text,'')   OBS_ITEM,                 --17
     ORIGEM.DESCR                TRIBUT_ORIGEM,            --18
     CASE WHEN REC942.BASE_ICMS = tdrec941.t$tamt$l THEN
       '00'
@@ -28,12 +28,12 @@
       ELSE '90'   END           TRIBUT_ICMS,              --19
     tdrec941.t$opfc$l           CODIGO_FISCAL_OPERACAO,   --20
     tdrec941.t$frat$l           CLASSIF_FISCAL,           --21
-    ' '                         INDICADOR_CFOP,           --22    VERIFICAR
-    ' '                         ID_EXCECAO_IMPOSTO,       --23
-    ' '                         REFERENCIA,               --24
-    ' '                         REFERENCIA_ITEM,          --25
-    ' '                         REFERENCIA_PEDIDO,        --26
-    ' '                         CONTA_CONTABIL,           --27
+    ''                         INDICADOR_CFOP,           --22    VERIFICAR
+    ''                         ID_EXCECAO_IMPOSTO,       --23
+    ''                         REFERENCIA,               --24
+    ''                         REFERENCIA_ITEM,          --25
+    ''                         REFERENCIA_PEDIDO,        --26
+    ''                         CONTA_CONTABIL,           --27
     '0'                         NAO_SOMA_VALOR,           --28
     tdrec941.t$gexp$l           VALOR_ENCARGOS,           --29
     0                           VALOR_DESCONTOS,          --30
@@ -128,7 +128,7 @@ UNION
 SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
-    ' '                         CODIGO_BARRA,             --03
+    ''                         CODIGO_BARRA,             --03
     cisli941.t$gamt$l           VALOR,                    --04
     cisli941.t$dqua$l           QTDE_ITEM,                --05
     TO_CHAR(cisli940.t$docn$l,'000000000')           
@@ -144,7 +144,7 @@ SELECT DISTINCT
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
     cisli941.t$ldam$l           DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
-    nvl(tttxt010r.t$text,' ')   OBS_ITEM,                 --17
+    nvl(tttxt010r.t$text,'')   OBS_ITEM,                 --17
     ORIGEM.DESCR                TRIBUT_ORIGEM,            --18
     CASE WHEN SLI943.BASE_ICMS = cisli941.t$amnt$l THEN
       '00'
@@ -155,12 +155,12 @@ SELECT DISTINCT
       ELSE '90'   END           TRIBUT_ICMS,              --19
     cisli941.t$ccfo$l           CODIGO_FISCAL_OPERACAO,   --20
     cisli941.t$frat$l           CLASSIF_FISCAL,           --21
-    ' '                         INDICADOR_CFOP,           --22    VERIFICAR
-    ' '                         ID_EXCECAO_IMPOSTO,       --23
-    ' '                         REFERENCIA,               --24
-    ' '                         REFERENCIA_ITEM,          --25
-    ' '                         REFERENCIA_PEDIDO,        --26
-    ' '                         CONTA_CONTABIL,           --27
+    ''                         INDICADOR_CFOP,           --22    VERIFICAR
+    ''                         ID_EXCECAO_IMPOSTO,       --23
+    ''                         REFERENCIA,               --24
+    ''                         REFERENCIA_ITEM,          --25
+    ''                         REFERENCIA_PEDIDO,        --26
+    ''                         CONTA_CONTABIL,           --27
     '0'                         NAO_SOMA_VALOR,           --28
     cisli941.t$gexp$l           VALOR_ENCARGOS,           --29
     0                           VALOR_DESCONTOS,          --30

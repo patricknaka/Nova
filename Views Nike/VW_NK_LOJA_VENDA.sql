@@ -1,4 +1,4 @@
-SELECT
+﻿SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -8,10 +8,10 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		nvl(to_char(ZNSLS400.T$ICLF$C),' ')							CPF_CGC,		-- VERIFICAR FORMATAÇÃO
-		' '									PERIODO,
-		' '									VENDEDOR,
+		''									PERIODO,
+		''									VENDEDOR,
 		'004'									OPERACAO_VENDA,
-		' '									CODIGO_TAB_PRECO,
+		''									CODIGO_TAB_PRECO,
 		0									COMISSAO,
 		0									DESCONTO,
 		ZNSLS401.T$QTVE$C							QTDE_TOTAL,
@@ -24,20 +24,20 @@ SELECT
 		 ELSE CISLI940.T$AMNT$L + CISLI941.T$TLDM$L END				VALOR_VENDA_BRUTA,
 		0									VALOR_TROCA,
 		0									QTDE_TROCA_TOTAL,
-		' ' 									TICKET_IMPRESSO,
-		' '									TERMINAL,
-		' '									GERENTE_LOJA,
-		' '									GERENTE_PERIODO,
-		' '									LANCAMENTO_CAIXA,
+		'' 									TICKET_IMPRESSO,
+		''									TERMINAL,
+		''									GERENTE_LOJA,
+		''									GERENTE_PERIODO,
+		''									LANCAMENTO_CAIXA,
 		0									VALOR_CANCELADO,
 		0									TOTAL_QTDE_CANCELADA,
 		ZNSLS401.QITM						QTDE_ITEM,						-- alt1
-		' '									MOTIVO_CANCELAMENTO,
+		''									MOTIVO_CANCELAMENTO,
 		CASE WHEN ZNSLS400.T$FTYP$C='PF'			
 		 THEN nvl(to_char(ZNSLS400.T$ICLF$C),' ')			
 		 ELSE NULL END								CPF_CGC_ECF,
-		' '									DATA_HORA_CANCELAMENTO,
-		' '									SUGESTAO_COD_FORMA_PGTO,
+		''									DATA_HORA_CANCELAMENTO,
+		''									SUGESTAO_COD_FORMA_PGTO,
 		nvl(Q_IPI.T$AMNT$L,0)								VALOR_IPI,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				EMISSAO,
@@ -155,10 +155,10 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		nvl(to_char(ZNSLS400.T$ICLF$C),' ')										CPF_CGC,		-- VERIFICAR FORMATAÇÃO
-		' '														PERIODO,
-		' '														VENDEDOR,
+		''														PERIODO,
+		''														VENDEDOR,
 		'004'													OPERACAO_VENDA,
-		' '														CODIGO_TAB_PRECO,
+		''														CODIGO_TAB_PRECO,
 		0														COMISSAO,
 		0														DESCONTO,
 		0														QTDE_TOTAL,
@@ -167,20 +167,20 @@ SELECT
 		(TDREC940.T$TFDA$L + TDREC940.T$FGHT$L)*-1				VALOR_VENDA_BRUTA,
 		(TDREC940.T$TFDA$L + TDREC940.T$FGHT$L)*-1				VALOR_TROCA,
 		ZNSLS401.T$QTVE$C							QTDE_TROCA_TOTAL,					--ALT2
-		' ' 													TICKET_IMPRESSO,
-		' '														TERMINAL,
-		' '														GERENTE_LOJA,
-		' '														GERENTE_PERIODO,
-		' '														LANCAMENTO_CAIXA,
+		'' 													TICKET_IMPRESSO,
+		''														TERMINAL,
+		''														GERENTE_LOJA,
+		''														GERENTE_PERIODO,
+		''														LANCAMENTO_CAIXA,
 		0														VALOR_CANCELADO,
 		0														TOTAL_QTDE_CANCELADA,
 		ZNSLS401.QITM											QTDE_ITEM,							-- ALT2
-		' '														MOTIVO_CANCELAMENTO,
+		''														MOTIVO_CANCELAMENTO,
 		CASE WHEN ZNSLS400.T$FTYP$C='PF'			
 		 THEN nvl(to_char(ZNSLS400.T$ICLF$C),' ')			
 		 ELSE NULL END											CPF_CGC_ECF,
-		' '														DATA_HORA_CANCELAMENTO,
-		' '														SUGESTAO_COD_FORMA_PGTO,
+		''														DATA_HORA_CANCELAMENTO,
+		''														SUGESTAO_COD_FORMA_PGTO,
 		nvl(Q_IPI.T$AMNT$L,0)											VALOR_IPI,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$IDAT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				EMISSAO,
@@ -263,10 +263,10 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		nvl(to_char(ZNSLS400.T$ICLF$C),' ')										CPF_CGC,		-- VERIFICAR FORMATAÇÃO
-		' '														PERIODO,
-		' '														VENDEDOR,
+		''														PERIODO,
+		''														VENDEDOR,
 		'005'													OPERACAO_VENDA,
-		' '														CODIGO_TAB_PRECO,
+		''														CODIGO_TAB_PRECO,
 		0														COMISSAO,
 		0														DESCONTO,
 		1														QTDE_TOTAL,
@@ -278,20 +278,20 @@ SELECT
 		+ ZNSLS401.VL_FRETE 									VALOR_VENDA_BRUTA,
 		0														VALOR_TROCA,
 		0														QTDE_TROCA_TOTAL,
-		' ' 													TICKET_IMPRESSO,
-		' '														TERMINAL,
-		' '														GERENTE_LOJA,
-		' '														GERENTE_PERIODO,
-		' '														LANCAMENTO_CAIXA,
+		'' 													TICKET_IMPRESSO,
+		''														TERMINAL,
+		''														GERENTE_LOJA,
+		''														GERENTE_PERIODO,
+		''														LANCAMENTO_CAIXA,
 		0														VALOR_CANCELADO,
 		0														TOTAL_QTDE_CANCELADA,
 		1														QTDE_ITEM,
-		' '														MOTIVO_CANCELAMENTO,
+		''														MOTIVO_CANCELAMENTO,
 		CASE WHEN ZNSLS400.T$FTYP$C='PF'			
 		 THEN nvl(to_char(ZNSLS400.T$ICLF$C),' ')			
 		 ELSE NULL END											CPF_CGC_ECF,
-		' '														DATA_HORA_CANCELAMENTO,
-		' '														SUGESTAO_COD_FORMA_PGTO,
+		''														DATA_HORA_CANCELAMENTO,
+		''														SUGESTAO_COD_FORMA_PGTO,
 		0														VALOR_IPI,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				EMISSAO,
