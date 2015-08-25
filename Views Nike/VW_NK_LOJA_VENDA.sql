@@ -130,11 +130,16 @@ INNER JOIN (SELECT	E.T$FIRE$L,
 						AND	E1.T$LINE$L=E.T$RFDL$L
 			GROUP BY E.T$FIRE$L,
 					 E.T$REFR$L) CISLI941	ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
-
-INNER JOIN (SELECT	E.T$FIRE$L,
-                    SUM(E.T$DQUA$L) QTDE
-            FROM	BAANDB.TCISLI941601 E
-            GROUP BY E.T$FIRE$L ) TOT_NOTA	
+       
+INNER JOIN (SELECT	A.T$FIRE$L,
+                    SUM(A.T$DQUA$L) QTDE
+            FROM	BAANDB.TCISLI941601 A, 
+                  BAANDB.TZNSLS000601 B
+            WHERE B.T$INDT$C = TO_DATE('01-01-1970','DD-MM-YYYY')
+            AND   A.T$ITEM$L != B.t$itjl$c       -- item juros lojista
+            AND   A.T$ITEM$L != B.t$itmd$c       -- item despesa
+            AND   A.T$ITEM$L != B.t$itmf$c       -- item frete
+            GROUP BY A.T$FIRE$L ) TOT_NOTA	
         ON	TOT_NOTA.T$FIRE$L	=	CISLI940.T$FIRE$L
            
 LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
@@ -159,7 +164,7 @@ LEFT JOIN (	SELECT	F.T$FIRE$L,
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
    
---   AND cisli940.t$fire$l IN ('F00000269', 'F00000305', 'F00000317')
+--   AND cisli940.t$fire$l IN ('F00000295', 'F00000246')
 --***************************************************************************************************************************
 --				COLETA
 --***************************************************************************************************************************
