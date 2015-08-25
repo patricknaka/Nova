@@ -1,31 +1,32 @@
 SELECT 
   DISTINCT
-    CASE WHEN znsls401.t$itpe$c = 15 THEN   --REVERSA
-      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
-        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-    WHEN  znsls401.t$itpe$c = 9 THEN        --POSTAGEM
-      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(POSTAGEM.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
-        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-    ELSE NULL END                             DATA_SOL_COLETA_POSTAGEM,
+    CASE WHEN znsls401.t$itpe$c = 15   --REVERSA
+           THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+                  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+         WHEN znsls401.t$itpe$c = 9    --POSTAGEM
+           THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(POSTAGEM.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+                  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+         ELSE NULL 
+    END                                       DATA_SOL_COLETA_POSTAGEM,
                               
     znsls401.t$pecl$c                         PEDIDO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_PEDIDO,
-											  
+             
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_APROVACAO_PEDIDO,
-											  
+             
     znfmd001.t$fili$c                         Estabelecimento,
     tccom130cnova.t$fovn$l                    CNPJ_NOVA,
     znint002.t$desc$c                         UNIDADE_NEGOCIO,
     znsls401.t$orno$c                         ORDEM_DEVOLUCAO,
-	
+ 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400_2.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_ORDEM_DEVOLUCAO,
-											  
+             
     znsls401.t$entr$c                         ENTREGA,
     znsls002.t$dsca$c                         TIPO_ENTREGA,
     znsls401.t$lass$c                         ASSUNTO,
@@ -42,44 +43,43 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(EXPEDICAO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_EXPEDICAO_PEDIDO,
---    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400_2.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 
---        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTPR, 'DD-MON-YYYY HH24:MI:SS'), 
-        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTPR, 'DD-MON-YYYY HH24:MI:SS'), 
+      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_COLETA_PROMETIDA,
---    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400_2.t$prdt, 'DD-MON-YYYY HH24:MI:SS'), 
---        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTCD, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_RETORNO_PROMETIDA,
-    CASE WHEN EXPEDICAO.NOME_TRANSP IS NULL THEN
-      VENDA_TRANSP.t$dsca
-    ELSE
-      EXPEDICAO.NOME_TRANSP END               NOME_TRANSP_ENTREGA,
+    CASE WHEN EXPEDICAO.NOME_TRANSP IS NULL 
+           THEN VENDA_TRANSP.t$dsca
+         ELSE   EXPEDICAO.NOME_TRANSP 
+    END                                       NOME_TRANSP_ENTREGA,
       
-    CASE WHEN tcmcs080.t$dsca IS NULL THEN
-        NVL(cisli940.t$cfrn$l,
-        ( SELECT Trim(A.T$NTRA$C)
-            FROM BAANDB.TZNSLS410301 A
-           WHERE A.T$NCIA$C = ZNSLS401.T$NCIA$C
-             AND A.T$UNEG$C = ZNSLS401.T$UNEG$C
-             AND A.T$PECL$C = ZNSLS401.T$PECL$C
-             AND A.T$SQPD$C = ZNSLS401.T$SQPD$C
-             AND A.T$ENTR$C = ZNSLS401.T$ENTR$C
-             AND A.T$NTRA$C != ' '
-             AND ROWNUM = 1 ) )                   
-    ELSE tcmcs080.t$dsca END                  Nome_Transportadora_Coleta,
+    CASE WHEN tcmcs080.t$dsca IS NULL 
+           THEN NVL( cisli940.t$cfrn$l, ( select Trim(A.T$NTRA$C)
+                                            from BAANDB.TZNSLS410301 A
+                                           where A.T$NCIA$C = ZNSLS401.T$NCIA$C
+                                             and A.T$UNEG$C = ZNSLS401.T$UNEG$C
+                                             and A.T$PECL$C = ZNSLS401.T$PECL$C
+                                             and A.T$SQPD$C = ZNSLS401.T$SQPD$C
+                                             and A.T$ENTR$C = ZNSLS401.T$ENTR$C
+                                             and A.T$NTRA$C != ' '
+                                             and ROWNUM = 1 ) )                   
+         ELSE tcmcs080.t$dsca 
+    END                                       Nome_Transportadora_Coleta,
     Trim(tcmcs080.t$seak)                     APELIDO_TRANSP_COLETA,
-    NVL(tccom130transp.t$fovn$l,                   
-          ( SELECT Trim(A.T$FOVT$C)
-        FROM BAANDB.TZNSLS410301 A
-       WHERE A.T$NCIA$C = ZNSLS401.T$NCIA$C
-         AND A.T$UNEG$C = ZNSLS401.T$UNEG$C
-         AND A.T$PECL$C = ZNSLS401.T$PECL$C
-         AND A.T$SQPD$C = ZNSLS401.T$SQPD$C
-         AND A.T$ENTR$C = ZNSLS401.T$ENTR$C
-         AND A.T$NTRA$C != ' '
-         AND ROWNUM = 1 ) )                   CNPJ_TRANSP_COLETA,
+    NVL( tccom130transp.t$fovn$l, 
+         ( select Trim(A.T$FOVT$C)
+             from BAANDB.TZNSLS410301 A
+            where A.T$NCIA$C = ZNSLS401.T$NCIA$C
+              and A.T$UNEG$C = ZNSLS401.T$UNEG$C
+              and A.T$PECL$C = ZNSLS401.T$PECL$C
+              and A.T$SQPD$C = ZNSLS401.T$SQPD$C
+              and A.T$ENTR$C = ZNSLS401.T$ENTR$C
+              and A.T$NTRA$C != ' '
+              and ROWNUM = 1 ) )              CNPJ_TRANSP_COLETA,
+											  
     Trim(znsls401.t$nome$c)                   Nome_Cliente_Coleta,       
     znsls401.t$fovn$c                         CPF_Cliente,
     znsls401.t$cepe$c                         CEP,
@@ -133,13 +133,12 @@ SELECT
     znsls401.t$vlfr$c                         VL_FRETE_SITE,
     cisli941.t$amnt$l                         VL_TOTAL_ITEM,
     NVL(znfmd030.t$dsci$c,znmcs002.t$desc$c)  OCORRENCIA,
-	
+ 
     NVL( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
           'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE),
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) )
                                               DATA_DA_OCORRENCIA,
---    NULL                                      Status,
     znmcs002.t$desc$c                         STATUS,
     znsls401.t$lcat$c                         CATEGORIA,
     CASE WHEN tdrec947.t$fire$l IS NULL 
@@ -155,7 +154,10 @@ SELECT
     tdsls094.t$dsca,
     ZNSLS401.T$ORNO$C,
     cisli940.t$fire$l                         REF_FISCAL,
-    CANC_COLETA.DATA_OCORR                    DATA_CANC_COLETA,
+	
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+                                              DATA_CANC_COLETA,
     REC_COLETA.DATA_OCORR                     RETORNO_RDV,
     cisli940.t$cnfe$l                         CHAVE_DANFE
   
@@ -196,7 +198,6 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND znsls004.t$entr$c = znsls401.t$entr$c
        AND znsls004.t$sequ$c = znsls401.t$sequ$c
        AND ROWNUM = 1
-
     
  LEFT JOIN ( select F.t$ncia$c,
                     F.t$uneg$c,
@@ -339,8 +340,6 @@ INNER JOIN baandb.tznsls400301 znsls400
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
---                    znsls410.t$entr$c
---                    znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR,
                     MAX(znsls410.t$dtpr$c) DATA_DTPR,
                     MAX(znsls410.t$dtcd$c) DATA_DTCD
@@ -349,32 +348,22 @@ INNER JOIN baandb.tznsls400301 znsls400
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c ) SOLIC_COLETA
---                    znsls410.t$entr$c,
---                    znsls410.t$sqpd$c ) SOLIC_COLETA
         ON SOLIC_COLETA.t$ncia$c = znsls401.t$ncia$c
        AND SOLIC_COLETA.t$uneg$c = znsls401.t$uneg$c
        AND SOLIC_COLETA.t$pecl$c = znsls401.t$pecl$c
---       AND SOLIC_COLETA.t$entr$c = znsls401.t$entr$c
---       AND SOLIC_COLETA.t$sqpd$c = znsls401.t$sqpd$c
 
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
---                    znsls410.t$entr$c,
---                    znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
                from baandb.tznsls410301 znsls410
               where znsls410.t$poco$c = 'POS'
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c ) POSTAGEM
---                    znsls410.t$entr$c,
---                    znsls410.t$sqpd$c ) POSTAGEM
         ON POSTAGEM.t$ncia$c = znsls401.t$ncia$c
        AND POSTAGEM.t$uneg$c = znsls401.t$uneg$c
        AND POSTAGEM.t$pecl$c = znsls401.t$pecl$c
---       AND POSTAGEM.t$entr$c = znsls401.t$entr$c
---       AND POSTAGEM.t$sqpd$c = znsls401.t$sqpd$c
        
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -448,8 +437,6 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
                     MAX(znsls410.t$orno$c)  OV,
---                    znsls410.t$entr$c,
---                    znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR,
                     MAX(znsls410.t$ntra$c) NOME_TRANSP
                from baandb.tznsls410301 znsls410
@@ -457,13 +444,9 @@ INNER JOIN baandb.tznsls400301 znsls400
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c ) EXPEDICAO
---                    znsls410.t$entr$c,
---                    znsls410.t$sqpd$c ) EXPEDICAO
         ON EXPEDICAO.t$ncia$c = znsls401.t$ncia$c
        AND EXPEDICAO.t$uneg$c = znsls401.t$uneg$c
        AND EXPEDICAO.t$pecl$c = znsls401.t$pecl$c
---       AND EXPEDICAO.t$entr$c = znsls401.t$entr$c
---       AND EXPEDICAO.t$sqpd$c = znsls401.t$sqpd$c
               
  LEFT JOIN baandb.ttcmcs080301 tcmcs080           --Transportadora da Coleta
         ON tcmcs080.t$cfrw = cisli940.t$cfrw$l
@@ -535,32 +518,18 @@ WHERE TRIM(znsls401.t$idor$c) = 'TD'  -- Troca / Devolução
   AND znsls401.t$qtve$c < 0           -- Devolução
   AND tdsls094.t$reto in (1, 3)       -- Ordem Devolução, Ordem Devolução Rejeitada
   AND znsls401.t$itpe$c in (9, 15)    -- Postagem, Reversa
-  
---  and znsls401.t$pecl$c IN ('72931808','71178599')
 
---and cisli940.t$fire$l IS NULL
-
---and znsls002.t$tpen$c = 15    -- Reversa
-  
---and CANC_PEDIDO.DATA_OCORR IS NOT NULL
-
---  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 
---              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
---                AT time zone 'America/Sao_Paulo') AS DATE))
---      Between :DataColetaDe
---          And :DataColetaAte
---  AND znsls401.t$ccat$c IN (:Categoria)    --BAANDB.TZNSLS010301 RETIRAR DO RELATÓRIO, PRECISA VERIFICAR JUNTO A EQUIPE DE FRONTE
---  AND znsls401.t$cass$c IN (:Assunto)      --BAANDB.TZNSLS011301
---  AND znsls401.t$cmot$c IN (:MotivoColeta) --BAANDB.TZNSLS012301
---  AND CASE WHEN znsls409.t$lbrd$c = 1 
---             THEN 1 -- FORÇADO
---           ELSE   0 -- NÃO FORÇADO
---      END IN (:Forcado)
---  AND znsls401.t$uneg$c IN (:UnidNegocio)
---  AND tcibd001.t$citg IN (:Depto)
--- Estato da Instancia  
---  AND znfmd001.t$fili$c IN (:Filial)
---  AND znsls401.t$itpe$c IN (:TipoEntrega)
+  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
+              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
+      Between :DataPedidoDe
+          And :DataPedidoAte
+  AND znfmd001.t$fili$c IN (:Filial)
+  AND tcibd001.t$citg IN (:Depto)
+  AND znsls401.t$uneg$c IN (:UnidNegocio)
+  AND znsls401.t$itpe$c IN (:TipoEntrega)
+  AND CASE WHEN znsls409.t$lbrd$c = 1 
+             THEN 1 -- FORÇADO
+           ELSE   0 -- NÃO FORÇADO
+      END IN (:Forcado)
   
 ORDER BY DATA_SOL_COLETA_POSTAGEM, DATA_PEDIDO, PEDIDO
-
