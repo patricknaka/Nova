@@ -26,7 +26,7 @@ SELECT
 --		ZNSLS401.T$VLDI$C	* (-1)  					            DESCONTO_PGTO,
     cisli940.t$fght$l * (-1)                         DESCONTO_PGTO,
 --		ZNSLS402.T$VLMR$C	                              TOTAL_VENDA,
-    cisli940.t$amnt$l - cisli940.t$fght$l           TOTAL_VENDA,
+    cisli940.t$amnt$l                               TOTAL_VENDA,
 		''														                  CANCELADO_FISCAL,
 		ZNSLS402.T$NUPA$C										            PARCELA,
 		''														                  LANCAMENTO_CAIXA,
