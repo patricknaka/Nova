@@ -1,4 +1,4 @@
-﻿SELECT  DISTINCT
+SELECT DISTINCT
 
   'NIKE.COM'                    FILIAL,                   --02
   TO_CHAR(tdrec940.t$docn$l,'000000000')           
@@ -46,7 +46,11 @@ SELECT  DISTINCT
   TO_CHAR(cisli940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --03
   cisli940.t$seri$l             SERI_NF,                  --04
-  to_char(cisli943.t$line$l)    ITEM_IMPRESSAO,           --05
+  case when cisli943.t$line$l/10 < 1 then
+      to_char(cisli943.t$line$l)
+  else
+      to_char(cisli943.t$line$l/10)    
+  end                           ITEM_IMPRESSAO,           --05
   '1'                           SUB_ITEM_TAMANHO,         --06
   to_char(cisli943.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
   cisli943.t$rate$l             TAXA_IMPOSTO,             --08
