@@ -1,4 +1,4 @@
-﻿SELECT DISTINCT
+SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
     ''                         CODIGO_BARRA,             --03
@@ -171,7 +171,10 @@ SELECT DISTINCT
     cisli940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado junto com o CFOP
     tcmcs966.t$dsca$l           DESCR_COD_TIPO_DOC_FISCAL,--35
     cisli941.t$fire$l           REF_FISCAL,               --36
-    cisli941.t$line$l           LIN_REF_FIS,              --37
+    case when cisli941.t$line$l/10 < 1 then
+        cisli941.t$line$l
+    else
+      cisli941.t$line$l/10  end      LIN_REF_FIS,              --37
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli941.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO,          --38
     tcibd001.t$mdfb$c           MOD_FABR_ITEM             --39
