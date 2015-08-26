@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
@@ -37,18 +37,18 @@
 		CASE WHEN ZNSLS400.T$IDPO$C='TD' THEN										--	LN										NIKE
 				'T'																	--											T - TROCA
 		 ELSE DECODE(ZNSLS402.T$IDMP$C,													
-				1,	'A',                                                           --1	Cartão de Crédito						A - CARTAO DE CREDITO POS 
-				2,	'D',                                                           --2	Boleto B2C (BV)							J - DUPLICATA
-				3,	'D',                                                           --3	Boleto B2B Spot							J - DUPLICATA
-				4,	'1',                                                           --4	Vale (VA)								    R - VALE PRODUTO
-				5,	'5',                                                           --5	Debito/Transferência (BV)		5 - TRANSFERENCIA BANCARIA
-				8,	'D',                                                           --8	Boleto à Prazo B2B (PZ)					' ' - Não existe
-				9,	'D',                                                           --9	Boleto a prazo Atacado (PZ)				' ' - Não existe
-				10,	'D',                                                           --10	Boleto à vista Atacado (BV)			' ' - Não existe
-				11, '  ',                                                          --11	Pagamento Complementar				' ' - Não existe
-				12, '5',                                                           --12	Cartão de Débito (DB)				E - CARTAO DE DEBITO
-				13, '  ',                                                          --13	Pagamento Antecipado				' ' - Não existe
-				15,	'  ')	END									COD_FORMA_PGTO,                      --15	BNDES								' ' - Não existe			
+          1,	'08',                                                           --1	Cartão de Crédito						A - CARTAO DE CREDITO POS 
+          2,	'11',                                                           --2	Boleto B2C (BV)							J - DUPLICATA
+          3,	' ',                                                           --3	Boleto B2B Spot							J - DUPLICATA
+          4,	'13',                                                           --4	Vale (VA)								    R - VALE PRODUTO
+          5,	'12',                                                           --5	Debito/Transferência (BV)		5 - TRANSFERENCIA BANCARIA
+          8,	' ',                                                           --8	Boleto à Prazo B2B (PZ)					' ' - Não existe
+          9,	'11',                                                           --9	Boleto a prazo Atacado (PZ)				' ' - Não existe
+          10,	'11',                                                           --10	Boleto à vista Atacado (BV)			' ' - Não existe
+          11, '  ',                                                          --11	Pagamento Complementar				' ' - Não existe
+          12, '09',                                                           --12	Cartão de Débito (DB)				E - CARTAO DE DEBITO
+          13, '  ',                                                          --13	Pagamento Antecipado				' ' - Não existe
+          15,	'  ')			END 					              COD_FORMA_PGTO,           --15	BNDES								' ' - Não existe			
 		ZNSLS402.T$VLPG$C										VALOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$PVEN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
