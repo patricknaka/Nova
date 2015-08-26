@@ -218,7 +218,7 @@ SELECT DISTINCT
   cisli940.t$fght$l         FRETE,                                  --20
   cisli940.t$insr$l         SEGURO,                                 --21
   0                         FRETE_A_PAGAR,                          --22 'AGUARDANDO CONSULTOR'
-  cisli940.t$amnt$l         VALOR_TOTAL_ITENS,                      --23
+  cisli940.t$gamt$l - SLI941.DESCONTO         VALOR_TOTAL_ITENS,                      --23
   SLI941.DESCONTO           DESCONTO,                               --24
   cisli940.t$gexp$l         ENCARGO,                                --25
   CASE WHEN cisli940.t$stat$l >= 5  THEN
