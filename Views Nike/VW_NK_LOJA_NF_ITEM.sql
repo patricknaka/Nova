@@ -135,7 +135,11 @@ SELECT DISTINCT
     TO_CHAR(cisli940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --06
     cisli940.t$seri$l           SERIE_NF,                 --07
-    to_char(cisli941.t$line$l)  ITEM_IMPRESSAO,           --08
+    case when cisli941.t$line$l/10 < 1 then
+        to_char(cisli941.t$line$l)
+    else
+        to_char(cisli941.t$line$l/10)  
+    end                         ITEM_IMPRESSAO,           --08
     '1'                         SUB_ITEM_TAMANHO,         --09
     cisli941.t$desc$l           DESCRICAO_ITEM,           --10
     ltrim(rtrim(NVL(tcibd004.t$item,tcibd001.t$item)))             
@@ -174,7 +178,8 @@ SELECT DISTINCT
     case when cisli941.t$line$l/10 < 1 then
         cisli941.t$line$l
     else
-      cisli941.t$line$l/10  end      LIN_REF_FIS,              --37
+      cisli941.t$line$l/10  
+    end                         LIN_REF_FIS,              --37
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli941.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO,          --38
     tcibd001.t$mdfb$c           MOD_FABR_ITEM             --39
