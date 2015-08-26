@@ -1,4 +1,4 @@
-﻿SELECT DISTINCT
+SELECT DISTINCT
   'NIKE.COM'                FILIAL,                                 --02
   tccom130r.t$fovn$l        CGC_FILIAL_DESTINO,                     --03
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -112,7 +112,8 @@
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DT_ULT_ALTERACAO,                        --78
-  tccom139fat.t$ibge$l         COD_IBGE                                 --79
+  tccom139fat.t$ibge$l         COD_IBGE,                              --79
+  0.0                       DESCONTO                                  --80                         
   
 FROM  baandb.ttdrec940601  tdrec940
 
@@ -340,7 +341,8 @@ SELECT DISTINCT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DT_ULT_ALTERACAO,                        --78
-  tccom139c.t$ibge$l        COD_IBGE
+  tccom139c.t$ibge$l        COD_IBGE,                                --79
+  0.0                       DESCONTO                                 --80
   
 FROM  baandb.tcisli940601  cisli940
 
