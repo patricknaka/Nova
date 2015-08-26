@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
@@ -15,8 +15,14 @@
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE)            EMISSAO,
  		(	SELECT SUM(A.T$DQUA$L)
-			FROM BAANDB.TCISLI941601 A
-			WHERE A.T$FIRE$L = CISLI940.T$FIRE$L)				        QTDE_TOTAL,
+			FROM BAANDB.TCISLI941601 a,
+           baandb.tznsls000601 b
+			WHERE A.T$FIRE$L = CISLI940.T$FIRE$L	        
+      AND b.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+      AND a.t$item$l != b.t$itmf$c      --ITEM FRETE
+      AND a.t$item$l != b.t$itmd$c      --ITEM DESPESAS
+      AND a.t$item$l != b.t$itjl$c      --ITEM JUROS			
+      )                                                   QTDE_TOTAL,
 		CISLI940.T$AMNT$L										                  VALOR_TOTAL,
 		REGEXP_REPLACE(TCCOM130_TRN.T$FOVN$L, '[^0-9]', '')		CGC,
 		''														                        OBS,
