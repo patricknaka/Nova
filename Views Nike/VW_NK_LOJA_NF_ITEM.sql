@@ -130,7 +130,7 @@ SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
     ''                         CODIGO_BARRA,             --03
-    cisli941.t$gamt$l           VALOR,                    --04
+    cisli941.t$gamt$l-cisli941.t$tldm$l           VALOR,                    --04
     cisli941.t$dqua$l           QTDE_ITEM,                --05
     TO_CHAR(cisli940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --06
@@ -141,13 +141,9 @@ SELECT DISTINCT
     ltrim(rtrim(NVL(tcibd004.t$item,tcibd001.t$item)))             
                                 CODIGO_ITEM,              --11
     tcibd001.t$cuni             UNIDADE,                  --12
-    case when cisli941.t$dqua$l = 0 then
-        cisli941.t$pric$l - cisli941.t$ldam$l
-    else
-        cisli941.t$pric$l - (cisli941.t$ldam$l / cisli941.t$dqua$l)           
-    end                         PRECO_UNITARIO,           --13
+    cisli941.t$pric$l - cisli941.t$ldam$l           PRECO_UNITARIO,           --13
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
-    cisli941.t$ldam$l           DESCONTO_ITEM,            --15
+    cisli941.t$tldm$l           DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
     nvl(tttxt010r.t$text,'')   OBS_ITEM,                 --17
     ORIGEM.DESCR                TRIBUT_ORIGEM,            --18
