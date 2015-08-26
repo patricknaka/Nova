@@ -6,7 +6,10 @@ SELECT
 		'NIKE.COM'												FILIAL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
-		CISLI941.T$LINE$L										ITEM,
+    case when cisli941.t$line$l/10 < 1 then
+        cisli941.t$line$l
+    else
+        CISLI941.T$LINE$L/10 end			ITEM,
 		''														CODIGO_BARRA,
 		CISLI941.T$DQUA$L										QTDE,
 		CISLI941.T$PRIC$L	- cisli941.t$tldm$l									PRECO_LIQUIDO,
@@ -111,7 +114,7 @@ WHERE CISLI245.T$SLCP=601
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
 
---  AND cisli940.t$fire$l IN ('F00000269', 'F00000317')
+  AND cisli940.t$fire$l IN ('F00000246', 'F00000295')
 --***************************************************************************************************************************
 --				INSTANCIA
 --***************************************************************************************************************************
