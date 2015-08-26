@@ -141,7 +141,11 @@ SELECT DISTINCT
     ltrim(rtrim(NVL(tcibd004.t$item,tcibd001.t$item)))             
                                 CODIGO_ITEM,              --11
     tcibd001.t$cuni             UNIDADE,                  --12
-    cisli941.t$pric$l           PRECO_UNITARIO,           --13
+    case when cisli941.t$dqua$l = 0 then
+        cisli941.t$pric$l - cisli941.t$ldam$l
+    else
+        cisli941.t$pric$l - (cisli941.t$ldam$l / cisli941.t$dqua$l)           
+    end                         PRECO_UNITARIO,           --13
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
     cisli941.t$ldam$l           DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
