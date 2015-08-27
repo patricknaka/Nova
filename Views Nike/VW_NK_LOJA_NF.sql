@@ -25,7 +25,7 @@ SELECT DISTINCT
   tdrec940.t$insr$l         SEGURO,                                 --21
   0                         FRETE_A_PAGAR,                          --22 'NÃO FOI MODELADO NO LN'
   tdrec940.t$gtam$l         VALOR_TOTAL_ITENS,                      --23
-  tdrec940.t$addc$l         DESCONTO,                               --24
+  0.00                      DESCONTO,                               --24
   tdrec940.t$gexp$l         ENCARGO,                                --25
   CASE WHEN tdrec940.t$stat$l = 4 or tdrec940.t$stat$l = 5 THEN
         '1'       -- NF impressa
@@ -200,8 +200,7 @@ SELECT DISTINCT
   CASE WHEN cisli940.t$fdty$l = 1 or cisli940.t$fdty$l = 14 THEN
     tccom130c.t$fovn$l
   ELSE '' END              CGC_CPF,                                --07
---  tccom130c.t$fovn$l        COD_CLIFOR,                             --08
-  cisli940.t$bpid$l          COD_CLIFOR,            --retirar após teste
+  tccom130c.t$fovn$l        COD_CLIFOR,                             --08
   cast(NVL(tttxt010f.t$text,'') as varchar(100))         OBS,      --09
   cisli940.t$seri$l         SERIE_NF,                               --10
   cisli940.t$docn$l         NF_NUMERO,                              --11
@@ -219,7 +218,7 @@ SELECT DISTINCT
   cisli940.t$insr$l         SEGURO,                                 --21
   0                         FRETE_A_PAGAR,                          --22 'AGUARDANDO CONSULTOR'
   cisli940.t$gamt$l - SLI941.DESCONTO         VALOR_TOTAL_ITENS,                      --23
-  SLI941.DESCONTO           DESCONTO,                               --24
+  0.00                      DESCONTO,                               --24
   cisli940.t$gexp$l         ENCARGO,                                --25
   CASE WHEN cisli940.t$stat$l >= 5  THEN
         '1'       -- NF impressa
