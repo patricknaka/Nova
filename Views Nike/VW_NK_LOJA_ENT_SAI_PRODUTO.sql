@@ -78,7 +78,9 @@ SELECT
 		TDREC941.T$QNTY$L										          QTDE_ITEM,
     1														                  TIPO_TRANSACAO,   --Entradas
     tdrec941.t$fire$l                             REF_FISCAL,
-    tdrec941.t$line$l                             LIN_REF_FISCAL,
+    case when tdrec941.t$line$l/10 < 1 then
+        tdrec941.t$line$l
+    else tdrec941.t$line$l/10 end                 LIN_REF_FISCAL,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO,
     tcibd001.t$mdfb$c                             MOD_FABR_ITEM,
