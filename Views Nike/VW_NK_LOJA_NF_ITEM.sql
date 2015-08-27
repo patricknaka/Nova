@@ -135,7 +135,7 @@ SELECT DISTINCT
     TO_CHAR(cisli940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --06
     cisli940.t$seri$l           SERIE_NF,                 --07
-    case when cisli941.t$line$l/10 < 1 then
+    case  when  cisli941.t$line$l/10 < 1 then
         to_char(cisli941.t$line$l)
     else
         to_char(cisli941.t$line$l/10)  
