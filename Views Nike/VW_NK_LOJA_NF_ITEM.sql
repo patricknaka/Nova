@@ -7,7 +7,11 @@ SELECT DISTINCT
     TO_CHAR(tdrec940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --06
     tdrec940.t$seri$l           SERIE_NF,                 --07
-    to_char(tdrec941.t$line$l)  ITEM_IMPRESSAO,           --08
+    case when tdrec941.t$line$l/10 < 1 then
+          to_char(tdrec941.t$line$l)
+    else
+          to_char(tdrec941.t$line$l/10)  
+    end                         ITEM_IMPRESSAO,           --08
     '1'                         SUB_ITEM_TAMANHO,         --09
     tdrec941.t$dsca$l           DESCRICAO_ITEM,           --10
     ltrim(rtrim(nvl(tcibd004.t$item,tdrec941.t$item$l)))             
@@ -43,7 +47,10 @@ SELECT DISTINCT
     tdrec940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado juntamente com o CFOP
     tcmcs966.t$dsca$l           DESCR_TIPO_DOC_FISCAL,    --35
     tdrec941.t$fire$l           REF_FISCAL,               --36
-    tdrec941.t$line$l           LIN_REF_FIS,              --37
+    case when tdrec941.t$line$l/10 < 1 then
+        tdrec941.t$line$l
+    else
+        tdrec941.t$line$l/10 end           LIN_REF_FIS,              --37
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec941.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO,          --38
     tcibd001.t$mdfb$c           MOD_FABR_ITEM             --39
@@ -135,7 +142,7 @@ SELECT DISTINCT
     TO_CHAR(cisli940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --06
     cisli940.t$seri$l           SERIE_NF,                 --07
-    case  when  cisli941.t$line$l/10 < 1 then
+    case when cisli941.t$line$l/10 < 1 then
         to_char(cisli941.t$line$l)
     else
         to_char(cisli941.t$line$l/10)  
