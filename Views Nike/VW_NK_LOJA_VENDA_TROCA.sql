@@ -4,10 +4,13 @@ SELECT
 --***************************************************************************************************************************
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,	
 		'NIKE.COM'												              FILIAL,
-		TDREC941.T$LINE$L										            ITEM,
+    case when tdrec941.t$line$l/10 < 1 then
+        tdrec941.t$line$l
+    else
+        TDREC941.T$LINE$L/10 end  			            ITEM,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 			DATA_VENDA,
-		' '														                  CODIGO_BARRA,
+		''														                  CODIGO_BARRA,
 		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))			PRODUTO,				-- Estamos usando a tabela de código alternativo de item mas ainda esperamos a resposta dos consultores para confirmar se será usado este conveito na Nike
 		'01'													                  COR_PRODUTO,
 		ZNIBD005.T$DESC$C										            TAMANHO,
@@ -17,11 +20,15 @@ SELECT
 		0														                    QTDE_CANCELADA,
 		CASE TDREC941.T$QNTY$L WHEN 0 THEN 0 ELSE ABS(TDSLS415.CTOT / TDREC941.T$QNTY$L) END	CUSTO,
 		NVL(Q_IPI.T$AMNT$L,0)									          IPI,		
-		' '														                  ID_VENDEDOR,
+		''														                  ID_VENDEDOR,
 		0														                    ITEM_EXCLUIDO,
 		0														                    NÃO_MOVIMENTA_ESTOQUE,		
-		' '														                  INDICA_ENTREGA_FUTURA,
-    		tdrec940.t$fire$l                            REF_FISCAL,
+		''														                  INDICA_ENTREGA_FUTURA,
+    		tdrec941.t$fire$l                           REF_FISCAL,
+        case when tdrec941.t$line$l/10 < 1 then
+            tdrec941.t$line$l
+        else
+            tdrec941.t$line$l  end                  LIN_REF_FICAL,
     		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 	    DT_ULT_ALTERACAO,
     tcibd001.t$mdfb$c                               MOD_FABR_ITEM
