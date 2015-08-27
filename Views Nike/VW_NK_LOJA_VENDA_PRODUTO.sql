@@ -6,7 +6,7 @@ SELECT
 		'NIKE.COM'												FILIAL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
-    case when cisli941.t$line$l/10 < 1 then
+    case  when  cisli941.t$line$l/10 < 1 then
         cisli941.t$line$l
     else
         CISLI941.T$LINE$L/10 end			ITEM,
