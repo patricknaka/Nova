@@ -200,7 +200,8 @@ SELECT DISTINCT
   CASE WHEN cisli940.t$fdty$l = 1 or cisli940.t$fdty$l = 14 THEN
     tccom130c.t$fovn$l
   ELSE '' END              CGC_CPF,                                --07
-  tccom130c.t$fovn$l        COD_CLIFOR,                             --08
+--  tccom130c.t$fovn$l        COD_CLIFOR,                             --08
+  cisli940.t$bpid$l          COD_CLIFOR,            --retirar após teste
   cast(NVL(tttxt010f.t$text,'') as varchar(100))         OBS,      --09
   cisli940.t$seri$l         SERIE_NF,                               --10
   cisli940.t$docn$l         NF_NUMERO,                              --11
@@ -340,7 +341,7 @@ SELECT DISTINCT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DT_ULT_ALTERACAO,                        --78
-  tccom139c.t$ibge$l        COD_IBGE                                  --79
+  tccom139entr.t$ibge$l        COD_IBGE                                  --79
   
 FROM  baandb.tcisli940601  cisli940
 
