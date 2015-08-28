@@ -1,9 +1,10 @@
+--#2015-08-28 - Humberto Kasai - Conferência view
+
 SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
 		'NIKE.COM'								FILIAL,
---		ZNSLS004.T$PECL$C || ZNSLS004.T$SQPD$C					TICKET,
     TO_CHAR(znsls401.t$entr$c)         TICKET,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
@@ -14,7 +15,6 @@ SELECT
 		''									CODIGO_TAB_PRECO,
 		0									COMISSAO,
 		0									DESCONTO,
---		ZNSLS401.T$QTVE$C							QTDE_TOTAL,
     TOT_NOTA.QTDE       QTDE_TOTAL,    
 		CASE WHEN CISLI940.T$FDTY$L=15 THEN
           CISLI940_FAT.T$GAMT$L - CISLI941.T$TLDM$L_FAT
