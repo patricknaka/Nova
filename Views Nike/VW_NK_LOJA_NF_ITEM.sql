@@ -1,3 +1,5 @@
+--#2015-08-28 - Humberto Kasai - Conferência View
+
 SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
