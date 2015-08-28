@@ -1,3 +1,5 @@
+--#2015-08-28, Humberto Kasai, conferência da view
+
 SELECT DISTINCT
 
   ''                           CODIGO_CLIENTE,     --02
