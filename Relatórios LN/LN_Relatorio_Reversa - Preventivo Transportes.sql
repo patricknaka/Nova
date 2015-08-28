@@ -132,12 +132,10 @@ SELECT
     NVL(znsls401.t$vlfr$c,0)                  VL_TOTAL_NF,
     znsls401.t$vlfr$c                         VL_FRETE_SITE,
     cisli941.t$amnt$l                         VL_TOTAL_ITEM,
-    NVL(znfmd030.t$dsci$c,znmcs002.t$desc$c)  OCORRENCIA,
- 
-    NVL( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
-          'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE),
-         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
-             'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) )
+    znmcs002.t$desc$c                         OCORRENCIA,
+
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+             'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_DA_OCORRENCIA,
     znmcs002.t$desc$c                         STATUS,
     znsls401.t$lcat$c                         CATEGORIA,
