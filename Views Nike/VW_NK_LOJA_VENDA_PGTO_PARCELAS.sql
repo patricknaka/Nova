@@ -5,7 +5,7 @@
 		''														TERMINAL,
 		''														LANCAMENTO_CAIXA,
 		'NIKE.COM'												FILIAL,		
-		ZNSLS402.T$NUPA$C										PARCELA,
+		ZNSLS402.T$SEQU$C										PARCELA,
 		DECODE(ZNSLS402.T$cccd$c,
 			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
 			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
@@ -164,7 +164,7 @@ SELECT
 		''														TERMINAL,
 		''														LANCAMENTO_CAIXA,
 		'NIKE.COM'												FILIAL,		
-		ZNSLS402.T$NUPA$C										PARCELA,
+		ZNSLS402.T$SEQU$C										PARCELA,
 		DECODE(ZNSLS402.T$cccd$c,
 			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
 			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
@@ -293,7 +293,7 @@ SELECT
 		''														TERMINAL,
 		''														LANCAMENTO_CAIXA,
 		'NIKE.COM'												FILIAL,		
-		ZNSLS402.T$NUPA$C										PARCELA,
+		ZNSLS402.T$SEQU$C										PARCELA,
 		DECODE(ZNSLS402.T$cccd$c,
 			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
 			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
