@@ -1,10 +1,8 @@
---#2015-08-28 - Humberto Kasai - Conferência View
-
 SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
     ''                         CODIGO_BARRA,             --03
-    tdrec941.t$tamt$l           VALOR,                    --04
+    tdrec941.t$gamt$l           VALOR,                    --04
     tdrec941.t$qnty$l           QTDE_ITEM,                --05
     TO_CHAR(tdrec940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --06
