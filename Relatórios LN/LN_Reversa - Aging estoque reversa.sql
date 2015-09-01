@@ -1,4 +1,4 @@
-SELECT 	Trim(tcibd001.t$item)             										ID_ITEM, 
+SELECT 	Trim(tcibd001.t$item)             								ID_ITEM, 
 		tcibd001.t$dsca                   										NOME, 
 		tcibd001.t$citg                   										COD_DEPTO, 
 		tcmcs023.t$dsca                   										DEPTO, 
@@ -6,20 +6,18 @@ SELECT 	Trim(tcibd001.t$item)             										ID_ITEM,
 		znmcs030.t$dsca$c                 										SETOR, 
 		tcibd001.t$fami$c                 										COD_FAMILIA, 
 		znmcs031.t$dsca$c                 										FAMILIA, 
-		-- tcibd001.t$subf$c                 									COD_SUB, 
-		-- znmcs032.t$dsca$c                 									SUB, 
-		WHSE.UDF1                       										ID_FILIAL, 
+		WHSE.UDF1                       										  ID_FILIAL, 
 		WHSE.UDF2                         										FILIAL,	   	   
 		sum(whinr140.t$qhnd)              										QT_FISICA,
-		max(whinr110.t$qstk)													QT_ULTIMA_SAIDA,	   
+    SUM(whinr110.t$qstk)                                  QT_ENTRADA,
 		WHWMD400.T$HGHT *        
 		WHWMD400.T$WDTH *        
-		WHWMD400.T$DPTH          												M3_UNI,
+		WHWMD400.T$DPTH          												      M3_UNI,
 	   
 		sum((WHWMD400.T$HGHT *
 	       WHWMD400.T$WDTH *
 	       WHWMD400.T$DPTH)*
-		   whinr140.t$qhnd) 													M3_TOTAL,
+		   whinr140.t$qhnd) 													        M3_TOTAL,
 		   
 		max(MAUC.mauc)                      									VL_UNITARIO,
 		sum(whinr140.t$qhnd* MAUC.mauc)     									VL_TOTAL,		   
@@ -29,17 +27,16 @@ SELECT 	Trim(tcibd001.t$item)             										ID_ITEM,
             WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')) < 11 
               THEN '00000000000000' 
             ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')  
-        END                              										ID_FORNECEDOR, 
-       tccom100.t$nama                   										FORN_NOME, 
-       tccom100.t$seak                   										FORN_APELIDO,
+        END                              									ID_FORNECEDOR, 
+       tccom100.t$nama                   									FORN_NOME, 
+       tccom100.t$seak                   									FORN_APELIDO,
 
-	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(whinr110.t$trdt), 
-		'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		  AT time zone 'America/Sao_Paulo') AS DATE)
-																				DATA_ULTIMA_SAIDA,
+    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whinr110.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		AT time zone 'America/Sao_Paulo') AS DATE), 'DD-MM-YY')
+                                                          DATA_ENTRADA,
 
 		TRUNC(sysdate-max(whinr110.t$trdt))										AGING,
-    TIPO_ORDEM.DESCR                                      TIPO_SAIDA
+    TIPO_ORDEM.DESCR                                      TIPO_ENTRADA
      
 FROM       baandb.ttcibd001301 tcibd001
 
@@ -85,12 +82,6 @@ INNER JOIN baandb.tznmcs031301 znmcs031
        AND znmcs031.t$seto$c = tcibd001.t$seto$c  
        AND znmcs031.t$fami$c = tcibd001.t$fami$c 
  
--- INNER JOIN baandb.tznmcs032301 znmcs032 
-        -- ON znmcs032.t$citg$c = tcibd001.t$citg  
-       -- AND znmcs032.t$seto$c = tcibd001.t$seto$c  
-       -- AND znmcs032.t$fami$c = tcibd001.t$fami$c 
-       -- AND znmcs032.t$subf$c = tcibd001.t$subf$c 
- 
 INNER JOIN BAANDB.TTCEMM300301 TCEMM300
         ON TCEMM300.T$COMP = 301 
        AND TCEMM300.T$TYPE = 20
@@ -103,25 +94,19 @@ INNER JOIN ( select A.LONG_VALUE,
                from ENTERPRISE.CODELKUP@DL_LN_WMS A
               where A.LISTNAME = 'SCHEMA') WHSE
         ON WHSE.LONG_VALUE = TCEMM300.T$LCTN 
- 
-
+      
 LEFT JOIN	(	select 	a.t$item,
 						a.t$cwar,
             a.t$koor,
-						sum(a.t$qstk) t$qstk,
-						max(a.t$trdt) t$trdt
+            TRUNC(a.t$trdt) t$trdt,
+						sum(a.t$qstk) t$qstk
 				from	baandb.twhinr110301 a
-				where	a.t$kost = 5
-				and 	a.t$koor != 52
-				and 	a.t$trdt = (select max(b.t$trdt)
-									from baandb.twhinr110301 b
-									where b.t$cwar = a.t$cwar
-									and b.t$item = a.t$item
-									and b.t$kost = 5
-									and b.t$koor != 52)
+				where	a.t$kost = 3    --Recebimento
+				and 	a.t$koor = 2    --Ordem de Compra
 				group by a.t$item,
 				         a.t$cwar,
-                 a.t$koor) whinr110
+                 a.t$koor,
+                 TRUNC(a.t$trdt)) whinr110
 			ON	whinr110.t$cwar = whinr140.t$cwar
 			AND	whinr110.t$item = whinr140.t$item
 
@@ -164,8 +149,6 @@ GROUP BY Trim(tcibd001.t$item),  tcibd001.t$dsca,
          znmcs030.t$dsca$c,  
          tcibd001.t$fami$c,   
          znmcs031.t$dsca$c,  
---         tcibd001.t$subf$c,  
---         znmcs032.t$dsca$c,  		 
          WHSE.UDF1,
          WHSE.UDF2,
          tccom130.t$fovn$l,  
@@ -174,6 +157,8 @@ GROUP BY Trim(tcibd001.t$item),  tcibd001.t$dsca,
 		 WHWMD400.T$HGHT *
 		 WHWMD400.T$WDTH *
 		 WHWMD400.T$DPTH,
-     TIPO_ORDEM.DESCR
+     TIPO_ORDEM.DESCR,
+    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whinr110.t$trdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		AT time zone 'America/Sao_Paulo') AS DATE), 'DD-MM-YY')
 
-ORDER BY ID_FILIAL, NOME
+ORDER BY ID_FILIAL, NOME, ID_ITEM, DATA_ENTRADA
