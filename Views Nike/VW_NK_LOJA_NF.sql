@@ -1,5 +1,3 @@
---2015-08-28 - Humberto Kasai - Conferência View
-
 SELECT DISTINCT
   'NIKE.COM'                FILIAL,                                 --02
   tccom130r.t$fovn$l        CGC_FILIAL_DESTINO,                     --03
@@ -8,7 +6,7 @@ SELECT DISTINCT
                             EMISSAO,                                --04
   TDREC941.QTDE             QTDE_TOTAL,                             --05
   tdrec940.t$tfda$l         VALOR_TOTAL,                            --06
-  ''                       CGC_CPF,                                --07
+  tdrec940.t$fovn$l         CGC_CPF,                                --07
   tdrec940.t$fovn$l         COD_CLIFOR,                             --08
   cast(NVL(tttxt010r.t$text,' ') as varchar(100))        OBS,                --09
   tdrec940.t$seri$l         SERIE_NF,                               --10
@@ -106,7 +104,8 @@ SELECT DISTINCT
   SUBSTR(tccom130fat.t$telx,3,9)        ENTREGA_CELULAR,             --70
   tccom130fat.t$nama          ENTREGA_NOME_DESTINATARIO,             --71
   '0'                       ENTREGA_DEST_COMPR,                      --72
-  ''                       NUMERO_PEDIDO_VENDA,                     --73
+  TO_CHAR(tdrec940.t$docn$l) ||
+  tdrec940.t$seri$l         NUMERO_PEDIDO_VENDA,                     --73
   'E'                       TP_MOVTO,                                --74 Criado para separar na tabela as entradas e saídas
   tdrec940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
   tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL,               --76
