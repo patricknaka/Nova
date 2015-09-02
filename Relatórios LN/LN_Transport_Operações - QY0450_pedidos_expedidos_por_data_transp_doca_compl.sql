@@ -35,7 +35,8 @@ SELECT
     znfmd610.t$ngai$c         CARGA,  
     whwmd400.t$hght *         
     whwmd400.t$wdth *         
-    whwmd400.t$dpth           CUBO
+    whwmd400.t$dpth           CUBO,
+    znsls002.t$dsca$c         TIPO_ENTREGA
   
 FROM       baandb.tznfmd610301 znfmd610
 
@@ -89,6 +90,9 @@ INNER JOIN baandb.ttcibd001301  tcibd001
 
  LEFT JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
+
+ LEFT JOIN baandb.tznsls002301 znsls002
+        ON znsls002.t$tpen$c = znsls401.t$itpe$c
         
 WHERE znfmd610.t$fili$c = :Planta
   AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCOR_ETR.data_etr, 
