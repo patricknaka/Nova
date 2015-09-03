@@ -1,5 +1,5 @@
 select Q1.* 
-  from  ( SELECT DISTINCT
+  from  ( SELECT DISTINCT tdrec940.t$rfdt$l,
                  tdrec940.t$docn$l          NF,
                  tdrec940.t$seri$l          SERIE,
                  tdrec941.t$fire$l          REF_FIS,
@@ -12,7 +12,7 @@ select Q1.*
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') AS DATE)  
                                             DATA,
-                 tdrec940.t$fovn$l          CNPJ,                                            
+                 tdrec940.t$fovn$l          CNPJ,
                  tdrec940.t$bpid$l          COD_FORNECEDOR,
                  tdrec940.t$fids$l          NOME_FORNECEDOR,
                  tdrec941.t$opfc$l          COD_CFOP,
@@ -26,16 +26,16 @@ select Q1.*
                  tdrec941.t$tamt$l          VL_TOTAL,
                  TIPO.DESCR                 TIPO
                  
-      FROM baandb.ttdrec940301  tdrec940  
+            FROM baandb.ttdrec940301  tdrec940  
            
        LEFT JOIN ( SELECT d.t$cnst CNST, 
                           l.t$desc DESCR
                      FROM baandb.tttadv401000 d, 
                           baandb.tttadv140000 l 
-                    WHERE d.t$cpac = 'ci' 
-                      AND d.t$cdom = 'sli.tdff.l'
+                    WHERE d.t$cpac = 'td' 
+                      AND d.t$cdom = 'rec.trfd.l'
                       AND l.t$clan = 'p'
-                      AND l.t$cpac = 'ci'
+                      AND l.t$cpac = 'td'
                       AND l.t$clab = d.t$za_clab
                       AND rpad(d.t$vers,4) ||
                           rpad(d.t$rele,2) ||
@@ -60,10 +60,10 @@ select Q1.*
                           l.t$desc DESCR
                      FROM baandb.tttadv401000 d, 
                           baandb.tttadv140000 l 
-                    WHERE d.t$cpac = 'ci' 
-                      AND d.t$cdom = 'sli.stat'
+                    WHERE d.t$cpac = 'td' 
+                      AND d.t$cdom = 'rec.stat.l'
                       AND l.t$clan = 'p'
-                      AND l.t$cpac = 'ci'
+                      AND l.t$cpac = 'td'
                       AND l.t$clab = d.t$za_clab
                       AND rpad(d.t$vers,4) ||
                           rpad(d.t$rele,2) ||
@@ -102,7 +102,7 @@ select Q1.*
       INNER JOIN baandb.ttcemm030301 tcemm030
               ON tcemm030.t$eunt = tcemm124.t$grid
 
-      WHERE tdrec940.t$rfdt$l = 10
-        AND tcemm124.t$dtyp = 1 
+           WHERE tdrec940.t$rfdt$l = 28
+             AND tdrec940.t$stat$l in (:SituacaoNF)
     
         ORDER BY tdrec940.t$docn$l, tdrec940.t$seri$l ) Q1
