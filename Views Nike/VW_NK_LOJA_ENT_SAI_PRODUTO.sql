@@ -1,14 +1,14 @@
---2015-08-28, Humberto Kasai, Conferência view
-
 SELECT
 --***************************************************************************************************************************
 --				SAIDA
 --***************************************************************************************************************************
 		'NIKE.COM'												            FILIAL,	
-    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE), 'YY')
-    || TO_CHAR(CISLI940.T$DOCN$L)
-		|| TO_CHAR(CISLI940.T$SERI$L)                 ROMANEIO_PRODUTO,
+        TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sysdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+        AT time zone 'America/Sao_Paulo') AS DATE), 'YY') ||
+        substr(to_char(
+                        ceil(current_date - date '1900-01-01') + 
+                        substr(to_char(cisli940.t$docn$l,'00000000'),-6,6)
+                ,'0000000'),-6,6)                  ROMANEIO_PRODUTO,
 		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))					PRODUTO,
 		'01'													                COR_PRODUTO,
 		znibd005.t$desc$c										          TAMANHO,
@@ -67,10 +67,12 @@ AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
 UNION
 SELECT
 		'NIKE.COM'												FILIAL,	
-    TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE), 'YY')
-		|| TO_CHAR(TDREC940.T$DOCN$L)
-		|| TO_CHAR(TDREC940.T$SERI$L)                 ROMANEIO_PRODUTO,
+      REVERSE(TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sysdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+        AT time zone 'America/Sao_Paulo') AS DATE), 'YY')) ||
+        substr(to_char(
+                        ceil(current_date - date '1900-01-01') + 
+                        substr(to_char(tdrec940.t$docn$l,'00000000'),-6,6)
+                ,'0000000'),-6,6)                               ROMANEIO_PRODUTO,
 		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))					PRODUTO,
 		'01'													                COR_PRODUTO,
 		znibd005.t$desc$c										          TAMANHO,
