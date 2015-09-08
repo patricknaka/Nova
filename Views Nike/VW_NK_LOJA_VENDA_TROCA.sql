@@ -1,5 +1,3 @@
---#2015-08-28, Humberto Kasai, Conferência view
-
 SELECT
 --***************************************************************************************************************************
 --				SAIDA
@@ -33,7 +31,9 @@ SELECT
             tdrec941.t$line$l  end                  LIN_REF_FICAL,
     		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 	    DT_ULT_ALTERACAO,
-    tcibd001.t$mdfb$c                               MOD_FABR_ITEM
+    tcibd001.t$mdfb$c                               MOD_FABR_ITEM,
+    tdrec941.t$opfc$l                               CFOP,
+    tdrec940.t$fdtc$l                               COD_TIPO_DOC_FISCAL
 
 FROM
 			BAANDB.TTDREC947601	TDREC947
@@ -104,4 +104,5 @@ WHERE
 		AND	TDREC947.T$OORG$L=1
     AND tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
     AND	tdrec940.t$cnfe$l != ' '
-		AND	TDREC940.T$RFDT$L = 10
+		AND	TDREC940.T$RFDT$L = 10            --10 - retorno de mercadoria
+--    AND tdrec940.t$opfc$l IN ('1202','2202','1411','2411')
