@@ -1,5 +1,3 @@
---#2015-08-28 - Humberto Kasai - Conferência view
-
 SELECT
 --***************************************************************************************************************************
 --				VENDA
@@ -28,9 +26,7 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		TO_CHAR(ZNSLS004.T$ENTR$C)										  NUMERO_CUPOM_FISCAL,
---		ZNSLS401.T$VLDI$C	* (-1)  					            DESCONTO_PGTO,
     cisli940.t$fght$l * (-1)                         DESCONTO_PGTO,
---		ZNSLS402.T$VLMR$C	                              TOTAL_VENDA,
     cisli940.t$amnt$l                               TOTAL_VENDA,
 		''														                  CANCELADO_FISCAL,
 		ZNSLS402.T$NUPA$C										            PARCELA,
@@ -88,8 +84,6 @@ INNER JOIN (SELECT	C.T$NCIA$C,
                     C.T$SQPD$C,
                     C.T$ENTR$C,
 					SUM(C.T$VLDI$C) T$VLDI$C
-                    --SUM(C.T$QTVE$C) T$QTVE$C,
-					--MAX(C.T$PZTR$C) T$PZTR$C
 			FROM	BAANDB.TZNSLS401601 C
 			GROUP BY C.T$NCIA$C,
 			         C.T$UNEG$C,
@@ -123,13 +117,9 @@ INNER JOIN	BAANDB.TCISLI940601	CISLI940	ON	CISLI940.T$FIRE$L	=	CISLI245.T$FIRE$L
 
 INNER JOIN (SELECT	E.T$FIRE$L,
 					E.T$REFR$L
-					-- SUM(E.T$TLDM$L) T$TLDM$L,
-					-- SUM(E1.T$TLDM$L) T$TLDM$L_FAT,
-					-- SUM(E.T$DQUA$L) T$DQUA$L
+
 			FROM	BAANDB.TCISLI941601 E
-			-- LEFT JOIN BAANDB.TCISLI941601 E1 
-						-- ON	E1.T$FIRE$L=E.T$REFR$L
-						-- AND	E1.T$LINE$L=E.T$RFDL$L
+
 			GROUP BY E.T$FIRE$L,
 					 E.T$REFR$L) CISLI941	ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
 					 
@@ -147,29 +137,28 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
 
---    AND cisli940.t$fire$l IN ('F00000280', 'F00000317')
 --***************************************************************************************************************************
---				COLETA
+--				TROCA
 --***************************************************************************************************************************
 UNION
 SELECT
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,
 		'NIKE.COM'												              FILIAL,
 		''														                  TERMINAL,
-		DECODE(ZNSLS402.T$IDMP$C,													--	LN										NIKE
-				1,	'08',                                                           --1	Cartão de Crédito						08 - CARTAO DE CREDITO TEF
-				2,	'11',                                                           --2	Boleto B2C (BV)							11 - BOLETO BANCARIO
-				3,	'  ',                                                           --3	Boleto B2B Spot							' ' - Não existe
-				4,	'13',                                                           --4	Vale (VA)								13 - VOUCHER
-				5,	'12',                                                           --5	Debito/Transferência (BV)				12 - TRANSFERENCIA BANCARIA
-				8,	'  ',                                                           --8	Boleto à Prazo B2B (PZ)					' ' - Não existe
-				9,	'11',                                                           --9	Boleto a prazo Atacado (PZ)				11 - BOLETO BANCARIO
-				10,	'11',                                                           --10	Boleto à vista Atacado (BV)			11 - BOLETO BANCARIO
-				11, '  ',                                                           --11	Pagamento Complementar				' ' - Não existe
-				12, '09',                                                           --12	Cartão de Débito (DB)				09 - CARTAO DE DEBITO TEF
-				13, '  ',                                                           --13	Pagamento Antecipado				' ' - Não existe
-				15,	'  ')										                COD_FORMA_PGTO,     --15	BNDES								' ' - Não existe
-		
+--		DECODE(ZNSLS402.T$IDMP$C,													--	LN										NIKE
+--				1,	'08',                                                           --1	Cartão de Crédito						08 - CARTAO DE CREDITO TEF
+--				2,	'11',                                                           --2	Boleto B2C (BV)							11 - BOLETO BANCARIO
+--				3,	'  ',                                                           --3	Boleto B2B Spot							' ' - Não existe
+--				4,	'13',                                                           --4	Vale (VA)								13 - VOUCHER
+--				5,	'12',                                                           --5	Debito/Transferência (BV)				12 - TRANSFERENCIA BANCARIA
+--				8,	'  ',                                                           --8	Boleto à Prazo B2B (PZ)					' ' - Não existe
+--				9,	'11',                                                           --9	Boleto a prazo Atacado (PZ)				11 - BOLETO BANCARIO
+--				10,	'11',                                                           --10	Boleto à vista Atacado (BV)			11 - BOLETO BANCARIO
+--				11, '  ',                                                           --11	Pagamento Complementar				' ' - Não existe
+--				12, '09',                                                           --12	Cartão de Débito (DB)				09 - CARTAO DE DEBITO TEF
+--				13, '  ',                                                           --13	Pagamento Antecipado				' ' - Não existe
+--				15,	'  ')										                COD_FORMA_PGTO,     --15	BNDES								' ' - Não existe
+		'$$'                                            COD_FORMA_PGTO,
 		''														                  CAIXA_VENDEDOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
@@ -217,7 +206,7 @@ INNER JOIN (SELECT	B.T$NCIA$C,
 					 B.T$ENTR$C,
                      B.T$ORNO$C) ZNSLS004	ON	ZNSLS004.T$ORNO$C	=	TDREC947.T$ORNO$L
 					 
-INNER JOIN (SELECT	D.T$NCIA$C,
+LEFT JOIN (SELECT	D.T$NCIA$C,
                     D.T$UNEG$C,
                     D.T$PECL$C,
                     D.T$SQPD$C,
@@ -264,9 +253,7 @@ INNER JOIN (SELECT	L.T$FIRE$L,
 
 INNER JOIN  BAANDB.TCISLI940601 CISLI940  ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
 											
---WHERE
---		TDREC940.T$STAT$L IN (4, 5)			-- APROVADO, APROVADO COM PROBLEMAS
---AND 	TDREC940.T$RFDT$L = 10
+
 WHERE
       tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
 AND	  tdrec940.t$cnfe$l != ' '
