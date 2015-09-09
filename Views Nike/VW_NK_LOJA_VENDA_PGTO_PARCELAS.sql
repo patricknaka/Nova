@@ -195,7 +195,7 @@ SELECT
 
 		''                            CODIGO_ADMINISTRADORA,
 		'D'														TIPO_PAGTO,
-		tdrec940.t$tfda$l * (1)				VALOR,
+		tdrec940.t$tfda$l * (-1)				VALOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L+1, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
