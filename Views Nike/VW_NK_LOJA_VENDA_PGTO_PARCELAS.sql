@@ -1,6 +1,4 @@
---#2015-08-28, Humberto Kasai, Conferência view
-
-SELECT
+?SELECT
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
@@ -159,45 +157,45 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
 --***************************************************************************************************************************
---				COLETA
+--				TROCA
 --***************************************************************************************************************************
 UNION
 SELECT
 		''														TERMINAL,
 		''														LANCAMENTO_CAIXA,
-		'NIKE.COM'												FILIAL,		
-		ZNSLS402.T$SEQU$C										PARCELA,
-		DECODE(ZNSLS402.T$cccd$c,
-			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
-			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
-			3,	'01',                                                       				-- 3	Amex                            01- AMERICAN EXPRESS
-			4,	'07',                                                       				-- 4	Diners                          07 - DINERS
-			5,	'10',                                                       				-- 5	Hipercard                       10 - HIPERCARD
-			18,	'04',                                                       				-- 18	Extra Mastercard                04 - MASTERCARD
-			38,	'11',                                                       				-- 38	Paypal                          11 - PAYPAL
-			15,	'  ',                                                       				-- 15	Multicheque/Multicash           
-			50,	'  ',                                                       				-- 50	Multicheque/Multicash           
-			19,	'03',                                                       				-- 19	Extra Visa                      03 - VISA CREDITO
-			11,	'03',                                                       				-- 11	Ponto Frio Visa                 03 - VISA CREDITO
-			8,	'04',                                                       				-- 8	Ponto Frio Mastercard           04 - MASTERCARD
-			10,	'11',                                                       				-- 10	Cartão Pão de Açúcar            
-			7, 	'  ',                                                       				-- 7	Aura                            
-			37,	'08',                                                       				-- 37	Elo                             08 - ELO CREDITO
-			43,	'  ',                                                       				-- 43	Primeira Compra                 
-			21, '  ',                                                       				-- 21	Ponto Frio Private Label        
-			17, '  ',                                                       				-- 17	Extra Private Label             
-			40, '04',                                                       				-- 40	Mobile Mastercard               04 - MASTERCARD
-			42,	'05',                                                       				-- 42	Visa Electron                   05 - VISA ELECTRON
-			49,	'04',                                                       				-- 49	Minha Casa Melhor Mastercard    04 - MASTERCARD
-			39,	'03',                                                       				-- 39	Mobile Visa                     03 - VISA CREDITO
-			22,	'  ',                                                       				-- 22	Itaucard
-			48,	'  ',                                                       				-- 48	Minha Casa Melhor Elo
-			44,	'  ',                                                       				-- 44	Clube Extra
-			70, '  ')											CODIGO_ADMINISTRADORA,      -- 70	Bndes
+		'NIKE.COM'										FILIAL,		
+		1										          PARCELA,
+--		DECODE(ZNSLS402.T$cccd$c,
+--			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
+--			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
+--			3,	'01',                                                       				-- 3	Amex                            01- AMERICAN EXPRESS
+--			4,	'07',                                                       				-- 4	Diners                          07 - DINERS
+--			5,	'10',                                                       				-- 5	Hipercard                       10 - HIPERCARD
+--			18,	'04',                                                       				-- 18	Extra Mastercard                04 - MASTERCARD
+--			38,	'11',                                                       				-- 38	Paypal                          11 - PAYPAL
+--			15,	'  ',                                                       				-- 15	Multicheque/Multicash           
+--			50,	'  ',                                                       				-- 50	Multicheque/Multicash           
+--			19,	'03',                                                       				-- 19	Extra Visa                      03 - VISA CREDITO
+--			11,	'03',                                                       				-- 11	Ponto Frio Visa                 03 - VISA CREDITO
+--			8,	'04',                                                       				-- 8	Ponto Frio Mastercard           04 - MASTERCARD
+--			10,	'11',                                                       				-- 10	Cartão Pão de Açúcar            
+--			7, 	'  ',                                                       				-- 7	Aura                            
+--			37,	'08',                                                       				-- 37	Elo                             08 - ELO CREDITO
+--			43,	'  ',                                                       				-- 43	Primeira Compra                 
+--			21, '  ',                                                       				-- 21	Ponto Frio Private Label        
+--			17, '  ',                                                       				-- 17	Extra Private Label             
+--			40, '04',                                                       				-- 40	Mobile Mastercard               04 - MASTERCARD
+--			42,	'05',                                                       				-- 42	Visa Electron                   05 - VISA ELECTRON
+--			49,	'04',                                                       				-- 49	Minha Casa Melhor Mastercard    04 - MASTERCARD
+--			39,	'03',                                                       				-- 39	Mobile Visa                     03 - VISA CREDITO
+--			22,	'  ',                                                       				-- 22	Itaucard
+--			48,	'  ',                                                       				-- 48	Minha Casa Melhor Elo
+--			44,	'  ',                                                       				-- 44	Clube Extra
+--			70, '  ')											CODIGO_ADMINISTRADORA,      -- 70	Bndes
 
-		
+		''                            CODIGO_ADMINISTRADORA,
 		'D'														TIPO_PAGTO,
-		ZNSLS402.T$VLPG$C											VALOR,
+		tdrec940.t$tfda$l * (1)				VALOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L+1, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
@@ -206,12 +204,12 @@ SELECT
 		''														BANCO,
 		''														CONTA_CORRENTE,
 		ABS(ZNSLS402.T$NSUA$C)				NUMERO_APROVACAO_CARTAO,
-		ZNSLS402.T$NUPA$C							PARCELAS_CARTAO,
-		0														VALOR_CANCELADO,
+		0							                PARCELAS_CARTAO,
+		0														  VALOR_CANCELADO,
 		''														CHEQUE_CARTAO,
 		''														NUMERO_LOTE,
 		0														TROCO,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
 		''														ID_DOCUMENTO_ECF,
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,
@@ -244,7 +242,7 @@ INNER JOIN (SELECT	B.T$NCIA$C,
 					 B.T$ENTR$C,
                      B.T$ORNO$C) ZNSLS004	ON	ZNSLS004.T$ORNO$C	=	TDREC947.T$ORNO$L
 					 
-INNER JOIN BAANDB.TZNSLS402601 ZNSLS402		ON	ZNSLS402.T$NCIA$C	=	ZNSLS004.T$NCIA$C
+LEFT JOIN BAANDB.TZNSLS402601 ZNSLS402		ON	ZNSLS402.T$NCIA$C	=	ZNSLS004.T$NCIA$C
 					                        AND ZNSLS402.T$UNEG$C   =	ZNSLS004.T$UNEG$C
 					                        AND ZNSLS402.T$PECL$C   =	ZNSLS004.T$PECL$C
 					                        AND ZNSLS402.T$SQPD$C   =	ZNSLS004.T$SQPD$C
