@@ -163,8 +163,9 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					NUMERO_CUPOM_FISCAL,
-		ZNSLS401.T$VLFR$C*-1									          DESCONTO_PGTO,
-		TDREC940.T$TFDA$L*-1									          TOTAL_VENDA,
+--		ZNSLS401.T$VLFR$C*-1									          DESCONTO_PGTO,
+    0.0                                             DESCONTO_PGTO,
+		(TDREC940.T$TFDA$L + ZNSLS401.T$VLFR$C )*-1	    TOTAL_VENDA,
 		''														                  CANCELADO_FISCAL,
 		1														                    PARCELA,
 		''														                  LANCAMENTO_CAIXA,
@@ -368,4 +369,4 @@ WHERE
 		AND	TDSLS400.T$HDST		=		35
 		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)   --branco, venda sem pedido, retorno de mercadoria de cliente
     
-ORDER BY TP_MOVTO, REF_FISCAL
+ORDER BY TICKET, TP_MOVTO, REF_FISCAL
