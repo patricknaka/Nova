@@ -330,7 +330,7 @@ SELECT DISTINCT
   CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
       '1'
   ELSE '0' END                                            ENTREGA_DEST_COMPR,                      --72
-  CASE WHEN SLS004.ENTREGA = 0 THEN
+  CASE WHEN SLS004.ENTREGA IS NULL THEN
       TO_CHAR(cisli940.t$docn$l) || cisli940.t$seri$l
   ELSE TO_CHAR(SLS004.ENTREGA) END   
                             NUMERO_PEDIDO_VENDA,                     --73
