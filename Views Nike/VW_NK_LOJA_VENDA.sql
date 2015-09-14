@@ -164,16 +164,15 @@ LEFT JOIN (	SELECT	F.T$FIRE$L,
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
    
---   AND cisli940.t$fire$l IN ('F00000295', 'F00000246')
 --***************************************************************************************************************************
---				COLETA
+--				TROCA
 --***************************************************************************************************************************
 
 UNION
 SELECT
 		'NIKE.COM'												FILIAL,
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L				TICKET,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
 		nvl(to_char(ZNSLS400.T$ICLF$C),' ')										CPF_CGC,		-- VERIFICAR FORMATAÇÃO
 		''														PERIODO,
