@@ -45,7 +45,8 @@ SELECT
             AT time zone 'America/Sao_Paulo') AS DATE) 
     END                    DT_RETORNO_REMESSA,
     zncmg015.t$rcod$c      COD_RETORNO,
-    zncmg019.t$dsca$c      DESC_COD_RETORNO
+    zncmg019.t$dsca$c      DESC_COD_RETORNO,
+    NVL(znsls409.LIBERADO, 'Não') LIBERADO
   
 FROM       baandb.tznsls402301 znsls402
 
@@ -103,7 +104,23 @@ INNER JOIN baandb.tzncmg009301 zncmg009
   LEFT JOIN baandb.tzncmg019301 zncmg019
          ON zncmg019.t$idad$c=zncmg015.t$idad$c
         AND zncmg019.t$rcod$c=zncmg015.t$rcod$c
-        
+
+  LEFT JOIN ( select sls409.t$ncia$c,
+                     sls409.t$uneg$c,
+                     sls409.t$pecl$c,
+                     sls409.t$sqpd$c,
+                     sls409.t$dved$c, 
+                     sls409.t$lbrd$c,
+                     case when sls409.t$dved$c = 1 or sls409.t$lbrd$c = 1
+                            then 'Sim'
+                          else   'Não'
+                      end Liberado
+                from baandb.tznsls409301 sls409 ) znsls409
+         ON znsls409.t$ncia$c = zncmg015.t$ncia$c
+        AND znsls409.t$uneg$c = zncmg015.t$uneg$c
+        AND znsls409.t$pecl$c = zncmg015.t$pecl$c
+        AND znsls409.t$sqpd$c = zncmg015.t$sqpd$c
+
 WHERE znsls400.T$IDPO$C = 'TD'
   AND znsls402.t$idmp$c = 1
   
@@ -119,3 +136,7 @@ WHERE znsls400.T$IDPO$C = 'TD'
   AND ( (zncmg015.t$pecl$c IN (:Pedido)) OR (:PedidoTodos = 1) )
     
 ORDER BY znsls400.t$dtin$c
+
+
+
+
