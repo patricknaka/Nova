@@ -35,33 +35,7 @@ SELECT
     whwmd400.t$pmex$c         PRAZO_EXPEDICAO,
     tcibd001.t$nwgt$l         PESO_LIQUIDO,
     tcibd001.t$kitm           TIPO_ITEM, 
-    ( SELECT l.t$desc DESC_KITM
-        FROM baandb.tttadv401000 d, 
-             baandb.tttadv140000 l 
-       WHERE d.t$cpac = 'tc' 
-         AND d.t$cdom = 'kitm'
-         AND l.t$clan = 'p'
-         AND l.t$cpac = 'tc'
-         AND l.t$clab = d.t$za_clab
-         AND d.t$cnst = tcibd001.t$kitm
-         AND rpad(d.t$vers,4) ||
-             rpad(d.t$rele,2) ||
-             rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv401000 l1 
-                                   where l1.t$cpac = d.t$cpac 
-                                     and l1.t$cdom = d.t$cdom )
-         AND rpad(l.t$vers,4) ||
-             rpad(l.t$rele,2) ||
-             rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv140000 l1 
-                                   where l1.t$clab = l.t$clab 
-                                     and l1.t$clan = l.t$clan 
-                                     and l1.t$cpac = l.t$cpac)) 
-                              DESC_KITM,
+    KITM.                     DESC_KITM,
     tcibd001.t$mdfb$c         MODELO_FABRICANTE,
     tcibd001.t$mont$c         POSSUI_MONTAGEM,
     tcibd001.t$uatc$c         UTILIZA_ATACADO,
@@ -79,33 +53,7 @@ SELECT
     tcibd200.t$cwar           ARMAZEM,
     tdipu001.t$ixdn$c         TIPO_XD_NOVA,
  
-    ( SELECT l.t$desc DESCR_TIPO_XD_NOVA
-        FROM baandb.tttadv401000 d,
-             baandb.tttadv140000 l
-       WHERE d.t$cpac = 'zn'
-         AND d.t$cdom = 'ipu.ixdn.c'
-         AND l.t$clan = 'p'
-         AND l.t$cpac = 'zn'
-         AND l.t$clab = d.t$za_clab
-         AND d.t$cnst = tdipu001.t$ixdn$c
-         AND rpad(d.t$vers,4) ||
-             rpad(d.t$rele,2) ||
-             rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv401000 l1 
-                                   where l1.t$cpac = d.t$cpac 
-                                     and l1.t$cdom = d.t$cdom )
-         AND rpad(l.t$vers,4) ||
-             rpad(l.t$rele,2) ||
-             rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv140000 l1 
-                                   where l1.t$clab = l.t$clab 
-                                     and l1.t$clan = l.t$clan 
-                                     and l1.t$cpac = l.t$cpac ) ) 
-                              DESCR_TIPO_XD_NOVA,
+    TIPO_XD_NOVA.             DESCR_TIPO_XD_NOVA,
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -117,95 +65,11 @@ SELECT
       
     tcibd001.t$seab           CHAVE_DE_BUSCA_II,
     tcibd936.t$sour$l         ORIGEM,
- 
-    ( SELECT l.t$desc DESCR_ORIGEM
-        FROM baandb.tttadv401000 d,
-             baandb.tttadv140000 l
-       WHERE d.t$cpac = 'tc'
-         AND d.t$cdom = 'sour.l'
-         AND l.t$clan = 'p'
-         AND l.t$cpac = 'tc'
-         AND l.t$clab = d.t$za_clab
-         AND d.t$cnst = tcibd936.t$sour$l
-         AND rpad(d.t$vers,4) ||
-             rpad(d.t$rele,2) ||
-             rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv401000 l1 
-                                   where l1.t$cpac = d.t$cpac 
-                                     and l1.t$cdom = d.t$cdom )
-         AND rpad(l.t$vers,4) ||
-             rpad(l.t$rele,2) ||
-             rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv140000 l1 
-                                   where l1.t$clab = l.t$clab 
-                                     and l1.t$clan = l.t$clan 
-                                     and l1.t$cpac = l.t$cpac ) ) 
-                              DESCR_ORIGEM,
-    
+    ORIGEM.                   DESCR_ORIGEM,
     tcibd200.t$osys           SISTEMA_DA_ORDEM,
- 
-    ( SELECT l.t$desc DESCR_SISTEMA_DA_ORDEM
-        FROM baandb.tttadv401000 d,
-             baandb.tttadv140000 l
-       WHERE d.t$cpac = 'tc'
-         AND d.t$cdom = 'osys'
-         AND l.t$clan = 'p'
-         AND l.t$cpac = 'tc'
-         AND l.t$clab = d.t$za_clab
-         AND d.t$cnst = tcibd200.t$osys
-         AND rpad(d.t$vers,4) ||
-             rpad(d.t$rele,2) ||
-             rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv401000 l1 
-                                   where l1.t$cpac = d.t$cpac 
-                                     and l1.t$cdom = d.t$cdom )
-         AND rpad(l.t$vers,4) ||
-             rpad(l.t$rele,2) ||
-             rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv140000 l1 
-                                   where l1.t$clab = l.t$clab 
-                                     and l1.t$clan = l.t$clan 
-                                     and l1.t$cpac = l.t$cpac ) ) 
-                              DESCR_SISTEMA_DA_ORDEM,
-    
+    SISTEMA_DA_ORDEM.         DESCR_SISTEMA_DA_ORDEM,
     tcibd001.t$espe$c         ITEM_ESPECIAL,
- 
-    ( SELECT l.t$desc DESC_ITEM_ESPECIAL
-        FROM baandb.tttadv401000 d,
-             baandb.tttadv140000 l
-       WHERE d.t$cpac = 'zn'
-         AND d.t$cdom = 'ibd.espe.c'
-         AND l.t$clan = 'p'
-         AND l.t$cpac = 'zn'
-         AND l.t$clab = d.t$za_clab
-         AND d.t$cnst = tcibd001.t$espe$c
-         AND rpad(d.t$vers,4) ||
-             rpad(d.t$rele,2) ||
-             rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv401000 l1 
-                                   where l1.t$cpac = d.t$cpac 
-                                     and l1.t$cdom = d.t$cdom )
-         AND rpad(l.t$vers,4) ||
-             rpad(l.t$rele,2) ||
-             rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                             rpad(l1.t$rele,2) ||
-                                             rpad(l1.t$cust,4)) 
-                                    from baandb.tttadv140000 l1 
-                                   where l1.t$clab = l.t$clab 
-                                     and l1.t$clan = l.t$clan 
-                                     and l1.t$cpac = l.t$cpac ) ) 
-                              DESC_ITEM_ESPECIAL,   
-         
+    ITEM_ESPECIAL.            DESC_ITEM_ESPECIAL,   
     tcibd001.t$okfi$c         OK_FISCAL,
     
     CASE WHEN tcibd001.t$okfi$c = 1 THEN 'Sim'
@@ -228,9 +92,6 @@ LEFT JOIN baandb.ttccom100301 tccom100
   
 LEFT JOIN baandb.ttccom130301 tccom130a
        ON tccom130a.t$cadr  = tccom100.t$cadr 
-  
-LEFT JOIN baandb.ttccom100301 tccom100
-       ON tccom100.t$bpid   = tdipu001.t$otbp
     
 LEFT JOIN baandb.ttcibd004301 tcibd004  
        ON tcibd004.t$item   = tcibd001.t$item 
@@ -268,11 +129,148 @@ LEFT JOIN baandb.tznmcs032301 znmcs032
       AND znmcs032.t$subf$c = tcibd001.t$subf$c              
 
 LEFT JOIN baandb.twhwmd400301 whwmd400
-       ON whwmd400.t$item   = tcibd001.t$item                      
+       ON whwmd400.t$item   = tcibd001.t$item             
+
+LEFT JOIN ( SELECT d.t$cnst   CODE_KITM,
+                   l.t$desc   DESC_KITM
+              FROM baandb.tttadv401000 d, 
+                   baandb.tttadv140000 l 
+             WHERE d.t$cpac = 'tc' 
+               AND d.t$cdom = 'kitm'
+               AND l.t$clan = 'p'
+               AND l.t$cpac = 'tc'
+               AND l.t$clab = d.t$za_clab
+               AND rpad(d.t$vers,4) ||
+                   rpad(d.t$rele,2) ||
+                   rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv401000 l1 
+                                         where l1.t$cpac = d.t$cpac 
+                                           and l1.t$cdom = d.t$cdom )
+               AND rpad(l.t$vers,4) ||
+                   rpad(l.t$rele,2) ||
+                   rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv140000 l1 
+                                         where l1.t$clab = l.t$clab 
+                                           and l1.t$clan = l.t$clan 
+                                           and l1.t$cpac = l.t$cpac ) ) KITM
+       ON KITM.CODE_KITM = tcibd001.t$kitm
+	   
+LEFT JOIN ( SELECT d.t$cnst CODE_TIPO_XD_NOVA,
+                   l.t$desc DESCR_TIPO_XD_NOVA
+              FROM baandb.tttadv401000 d,
+                   baandb.tttadv140000 l
+             WHERE d.t$cpac = 'zn'
+               AND d.t$cdom = 'ipu.ixdn.c'
+               AND l.t$clan = 'p'
+               AND l.t$cpac = 'zn'
+               AND l.t$clab = d.t$za_clab
+               AND rpad(d.t$vers,4) ||
+                   rpad(d.t$rele,2) ||
+                   rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv401000 l1 
+                                         where l1.t$cpac = d.t$cpac 
+                                           and l1.t$cdom = d.t$cdom )
+               AND rpad(l.t$vers,4) ||
+                   rpad(l.t$rele,2) ||
+                   rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv140000 l1 
+                                         where l1.t$clab = l.t$clab 
+                                           and l1.t$clan = l.t$clan 
+                                           and l1.t$cpac = l.t$cpac ) ) TIPO_XD_NOVA
+       ON TIPO_XD_NOVA.CODE_TIPO_XD_NOVA = tdipu001.t$ixdn$c
+	   
+LEFT JOIN ( SELECT d.t$cnst CODE_ORIGEM,
+                   l.t$desc DESCR_ORIGEM
+              FROM baandb.tttadv401000 d,
+                   baandb.tttadv140000 l
+             WHERE d.t$cpac = 'tc'
+               AND d.t$cdom = 'sour.l'
+               AND l.t$clan = 'p'
+               AND l.t$cpac = 'tc'
+               AND l.t$clab = d.t$za_clab
+               AND rpad(d.t$vers,4) ||
+                   rpad(d.t$rele,2) ||
+                   rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv401000 l1 
+                                         where l1.t$cpac = d.t$cpac 
+                                           and l1.t$cdom = d.t$cdom )
+               AND rpad(l.t$vers,4) ||
+                   rpad(l.t$rele,2) ||
+                   rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv140000 l1 
+                                         where l1.t$clab = l.t$clab 
+                                           and l1.t$clan = l.t$clan 
+                                           and l1.t$cpac = l.t$cpac ) ) ORIGEM
+       ON ORIGEM.CODE_ORIGEM = tcibd936.t$sour$l
+
+LEFT JOIN ( SELECT d.t$cnst CODE_SISTEMA_DA_ORDEM,
+                   l.t$desc DESCR_SISTEMA_DA_ORDEM
+              FROM baandb.tttadv401000 d,
+                   baandb.tttadv140000 l
+             WHERE d.t$cpac = 'tc'
+               AND d.t$cdom = 'osys'
+               AND l.t$clan = 'p'
+               AND l.t$cpac = 'tc'
+               AND l.t$clab = d.t$za_clab
+               AND rpad(d.t$vers,4) ||
+                   rpad(d.t$rele,2) ||
+                   rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv401000 l1 
+                                         where l1.t$cpac = d.t$cpac 
+                                           and l1.t$cdom = d.t$cdom )
+               AND rpad(l.t$vers,4) ||
+                   rpad(l.t$rele,2) ||
+                   rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv140000 l1 
+                                         where l1.t$clab = l.t$clab 
+                                           and l1.t$clan = l.t$clan 
+                                           and l1.t$cpac = l.t$cpac ) ) SISTEMA_DA_ORDEM
+       ON SISTEMA_DA_ORDEM.CODE_SISTEMA_DA_ORDEM = tcibd200.t$osys
+
+LEFT JOIN ( SELECT d.t$cnst CODE_ITEM_ESPECIAL,
+                   l.t$desc DESC_ITEM_ESPECIAL
+              FROM baandb.tttadv401000 d,
+                   baandb.tttadv140000 l
+             WHERE d.t$cpac = 'zn'
+               AND d.t$cdom = 'ibd.espe.c'
+               AND l.t$clan = 'p'
+               AND l.t$cpac = 'zn'
+               AND l.t$clab = d.t$za_clab
+               AND rpad(d.t$vers,4) ||
+                   rpad(d.t$rele,2) ||
+                   rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv401000 l1 
+                                         where l1.t$cpac = d.t$cpac 
+                                           and l1.t$cdom = d.t$cdom )
+               AND rpad(l.t$vers,4) ||
+                   rpad(l.t$rele,2) ||
+                   rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv140000 l1 
+                                         where l1.t$clab = l.t$clab 
+                                           and l1.t$clan = l.t$clan 
+                                           and l1.t$cpac = l.t$cpac ) ) ITEM_ESPECIAL
+       ON ITEM_ESPECIAL.CODE_ITEM_ESPECIAL = tcibd001.t$espe$c
   
-LEFT JOIN baandb.twhwmd220301 whwmd210
-       ON whwmd210.t$item   = tcibd001.t$item
-        
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY HH24:MI:SS'), 
              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)) 
                    BETWEEN NVL(:DataInclusaoDe, CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY HH24:MI:SS'), 
@@ -286,7 +284,8 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY H
                                                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)) 
                        AND NVL(:DataAlteracaoAte,     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 
                                                    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
-  AND tcibd001.t$npcl$c IN (:TipoClasse)
-  AND tcibd001.t$csig   IN (:Situacao)
+  AND tcibd001.t$kitm = :TipoItem
+  AND NVL(Trim(tcibd001.t$csig), '000')   IN (:Situacao)
   AND tdipu001.t$ixdn$c IN (:TipoXD)
+  AND tcibd001.t$npcl$c IN (:TipoClasse)
   AND ( (Trim(tccom130a.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ is null) )
