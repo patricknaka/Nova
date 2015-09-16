@@ -12,7 +12,10 @@ SELECT DISTINCT
       to_char(tdrec942.t$line$l/10)    
   end                           ITEM_IMPRESSAO,           --05
   '1'                           SUB_ITEM_TAMANHO,         --06
-  to_char(tdrec942.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
+  CASE WHEN tdrec942.t$brty$l = 3 THEN     --IPI
+      '2'
+  ELSE
+      to_char(tdrec942.t$brty$l) END    ID_IMPOSTO,       --07
   tdrec942.t$rate$l             TAXA_IMPOSTO,             --08
   
   CASE
@@ -58,7 +61,10 @@ SELECT  DISTINCT
       to_char(cisli943.t$line$l/10)    
   end                           ITEM_IMPRESSAO,           --05
   '1'                           SUB_ITEM_TAMANHO,         --06
-  to_char(cisli943.t$brty$l)    ID_IMPOSTO,               --07      --OBS: CÓDIGOS DIFERENTES DA NIKE
+  CASE WHEN cisli943.t$brty$l = 3 THEN
+      '2'
+  ELSE
+      to_char(cisli943.t$brty$l) END    ID_IMPOSTO,       --07
   cisli943.t$rate$l             TAXA_IMPOSTO,             --08
   CASE
 	WHEN cisli943.t$brty$l=1 THEN 3
