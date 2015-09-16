@@ -34,7 +34,8 @@ select Q1.DATA_EMISSAO,
        Round(sum(Q1.PESO_VOLUME) /
               (1-(ALIQUOTA/100)) -
               (sum(Q1.PESO_VOLUME)), 4 )   VLR_ICMS, 
-       sum(Q1.PESO_VOLUME)   FRETE_TOTAL
+       sum(Q1.PESO_VOLUME)   FRETE_TOTAL 
+
   
 from ( SELECT DISTINCT
               CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
@@ -173,10 +174,20 @@ from ( SELECT DISTINCT
            ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
           AND znfmd060.t$cono$c = znfmd630.t$cono$c
               
-    LEFT JOIN BAANDB.tznfmd068301 znfmd068
+    LEFT JOIN ( select  a.t$adva$c,
+                        a.t$peda$c,
+                        a.t$cfrw$c,
+                        a.t$cono$c,
+                        max(a.t$nlis$c) t$nlis$c
+                from    baandb.tznfmd068301 a
+                where a.t$ativ$c = 1  --Ativo
+                group by a.t$cfrw$c,
+                         a.t$cono$c,
+                         a.t$adva$c,
+                         a.t$peda$c) znfmd068
            ON znfmd068.t$cfrw$c = znfmd630.t$cfrw$c 
           AND znfmd068.t$cono$c = znfmd630.t$cono$c
-   
+                  
     LEFT JOIN BAANDB.ttcmcs940301 tcmcs940
            ON tcmcs940.t$ofso$l = cisli940.t$ccfo$l 
                                     
@@ -261,7 +272,7 @@ WHERE ( select max(znfmd640.t$coci$c)
           from BAANDB.tznfmd640301 znfmd640
          where znfmd640.t$coci$c IN ('ETR', 'COL','CTR', 'POS')
            and znfmd640.t$fili$c = znfmd630.t$fili$c 
-           and znfmd640.t$etiq$c = znfmd630.t$etiq$c ) IS NOT NULL  )  Q1
+           and znfmd640.t$etiq$c = znfmd630.t$etiq$c ) IS NOT NULL )  Q1
     
 WHERE Q1.TIPO_NF IN (:TipoNF)
   AND TRUNC(Q1.DATA_EMISSAO)
@@ -298,6 +309,7 @@ GROUP BY Q1.DATA_EMISSAO,
          Q1.DESCR_TIPO_DOC,
          Q1.CFO_ENTREGA,
          Q1.DESC_CFO_ENTREGA
+ 
 
 ORDER BY Q1.DATA_EMISSAO, 
          Q1.ENTREGA
