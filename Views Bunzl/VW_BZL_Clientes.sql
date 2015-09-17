@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --*********************************************************************************************************************
 --	LISTA TODOS OS PEDIDOS INTEGRADOS INCLUSIVE TROCAS E DEVOLUÇÕES INDEPENDENTE DO STATUS
 --*********************************************************************************************************************
@@ -27,7 +27,8 @@
       then LTRIM(RTRIM(SUBSTR(replace(replace(REPLACE(TCCOM130.T$TELP,'(',''),')',''),'-',''),6,13)))		
       else LTRIM(RTRIM(SUBSTR(replace(replace(REPLACE(TCCOM130.T$TELP,'(',''),')',''),'-',''),3,13)))	end TELEFONE,
 		TCCOM130.T$INFO									EMAIL,
-		TCCOM140.T$FULN									CONTATO
+		TCCOM140.T$FULN									CONTATO,
+    tccom139.t$ibge$l               COD_IBGE
 		
 		
 FROM
@@ -39,4 +40,9 @@ LEFT JOIN 	BAANDB.TTCCOM966602	TCCOM966	ON	TCCOM966.T$COMP$D	=	TCCOM938.T$COMP$D
 											AND	TCCOM966.T$COMP$D	!=	' '
 LEFT JOIN	BAANDB.TTCCOM140602 TCCOM140	ON	TCCOM140.T$CCNT		=	TCCOM100.T$CCNT
 
+ LEFT JOIN baandb.ttccom139301 tccom139
+        ON  tccom139.t$ccty = tccom130.t$ccty
+       AND  tccom139.t$cste = tccom130.t$cste
+       AND  tccom139.t$city = tccom130.t$ccit
+       
 WHERE tccom100.t$bprl = 2     --Cliente
