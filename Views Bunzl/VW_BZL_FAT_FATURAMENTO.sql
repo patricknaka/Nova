@@ -10,7 +10,7 @@
   WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
   AND tcemm030.t$eunt=tcemm124.t$grid
   AND tcemm124.t$loco=602
-  AND rownum=1) = ''
+  AND rownum=1) = ' '
 THEN
   (	SELECT substr(tcemm124.t$grid,-2,2) FROM baandb.ttcemm124602 tcemm124
   WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
