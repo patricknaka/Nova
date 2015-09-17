@@ -278,7 +278,7 @@ WHERE Q1.TIPO_NF IN (:TipoNF)
   AND TRUNC(Q1.DATA_EMISSAO)
       Between :DataDe 
           And :DataAte
-  AND ( (Q1.CNPJ_TRANS like '%' || :CNPJ  || '%') OR (:CNPJ is null) )
+  AND ( (regexp_replace(Q1.CNPJ_TRANS, '[^0-9]', '')  like '%' || Trim(:CNPJ)  || '%' ) OR (Trim(:CNPJ) is null) )
 
 GROUP BY Q1.DATA_EMISSAO,
          Q1.FILIAL,
