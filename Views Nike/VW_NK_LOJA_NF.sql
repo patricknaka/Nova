@@ -181,7 +181,7 @@ FROM  baandb.ttdrec940601  tdrec940
       AND tttxt010r.t$clan = 'p'
 	    AND tttxt010r.t$seqe = 1
     
-    LEFT JOIN baandb.ttcmcs966301 tcmcs966
+    LEFT JOIN baandb.ttcmcs966601 tcmcs966
            ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
            
     WHERE tdrec940.t$stat$l IN (4,5,6)
@@ -460,7 +460,7 @@ FROM  baandb.tcisli940601  cisli940
           AND tttxt010f.t$clan = 'p'
           AND tttxt010f.t$seqe = 1
       
-    LEFT JOIN baandb.ttcmcs966301 tcmcs966
+    LEFT JOIN baandb.ttcmcs966601 tcmcs966
            ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
     
     LEFT JOIN (SELECT A.t$ncmp$l,
