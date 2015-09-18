@@ -2,7 +2,7 @@ SELECT
 --*********************************************************************************************************************
 --	LISTA TODOS AS ENTREGAS INTEGRADAS E OS PRODUTOS INDEPENDENTE DO STATUS
 --*********************************************************************************************************************
-		to_char(ZNSLS004.T$ENTR$C)														PEDIDO,
+    to_char(ZNSLS004.T$ENTR$C)									PEDIDO,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE)  DATA_FATURAMENTO,
 		to_char(CISLI940.T$DOCN$L)									NF,
@@ -17,7 +17,8 @@ SELECT
 				AT time zone 'America/Sao_Paulo') AS DATE)
 				ELSE NULL END													  DT_ENTREGA,		
 		ICMS_ST.T$BASE$L														BASE_CALCULO,
-		ICMS_ST.T$NMRG$L														IVA,
+--		ICMS_ST.T$NMRG$L														IVA,
+    cisli941.t$tpot$l                           IVA,
 		ICMS_ST.T$RATE$L														ALIQUOTA
 
 FROM
@@ -90,3 +91,12 @@ LEFT JOIN (	SELECT	A.T$FIRE$L,
 			FROM	BAANDB.TCISLI943602 A
 			WHERE 	A.T$BRTY$L=2) ICMS_ST	ON	ICMS_ST.T$FIRE$L	=	CISLI941.T$FIRE$L
 											AND	ICMS_ST.T$LINE$L	=	CISLI941.T$LINE$L
+
+LEFT JOIN baandb.tznsls000601 znsls000
+       ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+
+WHERE cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE 
+  AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
+  AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
+   
+ORDER BY PEDIDO
