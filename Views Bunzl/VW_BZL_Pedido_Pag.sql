@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --*********************************************************************************************************************
 --	LISTA TODOS OS PEDIDOS INTEGRADOS INCLUSIVE TROCAS E DEVOLUÇÕES INDEPENDENTE DO STATUS
 --*********************************************************************************************************************
@@ -29,7 +29,8 @@
 			CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS401.T$DTAP$C, 
 				'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 				AT time zone 'America/Sao_Paulo') AS DATE)						DT_APROV,
-			ZNSLS402.T$VLMR$C													VL_PAGAMENTO
+			ZNSLS402.T$VLMR$C													VL_PAGAMENTO,
+      ABS(ZNSLS402.T$NSUA$C)					          NUMERO_APROVACAO_CARTAO
 			
 FROM
 			BAANDB.TZNSLS402602	ZNSLS402
