@@ -122,7 +122,7 @@ FROM  baandb.ttdrec941601 tdrec941
           LEFT JOIN baandb.tznsls000601 znsls000
                  ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
 
-    LEFT JOIN baandb.ttcmcs966301 tcmcs966
+    LEFT JOIN baandb.ttcmcs966601 tcmcs966
            ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
            
 WHERE tdrec940.t$stat$l IN (4,5,6)
@@ -258,7 +258,7 @@ FROM  baandb.tcisli941601 cisli941
           LEFT JOIN baandb.tznsls000601 znsls000
                  ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
 
-    LEFT JOIN baandb.ttcmcs966301 tcmcs966
+    LEFT JOIN baandb.ttcmcs966601 tcmcs966
            ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
            
         LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
