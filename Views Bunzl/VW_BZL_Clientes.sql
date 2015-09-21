@@ -28,7 +28,10 @@ SELECT
       else LTRIM(RTRIM(SUBSTR(replace(replace(REPLACE(TCCOM130.T$TELP,'(',''),')',''),'-',''),3,13)))	end TELEFONE,
 		TCCOM130.T$INFO									EMAIL,
 		TCCOM140.T$FULN									CONTATO,
-    tccom139.t$ibge$l               COD_IBGE
+    tccom139.t$ibge$l               COD_IBGE,
+    znsls401.t$entr$c               PEDIDO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TCCOM100.T$RCD_UTC, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone 'America/Sao_Paulo') AS DATE)    DATA_ULT_UPDATE
 		
 		
 FROM
@@ -40,9 +43,18 @@ LEFT JOIN 	BAANDB.TTCCOM966602	TCCOM966	ON	TCCOM966.T$COMP$D	=	TCCOM938.T$COMP$D
 											AND	TCCOM966.T$COMP$D	!=	' '
 LEFT JOIN	BAANDB.TTCCOM140602 TCCOM140	ON	TCCOM140.T$CCNT		=	TCCOM100.T$CCNT
 
- LEFT JOIN baandb.ttccom139301 tccom139
-        ON  tccom139.t$ccty = tccom130.t$ccty
-       AND  tccom139.t$cste = tccom130.t$cste
-       AND  tccom139.t$city = tccom130.t$ccit
+LEFT JOIN baandb.ttccom139602 tccom139
+       ON  tccom139.t$ccty = tccom130.t$ccty
+      AND  tccom139.t$cste = tccom130.t$cste
+      AND  tccom139.t$city = tccom130.t$ccit
+       
+LEFT JOIN (select max(a.t$entr$c) T$ENTR$C,
+                      a.t$stbp$c
+           from    baandb.tznsls401602 a
+           group by a.t$stbp$c ) znsls401
+       ON znsls401.T$STBP$C = tccom100.t$bpid
+
        
 WHERE tccom100.t$bprl = 2     --Cliente
+
+ORDER BY TCCOM100.T$BPID, ZNSLS401.T$ENTR$C
