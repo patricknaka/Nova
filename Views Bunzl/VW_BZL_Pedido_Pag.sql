@@ -30,7 +30,7 @@ SELECT
 				'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 				AT time zone 'America/Sao_Paulo') AS DATE)						DT_APROV,
 			ZNSLS402.T$VLMR$C													VL_PAGAMENTO,
-      ABS(ZNSLS402.T$NSUA$C)					          NUMERO_APROVACAO_CARTAO,
+      ABS(ZNSLS402.T$NSUA$C)					            NUMERO_APROVACAO_CARTAO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone 'America/Sao_Paulo') AS DATE)    DATA_INCLUSAO
 			
