@@ -1,4 +1,4 @@
---#2015-08-28, Humberto Kasai, conferência da view
+ --#2015-08-28, Humberto Kasai, conferência da view
 
 SELECT DISTINCT
 
@@ -29,14 +29,14 @@ SELECT DISTINCT
   tccom130.t$tefx               FAX,                --18
   ''                           LIMITE_CREDITO,     --19
   ''                           SEM_CREDITO,        --20
-  ''                           ANIVERSARIO,        --21
+  ZNSLS400.t$dtna$c            ANIVERSARIO,        --21
   CASE WHEN tccom100.t$crdt < to_date('01-01-1980','DD-MM-YYYY') THEN
       NULL
   ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( tccom100.t$crdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE) END
                                 CADASTRAMENTO,      --22
   NVL(SUBSTR(replace(replace(replace(tccom130.t$telp,'(',''),')',''),'-',''),1,2),' ') DDD,                --23
-  ''                           SEXO,               --24
+  ZNSLS400.t$tpse$c            SEXO,               --24
   ''                           OBS,                --25
     CASE WHEN tccom130.t$ftyp$l = 'PJ' THEN
       'C'
@@ -60,6 +60,7 @@ SELECT DISTINCT
     'S'                         TIPO_MOV,           --27
     SLI940.t$fire$l             REF_FISCAL,         --28
     SLI940.t$rcd_utc            DT_ULT_UPDATE       --29
+
    
 FROM  baandb.ttccom100601 tccom100
 
@@ -71,15 +72,19 @@ FROM  baandb.ttccom100601 tccom100
          
   LEFT JOIN ( select  MAX(a.t$dtem$c)  DT_ULT_COMP,
                       a.t$ofbp$c,
-					  a.t$te1f$c,
-					  a.t$te2f$c
+                      a.t$te1f$c,
+                      a.t$te2f$c,
+                      a.t$tpse$c,
+                      a.t$dtna$c
               from    baandb.tznsls400601  a
               group by 	a.t$ofbp$c,
-						a.t$te1f$c,
-						a.t$te2f$c) ZNSLS400
+                        a.t$te1f$c,
+                        a.t$te2f$c,
+                        a.t$tpse$c,
+                        a.t$dtna$c) ZNSLS400
          ON   ZNSLS400.t$ofbp$c = tccom100.t$bpid
          
-  LEFT JOIN baandb.ttccom139301 tccom139              --tabela compartilhada com cia 201
+  LEFT JOIN baandb.ttccom139601 tccom139
         ON  tccom139.t$ccty = tccom130.t$ccty
        AND  tccom139.t$cste = tccom130.t$cste
        AND  tccom139.t$city = tccom130.t$ccit
@@ -95,12 +100,9 @@ FROM  baandb.ttccom100601 tccom100
                               and   znnfe011.t$fire$c = cisli940.t$fire$l
                               and   znnfe011.t$stfa$c = 5
                               and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))) SLI940
---              and   TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---                          AT time zone 'America/Sao_Paulo') AS DATE)) = TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---                          AT time zone 'America/Sao_Paulo') AS DATE))) SLI940
           ON SLI940.t$bpid$l = tccom100.t$bpid
          AND SLI940.t$stat$l IN (2,5,6,101)
-                          
+          
 UNION
 
 SELECT DISTINCT
@@ -132,14 +134,14 @@ SELECT DISTINCT
   tccom130.t$tefx               FAX,                --18
   ''                           LIMITE_CREDITO,     --19
   ''                           SEM_CREDITO,        --20
-  ''                           ANIVERSARIO,        --21
+  ZNSLS400.T$dtna$c            ANIVERSARIO,        --21
   CASE WHEN tccom100.t$crdt < to_date('01-01-1980','DD-MM-YYYY') THEN
       NULL
   ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( tccom100.t$crdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE) END
                                 CADASTRAMENTO,      --22
   NVL(SUBSTR(replace(replace(replace(tccom130.t$telp,'(',''),')',''),'-',''),1,2),' ') DDD,                --23
-  ''                           SEXO,               --24
+  ZNSLS400.t$tpse$c            SEXO,               --24
   ''                           OBS,                --25
     CASE WHEN tccom130.t$ftyp$l = 'PJ' THEN
       'C'
@@ -163,7 +165,7 @@ SELECT DISTINCT
     'E'                         TIPO_MOV,           --27
     REC940.t$fire$l             REF_FISCAL,         --28
     REC940.t$rcd_utc            DT_ULT_UPDATE       --29
-   
+    
 FROM  baandb.ttccom100601 tccom100
 
   LEFT JOIN baandb.ttccom130601 tccom130
@@ -174,15 +176,19 @@ FROM  baandb.ttccom100601 tccom100
          
   LEFT JOIN ( select  MAX(a.t$dtem$c)  DT_ULT_COMP,
                       a.t$ofbp$c,
-					  a.t$te1f$c,
-					  a.t$te2f$c
+                      a.t$te1f$c,
+                      a.t$te2f$c,
+                      a.t$tpse$c,
+                      a.t$dtna$c
               from    baandb.tznsls400601  a
               group by 	a.t$ofbp$c,
 						a.t$te1f$c,
-						a.t$te2f$c) ZNSLS400
+						a.t$te2f$c,
+            a.t$tpse$c,
+            a.t$dtna$c) ZNSLS400
          ON   ZNSLS400.t$ofbp$c = tccom100.t$bpid
          
-  LEFT JOIN baandb.ttccom139301 tccom139              --tabela compartilhada com cia 201
+  LEFT JOIN baandb.ttccom139601 tccom139
         ON  tccom139.t$ccty = tccom130.t$ccty
        AND  tccom139.t$cste = tccom130.t$cste
        AND  tccom139.t$city = tccom130.t$ccit
@@ -192,8 +198,5 @@ FROM  baandb.ttccom100601 tccom100
                           tdrec940.t$stat$l,
                           tdrec940.t$rcd_utc
                   from    baandb.ttdrec940601 tdrec940 ) REC940
---                  where   TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---                          AT time zone 'America/Sao_Paulo') AS DATE)) = TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---                          AT time zone 'America/Sao_Paulo') AS DATE)) ) REC940
           ON REC940.t$bpid$l = tccom100.t$bpid
          AND REC940.t$stat$l IN (4,5,6)
