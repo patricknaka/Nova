@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 --*********************************************************************************************************************
 --	LISTA TODOS OS PEDIDOS INTEGRADOS INCLUSIVE TROCAS E DEVOLUÇÕES INDEPENDENTE DO STATUS
 --*********************************************************************************************************************
@@ -29,7 +29,10 @@
 			CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS401.T$DTAP$C, 
 				'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 				AT time zone 'America/Sao_Paulo') AS DATE)						DT_APROV,
-			ZNSLS402.T$VLMR$C													VL_PAGAMENTO
+			ZNSLS402.T$VLMR$C													VL_PAGAMENTO,
+      ABS(ZNSLS402.T$NSUA$C)					            NUMERO_APROVACAO_CARTAO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone 'America/Sao_Paulo') AS DATE)    DATA_INCLUSAO
 			
 FROM
 			BAANDB.TZNSLS402602	ZNSLS402
@@ -48,3 +51,9 @@ INNER JOIN (SELECT	C.T$NCIA$C,
 					                        AND ZNSLS401.T$UNEG$C   =	ZNSLS402.T$UNEG$C
 					                        AND ZNSLS401.T$PECL$C   =	ZNSLS402.T$PECL$C
 					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS402.T$SQPD$C
+                                  
+INNER JOIN baandb.tznsls400602 znsls400
+        ON znsls400.t$ncia$c = znsls401.t$ncia$c
+       AND znsls400.t$uneg$c = znsls401.t$uneg$c
+       AND znsls400.t$pecl$c = znsls401.t$pecl$c
+       AND znsls400.t$sqpd$c = znsls401.t$sqpd$c

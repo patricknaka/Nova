@@ -28,8 +28,10 @@ SELECT
       else LTRIM(RTRIM(SUBSTR(replace(replace(REPLACE(TCCOM130.T$TELP,'(',''),')',''),'-',''),3,13)))	end TELEFONE,
 		TCCOM130.T$INFO									EMAIL,
 		TCCOM140.T$FULN									CONTATO,
-    tccom139.t$ibge$l               COD_IBGE
-		
+    tccom139.t$ibge$l               COD_IBGE,
+    znsls401.t$entr$c               PEDIDO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone 'America/Sao_Paulo') AS DATE)    DATA_INCLUSAO
 		
 FROM
 			BAANDB.TTCCOM100602	TCCOM100
@@ -40,9 +42,42 @@ LEFT JOIN 	BAANDB.TTCCOM966602	TCCOM966	ON	TCCOM966.T$COMP$D	=	TCCOM938.T$COMP$D
 											AND	TCCOM966.T$COMP$D	!=	' '
 LEFT JOIN	BAANDB.TTCCOM140602 TCCOM140	ON	TCCOM140.T$CCNT		=	TCCOM100.T$CCNT
 
- LEFT JOIN baandb.ttccom139301 tccom139
-        ON  tccom139.t$ccty = tccom130.t$ccty
-       AND  tccom139.t$cste = tccom130.t$cste
-       AND  tccom139.t$city = tccom130.t$ccit
+LEFT JOIN baandb.ttccom139602 tccom139
+       ON  tccom139.t$ccty = tccom130.t$ccty
+      AND  tccom139.t$cste = tccom130.t$cste
+      AND  tccom139.t$city = tccom130.t$ccit
        
+LEFT JOIN (select     a.t$ncia$c,
+                      a.t$uneg$c,
+                      a.t$pecl$c,
+                      a.t$sqpd$c,
+                      a.t$ofbp$c,
+                      a.t$dtin$c
+           from    baandb.tznsls400602 a
+           group by a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$ofbp$c,
+                    a.t$dtin$c) znsls400
+       ON znsls400.t$ofbp$c = tccom100.t$bpid
+
+LEFT JOIN (select a.t$ncia$c, 
+                  a.t$uneg$c,
+                  a.t$pecl$c,
+                  a.t$sqpd$c,
+                  a.t$entr$c
+          from    baandb.tznsls401602 a
+          group by  a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c) znsls401
+       ON znsls401.t$ncia$c = znsls400.t$ncia$c
+      AND znsls401.t$uneg$c = znsls400.t$uneg$c
+      AND znsls401.t$pecl$c = znsls400.t$pecl$c
+      AND znsls401.t$sqpd$c = znsls400.t$sqpd$c
+
 WHERE tccom100.t$bprl = 2     --Cliente
+
+ORDER BY TCCOM100.T$BPID, ZNSLS401.T$ENTR$C
