@@ -84,7 +84,7 @@ FROM  baandb.ttccom100601 tccom100
                         a.t$dtna$c) ZNSLS400
          ON   ZNSLS400.t$ofbp$c = tccom100.t$bpid
          
-  LEFT JOIN baandb.ttccom139601 tccom139
+  LEFT JOIN baandb.ttccom139301 tccom139
         ON  tccom139.t$ccty = tccom130.t$ccty
        AND  tccom139.t$cste = tccom130.t$cste
        AND  tccom139.t$city = tccom130.t$ccit
@@ -188,7 +188,7 @@ FROM  baandb.ttccom100601 tccom100
             a.t$dtna$c) ZNSLS400
          ON   ZNSLS400.t$ofbp$c = tccom100.t$bpid
          
-  LEFT JOIN baandb.ttccom139601 tccom139
+  LEFT JOIN baandb.ttccom139301 tccom139
         ON  tccom139.t$ccty = tccom130.t$ccty
        AND  tccom139.t$cste = tccom130.t$cste
        AND  tccom139.t$city = tccom130.t$ccit

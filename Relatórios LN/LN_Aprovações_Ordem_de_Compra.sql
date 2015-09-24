@@ -84,7 +84,7 @@ SELECT
     tcmcs023.t$dsca                                   CONTA_CONTABIL_DESCRICAO,
     tdpur401.t$wrkc$l                                 CODIGO_CENTRO_TRABALHO,
     tcmcs065.t$dsca                                   CENTRO_TRABALHO_DESCRICAO,
-    tcmcs013.t$dsca                                   CONDICAO_PAGTO,
+    Trim(Replace(tcmcs013.t$dsca, 'DIAS', ''))        CONDICAO_PAGTO,
     
     TDREC940.T$TTYP$L,
     TDREC940.T$INVN$L,
@@ -98,11 +98,11 @@ SELECT
                 TO_CHAR(TRUNC(MOD(GLD106.HR,3600)/60),'FM00') || ':' ||
                 TO_CHAR(MOD(GLD106.HR,60),'FM00')
     END                                               HORA_APROVACAO_CONTABIL,
-    tttxt010a.t$text                                  TEXTO_CAB,
+    Trim(tttxt010a.t$text)                            TEXTO_CAB,
     tttxt010b.t$text                                  TEXTO_RDP,
     tccom001.t$nama                                   ENVIADO_PARA_APROVACAO_DE,
-    tdpur401.t$cpay                                   COD_CONDICAO_PAGTO_LINHA,
-    tcmcs013L.t$dsca                                  DESC_COND_PAGTO_LINHA,
+    tdpur401.t$cpay                                   COD_CONDICAO_PAGTO_LINHA
+    Trim(Replace(tcmcs013L.t$dsca, 'DIAS', ''))       DESC_COND_PAGTO_LINHA,
     tdpur401.t$pono                                   POS,
     tdpur400.t$refa                                   TIPO_PAGAMENTO
     
@@ -466,7 +466,7 @@ ORDER BY DATA_ORDEM,
 " 	tcmcs023.t$dsca                                   CONTA_CONTABIL_DESCRICAO,  " &
 " 	tdpur401.t$wrkc$l                                 CODIGO_CENTRO_TRABALHO,  " &
 " 	tcmcs065.t$dsca                                   CENTRO_TRABALHO_DESCRICAO,  " &
-" 	tcmcs013.t$dsca                                   CONDICAO_PAGTO,  " &
+"   Trim(Replace(tcmcs013.t$dsca, 'DIAS', ''))        CONDICAO_PAGTO,  " &
 " 	TDREC940.T$TTYP$L,  " &
 " 	TDREC940.T$INVN$L,  " &
 " 	GLD106.t$user                                     LOGIN_APROVADOR_CONTABIL,  " &
@@ -477,11 +477,11 @@ ORDER BY DATA_ORDEM,
 " 				TO_CHAR(TRUNC(MOD(GLD106.HR,3600)/60),'FM00') || ':' ||  " &
 " 				TO_CHAR(MOD(GLD106.HR,60),'FM00')  " &
 " 	END                                               HORA_APROVACAO_CONTABIL,  " &
-" 	tttxt010a.t$text                                  TEXTO_CAB,  " &
+" 	Trim(tttxt010a.t$text)                            TEXTO_CAB,  " &
 " 	tttxt010b.t$text                                  TEXTO_RDP,  " &
 " 	tccom001.t$nama                                   ENVIADO_PARA_APROVACAO_DE,  " &
 " 	tdpur401.t$cpay                                   COD_CONDICAO_PAGTO_LINHA,  " &
-" 	tcmcs013L.t$dsca                                  DESC_COND_PAGTO_LINHA,  " &
+" 	Trim(Replace(tcmcs013L.t$dsca, 'DIAS', ''))       DESC_COND_PAGTO_LINHA,  " &
 " 	tdpur401.t$pono                                   POS,  " &
 " 	tdpur400.t$refa                                   TIPO_PAGAMENTO  " &
 " FROM       baandb.ttdpur400" + Parameters!Compania.Value +  "      tdpur400  " &
