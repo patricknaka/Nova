@@ -74,10 +74,15 @@ SELECT
                                  DATA_PROMETIDA,
 
     ZNSLS401.T$IDPA$C            PERIODO,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNFMD630.T$DATE$C, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE) 
+    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone 'America/Sao_Paulo') AS DATE)
+        from BAANDB.tznfmd640301 znfmd640
+       where znfmd640.t$fili$c = znfmd630.t$fili$c
+         and znfmd640.t$etiq$c = znfmd630.t$etiq$c
+         and znfmd640.t$coct$c = 'ETR')
                                  DATA_EXPED,
+								 
     CISLI940.T$AMNT$L            VALOR,
     ZNSLS401.T$ITPE$C            ID_TIPO_ENTREGA,
     ZNSLS002.T$DSCA$C            DESCR_TIPO_ENTREGA,
