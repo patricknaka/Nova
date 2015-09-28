@@ -1,9 +1,13 @@
 SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
-    ''                         CODIGO_BARRA,             --03
-    tdrec941.t$gamt$l           VALOR,                    --04
-    tdrec941.t$qnty$l           QTDE_ITEM,                --05
+    ''                         CODIGO_BARRA,              --03
+    CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+          0.0
+    ELSE tdrec941.t$gamt$l END  VALOR,                    --04
+    CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+          0.0
+    ELSE tdrec941.t$qnty$l END  QTDE_ITEM,                --05
     TO_CHAR(tdrec940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --06
     tdrec940.t$seri$l           SERIE_NF,                 --07
@@ -17,9 +21,13 @@ SELECT DISTINCT
     ltrim(rtrim(nvl(tcibd004.t$item,tdrec941.t$item$l)))             
                                 CODIGO_ITEM,              --11
     tcibd001.t$cuni             UNIDADE,                  --12
-    tdrec941.t$pric$l           PRECO_UNITARIO,           --13
+    CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+          0.0
+    ELSE tdrec941.t$pric$l END  PRECO_UNITARIO,           --13
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
-    tdrec941.t$addc$l           DESCONTO_ITEM,            --15
+    CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+          0.0
+    ELSE tdrec941.t$addc$l END  DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
     nvl(tttxt010r.t$text,'')   OBS_ITEM,                 --17
     ORIGEM.DESCR                TRIBUT_ORIGEM,            --18
@@ -41,8 +49,12 @@ SELECT DISTINCT
     '0'                         NAO_SOMA_VALOR,           --28
     tdrec941.t$gexp$l           VALOR_ENCARGOS,           --29
     0                           VALOR_DESCONTOS,          --30
-    tdrec941.t$fght$l           VALOR_RATEIO_FRETE,       --31
-    tdrec941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
+    CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+          0.0
+    ELSE tdrec941.t$fght$l END  VALOR_RATEIO_FRETE,       --31
+    CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+          0.0
+    ELSE tdrec941.t$insr$l END  VALOR_RATEIO_SEGURO,      --32
     'E'                         TP_MOVTO,                 --33 Criado para separar na tabela as entradas e saídas
     tdrec940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado juntamente com o CFOP
     tcmcs966.t$dsca$l           DESCR_TIPO_DOC_FISCAL,    --35
@@ -137,8 +149,12 @@ SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
     ''                         CODIGO_BARRA,             --03
-    cisli941.t$gamt$l-cisli941.t$tldm$l           VALOR,                    --04
-    cisli941.t$dqua$l           QTDE_ITEM,                --05
+    CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+    ELSE cisli941.t$gamt$l-cisli941.t$tldm$l END          VALOR,                    --04
+    CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+    ELSE cisli941.t$dqua$l END          QTDE_ITEM,                --05
     TO_CHAR(cisli940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --06
     cisli940.t$seri$l           SERIE_NF,                 --07
@@ -152,9 +168,13 @@ SELECT DISTINCT
     ltrim(rtrim(NVL(tcibd004.t$item,tcibd001.t$item)))             
                                 CODIGO_ITEM,              --11
     tcibd001.t$cuni             UNIDADE,                  --12
-    cisli941.t$pric$l - cisli941.t$ldam$l           PRECO_UNITARIO,           --13
+    CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+          0.0
+    ELSE cisli941.t$pric$l - cisli941.t$ldam$l END          PRECO_UNITARIO,           --13
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
-    cisli941.t$tldm$l           DESCONTO_ITEM,            --15
+    CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+    ELSE cisli941.t$tldm$l END          DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
     nvl(tttxt010r.t$text,'')   OBS_ITEM,                 --17
     ORIGEM.DESCR                TRIBUT_ORIGEM,            --18
@@ -176,8 +196,12 @@ SELECT DISTINCT
     '0'                         NAO_SOMA_VALOR,           --28
     cisli941.t$gexp$l           VALOR_ENCARGOS,           --29
     0                           VALOR_DESCONTOS,          --30
-    cisli941.t$fght$l           VALOR_RATEIO_FRETE,       --31
-    cisli941.t$insr$l           VALOR_RATEIO_SEGURO,      --32
+    CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+    ELSE cisli941.t$fght$l END           VALOR_RATEIO_FRETE,       --31
+    CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+    ELSE cisli941.t$insr$l END          VALOR_RATEIO_SEGURO,      --32
     'S'                         TP_MOVTO,                 --33 Criado para separar na tabela as entradas e saídas
     cisli940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado junto com o CFOP
     tcmcs966.t$dsca$l           DESCR_COD_TIPO_DOC_FISCAL,--35
