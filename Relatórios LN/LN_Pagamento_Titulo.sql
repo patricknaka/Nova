@@ -2,7 +2,7 @@ SELECT
   DISTINCT
     tfcmg101.t$btno         NUME_LOTE,
  
-    LOTE.                   VALO_LOTE,
+    ABS(LOTE.VALO_LOTE)     VALO_LOTE,
        
     tfcmg101.t$ninv         NUME_TITULO,
     tfcmg101.t$ttyp         CODE_TRANSAC,
@@ -10,9 +10,9 @@ SELECT
     regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
                             CNPJ_FORN,
     Trim(tccom100.t$nama)   NOME_FORN,
-    tfcmg101.t$amnt-
-    tfcmg101.t$ramn$l       VALO_PAGA,
-    tfcmg101.t$amnt$l       VALO_BRUTO,
+    ABS(tfcmg101.t$amnt-
+    tfcmg101.t$ramn$l)      VALO_PAGA,
+    ABS(tfcmg101.t$amnt$l)  VALO_BRUTO,
     tfcmg101.t$post         CODE_LIQUID, 
     tfcmg101.t$paym         CODE_METPGTO,
  
@@ -66,10 +66,10 @@ SELECT
 FROM       baandb.ttccom100301  tccom100
 
 INNER JOIN baandb.ttccom130301  tccom130
-        ON tccom130.t$cadr   = tccom100.t$cadr
+        ON tccom130.t$cadr = tccom100.t$cadr
 
 INNER JOIN baandb.ttfcmg101301  tfcmg101  
-        ON tccom100.T$BPID   = tfcmg101.t$ifbp
+        ON tccom100.T$BPID = tfcmg101.t$ifbp
 
 INNER JOIN ( SELECT SUM(t.t$amnt) VALO_LOTE,
                     t.t$ninv,
@@ -84,10 +84,10 @@ INNER JOIN ( SELECT SUM(t.t$amnt) VALO_LOTE,
        AND LOTE.t$btno = tfcmg101.t$btno
   
 INNER JOIN baandb.ttfcmg109301  tfcmg109
-        ON tfcmg109.t$btno   = tfcmg101.t$btno
+        ON tfcmg109.t$btno = tfcmg101.t$btno
 
 INNER JOIN baandb.ttfcmg003301  tfcmg003
-        ON tfcmg003.t$paym   = tfcmg101.t$paym
+        ON tfcmg003.t$paym = tfcmg101.t$paym
     
  LEFT JOIN baandb.ttfcmg001301 tfcmg001 
         ON tfcmg001.t$bank = tfcmg101.t$bank
@@ -354,7 +354,7 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
                                           where l1.t$clab = l.t$clab 
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iSTATUS
-        ON tfcmg109.t$stpp   = iSTATUS.CODE
+        ON tfcmg109.t$stpp = iSTATUS.CODE
 
  LEFT JOIN ( SELECT l.t$desc DESCR_TIPO_ACONSELHAMENTO,
                     d.t$cnst
@@ -385,8 +385,8 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
         ON ACONSELHAMENTO.t$cnst = tfcmg101.t$tadv
 
  LEFT JOIN baandb.ttfcmg103301 tfcmg103
-        ON tfcmg103.t$btno=tfcmg101.t$btno
-       AND tfcmg103.t$ptbp=tfcmg101.t$ifbp
+        ON tfcmg103.t$btno = tfcmg101.t$btno
+       AND tfcmg103.t$ptbp = tfcmg101.t$ifbp
        AND ROWNUM = 1
         
 WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
@@ -410,7 +410,7 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "   DISTINCT  " &
 "     tfcmg101.t$btno         NUME_LOTE,  " &
 "  " &
-"     LOTE.                   VALO_LOTE,  " &
+"     ABS(LOTE.VALO_LOTE)     VALO_LOTE,  " &
 "  " &
 "     tfcmg101.t$ninv         NUME_TITULO,  " &
 "     tfcmg101.t$ttyp         CODE_TRANSAC,  " &
@@ -418,9 +418,9 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "     regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')  " &
 "                             CNPJ_FORN,  " &
 "     Trim(tccom100.t$nama)   NOME_FORN,  " &
-"     tfcmg101.t$amnt-  " &
-"     tfcmg101.t$ramn$l       VALO_PAGA,  " &
-"     tfcmg101.t$amnt$l       VALO_BRUTO,  " &
+"     ABS(tfcmg101.t$amnt -  " &
+"     tfcmg101.t$ramn$l)      VALO_PAGA,  " &
+"     ABS(tfcmg101.t$amnt$l)  VALO_BRUTO,  " &
 "     tfcmg101.t$post         CODE_LIQUID,  " &
 "     tfcmg101.t$paym         CODE_METPGTO,  " &
 "  " &
@@ -474,10 +474,10 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 " FROM       baandb.ttccom100" + Parameters!Compania.Value +  "  tccom100  " &
 "  " &
 " INNER JOIN baandb.ttccom130" + Parameters!Compania.Value +  "  tccom130  " &
-"         ON tccom130.t$cadr   = tccom100.t$cadr  " &
+"         ON tccom130.t$cadr = tccom100.t$cadr  " &
 "  " &
 " INNER JOIN baandb.ttfcmg101" + Parameters!Compania.Value +  "  tfcmg101  " &
-"         ON tccom100.T$BPID   = tfcmg101.t$ifbp  " &
+"         ON tccom100.T$BPID = tfcmg101.t$ifbp  " &
 "  " &
 " INNER JOIN ( SELECT SUM(t.t$amnt) VALO_LOTE,  " &
 "                     t.t$ninv,  " &
@@ -492,10 +492,10 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "        AND LOTE.t$btno = tfcmg101.t$btno  " &
 "  " &
 " INNER JOIN baandb.ttfcmg109" + Parameters!Compania.Value +  "  tfcmg109  " &
-"         ON tfcmg109.t$btno   = tfcmg101.t$btno  " &
+"         ON tfcmg109.t$btno = tfcmg101.t$btno  " &
 "  " &
 " INNER JOIN baandb.ttfcmg003301  tfcmg003  " &
-"         ON tfcmg003.t$paym   = tfcmg101.t$paym  " &
+"         ON tfcmg003.t$paym = tfcmg101.t$paym  " &
 "  " &
 "  LEFT JOIN baandb.ttfcmg001" + Parameters!Compania.Value +  " tfcmg001  " &
 "         ON tfcmg001.t$bank = tfcmg101.t$bank  " &
@@ -762,7 +762,7 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "                                           where l1.t$clab = l.t$clab  " &
 "                                             and l1.t$clan = l.t$clan  " &
 "                                             and l1.t$cpac = l.t$cpac ) ) iSTATUS  " &
-"         ON tfcmg109.t$stpp   = iSTATUS.CODE  " &
+"         ON tfcmg109.t$stpp = iSTATUS.CODE  " &
 "  " &
 "  LEFT JOIN ( SELECT l.t$desc DESCR_TIPO_ACONSELHAMENTO,  " &
 "                     d.t$cnst  " &
