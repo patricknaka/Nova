@@ -4,8 +4,12 @@ SELECT DISTINCT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             EMISSAO,                                --04
-  TDREC941.QTDE             QTDE_TOTAL,                             --05
-  tdrec940.t$tfda$l         VALOR_TOTAL,                            --06
+  CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+    0.0
+  ELSE TDREC941.QTDE END    QTDE_TOTAL,                             --05
+  CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+      0.0
+  ELSE tdrec940.t$tfda$l END        VALOR_TOTAL,                            --06
   tdrec940.t$fovn$l         CGC_CPF,                                --07
   tdrec940.t$fovn$l         COD_CLIFOR,                             --08
   cast(NVL(tttxt010r.t$text,' ') as varchar(100))        OBS,                --09
@@ -21,12 +25,20 @@ SELECT DISTINCT
   0                         VOLUMES,                                --17
   ''                       TIPO_VOLUME,                            --18
   ''                       MARCA_VOLUME,                           --19
-  tdrec940.t$fght$l         FRETE,                                  --20
-  tdrec940.t$insr$l         SEGURO,                                 --21
-  0                         FRETE_A_PAGAR,                          --22 'NÃO FOI MODELADO NO LN'
-  tdrec940.t$gtam$l         VALOR_TOTAL_ITENS,                      --23
+  CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+      0.0
+  ELSE tdrec940.t$fght$l END         FRETE,                         --20
+  CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+      0.0
+  ELSE tdrec940.t$insr$l END         SEGURO,                               --21
+  0                         FRETE_A_PAGAR,                          --22
+  CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+      0.0
+  ELSE tdrec940.t$gtam$l END        VALOR_TOTAL_ITENS,               --23
   0.00                      DESCONTO,                               --24
-  tdrec940.t$gexp$l         ENCARGO,                                --25
+  CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+      0.0
+  ELSE tdrec940.t$gexp$l END         ENCARGO,                        --25
   CASE WHEN tdrec940.t$stat$l = 4 or tdrec940.t$stat$l = 5 THEN
         '1'       -- NF impressa
   ELSE  '0' END                  NOTA_IMPRESSA,                     --26
@@ -196,8 +208,12 @@ SELECT DISTINCT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             EMISSAO,                                --04
-  SLI941.QTDE               QTDE_TOTAL,                             --05
-  cisli940.t$amnt$l         VALOR_TOTAL,                            --06
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE  SLI941.QTDE END     QTDE_TOTAL,                             --05
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli940.t$amnt$l END  VALOR_TOTAL,                            --06
   CASE WHEN cisli940.t$fdty$l = 1 or cisli940.t$fdty$l = 14 THEN
     tccom130c.t$fovn$l
   ELSE '' END              CGC_CPF,                                --07
@@ -215,12 +231,20 @@ SELECT DISTINCT
   NVL(FMD630.VOLUMES,SLI941.QTDE)     VOLUMES,                      --17
   ''                       TIPO_VOLUME,                            --18
   ''                       MARCA_VOLUME,                           --19
-  cisli940.t$fght$l         FRETE,                                  --20
-  cisli940.t$insr$l         SEGURO,                                 --21
-  0                         FRETE_A_PAGAR,                          --22 'AGUARDANDO CONSULTOR'
-  cisli940.t$gamt$l - SLI941.DESCONTO         VALOR_TOTAL_ITENS,                      --23
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli940.t$fght$l END        FRETE,                          --20
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli940.t$insr$l END        SEGURO,                         --21
+  0                         FRETE_A_PAGAR,                          --22
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli940.t$gamt$l - SLI941.DESCONTO END        VALOR_TOTAL_ITENS,      --23
   0.00                      DESCONTO,                               --24
-  cisli940.t$gexp$l         ENCARGO,                                --25
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+      0.0
+  ELSE cisli940.t$gexp$l END         ENCARGO,                       --25
   CASE WHEN cisli940.t$stat$l >= 5  THEN
         '1'       -- NF impressa
   ELSE  '0' END             NOTA_IMPRESSA,                          --26
@@ -393,8 +417,8 @@ FROM  baandb.tcisli940601  cisli940
                         a.t$stfa$c,
                         MIN(a.t$data$c) ESTORNADO
                 from    baandb.tznnfe011601 a
-                where   a.t$stfa$c = 101  --ESTORNADO
-                group by a.t$oper$c, a.t$fire$c, a.t$stfa$c ) DATA_FAT       
+                where   a.t$stfa$c = 2  --CANCELAR
+                group by a.t$oper$c, a.t$fire$c, a.t$stfa$c ) DATA_FAT 
            ON DATA_FAT.t$oper$c = 1
           AND DATA_FAT.t$fire$c = cisli940.t$fire$l
           

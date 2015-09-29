@@ -65,7 +65,9 @@ SELECT  DISTINCT
       '2'
   ELSE
       to_char(cisli943.t$brty$l) END    ID_IMPOSTO,       --07
-  cisli943.t$rate$l             TAXA_IMPOSTO,             --08
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+          0.0
+  ELSE cisli943.t$rate$l END            TAXA_IMPOSTO,             --08
   CASE
 	WHEN cisli943.t$brty$l=1 THEN 3
 	WHEN cisli943.t$brty$l=3 THEN 1
@@ -73,8 +75,10 @@ SELECT  DISTINCT
 	WHEN cisli943.t$brty$l=6 THEN 3
 	WHEN cisli943.t$brty$l=2 THEN 1
 	ELSE 0 END                  INCIDENCIA,               --09
-  cisli943.t$amnt$l             VALOR_IMPOSTO,            --10
-  CASE WHEN cisli943.t$amnt$l = 0 THEN
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli943.t$amnt$l END      VALOR_IMPOSTO,            --10
+  CASE WHEN cisli943.t$amnt$l = 0 OR cisli940.t$stat$l = 2 THEN
     0
   ELSE cisli943.t$base$l END    BASE_IMPOSTO,             --11
   ''                           AGREGA_APOS_ENCARGO,      --12
