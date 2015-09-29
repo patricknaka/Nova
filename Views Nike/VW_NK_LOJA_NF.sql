@@ -195,7 +195,8 @@ FROM  baandb.ttdrec940601  tdrec940
     
     LEFT JOIN baandb.ttcmcs966601 tcmcs966
            ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
-           
+    
+
     WHERE tdrec940.t$stat$l IN (4,5,6)
     AND	  tdrec940.t$cnfe$l != ' '
     
@@ -233,29 +234,44 @@ SELECT DISTINCT
   ''                       MARCA_VOLUME,                           --19
   CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
-  ELSE cisli940.t$fght$l END        FRETE,                          --20
+  ELSE cisli940.t$fght$l END                          FRETE,                          --20
   CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
-  ELSE cisli940.t$insr$l END        SEGURO,                         --21
-  0                         FRETE_A_PAGAR,                          --22
+  ELSE cisli940.t$insr$l END                          SEGURO,                         --21
+  0                                                   FRETE_A_PAGAR,                  --22
   CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
-  ELSE cisli940.t$gamt$l - SLI941.DESCONTO END        VALOR_TOTAL_ITENS,      --23
-  0.00                      DESCONTO,                               --24
+  ELSE cisli940.t$gamt$l - SLI941.DESCONTO END        VALOR_TOTAL_ITENS,              --23
+  0.00                                                DESCONTO,                       --24
   CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
       0.0
-  ELSE cisli940.t$gexp$l END         ENCARGO,                       --25
+  ELSE cisli940.t$gexp$l END                          ENCARGO,                        --25
   CASE WHEN cisli940.t$stat$l >= 5  THEN
         '1'       -- NF impressa
-  ELSE  '0' END             NOTA_IMPRESSA,                          --26
-  cisli940.t$cfrn$l         TRANSP_RAZAO_SOCIAL,                    --27
-  tccom130ft.t$cste         TRANSP_UF,                              --28
-  tccom139ft.t$dsca          TRANSP_CIDADE,                          --29
-  tccom130ft.t$fovn$l       TRANSP_CGC,                             --30
-  tccom966f.t$stin$d        TRANSP_INSCRICAO,                       --31
-  tccom130ft.t$namc || ' ' ||
-  tccom130ft.t$hono || ' ' ||
-  tccom130ft.t$namd         TRANSP_ENDERECO,                        --32
+  ELSE  '0' END                                       NOTA_IMPRESSA,                  --26
+  CASE WHEN cisli940.t$fdty$l = 16 THEN   --Fatura Operação Triangular
+        tccom130rem.t$nama                
+  ELSE cisli940.t$cfrn$l END                          TRANSP_RAZAO_SOCIAL,            --27
+  CASE WHEN cisli940.t$fdty$l = 16 THEN   --Fatura Operação Triangular
+        tccom130rem.t$cste
+  ELSE  tccom130ft.t$cste END                         TRANSP_UF,                      --28
+  CASE WHEN cisli940.t$fdty$l = 16 THEN
+        tccom139rem.t$dsca
+  ELSE  tccom139ft.t$dsca   END                       TRANSP_CIDADE,                  --29
+  CASE WHEN cisli940.t$fdty$l = 16 THEN
+        tccom130rem.t$fovn$l
+  ELSE  tccom130ft.t$fovn$l END                       TRANSP_CGC,                     --30
+  CASE WHEN cisli940.t$fdty$l = 16 THEN
+        tccom966rem.t$stin$d
+  ELSE tccom966f.t$stin$d END                         TRANSP_INSCRICAO,               --31
+  CASE WHEN cisli940.t$fdty$l = 16 THEN
+        tccom130rem.t$namc || ' ' ||
+        tccom130rem.t$hono || ' ' ||
+        tccom130rem.t$namd
+  ELSE 
+        tccom130ft.t$namc || ' ' ||
+        tccom130ft.t$hono || ' ' ||
+        tccom130ft.t$namd               END           TRANSP_ENDERECO,                --32
   CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
     DATA_FAT.ESTORNADO
   ELSE  NULL END            DATA_CANCELAMENTO,                      --33
@@ -499,7 +515,30 @@ FROM  baandb.tcisli940601  cisli940
             ON DPEC.t$ncmp$l = cisli940.t$sfcp$l
            AND DPEC.t$refi$l = cisli940.t$fire$l
            AND DPEC.t$ioin$l = 2  --retorno
-     
+  
+    LEFT JOIN ( select  a.t$refr$l,
+                        a.t$fire$l
+                from    baandb.tcisli941601 a
+                group by a.t$refr$l, a.t$fire$l ) SLI941
+           ON SLI941.t$fire$l = cisli940.t$fire$l
+                        
+    LEFT JOIN ( select a.t$fire$l,
+                       a.t$cfrw$l,
+                       a.t$cfra$l
+                from   baandb.tcisli940601 a ) REF_REL    --REFERÊNCIA RELATIVA
+           ON REF_REL.t$fire$l = SLI941.t$refr$l
+           
+    LEFT JOIN baandb.ttccom130601 tccom130rem         --Endereço da Remessa Operação Triangular
+           ON tccom130rem.t$cadr = REF_REL.t$cfra$l
+           
+    LEFT JOIN baandb.ttccom139301  tccom139rem
+           ON tccom139rem.t$ccty = tccom130rem.t$ccty
+          AND tccom139rem.t$cste = tccom130rem.t$cste
+          AND tccom139rem.t$city = tccom130rem.t$ccit
+          
+    LEFT JOIN baandb.ttccom966601 tccom966rem     
+           ON tccom966rem.t$comp$d = tccom130rem.t$comp$d
+           
     WHERE cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
     AND   cisli940.t$cnfe$l != ' '
     AND   exists (select *
