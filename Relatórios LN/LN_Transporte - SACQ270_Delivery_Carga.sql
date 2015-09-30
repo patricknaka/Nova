@@ -242,7 +242,7 @@ WHERE Trunc(NVL(Q1.DT_SITUACAO, SysDate)) BETWEEN NVL(:DataSituacaoDe, NVL(Q1.DT
   AND NVL(:DataSituacaoAte, NVL(Q1.DT_SITUACAO, SysDate))
   AND Trunc(Q1.DT_REGISTRO) BETWEEN :DataRegistroDe AND :DataRegistroAte
   AND Q1.UNID_NEG IN (:UnidNegocio)
-  AND Q1.CNPJ_FILIAL IN (:Filial)
+  AND REPLACE(REPLACE(Q1.CNPJ_FILIAL,'/',''),'-','')= REPLACE(REPLACE(:Filial,'/',''),'-','')
   AND Q1.SITUACAO IN (:Situacao)
   AND Q1.IN_FORCADO in (:Forcado)
   AND ( (:EntregaTodas = 0) or (Q1.ENTREGA IN (:Entrega) and (:EntregaTodas = 1)) )
