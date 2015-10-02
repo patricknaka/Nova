@@ -1,7 +1,7 @@
 SELECT  DISTINCT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
--- a tabela ttdsls094201 é compartilhada com a 201
+-- a tabela ttdsls094201 Ã© compartilhada com a 201
 
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
          AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                                                 
@@ -80,9 +80,9 @@ SELECT  DISTINCT
   tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
   sls401q.t$idor$c CD_TIPO_SITE,                                        
   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                                     
-  sls401q.cancela IN_CANCELADO,
-  sls401q.seq_pedido_cancel SQ_PEDIDO_CANCELADO,
-  TO_CHAR(sls401q.entrega_cancel) NR_ENTREGA_CANCELADO
+  sls401q.cancela IN_CANCELADO
+--  sls401q.seq_pedido_cancel SQ_PEDIDO_CANCELADO,
+--  TO_CHAR(sls401q.entrega_cancel) NR_ENTREGA_CANCELADO
 FROM    BAANDB.TTDSLS400601 tdsls400
     LEFT JOIN (select  c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE             
               from baandb.tcisli245601 c245
@@ -99,8 +99,8 @@ FROM    BAANDB.TTDSLS400601 tdsls400
           znsls401.t$sqpd$c       t$sqpd$c,
           znsls401.t$entr$c       t$entr$c,
       case when znsls401.t$qtve$c<0 then 2 else 1 end cancela,
-      znsls401.t$sedt$c   seq_pedido_cancel,
-      znsls401.t$endt$c    entrega_cancel,
+--      znsls401.t$sedt$c   seq_pedido_cancel,
+--      znsls401.t$endt$c    entrega_cancel,
           max(znsls401.t$pztr$c)  t$pztr$c,
           max(znsls401.t$pzcd$c)  t$pzcd$c,
           max(znsls401.t$pcga$c)       t$pcga$c,                                  
@@ -135,8 +135,8 @@ FROM    BAANDB.TTDSLS400601 tdsls400
           znsls401.t$entr$c,
           znsls401.t$orno$c,
       case when znsls401.t$qtve$c<0 then 2 else 1 end,
-      znsls401.t$sedt$c,
-      znsls401.t$endt$c,
+--      znsls401.t$sedt$c,
+--      znsls401.t$endt$c,
           brmcs941.t$opfc$l,
       znsls401.t$idor$c) sls401q
       LEFT JOIN  baandb.tznsls004601 znsls004 
@@ -178,4 +178,4 @@ AND     endent.t$cadr=tdsls400.t$stad
 AND     ulttrc.ncia=sls401q.t$ncia$c
 AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
-AND    tdsls094.t$sotp=tdsls400.t$sotp                                
+AND    tdsls094.t$sotp=tdsls400.t$sotp  
