@@ -66,8 +66,10 @@ SELECT
 	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,												
 	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM,													
 	   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                 						
-  case when znsls401.TOT_QTVE<0 then 2 else 1 end                       IN_CANCELADO			
-  
+  case when znsls401.TOT_QTVE<0 then 2 else 1 end                       IN_CANCELADO,
+    znsls401.t$endt$c             NR_ENTREGA_CANCELADO,
+    znsls401.t$sidt$c             SQ_ENTREGA_CANCELADO
+
 FROM
         baandb.ttdsls401601 tdsls401,
 	
@@ -83,6 +85,8 @@ FROM
                   a.t$vlun$c,
                   a.t$tpcb$c,
                   a.t$igar$c,
+                  a.t$endt$c,
+                  a.t$sidt$c,
                   sum(a.t$qtve$c) TOT_QTVE,
                   sum(a.t$vlfr$c) TOT_VLFR,
                   sum(a.t$vldi$c) TOT_VLDI,
@@ -99,7 +103,9 @@ FROM
                     a.t$dtep$c,
                     a.t$vlun$c,
                     a.t$tpcb$c,
-                    a.t$igar$c ) znsls401,                    
+                    a.t$igar$c,
+                    a.t$endt$c,
+                    a.t$sidt$c) znsls401,                    
           
           baandb.tznsls004601 znsls004,		
         baandb.ttdsls400601 tdsls400,
