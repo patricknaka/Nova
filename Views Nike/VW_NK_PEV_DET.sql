@@ -68,7 +68,7 @@ SELECT
 	   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                 						
   case when znsls401.TOT_QTVE<0 then 2 else 1 end                       IN_CANCELADO,
     znsls401.t$endt$c             NR_ENTREGA_CANCELADO,
-    znsls401.t$sidt$c             SQ_ENTREGA_CANCELADO
+    znsls401.t$sidt$c             SQ_PEDIDO_CANCELADO
 
 FROM
         baandb.ttdsls401601 tdsls401,
