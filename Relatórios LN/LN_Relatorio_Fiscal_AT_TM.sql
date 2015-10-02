@@ -37,13 +37,16 @@ select Q1.*
                  cisli940.t$fdtc$l          COD_TIPO_DOC_REMESSA,
                  tcmcs966.t$dsca$l          DESC_COD_TIPO_DOC_REMESSA,
      
-                 CASE WHEN tdrec955.t$qtdr$l > 0 
-                        THEN 'Sim'
-                      ELSE   'Não' 
+                 CASE WHEN tdrec940.t$docn$l is null
+                        THEN 'Não'
+                      ELSE   'Sim'
                  END                        ENTRADA,
                  tdrec955.t$lfir$l          REF_REC,
                  tdrec955.t$llin$l          LIN_REC,
-                 NOTA_ENT.STATUS            STATUS_REC
+                 tdrec940.t$docn$l          NF_ENTRADA,
+                 tdrec940.t$seri$l          SERI_NF_ENTRADA,
+                 NOTA_ENT.CNST              COD_STATUS_REC,
+                 NOTA_ENT.STATUS            DSC_STATUS_REC
                  
             FROM baandb.tcisli940301  cisli940  
            
@@ -171,32 +174,37 @@ select Q1.*
       LEFT JOIN baandb.ttdrec940301 tdrec940
              ON tdrec940.t$fire$l = tdrec955.t$lfir$l
              
-      LEFT JOIN ( SELECT d.t$cnst CNST, l.t$desc STATUS
-                     FROM baandb.tttadv401000 d, 
-                          baandb.tttadv140000 l 
-                    WHERE d.t$cpac = 'td' 
-                      AND d.t$cdom = 'rec.stat.l'
-                      AND l.t$clan = 'p'
-                      AND l.t$cpac = 'td'
-                      AND l.t$clab = d.t$za_clab
-                      AND rpad(d.t$vers,4) ||
-                          rpad(d.t$rele,2) ||
-                          rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                          rpad(l1.t$rele,2) ||
-                                                          rpad(l1.t$cust,4)) 
-                                                 from baandb.tttadv401000 l1 
-                                                where l1.t$cpac = d.t$cpac 
-                                                  and l1.t$cdom = d.t$cdom )
-                      AND rpad(l.t$vers,4) ||
-                          rpad(l.t$rele,2) ||
-                          rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                          rpad(l1.t$rele,2) || 
-                                                          rpad(l1.t$cust,4)) 
-                                                 from baandb.tttadv140000 l1 
-                                                where l1.t$clab = l.t$clab 
-                                                  and l1.t$clan = l.t$clan 
-                                                  and l1.t$cpac = l.t$cpac ) ) NOTA_ENT
-              ON tdrec940.t$stat$l = NOTA_ENT.CNST
+      LEFT JOIN ( select 0                    CNST, 
+                         'Sem NF de Entrada'  STATUS
+                    from Dual
+                   UNION 
+                  select d.t$cnst CNST, l.t$desc STATUS
+                    from baandb.tttadv401000 d, 
+                         baandb.tttadv140000 l 
+                   where d.t$cpac = 'td' 
+                     and d.t$cdom = 'rec.stat.l'
+                     and l.t$clan = 'p'
+                     and l.t$cpac = 'td'
+                     and l.t$clab = d.t$za_clab
+                     and rpad(d.t$vers,4) ||
+                         rpad(d.t$rele,2) ||
+                         rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                         rpad(l1.t$rele,2) ||
+                                                         rpad(l1.t$cust,4)) 
+                                                from baandb.tttadv401000 l1 
+                                               where l1.t$cpac = d.t$cpac 
+                                                 and l1.t$cdom = d.t$cdom )
+                     and rpad(l.t$vers,4) ||
+                         rpad(l.t$rele,2) ||
+                         rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                         rpad(l1.t$rele,2) || 
+                                                         rpad(l1.t$cust,4)) 
+                                                from baandb.tttadv140000 l1 
+                                               where l1.t$clab = l.t$clab 
+                                                 and l1.t$clan = l.t$clan 
+                                                 and l1.t$cpac = l.t$cpac )
+                order by 2 ) NOTA_ENT
+              ON NVL(tdrec940.t$stat$l, 0) = NOTA_ENT.CNST
               
            WHERE cisli940.t$stat$l = 6
              AND cisli940.t$fdty$l = 17
@@ -209,4 +217,5 @@ where ID_FILIAL in (:Filial)
   and ENTRADA in (:Entrada)
   and trunc(DT_NF) 
       between :DataEmissaoNFDe
-       and :DataEmissaoNFAte
+          and :DataEmissaoNFAte
+  and Q1.COD_STATUS_REC IN (:Status)
