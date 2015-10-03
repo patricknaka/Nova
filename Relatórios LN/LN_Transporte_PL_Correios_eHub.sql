@@ -50,7 +50,7 @@ LEFT JOIN baandb.tznfmd170601 znfmd170
       AND znfmd170.t$nent$c = znfmd171.t$nent$c
       AND znfmd170.t$cfrw$c = znfmd171.t$cfrw$c
       
- LEFT JOIN ( Select znfmd640.t$fili$c,
+ INNER JOIN ( Select znfmd640.t$fili$c,
                     znfmd640.t$etiq$c,
                     max(znfmd640.t$date$c) t$date$c
                from baandb.tznfmd640601 znfmd640
