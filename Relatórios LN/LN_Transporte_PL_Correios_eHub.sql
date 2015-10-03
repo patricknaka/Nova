@@ -1,15 +1,20 @@
 SELECT
 
-znfmd630.t$etiq$c             ETIQUETA,
-znfmd065.t$cser$c             CODIGO_SERVICO,
-tccom130.t$pstc               CEP_DESTINO,
-znfmd630.t$wght$c             PESO_TARIFADO,
-znfmd630.t$ncar$c             CARGA,
-znsls401.t$item$c             ITEM,
-whwmd400.t$hght               Altura,
-whwmd400.t$wdth               Largura,
-whwmd400.t$dpth               Comprimento,
-znfmd170.t$vpla$c             PLACA
+znfmd630.t$etiq$c                                   ETIQUETA,
+znfmd065.t$cser$c                                   CODIGO_SERVICO,
+tccom130.t$pstc                                     CEP_DESTINO,
+znfmd630.t$wght$c                                   PESO_TARIFADO,
+znfmd630.t$ncar$c                                   CARGA_TMS,
+znsls401.t$item$c                                   ITEM,
+tcibd001.t$dscb$c                                   DESC_ITEM,
+whwmd400.t$hght                                     ALTURA,
+whwmd400.t$wdth                                     LARGURA,
+whwmd400.t$dpth                                     COMPRIMENTO,
+znfmd170.t$vpla$c                                   PLACA,
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)   DATA_ETR,
+znfmd630.t$cfrw$c                                    TRANSPORTADORA
 
 FROM  baandb.tznfmd630601    znfmd630
 
@@ -33,6 +38,9 @@ LEFT JOIN baandb.tznsls401601 znsls401
        
 LEFT JOIN baandb.twhwmd400601 whwmd400
        ON TRIM(TO_CHAR(whwmd400.t$item)) = TRIM(TO_CHAR(znsls401.t$item$c))
+
+LEFT JOIN baandb.ttcibd001601 tcibd001
+       ON TRIM(TO_CHAR(tcibd001.t$item)) = TRIM(TO_CHAR(znsls401.t$item$c))
        
 LEFT JOIN baandb.tznfmd171601 znfmd171
        ON znfmd171.t$ncar$c = znfmd630.t$ncar$c
@@ -41,5 +49,17 @@ LEFT JOIN baandb.tznfmd170601 znfmd170
        ON znfmd170.t$fili$c = znfmd171.t$fili$c
       AND znfmd170.t$nent$c = znfmd171.t$nent$c
       AND znfmd170.t$cfrw$c = znfmd171.t$cfrw$c
+      
+ LEFT JOIN ( Select znfmd640.t$fili$c,
+                    znfmd640.t$etiq$c,
+                    max(znfmd640.t$date$c) t$date$c
+               from baandb.tznfmd640601 znfmd640
+               where znfmd640.t$coct$c = 'ETR'
+           group by znfmd640.t$fili$c,
+                    znfmd640.t$etiq$c ) znfmd640
+        ON znfmd640.t$fili$c = znfmd630.t$fili$c
+       AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
+
+--WHERE znfmd630.T$CFRW$C = 'T03'
 
 order by ETIQUETA
