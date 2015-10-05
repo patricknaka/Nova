@@ -1,9 +1,12 @@
-﻿SELECT DISTINCT
+﻿SELECT  DISTINCT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
-        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-         AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                                                 --#MAR.265.en
-        15 CD_CIA, --znsls400.t$ncia$c 
+-- a tabela ttdsls094201 é compartilhada com a 201
+-- em 02/10/15 foram retirados os campos NR_ENTREGA_CANCELADO e SQ_PEDIDO_CANCELADO
+
+         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+         AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                                                 
+        /*znsls400.t$ncia$c*/ 15 CD_CIA,
         tdsls400.t$orno NR_ORDEM,
         tdsls400.t$ofbp CD_CLIENTE,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -48,8 +51,9 @@
         znsls400.t$idcp$c NR_CAMPANHA_B2B,
         sls401q.t$pztr$c QT_PRAZO_TRANSIT_TIME,
         sls401q.t$pzcd$c QT_PRAZO_CD,
+--        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 END NR_NF_CONSOLIDADA,           
         CASE WHEN tdsls094.t$bill$c!=3 THEN to_char(consold.NOTA) ELSE '0' END NR_NF_CONSOLIDADA,                 
-        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END NR_SERIE_NF_CONSOLIDADA,    
+        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END NR_SERIE_NF_CONSOLIDADA,     
         sls401q.t$pcga$c NR_PEDIDO_GARANTIA,
         sls401q.t$dtep$c DT_LIMITE_EXPED,
         znsls400.t$tped$c CD_TIPO_PEDIDO,
@@ -77,10 +81,10 @@
   tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
   sls401q.t$idor$c CD_TIPO_SITE,                                        
   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                                     
-  sls401q.cancela IN_CANCELADO,
-  sls401q.seq_pedido_cancel SQ_PEDIDO_CANCELADO,
-  TO_CHAR(sls401q.entrega_cancel) NR_ENTREGA_CANCELADO
-FROM    baandb.ttdsls400602 tdsls400
+  sls401q.cancela IN_CANCELADO
+--  sls401q.seq_pedido_cancel SQ_PEDIDO_CANCELADO,
+--  TO_CHAR(sls401q.entrega_cancel) NR_ENTREGA_CANCELADO
+FROM    BAANDB.TTDSLS400602 tdsls400
     LEFT JOIN (select  c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE             
               from baandb.tcisli245602 c245
               inner join baandb.tcisli941602 c941
@@ -96,8 +100,8 @@ FROM    baandb.ttdsls400602 tdsls400
           znsls401.t$sqpd$c       t$sqpd$c,
           znsls401.t$entr$c       t$entr$c,
       case when znsls401.t$qtve$c<0 then 2 else 1 end cancela,
-      znsls401.t$sedt$c   seq_pedido_cancel,
-      znsls401.t$endt$c    entrega_cancel,
+--      znsls401.t$sedt$c   seq_pedido_cancel,
+--      znsls401.t$endt$c    entrega_cancel,
           max(znsls401.t$pztr$c)  t$pztr$c,
           max(znsls401.t$pzcd$c)  t$pzcd$c,
           max(znsls401.t$pcga$c)       t$pcga$c,                                  
@@ -132,16 +136,18 @@ FROM    baandb.ttdsls400602 tdsls400
           znsls401.t$entr$c,
           znsls401.t$orno$c,
       case when znsls401.t$qtve$c<0 then 2 else 1 end,
-      znsls401.t$sedt$c,
-      znsls401.t$endt$c,
+--      znsls401.t$sedt$c,
+--      znsls401.t$endt$c,
           brmcs941.t$opfc$l,
       znsls401.t$idor$c) sls401q
-      LEFT JOIN  baandb.tznsls004602 znsls004 ON znsls004.t$orno$c=sls401q.t$orno AND znsls004.t$entr$c=sls401q.t$entr$c,      
+      LEFT JOIN  baandb.tznsls004602 znsls004 
+      ON znsls004.t$orno$c=sls401q.t$orno 
+      AND znsls004.t$entr$c=sls401q.t$entr$c,      
         baandb.ttcemm124602 tcemm124,
         baandb.ttcemm030602 tcemm030,
         baandb.ttccom130602 endfat,
         baandb.ttccom130602 endent,
-        baandb.ttdsls094201 tdsls094,  --- essa tabela não existe na 602. Está compartilhada com a 201                                      
+        baandb.ttdsls094201 tdsls094,                                        
     ( SELECT Max(tznsls410602.t$poco$c) poco,
                  tznsls410602.t$ncia$c ncia,
                  tznsls410602.t$uneg$c uneg,
@@ -173,4 +179,4 @@ AND     endent.t$cadr=tdsls400.t$stad
 AND     ulttrc.ncia=sls401q.t$ncia$c
 AND     ulttrc.uneg=sls401q.t$uneg$c
 AND     ulttrc.pecl=sls401q.t$pecl$c
-AND    tdsls094.t$sotp=tdsls400.t$sotp
+AND    tdsls094.t$sotp=tdsls400.t$sotp  
