@@ -26,8 +26,12 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		TO_CHAR(ZNSLS004.T$ENTR$C)										  NUMERO_CUPOM_FISCAL,
-    cisli940.t$fght$l * (-1)                         DESCONTO_PGTO,
-    cisli940.t$amnt$l                               TOTAL_VENDA,
+    CASE WHEN CISLI940.T$FDTY$L=15 THEN
+          cisli940_FAT.t$fght$l * (-1)
+    ELSE  cisli940.t$fght$l * (-1) END              DESCONTO_PGTO,
+    CASE WHEN CISLI940.T$FDTY$L=15 THEN
+          cisli940_FAT.t$amnt$l
+    ELSE  cisli940.t$amnt$l END                     TOTAL_VENDA,
 		''														                  CANCELADO_FISCAL,
 		ZNSLS402.T$NUPA$C										            PARCELA,
 		''														                  LANCAMENTO_CAIXA,
@@ -45,9 +49,16 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 			DATA_VENDA,
     'S'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
-    cisli940.t$fire$l             REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 			DT_ULT_ALTERACAO,
+    CASE WHEN CISLI940.T$FDTY$L=15 THEN
+          CISLI940_FAT.T$FIRE$L
+    ELSE  cisli940.t$fire$l END                   REF_FISCAL,
+    CASE WHEN CISLI940.T$FDTY$L=15 THEN
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE)
+    END                                             DT_ULT_ALTERACAO,
     ''                                             NUMERO_FISCAL_CANCELAMENTO
 
 FROM	(	SELECT	A.T$FIRE$L,
@@ -179,7 +190,7 @@ SELECT
 		AT time zone 'America/Sao_Paulo') AS DATE) 			DATA_VENDA,
     'C'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
     tdrec940.t$fire$l             REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$SADT$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 			DT_ULT_ALTERACAO,
     ''                                             NUMERO_FISCAL_CANCELAMENTO
 
@@ -301,9 +312,16 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA_VENDA,
     'I'                                               TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
-    CISLI940.T$FIRE$L                                 REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$RCD_UTC, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO,
+    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+          CISLI940_FAT.T$FIRE$L
+    ELSE  CISLI940.T$FIRE$L END                       REF_FISCAL,
+    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940_FAT.T$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE) 				
+    ELSE
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE)
+    END                                               DT_ULT_ALTERACAO,
     ''                                               NUMERO_FISCAL_CANCELAMENTO
 
 FROM
@@ -362,10 +380,24 @@ LEFT JOIN ( 	SELECT	A.T$FIRE$L,
       
 LEFT JOIN BAANDB.TCISLI940601 CISLI940
        ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
-       
+
+INNER JOIN (SELECT	E.T$FIRE$L,
+                    E.T$REFR$L
+
+            FROM	  BAANDB.TCISLI941601 E
+
+            GROUP BY  E.T$FIRE$L,
+                      E.T$REFR$L) CISLI941	
+        ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
+					 
+LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT 
+       ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
+      AND	CISLI940_FAT.T$FDTY$L =	16
+                      
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
 		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)   --branco, venda sem pedido, retorno de mercadoria de cliente
     
-ORDER BY TICKET, TP_MOVTO, REF_FISCAL
+--ORDER BY TICKET, TP_MOVTO, REF_FISCAL
+ORDER BY TP_MOVTO, REF_FISCAL
