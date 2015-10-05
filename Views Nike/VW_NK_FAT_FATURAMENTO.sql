@@ -305,14 +305,12 @@ LEFT JOIN ( select c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE
 baandb.ttccom130601 endfat,
 baandb.ttccom130601 endent,
 baandb.ttcibd001601 tcibd001,
-baandb.ttdsls094201 tdsls094    --tabela compartilhada
+baandb.ttdsls094301 tdsls094    --tabela compartilhada
 WHERE cisli941f.t$fire$l=cisli940.t$fire$l
-  and cisli941.t$fire$l = cisli940.t$fire$l
-  and  cisli245.t$fire$l=cisli941.t$fire$l
+  AND cisli245.t$fire$l=cisli941.t$fire$l
   AND cisli245.t$line$l=cisli941.t$line$l
   AND tdsls401.t$orno = cisli245.t$slso
   AND tdsls401.t$pono = cisli245.t$pono
-  AND tdsls401.t$sqnb = 0
   AND	znsls004.t$orno$c=tdsls401.t$orno	-- Origem OV
   AND	znsls004.t$pono$c=tdsls401.t$pono -- Origem OV
   AND	znsls401.t$ncia$c=znsls004.t$ncia$c	-- Origem OV
