@@ -1,5 +1,8 @@
 ﻿SELECT
 --**********************************************************************************************************************************************************
+-- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
+-- em 02/10/15 foram incluidos os campos NR_ENTREGA_CANCELADO e SQ_PEDIDO_CANCELADO
+
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, tdsls401.t$rcd_utc), 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
@@ -65,8 +68,10 @@
 	  ELSE TO_CHAR(znsls401.t$igar$c) END CD_PRODUTO,												
 	CAST(tdsls401.t$pono as varchar(10)) SQ_ORDEM,													
 	   tdsls400.t$sotp  CD_TIPO_ORDEM_VENDA,                                 						
-  case when znsls401.TOT_QTVE<0 then 2 else 1 end                       IN_CANCELADO			
-  
+  case when znsls401.TOT_QTVE<0 then 2 else 1 end                       IN_CANCELADO,
+    znsls401.t$endt$c             NR_ENTREGA_CANCELADO,
+    znsls401.t$sidt$c             SQ_PEDIDO_CANCELADO
+
 FROM
         baandb.ttdsls401602 tdsls401,
 	
@@ -82,6 +87,8 @@ FROM
                   a.t$vlun$c,
                   a.t$tpcb$c,
                   a.t$igar$c,
+                  a.t$endt$c,
+                  a.t$sidt$c,
                   sum(a.t$qtve$c) TOT_QTVE,
                   sum(a.t$vlfr$c) TOT_VLFR,
                   sum(a.t$vldi$c) TOT_VLDI,
@@ -98,7 +105,9 @@ FROM
                     a.t$dtep$c,
                     a.t$vlun$c,
                     a.t$tpcb$c,
-                    a.t$igar$c ) znsls401,                    
+                    a.t$igar$c,
+                    a.t$endt$c,
+                    a.t$sidt$c) znsls401,                    
           
           baandb.tznsls004602 znsls004,		
         baandb.ttdsls400602 tdsls400,
@@ -151,4 +160,4 @@ and    znsls004.t$uneg$c=znsls401.t$uneg$c
 and     znsls004.t$pecl$c=znsls401.t$pecl$c			
 and     znsls004.t$orno$c=znsls401.t$orno$c  						
 and     znsls004.t$pono$c=znsls401.t$pono$c                                     
-and     tdsls401.t$sqnb = 0
+and     tdsls401.t$sqnb = 0          
