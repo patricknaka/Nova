@@ -270,13 +270,8 @@ LEFT JOIN baandb.tcisli943601 PIS ON PIS.t$fire$l=cisli941f.t$fire$l
 LEFT JOIN baandb.tcisli943601 CSLL ON CSLL.t$fire$l=cisli941f.t$fire$l	
      AND	CSLL.t$line$l=cisli941f.t$line$l
      AND CSLL.t$brty$l=13,
-( select a.t$fire$l,
-         a.t$line$l,
-         max(a.t$slso) t$slso,
-         max(a.t$pono) t$pono
-  from   baandb.tcisli245601 a
-  group by a.t$fire$l, 
-           a.t$line$l ) cisli245,
+     
+baandb.tcisli245601 cisli245,
 baandb.ttdsls401601 tdsls401,
 baandb.tznsls004601 znsls004,	--Origem OV
 baandb.tznsls401601 znsls401,
@@ -339,4 +334,4 @@ WHERE cisli941f.t$fire$l=cisli940.t$fire$l
         or cisli941.T$line$L= cisli941f.T$line$l) 
   and cisli940.t$stat$l IN (5,6) ----Impresso, Lançado  
   and cisli940.t$nfes$l IN (1,2,5) --Nenhum, Transmitida, Processada
-  
+  AND tdsls401.t$sqnb = 0
