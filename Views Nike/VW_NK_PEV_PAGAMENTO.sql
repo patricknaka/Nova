@@ -18,7 +18,7 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_PEDIDO,
     znsls402.t$uneg$c  CD_UNIDADE_NEGOCIO,	
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.T$PVEN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE) DT_APROVACAO,
     znsls402.t$valo$c  VL_ORIGINAL,
     cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlja$c as numeric(12,2))  VL_JUROS_ADMINISTRADORA,
