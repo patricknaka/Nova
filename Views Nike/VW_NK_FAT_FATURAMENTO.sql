@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
 -- a tabela ttdsls094 é compartilhada com a 201
@@ -300,7 +300,7 @@ LEFT JOIN ( select c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE
 baandb.ttccom130601 endfat,
 baandb.ttccom130601 endent,
 baandb.ttcibd001601 tcibd001,
-baandb.ttdsls094201 tdsls094    --tabela compartilhada
+baandb.ttdsls094301 tdsls094    --tabela compartilhada
 WHERE cisli941f.t$fire$l=cisli940.t$fire$l
   AND cisli245.t$fire$l=cisli941.t$fire$l
   AND cisli245.t$line$l=cisli941.t$line$l
