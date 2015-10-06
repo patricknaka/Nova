@@ -5,10 +5,10 @@ SELECT
     TO_CHAR(znsls004.t$entr$c)                      TICKET,
 		'NIKE.COM'												              FILIAL,
 		''														                  TERMINAL,
-		CASE WHEN ZNSLS400.T$IDPO$C='TD' THEN										--	LN										NIKE
-				'T'																	--											T - TROCA
+		CASE WHEN ZNSLS400.T$IDPO$C='TD' AND znsls402.t$idmp$c = 4 THEN										--	LN										NIKE
+				'13'																	--											T - TROCA
     ELSE
-      DECODE(ZNSLS402.T$IDMP$C,													--	LN										NIKE
+      DECODE(ZNSLS402.T$IDMP$C,													                            --	LN										NIKE
           1,	'08',                                                           --1	Cartão de Crédito						A - CARTAO DE CREDITO POS 
           2,	'11',                                                           --2	Boleto B2C (BV)							J - DUPLICATA
           3,	' ',                                                           --3	Boleto B2B Spot							J - DUPLICATA
@@ -148,6 +148,7 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
 
+--  and znsls401.t$entr$c = '121329402'
 --***************************************************************************************************************************
 --				TROCA
 --***************************************************************************************************************************
