@@ -30,7 +30,7 @@ SELECT
             tdrec941.t$line$l
         else
             tdrec941.t$line$l  end                  LIN_REF_FICAL,
-    		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+    		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$sadt$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 	    DT_ULT_ALTERACAO,
     tcibd001.t$mdfb$c                               MOD_FABR_ITEM,
     tdrec941.t$opfc$l                               CFOP,
