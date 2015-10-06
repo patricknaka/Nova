@@ -12,8 +12,12 @@ SELECT
         CISLI941.T$LINE$L/10 end			                        ITEM,
 		''														                            CODIGO_BARRA,
 		CISLI941.T$DQUA$L										                      QTDE,
-		CISLI941.T$PRIC$L	- cisli941.t$tldm$l									    PRECO_LIQUIDO,
-		CISLI941.T$TLDM$L										                      DESCONTO_ITEM,
+    CASE WHEN CISLI940_FAT.T$FDTY$L = 16 THEN
+          CISLI941_FAT.T$PRIC$L	- cisli941_FAT.t$tldm$l	
+		ELSE  CISLI941.T$PRIC$L	- cisli941.t$tldm$l	END						PRECO_LIQUIDO,
+    CASE WHEN CISLI940_FAT.T$FDTY$L = 16 THEN
+        CISLI941_FAT.T$TLDM$L
+		ELSE CISLI941.T$TLDM$L	END					                      DESCONTO_ITEM,
 		''														                            ID_VENDEDOR,
 		''														                            TERMINAL,
 		LTRIM(RTRIM(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM))) 			PRODUTO,				-- Estamos usando a tabela de código alternativo de item mas ainda esperamos a resposta dos consultores para confirmar se será usado este conveito na Nike
@@ -24,15 +28,24 @@ SELECT
 		0														                              QTDE_CANCELADA,
 		NVL(Q_IPI.T$RATE$L,0.0)									                    IPI,
 		NVL(Q_ICMS.T$RATE$L,0.0)									                  ALIQUOTA,
-		
-		CAST((CASE CISLI941.T$DQUA$L WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / CISLI941.T$DQUA$L) END) AS NUMERIC(38,4))
-                                                              CUSTO,
+		CASE WHEN CISLI940_FAT.T$FDTY$L = 16 THEN
+          CAST((CASE CISLI941_FAT.T$DQUA$L WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / CISLI941_FAT.T$DQUA$L) END) AS NUMERIC(38,4))
+    ELSE
+          CAST((CASE CISLI941.T$DQUA$L WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / CISLI941.T$DQUA$L) END) AS NUMERIC(38,4))
+    END                                                          CUSTO,
 		'01'													                            COR_PRODUTO,
 		znibd005.t$desc$c							                            TAMANHO,
     'S'                                                       TP_MOVTO,         -- Criado para separar na tabela as entradas e saídas
-    cisli940.t$fire$l                                         REF_FISCAL,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				        DT_ULT_ALTERACAO,
+    CASE WHEN CISLI940_FAT.T$FDTY$L = 16 THEN
+          CISLI940_FAT.T$FIRE$L
+    ELSE cisli940.t$fire$l END                                REF_FISCAL,
+    CASE WHEN CISLI940_FAT.T$FDTY$L = 16 THEN
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE) 				
+    END                                                       DT_ULT_ALTERACAO,
     tcibd001.t$mdfb$c                                         MOD_FABR_ITEM
     
 FROM
@@ -99,6 +112,33 @@ LEFT JOIN baandb.tznsls000601 znsls000
 LEFT JOIN baandb.tznibd005601 znibd005
        ON znibd005.t$size$c = TCIBD001.T$SIZE$C
        
+LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT 
+       ON CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
+      AND	CISLI940_FAT.T$FDTY$L =	16
+
+LEFT JOIN BAANDB.TCISLI941601 CISLI941_FAT
+       ON CISLI941_FAT.T$FIRE$L =	CISLI941.T$REFR$L
+      AND CISLI941_FAT.T$LINE$L = CISLI941.T$RFDL$L
+       
+       
+LEFT JOIN (	SELECT 	A.T$FIRE$L,
+                    A.T$LINE$L,
+                    A.T$AMNT$L,
+                    A.T$RATE$L
+            FROM BAANDB.TCISLI943601 A
+            WHERE	A.T$BRTY$L=3) Q_IPI		
+      ON	Q_IPI.T$FIRE$L		=	CISLI941_FAT.T$FIRE$L
+     AND	Q_IPI.T$LINE$L		=	CISLI941_FAT.T$LINE$L
+
+LEFT JOIN (	SELECT 	A.T$FIRE$L,
+                    A.T$LINE$L,
+                    A.T$AMNT$L,
+                    A.T$RATE$L
+      			FROM BAANDB.TCISLI943601 A
+            WHERE	A.T$BRTY$L=1) Q_ICMS	
+       ON	Q_ICMS.T$FIRE$L		=	CISLI941_FAT.T$FIRE$L
+      AND	Q_ICMS.T$LINE$L		=	CISLI941_FAT.T$LINE$L											
+                      
 WHERE CISLI245.T$SLCP=601
   AND	CISLI245.T$ORTP=1
   AND	CISLI245.T$KOOR=3
@@ -145,9 +185,16 @@ SELECT
 		'01'													COR_PRODUTO,
 		znibd005.t$desc$c							TAMANHO,
     'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
-    cisli940.t$fire$l             REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 		DT_ULT_ALTERACAO,
+    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+          CISLI940_FAT.T$FIRE$L
+    ELSE cisli940.t$fire$l END    REF_FISCAL,
+    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE) 		
+    ELSE
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE) 		  
+    END                           DT_ULT_ALTERACAO,
     tcibd001.t$mdfb$c             MOD_FABR_ITEM
 
 FROM
@@ -193,7 +240,22 @@ LEFT JOIN BAANDB.TCISLI940601 CISLI940
        ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
        
 LEFT JOIN baandb.tznibd005601 znibd005
-       ON znibd005.t$size$c = TCIBD001.T$SIZE$C       
+       ON znibd005.t$size$c = TCIBD001.T$SIZE$C
+
+INNER JOIN (SELECT	E.T$FIRE$L,
+                    E.T$REFR$L
+            FROM	BAANDB.TCISLI941601 E
+                LEFT JOIN BAANDB.TCISLI941601 E1 
+                       ON	E1.T$FIRE$L=E.T$REFR$L
+                      AND	E1.T$LINE$L=E.T$RFDL$L
+            GROUP BY E.T$FIRE$L,
+                     E.T$REFR$L) CISLI941	
+        ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
+           
+LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT 
+       ON CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
+      AND	CISLI940_FAT.T$FDTY$L =	16
+      
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35

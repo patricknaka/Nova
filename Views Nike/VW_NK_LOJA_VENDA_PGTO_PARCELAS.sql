@@ -1,4 +1,4 @@
-?SELECT
+SELECT
 --***************************************************************************************************************************
 --				VENDA
 --***************************************************************************************************************************
@@ -71,9 +71,16 @@
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
     'S'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
-    cisli940.t$fire$l             REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 							DT_ULT_ALTERACAO
+    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+          CISLI940_FAT.T$FIRE$L
+    ELSE cisli940.t$fire$l END                             REF_FISCAL,
+    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) 							
+    END                                                     DT_ULT_ALTERACAO
     
 FROM (	SELECT	A.T$FIRE$L,
                 A.T$SLSO
@@ -130,16 +137,12 @@ INNER JOIN BAANDB.TZNSLS402601 ZNSLS402		ON	ZNSLS402.T$NCIA$C	=	ZNSLS004.T$NCIA$
 INNER JOIN	BAANDB.TCISLI940601	CISLI940	ON	CISLI940.T$FIRE$L	=	CISLI245.T$FIRE$L
 
 INNER JOIN (SELECT	E.T$FIRE$L,
-					E.T$REFR$L
-					-- SUM(E.T$TLDM$L) T$TLDM$L,
-					-- SUM(E1.T$TLDM$L) T$TLDM$L_FAT,
-					-- SUM(E.T$DQUA$L) T$DQUA$L
-			FROM	BAANDB.TCISLI941601 E
-			-- LEFT JOIN BAANDB.TCISLI941601 E1 
-						-- ON	E1.T$FIRE$L=E.T$REFR$L
-						-- AND	E1.T$LINE$L=E.T$RFDL$L
-			GROUP BY E.T$FIRE$L,
-					 E.T$REFR$L) CISLI941	ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
+                    E.T$REFR$L
+
+            FROM	BAANDB.TCISLI941601 E
+            GROUP BY E.T$FIRE$L,
+                     E.T$REFR$L) CISLI941	
+       ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
 					 
 LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
 											AND	CISLI940_FAT.T$FDTY$L =	16
@@ -217,7 +220,7 @@ SELECT
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,												
     'C'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
     tdrec940.t$fire$l             REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$SADT$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DT_ULT_ALTERACAO
 FROM
 		(	SELECT	A.T$FIRE$L,
@@ -349,9 +352,16 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
     'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
-    cisli940.t$fire$l             REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE) 							DT_ULT_ALTERACAO
+    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+          CISLI940_FAT.T$FIRE$L
+    ELSE  cisli940.t$fire$l END   REF_FISCAL,
+    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+          AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+          AT time zone 'America/Sao_Paulo') AS DATE) 							
+    END                           DT_ULT_ALTERACAO
 
 FROM
 			BAANDB.TZNSLS400601	ZNSLS400
@@ -398,6 +408,17 @@ LEFT JOIN ( 	SELECT	A.T$FIRE$L,
       
 LEFT JOIN BAANDB.TCISLI940601 CISLI940
        ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
+       
+INNER JOIN (SELECT	E.T$FIRE$L,
+                    E.T$REFR$L
+            FROM	  BAANDB.TCISLI941601 E
+            GROUP BY E.T$FIRE$L,
+                     E.T$REFR$L) CISLI941	
+       ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
+					 
+LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
+											AND	CISLI940_FAT.T$FDTY$L =	16
+                      
        
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'

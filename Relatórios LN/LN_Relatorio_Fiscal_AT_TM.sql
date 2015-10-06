@@ -46,7 +46,8 @@ select Q1.*
                  tdrec940.t$docn$l          NF_ENTRADA,
                  tdrec940.t$seri$l          SERI_NF_ENTRADA,
                  NOTA_ENT.CNST              COD_STATUS_REC,
-                 NOTA_ENT.STATUS            DSC_STATUS_REC
+                 NOTA_ENT.STATUS            DSC_STATUS_REC,
+                 cisli940.t$fire$l
                  
             FROM baandb.tcisli940301  cisli940  
            
@@ -169,7 +170,7 @@ select Q1.*
        LEFT JOIN baandb.ttdrec955301 tdrec955
               ON tdrec955.t$fire$l = cisli941.t$fire$l
              AND tdrec955.t$line$l = cisli941.t$line$l
-             AND tdrec955.t$sern$l = 1
+--             AND tdrec955.t$sern$l = 1
       
       LEFT JOIN baandb.ttdrec940301 tdrec940
              ON tdrec940.t$fire$l = tdrec955.t$lfir$l
@@ -209,9 +210,8 @@ select Q1.*
            WHERE cisli940.t$stat$l = 6
              AND cisli940.t$fdty$l = 17
              AND tcemm124.t$dtyp = 1
-             AND STATUS.CNST IN (:StatusNF)
-			 
-        ORDER BY CHAVE_NM_FILIAL, ID_ITEM ) Q1
+             AND STATUS.CNST IN (:StatusNF)       
+        ORDER BY CHAVE_NM_FILIAL, ID_ITEM ) Q1     
           
 where ID_FILIAL in (:Filial)
   and ENTRADA in (:Entrada)

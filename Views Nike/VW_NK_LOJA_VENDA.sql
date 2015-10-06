@@ -47,13 +47,24 @@ SELECT
 		''									DATA_HORA_CANCELAMENTO,
 		''									SUGESTAO_COD_FORMA_PGTO,
 		nvl(Q_IPI.T$AMNT$L,0)								VALOR_IPI,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				EMISSAO,
+    --CISLI940_FAT
+    CASE WHEN CISLI940.T$FDTY$L=15 THEN
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940_FAT.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+        AT time zone 'America/Sao_Paulo') AS DATE) 		
+    ELSE
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		AT time zone 'America/Sao_Paulo') AS DATE) END				EMISSAO,
 		TO_CHAR(ZNSLS401.T$PZTR$C)							TRANSIT_TIME,
     'S'                           TP_MOVTO,                 -- Criado para separar na tabela as entradas e saídas
-    cisli940.t$fire$l             REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO
+    CASE WHEN CISLI940.T$FDTY$L=15 THEN
+      CISLI940_FAT.T$FIRE$L
+    ELSE cisli940.t$fire$l  END           REF_FISCAL,
+    CASE WHEN CISLI940.T$FDTY$L=15 THEN
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          AT time zone 'America/Sao_Paulo') AS DATE) 	END			DT_ULT_ALTERACAO
 
 FROM (	SELECT	A.T$FIRE$L,
                 A.T$SLSO
@@ -142,8 +153,9 @@ INNER JOIN (SELECT	A.T$FIRE$L,
             GROUP BY A.T$FIRE$L ) TOT_NOTA	
         ON	TOT_NOTA.T$FIRE$L	=	CISLI940.T$FIRE$L
            
-LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
-											AND	CISLI940_FAT.T$FDTY$L =	16
+LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT 
+       ON CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
+      AND	CISLI940_FAT.T$FDTY$L =	16
 			
 LEFT JOIN (	SELECT	F.T$FIRE$L,
 					F.T$AMNT$L
@@ -207,7 +219,7 @@ SELECT
 		TO_CHAR(0)														TRANSIT_TIME,
     'C'                         TP_MOVTO,                 -- Criado para separar na tabela as entradas e saídas
     tdrec940.t$fire$l           REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$SADT$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO
 		
 FROM
@@ -316,9 +328,15 @@ SELECT
 		AT time zone 'America/Sao_Paulo') AS DATE) 				EMISSAO,
 		TO_CHAR(0)														TRANSIT_TIME,
     'I'                         TP_MOVTO,                 -- Criado para separar na tabela as entradas e saídas
-    CISLI940.T$FIRE$L           REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$RCD_UTC, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO
+    CASE WHEN CISLI940_FAT.T$FDTY$L = 15 THEN
+          CISLI940_FAT.T$FIRE$L
+    ELSE  CISLI940.T$FIRE$L END          REF_FISCAL,
+    CASE WHEN CISLI940_FAT.T$FDTY$L = 15 THEN
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940_FAT.T$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+        AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+        AT time zone 'America/Sao_Paulo') AS DATE) 	END			DT_ULT_ALTERACAO
 		
 FROM
 			BAANDB.TZNSLS400601	ZNSLS400
@@ -373,7 +391,20 @@ LEFT JOIN ( 	SELECT	A.T$FIRE$L,
       
 LEFT JOIN BAANDB.TCISLI940601 CISLI940
        ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
-       
+
+INNER JOIN (SELECT	E.T$FIRE$L,
+                    E.T$REFR$L
+			FROM	BAANDB.TCISLI941601 E
+			LEFT JOIN BAANDB.TCISLI941601 E1 
+						ON	E1.T$FIRE$L=E.T$REFR$L
+						AND	E1.T$LINE$L=E.T$RFDL$L
+			GROUP BY E.T$FIRE$L,
+					 E.T$REFR$L) CISLI941	ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
+           
+LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT 
+       ON CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
+      AND	CISLI940_FAT.T$FDTY$L =	16
+      
 WHERE
 			ZNSLS400.T$IDPO$C	=		'TD'
 		AND	TDSLS400.T$HDST		=		35
