@@ -155,110 +155,109 @@ WHERE CISLI245.T$SLCP=601
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
 
---  AND cisli940.t$fire$l IN ('F00000246', 'F00000295')
 --***************************************************************************************************************************
 --				INSTANCIA
 --***************************************************************************************************************************
-UNION
-SELECT
-    ZNSLS401.T$ENTR$C                 TICKET,
-		'NIKE.COM'												FILIAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
-		ZNSLS401.T$SEQU$C										ITEM,
-		''														      CODIGO_BARRA,
-		CAST( ZNSLS401.T$QTVE$C AS NUMERIC(8,2)	)							  QTDE,
-		ZNSLS401.T$VLUN$C										PRECO_LIQUIDO,
-		ZNSLS401.T$VLDI$C										DESCONTO_ITEM,
-		''														ID_VENDEDOR,
-		''														TERMINAL,
-		LTRIM(RTRIM(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM))) 					PRODUTO,				-- Estamos usando a tabela de código alternativo de item mas ainda esperamos a resposta dos consultores para confirmar se será usado este conveito na Nike
-		0														  ITEM_EXCLUIDO,
-		0														  QTDE_BRINDE,
-		0 													  NÃO_MOVIMENTA_ESTOQUE,
-		''														INDICA_ENTREGA_FUTURA,
-		0														  QTDE_CANCELADA,
-		0.0														IPI,
-		0.0														ALIQUOTA,
-		CAST ((CASE ZNSLS401.T$QTVE$C WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / ZNSLS401.T$QTVE$C) END)	AS NUMERIC(38,4))					
-                                  CUSTO,
-		'01'													COR_PRODUTO,
-		znibd005.t$desc$c							TAMANHO,
-    'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
-    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
-          CISLI940_FAT.T$FIRE$L
-    ELSE cisli940.t$fire$l END    REF_FISCAL,
-    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-          AT time zone 'America/Sao_Paulo') AS DATE) 		
-    ELSE
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-          AT time zone 'America/Sao_Paulo') AS DATE) 		  
-    END                           DT_ULT_ALTERACAO,
-    tcibd001.t$mdfb$c             MOD_FABR_ITEM
-
-FROM
-
-			BAANDB.TZNSLS400601	ZNSLS400	
-
-INNER JOIN	BAANDB.TZNSLS401601 ZNSLS401	ON	ZNSLS401.T$NCIA$C	=	ZNSLS400.T$NCIA$C
-                                            AND ZNSLS401.T$UNEG$C   =	ZNSLS400.T$UNEG$C
-                                            AND ZNSLS401.T$PECL$C   =	ZNSLS400.T$PECL$C
-                                            AND ZNSLS401.T$SQPD$C   =	ZNSLS400.T$SQPD$C
-											
-INNER JOIN	BAANDB.TTDSLS400601 TDSLS400	ON	TDSLS400.T$ORNO		=	ZNSLS401.T$ORNO$C
-											
-INNER JOIN	BAANDB.TTCIBD001601	TCIBD001	ON	TCIBD001.T$ITEM		=	ZNSLS401.T$ITML$C
-
-LEFT JOIN (	SELECT	A.T$ORNO,
-                    A.T$PONO,
---					        A.T$SQNB,
-                    SUM(A.T$COGS$1) CTOT
-            FROM	BAANDB.TTDSLS415601 A
-            WHERE 	A.T$CSTO = 2
-            GROUP BY A.T$ORNO,
-                     A.T$PONO ) TDSLS415	
---			         A.T$SQNB)	TDSLS415	ON	TDSLS415.T$ORNO		=	ZNSLS401.T$ORNO$C
-      ON	TDSLS415.T$ORNO	=	ZNSLS401.T$ORNO$C
-     AND	TDSLS415.T$PONO	=	ZNSLS401.T$PONO$C
-
-LEFT JOIN	BAANDB.TTCIBD004601	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
-											AND	TCIBD004.T$BPID		=	' '
-											AND	TCIBD004.T$ITEM		=	TCIBD001.T$ITEM
-
-LEFT JOIN ( 	SELECT	A.T$FIRE$L,
-                A.T$SLSO
-        FROM	BAANDB.TCISLI245601 A
-        WHERE	A.T$SLCP=601
-        AND		A.T$ORTP=1
-        AND		A.T$KOOR=3
-        GROUP BY A.T$FIRE$L,
-		             A.T$SLSO ) SLS245
-      ON SLS245.T$SLSO = TDSLS400.T$ORNO
-      
-LEFT JOIN BAANDB.TCISLI940601 CISLI940
-       ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
-       
-LEFT JOIN baandb.tznibd005601 znibd005
-       ON znibd005.t$size$c = TCIBD001.T$SIZE$C
-
-INNER JOIN (SELECT	E.T$FIRE$L,
-                    E.T$REFR$L
-            FROM	BAANDB.TCISLI941601 E
-                LEFT JOIN BAANDB.TCISLI941601 E1 
-                       ON	E1.T$FIRE$L=E.T$REFR$L
-                      AND	E1.T$LINE$L=E.T$RFDL$L
-            GROUP BY E.T$FIRE$L,
-                     E.T$REFR$L) CISLI941	
-        ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
-           
-LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT 
-       ON CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
-      AND	CISLI940_FAT.T$FDTY$L =	16
-      
-WHERE
-			ZNSLS400.T$IDPO$C	=		'TD'
-		AND	TDSLS400.T$HDST		=		35
-		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)
+--UNION
+--SELECT
+--    ZNSLS401.T$ENTR$C                 TICKET,
+--		'NIKE.COM'												FILIAL,
+--		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+--		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
+--		ZNSLS401.T$SEQU$C										ITEM,
+--		''														      CODIGO_BARRA,
+--		CAST( ZNSLS401.T$QTVE$C AS NUMERIC(8,2)	)							  QTDE,
+--		ZNSLS401.T$VLUN$C										PRECO_LIQUIDO,
+--		ZNSLS401.T$VLDI$C										DESCONTO_ITEM,
+--		''														ID_VENDEDOR,
+--		''														TERMINAL,
+--		LTRIM(RTRIM(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM))) 					PRODUTO,				-- Estamos usando a tabela de código alternativo de item mas ainda esperamos a resposta dos consultores para confirmar se será usado este conveito na Nike
+--		0														  ITEM_EXCLUIDO,
+--		0														  QTDE_BRINDE,
+--		0 													  NÃO_MOVIMENTA_ESTOQUE,
+--		''														INDICA_ENTREGA_FUTURA,
+--		0														  QTDE_CANCELADA,
+--		0.0														IPI,
+--		0.0														ALIQUOTA,
+--		CAST ((CASE ZNSLS401.T$QTVE$C WHEN 0.0 THEN 0.0 ELSE (TDSLS415.CTOT / ZNSLS401.T$QTVE$C) END)	AS NUMERIC(38,4))					
+--                                  CUSTO,
+--		'01'													COR_PRODUTO,
+--		znibd005.t$desc$c							TAMANHO,
+--    'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
+--    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+--          CISLI940_FAT.T$FIRE$L
+--    ELSE cisli940.t$fire$l END    REF_FISCAL,
+--    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+--          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+--          AT time zone 'America/Sao_Paulo') AS DATE) 		
+--    ELSE
+--          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+--          AT time zone 'America/Sao_Paulo') AS DATE) 		  
+--    END                           DT_ULT_ALTERACAO,
+--    tcibd001.t$mdfb$c             MOD_FABR_ITEM
+--
+--FROM
+--
+--			BAANDB.TZNSLS400601	ZNSLS400	
+--
+--INNER JOIN	BAANDB.TZNSLS401601 ZNSLS401	ON	ZNSLS401.T$NCIA$C	=	ZNSLS400.T$NCIA$C
+--                                            AND ZNSLS401.T$UNEG$C   =	ZNSLS400.T$UNEG$C
+--                                            AND ZNSLS401.T$PECL$C   =	ZNSLS400.T$PECL$C
+--                                            AND ZNSLS401.T$SQPD$C   =	ZNSLS400.T$SQPD$C
+--											
+--INNER JOIN	BAANDB.TTDSLS400601 TDSLS400	ON	TDSLS400.T$ORNO		=	ZNSLS401.T$ORNO$C
+--											
+--INNER JOIN	BAANDB.TTCIBD001601	TCIBD001	ON	TCIBD001.T$ITEM		=	ZNSLS401.T$ITML$C
+--
+--LEFT JOIN (	SELECT	A.T$ORNO,
+--                    A.T$PONO,
+----					        A.T$SQNB,
+--                    SUM(A.T$COGS$1) CTOT
+--            FROM	BAANDB.TTDSLS415601 A
+--            WHERE 	A.T$CSTO = 2
+--            GROUP BY A.T$ORNO,
+--                     A.T$PONO ) TDSLS415	
+----			         A.T$SQNB)	TDSLS415	ON	TDSLS415.T$ORNO		=	ZNSLS401.T$ORNO$C
+--      ON	TDSLS415.T$ORNO	=	ZNSLS401.T$ORNO$C
+--     AND	TDSLS415.T$PONO	=	ZNSLS401.T$PONO$C
+--
+--LEFT JOIN	BAANDB.TTCIBD004601	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
+--											AND	TCIBD004.T$BPID		=	' '
+--											AND	TCIBD004.T$ITEM		=	TCIBD001.T$ITEM
+--
+--LEFT JOIN ( 	SELECT	A.T$FIRE$L,
+--                A.T$SLSO
+--        FROM	BAANDB.TCISLI245601 A
+--        WHERE	A.T$SLCP=601
+--        AND		A.T$ORTP=1
+--        AND		A.T$KOOR=3
+--        GROUP BY A.T$FIRE$L,
+--		             A.T$SLSO ) SLS245
+--      ON SLS245.T$SLSO = TDSLS400.T$ORNO
+--      
+--LEFT JOIN BAANDB.TCISLI940601 CISLI940
+--       ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
+--       
+--LEFT JOIN baandb.tznibd005601 znibd005
+--       ON znibd005.t$size$c = TCIBD001.T$SIZE$C
+--
+--INNER JOIN (SELECT	E.T$FIRE$L,
+--                    E.T$REFR$L
+--            FROM	BAANDB.TCISLI941601 E
+--                LEFT JOIN BAANDB.TCISLI941601 E1 
+--                       ON	E1.T$FIRE$L=E.T$REFR$L
+--                      AND	E1.T$LINE$L=E.T$RFDL$L
+--            GROUP BY E.T$FIRE$L,
+--                     E.T$REFR$L) CISLI941	
+--        ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
+--           
+--LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT 
+--       ON CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
+--      AND	CISLI940_FAT.T$FDTY$L =	16
+--      
+--WHERE
+--			ZNSLS400.T$IDPO$C	=		'TD'
+--		AND	TDSLS400.T$HDST		=		35
+--		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)
     
 ORDER BY REF_FISCAL, ITEM
