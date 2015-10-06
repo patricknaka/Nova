@@ -215,9 +215,12 @@ SELECT DISTINCT
   CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
   ELSE cisli940.t$amnt$l END  VALOR_TOTAL,                            --06
-  CASE WHEN cisli940.t$fdty$l = 1 or cisli940.t$fdty$l = 14 THEN
+  CASE WHEN cisli940.t$fdty$l = 1 or        --Venda com pedido
+            cisli940.t$fdty$l = 14 or       --Retorno de mercadoria cliente
+            cisli940.t$fdty$l = 15 or       --Remessa triangular
+            cisli940.t$fdty$l = 16 THEN     --Fatura triangular
     tccom130c.t$fovn$l
-  ELSE '' END              CGC_CPF,                                --07
+  ELSE '' END               CGC_CPF,                                --07
   tccom130c.t$fovn$l        COD_CLIFOR,                             --08
   cast(NVL(tttxt010f.t$text,'') as varchar(100))         OBS,      --09
   cisli940.t$seri$l         SERIE_NF,                               --10
