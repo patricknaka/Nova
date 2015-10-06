@@ -291,138 +291,138 @@ AND 	TDREC940.T$RFDT$L = 10        --10-retorno de mercadoria
 --***************************************************************************************************************************
 --				INSTANCIA
 --***************************************************************************************************************************
-UNION
-SELECT
-		''														TERMINAL,
-		''														LANCAMENTO_CAIXA,
-		'NIKE.COM'												FILIAL,		
-		ZNSLS402.T$SEQU$C										PARCELA,
-		DECODE(ZNSLS402.T$cccd$c,
-			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
-			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
-			3,	'01',                                                       				-- 3	Amex                            01- AMERICAN EXPRESS
-			4,	'07',                                                       				-- 4	Diners                          07 - DINERS
-			5,	'10',                                                       				-- 5	Hipercard                       10 - HIPERCARD
-			18,	'04',                                                       				-- 18	Extra Mastercard                04 - MASTERCARD
-			38,	'11',                                                       				-- 38	Paypal                          11 - PAYPAL
-			15,	'  ',                                                       				-- 15	Multicheque/Multicash           
-			50,	'  ',                                                       				-- 50	Multicheque/Multicash           
-			19,	'03',                                                       				-- 19	Extra Visa                      03 - VISA CREDITO
-			11,	'03',                                                       				-- 11	Ponto Frio Visa                 03 - VISA CREDITO
-			8,	'04',                                                       				-- 8	Ponto Frio Mastercard           04 - MASTERCARD
-			10,	'11',                                                       				-- 10	Cartão Pão de Açúcar            
-			7, 	'  ',                                                       				-- 7	Aura                            
-			37,	'08',                                                       				-- 37	Elo                             08 - ELO CREDITO
-			43,	'  ',                                                       				-- 43	Primeira Compra                 
-			21, '  ',                                                       				-- 21	Ponto Frio Private Label        
-			17, '  ',                                                       				-- 17	Extra Private Label             
-			40, '04',                                                       				-- 40	Mobile Mastercard               04 - MASTERCARD
-			42,	'05',                                                       				-- 42	Visa Electron                   05 - VISA ELECTRON
-			49,	'04',                                                       				-- 49	Minha Casa Melhor Mastercard    04 - MASTERCARD
-			39,	'03',                                                       				-- 39	Mobile Visa                     03 - VISA CREDITO
-			22,	'  ',                                                       				-- 22	Itaucard
-			48,	'  ',                                                       				-- 48	Minha Casa Melhor Elo
-			44,	'  ',                                                       				-- 44	Clube Extra
-			70, '  ')											CODIGO_ADMINISTRADORA,      -- 70	Bndes
-
-		'6'														TIPO_PAGTO,
-			
-		-- ZNSLS401.VL_MERCD 
-		-- - ZNSLS401.VL_DSCONT 
-		-- + ZNSLS401.VL_FRETE										VALOR,
-		ZNSLS402.T$VLPG$C											VALOR,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C+1, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
-		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
-		''														MOEDA,
-		''														AGENCIA,
-		''														BANCO,
-		''														CONTA_CORRENTE,
-		ZNSLS402.T$NSUA$C										NUMERO_APROVACAO_CARTAO,
-		ZNSLS402.T$NUPA$C										PARCELAS_CARTAO,
-		0														VALOR_CANCELADO,
-		''														CHEQUE_CARTAO,
-		''														NUMERO_LOTE,
-		0														TROCO,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
-		''														ID_DOCUMENTO_ECF,
---		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
-    TO_CHAR(znsls401.t$entr$c)             TICKET,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
-    'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
-    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
-          CISLI940_FAT.T$FIRE$L
-    ELSE  cisli940.t$fire$l END   REF_FISCAL,
-    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-          AT time zone 'America/Sao_Paulo') AS DATE)
-    ELSE
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-          AT time zone 'America/Sao_Paulo') AS DATE) 							
-    END                           DT_ULT_ALTERACAO
-
-FROM
-			BAANDB.TZNSLS400601	ZNSLS400
-											
-INNER JOIN (SELECT	C.T$NCIA$C,
-                    C.T$UNEG$C,
-                    C.T$PECL$C,
-                    C.T$SQPD$C,
-                    C.T$ENTR$C,
-					C.T$ORNO$C,
-                    SUM(C.T$QTVE$C) T$QTVE$C,
-					SUM(C.T$VLUN$C*C.T$QTVE$C)	VL_MERCD,
-					SUM(C.T$VLDI$C) VL_DSCONT,
-					SUM(C.T$VLFR$C) VL_FRETE,
-					MAX(C.T$PZTR$C) T$PZTR$C
-			FROM	BAANDB.TZNSLS401601 C
-			GROUP BY C.T$NCIA$C,
-			         C.T$UNEG$C,
-			         C.T$PECL$C,
-			         C.T$SQPD$C,
-			         C.T$ENTR$C,
-               C.T$ORNO$C) ZNSLS401			ON	ZNSLS401.T$NCIA$C	=	ZNSLS400.T$NCIA$C
-					                        AND ZNSLS401.T$UNEG$C   =	ZNSLS400.T$UNEG$C
-					                        AND ZNSLS401.T$PECL$C   =	ZNSLS400.T$PECL$C
-					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS400.T$SQPD$C
-
-											
-INNER JOIN	BAANDB.TTDSLS400601 TDSLS400	ON	TDSLS400.T$ORNO		=	ZNSLS401.T$ORNO$C
-											
-INNER JOIN BAANDB.TZNSLS402601 ZNSLS402		ON	ZNSLS402.T$NCIA$C	=	ZNSLS400.T$NCIA$C
-					                        AND ZNSLS402.T$UNEG$C   =	ZNSLS400.T$UNEG$C
-					                        AND ZNSLS402.T$PECL$C   =	ZNSLS400.T$PECL$C
-					                        AND ZNSLS402.T$SQPD$C   =	ZNSLS400.T$SQPD$C	
-		
-LEFT JOIN ( 	SELECT	A.T$FIRE$L,
-                A.T$SLSO
-        FROM	BAANDB.TCISLI245601 A
-        WHERE	A.T$SLCP=601
-        AND		A.T$ORTP=1
-        AND		A.T$KOOR=3
-        GROUP BY A.T$FIRE$L,
-		             A.T$SLSO ) SLS245
-      ON SLS245.T$SLSO = TDSLS400.T$ORNO
-      
-LEFT JOIN BAANDB.TCISLI940601 CISLI940
-       ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
-       
-INNER JOIN (SELECT	E.T$FIRE$L,
-                    E.T$REFR$L
-            FROM	  BAANDB.TCISLI941601 E
-            GROUP BY E.T$FIRE$L,
-                     E.T$REFR$L) CISLI941	
-       ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
-					 
-LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
-											AND	CISLI940_FAT.T$FDTY$L =	16
-                      
-       
-WHERE
-			ZNSLS400.T$IDPO$C	=		'TD'
-		AND	TDSLS400.T$HDST		=		35
-		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)
+--UNION
+--SELECT
+--		''														TERMINAL,
+--		''														LANCAMENTO_CAIXA,
+--		'NIKE.COM'												FILIAL,		
+--		ZNSLS402.T$SEQU$C										PARCELA,
+--		DECODE(ZNSLS402.T$cccd$c,
+--			1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
+--			2,	'04',                                                       				-- 2	Mastercard                      04 - MASTERCARD
+--			3,	'01',                                                       				-- 3	Amex                            01- AMERICAN EXPRESS
+--			4,	'07',                                                       				-- 4	Diners                          07 - DINERS
+--			5,	'10',                                                       				-- 5	Hipercard                       10 - HIPERCARD
+--			18,	'04',                                                       				-- 18	Extra Mastercard                04 - MASTERCARD
+--			38,	'11',                                                       				-- 38	Paypal                          11 - PAYPAL
+--			15,	'  ',                                                       				-- 15	Multicheque/Multicash           
+--			50,	'  ',                                                       				-- 50	Multicheque/Multicash           
+--			19,	'03',                                                       				-- 19	Extra Visa                      03 - VISA CREDITO
+--			11,	'03',                                                       				-- 11	Ponto Frio Visa                 03 - VISA CREDITO
+--			8,	'04',                                                       				-- 8	Ponto Frio Mastercard           04 - MASTERCARD
+--			10,	'11',                                                       				-- 10	Cartão Pão de Açúcar            
+--			7, 	'  ',                                                       				-- 7	Aura                            
+--			37,	'08',                                                       				-- 37	Elo                             08 - ELO CREDITO
+--			43,	'  ',                                                       				-- 43	Primeira Compra                 
+--			21, '  ',                                                       				-- 21	Ponto Frio Private Label        
+--			17, '  ',                                                       				-- 17	Extra Private Label             
+--			40, '04',                                                       				-- 40	Mobile Mastercard               04 - MASTERCARD
+--			42,	'05',                                                       				-- 42	Visa Electron                   05 - VISA ELECTRON
+--			49,	'04',                                                       				-- 49	Minha Casa Melhor Mastercard    04 - MASTERCARD
+--			39,	'03',                                                       				-- 39	Mobile Visa                     03 - VISA CREDITO
+--			22,	'  ',                                                       				-- 22	Itaucard
+--			48,	'  ',                                                       				-- 48	Minha Casa Melhor Elo
+--			44,	'  ',                                                       				-- 44	Clube Extra
+--			70, '  ')											CODIGO_ADMINISTRADORA,      -- 70	Bndes
+--
+--		'6'														TIPO_PAGTO,
+--			
+--		-- ZNSLS401.VL_MERCD 
+--		-- - ZNSLS401.VL_DSCONT 
+--		-- + ZNSLS401.VL_FRETE										VALOR,
+--		ZNSLS402.T$VLPG$C											VALOR,
+--		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C+1, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+--		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
+--		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
+--		''														MOEDA,
+--		''														AGENCIA,
+--		''														BANCO,
+--		''														CONTA_CORRENTE,
+--		ZNSLS402.T$NSUA$C										NUMERO_APROVACAO_CARTAO,
+--		ZNSLS402.T$NUPA$C										PARCELAS_CARTAO,
+--		0														VALOR_CANCELADO,
+--		''														CHEQUE_CARTAO,
+--		''														NUMERO_LOTE,
+--		0														TROCO,
+--		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+--		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_HORA_TEF,
+--		''														ID_DOCUMENTO_ECF,
+----		ZNSLS400.T$PECL$C || ZNSLS400.T$SQPD$C					TICKET,
+--    TO_CHAR(znsls401.t$entr$c)             TICKET,
+--		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+--		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,
+--    'I'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
+--    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+--          CISLI940_FAT.T$FIRE$L
+--    ELSE  cisli940.t$fire$l END   REF_FISCAL,
+--    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+--          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940_FAT.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+--          AT time zone 'America/Sao_Paulo') AS DATE)
+--    ELSE
+--          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+--          AT time zone 'America/Sao_Paulo') AS DATE) 							
+--    END                           DT_ULT_ALTERACAO
+--
+--FROM
+--			BAANDB.TZNSLS400601	ZNSLS400
+--											
+--INNER JOIN (SELECT	C.T$NCIA$C,
+--                    C.T$UNEG$C,
+--                    C.T$PECL$C,
+--                    C.T$SQPD$C,
+--                    C.T$ENTR$C,
+--					C.T$ORNO$C,
+--                    SUM(C.T$QTVE$C) T$QTVE$C,
+--					SUM(C.T$VLUN$C*C.T$QTVE$C)	VL_MERCD,
+--					SUM(C.T$VLDI$C) VL_DSCONT,
+--					SUM(C.T$VLFR$C) VL_FRETE,
+--					MAX(C.T$PZTR$C) T$PZTR$C
+--			FROM	BAANDB.TZNSLS401601 C
+--			GROUP BY C.T$NCIA$C,
+--			         C.T$UNEG$C,
+--			         C.T$PECL$C,
+--			         C.T$SQPD$C,
+--			         C.T$ENTR$C,
+--               C.T$ORNO$C) ZNSLS401			ON	ZNSLS401.T$NCIA$C	=	ZNSLS400.T$NCIA$C
+--					                        AND ZNSLS401.T$UNEG$C   =	ZNSLS400.T$UNEG$C
+--					                        AND ZNSLS401.T$PECL$C   =	ZNSLS400.T$PECL$C
+--					                        AND ZNSLS401.T$SQPD$C   =	ZNSLS400.T$SQPD$C
+--
+--											
+--INNER JOIN	BAANDB.TTDSLS400601 TDSLS400	ON	TDSLS400.T$ORNO		=	ZNSLS401.T$ORNO$C
+--											
+--INNER JOIN BAANDB.TZNSLS402601 ZNSLS402		ON	ZNSLS402.T$NCIA$C	=	ZNSLS400.T$NCIA$C
+--					                        AND ZNSLS402.T$UNEG$C   =	ZNSLS400.T$UNEG$C
+--					                        AND ZNSLS402.T$PECL$C   =	ZNSLS400.T$PECL$C
+--					                        AND ZNSLS402.T$SQPD$C   =	ZNSLS400.T$SQPD$C	
+--		
+--LEFT JOIN ( 	SELECT	A.T$FIRE$L,
+--                A.T$SLSO
+--        FROM	BAANDB.TCISLI245601 A
+--        WHERE	A.T$SLCP=601
+--        AND		A.T$ORTP=1
+--        AND		A.T$KOOR=3
+--        GROUP BY A.T$FIRE$L,
+--		             A.T$SLSO ) SLS245
+--      ON SLS245.T$SLSO = TDSLS400.T$ORNO
+--      
+--LEFT JOIN BAANDB.TCISLI940601 CISLI940
+--       ON CISLI940.T$FIRE$L = SLS245.T$FIRE$L
+--       
+--INNER JOIN (SELECT	E.T$FIRE$L,
+--                    E.T$REFR$L
+--            FROM	  BAANDB.TCISLI941601 E
+--            GROUP BY E.T$FIRE$L,
+--                     E.T$REFR$L) CISLI941	
+--       ON	CISLI941.T$FIRE$L	=	CISLI940.T$FIRE$L
+--					 
+--LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
+--											AND	CISLI940_FAT.T$FDTY$L =	16
+--                      
+--       
+--WHERE
+--			ZNSLS400.T$IDPO$C	=		'TD'
+--		AND	TDSLS400.T$HDST		=		35
+--		AND TDSLS400.T$FDTY$L 	NOT IN (0,2,14)
 
 ORDER BY TP_MOVTO, REF_FISCAL
