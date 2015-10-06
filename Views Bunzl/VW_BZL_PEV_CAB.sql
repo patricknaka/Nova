@@ -2,7 +2,7 @@
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
 -- a tabela ttdsls094201 é compartilhada com a 201
--- em 02/10/15 foram retirados os campos NR_ENTREGA_CANCELADO e SQ_PEDIDO_CANCELADO
+-- em 02/10/15 foram retirados os campos NR_ENTREGA_CANCELADO e SQ_PEDIDO_CANCELADO  #456
 
          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, ulttrc.dtoc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
          AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                                                 

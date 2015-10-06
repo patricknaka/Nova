@@ -1,7 +1,7 @@
 ﻿SELECT
 --**********************************************************************************************************************************************************
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
--- em 02/10/15 foram incluidos os campos NR_ENTREGA_CANCELADO e SQ_PEDIDO_CANCELADO
+-- em 02/10/15 foram incluidos os campos NR_ENTREGA_CANCELADO e SQ_PEDIDO_CANCELADO #457
 
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, tdsls401.t$rcd_utc), 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -11,7 +11,9 @@
       tdsls401.t$orno NR_ORDEM,
 		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_COMPRA,			
-		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--        AT time zone 'America/Sao_Paulo') AS DATE) DT_ENTREGA,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.T$PRDT, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_ENTREGA,
       CASE WHEN tdsls401.t$clyn=1 THEN 35 -- cancelado
         WHEN tdsls401.t$term=1 THEN 30	  -- finalizado
