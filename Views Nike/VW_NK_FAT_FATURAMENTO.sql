@@ -30,7 +30,7 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
   CASE WHEN instr(cisli940.t$ccfo$l,'-')=0 THEN cisli940.t$opor$l
        ELSE regexp_replace(substr(cisli940.t$ccfo$l,instr(cisli940.t$ccfo$l,'-')+1,3), '[^0-9]', '')
   END	SQ_NATUREZA_OPERACAO,	
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$datg$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
   AT time zone 'America/Sao_Paulo') AS DATE) DT_FATURA,
   cisli940.t$itbp$l CD_CLIENTE_FATURA,
   cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
