@@ -374,7 +374,9 @@ SELECT DISTINCT
       '1'
   ELSE '0' END                                            ENTREGA_DEST_COMPR,                      --72
   CASE WHEN SLS004.ENTREGA IS NULL THEN
-      TO_CHAR(cisli940.t$docn$l) || cisli940.t$seri$l
+      CASE WHEN cisli940.t$fdty$l = 16 THEN   --Fatura Triangular
+            TO_CHAR(SLS004_REM.ENTREGA)
+      ELSE TO_CHAR(cisli940.t$docn$l) || cisli940.t$seri$l END
   ELSE TO_CHAR(SLS004.ENTREGA) END   
                             NUMERO_PEDIDO_VENDA,                     --73
   'S'                       TP_MOVTO,                                --74 Criado para separar na tabela as entradas e saídas
@@ -527,12 +529,15 @@ FROM  baandb.tcisli940601  cisli940
                         
     LEFT JOIN ( select a.t$fire$l,
                        a.t$cfrw$l,
-                       a.t$cfra$l
-                from   baandb.tcisli940601 a ) REF_REL    --REFERÊNCIA RELATIVA
-           ON REF_REL.t$fire$l = SLI941.t$refr$l
+                       a.t$cfra$l,
+                       a.t$docn$l,
+                       a.t$seri$l
+                from   baandb.tcisli940601 a 
+                where    a.t$fdty$l = 15) REF_REM    --REFERÊNCIA RELATIVA de Remessa
+           ON REF_REM.t$fire$l = SLI941.t$refr$l
            
     LEFT JOIN baandb.ttccom130601 tccom130rem         --Endereço da Remessa Operação Triangular
-           ON tccom130rem.t$cadr = REF_REL.t$cfra$l
+           ON tccom130rem.t$cadr = REF_REM.t$cfra$l
            
     LEFT JOIN baandb.ttccom139301  tccom139rem
            ON tccom139rem.t$ccty = tccom130rem.t$ccty
@@ -541,7 +546,26 @@ FROM  baandb.tcisli940601  cisli940
           
     LEFT JOIN baandb.ttccom966601 tccom966rem     
            ON tccom966rem.t$comp$d = tccom130rem.t$comp$d
+    
+    LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
+                        cisli245.t$fire$l
+                from    baandb.tcisli245601 cisli245
+                group by cisli245.t$fire$l )  SLI245_REM
+           ON SLI245_REM.t$fire$l = REF_REM.t$fire$l
            
+    LEFT JOIN ( select  MIN(znsls004.t$entr$c)  ENTREGA,
+                        znsls004.t$orno$c OV
+                from    baandb.tznsls004601 znsls004
+                group by znsls004.t$orno$c ) SLS004_REM
+           ON   SLS004_REM.OV = SLI245_REM.OV
+    
+    LEFT JOIN ( select  MAX(a.t$dtoc$c)  DT_OCORR,
+                        a.t$entr$c
+                from    baandb.tznsls410601 a
+                where a.t$poco$c = 'ETR'  
+                group by a.t$entr$c ) SLS410_REM
+           ON   SLS410_REM.t$entr$c = SLS004_REM.ENTREGA
+    
     WHERE cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
     AND   cisli940.t$cnfe$l != ' '
     AND   exists (select *
@@ -551,5 +575,5 @@ FROM  baandb.tcisli940601  cisli940
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l != 2     --venda sem pedido
-
+  
 order by REF_FISCAL
