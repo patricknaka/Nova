@@ -3,9 +3,13 @@ SELECT
     znfmd630.t$fili$c    FILIAL,
     NVL(tcmcs031.t$dsca,
         'Pedido Interno')MARCA,  
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE)      
+    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$date$c, 
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone 'America/Sao_Paulo') AS DATE)
+        from BAANDB.tznfmd640301 znfmd640_ETR
+       where znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
+         and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
+         and znfmd640_ETR.t$coct$c = 'ETR')
                          DATA_EXPEDICAO,
     znfmd630.t$docn$c    NUME_NOTA,
     znfmd630.t$seri$c    NUME_SERIE,   

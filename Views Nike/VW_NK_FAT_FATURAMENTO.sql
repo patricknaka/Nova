@@ -180,7 +180,11 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
        WHERE cisli943.t$fire$l=cisli941f.t$fire$l
        AND cisli943.t$line$l=cisli941f.t$line$l
        AND cisli943.t$brty$l=3),0) VL_BASE_IPI,
-       nvl((select t.t$suno from baandb.ttcmcs080601 t where t.t$cfrw=cisli940.t$cfrw$l and rownum=1),' ') 
+       CASE WHEN cisli940.t$fdty$l=16 THEN    --fatura triangular
+            nvl((select t.t$suno from baandb.ttcmcs080601 t where t.t$cfrw=SLI940_REM.t$cfrw$l and rownum=1),' ') 
+       ELSE
+            nvl((select t.t$suno from baandb.ttcmcs080601 t where t.t$cfrw=cisli940.t$cfrw$l and rownum=1),' ') 
+       END
   AS CD_TRANSPORTADORA, --#FAF.063.n
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
   AS DT_ENTREGA,
@@ -269,7 +273,12 @@ LEFT JOIN baandb.tcisli943601 PIS ON PIS.t$fire$l=cisli941f.t$fire$l
      AND PIS.t$brty$l=5
 LEFT JOIN baandb.tcisli943601 CSLL ON CSLL.t$fire$l=cisli941f.t$fire$l	
      AND	CSLL.t$line$l=cisli941f.t$line$l
-     AND CSLL.t$brty$l=13,
+     AND CSLL.t$brty$l=13
+LEFT JOIN ( select a.t$cfrw$l,
+                   a.t$fire$l
+            from   baandb.tcisli940601 a
+            where  a.t$fdty$l = 15 )  SLI940_REM        --REMESSA TRIANGULAR
+      ON  SLI940_REM.t$fire$l = cisli941f.t$refr$l,
      
 baandb.tcisli245601 cisli245,
 baandb.ttdsls401601 tdsls401,

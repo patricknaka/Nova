@@ -1,9 +1,13 @@
 SELECT DISTINCT
   znfmd630.t$fili$c                     FILIAL,
   
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
-    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone 'America/Sao_Paulo') AS DATE)      
+   ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$date$c, 
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone 'America/Sao_Paulo') AS DATE)
+        from BAANDB.tznfmd640301 znfmd640_ETR
+       where znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
+         and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
+         and znfmd640_ETR.t$coct$c = 'ETR')
                                         DT_HR_EXPEDICAO, 
 
   znfmd630.t$docn$c                     NUME_NOTA,
