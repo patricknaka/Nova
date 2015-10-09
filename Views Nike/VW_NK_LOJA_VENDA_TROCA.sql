@@ -1,6 +1,6 @@
 SELECT
 --***************************************************************************************************************************
---				SAIDA
+--				TROCA
 --***************************************************************************************************************************
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,	
 		'NIKE.COM'												              FILIAL,
@@ -18,7 +18,6 @@ SELECT
 		TDREC941.T$PRIC$L										            PRECO_LIQUIDO,
 		TDREC941.T$ADDC$L										            DESCONTO_ITEM,
 		0														                    QTDE_CANCELADA,
---		CASE TDREC941.T$QNTY$L WHEN 0 THEN 0 ELSE ABS(TDSLS415.CTOT / TDREC941.T$QNTY$L) END	CUSTO,
     0.0                                             CUSTO,
 		NVL(Q_IPI.T$AMNT$L,0)									          IPI,		
 		''														                  ID_VENDEDOR,
@@ -30,7 +29,7 @@ SELECT
             tdrec941.t$line$l
         else
             tdrec941.t$line$l  end                  LIN_REF_FICAL,
-    		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$sadt$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+    		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 	    DT_ULT_ALTERACAO,
     tcibd001.t$mdfb$c                               MOD_FABR_ITEM,
     tdrec941.t$opfc$l                               CFOP,
@@ -106,4 +105,3 @@ WHERE
     AND tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
     AND	tdrec940.t$cnfe$l != ' '
 		AND	TDREC940.T$RFDT$L = 10            --10 - retorno de mercadoria
---    AND tdrec940.t$opfc$l IN ('1202','2202','1411','2411')
