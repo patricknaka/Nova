@@ -169,6 +169,7 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
 --				TROCA
 --***************************************************************************************************************************
 UNION
+
 SELECT
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,
 		'NIKE.COM'												              FILIAL,
