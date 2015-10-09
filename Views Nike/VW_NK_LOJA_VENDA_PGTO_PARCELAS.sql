@@ -164,6 +164,7 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
 --				TROCA
 --***************************************************************************************************************************
 UNION
+
 SELECT
 		''														TERMINAL,
 		''														LANCAMENTO_CAIXA,
@@ -221,7 +222,7 @@ SELECT
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,												
     'C'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
     tdrec940.t$fire$l             REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$SADT$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$ADAT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DT_ULT_ALTERACAO
 FROM
 		(	SELECT	A.T$FIRE$L,
@@ -280,10 +281,7 @@ INNER JOIN (SELECT	L.T$FIRE$L,
 
 INNER JOIN  BAANDB.TCISLI940601 CISLI940  ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
 
-											
---WHERE
---		TDREC940.T$STAT$L IN (4, 5)			-- APROVADO, APROVADO COM PROBLEMAS
---AND 	TDREC940.T$RFDT$L = 10
+
 WHERE
       tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
 AND	  tdrec940.t$cnfe$l != ' '
