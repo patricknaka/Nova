@@ -4,14 +4,11 @@ SELECT
 --***************************************************************************************************************************
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,	
 		'NIKE.COM'												              FILIAL,
-    case when tdrec941.t$line$l/10 < 1 then
-        tdrec941.t$line$l
-    else
-        TDREC941.T$LINE$L/10 end  			            ITEM,
+    tdrec941.t$line$l  			                        ITEM,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 			DATA_VENDA,
 		''														                  CODIGO_BARRA,
-		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))			PRODUTO,				-- Estamos usando a tabela de código alternativo de item mas ainda esperamos a resposta dos consultores para confirmar se será usado este conveito na Nike
+		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))			PRODUTO,
 		'01'													                  COR_PRODUTO,
 		ZNIBD005.T$DESC$C										            TAMANHO,
 		TDREC941.T$QNTY$L										            QTDE,		
