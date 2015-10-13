@@ -1,16 +1,10 @@
---#2015-08-28 - Humberto Kasai - Conferência View
-
 SELECT DISTINCT
 
   'NIKE.COM'                    FILIAL,                   --02
   TO_CHAR(tdrec940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --03
   tdrec940.t$seri$l             SERI_NF,                  --04
-  case when tdrec942.t$line$l/10 < 1 then
-      to_char(tdrec942.t$line$l)
-  else
-      to_char(tdrec942.t$line$l/10)    
-  end                           ITEM_IMPRESSAO,           --05
+  tdrec942.t$line$l             ITEM_IMPRESSAO,           --05
   '1'                           SUB_ITEM_TAMANHO,         --06
   CASE WHEN tdrec942.t$brty$l = 3 THEN     --IPI
       '2'
@@ -55,11 +49,7 @@ SELECT  DISTINCT
   TO_CHAR(cisli940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --03
   cisli940.t$seri$l             SERI_NF,                  --04
-  case when cisli943.t$line$l/10 < 1 then
-      to_char(cisli943.t$line$l)
-  else
-      to_char(cisli943.t$line$l/10)    
-  end                           ITEM_IMPRESSAO,           --05
+  cisli943.t$line$l             ITEM_IMPRESSAO,           --05
   '1'                           SUB_ITEM_TAMANHO,         --06
   CASE WHEN cisli943.t$brty$l = 3 THEN
       '2'
