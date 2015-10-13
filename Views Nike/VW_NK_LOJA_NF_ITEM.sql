@@ -59,10 +59,7 @@ SELECT DISTINCT
     tdrec940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado juntamente com o CFOP
     tcmcs966.t$dsca$l           DESCR_TIPO_DOC_FISCAL,    --35
     tdrec941.t$fire$l           REF_FISCAL,               --36
-    case when tdrec941.t$line$l/10 < 1 then
-        tdrec941.t$line$l
-    else
-        tdrec941.t$line$l/10 end           LIN_REF_FIS,              --37
+    tdrec941.t$line$l           LIN_REF_FIS,              --37
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec941.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO,          --38
     tcibd001.t$mdfb$c           MOD_FABR_ITEM             --39
@@ -206,11 +203,7 @@ SELECT DISTINCT
     cisli940.t$fdtc$l           COD_TIPO_DOC_FISCAL,      --34 Criado para ser usado junto com o CFOP
     tcmcs966.t$dsca$l           DESCR_COD_TIPO_DOC_FISCAL,--35
     cisli941.t$fire$l           REF_FISCAL,               --36
-    case when cisli941.t$line$l/10 < 1 then
-        cisli941.t$line$l
-    else
-      cisli941.t$line$l/10  
-    end                         LIN_REF_FIS,              --37
+    cisli941.t$line$l           LIN_REF_FIS,              --37
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli941.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO,          --38
     tcibd001.t$mdfb$c           MOD_FABR_ITEM             --39
@@ -303,5 +296,5 @@ FROM  baandb.tcisli941601 cisli941
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l != 2     --venda sem pedido
-
-ORDER BY REF_FISCAL
+    
+ORDER BY REF_FISCAL, LIN_REF_FIS
