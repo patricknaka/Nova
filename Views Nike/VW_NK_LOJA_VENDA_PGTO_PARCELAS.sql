@@ -164,6 +164,7 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
 --				TROCA
 --***************************************************************************************************************************
 UNION
+
 SELECT
 		''														TERMINAL,
 		''														LANCAMENTO_CAIXA,
@@ -221,7 +222,7 @@ SELECT
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DATA_VENDA,												
     'C'                           TP_MOVTO,                  -- Criado para separar na tabela as entradas e saídas
     tdrec940.t$fire$l             REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$SADT$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$ADAT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE) 							DT_ULT_ALTERACAO
 FROM
 		(	SELECT	A.T$FIRE$L,
@@ -280,10 +281,7 @@ INNER JOIN (SELECT	L.T$FIRE$L,
 
 INNER JOIN  BAANDB.TCISLI940601 CISLI940  ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
 
-											
---WHERE
---		TDREC940.T$STAT$L IN (4, 5)			-- APROVADO, APROVADO COM PROBLEMAS
---AND 	TDREC940.T$RFDT$L = 10
+
 WHERE
       tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
 AND	  tdrec940.t$cnfe$l != ' '
@@ -302,7 +300,7 @@ SELECT
         1
     ELSE SLS402_VENDA.T$SEQU$C END				PARCELA,
     CASE WHEN NOTA_VENDA.T$FIRE$L != ' ' OR PED_VENDA.T$PECL$C IS NULL THEN    --NOTA VENDA FATURADA NO LN OU NOTA VENDA FATURADA NO SIGE
-        ''  --???
+        ''  --OK
     ELSE
         DECODE(SLS402_VENDA.T$cccd$c,
         1,	'03',																		-- 1	Visa							03 - VISA CREDITO	
@@ -333,7 +331,7 @@ SELECT
         70, '  ')		END									CODIGO_ADMINISTRADORA,                  -- 70	Bndes   
 
     CASE WHEN NOTA_VENDA.T$FIRE$L != ' ' OR PED_VENDA.T$PECL$C IS NULL THEN    --NOTA VENDA FATURADA NO LN OU NOTA VENDA FATURADA NO SIGE
-          '1'    --???
+          '1'  
     ELSE
         CASE WHEN CONT.NO_IDMP > 1 THEN
               '$$'
@@ -353,16 +351,18 @@ SELECT
               15,	'  ')	END									                                    --15	BNDES								' ' - Não existe			
 		END                                     TIPO_PAGTO, 
     CASE WHEN NOTA_VENDA.T$FIRE$L != ' ' OR PED_VENDA.T$PECL$C IS NULL THEN    --NOTA VENDA FATURADA NO LN OU NOTA VENDA FATURADA NO SIGE
-          0.0 --??
+          CASE WHEN CISLI940.T$FDTY$L = 15 THEN     --REMESSA TRIANGULAR
+                CISLI940_FAT.T$AMNT$L
+          ELSE CISLI940.T$AMNT$L END    --OK
     ELSE SLS402_VENDA.T$VLPG$C	END 				VALOR,
     CASE WHEN NOTA_VENDA.T$FIRE$L != ' ' OR PED_VENDA.T$PECL$C IS NULL THEN    --NOTA VENDA FATURADA NO LN OU NOTA VENDA FATURADA NO SIGE
-            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        --???
+            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')        --OK
             AT time zone 'America/Sao_Paulo') AS DATE)
     ELSE   
             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS402_VENDA.T$PVEN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
             AT time zone 'America/Sao_Paulo') AS DATE) 		END					VENCIMENTO,
     CASE WHEN NOTA_VENDA.T$FIRE$L != ' ' OR PED_VENDA.T$PECL$C IS NULL THEN    --NOTA VENDA FATURADA NO LN OU NOTA VENDA FATURADA NO SIGE
-          ''    --???
+          ''    --OK
     ELSE SLS402_VENDA.T$AUTO$C	END				NUMERO_TITULO,	
 		''														MOEDA,
 		''														AGENCIA,
@@ -379,7 +379,7 @@ SELECT
 		''														NUMERO_LOTE,
 		0														  TROCO,
     CASE WHEN NOTA_VENDA.T$FIRE$L != ' ' OR PED_VENDA.T$PECL$C IS NULL THEN    --NOTA VENDA FATURADA NO LN OU NOTA VENDA FATURADA NO SIGE
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SYSDATE, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
        		AT time zone 'America/Sao_Paulo') AS DATE)
     ELSE
       		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS402_VENDA.T$DTRA$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn

@@ -169,6 +169,7 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
 --				TROCA
 --***************************************************************************************************************************
 UNION
+
 SELECT
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					TICKET,
 		'NIKE.COM'												              FILIAL,
@@ -320,7 +321,7 @@ SELECT
 		
 		''														                  CAIXA_VENDEDOR,
     CASE WHEN NOTA_VENDA.T$FIRE$L != ' ' OR PED_VENDA.T$PECL$C IS NULL THEN    --NOTA VENDA FATURADA NO LN OU NOTA VENDA FATURADA NO SIGE
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS402_VENDA.T$DTVB$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  --???
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTIN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  --OK
           AT time zone 'America/Sao_Paulo') AS DATE)
     ELSE
           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS402_VENDA.T$DTVB$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')

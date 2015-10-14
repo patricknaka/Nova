@@ -173,6 +173,7 @@ LEFT JOIN (	SELECT	F.T$FIRE$L,
 --***************************************************************************************************************************
 
 UNION
+
 SELECT
 		'NIKE.COM'												FILIAL,
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L				TICKET,
@@ -211,7 +212,7 @@ SELECT
 		TO_CHAR(0)														TRANSIT_TIME,
     'C'                         TP_MOVTO,                 -- Criado para separar na tabela as entradas e saídas
     tdrec940.t$fire$l           REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$SADT$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$ADAT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO
 		
 FROM
@@ -298,8 +299,8 @@ SELECT
 
 --		ZNSLS402.T$VLMR$C							VALOR_PAGO,
 		CASE WHEN CISLI940.T$FDTY$L=15 THEN 
-            CISLI940_FAT.T$GAMT$L - CISLI941.T$TLDM$L_FAT
-    ELSE    CISLI940.T$GAMT$L - CISLI941.T$TLDM$L  END    VALOR_PAGO,   --???
+            CISLI940_FAT.T$AMNT$L
+    ELSE    CISLI940.T$AMNT$L  END    VALOR_PAGO,   --OK
 		CASE WHEN CISLI940.T$FDTY$L=15  THEN 
           CISLI940_FAT.T$GAMT$L - CISLI941.T$TLDM$L_FAT
 		 ELSE CISLI940.T$GAMT$L - CISLI941.T$TLDM$L END				VALOR_VENDA_BRUTA,    
