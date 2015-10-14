@@ -399,7 +399,7 @@ FROM  baandb.tcisli940601  cisli940
     LEFT JOIN baandb.ttccom130601 tccom130c
            ON tccom130c.t$cadr = tccom100f.t$cadr
                   
-    LEFT JOIN ( select sum(a.t$ldam$l) DESCONTO,
+    LEFT JOIN ( select sum(a.t$tldm$l) DESCONTO,  
                        sum(a.t$dqua$l) QTDE,
                         a.t$fire$l
                 from  baandb.tcisli941601 a,
@@ -575,5 +575,4 @@ FROM  baandb.tcisli940601  cisli940
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
    AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente
-  
 order by REF_FISCAL
