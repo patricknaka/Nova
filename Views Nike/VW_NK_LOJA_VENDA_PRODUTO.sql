@@ -10,14 +10,14 @@ SELECT
 		''														                            CODIGO_BARRA,
 		CISLI941.T$DQUA$L										                      QTDE,
     CASE WHEN CISLI940_FAT.T$FDTY$L = 16 THEN
-          CISLI941_FAT.T$PRIC$L	- cisli941_FAT.t$tldm$l	
-		ELSE  CISLI941.T$PRIC$L	- cisli941.t$tldm$l	END						PRECO_LIQUIDO,
+          CISLI941_FAT.T$PRIC$L	- cisli941_FAT.t$ldam$l	
+		ELSE  CISLI941.T$PRIC$L	- cisli941.t$ldam$l	END						PRECO_LIQUIDO,
     CASE WHEN CISLI940_FAT.T$FDTY$L = 16 THEN
-        CISLI941_FAT.T$TLDM$L
-		ELSE CISLI941.T$TLDM$L	END					                      DESCONTO_ITEM,
+        CISLI941_FAT.T$LDAM$L
+		ELSE CISLI941.T$LDAM$L	END					                      DESCONTO_ITEM,
 		''														                            ID_VENDEDOR,
 		''														                            TERMINAL,
-		LTRIM(RTRIM(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM))) 			PRODUTO,
+		LTRIM(RTRIM(TCIBD001.T$ITEM)) 			                      PRODUTO,
 		0														                              ITEM_EXCLUIDO,
 		0														                              QTDE_BRINDE,
 		0														                              NÃO_MOVIMENTA_ESTOQUE,
@@ -69,10 +69,6 @@ INNER JOIN	BAANDB.TZNSLS401601 ZNSLS401	ON	ZNSLS401.T$NCIA$C	=	ZNSLS004.T$NCIA$C
 											AND ZNSLS401.T$SEQU$C   =	ZNSLS004.T$SEQU$C
 											
 INNER JOIN	BAANDB.TTCIBD001601	TCIBD001	ON	TCIBD001.T$ITEM		=	CISLI941.T$ITEM$L
-
-LEFT JOIN	BAANDB.TTCIBD004601	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
-											AND	TCIBD004.T$BPID		=	' '
-											AND	TCIBD004.T$ITEM		=	TCIBD001.T$ITEM
 											
 LEFT JOIN (	SELECT	A.T$ORNO,
                     A.T$PONO,
@@ -148,4 +144,4 @@ WHERE CISLI245.T$SLCP=601
                   and   znnfe011.t$fire$c = cisli940.t$fire$l
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
-ORDER BY REF_FISCAL, ITEM
+  ORDER BY REF_FISCAL, ITEM
