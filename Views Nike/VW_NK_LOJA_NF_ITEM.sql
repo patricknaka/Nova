@@ -295,6 +295,6 @@ FROM  baandb.tcisli941601 cisli941
                   and   znnfe011.t$fire$c = cisli940.t$fire$l
                   and   znnfe011.t$stfa$c = 5
                   and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
-   AND      cisli940.t$fdty$l != 2     --venda sem pedido
+   AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente
     
 ORDER BY REF_FISCAL, LIN_REF_FIS
