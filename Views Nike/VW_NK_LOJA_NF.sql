@@ -122,7 +122,7 @@ SELECT DISTINCT
   tdrec940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
   tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL,               --76
   tdrec940.t$fire$l         REF_FISCAL,                              --77
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DT_ULT_ALTERACAO,                        --78
   tccom139fat.t$ibge$l         COD_IBGE                              --79
@@ -383,7 +383,7 @@ SELECT DISTINCT
   cisli940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
   tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL,               --76
   cisli940.t$fire$l         REF_FISCAL,                              --77
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DT_ULT_ALTERACAO,                        --78
   tccom139entr.t$ibge$l        COD_IBGE                                  --79
