@@ -1,5 +1,3 @@
- --#2015-08-28, Humberto Kasai, conferência da view
-
 SELECT DISTINCT
 
   ''                           CODIGO_CLIENTE,     --02
@@ -52,8 +50,6 @@ SELECT DISTINCT
     ''                         TIPO_LOGRADOURO,    --31
     tccom130.t$hono             NUMERO,             --22
     ' '                         ESTADO_CIVIL,       --23
-    --SUBSTR(ZNSLS400.t$te1f$c,1,2) DDD_CELULAR,        --24
-    --SUBSTR(ZNSLS400.t$te1f$c,3,13)CELULAR             --25
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),1,2),' ') DDD_CELULAR,        --24
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),3,13),' ') CELULAR,           --25
     tccom139.t$ibge$l           COD_IBGE,           --26
@@ -99,7 +95,7 @@ FROM  baandb.ttccom100601 tccom100
                               where znnfe011.t$oper$c = 1
                               and   znnfe011.t$fire$c = cisli940.t$fire$l
                               and   znnfe011.t$stfa$c = 5
-                              and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))) SLI940
+                              and   znnfe011.t$nfes$c = 5)) SLI940
           ON SLI940.t$bpid$l = tccom100.t$bpid
          AND SLI940.t$stat$l IN (2,5,6,101)
           
@@ -157,8 +153,6 @@ SELECT DISTINCT
     ''                         TIPO_LOGRADOURO,    --31
     tccom130.t$hono             NUMERO,             --22
     ''                         ESTADO_CIVIL,       --23
-    --SUBSTR(ZNSLS400.t$te1f$c,1,2) DDD_CELULAR,        --24
-    --SUBSTR(ZNSLS400.t$te1f$c,3,13)CELULAR             --25
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),1,2),' ') DDD_CELULAR,        --24
     nvl(SUBSTR(replace(replace(replace(ZNSLS400.t$te1f$c,'(',''),')',''),'-',''),3,13),' ') CELULAR,           --25
     tccom139.t$ibge$l           COD_IBGE,           --26
