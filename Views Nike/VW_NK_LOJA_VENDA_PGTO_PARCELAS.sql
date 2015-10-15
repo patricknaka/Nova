@@ -116,8 +116,6 @@ INNER JOIN (SELECT	C.T$NCIA$C,
                     C.T$SQPD$C,
                     C.T$ENTR$C,
 					SUM(C.T$VLDI$C) T$VLDI$C
-                    --SUM(C.T$QTVE$C) T$QTVE$C,
-					--MAX(C.T$PZTR$C) T$PZTR$C
 			FROM	BAANDB.TZNSLS401601 C
 			GROUP BY C.T$NCIA$C,
 			         C.T$UNEG$C,
@@ -147,19 +145,17 @@ INNER JOIN (SELECT	E.T$FIRE$L,
 LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T$REFR$L
 											AND	CISLI940_FAT.T$FDTY$L =	16
 			
---WHERE
---		CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO
---AND 	CISLI940.T$FDTY$L != 14
     WHERE cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
     AND   cisli940.t$cnfe$l != ' '
     AND   exists (select *
                   from  baandb.tznnfe011601 znnfe011
-                  where znnfe011.t$oper$c = 1
+                  where znnfe011.t$oper$c = 1   --faturamento
                   and   znnfe011.t$fire$c = cisli940.t$fire$l
-                  and   znnfe011.t$stfa$c = 5
-                  and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
+                  and   znnfe011.t$stfa$c = 5   --nota impressa
+                  and   znnfe011.t$nfes$c = 5)  --nfe processada
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
    AND      znsls400.t$idpo$c = 'LJ'
+   
 --***************************************************************************************************************************
 --				TROCA
 --***************************************************************************************************************************
@@ -287,6 +283,9 @@ WHERE
 AND	  tdrec940.t$cnfe$l != ' '
 AND 	TDREC940.T$RFDT$L = 10        --10-retorno de mercadoria
 
+ and tdrec940.t$docn$l = 19487
+  and tdrec940.t$seri$l = '8'
+  
 UNION
 
 SELECT
@@ -554,10 +553,10 @@ LEFT JOIN	BAANDB.TCISLI940601	CISLI940_FAT ON	CISLI940_FAT.T$FIRE$L =	CISLI941.T
     AND   cisli940.t$cnfe$l != ' '
     AND   exists (select *
                   from  baandb.tznnfe011601 znnfe011
-                  where znnfe011.t$oper$c = 1
+                  where znnfe011.t$oper$c = 1   --faturamento
                   and   znnfe011.t$fire$c = cisli940.t$fire$l
-                  and   znnfe011.t$stfa$c = 5
-                  and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
+                  and   znnfe011.t$stfa$c = 5   --nota impressa
+                  and   znnfe011.t$nfes$c = 5)  --nfe processada
    AND      cisli940.t$fdty$l NOT IN (2,14)     --2-venda sem pedido, 14-retorno mercadoria cliente
    AND      znsls400.t$idpo$c = 'TD'
 
