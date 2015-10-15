@@ -69,11 +69,11 @@ WHERE
 AND   cisli940.t$cnfe$l != ' '
 AND   exists (select *
                   from  baandb.tznnfe011601 znnfe011
-                  where znnfe011.t$oper$c = 1         
+                  where znnfe011.t$oper$c = 1   --faturamento       
                   and   znnfe011.t$fire$c = cisli940.t$fire$l
-                  and   znnfe011.t$stfa$c = 5
-                  and   (znnfe011.t$nfes$c = 2 or znnfe011.t$nfes$c = 5))
-AND      cisli940.t$fdty$l != 2     --venda sem pedido
+                  and   znnfe011.t$stfa$c = 5   --nota impressa
+                  and   znnfe011.t$nfes$c = 5)  --nfe processada
+AND      cisli940.t$fdty$l != 2   --venda sem pedido
 			
 --***************************************************************************************************************************
 --				ENTRADA
