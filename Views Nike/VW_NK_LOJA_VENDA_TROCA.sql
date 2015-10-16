@@ -102,3 +102,4 @@ WHERE
     AND tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
     AND	tdrec940.t$cnfe$l != ' '
 		AND	TDREC940.T$RFDT$L = 10            --10 - retorno de mercadoria
+    AND tdrec947.t$qnty$l != 0
