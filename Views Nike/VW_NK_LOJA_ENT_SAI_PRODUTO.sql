@@ -9,7 +9,7 @@ SELECT
                         ceil(current_date - date '1900-01-01') + 
                         substr(to_char(cisli940.t$docn$l,'00000000'),-6,6)
                 ,'0000000'),-6,6)                  ROMANEIO_PRODUTO,
-		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))					PRODUTO,
+		TCIBD001.T$ITEM                     					PRODUTO,
 		'01'													                COR_PRODUTO,
 		znibd005.t$desc$c										          TAMANHO,
 		''														                CODIGO_BARRA,
@@ -17,11 +17,9 @@ SELECT
 		CISLI941.T$PRIC$L										          PRECO1,
 		CISLI941.T$DQUA$L										          QTDE_ITEM,
     2														                  TIPO_TRANSACAO,     --Saídas
-    cisli941.t$fire$l                             REF_FISCAL,
-    case when cisli941.t$line$l/10 < 1 then
-          cisli941.t$line$l                         
-    else  cisli941.t$line$l/10 end                LIN_REF_FISCAL,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+    cisli941.t$fire$l                             REF_FISCAL,             
+    cisli941.t$line$l                              LIN_REF_FISCAL,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO,
     tcibd001.t$mdfb$c                             MOD_FABR_ITEM,
     cisli940.t$ccfo$l                             CFO,
@@ -42,9 +40,6 @@ LEFT JOIN baandb.tznsls000601 znsls000
 LEFT JOIN baandb.tznibd005601 znibd005
        ON znibd005.t$size$c = TCIBD001.T$SIZE$C
        
---WHERE
---			CISLI940.T$FDTY$L IN (4,5,9,17,18,19,22,23,26,32,33)
---AND	  CISLI940.T$STAT$L IN (5, 6)			-- IMPRESSO, LANÇADO			
 WHERE CISLI940.T$STAT$L IN (2, 5, 6, 101)			-- 2-CANCELADA, 5-IMPRESSO, 6-LANÇADO, 101-ESTORNADA
 AND   cisli940.t$cnfe$l != ' '
 AND   exists (select *
@@ -73,19 +68,23 @@ SELECT
                         ceil(current_date - date '1900-01-01') + 
                         substr(to_char(tdrec940.t$docn$l,'00000000'),-6,6)
                 ,'0000000'),-6,6)                               ROMANEIO_PRODUTO,
-		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))					PRODUTO,
+--		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))					PRODUTO,
+    whinh301.t$item                               PRODUTO,
 		'01'													                COR_PRODUTO,
 		znibd005.t$desc$c										          TAMANHO,
 		''														                CODIGO_BARRA,
-		TDREC941.T$TAMT$L										          VALOR ,
-		TDREC941.T$PRIC$L										          PRECO1,
-		TDREC941.T$QNTY$L										          QTDE_ITEM,
+--		TDREC941.T$TAMT$L										          VALOR ,
+    CAST((WHINH301.T$RQUA * TDREC941.T$PRIC$L) AS NUMERIC(38,4))           VALOR,
+		CAST(TDREC941.T$PRIC$L AS NUMERIC(38,4)  )     PRECO1,
+--		TDREC941.T$QNTY$L										          QTDE_ITEM,
+    whinh301.t$rqua                               QTDE_ITEM,
     1														                  TIPO_TRANSACAO,   --Entradas
     tdrec941.t$fire$l                             REF_FISCAL,
-    case when tdrec941.t$line$l/10 < 1 then
-        tdrec941.t$line$l
-    else tdrec941.t$line$l/10 end                 LIN_REF_FISCAL,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+--    case when tdrec941.t$line$l/10 < 1 then
+--        tdrec941.t$line$l
+--    else tdrec941.t$line$l/10 end                 LIN_REF_FISCAL,
+    TDREC941.T$LINE$L                              LIN_REF_FISCAL,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$ADAT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO,
     tcibd001.t$mdfb$c                             MOD_FABR_ITEM,
     tdrec940.t$opfc$l                             CFO,
@@ -94,26 +93,28 @@ SELECT
 FROM  BAANDB.TTDREC940601	TDREC940
 
 INNER JOIN	BAANDB.TTDREC941601 TDREC941	ON	TDREC941.T$FIRE$L	=	TDREC940.T$FIRE$L
-
-INNER JOIN	BAANDB.TTCIBD001601	TCIBD001	ON	TCIBD001.T$ITEM		=	TDREC941.T$ITEM$L
-
-LEFT JOIN	BAANDB.TTCIBD004601	TCIBD004	ON	TCIBD004.T$CITT		=	'000'
-											AND	TCIBD004.T$BPID		=	' '
-											AND	TCIBD004.T$ITEM		=	TDREC941.T$ITEM$L
                       
 LEFT JOIN baandb.tznsls000601 znsls000
        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+       
+LEFT JOIN baandb.twhinh300601 whinh300
+       ON whinh300.t$fire$c = tdrec940.t$fire$l
+       
+LEFT JOIN baandb.twhinh301601 whinh301
+       ON whinh301.t$sfbp = whinh300.t$sfbp
+      AND whinh301.t$shid = whinh300.t$shid
+
+INNER JOIN	BAANDB.TTCIBD001601	TCIBD001	
+        ON	TCIBD001.T$ITEM		=	WHINH301.T$ITEM
 
 LEFT JOIN baandb.tznibd005601 znibd005
        ON znibd005.t$size$c = TCIBD001.T$SIZE$C
        
---WHERE
---			TDREC940.T$RFDT$L IN (1,2,4,5,10,26,27,28,32,33,35,36,37,40)
---AND   TDREC940.T$STAT$L IN (4,5)    --APROVADO, APROVADO COM PROBLEMAS
 WHERE TDREC940.T$STAT$L IN (4,5,6)  --4-Aprovado, 5-Aprovado com Problemas, 6-estornada
   AND	tdrec940.t$cnfe$l != ' '
   AND tdrec941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
   AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
   AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS			
-  
+  AND WHINH301.T$RQUA != 0
+--  AND TDREC941.T$FIRE$L = '000000137'
   ORDER BY TIPO_TRANSACAO, REF_FISCAL, LIN_REF_FISCAL
