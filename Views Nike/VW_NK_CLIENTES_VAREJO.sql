@@ -55,7 +55,7 @@ SELECT DISTINCT
     tccom139.t$ibge$l           COD_IBGE,           --26
     'S'                         TIPO_MOV,           --27
     SLI940.t$fire$l             REF_FISCAL,         --28
-    SLI940.t$rcd_utc            DT_ULT_UPDATE       --29
+    SLI940.t$sadt$l            DT_ULT_UPDATE       --29
 
    
 FROM  baandb.ttccom100601 tccom100
@@ -88,7 +88,7 @@ FROM  baandb.ttccom100601 tccom100
   INNER JOIN (  select  cisli940.t$fire$l,
                         cisli940.t$bpid$l,
                         cisli940.t$stat$l,
-                        cisli940.t$rcd_utc
+                        cisli940.t$sadt$l
                 from    baandb.tcisli940601 cisli940
                 where   exists (  select *
                               from  baandb.tznnfe011601 znnfe011
@@ -158,7 +158,7 @@ SELECT DISTINCT
     tccom139.t$ibge$l           COD_IBGE,           --26
     'E'                         TIPO_MOV,           --27
     REC940.t$fire$l             REF_FISCAL,         --28
-    REC940.t$rcd_utc            DT_ULT_UPDATE       --29
+    REC940.t$adat$l            	DT_ULT_UPDATE       --29
     
 FROM  baandb.ttccom100601 tccom100
 
@@ -190,7 +190,7 @@ FROM  baandb.ttccom100601 tccom100
   INNER JOIN (    select  tdrec940.t$fire$l,
                           tdrec940.t$bpid$l,
                           tdrec940.t$stat$l,
-                          tdrec940.t$rcd_utc
+                          tdrec940.t$adat$l
                   from    baandb.ttdrec940601 tdrec940 ) REC940
           ON REC940.t$bpid$l = tccom100.t$bpid
          AND REC940.t$stat$l IN (4,5,6)
