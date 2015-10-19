@@ -46,7 +46,7 @@ SELECT
 		''														                        FORNECEDOR,
 		2														                          TIPO_TRANSACAO,
     cisli940.t$fire$l                                     REF_FISCAL,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE)            DT_ULT_ALTERACAO,
     cisli940.t$ccfo$l                                     CFOP,
     tcmcs940.t$dsca$l                                     DESC_CFOP,
@@ -96,9 +96,7 @@ SELECT
 		''														                        RESPONSAVEL,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE)            EMISSAO,
-		(	SELECT SUM(A.T$QNTY$L)
-			FROM BAANDB.TTDREC941601 A
-			WHERE A.T$FIRE$L = TDREC940.T$FIRE$L)				        QTDE_TOTAL,
+    whinh301.t$rqua                                       QTDE_TOTAL,
 		TDREC940.T$TFDA$L										                  VALOR_TOTAL,
 		REGEXP_REPLACE(TDREC940.T$FOVN$L, '[^0-9]', '')			  CGC,
 		''														                        OBS,
@@ -118,7 +116,7 @@ SELECT
 		''														                        FORNECEDOR,
 		1														                          TIPO_TRANSACAO,
     tdrec940.t$fire$l                                     REF_FISCAL,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$ADAT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE)            DT_ULT_ALTERACAO,
     tdrec940.t$opfc$l                                     CFOP,
     tcmcs940.t$dsca$l                                     DESC_CFOP,
@@ -138,10 +136,28 @@ LEFT JOIN baandb.ttcmcs940601 tcmcs940
        
 LEFT JOIN baandb.ttcmcs966601 tcmcs966
        ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
-       
+
+LEFT JOIN ( select  a.t$fire$c,
+                    a.t$sfbp,
+                    a.t$shid 
+            from    baandb.twhinh300601 a
+            group by a.t$fire$c,
+                     a.t$sfbp,
+                     a.t$shid ) whinh300
+      ON  whinh300.t$fire$c = tdrec940.t$fire$l
+      
+LEFT JOIN ( select  a.t$sfbp,
+                    a.t$shid,
+                sum(a.t$rqua) t$rqua
+            from    baandb.twhinh301601 a
+            group by a.t$sfbp,
+                     a.t$shid ) whinh301
+      ON  whinh301.t$sfbp = whinh300.t$sfbp
+     AND  whinh301.t$shid = whinh300.t$shid
+     
 WHERE
---			TDREC940.T$RFDT$L IN (1,2,4,5,10,26,27,28,32,33,35,36,37,40)
     TDREC940.T$STAT$L IN (4,5,6)  --4-Aprovado, 5-Aprovado com Problemas, 6-estornada
-    AND	  tdrec940.t$cnfe$l != ' '
+    AND	tdrec940.t$cnfe$l != ' '
+    AND tdrec940.t$doty$l != 8    --8-conhecimento de frete
 
 ORDER BY TIPO_TRANSACAO, REF_FISCAL
