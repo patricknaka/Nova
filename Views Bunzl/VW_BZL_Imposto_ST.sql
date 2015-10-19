@@ -19,7 +19,9 @@ SELECT
 		ICMS_ST.T$BASE$L														BASE_CALCULO,
 --		ICMS_ST.T$NMRG$L														IVA,
     cisli941.t$tpot$l                           IVA,
-		ICMS_ST.T$RATE$L														ALIQUOTA
+		ICMS_ST.T$RATE$L														ALIQUOTA,
+    tcibd001.t$mdfb$c                           MOD_FABR_ITEM
+
 
 FROM
 		(	SELECT	A.T$FIRE$L,
@@ -95,6 +97,9 @@ LEFT JOIN (	SELECT	A.T$FIRE$L,
 LEFT JOIN baandb.tznsls000601 znsls000
        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
 
+INNER JOIN baandb.ttcibd001602  tcibd001
+        ON tcibd001.t$item = cisli941.t$item$l
+        
 WHERE cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE 
   AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
   AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
