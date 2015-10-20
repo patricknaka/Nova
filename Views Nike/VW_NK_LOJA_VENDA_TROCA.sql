@@ -10,10 +10,10 @@ SELECT
 		''														                  CODIGO_BARRA,
 		ltrim(rtrim(NVL(TCIBD004.T$AITC, TCIBD001.T$ITEM)))			PRODUTO,
 		'01'													                  COR_PRODUTO,
-		ZNIBD005.T$DESC$C										            TAMANHO,
-		TDREC941.T$QNTY$L										            QTDE,		
-		TDREC941.T$PRIC$L										            PRECO_LIQUIDO,
-		TDREC941.T$ADDC$L										            DESCONTO_ITEM,
+		ZNIBD005.T$DESC$C										TAMANHO,
+		TDREC941.T$QNTY$L										QTDE,		
+		TDREC941.T$PRIC$L										PRECO_LIQUIDO,
+		(TDREC940.T$ADDC$L + TDREC940.T$GEXP$L + TDREC940.T$CCHR$L)*(-1)				DESCONTO_ITEM,
 		0														                    QTDE_CANCELADA,
     0.0                                             CUSTO,
 		NVL(Q_IPI.T$AMNT$L,0)									          IPI,		
@@ -21,11 +21,8 @@ SELECT
 		0														                    ITEM_EXCLUIDO,
 		0														                    NÃO_MOVIMENTA_ESTOQUE,		
 		''														                  INDICA_ENTREGA_FUTURA,
-    		tdrec941.t$fire$l                           REF_FISCAL,
-        case when tdrec941.t$line$l/10 < 1 then
-            tdrec941.t$line$l
-        else
-            tdrec941.t$line$l  end                  LIN_REF_FICAL,
+    		tdrec941.t$fire$l                    REF_FISCAL,
+            	tdrec941.t$line$l                    LIN_REF_FICAL,
     		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 	    DT_ULT_ALTERACAO,
     tcibd001.t$mdfb$c                               MOD_FABR_ITEM,
