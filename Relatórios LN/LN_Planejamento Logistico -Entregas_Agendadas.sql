@@ -58,7 +58,7 @@ SELECT
          and znfmd640.t$etiq$c = znfmd630.t$etiq$c ) 
                                  DATA_PROCESSAMENTO,
 								 
-    CASE WHEN ZNFMD630.T$STAT$C = 'F'
+    CASE WHEN TO_CHAR(ZNFMD630.T$STAT$C) = 'F'
            THEN 'FINALIZADO'
          ELSE   'PENDENTE' 
     END                          SITUACAO,
@@ -67,14 +67,22 @@ SELECT
     ZNSLS401.T$CEPE$C            CEP,
     ZNSLS401.T$UFEN$C            UF,
     ZNSLS401.T$NOME$C            DESTINATARIO,
-    
+
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS401.T$DTEP$C, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) 
                                  DATA_PROMETIDA,
 
-    ZNSLS401.T$IDPA$C            PERIODO,
-    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 
+    CASE WHEN ZNSLS401.T$IDPA$C = '1'
+           THEN 'Manhã'
+         WHEN ZNSLS401.T$IDPA$C = '2'
+           THEN 'Tarde'
+         WHEN ZNSLS401.T$IDPA$C = '3'
+           THEN 'Noite'
+         ELSE Null
+    END                          PERIODO,
+	
+    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znfmd640.t$date$c), 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                   AT time zone 'America/Sao_Paulo') AS DATE)
         from BAANDB.tznfmd640301 znfmd640
@@ -190,7 +198,7 @@ WHERE znsls401.t$itpe$c = 5 --Agendado
                 AT time zone 'America/Sao_Paulo') AS DATE))
       BETWEEN :DataPrometida_De
           AND :DataPrometida_Ate
-  AND CASE WHEN ZNFMD630.T$STAT$C = 'F'
+  AND CASE WHEN TO_CHAR(ZNFMD630.T$STAT$C) = 'F'
              THEN 'F'
            ELSE   'P'
       END IN (:Status)
