@@ -4,7 +4,7 @@ SELECT DISTINCT
     ''                         CODIGO_BARRA,              --03
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
-    ELSE tdrec941.t$gamt$l END  VALOR,                    --04
+    ELSE tdrec941.t$gamt$l + TDREC940.T$ADDC$L + TDREC940.T$GEXP$L + TDREC940.T$CCHR$L END  VALOR,                    --04
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
     ELSE tdrec941.t$qnty$l END  QTDE_ITEM,                --05
@@ -27,7 +27,7 @@ SELECT DISTINCT
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
-    ELSE tdrec941.t$addc$l END  DESCONTO_ITEM,            --15
+    ELSE (TDREC940.T$ADDC$L + TDREC940.T$GEXP$L + TDREC940.T$CCHR$L)*(-1) END  DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
     nvl(tttxt010r.t$text,'')   OBS_ITEM,                 --17
     ORIGEM.DESCR                TRIBUT_ORIGEM,            --18
@@ -47,7 +47,8 @@ SELECT DISTINCT
     ''                         REFERENCIA_PEDIDO,        --26
     ''                         CONTA_CONTABIL,           --27
     '0'                         NAO_SOMA_VALOR,           --28
-    tdrec941.t$gexp$l           VALOR_ENCARGOS,           --29
+--    tdrec941.t$gexp$l           VALOR_ENCARGOS,           --29
+    0.0                         VALOR_ENCARGOS,   --DEIXAR ZERADO ATÉ A CORREÇÃO DO CAMPO PELA INFOR
     0                           VALOR_DESCONTOS,          --30
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
