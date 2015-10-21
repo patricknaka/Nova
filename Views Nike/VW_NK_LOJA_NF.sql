@@ -34,11 +34,11 @@ SELECT DISTINCT
   0                         FRETE_A_PAGAR,                          --22
   CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
       0.0
-  ELSE tdrec940.t$gtam$l END        VALOR_TOTAL_ITENS,               --23
+   ELSE tdrec940.t$gtam$l + TDREC940.T$ADDC$L + TDREC940.T$GEXP$L + TDREC940.T$CCHR$L END        VALOR_TOTAL_ITENS,               --23
   0.00                      DESCONTO,                               --24
   CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
       0.0
-  ELSE tdrec940.t$gexp$l END         ENCARGO,                        --25
+  ELSE 0.0 END              ENCARGO,   --Obs.: Zerar o campo até a Infor corrigir o mesmo. Está vindo o valor do Desconto.
   CASE WHEN tdrec940.t$stat$l = 4 or tdrec940.t$stat$l = 5 THEN
         '1'       -- NF impressa
   ELSE  '0' END                  NOTA_IMPRESSA,                     --26
