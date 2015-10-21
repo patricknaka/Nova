@@ -4,18 +4,15 @@ SELECT DISTINCT
     ''                         CODIGO_BARRA,              --03
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
-    ELSE tdrec941.t$gamt$l + TDREC940.T$ADDC$L + TDREC940.T$GEXP$L + TDREC940.T$CCHR$L END  VALOR,                    --04
+    ELSE tdrec941.t$gamt$l + TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L END  VALOR,          --04
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
     ELSE tdrec941.t$qnty$l END  QTDE_ITEM,                --05
     TO_CHAR(tdrec940.t$docn$l,'000000000')           
                                 NF_NUMERO,                --06
     tdrec940.t$seri$l           SERIE_NF,                 --07
-    case when tdrec941.t$line$l/10 < 1 then
-          to_char(tdrec941.t$line$l)
-    else
-          to_char(tdrec941.t$line$l/10)  
-    end                         ITEM_IMPRESSAO,           --08
+
+    tdrec941.t$line$l 		ITEM_IMPRESSAO,           --08
     '1'                         SUB_ITEM_TAMANHO,         --09
     tdrec941.t$dsca$l           DESCRICAO_ITEM,           --10
     ltrim(rtrim(nvl(tcibd004.t$item,tdrec941.t$item$l)))             
@@ -23,11 +20,11 @@ SELECT DISTINCT
     tcibd001.t$cuni             UNIDADE,                  --12
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
-    ELSE tdrec941.t$pric$l END  PRECO_UNITARIO,           --13
+    ELSE tdrec941.t$pric$l + TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L END  PRECO_UNITARIO,           --13
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
-    ELSE (TDREC940.T$ADDC$L + TDREC940.T$GEXP$L + TDREC940.T$CCHR$L)*(-1) END  DESCONTO_ITEM,            --15
+    ELSE (TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L)*(-1) END  DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
     nvl(tttxt010r.t$text,'')   OBS_ITEM,                 --17
     ORIGEM.DESCR                TRIBUT_ORIGEM,            --18
