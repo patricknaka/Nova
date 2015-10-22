@@ -268,23 +268,12 @@ INNER JOIN (SELECT	C.T$NCIA$C,
 
 INNER JOIN	BAANDB.TTDREC940601	TDREC940	ON	TDREC940.T$FIRE$L	=	TDREC947.T$FIRE$L
 
-INNER JOIN (SELECT	L.T$FIRE$L,
-                    L.T$DVRF$C
-			FROM BAANDB.TTDREC941601 L
-			GROUP BY L.T$FIRE$L,
-               L.T$DVRF$C) TDREC941		ON	TDREC941.T$FIRE$L = TDREC940.T$FIRE$L
-			
 
-INNER JOIN  BAANDB.TCISLI940601 CISLI940  ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
-
-
-WHERE
-      tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
+WHERE tdrec940.t$stat$l IN (4,5,6)                --4-aprovado, 5-aprovado com problemas, 6-estornado
 AND	  tdrec940.t$cnfe$l != ' '
-AND 	TDREC940.T$RFDT$L = 10        --10-retorno de mercadoria
+AND 	TDREC940.T$RFDT$L = 10                      --10-retorno de mercadoria
+AND   tdrec940.t$rfdt$l NOT IN (19,20,21,22,23) --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
 
- and tdrec940.t$docn$l = 19487
-  and tdrec940.t$seri$l = '8'
   
 UNION
 
