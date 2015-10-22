@@ -192,13 +192,15 @@ SELECT
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDREC940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 				DATA,
 		TDREC940.T$DOCN$L || TDREC940.T$SERI$L					NUMERO_CUPOM_FISCAL,
-    		TDREC940.T$FGHT$L * -1							DESCONTO_PGTO,
+    TDREC940.T$FGHT$L * -1							            DESCONTO_PGTO,
 		(TDREC940.T$GTAM$L + TDREC940.T$ADDC$L + TDREC940.T$GEXP$L + TDREC940.T$CCHR$L + TDREC940.T$FGHT$L)*-1	    TOTAL_VENDA,
 		''														                  CANCELADO_FISCAL,
 		1														                    PARCELA,
 		''														                  LANCAMENTO_CAIXA,
 		0														                    VALOR_CANCELADO,
-		CISLI940.T$DOCN$L							                  NUMERO_FISCAL_TROCA,
+    CASE WHEN CISLI940.T$DOCN$L IS NULL THEN
+        ZNMCS095.T$DOCN$C
+		ELSE CISLI940.T$DOCN$L	END		                  NUMERO_FISCAL_TROCA,
 		''														                  VENDA_FINALIZADA,
 		TDREC940.T$SERI$L										            SERIE_NF_ENTRADA,
 		''														                  SERIE_NF_SAIDA,
@@ -280,13 +282,21 @@ INNER JOIN (SELECT	L.T$FIRE$L,
                L.T$DVRF$C) TDREC941		ON	TDREC941.T$FIRE$L = TDREC940.T$FIRE$L
 			
 
-INNER JOIN  BAANDB.TCISLI940601 CISLI940  ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
-											
+LEFT JOIN  BAANDB.TCISLI940601 CISLI940  
+       ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
+      AND CISLI940.T$DOCN$L != 0
+      AND CISLI940.T$STAT$L IN (5,6)    --impresso-5, lançado-6
+
+LEFT JOIN baandb.tznmcs095601  znmcs095
+        ON znmcs095.t$ncmp$c = 2     --Faturamento
+       AND znmcs095.t$fire$c = TDREC941.T$DVRF$C
 
 WHERE
-      tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
+      tdrec940.t$stat$l IN (4,5,6)                --4-aprovado, 5-aprovado com problemas, 6-estornado
 AND	  tdrec940.t$cnfe$l != ' '
-AND 	TDREC940.T$RFDT$L = 10        --10-retorno de mercadoria
+AND 	TDREC940.T$RFDT$L = 10                      --10-retorno de mercadoria
+AND   tdrec940.t$rfdt$l NOT IN (19,20,21,22,23)   --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
+
 
 UNION
 
