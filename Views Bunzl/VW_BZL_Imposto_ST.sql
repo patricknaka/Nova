@@ -20,7 +20,9 @@ SELECT
 --		ICMS_ST.T$NMRG$L														IVA,
     cisli941.t$tpot$l                           IVA,
 		ICMS_ST.T$RATE$L														ALIQUOTA,
-    tcibd001.t$mdfb$c                           MOD_FABR_ITEM
+    tcibd001.t$mdfb$c                           MOD_FABR_ITEM,
+    CASE WHEN cisli940.t$stat$l = 2 THEN
+        'C' ELSE ' ' END                        CANCELADA
 
 
 FROM
