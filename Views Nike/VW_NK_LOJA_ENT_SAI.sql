@@ -111,7 +111,7 @@ SELECT
 --		CASE WHEN TCEMM122.T$BUPA IS NULL
 --			THEN 1
 --			ELSE 2 END											                    ENTRADA_POR,
-    CASE WHEN tdrec940.t$opfc$l = '1152' THEN
+    CASE WHEN tdrec940.t$opfc$l = '1152' OR 'tdrec940.t$opfc$l = '2102' THEN
         1 ELSE 2 END                                      ENTRADA_POR,
 		0														                          INDICA_DEVOLUCAO,
 		''														                        ROMANEIO_AJUSTE,
