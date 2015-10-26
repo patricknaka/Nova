@@ -43,7 +43,7 @@ INNER JOIN baandb.ttcibd001601  tcibd001
         ON DT_NFE_REC.t$ncmp$l = 601
        AND DT_NFE_REC.t$refi$l = tdrec940.t$fire$l
 
- LEFT JOIN baandb.ttttxt010601 tttxt010r
+ LEFT JOIN baandb.ttttxt010301 tttxt010r
         ON tttxt010r.t$ctxt = tdrec940.t$obse$l
        AND tttxt010r.t$clan = 'p'
        AND tttxt010r.t$seqe = 1
@@ -51,7 +51,7 @@ INNER JOIN baandb.ttcibd001601  tcibd001
  LEFT JOIN baandb.ttcmcs966601 tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
 
- LEFT JOIN baandb.ttttxt010601 tttxt010f
+ LEFT JOIN baandb.ttttxt010301 tttxt010f
         ON tttxt010f.t$ctxt = tdrec940.t$obse$l
        AND tttxt010f.t$clan = 'p'
        AND tttxt010f.t$seqe = 1
@@ -76,7 +76,7 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)     DATA_EMISSAO,
-    NFE.STATUS                                         SITUACAO,
+    NFE.DSC_STATUS                                     SITUACAO,
     Case When NFE.COD_STATUS = 5
            Then Null
          Else   cisli940.t$cnfe$l
@@ -108,7 +108,7 @@ INNER JOIN baandb.ttcibd001601  tcibd001
  LEFT JOIN baandb.ttccom130601 tccom130c
         ON tccom130c.t$cadr = tccom100c.t$cadr
 
- LEFT JOIN baandb.ttttxt010601 tttxt010f
+ LEFT JOIN baandb.ttttxt010301 tttxt010f
         ON tttxt010f.t$ctxt = cisli940.t$obse$l
        AND tttxt010f.t$clan = 'p'
        AND tttxt010f.t$seqe = 1
@@ -205,7 +205,7 @@ WHERE cisli940.t$stat$l IN (2,5,6,101)
 "         ON DT_NFE_REC.t$ncmp$l = " + Parameters!Compania.Value + "  " &
 "        AND DT_NFE_REC.t$refi$l = tdrec940.t$fire$l  " &
 "  " &
-"  LEFT JOIN baandb.ttttxt010" + Parameters!Compania.Value + " tttxt010r  " &
+"  LEFT JOIN baandb.ttttxt010301 tttxt010r  " &
 "         ON tttxt010r.t$ctxt = tdrec940.t$obse$l  " &
 "        AND tttxt010r.t$clan = 'p'  " &
 "        AND tttxt010r.t$seqe = 1  " &
@@ -213,7 +213,7 @@ WHERE cisli940.t$stat$l IN (2,5,6,101)
 "  LEFT JOIN baandb.ttcmcs966" + Parameters!Compania.Value + " tcmcs966  " &
 "         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l  " &
 "  " &
-"  LEFT JOIN baandb.ttttxt010" + Parameters!Compania.Value + " tttxt010f  " &
+"  LEFT JOIN baandb.ttttxt010301 tttxt010f  " &
 "         ON tttxt010f.t$ctxt = tdrec940.t$obse$l  " &
 "        AND tttxt010f.t$clan = 'p'  " &
 "        AND tttxt010f.t$seqe = 1  " &
@@ -238,7 +238,7 @@ WHERE cisli940.t$stat$l IN (2,5,6,101)
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "         AT time zone 'America/Sao_Paulo') AS DATE)     DATA_EMISSAO,  " &
-"     NFE.STATUS                                         SITUACAO,  " &
+"     NFE.DSC_STATUS                                     SITUACAO,  " &
 "     Case When NFE.COD_STATUS = 5  " &
 "            Then Null  " &
 "          Else   cisli940.t$cnfe$l  " &
@@ -270,7 +270,7 @@ WHERE cisli940.t$stat$l IN (2,5,6,101)
 "  LEFT JOIN baandb.ttccom130" + Parameters!Compania.Value + " tccom130c  " &
 "         ON tccom130c.t$cadr = tccom100c.t$cadr  " &
 "  " &
-"  LEFT JOIN baandb.ttttxt010" + Parameters!Compania.Value + " tttxt010f  " &
+"  LEFT JOIN baandb.ttttxt010301 tttxt010f  " &
 "         ON tttxt010f.t$ctxt = cisli940.t$obse$l  " &
 "        AND tttxt010f.t$clan = 'p'  " &
 "        AND tttxt010f.t$seqe = 1  " &
