@@ -32,9 +32,13 @@ SELECT
     znsls400.t$cepf$c    CEP,
     znsls400.t$cidf$c    CIDADE,
     znsls400.t$uffa$c    UF,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE)        
+    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ENT.t$date$c,
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone 'America/Sao_Paulo') AS DATE)
+        from BAANDB.tznfmd640301 znfmd640_ENT
+       where znfmd640_ENT.t$fili$c = znfmd630.t$fili$c
+         and znfmd640_ENT.t$etiq$c = znfmd630.t$etiq$c
+         and znfmd640_ENT.t$coci$c = 'ENT')
                          DATA_ENTREGA,
     znsls400.t$idca$c    CANAL_VENDA,
     CASE WHEN znfmd630.t$stat$c = 'F' 
@@ -74,7 +78,7 @@ SELECT
                          DATA_AJUSTADA,
     znfmd630.t$cono$c    CONTRATO,
     znfmd640.t$coci$c    ULTIMA_OCORRENCIA,
-    znfmd640.t$obsv$c    OCORRENCIA,
+    znfmd640.t$dsci$c    OCORRENCIA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)      
@@ -183,18 +187,21 @@ INNER JOIN baandb.ttcmcs080301  tcmcs080
 
  LEFT JOIN ( select a.t$fili$c,
                     a.t$etiq$c,
+                    znfmd030.t$dsci$c,
                     max(a.t$coci$c) t$coci$c,
-                    max(a.t$obsv$c) t$obsv$c,
                     max(a.t$date$c) t$date$c
                from baandb.tznfmd640301 a
+         inner join baandb.tznfmd030301 znfmd030
+                 on znfmd030.t$ocin$c = a.t$coci$c
               where a.t$date$c = ( select max(oc.t$date$c) 
                                      from baandb.tznfmd640301 oc
                                     where oc.t$fili$c = a.t$fili$c
                                       and oc.t$etiq$c = a.t$etiq$c )
            group by a.t$fili$c,
-                    a.t$etiq$c ) znfmd640 
+                    a.t$etiq$c,
+                    znfmd030.t$dsci$c ) znfmd640
         ON znfmd640.t$fili$c = znfmd630.t$fili$c
-       AND znfmd640.t$etiq$c = znfmd630.t$etiq$c             
+       AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
        
  LEFT JOIN baandb.tznfmd610301  znfmd610
         ON znfmd610.t$fili$c = znfmd630.t$fili$c

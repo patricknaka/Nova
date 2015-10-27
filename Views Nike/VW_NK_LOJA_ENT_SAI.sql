@@ -108,9 +108,11 @@ SELECT
 		AT time zone 'America/Sao_Paulo') AS DATE)            DATA_SAIDA,
 		''														                        ENTRADA_CONFERIDA,
 		''														                        ENTRADA_SEM_PRODUTOS,
-		CASE WHEN TCEMM122.T$BUPA IS NULL
-			THEN 1
-			ELSE 2 END											                    ENTRADA_POR,
+--		CASE WHEN TCEMM122.T$BUPA IS NULL
+--			THEN 1
+--			ELSE 2 END											                    ENTRADA_POR,
+    CASE WHEN tdrec940.t$fdtc$l = 'E00002' AND tdrec940.t$opfc$l = '1152' THEN	 --Transferencia Nike Matriz
+        1 ELSE 2 END                                      ENTRADA_POR,
 		0														                          INDICA_DEVOLUCAO,
 		''														                        ROMANEIO_AJUSTE,
 		''														                        FORNECEDOR,
