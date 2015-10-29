@@ -61,36 +61,32 @@ AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
 
 UNION
 SELECT
-		'NIKE.COM'												FILIAL,	
+		'NIKE.COM'												            FILIAL,	
       REVERSE(TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sysdate, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
         AT time zone 'America/Sao_Paulo') AS DATE), 'YY')) ||
         substr(to_char(
                         ceil(current_date - date '1900-01-01') + 
                         substr(to_char(tdrec940.t$docn$l,'00000000'),-6,6)
-                ,'0000000'),-6,6)                               ROMANEIO_PRODUTO,
-    CASE WHEN WHINH301_1.t$item IS NULL THEN
-          WHINH301_2.t$item
-    ELSE  WHINH301_1.t$item  END                   PRODUTO,
+                ,'0000000'),-6,6)                 ROMANEIO_PRODUTO,
+
+    WHINH301.t$item                               PRODUTO,
 		'01'													                COR_PRODUTO,
-    CASE WHEN ZNIBD005_1.t$desc$c IS NULL THEN
-          ZNIBD005_2.t$desc$c
-    ELSE  ZNIBD005_1.t$desc$c END                   TAMANHO,
+    
+
+    ZNIBD005.t$desc$c                             TAMANHO,
 		''														                CODIGO_BARRA,
-    CASE WHEN WHINH301_1.T$RQUA IS NULL THEN
-          CAST((WHINH301_2.T$RQUA * TDREC941.T$PRIC$L) AS NUMERIC(38,4))           
-    ELSE  CAST((WHINH301_1.T$RQUA * TDREC941.T$PRIC$L) AS NUMERIC(38,4)) END VALOR,
+
+    CAST((WHINH301.T$RQUA * TDREC941.T$PRIC$L) AS NUMERIC(38,4))           VALOR,
 		CAST(TDREC941.T$PRIC$L AS NUMERIC(38,4)  )     PRECO1,
-    CASE WHEN WHINH301_1.t$rqua IS NULL THEN
-          WHINH301_2.t$rqua                               
-    ELSE  WHINH301_1.t$rqua END                    QTDE_ITEM,
+
+    WHINH301.t$rqua                               QTDE_ITEM,
     1														                  TIPO_TRANSACAO,   --Entradas
     tdrec941.t$fire$l                             REF_FISCAL,
-    TDREC941.T$LINE$L                              LIN_REF_FISCAL,
+    TDREC941.T$LINE$L                             LIN_REF_FISCAL,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$ADAT$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
 		AT time zone 'America/Sao_Paulo') AS DATE)    DT_ULT_ALTERACAO,
-    CASE WHEN TCIBD001_1.t$mdfb$c IS NULL THEN
-          TCIBD001_2.t$mdfb$c                             
-    ELSE  TCIBD001_1.t$mdfb$c END                  MOD_FABR_ITEM,
+
+    TCIBD001.t$mdfb$c                             MOD_FABR_ITEM,
     tdrec940.t$opfc$l                             CFO,
     tdrec940.t$fdtc$l                             COD_DOC_FISCAL
     
@@ -107,38 +103,38 @@ LEFT JOIN baandb.twhinh300601 whinh300
 LEFT JOIN ( select a.t$sfbp,
                    a.t$shid,
                    a.t$item,
-                   a.t$rqua
-            from  baandb.twhinh301601 a ) WHINH301_1
-       ON WHINH301_1.t$sfbp = whinh300.t$sfbp
-      AND WHINH301_1.t$shid = whinh300.t$shid
-      AND WHINH301_1.t$item = tdrec941.t$item$L
-
-LEFT JOIN ( select a.t$sfbp,
+                   a.t$rqua,
+                   b.t$mitm ITEM_NOTA
+            from  baandb.twhinh301601 a 
+            inner join   baandb.ttibom010601  b
+                    on   b.t$sitm = a.t$item 
+ 
+            UNION
+            
+            select a.t$sfbp,
                    a.t$shid,
                    a.t$item,
-                   a.t$rqua
-            from  baandb.twhinh301601 a ) WHINH301_2
-       ON WHINH301_2.t$sfbp = whinh300.t$sfbp
-      AND WHINH301_2.t$shid = whinh300.t$shid
-      AND WHINH301_1.t$item IS NULL
+                   a.t$rqua,
+                   b.t$item ITEM_NOTA
+            from  baandb.twhinh301601 a 
+            inner join baandb.ttcibd001601 b
+                    on b.t$item = a.t$item) WHINH301
+       ON WHINH301.t$sfbp = whinh300.t$sfbp
+      AND WHINH301.t$shid = whinh300.t$shid
+      AND WHINH301.ITEM_NOTA = tdrec941.t$item$l   --item agrupador, ou não
       
-LEFT JOIN	BAANDB.TTCIBD001601	TCIBD001_1	
-       ON	TCIBD001_1.T$ITEM		=	WHINH301_1.T$ITEM
+INNER JOIN	BAANDB.TTCIBD001601	TCIBD001	
+       ON	TCIBD001.T$ITEM		=	WHINH301.T$ITEM
        
-LEFT JOIN	BAANDB.TTCIBD001601	TCIBD001_2	
-       ON	TCIBD001_2.T$ITEM		=	WHINH301_2.T$ITEM
-       
-LEFT JOIN baandb.tznibd005601 znibd005_1
-       ON znibd005_1.t$size$c = TCIBD001_1.T$SIZE$C
-
-LEFT JOIN baandb.tznibd005601 znibd005_2
-       ON znibd005_2.t$size$c = TCIBD001_2.T$SIZE$C
+INNER JOIN baandb.tznibd005601 znibd005
+       ON znibd005.t$size$c = TCIBD001.T$SIZE$C
        
 WHERE TDREC940.T$STAT$L IN (4,5,6)  --4-Aprovado, 5-Aprovado com Problemas, 6-estornada
   AND	tdrec940.t$cnfe$l != ' '
   AND tdrec941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
   AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
   AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS			
-  AND (WHINH301_1.T$RQUA != 0 OR WHINH301_2.T$RQUA != 0)
+  AND WHINH301.T$RQUA != 0
   AND   tdrec940.t$rfdt$l NOT IN (19,20,21,22,23) --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
+  
   ORDER BY TIPO_TRANSACAO, REF_FISCAL, LIN_REF_FISCAL
