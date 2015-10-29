@@ -40,7 +40,7 @@ FROM  baandb.ttdrec942601   tdrec942
 
 WHERE tdrec940.t$stat$l IN (4,5,6)
 AND   tdrec940.t$cnfe$l != ' '
-
+AND   tdrec940.t$rfdt$l NOT IN (19,20,21,22,23) --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
 UNION
 
 SELECT  DISTINCT

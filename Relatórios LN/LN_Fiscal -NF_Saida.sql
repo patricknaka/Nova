@@ -308,6 +308,7 @@ select Q1.*
  
            WHERE cisli940.t$stat$l = 6
              AND tcemm124.t$dtyp = 1 
+             AND cisli940.t$nfes$l = 5
              AND cisli941.t$item$l NOT IN ( select a.t$itjl$c
                                               from baandb.tznsls000301 a
                                              where a.t$indt$c = ( select min(b.t$indt$c) 

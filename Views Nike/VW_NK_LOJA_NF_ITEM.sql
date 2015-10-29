@@ -75,7 +75,7 @@ FROM  baandb.ttdrec941601 tdrec941
         AND tcibd004.t$bpid = ' '
         AND tcibd004.t$item = tdrec941.t$item$l
         
-  LEFT JOIN baandb.ttttxt010601 tttxt010r
+  LEFT JOIN baandb.ttttxt010301 tttxt010r
        ON tttxt010r.t$ctxt = tcibd001.t$txtf$c
       AND tttxt010r.t$clan = 'p'
 	    AND tttxt010r.t$seqe = 1
@@ -137,7 +137,7 @@ WHERE tdrec940.t$stat$l IN (4,5,6)
    AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
    AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
    AND tdrec940.t$cnfe$l != ' '
-    
+   AND   tdrec940.t$rfdt$l NOT IN (19,20,21,22,23) --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
 UNION
 
 SELECT DISTINCT
@@ -219,7 +219,7 @@ FROM  baandb.tcisli941601 cisli941
         AND tcibd004.t$bpid = ' '
         AND tcibd004.t$item = cisli941.t$item$l
         
-  LEFT JOIN baandb.ttttxt010601 tttxt010r
+  LEFT JOIN baandb.ttttxt010301 tttxt010r
        ON tttxt010r.t$ctxt = tcibd001.t$txtf$c
       AND tttxt010r.t$clan = 'p'
 	    AND tttxt010r.t$seqe = 1
