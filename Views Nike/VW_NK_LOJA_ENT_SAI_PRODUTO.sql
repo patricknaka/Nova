@@ -113,9 +113,9 @@ LEFT JOIN ( select a.t$sfbp,
             
             select a.t$sfbp,
                    a.t$shid,
-                   a.t$item,
+                   a.t$item ITEM_NOTA,
                    a.t$rqua,
-                   b.t$item ITEM_NOTA
+                   b.t$item
             from  baandb.twhinh301601 a 
             inner join baandb.ttcibd001601 b
                     on b.t$item = a.t$item) WHINH301
