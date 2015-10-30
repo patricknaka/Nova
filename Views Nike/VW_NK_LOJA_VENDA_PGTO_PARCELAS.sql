@@ -49,7 +49,7 @@ SELECT
 				12, '5',                                                           --12	Cartão de Débito (DB)				E - CARTAO DE DEBITO
 				13, '  ',                                                          --13	Pagamento Antecipado				' ' - Não existe
 				15,	'  ')	END									  TIPO_PAGTO,                        --15	BNDES								' ' - Não existe			
-		ZNSLS402.T$VLPG$C										VALOR,
+		    CISLI940.T$AMNT$L                     VALOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$PVEN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
