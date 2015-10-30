@@ -161,5 +161,5 @@ WHERE
     TDREC940.T$STAT$L IN (4,5,6)  --4-Aprovado, 5-Aprovado com Problemas, 6-estornada
     AND	tdrec940.t$cnfe$l != ' '
     AND tdrec940.t$doty$l != 8    --8-conhecimento de frete
-
+    AND tdrec940.t$rfdt$l != 14	  --Nota de Débito-14
 ORDER BY TIPO_TRANSACAO, REF_FISCAL
