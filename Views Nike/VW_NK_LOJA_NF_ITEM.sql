@@ -137,7 +137,7 @@ WHERE tdrec940.t$stat$l IN (4,5,6)
    AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
    AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
    AND tdrec940.t$cnfe$l != ' '
-   AND   tdrec940.t$rfdt$l NOT IN (19,20,21,22,23) --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
+   AND   tdrec940.t$rfdt$l NOT IN (14,19,20,21,22,23) --Nota de Débito-14, Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
 UNION
 
 SELECT DISTINCT
