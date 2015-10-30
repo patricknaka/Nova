@@ -135,6 +135,7 @@ WHERE TDREC940.T$STAT$L IN (4,5,6)  --4-Aprovado, 5-Aprovado com Problemas, 6-es
   AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
   AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS			
   AND WHINH301.T$RQUA != 0
-  AND   tdrec940.t$rfdt$l NOT IN (19,20,21,22,23) --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
+  AND tdrec940.t$doty$l != 8    --8-conhecimento de frete
+  AND tdrec940.t$rfdt$l != 14	  --Nota de Débito-14
   
   ORDER BY TIPO_TRANSACAO, REF_FISCAL, LIN_REF_FISCAL
