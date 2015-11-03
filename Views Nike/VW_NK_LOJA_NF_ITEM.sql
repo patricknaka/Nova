@@ -8,14 +8,14 @@ SELECT DISTINCT
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
     ELSE tdrec941.t$qnty$l END  QTDE_ITEM,                --05
-    TO_CHAR(tdrec940.t$docn$l,'000000000')           
+    TO_CHAR(tdrec940.t$docn$l,'000000000')
                                 NF_NUMERO,                --06
     tdrec940.t$seri$l           SERIE_NF,                 --07
 
-    tdrec941.t$line$l 		ITEM_IMPRESSAO,           --08
+    tdrec941.t$line$l     ITEM_IMPRESSAO,           --08
     '1'                         SUB_ITEM_TAMANHO,         --09
     tdrec941.t$dsca$l           DESCRICAO_ITEM,           --10
-    ltrim(rtrim(nvl(tcibd004.t$item,tdrec941.t$item$l)))             
+    ltrim(rtrim(nvl(tcibd004.t$item,tdrec941.t$item$l)))
                                 CODIGO_ITEM,              --11
     tcibd001.t$cuni             UNIDADE,                  --12
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
@@ -58,28 +58,28 @@ SELECT DISTINCT
     tcmcs966.t$dsca$l           DESCR_TIPO_DOC_FISCAL,    --35
     tdrec941.t$fire$l           REF_FISCAL,               --36
     tdrec941.t$line$l           LIN_REF_FIS,              --37
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO,          --38
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+    AT time zone 'America/Sao_Paulo') AS DATE)         DT_ULT_ALTERACAO,          --38
     tcibd001.t$mdfb$c           MOD_FABR_ITEM             --39
-    
+
 FROM  baandb.ttdrec941601 tdrec941
 
   INNER JOIN baandb.ttdrec940601  tdrec940
           ON tdrec940.t$fire$l = tdrec941.t$fire$l
-          
+
   INNER JOIN baandb.ttcibd001601  tcibd001
           ON tcibd001.t$item = tdrec941.t$item$l
-          
+
   LEFT JOIN baandb.ttcibd004601   tcibd004
          ON tcibd004.t$citt = '000'
         AND tcibd004.t$bpid = ' '
         AND tcibd004.t$item = tdrec941.t$item$l
-        
+
   LEFT JOIN baandb.ttttxt010301 tttxt010r
        ON tttxt010r.t$ctxt = tcibd001.t$txtf$c
       AND tttxt010r.t$clan = 'p'
-	    AND tttxt010r.t$seqe = 1
-      
+      AND tttxt010r.t$seqe = 1
+
    LEFT JOIN ( SELECT l.t$desc DESCR,
                     d.t$cnst
                FROM baandb.tttadv401000 d,
@@ -93,21 +93,21 @@ FROM  baandb.ttdrec941601 tdrec941
                     rpad(d.t$rele,2) ||
                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
                                                     rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv401000 l1 
-                                          where l1.t$cpac = d.t$cpac 
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv401000 l1
+                                          where l1.t$cpac = d.t$cpac
                                             and l1.t$cdom = d.t$cdom )
                 AND rpad(l.t$vers,4) ||
                     rpad(l.t$rele,2) ||
                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
                                                     rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv140000 l1 
-                                          where l1.t$clab = l.t$clab 
-                                            and l1.t$clan = l.t$clan 
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv140000 l1
+                                          where l1.t$clab = l.t$clab
+                                            and l1.t$clan = l.t$clan
                                             and l1.t$cpac = l.t$cpac ) ) ORIGEM
-        ON ORIGEM.t$cnst = tdrec941.t$sour$l 
-        
+        ON ORIGEM.t$cnst = tdrec941.t$sour$l
+
         LEFT JOIN ( select  a.t$base$l  BASE_ICMS,
                             a.t$fire$l,
                             a.t$line$l,
@@ -116,7 +116,7 @@ FROM  baandb.ttdrec941601 tdrec941
               ON REC942.t$fire$l = tdrec941.t$fire$l
              AND REC942.t$line$l = tdrec941.t$line$l
              AND REC942.t$brty$l = 1  --ICMS
-             
+
         LEFT JOIN ( select  a.t$base$l  VL_ICMS_ST,
                             a.t$fire$l,
                             a.t$line$l,
@@ -125,21 +125,21 @@ FROM  baandb.ttdrec941601 tdrec941
               ON REC942.t$fire$l = tdrec941.t$fire$l
              AND REC942.t$line$l = tdrec941.t$line$l
              AND REC942.t$brty$l = 2  --ICMS_ST
-         
+
           LEFT JOIN baandb.tznsls000601 znsls000
                  ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
 
     LEFT JOIN baandb.ttcmcs966601 tcmcs966
            ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
-           
+
 WHERE tdrec940.t$stat$l IN (4,5,6)
    AND tdrec941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
    AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
    AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
    AND tdrec940.t$cnfe$l != ' '
    AND tdrec940.t$doty$l != 8    --8-conhecimento de frete
-   AND tdrec940.t$rfdt$l != 14	  --Nota de Débito-14
-   
+   AND tdrec940.t$rfdt$l != 14    --Nota de Débito-14
+
 UNION
 
 SELECT DISTINCT
@@ -152,17 +152,13 @@ SELECT DISTINCT
     CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
     ELSE cisli941.t$dqua$l END          QTDE_ITEM,                --05
-    TO_CHAR(cisli940.t$docn$l,'000000000')           
+    TO_CHAR(cisli940.t$docn$l,'000000000')
                                 NF_NUMERO,                --06
     cisli940.t$seri$l           SERIE_NF,                 --07
-    case when cisli941.t$line$l/10 < 1 then
-        to_char(cisli941.t$line$l)
-    else
-        to_char(cisli941.t$line$l/10)  
-    end                         ITEM_IMPRESSAO,           --08
+cisli941.t$line$l           ITEM_IMPRESSAO,           --08
     '1'                         SUB_ITEM_TAMANHO,         --09
     cisli941.t$desc$l           DESCRICAO_ITEM,           --10
-    ltrim(rtrim(NVL(tcibd004.t$item,tcibd001.t$item)))             
+    ltrim(rtrim(NVL(tcibd004.t$item,tcibd001.t$item)))
                                 CODIGO_ITEM,              --11
     tcibd001.t$cuni             UNIDADE,                  --12
     CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
@@ -204,28 +200,28 @@ SELECT DISTINCT
     tcmcs966.t$dsca$l           DESCR_COD_TIPO_DOC_FISCAL,--35
     cisli941.t$fire$l           REF_FISCAL,               --36
     cisli941.t$line$l           LIN_REF_FIS,              --37
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
-		AT time zone 'America/Sao_Paulo') AS DATE) 				DT_ULT_ALTERACAO,          --38
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+    AT time zone 'America/Sao_Paulo') AS DATE)         DT_ULT_ALTERACAO,          --38
     tcibd001.t$mdfb$c           MOD_FABR_ITEM             --39
-    
+
 FROM  baandb.tcisli941601 cisli941
 
   INNER JOIN baandb.tcisli940601 cisli940
           ON cisli940.t$fire$l = cisli941.t$fire$l
-          
+
   INNER JOIN baandb.ttcibd001601  tcibd001
           ON tcibd001.t$item = cisli941.t$item$l
-          
+
   LEFT JOIN baandb.ttcibd004601   tcibd004
          ON tcibd004.t$citt = '000'
         AND tcibd004.t$bpid = ' '
         AND tcibd004.t$item = cisli941.t$item$l
-        
+
   LEFT JOIN baandb.ttttxt010301 tttxt010r
        ON tttxt010r.t$ctxt = tcibd001.t$txtf$c
       AND tttxt010r.t$clan = 'p'
-	    AND tttxt010r.t$seqe = 1
-      
+      AND tttxt010r.t$seqe = 1
+
    LEFT JOIN ( SELECT l.t$desc DESCR,
                     d.t$cnst
                FROM baandb.tttadv401000 d,
@@ -239,21 +235,21 @@ FROM  baandb.tcisli941601 cisli941
                     rpad(d.t$rele,2) ||
                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
                                                     rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv401000 l1 
-                                          where l1.t$cpac = d.t$cpac 
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv401000 l1
+                                          where l1.t$cpac = d.t$cpac
                                             and l1.t$cdom = d.t$cdom )
                 AND rpad(l.t$vers,4) ||
                     rpad(l.t$rele,2) ||
                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
                                                     rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv140000 l1 
-                                          where l1.t$clab = l.t$clab 
-                                            and l1.t$clan = l.t$clan 
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv140000 l1
+                                          where l1.t$clab = l.t$clab
+                                            and l1.t$clan = l.t$clan
                                             and l1.t$cpac = l.t$cpac ) ) ORIGEM
-        ON ORIGEM.t$cnst = cisli941.t$sour$l 
-        
+        ON ORIGEM.t$cnst = cisli941.t$sour$l
+
         LEFT JOIN ( select  a.t$base$l  BASE_ICMS,
                             a.t$fire$l,
                             a.t$line$l,
@@ -262,7 +258,7 @@ FROM  baandb.tcisli941601 cisli941
               ON SLI943.t$fire$l = cisli941.t$fire$l
              AND SLI943.t$line$l = cisli941.t$line$l
              AND SLI943.t$brty$l = 1  --ICMS
-             
+
         LEFT JOIN ( select  a.t$base$l  VL_ICMS_ST,
                             a.t$fire$l,
                             a.t$line$l,
@@ -271,19 +267,19 @@ FROM  baandb.tcisli941601 cisli941
               ON SLI943.t$fire$l = cisli941.t$fire$l
              AND SLI943.t$line$l = cisli941.t$line$l
              AND SLI943.t$brty$l = 2  --ICMS_ST
-              
+
           LEFT JOIN baandb.tznsls000601 znsls000
                  ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
 
     LEFT JOIN baandb.ttcmcs966601 tcmcs966
            ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
-           
+
         LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
                         cisli245.t$fire$l
                 from    baandb.tcisli245601 cisli245
                 group by cisli245.t$fire$l )  SLI245
            ON SLI245.t$fire$l = cisli940.t$fire$l
-           
+
  WHERE cisli940.t$stat$l IN (2,5,6,101)
    AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
    AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
@@ -297,4 +293,4 @@ FROM  baandb.tcisli941601 cisli941
                   and   znnfe011.t$nfes$c = 5 ) --status nfe processada
    AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente
 
-ORDER BY REF_FISCAL, LIN_REF_FIS
+ORDER BY REF_FISCAL, LIN_REF_FIS;
