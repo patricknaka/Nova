@@ -49,7 +49,15 @@ SELECT
 				12, '5',                                                           --12	Cartão de Débito (DB)				E - CARTAO DE DEBITO
 				13, '  ',                                                          --13	Pagamento Antecipado				' ' - Não existe
 				15,	'  ')	END									  TIPO_PAGTO,                        --15	BNDES								' ' - Não existe			
-		    CISLI940.T$AMNT$L                     VALOR,
+    CASE WHEN CISLI940.T$FDTY$L = 15 THEN
+      CASE WHEN PAGTO.M_PAG > 1 THEN
+          CISLI940_FAT.T$AMNT$L * ZNSLS402.T$VLMR$C/PAGTO.VL_TOT
+      ELSE CISLI940_FAT.T$AMNT$L END
+    ELSE
+      CASE WHEN PAGTO.M_PAG > 1 THEN
+          CISLI940.T$AMNT$L * ZNSLS402.T$VLMR$C/PAGTO.VL_TOT
+      ELSE CISLI940.T$AMNT$L END            
+    END                                 VALOR,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS402.T$PVEN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
 		AT time zone 'America/Sao_Paulo') AS DATE) 							VENCIMENTO,
 		ZNSLS402.T$AUTO$C										NUMERO_TITULO,	
@@ -131,7 +139,22 @@ INNER JOIN BAANDB.TZNSLS402601 ZNSLS402		ON	ZNSLS402.T$NCIA$C	=	ZNSLS004.T$NCIA$
 					                        AND ZNSLS402.T$UNEG$C   =	ZNSLS004.T$UNEG$C
 					                        AND ZNSLS402.T$PECL$C   =	ZNSLS004.T$PECL$C
 					                        AND ZNSLS402.T$SQPD$C   =	ZNSLS004.T$SQPD$C
-
+LEFT JOIN ( select  a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    sum(a.t$vlmr$c) VL_TOT,
+                    count(a.t$idmp$c) M_PAG
+            from    baandb.tznsls402601 a
+            group by a.t$ncia$c,
+                      a.t$uneg$c,
+                      a.t$pecl$c,
+                      a.t$sqpd$c ) PAGTO
+        ON PAGTO.T$NCIA$C	=	ZNSLS004.T$NCIA$C
+       AND PAGTO.T$UNEG$C =	ZNSLS004.T$UNEG$C
+       AND PAGTO.T$PECL$C =	ZNSLS004.T$PECL$C
+      AND  PAGTO.T$SQPD$C =	ZNSLS004.T$SQPD$C
+      
 INNER JOIN	BAANDB.TCISLI940601	CISLI940	ON	CISLI940.T$FIRE$L	=	CISLI245.T$FIRE$L
 
 INNER JOIN (SELECT	E.T$FIRE$L,
