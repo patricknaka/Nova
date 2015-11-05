@@ -74,6 +74,7 @@ SELECT
       znmcs095.t$seri$c
   ELSE cisli940org.t$seri$l END NR_SERIE_NF_FATURA,
   cisli940dev.t$fire$l NR_REF_FISCAL_REMESSA,
+--  cisli940dev.t$fdty$l,
   SLI940DEV.STATUS     STATUS_REMESSA,   
 	cisli940dev.t$docn$l NR_NF_REMESSA,												-- NF devolução							
 	cisli940dev.t$seri$l NR_SERIE_NF_REMESSA,		
@@ -132,13 +133,15 @@ FROM
   INNER JOIN  baandb.ttdsls400601 tdsls400
   ON tdsls400.t$orno = znsls401dev.t$orno$c
   
-	INNER JOIN	baandb.tznsls401601 znsls401org								-- Pedido de venda original
+--	INNER JOIN	baandb.tznsls401601 znsls401org								-- Pedido de venda original
+  LEFT JOIN	baandb.tznsls401601 znsls401org
 			ON	znsls401org.t$pecl$c=znsls401dev.t$pvdt$c
 			AND	znsls401org.t$ncia$c=znsls401dev.t$ncia$c
 			AND	znsls401org.t$uneg$c=znsls401dev.t$uneg$c
 			AND	znsls401org.t$entr$c=znsls401dev.t$endt$c
 			AND	znsls401org.t$sequ$c=znsls401dev.t$sedt$c
-	INNER JOIN	baandb.tznsls400601 znsls400org
+--	INNER JOIN	baandb.tznsls400601 znsls400org
+  LEFT JOIN baandb.tznsls400601 znsls400org
 			ON	znsls400org.t$ncia$c=znsls401org.t$ncia$c
 			AND	znsls400org.t$uneg$c=znsls401org.t$uneg$c
 			AND	znsls400org.t$pecl$c=znsls401org.t$pecl$c
@@ -153,19 +156,23 @@ FROM
 	INNER JOIN	baandb.tcisli941601 cisli941dev
 			ON	cisli941dev.t$fire$l=cisli245dev.t$fire$l
 			AND	cisli941dev.t$line$l=cisli245dev.t$line$l
-	INNER JOIN 	baandb.tcisli245601 cisli245org								-- Rel ordem orig
+--	INNER JOIN 	baandb.tcisli245601 cisli245org								-- Rel ordem orig
+  LEFT JOIN 	baandb.tcisli245601 cisli245org
 			ON	cisli245dev.t$ortp=1
 			AND	cisli245dev.t$koor=3
 			AND	cisli245org.t$slso=znsls401org.t$orno$c
 			AND	cisli245org.t$pono=znsls401org.t$pono$c
-	INNER JOIN	baandb.tcisli940601 cisli940org
+--	INNER JOIN	baandb.tcisli940601 cisli940org
+  LEFT JOIN	baandb.tcisli940601 cisli940org
 			ON	cisli940org.t$fire$l=cisli245org.t$fire$l
 
-	INNER JOIN	baandb.tcisli941601 cisli941org
+--	INNER JOIN	baandb.tcisli941601 cisli941org
+    LEFT JOIN	baandb.tcisli941601 cisli941org
 			ON	cisli941org.t$fire$l=cisli245org.t$fire$l
 			AND	cisli941org.t$line$l=cisli245org.t$line$l
 			
-	INNER JOIN	baandb.ttccom130601 tccom130
+--	INNER JOIN	baandb.ttccom130601 tccom130
+    LEFT JOIN	baandb.ttccom130601 tccom130
 			ON	tccom130.t$cadr=cisli940org.t$stoa$l
 	LEFT JOIN	baandb.ttcmcs080601 tcmcs080
 			ON	tcmcs080.t$cfrw = cisli940org.t$cfrw$L			
@@ -223,3 +230,8 @@ FROM
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) SLI940DEV
         ON SLI940DEV.t$cnst = cisli940dev.t$stat$l        
+      
+where znsls401dev.t$qtve$c < 0 
+and   znsls401dev.t$idor$c = 'TD'
+
+--  where cisli940dev.t$fire$l = '000001771'
