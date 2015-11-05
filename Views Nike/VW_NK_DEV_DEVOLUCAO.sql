@@ -13,14 +13,22 @@ SELECT
   tdrec940rec.t$seri$l NR_SERIE_NF,						-- Serie NF rec. devolucção
 	tdrec940rec.t$opfc$l CD_NATUREZA_OPERACAO,
 	tdrec940rec.t$opor$l SQ_NATUREZA_OPERACAO,
-	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940org.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone 'America/Sao_Paulo') AS DATE) DT_FATURA,
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znmcs095.t$trdt$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
+  ELSE
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940org.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE) END DT_FATURA,
 	cisli940org.t$itbp$l CD_CLIENTE_FATURA,
 	cisli940org.t$stbp$l CD_CLIENTE_ENTREGA,
-	znsls401org.t$sequ$c SQ_ENTREGA,
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+    NULL
+	ELSE znsls401org.t$sequ$c END SQ_ENTREGA,
   CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN
       'Sim' ELSE 'Nao' END  PEDIDO_SIGE,
-	znsls401org.t$pecl$c NR_PEDIDO,
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+    ' '
+	ELSE znsls401org.t$pecl$c END   NR_PEDIDO,
 	(select znsls410.t$poco$c
 	FROM baandb.tznsls410601 znsls410
 	WHERE znsls410.t$ncia$c=znsls401dev.t$ncia$c
@@ -58,10 +66,16 @@ SELECT
 	cisli941dev.t$gexp$l VL_DESPESA,
 	cisli941dev.t$tldm$l VL_DESCONTO_INCONDICIONAL,															--#FAF.227.1.n
 	cisli941dev.t$amnt$l VL_TOTAL_ITEM,																		--#FAF.223.3.n
-	znsls401org.t$orno$c NR_PEDIDO_ORIGINAL,
-	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone 'America/Sao_Paulo') AS DATE) DT_PEDIDO,
-	znsls400org.t$idca$c CD_CANAL_VENDAS,
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+    ' '
+	ELSE znsls401org.t$orno$c END     NR_PEDIDO_ORIGINAL,
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+      NULL
+	ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone 'America/Sao_Paulo') AS DATE) END DT_PEDIDO,
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+    ' '
+	ELSE znsls400org.t$idca$c END   CD_CANAL_VENDAS,
 	tccom130.t$ftyp$l CD_TIPO_CLIENTE,
 	tccom130.t$ccit CD_CIDADE,
 	tccom130.t$ccty CD_PAIS,
@@ -113,10 +127,14 @@ SELECT
 					and a.t$sqpd$c=znsls401dev.t$sqpd$c
 					and a.t$entr$c=znsls401dev.t$entr$c
 					and a.t$sequ$c=znsls401dev.t$sequ$c),1)=0 THEN 1 ELSE 2 END ID_FORCADO,					--#FAF.140.en
-	to_char(znsls401org.t$entr$c) NR_ENTREGA_ORIGINAL,																--#FAF.227.3.sn
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+    ' '
+	ELSE to_char(znsls401org.t$entr$c) END NR_ENTREGA_ORIGINAL,																--#FAF.227.3.sn
 	to_char(znsls401dev.t$entr$c) NR_ENTREGA_DEVOLUCAO,																	
 	cisli941dev.t$cwar$l CD_ARMAZEM,
-	cisli940org.t$fire$l NR_REFERENCIA_FISCAL_FATURA,																		--#FAF.227.3.en
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+    ' '
+	ELSE cisli940org.t$fire$l END NR_REFERENCIA_FISCAL_FATURA,																		--#FAF.227.3.en
 	to_char(znsls401dev.t$ccat$c) CD_MOTIVO_CATEGORIA,																--#FAF.140.sn
 	to_char(znsls401dev.t$cass$c) CD_MOTIVO_ASSUNTO,
 	to_char(znsls401dev.t$cmot$c) CD_MOTIVO_ETIQUETA,
@@ -125,7 +143,9 @@ SELECT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_ORDEM_VENDA_DEVOLUCAO,
 	tcmcs080.t$suno			CD_PARCEIRO_TRANSPORTADORA_FAT,
-	cisli941org.t$refr$l 	NR_REFERENCIA_FISCAL
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+    ' '
+	ELSE cisli941org.t$refr$l END	  NR_REFERENCIA_FISCAL
          
 FROM
 				baandb.tznsls401601 znsls401dev								-- Pedido de devolução
@@ -201,7 +221,7 @@ FROM
 	ON q1.t$item = cisli941dev.t$item$l AND q1.t$cwar = cisli941dev.t$cwar$l
   
   LEFT JOIN baandb.tznmcs095601 znmcs095    --Pedidos Sige
-         ON znmcs095.t$sige$c = znsls401dev.t$entr$c
+         ON znmcs095.t$orno$c = znsls401dev.t$orno$c
   
    LEFT JOIN ( select l.t$desc STATUS,
                       d.t$cnst
