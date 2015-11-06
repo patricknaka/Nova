@@ -77,6 +77,7 @@ INNER JOIN baandb.tcisli940601 cisli940
        AND znsls430.t$sequ$c = znsls401.t$sequ$c
 
 WHERE znsls430.t$cosq$c IS NOT NULL
+  AND znsls401.t$IDOR$c = 'LJ'  --Vendas
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))
@@ -165,6 +166,7 @@ ORDER BY PEDIDO
 "        AND znsls430.t$sequ$c = znsls401.t$sequ$c  " &
 "  " &
 " WHERE znsls430.t$cosq$c IS NOT NULL  " &
+"   AND znsls401.t$IDOR$c = 'LJ'  " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c,  " &
 "               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "                 AT time zone 'America/Sao_Paulo') AS DATE))  " &
