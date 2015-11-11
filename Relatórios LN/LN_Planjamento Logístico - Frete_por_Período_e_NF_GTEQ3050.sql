@@ -3,7 +3,7 @@ SELECT
     znfmd630.t$fili$c    FILIAL,
     NVL(tcmcs031.t$dsca,
         'Pedido Interno')MARCA,  
-    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$date$c, 
+    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$date$c), 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                   AT time zone 'America/Sao_Paulo') AS DATE)
         from BAANDB.tznfmd640301 znfmd640_ETR
@@ -41,8 +41,8 @@ SELECT
          and znfmd640_ENT.t$coci$c = 'ENT')
                          DATA_ENTREGA,
     znsls400.t$idca$c    CANAL_VENDA,
-    CASE WHEN znfmd630.t$stat$c = 'F' 
-           THEN 'FECHADO' 
+    CASE WHEN znfmd630.t$stat$c = 'F' --HOMOLOGACAO ALTERAR PARA 0 (ZERO)
+           THEN 'FECHADO'
          ELSE 'ABERTO' 
      END                 SITUACAO_ENTREGA,  
     znfmd067.t$fate$c    FILIAL_TRANSPORTADORA,
