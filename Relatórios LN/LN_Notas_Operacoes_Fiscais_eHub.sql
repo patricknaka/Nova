@@ -8,25 +8,26 @@
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "      AT time zone 'America/Sao_Paulo') AS DATE)  " &
-"                              DATA_APROV,  " &
-"     tdrec940.t$fire$l        REFE_FISCAL,  " &
-"     tdrec940.t$stat$l        STAT_REFFISC,  " &
-"     DESC_DOMAIN_STAT.        DESC_STAT,  " &
-"     tdrec940.t$fovn$l        CNPJ_FORN,  " &
-"     tdrec940.t$fids$l        NOME_PARCE,  " &
-"     tdrec940.t$opfc$l        NUME_CFOP,  " &
-"     tdrec940.t$docn$l        NUME_NF,  " &
-"     tdrec940.t$seri$l        SERI_NF,  " &
-"     Trim(tdrec941.t$item$l)  COD_ITEM,  " &
-"     tdrec941.t$dsca$l        DSC_ITEM,  " &
-"     tdrec941.t$qnty$l        QTDE_ITEM,  " &
-"     tdrec940.t$tfda$l        VALO_TOTAL,  " &
-"     whinh300.t$recd$c        RECDOC_WMS,  " &
-"     tdrec940.t$lipl$l        PLAC_VEIC,  " &
-"     tdrec940.t$logn$l        CODE_USUA,  " &
-"     tdrec940.t$cnfe$l        CHAV_ACESS,  " &
-"     tdrec940.t$fdtc$l        COD_TIPO_DOCFIS,  " &
-"     tcmcs966.t$dsca$l        DESC_TIPO_DOCFIS  " &
+"                                 DATA_APROV,  " &
+"     tdrec940.t$fire$l           REFE_FISCAL,  " &
+"     tdrec940.t$stat$l           STAT_REFFISC,  " &
+"     DESC_DOMAIN_STAT.           DESC_STAT,  " &
+"     tdrec940.t$fovn$l           CNPJ_FORN,  " &
+"     tdrec940.t$fids$l           NOME_PARCE,  " &
+"     tdrec940.t$opfc$l           NUME_CFOP,  " &
+"     tdrec940.t$docn$l           NUME_NF,  " &
+"     tdrec940.t$seri$l           SERI_NF,  " &
+"     whinh301.t$item             COD_ITEM,  " &
+"     tdrec941.t$dsca$l           DSC_ITEM,  " &
+"     whinh301.t$rqua             QTDE_ITEM,  " &
+"     ROUND(whinh301.t$rqua *  " &
+"           tdrec941.t$pric$l, 4) VALO_TOTAL,  " &
+"     whinh300.t$recd$c           RECDOC_WMS,  " &
+"     tdrec940.t$lipl$l           PLAC_VEIC,  " &
+"     tdrec940.t$logn$l           CODE_USUA,  " &
+"     tdrec940.t$cnfe$l           CHAV_ACESS,  " &
+"     tdrec940.t$fdtc$l           COD_TIPO_DOCFIS,  " &
+"     tcmcs966.t$dsca$l           DESC_TIPO_DOCFIS  " &
 "  " &
 " FROM       baandb.ttdrec940" + Parameters!Compania.Value + "    tdrec940  " &
 "  " &
@@ -35,6 +36,10 @@
 "  " &
 "  LEFT JOIN baandb.twhinh300" + Parameters!Compania.Value + "    whinh300  " &
 "         ON whinh300.t$fire$c = tdrec940.t$fire$l  " &
+"  " &
+"  LEFT JOIN baandb.twhinh301" + Parameters!Compania.Value + "    whinh301  " &
+"         ON whinh301.t$sfbp = whinh300.t$sfbp  " &
+"        AND whinh301.t$shid = whinh300.t$shid  " &
 "  " &
 " INNER JOIN baandb.ttccom130" + Parameters!Compania.Value + "    tccom130  " &
 "         ON tccom130.t$cadr = tdrec940.t$sfra$l  " &
