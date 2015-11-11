@@ -54,8 +54,10 @@ SELECT
 		AND znsls410.t$sqpd$c=znsls401dev.t$sqpd$c
 		AND znsls410.t$entr$c=znsls401dev.t$entr$c) DT_STATUS,									--#FAF.227.2
 	tdrec940rec.t$rfdt$l CD_TIPO_NF,
+  
 	tdrec940rec.t$fire$l NR_REFERENCIA_FISCAL_DEVOLUCAO,										-- Ref. Fiscal recebimento devolção
-	ltrim(rtrim(znsls401dev.t$item$c)) CD_ITEM,
+	
+  ltrim(rtrim(znsls401dev.t$item$c)) CD_ITEM,
 	znsls401dev.t$qtve$c QT_DEVOLUCAO,
 	(SELECT a.t$amnt$l FROM baandb.tcisli943601 a
 	WHERE a.t$fire$l=cisli941dev.t$fire$l
@@ -81,17 +83,75 @@ SELECT
 	tccom130.t$ccty CD_PAIS,
 	tccom130.t$cste CD_ESTADO,
 	q1.mauc VL_CMV,
+  
+  CASE WHEN cisli940org.t$fdty$l = 15 THEN    --Remessa para presente
+      cisli940rem_fat.t$fire$l          --Fatura para presente
+  ELSE  cisli940org.t$fire$l END    NR_REF_FISCAL_FATURA,
+  
   CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
       znmcs095.t$docn$c     
-	ELSE cisli940org.t$docn$l END NR_NF_FATURA,												-- NF fatura entrega org
-  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
+	ELSE
+      CASE WHEN cisli940org.t$fdty$l = 15 THEN  --Remessa para presente
+          cisli940rem_fat.t$docn$l    --fatura para presente
+      ELSE
+          cisli940org.t$docn$l 
+      END 
+  END                               NR_NF_FATURA,						 -- NF fatura entrega org
+  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN               --Pedido SIGE
       znmcs095.t$seri$c
-  ELSE cisli940org.t$seri$l END NR_SERIE_NF_FATURA,
-  cisli940dev.t$fire$l NR_REF_FISCAL_REMESSA,
---  cisli940dev.t$fdty$l,
-  SLI940DEV.STATUS     STATUS_REMESSA,   
-	cisli940dev.t$docn$l NR_NF_REMESSA,												-- NF devolução							
-	cisli940dev.t$seri$l NR_SERIE_NF_REMESSA,		
+  ELSE 
+      CASE WHEN cisli940org.t$fdty$l = 15 THEN    --Remessa para presente
+          cisli940rem_fat.t$seri$l    --fatura para presente
+      ELSE
+          cisli940org.t$seri$l 
+      END 
+  END                               NR_SERIE_NF_FATURA,
+  
+  CASE WHEN cisli940org.t$fdty$l = 15 THEN        --Remessa para Presente
+      cisli940org.t$fire$l
+  ELSE
+      CASE WHEN cisli940org.t$fdty$l = 16 THEN
+        cisli940rem_fat.t$fire$l    --Remessa para presente
+      ELSE
+        NULL
+      END
+  END                                NR_REF_FISCAL_REMESSA,
+  
+  CASE WHEN cisli940org.t$fdty$l = 15 THEN        --Remessa para Presente
+      SLI940_ORG.STATUS
+  ELSE
+      CASE WHEN cisli940org.t$fdty$l = 16 THEN
+        SLI940_REM_FAT.STATUS    --remessa para presente
+      ELSE
+        NULL
+      END
+  END                                STATUS_REMESSA,
+  
+  CASE WHEN cisli940org.t$fdty$l = 15 THEN        --Remessa para Presente
+      cisli940org.t$docn$l
+  ELSE
+      CASE WHEN cisli940org.t$fdty$l = 16 THEN    --Fatura presente
+        cisli940rem_fat.t$docn$l  --remessa para presente
+      ELSE
+        NULL
+      END
+  END                                NR_NF_REMESSA,
+  
+  CASE WHEN cisli940org.t$fdty$l = 15 THEN        --Remessa para Presente
+      cisli940org.t$seri$l
+  ELSE
+      CASE WHEN cisli940org.t$fdty$l = 16 THEN
+        cisli940rem_fat.t$seri$l    --remessa para presente
+      ELSE
+        NULL
+      END
+  END                                NR_SERIE_NF_REMESSA,
+  
+--  cisli940dev.t$fire$l NR_REF_FISCAL_REMESSA,
+--  SLI940DEV.STATUS     STATUS_REMESSA,   
+--	cisli940dev.t$docn$l NR_NF_REMESSA,												-- NF devolução							
+--	cisli940dev.t$seri$l NR_SERIE_NF_REMESSA,
+  
 	(SELECT a.t$amnt$l FROM baandb.tcisli943601 a
 	WHERE a.t$fire$l=cisli941dev.t$fire$l
 	AND a.t$line$l=cisli941dev.t$line$l
@@ -132,9 +192,17 @@ SELECT
 	ELSE to_char(znsls401org.t$entr$c) END NR_ENTREGA_ORIGINAL,																--#FAF.227.3.sn
 	to_char(znsls401dev.t$entr$c) NR_ENTREGA_DEVOLUCAO,																	
 	cisli941dev.t$cwar$l CD_ARMAZEM,
+  
   CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
     ' '
-	ELSE cisli940org.t$fire$l END NR_REFERENCIA_FISCAL_FATURA,																		--#FAF.227.3.en
+	ELSE 
+    CASE WHEN cisli940org.t$fdty$l = 15 THEN    --Remessa para presente
+      cisli940rem_fat.t$fire$l    --Fatura para presente
+    ELSE
+      cisli940org.t$fire$l 
+    END 
+  END                 NR_REFERENCIA_FISCAL_FATURA,																	--#FAF.227.3.en
+  
 	to_char(znsls401dev.t$ccat$c) CD_MOTIVO_CATEGORIA,																--#FAF.140.sn
 	to_char(znsls401dev.t$cass$c) CD_MOTIVO_ASSUNTO,
 	to_char(znsls401dev.t$cmot$c) CD_MOTIVO_ETIQUETA,
@@ -143,10 +211,11 @@ SELECT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_ORDEM_VENDA_DEVOLUCAO,
 	tcmcs080.t$suno			CD_PARCEIRO_TRANSPORTADORA_FAT,
-  CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
-    ' '
-	ELSE cisli941org.t$refr$l END	  NR_REFERENCIA_FISCAL
-         
+  
+-- cisli941org.t$refr$l 	  NR_REFERENCIA_FISCAL
+   cisli941dev.t$fire$l  	  NR_REFERENCIA_FISCAL,
+   SLI940DEV.STATUS         STATUS_REF_FISCAL_DEV
+   
 FROM
 				baandb.tznsls401601 znsls401dev								-- Pedido de devolução
    
@@ -160,28 +229,34 @@ FROM
 			AND	znsls401org.t$uneg$c=znsls401dev.t$uneg$c
 			AND	znsls401org.t$entr$c=znsls401dev.t$endt$c
 			AND	znsls401org.t$sequ$c=znsls401dev.t$sedt$c
+      
 --	INNER JOIN	baandb.tznsls400601 znsls400org
   LEFT JOIN baandb.tznsls400601 znsls400org
 			ON	znsls400org.t$ncia$c=znsls401org.t$ncia$c
 			AND	znsls400org.t$uneg$c=znsls401org.t$uneg$c
 			AND	znsls400org.t$pecl$c=znsls401org.t$pecl$c
 			AND	znsls400org.t$sqpd$c=znsls401org.t$sqpd$c
+      
 	INNER JOIN 	baandb.tcisli245601 cisli245dev								-- Rel Devolução
 			ON	cisli245dev.t$ortp=1
 			AND	cisli245dev.t$koor=3
 			AND	cisli245dev.t$slso=znsls401dev.t$orno$c
 			AND	cisli245dev.t$pono=znsls401dev.t$pono$c
+      
 	INNER JOIN	baandb.tcisli940601 cisli940dev
 			ON	cisli940dev.t$fire$l=cisli245dev.t$fire$l
+      
 	INNER JOIN	baandb.tcisli941601 cisli941dev
 			ON	cisli941dev.t$fire$l=cisli245dev.t$fire$l
 			AND	cisli941dev.t$line$l=cisli245dev.t$line$l
+      
 --	INNER JOIN 	baandb.tcisli245601 cisli245org								-- Rel ordem orig
   LEFT JOIN 	baandb.tcisli245601 cisli245org
 			ON	cisli245dev.t$ortp=1
 			AND	cisli245dev.t$koor=3
 			AND	cisli245org.t$slso=znsls401org.t$orno$c
 			AND	cisli245org.t$pono=znsls401org.t$pono$c
+      
 --	INNER JOIN	baandb.tcisli940601 cisli940org
   LEFT JOIN	baandb.tcisli940601 cisli940org
 			ON	cisli940org.t$fire$l=cisli245org.t$fire$l
@@ -195,19 +270,24 @@ FROM
     LEFT JOIN	baandb.ttccom130601 tccom130
 			ON	tccom130.t$cadr=cisli940org.t$stoa$l
 	LEFT JOIN	baandb.ttcmcs080601 tcmcs080
-			ON	tcmcs080.t$cfrw = cisli940org.t$cfrw$L			
+			ON	tcmcs080.t$cfrw = cisli940org.t$cfrw$L
+      
 	LEFT JOIN	baandb.ttdsls406601 tdsls406rec								-- Rec da devolução
 			ON	tdsls406rec.t$orno=znsls401dev.t$orno$c
 			AND	tdsls406rec.t$pono=znsls401dev.t$pono$c
+      
 	LEFT JOIN	baandb.ttdrec947601 tdrec947rec
 			ON	tdrec947rec.t$oorg$l=1
 			AND	tdrec947rec.t$orno$l=znsls401dev.t$orno$c
 			AND	tdrec947rec.t$pono$l=znsls401dev.t$pono$c
+      
 	LEFT JOIN	baandb.ttdrec940601 tdrec940rec
 			ON	tdrec940rec.t$fire$l=tdrec947rec.t$fire$l
+      
 	LEFT JOIN	baandb.ttdrec941601 tdrec941rec
 			ON	tdrec941rec.t$fire$l=tdrec947rec.t$fire$l
 			AND	tdrec941rec.t$line$l=tdrec947rec.t$line$l
+      
 	LEFT JOIN ( SELECT 
 				 whwmd217.t$item,
 				 whwmd217.t$cwar,
@@ -248,10 +328,84 @@ FROM
                                            from baandb.tttadv140000 l1 
                                           where l1.t$clab = l.t$clab 
                                             and l1.t$clan = l.t$clan 
-                                            and l1.t$cpac = l.t$cpac ) ) SLI940DEV
+                                            and l1.t$cpac = l.t$cpac ) ) SLI940DEV  --Status Nota Devolução
         ON SLI940DEV.t$cnst = cisli940dev.t$stat$l        
-      
+  
+     LEFT JOIN ( select l.t$desc STATUS,
+                      d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'ci'
+                and d.t$cdom = 'sli.stat'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'ci'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) SLI940_ORG   --Status Nota Venda
+        ON SLI940_ORG.t$cnst = cisli940org.t$stat$l        
+        
+  LEFT JOIN ( select  a.t$fire$l  REF_FIS,
+                      a.t$refr$l,
+                      b.t$fire$l,
+                      b.t$docn$l,
+                      b.t$seri$l,
+                      b.t$stat$l
+              from    baandb.tcisli941601 a 
+              
+              inner join baandb.tcisli940601  b 
+                      on b.t$fire$l = a.t$refr$l 
+                         
+              group by a.t$fire$l,
+                       a.t$refr$l,
+                       b.t$fire$l,
+                       b.t$docn$l,
+                       b.t$seri$l,
+                       b.t$stat$l
+                                      ) cisli940rem_fat
+         ON cisli940rem_fat.REF_FIS = cisli940org.t$fire$l
+         
+   LEFT JOIN ( select l.t$desc STATUS,
+                      d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'ci'
+                and d.t$cdom = 'sli.stat'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'ci'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) SLI940_REM_FAT   --Status Remessa/Fatura
+        ON SLI940_REM_FAT.t$cnst = cisli940rem_fat.t$stat$l        
+        
 where znsls401dev.t$qtve$c < 0 
 and   znsls401dev.t$idor$c = 'TD'
-
---  where cisli940dev.t$fire$l = '000001771'
