@@ -296,7 +296,7 @@ SELECT DISTINCT
   ''                       EMPRESA,                                 --40
   cisli940.t$cnfe$l         CHAVE_NFE,                               --41
   cisli940.t$prot$l         PROTOCOLO_AUTORIZACAO_NFE,               --42
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(DT_NFE_FAT.AUTORIZADA, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_AUTORIZACAO_NFE,                    --43
   ''                       GERAR_AUTOMATICO,                        --44
