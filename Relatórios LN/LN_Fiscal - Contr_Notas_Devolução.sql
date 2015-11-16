@@ -16,8 +16,8 @@ SELECT
     cisli940.t$itbn$l                             NOME_PARCEI,
     tccom130.t$cste                               UF_PARCEI,
     cisli940.t$amnt$l                             VALO_NFD,
-    Usuario.t$logn$c                              USUARIO,
-    NOME_USUARIO.t$name                           NOME_USUARIO,
+    NVL(Usuario.t$logn$c, Log_Nfd.t$logn$c)       USUARIO,
+    NVL(NOME_USUARIO.t$name, Nfd_user.t$name)     NOME_USUARIO,
     cisli940.t$cnfe$l                             CHAVE_NFD,
     cisli940.t$stat$l                             STATUS, iTABLE.DESC_STAT,
     cisli940.t$fire$l                             REF_FISCAL,
@@ -43,15 +43,20 @@ SELECT
                                              
     tdrec940.t$logn$l                             USER_REC,
     cisli940d.t$stat$l                            STATUS_NFD,
-    DESCR_STATUS_NFD.DS_SITUACAO_NF               DESCR_STATUS_NFD
-  
+    DESCR_STATUS_NFD.DS_SITUACAO_NF               DESCR_STATUS_NFD,
+    Log_Nfe_P_WMS.t$logn$c                        PRONTO_PARA_ENVIAR_WMS,
+    Nfe_User_P_WMS.t$name                         NOME_PRONTO_ENVIAR_WMS,
+    Log_Nfe_A_WMS.t$logn$c                        AGUARDANDO_WMS,
+    Nfe_User_A_WMS.t$name                         NOME_AGUARDANDO_WMS,
+    Log_Nfe_AP.t$logn$c                           APROVADO    --Já grava o login da rede
+--    Nfe_User_AP.t$name                            NOME_APROVADO
+    
 FROM       baandb.tcisli245301  cisli245       
  
-
 INNER JOIN baandb.tcisli940301  cisli940
         ON cisli940.t$fire$l = cisli245.t$fire$l
 
-INNER JOIN baandb.ttdsls401301  tdsls401
+INNER JOIN baandb.ttdsls401301     tdsls401
         ON tdsls401.t$orno   = cisli245.t$slso
        AND tdsls401.t$pono   = cisli245.t$pono
  
@@ -227,7 +232,69 @@ INNER JOIN baandb.ttccom130301 tccom130B
                     ttaad200.t$name
                from baandb.tttaad200000 ttaad200 ) NOME_USUARIO
         ON NOME_USUARIO.t$user = Usuario.t$logn$c
+    
+ LEFT JOIN ( SELECT a.t$fire$c,
+                    a.t$stfa$c,
+                    a.t$nfes$c,
+                    a.t$logn$c
+               FROM baandb.tznnfe011301 a ) Log_Nfd
+        ON Log_Nfd.t$fire$c = cisli940.t$fire$l
+       AND Log_Nfd.t$stfa$c = 5   --Impressa
+       AND Log_Nfd.t$nfes$c = 2   --Transmitida
+       
+ LEFT JOIN ( select ttaad200.t$user,
+                    ttaad200.t$name
+               from baandb.tttaad200000 ttaad200 ) Nfd_User
+        ON Nfd_User.t$user = Log_Nfd.t$logn$c
         
+ LEFT JOIN ( SELECT a.t$fire$c,
+                    a.t$stre$c,
+                    a.t$logn$c,
+                    max(a.t$data$c)
+               FROM baandb.tznnfe011301 a
+               GROUP BY a.t$fire$c,
+                        a.t$stre$c,
+                        a.t$logn$c ) Log_Nfe_P_WMS
+        ON Log_Nfe_P_WMS.t$fire$c = tdrec940.t$fire$l
+       AND Log_Nfe_P_WMS.t$stre$c = 201   --Pronto para enviar para WMS
+       
+ LEFT JOIN ( select ttaad200.t$user,
+                    ttaad200.t$name
+               from baandb.tttaad200000 ttaad200 ) Nfe_User_P_WMS
+        ON Nfe_User_P_WMS.t$user = Log_Nfe_P_WMS.t$logn$c
+        
+LEFT JOIN ( SELECT a.t$fire$c,
+                    a.t$stre$c,
+                    a.t$logn$c,
+                    max(a.t$data$c)
+               FROM baandb.tznnfe011301 a
+               GROUP BY a.t$fire$c,
+                        a.t$stre$c,
+                        a.t$logn$c ) Log_Nfe_A_WMS
+        ON Log_Nfe_A_WMS.t$fire$c = tdrec940.t$fire$l
+       AND Log_Nfe_A_WMS.t$stre$c = 200   --Aguardando WMS
+       
+ LEFT JOIN ( select ttaad200.t$user,
+                    ttaad200.t$name
+               from baandb.tttaad200000 ttaad200 ) Nfe_User_A_WMS
+        ON Nfe_User_A_WMS.t$user = Log_Nfe_A_WMS.t$logn$c
+        
+LEFT JOIN ( SELECT a.t$fire$c,
+                    a.t$stre$c,
+                    a.t$logn$c,
+                    max(a.t$data$c)
+               FROM baandb.tznnfe011301 a
+               GROUP BY a.t$fire$c,
+                        a.t$stre$c,
+                        a.t$logn$c ) Log_Nfe_AP
+        ON Log_Nfe_AP.t$fire$c = tdrec940.t$fire$l
+       AND Log_Nfe_AP.t$stre$c = 4   --Aprovado
+
+-- LEFT JOIN ( select ttaad200.t$user,
+--                    ttaad200.t$name
+--               from baandb.tttaad200000 ttaad200 ) Nfe_User_AP
+--        ON Nfe_User_AP.t$user = Log_Nfe_AP.t$logn$c
+
 WHERE cisli940.t$fdty$l = 14
   AND tcemm124.t$dtyp = 1
 
