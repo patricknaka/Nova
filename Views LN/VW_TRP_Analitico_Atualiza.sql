@@ -1,8 +1,8 @@
-﻿select distinct
+﻿SELECT distinct
       znfmd630.t$pecl$c NR_ENTREGA,
       (select min(o.t$date$c) from baandb.tznfmd640201 o
 			where o.t$coci$c='ent'and o.t$etiq$c=znfmd630.t$etiq$c) DT_ENTREGA_REALIZADA,
-      case when znfmd630.t$stat$c='f' then 'FINALIZADO' else 'EM PROCESSO' end NM_TIPO_ESTAGIO,
+      case when to_char(znfmd630.t$stat$c) ='f' then 'FINALIZADO' else 'EM PROCESSO' end NM_TIPO_ESTAGIO,
       (select o.t$coci$c from baandb.tznfmd640201 o
 			where o.t$date$c=(select max(o1.t$date$c) from baandb.tznfmd640201 o1 where o1.t$etiq$c=o.t$etiq$c)
 			and o.t$etiq$c=znfmd630.t$etiq$c and rownum=1) CD_OCORRENCIA_INTERNA,
