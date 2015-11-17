@@ -22,8 +22,9 @@ SELECT
 		ICMS_ST.T$RATE$L														ALIQUOTA,
     tcibd001.t$mdfb$c                           MOD_FABR_ITEM,
     CASE WHEN cisli940.t$stat$l = 2 THEN
-        'C' ELSE ' ' END                        CANCELADA
-
+        'C' ELSE ' ' END                        CANCELADA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		AT time zone 'America/Sao_Paulo') AS DATE)    DATA_INCLUSAO
 
 FROM
 		(	SELECT	A.T$FIRE$L,
@@ -101,6 +102,12 @@ LEFT JOIN baandb.tznsls000601 znsls000
 
 INNER JOIN baandb.ttcibd001602  tcibd001
         ON tcibd001.t$item = cisli941.t$item$l
+
+INNER JOIN	BAANDB.TZNSLS400602	ZNSLS400	
+        ON	ZNSLS400.T$NCIA$C	=	ZNSLS004.T$NCIA$C
+       AND  ZNSLS400.T$UNEG$C	=	ZNSLS004.T$UNEG$C
+       AND  ZNSLS400.T$PECL$C	=	ZNSLS004.T$PECL$C
+       AND  ZNSLS400.T$SQPD$C	=	ZNSLS004.T$SQPD$C
         
 WHERE cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE 
   AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
