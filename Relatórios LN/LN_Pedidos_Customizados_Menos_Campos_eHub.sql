@@ -1,5 +1,3 @@
-=
-
 SELECT
 
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c,
@@ -17,12 +15,18 @@ SELECT
 
   znsls401.t$item$c       ITEM,
   tcibd001.t$dscb$c       ITEM_NOME,
+  ( select sum(znsls401.t$qtve$c)
+      from baandb.tznsls401601 sls401
+     where sls401.t$pecl$c = znsls401.t$pecl$c
+       and sls401.t$item$c = znsls401.t$item$c )
+                          QTDE_ITEM,
   tcibd001.t$mdfb$c       CODIGO_FORNECEDOR,
   tcmcs023.t$dsca         DEPARTAMENTO,
 
   znsls430.t$coit$c       CODE_ITEM_CUSTOMIZADO,
   znsls430.t$codc$c       DESC_ITEM_CUSTOMIZADO,
   znsls430.t$coqt$c       QTDE_CUSTOMIZADO
+
 
 FROM  baandb.tznsls401601 znsls401
 
@@ -77,16 +81,18 @@ INNER JOIN baandb.tcisli940601 cisli940
        AND znsls430.t$sequ$c = znsls401.t$sequ$c
 
 WHERE znsls430.t$cosq$c IS NOT NULL
-  AND znsls401.t$IDOR$c = 'LJ'  --Vendas
+  AND znsls401.t$IDOR$c = 'LJ'
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataEmissaoDe
           And :DataEmissaoAte
 
-ORDER BY PEDIDO
+ORDER BY PEDIDO 
 
 
+
+=
 
 " SELECT  " &
 "  " &
@@ -105,6 +111,11 @@ ORDER BY PEDIDO
 "  " &
 "   znsls401.t$item$c       ITEM,  " &
 "   tcibd001.t$dscb$c       ITEM_NOME,  " &
+"   ( select sum(znsls401.t$qtve$c)  " &
+"       from baandb.tznsls401601 sls401  " &
+"      where sls401.t$pecl$c = znsls401.t$pecl$c  " &
+"        and sls401.t$item$c = znsls401.t$item$c )  " &
+"                           QTDE_ITEM,  " &
 "   tcibd001.t$mdfb$c       CODIGO_FORNECEDOR,  " &
 "   tcmcs023.t$dsca         DEPARTAMENTO,  " &
 "  " &
