@@ -15,7 +15,7 @@ SELECT
   WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
   AND tcemm030.t$eunt=tcemm124.t$grid
   AND tcemm124.t$loco=201
-  AND rownum=1) = ' ' THEN NULL ELSE (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
+  AND rownum=1) = ' ' THEN '0' ELSE (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
   WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
   AND tcemm030.t$eunt=tcemm124.t$grid
   AND tcemm124.t$loco=201

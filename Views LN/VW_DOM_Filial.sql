@@ -1,24 +1,22 @@
--- 	#FAF.054 - 26-mai-2014, Fabio Ferreira, 	Incluída a descrição da contabilidade
---	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ						
---*************************************************************************************************************************************************************
-SELECT  cast(case when tcemm030.t$euca = ' ' then  substr(tcemm030.T$EUNT,5,2) else tcemm030.t$euca end as int) CD_FILIAL,
-        --tcemm030.t$lcmp CD_CIA,
-  1 CD_CIA,
+SELECT  
+        cast(case when tcemm030.t$euca = ' ' 
+          then  substr(tcemm030.T$EUNT,5,2) else tcemm030.t$euca end as int) CD_FILIAL,
+        1 CD_CIA,
         tcemm030.t$dsca NM_FILIAL,
-		
+        
         CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
-		THEN '00000000000000' 
-		WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
-		THEN '00000000000000'
-		ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') END  NR_CNPJ_FILIAL,							--#FAF.151.n
-		
---        tccom130.t$fovn$l NR_CNPJ_FILIAL,																	--#FAF.151.o
+        THEN '00000000000000' 
+        WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
+        THEN '00000000000000'
+        ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') END  NR_CNPJ_FILIAL,							--#FAF.151.n
+        
         tcemm030.T$EUNT CD_UNIDADE_EMPRESARIAL,
         tfgld010.t$desc DS_FILIAL,
         tccom100.t$bpid CD_PARCEIRO,
         ttccom139.t$dsca DS_MUNICIPIO,
         ttcmcs010.t$dsca DS_PAIS,
         ttccom139.t$cste CD_UF
+
 FROM    baandb.ttcemm030201 tcemm030
         LEFT JOIN baandb.ttcemm122201 tcemm122
         ON      tcemm122.t$grid=tcemm030.t$eunt
@@ -34,4 +32,8 @@ FROM    baandb.ttcemm030201 tcemm030
         ON tccom130.t$ccit = ttccom139.t$city
         LEFT JOIN baandb.ttcmcs010201 ttcmcs010
         ON ttccom139.t$ccty = ttcmcs010.t$ccty
+
+--somente Nova Pontocom
+where tcemm030.t$lcmp = 201
+
 ORDER BY 5,1
