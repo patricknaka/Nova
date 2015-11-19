@@ -2,7 +2,7 @@ SELECT
   ORDERS.WHSEID         PLANTA,                                          
   CL.UDF2               DESC_PLANTA,                                     
   ORDERS.ORDERKEY       PEDIDO,                                          
-  ORDERS.INVOICENUMBER  NF,                                              
+  NVL(ORDERS.INVOICENUMBER, CISLI940.T$DOCN$L)  NF,                                              
   ORDERS.LANE           SR,                                              
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,                  
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         
@@ -46,7 +46,7 @@ LEFT JOIN BAANDB.tcisli940301@pln01 CISLI940
       AND CISLI940.T$DOCN$L != 0
       AND CISLI940.T$FDTY$L != 11
 	
-WHERE TO_CHAR(ORDERS.INVOICENUMBER) != '0'
+WHERE ( TO_CHAR(ORDERS.INVOICENUMBER) != '0' OR cisli940.t$fire$l != ' ' )
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE))
