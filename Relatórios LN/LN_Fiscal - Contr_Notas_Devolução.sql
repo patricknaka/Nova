@@ -78,8 +78,19 @@ INNER JOIN baandb.ttdsls401301     tdsls401
 INNER JOIN baandb.ttdsls400301  tdsls400
         ON tdsls400.t$orno = tdsls401.t$orno
     
-LEFT JOIN baandb.ttdrec947301  tdrec947
-        ON tdrec947.t$ncmp$l = 301 
+LEFT JOIN (   select  a.t$ncmp$l,
+                      a.t$oorg$l,
+                      a.t$orno$l,
+                      a.t$pono$l,
+                      a.t$seqn$l,
+                      max(a.t$fire$l) t$fire$l
+              from baandb.ttdrec947301  a 
+              group by a.t$ncmp$l,
+                      a.t$oorg$l,
+                      a.t$orno$l,
+                      a.t$pono$l,
+                      a.t$seqn$l ) tdrec947
+        ON tdrec947.t$ncmp$l = 301
        AND tdrec947.t$oorg$l = 1
        AND tdrec947.t$orno$l = tdsls401.t$orno
        AND tdrec947.t$pono$l = tdsls401.t$pono
