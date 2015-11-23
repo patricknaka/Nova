@@ -76,11 +76,13 @@ FROM       baandb.ttfgld106301  tfgld106
  LEFT JOIN ( select distinct 
                     a.t$dim2 COD_FILIAL,
                     a.t$otyp,
-                    a.t$odoc
+                    a.t$odoc,
+                    a.t$leac
                from baandb.ttfgld106301 a
               where a.t$dim2 !=  ' ' ) Filial
         ON Filial.t$otyp = tfgld106.t$otyp
        AND Filial.t$odoc = tfgld106.t$odoc
+       AND Filial.t$leac = tfgld106.t$leac
        
 INNER JOIN baandb.ttfgld100301 tfgld100
         ON tfgld100.t$year = tfgld106.t$oyer 
