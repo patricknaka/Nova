@@ -8,6 +8,7 @@
 -- #FAF.089 - 28-mai-2014,	Fabio Ferreira,	NUN_TERMINAL convertido em String
 -- #FAF.088 - 28-mai-2014,	Fabio Ferreira, conversão de timezone no campo DT_APROVACAO_PAGAMENTO_ERP 
 -- #FAF.317 - 03-sep-2014,	Fabio Ferreira, VL_PAGAMENTO calculado com base no valor da entrega
+-- 26/11/2015 - Rosana Prignolato - tratamento para divisão por zeros
 --***************************************************************************************************************************************************************
 select
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -22,7 +23,8 @@ select
     CASE WHEN (znsls402.t$idmp$c = 4) THEN 0 ELSE znsls402.t$idbc$c END CD_BANCO,
     znsls402.t$nupa$c  NR_PARCELA,
     -- abs(znsls402.t$vlmr$c)  VL_PAGAMENTO,																						--#FAF.317.o
-	cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlmr$c as numeric(12,2)) VL_PAGAMENTO,														--#FAF.317.n																							--#FAF.317.n
+    case when sls401p.VL_PGTO_PED = 0 then 0 
+      else cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlmr$c as numeric(12,2)) end  VL_PAGAMENTO,														--#FAF.317.n																							--#FAF.317.n
     znsls402.t$stat$c  CD_STATUS_PAGAMENTO,
 	CASE WHEN (znsls402.t$idmp$c = 4 and znsls400.t$idli$c!=0) THEN 1 ELSE 2 END IN_VALE_LISTA_CASAMENTO,							--#FAF.049.n
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -31,7 +33,8 @@ select
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE) DT_APROVACAO,
     znsls402.t$valo$c  VL_ORIGINAL,
-    cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlja$c as numeric(12,2))  VL_JUROS_ADMINISTRADORA,
+  case when sls401p.VL_PGTO_PED = 0 then 0
+    else cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlja$c as numeric(12,2)) end VL_JUROS_ADMINISTRADORA,
     CASE WHEN znsls402.t$vlja$c!=0 THEN 1
 	ELSE 2
 	END IN_JUROS_ADMINISTRADORA,
@@ -40,7 +43,8 @@ select
     AT time zone 'America/Sao_Paulo') AS DATE)
 	from baandb.ttdsls451201 a
     where a.t$orno=tdsls400.t$orno) DT_APROVACAO_PAGAMENTO_ERP,
-    cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c  as numeric(12,2))  VL_JUROS,
+  case when sls401p.VL_PGTO_PED = 0 then 0 
+    else cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c  as numeric(12,2)) end  VL_JUROS,
     ' ' CD_CICLO_PAGAMENTO,            -- *** NÃO EXISTE ESTA INFORMAÇÃO NO LN / PENDENTE DE DUVIDA ***
     znsls402.t$cone$c  NR_TABELA_NEGOCIACAO,
     znsls402.t$ncam$c  NR_BIN_CARTAO_CREDITO,

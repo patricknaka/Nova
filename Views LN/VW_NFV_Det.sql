@@ -269,8 +269,18 @@ SELECT DISTINCT
 	CASE WHEN (cisli941.t$sour$l=2 or cisli941.t$sour$l=8) THEN cisli941.t$fght$l
 	ELSE 0 END VL_CIF_IMPORTACAO,
 --	CAST((FROM_TZ(CAST(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 'DD-MON-YYYY HH:MI:SS AM') AS TIMESTAMP), 'GMT') --#MAT.001.o
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli941.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
+--  instrução original
+--    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli941.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
+	GREATEST(																									--#FAF.286.sn
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT time zone 'America/Sao_Paulo') AS DATE),
+	nvl((select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(c1.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT time zone 'America/Sao_Paulo') AS DATE) from baandb.tcisli941201 c1 
+			where c1.t$fire$l=cisli940.t$fire$l), TO_DATE('01-JAN-1970', 'DD-MON-YYYY')),
+	nvl((select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(c2.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+			AT time zone 'America/Sao_Paulo') AS DATE) from baandb.tcisli943201 c2 
+			where c2.t$fire$l=cisli940.t$fire$l), TO_DATE('01-JAN-1970', 'DD-MON-YYYY'))) DT_ULT_ATUALIZACAO,		--#FAF.286.en
 	tcemm124.t$grid CD_UNIDADE_EMPRESARIAL,
 	cisli941.t$fire$l NR_REFERENCIA_FISCAL,				--#FAF.109.n
 	-- (SELECT cisli943.t$sbas$l FROM baandb.tcisli943201 cisli943									--#FAF.302.so
@@ -356,4 +366,5 @@ WHERE
 --	AND cisli245.t$pono=tdsls401.t$pono
 --	AND cisli245.t$sqnb=tdsls401.t$sqnb																--#FAF.247.eo
   AND tcibd001.t$item=cisli941.t$item$l
-  AND tcibd001.t$ctyp$l!=2
+--  AND tcibd001.t$ctyp$l!=2
+  AND tcibd001.t$ctyp$l not in (2,4) --juros estabelecimento, frete e outras despesas
