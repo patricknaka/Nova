@@ -463,10 +463,10 @@ FROM  baandb.tcisli940601  cisli940
            ON cisli959.t$rscd$l = cisli940.t$rscd$l
 
     LEFT JOIN baandb.ttccom130601 tccom130entr
-           ON tccom130entr.t$cadr = cisli940.t$itoa$l
+           ON tccom130entr.t$cadr = cisli940.t$stoa$l
 
     LEFT JOIN baandb.ttccom130601 tccom130fat
-           ON tccom130fat.t$cadr = cisli940.t$stoa$l
+           ON tccom130fat.t$cadr = cisli940.t$itoa$l
 
     LEFT JOIN baandb.ttccom139301  tccom139entr
            ON tccom139entr.t$ccty = tccom130entr.t$ccty
