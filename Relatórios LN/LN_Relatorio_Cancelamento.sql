@@ -46,30 +46,41 @@ SELECT
     END                    DT_RETORNO_REMESSA,
     zncmg015.t$rcod$c      COD_RETORNO,
     zncmg019.t$dsca$c      DESC_COD_RETORNO,
-    NVL(znsls409.LIBERADO, 'Não') LIBERADO
-  
-FROM       baandb.tznsls402301 znsls402
+--    NVL(znsls409.LIBERADO, 'Não') LIBERADO
+    CASE WHEN znsls409.t$dved$c = 1 OR znsls409.t$lbrd$c = 1 THEN
+      'Sim' 
+    ELSE 
+      CASE WHEN znsls410.PT_CONTR = 'CAN' OR 
+                znsls410.PT_CONTR = 'AES' OR
+                znsls410.PT_CONTR = 'WMS' THEN
+        'Sim'
+      ELSE 'Não' END 
+    END                     LIBERADO,
+    ZNSLS410.PT_CONTR     --Ponto de Controle do Pedido-Venda
 
-INNER JOIN baandb.tzncmg015301 zncmg015
+  
+FROM       baandb.tznsls402601  znsls402
+
+INNER JOIN baandb.tzncmg015601  zncmg015
         ON zncmg015.t$ncia$c = znsls402.t$ncia$c
        AND zncmg015.t$uneg$c = znsls402.t$uneg$c
        AND zncmg015.t$pecl$c = znsls402.t$pecl$c
        AND zncmg015.t$sqpd$c = znsls402.t$sqpd$c
        AND zncmg015.t$sequ$c = znsls402.t$sequ$c
     
-INNER JOIN baandb.tznsls400301 znsls400
+INNER JOIN baandb.tznsls400601  znsls400
         ON znsls400.t$ncia$c = znsls402.t$ncia$c
        AND znsls400.t$uneg$c = znsls402.t$uneg$c
        AND znsls400.t$pecl$c = znsls402.t$pecl$c
        AND znsls400.t$sqpd$c = znsls402.t$sqpd$c
 
-INNER JOIN baandb.tzncmg009301 zncmg009
+INNER JOIN baandb.tzncmg009601  zncmg009
         ON zncmg009.t$bnds$c = znsls402.t$cccd$c
 
  LEFT JOIN ( select tfcmg008.t$adqs$c   COD_ADQUIRENTE, 
                     tccom100.t$nama     DSC_ADQUIRENTE
-               from baandb.tzncmg008301 tfcmg008, 
-                    baandb.ttccom100301 tccom100
+               from baandb.tzncmg008601  tfcmg008, 
+                    baandb.ttccom100601  tccom100
               where tccom100.t$bpid = tfcmg008.t$adqu$c ) Adquirente
         ON Adquirente.COD_ADQUIRENTE = znsls402.t$idad$c
  
@@ -101,7 +112,7 @@ INNER JOIN baandb.tzncmg009301 zncmg009
                                             and l1.t$cpac = l.t$cpac ) )  Situacao
         ON Situacao.COD_SITUACAO = zncmg015.t$situ$c
         
-  LEFT JOIN baandb.tzncmg019301 zncmg019
+  LEFT JOIN baandb.tzncmg019301  zncmg019
          ON zncmg019.t$idad$c=zncmg015.t$idad$c
         AND zncmg019.t$rcod$c=zncmg015.t$rcod$c
 
@@ -115,14 +126,41 @@ INNER JOIN baandb.tzncmg009301 zncmg009
                             then 'Sim'
                           else   'Não'
                       end Liberado
-                from baandb.tznsls409301 sls409 ) znsls409
+                from baandb.tznsls409601  sls409 ) znsls409
          ON znsls409.t$ncia$c = zncmg015.t$ncia$c
         AND znsls409.t$uneg$c = zncmg015.t$uneg$c
         AND znsls409.t$pecl$c = zncmg015.t$pecl$c
         AND znsls409.t$sqpd$c = zncmg015.t$sqpd$c
 
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$idpo$c
+             from baandb.tznsls400601 a ) znsls400_LJ
+       ON znsls400_LJ.t$ncia$c = znsls402.t$ncia$c
+      AND znsls400_LJ.t$uneg$c = znsls402.t$uneg$c
+      AND znsls400_LJ.t$pecl$c = znsls402.t$pecl$c
+      AND znsls400_LJ.t$idpo$c = 'LJ'
+ 
+ LEFT JOIN ( select znsls410.t$ncia$c,
+                    znsls410.t$uneg$c,
+                    znsls410.t$pecl$c,
+                    znsls410.t$sqpd$c,
+                    MAX(znsls410.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C,  znsls410.T$SEQN$C) PT_CONTR
+               from baandb.tznsls410601 znsls410
+           group by znsls410.t$ncia$c,
+                    znsls410.t$uneg$c,
+                    znsls410.t$pecl$c,
+                    znsls410.t$sqpd$c ) znsls410
+        ON znsls410.t$ncia$c = znsls402.t$ncia$c
+       AND znsls410.t$uneg$c = znsls402.t$uneg$c
+       AND znsls410.t$pecl$c = znsls402.t$pecl$c
+       AND znsls410.t$sqpd$c = znsls400_LJ.t$sqpd$c
+       
 WHERE znsls400.T$IDPO$C = 'TD'
   AND znsls402.t$idmp$c = 1
+--  and znsls402.t$pecl$c = '1256515'
   
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$date$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
