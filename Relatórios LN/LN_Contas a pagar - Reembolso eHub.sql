@@ -138,13 +138,11 @@ INNER JOIN ( select sls401.t$te1e$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
                     znsls410.t$sqpd$c,
-                    znsls410.T$SEQN$C,
                     MAX(znsls410.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C,  znsls410.T$SEQN$C) PT_CONTR
                from baandb.tznsls410601 znsls410
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
-                    znsls410.t$seqn$c,
                     znsls410.t$sqpd$c ) znsls410
         ON znsls410.t$ncia$c = znsls402.t$ncia$c
        AND znsls410.t$uneg$c = znsls402.t$uneg$c
