@@ -23,7 +23,7 @@ SELECT
          WHEN ( ORDERS.INVOICESTATUS = '2' and ORDERS.status> = '55')      OR
               ( nvl(LNREF.t$poco$c, ' ') = 'NFT' and ORDERS.status = '95') OR
               ( nvl(LNREF.t$poco$c, ' ') = 'CAN' and ORDERS.status = '95') OR
-              ORDERS.fiscaldecision like 'CANCELADO DEVIDO A N√ÉO PROCESSAMENTO%' 
+              ORDERS.fiscaldecision like 'CANCELADO DEVIDO A N√O PROCESSAMENTO%' 
            THEN 'Estorno' 
          WHEN ORDERS.status = '100' 
            THEN 'Perda_Logistica' 
@@ -103,7 +103,7 @@ SELECT
          -- WHEN NVL(maucLN.mauc, 0)     != 0 THEN maucLN.mauc
          -- ELSE 0 
      -- END                                   VL,
-  
+    maucLN.mauc                            CMV_UNITARIO,  
     ABS( CASE WHEN NVL(cisli941.t$pric$l, 0) != 0 THEN cisli941.t$pric$l
               WHEN NVL(TDSLS401.T$PRIC, 0)   != 0 THEN TDSLS401.T$PRIC
               WHEN NVL(OPRIC.T$PRIC,0)       != 0 THEN OPRIC.T$PRIC
@@ -377,6 +377,8 @@ WHERE cl.listname = 'SCHEMA'
 ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10,  '0')
 
 
+=
+   
 " SELECT  " &
 "   DISTINCT  " &
 "     WMSADMIN.PL_DB.DB_ALIAS                PLANTA,  " &
@@ -402,7 +404,7 @@ ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10,  '0')
 "          WHEN ( ORDERS.INVOICESTATUS = '2' and ORDERS.status> = '55')      OR  " &
 "               ( nvl(LNREF.t$poco$c, ' ') = 'NFT' and ORDERS.status = '95') OR  " &
 "               ( nvl(LNREF.t$poco$c, ' ') = 'CAN' and ORDERS.status = '95') OR  " &
-"               ORDERS.fiscaldecision like 'CANCELADO DEVIDO A N√ÉO PROCESSAMENTO%'  " &
+"               ORDERS.fiscaldecision like 'CANCELADO DEVIDO A N√O PROCESSAMENTO%'  " &
 "            THEN 'Estorno'  " &
 "          WHEN ORDERS.status = '100'  " &
 "            THEN 'Perda_Logistica'  " &
@@ -477,6 +479,7 @@ ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10,  '0')
 "     ORDERS.C_COMPANY                       NOME,  " &
 "     ORDERDETAIL.ORIGINALQTY                QTDE_TOTAL,  " &
 "  " &
+"     maucLN.mauc                            CMV_UNITARIO,  " &
 "     ABS( CASE WHEN NVL(cisli941.t$pric$l, 0) != 0 THEN cisli941.t$pric$l  " &
 "               WHEN NVL(TDSLS401.T$PRIC, 0)   != 0 THEN TDSLS401.T$PRIC  " &
 "               WHEN NVL(OPRIC.T$PRIC,0)       != 0 THEN OPRIC.T$PRIC  " &
@@ -530,7 +533,6 @@ ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10,  '0')
 "         ON STORER.STORERKEY = sku.SUSR5  " &
 "        AND STORER.WHSEID = sku.WHSEID  " &
 "        AND STORER.TYPE = 5  " &
-"  " &
 "  LEFT JOIN ENTERPRISE.DEPARTSECTORSKU  DEPART  " &
 "         ON TO_CHAR(DEPART.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)  " &
 "        AND TO_CHAR(DEPART.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)  " &
@@ -735,14 +737,13 @@ ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10,  '0')
 "  " &
 " WHERE cl.listname = 'SCHEMA'  " &
 "   AND ORDERS.status NOT IN ('100', '95', '96', '97')  " &
-"   AND sq2.status != 6  " &
-"  AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,  " &
+"   AND Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "                  AT time zone 'America/Sao_Paulo') AS DATE),  " &
 "                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.EDITDATE,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "                  AT time zone 'America/Sao_Paulo') AS DATE)))  " &
-"      Between '"+ Parameters!DataUltEventoDe.Value + "'  " &
-"          And '"+ Parameters!DataUltEventoAte.Value + "'  " &
+"       Between '"+ Parameters!DataUltEventoDe.Value + "'  " &
+"           And '"+ Parameters!DataUltEventoAte.Value + "'  " &
 "  " &
 " ORDER BY PLANTA, PEDIDO, Trunc(DT_REGISTRO), LPAD(ITEM, 10,  '0')  "

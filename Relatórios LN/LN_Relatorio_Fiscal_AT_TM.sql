@@ -9,7 +9,7 @@ select Q1.*
      
                  Trim(cisli941.t$item$l)    ID_ITEM,
                  Trim(tcibd001.t$dscb$c)    DESC_ITEM,
-                 cisli941.t$dqua$l          QTD_FIS,
+                 cisli941.t$dqua$l          QTD_FIS,        --QTDE DE REMESSA PARA AT
                  cisli941.t$pric$l          PR_UNIT,
                  tcibd001.t$ceat$l          COD_EAN,
                  tcibd001.t$citg            ID_DEPTO,
@@ -37,8 +37,8 @@ select Q1.*
                  cisli940.t$fdtc$l          COD_TIPO_DOC_REMESSA,
                  tcmcs966.t$dsca$l          DESC_COD_TIPO_DOC_REMESSA,
      
-                 CASE WHEN tdrec940.t$docn$l is null
-                        THEN 'Não'
+                 CASE WHEN tdrec940.t$docn$l is null          
+                        THEN 'Não'                      --Indica que a Remessa não teve nenhum retorno de AT
                       ELSE   'Sim'
                  END                        ENTRADA,
                  tdrec955.t$lfir$l          REF_REC,
@@ -47,11 +47,60 @@ select Q1.*
                  tdrec940.t$seri$l          SERI_NF_ENTRADA,
                  NOTA_ENT.CNST              COD_STATUS_REC,
                  NOTA_ENT.STATUS            DSC_STATUS_REC,
-                 cisli940.t$fire$l
+                 tdrec955.t$qtdr$l          QTDE_ENTRADA
                  
-            FROM baandb.tcisli940301  cisli940  
-           
-       LEFT JOIN ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_DOC_FIS
+FROM baandb.tcisli940301  cisli940  
+                       
+      INNER JOIN baandb.tcisli941301 cisli941
+              ON cisli940.t$fire$l = cisli941.t$fire$l
+  
+       LEFT JOIN baandb.ttcmcs940301 tcmcs940
+              ON tcmcs940.T$OFSO$L = cisli941.t$ccfo$l
+
+      INNER JOIN baandb.ttcibd001301 tcibd001
+              ON tcibd001.t$item = cisli941.t$item$l  
+                   
+      INNER JOIN baandb.tznmcs030301 znmcs030
+              ON znmcs030.t$citg$c = tcibd001.t$citg
+             AND znmcs030.t$seto$c = tcibd001.t$seto$c
+                          
+      INNER JOIN baandb.ttcemm124301 tcemm124
+              ON tcemm124.t$cwoc  = cisli940.t$cofc$l 
+
+      INNER JOIN baandb.ttcemm030301 tcemm030
+              ON tcemm030.t$eunt = tcemm124.t$grid
+        
+      INNER JOIN baandb.ttcmcs023301 tcmcs023
+              ON tcmcs023.t$citg = tcibd001.t$citg
+  
+      INNER JOIN baandb.tznmcs031301 znmcs031
+              ON znmcs031.t$citg$c = tcibd001.t$citg 
+             AND znmcs031.t$seto$c = tcibd001.t$seto$c 
+             AND znmcs031.t$fami$c = tcibd001.t$fami$c
+ 
+       LEFT JOIN baandb.ttcmcs966301 tcmcs966
+              ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
+      
+       LEFT JOIN baandb.ttcmcs003301 tcmcs003
+              ON tcmcs003.t$cwar = cisli941.t$cwar$l
+              
+       LEFT JOIN baandb.ttdrec955301 tdrec955
+              ON tdrec955.t$fire$l = cisli941.t$fire$l
+             AND tdrec955.t$line$l = cisli941.t$line$l
+      
+      LEFT JOIN ( select  a.t$fire$l,
+                          a.t$line$l,
+                          sum(a.t$qtdr$l) QTDE_REC
+                  from    baandb.ttdrec955301 a 
+                  group by a.t$fire$l,
+                           a.t$line$l) REC955
+            ON REC955.t$fire$l = cisli941.t$fire$l
+           AND REC955.t$line$l = cisli941.t$line$l
+                  
+      LEFT JOIN baandb.ttdrec940301 tdrec940
+             ON tdrec940.t$fire$l = tdrec955.t$lfir$l
+     
+            LEFT JOIN ( SELECT d.t$cnst CNST, l.t$desc DESC_TIPO_DOC_FIS
                      FROM baandb.tttadv401000 d, 
                           baandb.tttadv140000 l 
                     WHERE d.t$cpac = 'ci' 
@@ -134,47 +183,6 @@ select Q1.*
                                                  and l1.t$cpac = l.t$cpac ) ) STATUS
               ON cisli940.t$stat$l = STATUS.CNST
               
-      INNER JOIN baandb.tcisli941301 cisli941
-              ON cisli940.t$fire$l = cisli941.t$fire$l
-  
-       LEFT JOIN baandb.ttcmcs940301 tcmcs940
-              ON tcmcs940.T$OFSO$L = cisli941.t$ccfo$l
-
-      INNER JOIN baandb.ttcibd001301 tcibd001
-              ON tcibd001.t$item = cisli941.t$item$l  
-                   
-      INNER JOIN baandb.tznmcs030301 znmcs030
-              ON znmcs030.t$citg$c = tcibd001.t$citg
-             AND znmcs030.t$seto$c = tcibd001.t$seto$c
-                          
-      INNER JOIN baandb.ttcemm124301 tcemm124
-              ON tcemm124.t$cwoc  = cisli940.t$cofc$l 
-
-      INNER JOIN baandb.ttcemm030301 tcemm030
-              ON tcemm030.t$eunt = tcemm124.t$grid
-        
-      INNER JOIN baandb.ttcmcs023301 tcmcs023
-              ON tcmcs023.t$citg = tcibd001.t$citg
-  
-      INNER JOIN baandb.tznmcs031301 znmcs031
-              ON znmcs031.t$citg$c = tcibd001.t$citg 
-             AND znmcs031.t$seto$c = tcibd001.t$seto$c 
-             AND znmcs031.t$fami$c = tcibd001.t$fami$c
- 
-       LEFT JOIN baandb.ttcmcs966301 tcmcs966
-              ON tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
-      
-       LEFT JOIN baandb.ttcmcs003301 tcmcs003
-              ON tcmcs003.t$cwar = cisli941.t$cwar$l
-              
-       LEFT JOIN baandb.ttdrec955301 tdrec955
-              ON tdrec955.t$fire$l = cisli941.t$fire$l
-             AND tdrec955.t$line$l = cisli941.t$line$l
---             AND tdrec955.t$sern$l = 1
-      
-      LEFT JOIN baandb.ttdrec940301 tdrec940
-             ON tdrec940.t$fire$l = tdrec955.t$lfir$l
-             
       LEFT JOIN ( select 0                    CNST, 
                          'Sem NF de Entrada'  STATUS
                     from Dual
@@ -210,7 +218,8 @@ select Q1.*
            WHERE cisli940.t$stat$l = 6
              AND cisli940.t$fdty$l = 17
              AND tcemm124.t$dtyp = 1
-             AND STATUS.CNST IN (:StatusNF)       
+             AND cisli941.t$dqua$l != REC955.QTDE_REC        
+             AND STATUS.CNST IN (:StatusNF)
         ORDER BY CHAVE_NM_FILIAL, ID_ITEM ) Q1     
           
 where ID_FILIAL in (:Filial)
