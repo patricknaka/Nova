@@ -363,4 +363,5 @@ WHERE cisli941f.t$fire$l=cisli940.t$fire$l
         or cisli941.T$fire$L= cisli941f.T$fire$L) --#FAF.173.n
   and ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
         or cisli941.T$line$L= cisli941f.T$line$l) --#FAF.173.n
-    and cisli940.t$stat$l IN (5,6) and cisli940.t$nfes$l IN (1,2,5)
+    and cisli940.t$stat$l IN (5,6) --Status Fatura: impresso e lançado
+    and cisli940.t$nfes$l IN (1,2,5) --Status Sefaz: nenhum,transmitida,processada 
