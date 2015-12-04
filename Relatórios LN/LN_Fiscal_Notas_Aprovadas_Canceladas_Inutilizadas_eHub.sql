@@ -24,7 +24,7 @@ SELECT
     cisli941.t$dqua$l                                  QT_ITEM, 
     cisli941.t$pric$l                                  VALOR_UNIT,
     cisli940.t$fght$l                                  VALOR_FRETE,
-    cisli941.t$iprt$l                                  VALOR_TOTAL,
+    cisli941.t$amnt$l                                  VALOR_TOTAL,
     cast(NVL(tttxt010f.t$text,'') as varchar(100))     MENSAGEM
 
 FROM       baandb.tcisli940601  cisli940
@@ -88,6 +88,10 @@ WHERE cisli940.t$stat$l IN (2,5,6,101)
   AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
   AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
   AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
+  
+--  and cisli940.t$docn$l = 70561
+--  and cisli940.t$seri$l = '10'
+  
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))
