@@ -173,3 +173,4 @@ LEFT JOIN (select	sum(znsls402t.t$vlju$c) t$vlju$c,
     AND    znsls402.t$sqpd$c = znsls401.t$sqpd$c
 		
 WHERE   tdsls401.t$sqnb  =  0
+AND     tdsls400.t$fdty$l != 14 --Retorno de Mercadoria Cliente
