@@ -256,117 +256,91 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
     ELSE NULL END 
   AS	NR_ITEM_NF_FATURA,	
   tdsls400.t$sotp CD_TIPO_ORDEM_VENDA 
+
+  --INICIO DO FROM
     
-FROM baandb.tcisli940601 cisli940
-
-INNER JOIN baandb.tcisli941601 cisli941f
-        on cisli941f.t$fire$l = cisli940.t$fire$l
-
-INNER JOIN baandb.tcisli941601 cisli941
-        ON (   (cisli941.T$fire$L =  cisli941f.T$REFR$L and (cisli940.t$fdty$l = 15 or cisli940.t$fdty$l = 16))
-            or (cisli941.T$fire$L =  cisli941f.T$fire$L) ) 
-       AND (    (cisli941.T$line$L =  cisli941f.T$rfdl$L and (cisli940.t$fdty$l = 15 or cisli940.t$fdty$l = 16))
-             or (cisli941.T$line$L =  cisli941f.T$line$l) ) 
-
-INNER JOIN baandb.tcisli245601 cisli245
-        ON cisli245.t$fire$l = cisli941.t$fire$l
-       AND cisli245.t$line$l = cisli941.t$line$l
-
- LEFT JOIN baandb.tcisli943601 ICMS 
-        ON ICMS.t$fire$l = cisli941f.t$fire$l 
-       AND ICMS.t$line$l = cisli941f.t$line$l
-       AND ICMS.t$brty$l = 1
-   
- LEFT JOIN baandb.tcisli943601 COFINS 
-        ON COFINS.t$fire$l = cisli941f.t$fire$l 
-       AND COFINS.t$line$l = cisli941f.t$line$l
-       AND COFINS.t$brty$l = 6
-   
- LEFT JOIN baandb.tcisli943601 PIS 
-        ON PIS.t$fire$l = cisli941f.t$fire$l 
-       AND PIS.t$line$l = cisli941f.t$line$l
-       AND PIS.t$brty$l = 5
-   
- LEFT JOIN baandb.tcisli943601 CSLL 
-        ON CSLL.t$fire$l = cisli941f.t$fire$l 
-       AND CSLL.t$line$l = cisli941f.t$line$l
-       AND CSLL.t$brty$l = 13
-   
- LEFT JOIN ( select a.t$cfrw$l,
-                    a.t$fire$l
-             from   baandb.tcisli940601 a
-             where  a.t$fdty$l = 15 )  SLI940_REM        --REMESSA TRIANGULAR
-       ON  SLI940_REM.t$fire$l = cisli941f.t$refr$l
+FROM baandb.tcisli940601 cisli940,
+     baandb.tcisli941601 cisli941,
+     baandb.tcisli941601 cisli941f
+LEFT JOIN baandb.tcisli943601 ICMS	ON ICMS.t$fire$l=cisli941f.t$fire$l	
+     AND	ICMS.t$line$l=cisli941f.t$line$l
+     AND ICMS.t$brty$l=1
+LEFT JOIN baandb.tcisli943601 COFINS ON COFINS.t$fire$l=cisli941f.t$fire$l	
+     AND	COFINS.t$line$l=cisli941f.t$line$l
+     AND COFINS.t$brty$l=6
+LEFT JOIN baandb.tcisli943601 PIS ON PIS.t$fire$l=cisli941f.t$fire$l	
+     AND	PIS.t$line$l=cisli941f.t$line$l
+     AND PIS.t$brty$l=5
+LEFT JOIN baandb.tcisli943601 CSLL ON CSLL.t$fire$l=cisli941f.t$fire$l	
+     AND	CSLL.t$line$l=cisli941f.t$line$l
+     AND CSLL.t$brty$l=13
+LEFT JOIN ( select a.t$cfrw$l,
+                   a.t$fire$l
+            from   baandb.tcisli940601 a
+            where  a.t$fdty$l = 15 )  SLI940_REM        --REMESSA TRIANGULAR
+      ON  SLI940_REM.t$fire$l = cisli941f.t$refr$l,
      
-INNER JOIN baandb.ttdsls401601 tdsls401
-        ON tdsls401.t$orno = cisli245.t$slso
-       AND tdsls401.t$pono = cisli245.t$pono
-
-INNER JOIN baandb.tznsls004601 znsls004 --Origem OV
-        ON znsls004.t$orno$c = tdsls401.t$orno -- Origem OV
-       AND znsls004.t$pono$c = tdsls401.t$pono -- Origem OV
-
-INNER JOIN baandb.tznsls401601 znsls401
-        ON znsls401.t$ncia$c = znsls004.t$ncia$c -- Origem OV
-       AND znsls401.t$uneg$c = znsls004.t$uneg$c -- Origem OV
-       AND znsls401.t$pecl$c = znsls004.t$pecl$c -- Origem OV
-       AND znsls401.t$sqpd$c = znsls004.t$sqpd$c -- Origem OV
-       AND znsls401.t$entr$c = znsls004.t$entr$c -- Origem OV
-       AND znsls401.t$sequ$c = znsls004.t$sequ$c -- Origem OV
-
-INNER JOIN baandb.tznsls400601 znsls400
-        ON znsls400.t$ncia$c = znsls401.t$ncia$c
-       AND znsls400.t$uneg$c = znsls401.t$uneg$c
-       AND znsls400.t$pecl$c = znsls401.t$pecl$c
-       AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
-   
- LEFT JOIN ( select znsls402q.t$ncia$c,
-                    znsls402q.t$uneg$c,
-                    znsls402q.t$pecl$c,
-                    znsls402q.t$sqpd$c,
-                    sum(znsls402q.t$vlju$c) t$vlju$c,
-                    sum(znsls402q.t$vlja$c) t$vlja$c
-               from baandb.tznsls402601 znsls402q
-           group by znsls402q.t$ncia$c,
-                    znsls402q.t$uneg$c,
-                    znsls402q.t$pecl$c,
-                    znsls402q.t$sqpd$c) znsls402
-        ON znsls402.t$ncia$c = znsls401.t$ncia$c 
-       AND znsls402.t$uneg$c = znsls401.t$uneg$c
-       AND znsls402.t$pecl$c = znsls401.t$pecl$c
-       AND znsls402.t$sqpd$c = znsls401.t$sqpd$c
-      
-INNER JOIN baandb.ttdsls400601 tdsls400
-        ON tdsls400.t$orno = tdsls401.t$orno 
-
- LEFT JOIN ( select c245.T$SLSO, 
-                    c940.T$DOCN$L NOTA, 
-                    c940.t$seri$l SERIE
-               from baandb.tcisli245601 c245
-                    inner join baandb.tcisli941601 c941 
-                            on c941.t$fire$l = c245.T$FIRE$L   
-                    inner join baandb.tcisli940601 c940
-                            on c940.t$fire$l = c941.T$REFR$L
-                    group by  c245.T$SLSO, 
-                              c940.T$DOCN$L, 
-                              c940.t$seri$l ) consold 
-        ON consold.T$SLSO = tdsls400.t$orno
-  
-INNER JOIN baandb.ttccom130601 endfat
-        ON endfat.t$cadr = cisli940.t$itoa$l
-
-INNER JOIN baandb.ttccom130601 endent
-        ON endent.t$cadr = cisli940.t$stoa$l
-
-INNER JOIN baandb.ttcibd001601 tcibd001
-        ON tcibd001.t$item = cisli941.t$item$l
-
-INNER JOIN baandb.ttdsls094301 tdsls094    --tabela compartilhada
-        ON tdsls094.t$sotp = tdsls400.t$sotp 
-
-WHERE ltrim(rtrim(tdsls401.t$item)) = ltrim(rtrim(znsls401.t$item$c)) -- Origem OV
-  AND cisli940.t$stat$l IN (5,6)   --Impresso, Lançado  
-  AND cisli940.t$nfes$l IN (1,2,5) --Nenhum, Transmitida, Processada
+baandb.tcisli245601 cisli245,
+baandb.ttdsls401601 tdsls401,
+baandb.tznsls004601 znsls004,	--Origem OV
+baandb.tznsls401601 znsls401,
+baandb.tznsls400601 znsls400,
+(select 
+    znsls402q.t$ncia$c,
+    znsls402q.t$uneg$c,
+    znsls402q.t$pecl$c,
+    znsls402q.t$sqpd$c,
+    sum(znsls402q.t$vlju$c) t$vlju$c,
+    sum(znsls402q.t$vlja$c) t$vlja$c
+ from	baandb.tznsls402601 znsls402q
+  group by
+    znsls402q.t$ncia$c,
+    znsls402q.t$uneg$c,
+    znsls402q.t$pecl$c,
+    znsls402q.t$sqpd$c) znsls402,
+baandb.ttdsls400601 tdsls400
+LEFT JOIN ( select c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE
+            from baandb.tcisli245601 c245
+            inner join baandb.tcisli941601 c941 on c941.t$fire$l=c245.T$FIRE$L   
+            inner join baandb.tcisli940601 c940
+            on c940.t$fire$l=c941.T$REFR$L
+            group by c245.T$SLSO, c940.T$DOCN$L, c940.t$seri$l
+            ) consold ON consold.T$SLSO=tdsls400.t$orno,
+baandb.ttccom130601 endfat,
+baandb.ttccom130601 endent,
+baandb.ttcibd001601 tcibd001,
+baandb.ttdsls094301 tdsls094    --tabela compartilhada
+WHERE cisli941f.t$fire$l=cisli940.t$fire$l
+  AND cisli245.t$fire$l=cisli941.t$fire$l
+  AND cisli245.t$line$l=cisli941.t$line$l
+  AND tdsls401.t$orno = cisli245.t$slso
+  AND tdsls401.t$pono = cisli245.t$pono
+  AND	znsls004.t$orno$c=tdsls401.t$orno	-- Origem OV
+  AND	znsls004.t$pono$c=tdsls401.t$pono -- Origem OV
+  AND	znsls401.t$ncia$c=znsls004.t$ncia$c	-- Origem OV
+  AND znsls401.t$uneg$c=znsls004.t$uneg$c	-- Origem OV
+  AND znsls401.t$pecl$c=znsls004.t$pecl$c	-- Origem OV
+  AND znsls401.t$sqpd$c=znsls004.t$sqpd$c	-- Origem OV
+  AND	znsls401.t$entr$c=znsls004.t$entr$c	-- Origem OV
+  AND	znsls401.t$sequ$c=znsls004.t$sequ$c	-- Origem OV
+  AND	ltrim(rtrim(tdsls401.t$item))=ltrim(rtrim(znsls401.t$item$c)) -- Origem OV
+  AND znsls400.t$ncia$c=znsls401.t$ncia$c
+  AND znsls400.t$uneg$c=znsls401.t$uneg$c
+  AND znsls400.t$pecl$c=znsls401.t$pecl$c
+  AND znsls400.t$sqpd$c=znsls401.t$sqpd$c
+  AND znsls402.t$ncia$c=znsls401.t$ncia$c	
+  AND znsls402.t$uneg$c=znsls401.t$uneg$c
+  AND znsls402.t$pecl$c=znsls401.t$pecl$c
+  AND znsls402.t$sqpd$c=znsls401.t$sqpd$c	
+  AND endfat.t$cadr=cisli940.t$itoa$l
+  AND endent.t$cadr=cisli940.t$stoa$l
+  AND tcibd001.t$item=cisli941.t$item$l
+  AND tdsls400.t$orno=tdsls401.t$orno 
+  AND tdsls094.t$sotp=tdsls400.t$sotp 
+  and ((cisli941.T$fire$L= cisli941f.T$REFR$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
+        or cisli941.T$fire$L= cisli941f.T$fire$L) 
+  and ((cisli941.T$line$L= cisli941f.T$rfdl$L and (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16))
+        or cisli941.T$line$L= cisli941f.T$line$l) 
+  and cisli940.t$stat$l IN (5,6) ----Impresso, Lançado  
+  and cisli940.t$nfes$l IN (1,2,5) --Nenhum, Transmitida, Processada
   AND tdsls401.t$sqnb = 0
-  
---   and cisli940.t$fire$l = '000026012'
