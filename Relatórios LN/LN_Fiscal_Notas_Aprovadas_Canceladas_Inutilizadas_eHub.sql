@@ -23,8 +23,10 @@ SELECT
     Trim(tcibd001.t$mdfb$c)                            SKU_FORN,
     cisli941.t$dqua$l                                  QT_ITEM, 
     cisli941.t$pric$l                                  VALOR_UNIT,
-    cisli940.t$fght$l                                  VALOR_FRETE,
-    cisli941.t$amnt$l                                  VALOR_TOTAL,
+    znsls401.t$vlfr$c                                  VALOR_FRETE,
+    cisli941.t$gamt$l                                  VALOR_TOTAL_MERC,
+    cisli941.t$ldam$l                                  VALOR_TOTAL_DESC,
+    cisli941.t$amnt$l                                  VALOR_TOTAL_ITEM,
     cast(NVL(tttxt010f.t$text,'') as varchar(100))     MENSAGEM
 
 FROM       baandb.tcisli940601  cisli940
@@ -32,6 +34,22 @@ FROM       baandb.tcisli940601  cisli940
 INNER JOIN baandb.tcisli941601  cisli941
         ON cisli941.t$fire$l = cisli940.t$fire$l
 
+INNER JOIN baandb.tcisli245601  cisli245
+        ON cisli245.t$fire$l = cisli941.t$fire$l
+       AND cisli245.t$line$l = cisli941.t$line$l
+       
+INNER JOIN baandb.tznsls004601 znsls004
+        ON znsls004.t$orno$c = cisli245.t$slso
+       AND znsls004.t$pono$c = cisli245.t$pono
+       
+INNER JOIN baandb.tznsls401601 znsls401
+        ON znsls401.t$ncia$c = znsls004.t$ncia$c
+       AND znsls401.t$uneg$c = znsls004.t$uneg$c
+       AND znsls401.t$pecl$c = znsls004.t$pecl$c
+       AND znsls401.t$sqpd$c = znsls004.t$sqpd$c
+       AND znsls401.t$entr$c = znsls004.t$entr$c
+       AND znsls401.t$sequ$c = znsls004.t$sequ$c
+        
 INNER JOIN baandb.ttcibd001601  tcibd001
         ON tcibd001.t$item = cisli941.t$item$l
 
@@ -88,12 +106,10 @@ WHERE cisli940.t$stat$l IN (2,5,6,101)
   AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
   AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
   AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
-  
---  and cisli940.t$docn$l = 70561
---  and cisli940.t$seri$l = '10'
-  
+
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataEmissaoDe
           And :DataEmissaoAte  
+
