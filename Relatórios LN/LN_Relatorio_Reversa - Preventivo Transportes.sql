@@ -13,9 +13,12 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_PEDIDO,
-             
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
+    CASE WHEN PAP_TD.DATA_OCORR IS NULL THEN
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PAP_TD.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) END
                                               DATA_APROVACAO_PEDIDO,
              
     znfmd001.t$fili$c                         Estabelecimento,
@@ -33,13 +36,13 @@ SELECT
     znsls401.t$lmot$c                         Motivo_da_Coleta,
 
 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_PEDIDO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_PED.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_CANC_PEDIDO,
     CASE WHEN znsls409.t$lbrd$c = 1 
            THEN 'Sim' -- FORÇADO
          ELSE   'Não' -- NÃO FORÇADO
-     END                                      IN_FORCADO,
+     END                                      LN_FORCADO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(EXPEDICAO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_EXPEDICAO_PEDIDO,
@@ -339,10 +342,10 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR,
-                    MAX(znsls410.t$dtpr$c) DATA_DTPR,
-                    MAX(znsls410.t$dtcd$c) DATA_DTCD
+                    MAX(znsls410.t$dpco$c) DATA_DTPR,
+                    MAX(znsls410.t$dtpr$c) DATA_DTCD
                from baandb.tznsls410301 znsls410
-              where znsls410.t$poco$c = 'COS'
+              where znsls410.t$poco$c = 'APD'
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c ) SOLIC_COLETA
@@ -355,7 +358,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$pecl$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
                from baandb.tznsls410301 znsls410
-              where znsls410.t$poco$c = 'POS'
+              where znsls410.t$poco$c = 'POS'       --POSTAGEM
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c ) POSTAGEM
@@ -370,7 +373,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
                from baandb.tznsls410301 znsls410
-              where znsls410.t$poco$c = 'CPC'
+              where znsls410.t$poco$c = 'CPC'       --Cancelamento da Coleta
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
@@ -389,7 +392,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
                from baandb.tznsls410301 znsls410
-              where znsls410.t$poco$c = 'RDV'
+              where znsls410.t$poco$c = 'RDV'       --Retorno da Mercadoria ao CD
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
@@ -411,25 +414,6 @@ INNER JOIN baandb.tznsls400301 znsls400
  LEFT JOIN baandb.tznint002301 znint002
         ON znint002.t$ncia$c = znsls401.t$ncia$c
        AND znint002.t$uneg$c = znsls401.t$uneg$c
-        
- LEFT JOIN ( select znsls410.t$ncia$c,
-                    znsls410.t$uneg$c,
-                    znsls410.t$pecl$c,
-                    znsls410.t$entr$c,
-                    znsls410.t$sqpd$c,
-                    MAX(znsls410.t$dtoc$c) DATA_OCORR
-               from baandb.tznsls410301 znsls410
-              where znsls410.t$poco$c = 'CAN'      --PEDIDO CANCELADO
-           group by znsls410.t$ncia$c,
-                    znsls410.t$uneg$c,
-                    znsls410.t$pecl$c,
-                    znsls410.t$entr$c,
-                    znsls410.t$sqpd$c ) CANC_PEDIDO
-        ON CANC_PEDIDO.t$ncia$c = znsls401.t$ncia$c
-       AND CANC_PEDIDO.t$uneg$c = znsls401.t$uneg$c
-       AND CANC_PEDIDO.t$pecl$c = znsls401.t$pecl$c
-       AND CANC_PEDIDO.t$entr$c = znsls401.t$entr$c
-       AND CANC_PEDIDO.t$sqpd$c = znsls401.t$sqpd$c
        
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -491,27 +475,82 @@ INNER JOIN baandb.tznsls400301 znsls400
                       a.t$uneg$c,
                       a.t$pecl$c,
                       a.t$sqpd$c,
-                      a.t$entr$c ) VENDA_OV
-        ON  VENDA_OV.t$ncia$c = znsls401.t$ncia$c
-       AND  VENDA_OV.t$uneg$c = znsls401.t$uneg$c
-       AND  VENDA_OV.t$pecl$c = znsls401.t$pecl$c
-       AND  VENDA_OV.t$sqpd$c = VENDA_ENTR.t$sqpd$c
-       AND  VENDA_OV.t$entr$c = VENDA_ENTR.t$entr$c
+                      a.t$entr$c ) ORIG_PED
+        ON  ORIG_PED.t$ncia$c = znsls401.t$ncia$c
+       AND  ORIG_PED.t$uneg$c = znsls401.t$uneg$c
+       AND  ORIG_PED.t$pecl$c = znsls401.t$pecl$c
+       AND  ORIG_PED.t$sqpd$c = VENDA_ENTR.t$sqpd$c
+       AND  ORIG_PED.t$entr$c = VENDA_ENTR.t$entr$c
        
   LEFT JOIN ( select  a.t$slso,
                       a.t$pono,
                       max(a.t$fire$l) t$fire$l
               from    baandb.tcisli245301 a
               group by  a.t$slso, a.t$pono ) SLI245
-         ON SLI245.t$slso = VENDA_OV.t$orno$c
-        AND SLI245.t$pono = VENDA_OV.t$pono$c
+         ON SLI245.t$slso = ORIG_PED.t$orno$c
+        AND SLI245.t$pono = ORIG_PED.t$pono$c
  
   LEFT JOIN baandb.tcisli940301 VENDA_REF
          ON VENDA_REF.t$fire$l = SLI245.t$fire$l
          
   LEFT JOIN baandb.ttcmcs080301  VENDA_TRANSP
          ON VENDA_TRANSP.t$cfrw = VENDA_REF.t$cfrw$l
- 
+
+  LEFT JOIN ( select a.t$ncia$c,
+                     a.t$uneg$c,
+                     a.t$pecl$c,
+                     a.t$sqpd$c,
+                     a.t$dtem$c
+             from   baandb.tznsls400301 a
+             group by a.t$ncia$c, 
+                      a.t$uneg$c,
+                      a.t$pecl$c,
+                      a.t$sqpd$c,
+                      a.t$dtem$c) PED_LJ
+        ON  PED_LJ.t$ncia$c = ORIG_PED.t$ncia$c
+       AND  PED_LJ.t$uneg$c = ORIG_PED.t$uneg$c
+       AND  PED_LJ.t$pecl$c = ORIG_PED.t$pecl$c
+       AND  PED_LJ.t$sqpd$c = ORIG_PED.t$sqpd$c
+
+ LEFT JOIN ( select znsls410.t$ncia$c,
+                    znsls410.t$uneg$c,
+                    znsls410.t$pecl$c,
+                    znsls410.t$entr$c,
+                    znsls410.t$sqpd$c,
+                    MAX(znsls410.t$dtoc$c) DATA_OCORR
+               from baandb.tznsls410301 znsls410
+              where znsls410.t$poco$c = 'CAN'      --PEDIDO CANCELADO
+           group by znsls410.t$ncia$c,
+                    znsls410.t$uneg$c,
+                    znsls410.t$pecl$c,
+                    znsls410.t$entr$c,
+                    znsls410.t$sqpd$c ) CANC_PED
+        ON CANC_PED.t$ncia$c = ORIG_PED.t$ncia$c
+       AND CANC_PED.t$uneg$c = ORIG_PED.t$uneg$c
+       AND CANC_PED.t$pecl$c = ORIG_PED.t$pecl$c
+       AND CANC_PED.t$entr$c = ORIG_PED.t$entr$c
+       AND CANC_PED.t$sqpd$c = ORIG_PED.t$sqpd$c
+
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    MIN(a.t$dtoc$c) DATA_OCORR
+              from baandb.tznsls410301 a
+              where a.t$poco$c = 'PAP'      --APROVAÇÃO PAGTO DEVOLUÇÃO
+              group by a.t$ncia$c,
+                       a.t$uneg$c,
+                       a.t$pecl$c,
+                       a.t$sqpd$c,
+                       a.t$entr$c ) PAP_TD      
+        ON PAP_TD.t$ncia$c = znsls401.t$ncia$c
+       AND PAP_TD.t$uneg$c = znsls401.t$uneg$c
+       AND PAP_TD.t$pecl$c = znsls401.t$pecl$c
+       AND PAP_TD.t$sqpd$c = znsls401.t$sqpd$c
+       AND PAP_TD.t$entr$c = znsls401.t$entr$c
+       
+
 WHERE TRIM(znsls401.t$idor$c) = 'TD'  -- Troca / Devolução
   AND znsls401.t$qtve$c < 0           -- Devolução
   AND tdsls094.t$reto in (1, 3)       -- Ordem Devolução, Ordem Devolução Rejeitada
