@@ -399,7 +399,10 @@ INNER JOIN baandb.ttcibd001201 tcibd001
 INNER JOIN baandb.ttdsls094201 tdsls094       --#FAF.087.n
         ON tdsls094.t$sotp = tdsls400.t$sotp  --#FAF.087.n
 
-
+WHERE cisli940.t$stat$l IN (5,6)    --Status Fatura: impresso e lançado
+  AND cisli940.t$nfes$l IN (1,2,5)  --Status Sefaz: nenhum,transmitida,processada 
+  AND cisli940.t$fdty$l != 14       --14-Retorno Mercadoria Cliente
+  
 --WHERE cisli941f.t$fire$l = cisli940.t$fire$l
 --  AND cisli245.t$fire$l = cisli941.t$fire$l
 --  AND cisli245.t$line$l = cisli941.t$line$l
@@ -432,6 +435,5 @@ INNER JOIN baandb.ttdsls094201 tdsls094       --#FAF.087.n
 --  and ((cisli941.T$line$L =  cisli941f.T$rfdl$L and (cisli940.t$fdty$l = 15 or cisli940.t$fdty$l = 16))
 --        or cisli941.T$line$L =  cisli941f.T$line$l) --#FAF.173.n
 
-WHERE cisli940.t$stat$l IN (5,6)    --Status Fatura: impresso e lançado
-  AND cisli940.t$nfes$l IN (1,2,5)  --Status Sefaz: nenhum,transmitida,processada 
+
     
