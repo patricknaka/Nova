@@ -1,23 +1,3 @@
-﻿-- 05-mai-2014, Fabio Ferreira, Correção timezone,
---								Campo ESTADO_PAGAMENTO alterado para 'aprovados',
---								Campo VALOR_TOTAL_ITEM alterado para  ( (Valor do Produto Unitário + Valor do Frete) - (valor desc incondicional)) * Quantidade
--- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Retirado campo DESCONTO_CONDICIONAL
--- FAF.003 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Incluido novos campos
--- FAF.004 - Fabio Ferreira, 13-mai-2014, Fabio Ferreira, 	Duplicando registros devido a problema de relacionamento na tabela znsls004
--- FAF.105 - Fabio Ferreira, 05-jun-2014, Fabio Ferreira, 	Campo vendedor deve ser NULL quando valor = 100
--- FAF.122 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Correção campo VL_TOTAL_ITEM
--- FAF.123 - Fabio Ferreira, 10-jun-2014, Fabio Ferreira, 	Correção campo VL_ITEM
--- FAF.129 - Fabio Ferreira, 11-jun-2014, Fabio Ferreira, 	Status da ref,fiscal
--- FAF.147 - Fabio Ferreira, 17-jun-2014, Fabio Ferreira, 	Incluído campo CD produto com o código do produto da garantia estendida
--- FAF.164 - Fabio Ferreira, 23-jun-2014, Fabio Ferreira, 	Correção de duplicidade de registro devido ao rel. com a tabela znsls004
--- FAF.174 - Fabio Ferreira, 27-jun-2014, Fabio Ferreira, 	Correção relaconamento tabela znsls004
--- FAF.201 - Fabio Ferreira, 03-jul-2014, Fabio Ferreira, 	Inclusão do numero da linha da ordem para adicionar na chave e evitar duplicidade
--- MAR.306 - Marcia A. R. Torres, 28-ago-2014, 			Inclusao do TIPO_ORDEM_VENDA.
--- #FAF.276 - 28-aug-2014, Fabio Ferreira, 	Correção valor da linha
--- #FAF.313 - 01-sep-2014, Fabio Ferreira, 	Flag cancelado
--- #FAF.314 - 04-sep-2014, Fabio Ferreira, 	Correção valor do juros
--- 26/11/2015 - Rosana Prignolato - Tratamento de divisão por zeros
---***************************************************************************************************************************************************************
 SELECT DISTINCT
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, tdsls401.t$rcd_utc), 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -40,6 +20,8 @@ SELECT DISTINCT
 					and   atv.t$xcst>=15),99)=99 THEN 10 ELSE 20 END
 			ELSE tdsls400.t$hdst END CD_SITUACAO_PEDIDO,
           znsls400.t$idca$c CD_CANAL_VENDA,
+          znsls401.t$itpe$c CD_TIPO_ENTREGA,
+          znsls401.t$eftr$c NR_CNPJ_REDESPACHO,
           ltrim(rtrim(tdsls401.t$item)) CD_ITEM,
           tdsls401.t$qoor QT_ITENS,
           tdsls401.t$pric*tdsls401.t$qoor VL_ITEM,																		--#FAF.123.n
@@ -153,4 +135,4 @@ and	   znsls402.t$ncia$c=znsls401.t$ncia$c
 and    znsls402.t$uneg$c=znsls401.t$uneg$c
 and    znsls402.t$pecl$c=znsls401.t$pecl$c
 and    znsls402.t$sqpd$c=znsls401.t$sqpd$c
-
+AND tdsls400.t$fdty$l != 14 --Retorno de Mercadoria Cliente
