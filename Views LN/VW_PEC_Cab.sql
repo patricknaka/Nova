@@ -6,6 +6,7 @@
 -- #FAF.246, 29-jul-2014, Fabio Ferreira, 	Tratamento timezone
 -- SQ_NATUREZA_OPERACAO e CD_DEPARTAMENTO	Eliminado com autorização do Patrick em 20/08/2014
 -- Tratamento do CD_FILIAL de nulo para zero	Rosana - 13/07/2015
+== Incluido o campo DS_ORDEM_PN_FORNEC		Rosana - 11/12/2015
 --*********************************************************************************************************************************************
 SELECT DISTINCT
     1 CD_CIA,
@@ -73,7 +74,8 @@ SELECT DISTINCT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(tdpur450.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone 'America/Sao_Paulo') AS DATE)   									--#FAF.246.n
     from baandb.ttdpur450201 tdpur450
-    where tdpur450.t$orno=tdpur400.t$orno) DT_CRIACAO									--#FAF.236.n
+    where tdpur450.t$orno=tdpur400.t$orno) DT_CRIACAO,									--#FAF.236.n
+  tdpur400.t$sorn DS_ORDEM_PN_FORNEC
 FROM
     baandb.ttdpur400201 tdpur400
     LEFT JOIN (select b.t$orno, min(b.t$trdt) dapr, b.t$logn from baandb.ttdpur450201 b
@@ -108,4 +110,3 @@ and tcemm124.t$loco=201
 and tcemm124.T$DTYP=2
 AND tcemm030.t$eunt=tcemm124.t$grid
 AND (select count(*) from baandb.ttdpur401201 l where l.t$orno=tdpur400.T$orno)>0
-
