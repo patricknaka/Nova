@@ -32,7 +32,9 @@ SELECT DISTINCT
 	tfacr200.t$docn$l NR_NF,
 	tfacr200.t$seri$l NR_SERIE_NF,
 	tfacr200.t$docd DT_EMISSAO_TITULO,
-	TO_DATE(REGEXP_REPLACE(tfacr200.T$LIQD,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO,			--#FAF.001.n
+  tfacr200.t$liqd dt_vencimento,
+--	TO_DATE(REGEXP_REPLACE(tfacr200.T$LIQD,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO			--#FAF.001.n
+  tfacr200.t$liqd   DT_VENCIMENTO,
 	CASE WHEN tfacr200.t$balc=0 THEN																--#FAF.146.n														 													
 	(select max(p.t$docd) 
 		from baandb.ttfacr200201 p
@@ -54,7 +56,8 @@ SELECT DISTINCT
 	 where a.t$ttyp=tfacr200.t$ttyp 
 	 and a.t$ninv=tfacr200.t$ninv
 	 and a.t$docn!=0) DT_SITUACAO_TITULO,																			--#FAF.002.en
-	TO_DATE(REGEXP_REPLACE(tfacr200.t$dued,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO_ORIGINAL,		--#FAF.001.n
+--	TO_DATE(REGEXP_REPLACE(tfacr200.t$dued,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO_ORIGINAL,		--#FAF.001.n
+  tfacr200.t$dued DT_VENCIMENTO_ORIGINAL,
 	tfacr200.t$bank NR_BANCARIO,
 	tfacr200.t$balc VL_SALDO,
 --	tfacr200.t$amti VL_DESCONTO,																						--#FAF.146.1.o
