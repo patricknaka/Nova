@@ -13,21 +13,21 @@ SELECT
 
 	(SELECT SUM(i.t$amnt$l)
 	FROM baandb.tbrnfe942201 i
-	WHERE i.t$fire$l=brnfe941.t$fire$l
-	AND i.t$line$l=brnfe941.t$line$l
-	AND i.t$brty$l=3) VL_IPI,
+	WHERE i.t$fire$l = brnfe941.t$fire$l
+	AND i.t$line$l = brnfe941.t$line$l
+	AND i.t$brty$l = 3) VL_IPI,
 	
 	(SELECT SUM(i.t$amnt$l)
 	FROM baandb.tbrnfe942201 i
-	WHERE i.t$fire$l=brnfe941.t$fire$l
-	AND i.t$line$l=brnfe941.t$line$l
-	AND i.t$brty$l=1) VL_ICMS,
+	WHERE i.t$fire$l = brnfe941.t$fire$l
+	AND i.t$line$l = brnfe941.t$line$l
+	AND i.t$brty$l = 1) VL_ICMS,
 
 	(SELECT SUM(i.t$amnt$l)
 	FROM baandb.tbrnfe942201 i
-	WHERE i.t$fire$l=brnfe941.t$fire$l
-	AND i.t$line$l=brnfe941.t$line$l
-	AND i.t$brty$l=2) VL_ICMS_ST,
+	WHERE i.t$fire$l = brnfe941.t$fire$l
+	AND i.t$line$l = brnfe941.t$line$l
+	AND i.t$brty$l = 2) VL_ICMS_ST,
 	
 	
 	brnfe941.t$gexp$l VL_DESPESA,
@@ -39,53 +39,67 @@ SELECT
 
 	(SELECT SUM(i.t$amnt$l)
 	FROM baandb.tbrnfe942201 i
-	WHERE i.t$fire$l=brnfe941.t$fire$l
-	AND i.t$line$l=brnfe941.t$line$l
-	AND i.t$brty$l=16) VL_IMPOSTO_IMPORTACAO,													--#FAF.237.n
+	WHERE i.t$fire$l = brnfe941.t$fire$l
+	AND i.t$line$l = brnfe941.t$line$l
+	AND i.t$brty$l = 16) VL_IMPOSTO_IMPORTACAO,													--#FAF.237.n
 	
 	nvl((select sum(r.T$CCHR$L) FROM baandb.ttdrec941201 r
-	where r.t$fire$l=brnfe941.t$fire$c
-	and r.t$line$l=brnfe941.t$line$c),0) VL_DESPESA_ADUANEIRA,
+	where r.t$fire$l = brnfe941.t$fire$c
+	and r.t$line$l = brnfe941.t$line$c),0) VL_DESPESA_ADUANEIRA,
 	
-	CASE WHEN tdpur400.t$rfdt$l=37 THEN brnfe941.t$addc$l ELSE 0 END VL_ADICIONAL_IMPORTACAO,
+	CASE WHEN tdpur400.t$rfdt$l = 37 THEN brnfe941.t$addc$l ELSE 0 END VL_ADICIONAL_IMPORTACAO,
 
-	CASE WHEN tdpur400.t$rfdt$l=37 THEN
+	CASE WHEN tdpur400.t$rfdt$l = 37 THEN
 	(SELECT SUM(i.t$amnt$l)
 	FROM baandb.tbrnfe942201 i
-	WHERE i.t$fire$l=brnfe941.t$fire$c
-	AND i.t$line$l=brnfe941.t$line$c
-	AND i.t$brty$l=5)
+	WHERE i.t$fire$l = brnfe941.t$fire$c
+	AND i.t$line$l = brnfe941.t$line$c
+	AND i.t$brty$l = 5)
 	ELSE 0 END VL_PIS_IMPORTACAO,	
 
-	CASE WHEN tdpur400.t$rfdt$l=37 THEN
+	CASE WHEN tdpur400.t$rfdt$l = 37 THEN
 	(SELECT SUM(i.t$amnt$l)
 	FROM baandb.tbrnfe942201 i
-	WHERE i.t$fire$l=brnfe941.t$fire$c
-	AND i.t$line$l=brnfe941.t$line$c
-	AND i.t$brty$l=6)																			--#FAF.237.n
+	WHERE i.t$fire$l = brnfe941.t$fire$c
+	AND i.t$line$l = brnfe941.t$line$c
+	AND i.t$brty$l = 6)																			--#FAF.237.n
 	ELSE 0 END VL_COFINS_IMPORTACAO,
 	
   CASE WHEN
 	nvl((select a.t$cdec from baandb.ttdpur400201 a
-		where a.t$orno=tdpur400.t$orno
-		and a.t$cdec='001'
-		and rownum=1),0)=0 THEN 0
+		where a.t$orno = tdpur400.t$orno
+		and a.t$cdec = '001'
+		and rownum = 1),0) = 0 THEN 0
 	ELSE brnfe941.t$fght$l
 	END VL_CIF_IMPORTACAO,
 	
-	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
-		GREATEST(brnfe941.t$rcd_utc, tdpur401.t$rcd_utc, tdpur400.t$rcd_utc),
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur451.t$trdt,
 		'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 		AT time zone 'America/Sao_Paulo') AS DATE) DT_ATUALIZACAO	
 
-FROM
-	baandb.tbrnfe941201 brnfe941,
-	baandb.ttdpur401201 tdpur401,
-	baandb.ttdpur400201 tdpur400,
-	baandb.tznnfe007201 znnfe007
-WHERE	znnfe007.t$fire$c=brnfe941.t$fire$l
-AND		znnfe007.t$line$c=brnfe941.t$line$l	
-AND		tdpur401.t$orno=znnfe007.t$orno$c
-AND		tdpur401.t$pono=znnfe007.t$pono$c
-AND		tdpur400.t$orno=tdpur401.t$orno
-AND		znnfe007.t$oorg$c=80
+FROM baandb.tbrnfe941201 brnfe941
+
+INNER JOIN baandb.tznnfe007201 znnfe007
+        ON znnfe007.t$fire$c = brnfe941.t$fire$l
+       AND znnfe007.t$line$c = brnfe941.t$line$l
+       AND znnfe007.t$oorg$c = 80
+       
+INNER JOIN baandb.ttdpur401201 tdpur401
+        ON tdpur401.t$orno = znnfe007.t$orno$c
+       AND tdpur401.t$pono = znnfe007.t$pono$c
+  
+INNER JOIN baandb.ttdpur400201 tdpur400
+        ON tdpur400.t$orno = tdpur401.t$orno
+
+LEFT JOIN ( select  a.t$orno,
+                    max(a.t$trdt) t$trdt
+            from baandb.ttdpur451201 a 
+            group by a.t$orno ) tdpur451
+       ON tdpur451.t$orno = tdpur400.t$orno
+  
+--WHERE	znnfe007.t$fire$c = brnfe941.t$fire$l
+--AND		znnfe007.t$line$c = brnfe941.t$line$l	
+--AND		tdpur401.t$orno = znnfe007.t$orno$c
+--AND		tdpur401.t$pono = znnfe007.t$pono$c
+--AND		tdpur400.t$orno = tdpur401.t$orno
+--AND		znnfe007.t$oorg$c = 80
