@@ -1,4 +1,4 @@
-﻿SELECT  DISTINCT
+SELECT  DISTINCT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15) 
 --**********************************************************************************************************************************************************
 -- a tabela ttdsls094201 é compartilhada com a 201
@@ -18,7 +18,7 @@
         TO_CHAR(sls401q.t$entr$c) NR_ENTREGA,                                      
         znsls400.t$cven$c CD_VENDEDOR,
         --tcemm030.t$euca CD_FILIAL,
-        case when tcemm030.t$euca  = ' ' then substr(tcemm124.t$grid,-2,2) else tcemm030.t$euca end as CD_FILIAL,
+        case when tcemm030.t$euca   =  ' ' then substr(tcemm124.t$grid,-2,2) else tcemm030.t$euca end as CD_FILIAL,
         sls401q.t$opfc$l CD_NATUREZA_OPERACAO,
         ' ' SQ_NATUREZA_OPERACAO,        -- *** NAO EXISTE NA PREVISAO DE IMPOSTOS
         tdsls400.t$ccur CD_MOEDA,
@@ -27,16 +27,16 @@
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(ttdsls450601.t$trdt), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE)
          FROM baandb.ttdsls450601
-         WHERE ttdsls450601.t$orno=tdsls400.t$orno) DT_SITUACAO_PEDIDO,
+         WHERE ttdsls450601.t$orno = tdsls400.t$orno) DT_SITUACAO_PEDIDO,
         znsls400.t$vlfr$c VL_FRETE_CLIENTE,
         nvl((select sum(f.t$vlft$c) from baandb.tznfmd630601 f
-             where f.T$PECL$C=TO_CHAR(sls401q.t$entr$c)),0) VL_FRETE_CIA,
+             where f.T$PECL$C = TO_CHAR(sls401q.t$entr$c)),0) VL_FRETE_CIA,
         znsls400.t$idca$c CD_CANAL_VENDA,
         znsls004.t$orig$c CD_ORIGEM_PEDIDO,
         znsls400.t$ipor$c NR_IP_CLIENTE,
         tdsls400.t$oamt VL_PEDIDO,                                  
         nvl((select sum(f.t$vlfc$c) from baandb.tznfmd630601 f
-			 where f.t$pecl$c=TO_CHAR(sls401q.t$entr$c)),0) VL_FRETE_TABELA,
+			 where f.t$pecl$c = TO_CHAR(sls401q.t$entr$c)),0) VL_FRETE_TABELA,
         endfat.t$ccit CD_CIDADE_FATURA,
         endfat.t$ccty CD_PAIS_FATURA,
         endfat.t$cste CD_ESTADO_FATURA,
@@ -51,30 +51,30 @@
         znsls400.t$idcp$c NR_CAMPANHA_B2B,
         sls401q.t$pztr$c QT_PRAZO_TRANSIT_TIME,
         sls401q.t$pzcd$c QT_PRAZO_CD,
---        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 END NR_NF_CONSOLIDADA,           
-        CASE WHEN tdsls094.t$bill$c!=3 THEN to_char(consold.NOTA) ELSE '0' END NR_NF_CONSOLIDADA,                 
-        CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' END NR_SERIE_NF_CONSOLIDADA,     
+--        CASE WHEN tdsls094.t$bill$c! = 3 THEN consold.NOTA ELSE 0 END NR_NF_CONSOLIDADA,           
+        CASE WHEN tdsls094.t$bill$c! = 3 THEN to_char(consold.NOTA) ELSE '0' END NR_NF_CONSOLIDADA,                 
+        CASE WHEN tdsls094.t$bill$c! = 3 THEN consold.SERIE ELSE ' ' END NR_SERIE_NF_CONSOLIDADA,     
         sls401q.t$pcga$c NR_PEDIDO_GARANTIA,
         sls401q.t$dtep$c DT_LIMITE_EXPED,
         znsls400.t$tped$c CD_TIPO_PEDIDO,
         (SELECT  DISTINCT to_char(znsls402.t$idmp$c)
         FROM    baandb.tznsls402601 znsls402
-        WHERE   znsls402.t$ncia$c=znsls400.t$ncia$c
-        AND     znsls402.t$uneg$c=znsls400.t$uneg$c
-        AND     znsls402.t$pecl$c=znsls400.t$pecl$c
-        AND     znsls402.t$sqpd$c=znsls400.t$sqpd$c
-    AND     rownum=1                                        
-        AND     znsls402.t$vlmr$c = (SELECT Max(znsls402b.t$vlmr$c)
+        WHERE   znsls402.t$ncia$c = znsls400.t$ncia$c
+        AND     znsls402.t$uneg$c = znsls400.t$uneg$c
+        AND     znsls402.t$pecl$c = znsls400.t$pecl$c
+        AND     znsls402.t$sqpd$c = znsls400.t$sqpd$c
+    AND     rownum = 1                                        
+        AND     znsls402.t$vlmr$c  =  (SELECT Max(znsls402b.t$vlmr$c)
                               FROM    baandb.tznsls402601 znsls402b
-                              WHERE   znsls402b.t$ncia$c=znsls402.t$ncia$c
-                              AND     znsls402b.t$uneg$c=znsls402.t$uneg$c
-                              AND     znsls402b.t$pecl$c=znsls402.t$pecl$c
-                              AND     znsls402b.t$sqpd$c=znsls402.t$sqpd$c)) CD_MEIO_PAGAMENTO_PRINCIPAL,
+                              WHERE   znsls402b.t$ncia$c = znsls402.t$ncia$c
+                              AND     znsls402b.t$uneg$c = znsls402.t$uneg$c
+                              AND     znsls402b.t$pecl$c = znsls402.t$pecl$c
+                              AND     znsls402b.t$sqpd$c = znsls402.t$sqpd$c)) CD_MEIO_PAGAMENTO_PRINCIPAL,
         znsls400.t$peex$c NR_PEDIDO_EXTERNO,
         sls401q.t$itpe$c CD_TIPO_ENTREGA,
         sls401q.t$tptr$c CD_TIPO_TRANSPORTE,
     (select tcmcs080.t$suno from baandb.ttcmcs080601 tcmcs080
-    where tcmcs080.t$cfrw=tdsls400.t$cfrw) CD_TRANSPORTADORA,
+    where tcmcs080.t$cfrw = tdsls400.t$cfrw) CD_TRANSPORTADORA,
         sls401q.t$mgrt$c CD_MEGA_ROTA,
         ulttrc.poco CD_STATUS,
         ulttrc.dtoc DT_STATUS_PEDIDO,
@@ -84,99 +84,144 @@
   sls401q.cancela IN_CANCELADO
 --  sls401q.seq_pedido_cancel SQ_PEDIDO_CANCELADO,
 --  TO_CHAR(sls401q.entrega_cancel) NR_ENTREGA_CANCELADO
+
 FROM    BAANDB.TTDSLS400601 tdsls400
-    LEFT JOIN (select  c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE             
-              from baandb.tcisli245601 c245
+    
+LEFT JOIN (select  c245.T$SLSO, c940.T$DOCN$L NOTA, c940.t$seri$l SERIE             
+           from     baandb.tcisli245601 c245
               inner join baandb.tcisli941601 c941
-                     on c941.t$fire$l=c245.T$FIRE$L
+                      on c941.t$fire$l = c245.T$FIRE$L
               inner join baandb.tcisli940601 c940
-                     on c940.t$fire$l=c941.T$REFR$L
-              group by  c245.T$SLSO, c940.T$DOCN$L, c940.t$seri$l ) consold ON consold.T$SLSO=tdsls400.t$orno,          
-          baandb.tznsls400601 znsls400,
-         (SELECT
-          znsls401.t$ncia$c        t$ncia$c,
-          znsls401.t$uneg$c       t$uneg$c,
-          znsls401.t$pecl$c       t$pecl$c,
-          znsls401.t$sqpd$c       t$sqpd$c,
-          znsls401.t$entr$c       t$entr$c,
-      case when znsls401.t$qtve$c<0 then 2 else 1 end cancela,
---      znsls401.t$sedt$c   seq_pedido_cancel,
---      znsls401.t$endt$c    entrega_cancel,
-          max(znsls401.t$pztr$c)  t$pztr$c,
-          max(znsls401.t$pzcd$c)  t$pzcd$c,
-          max(znsls401.t$pcga$c)       t$pcga$c,                                  
-      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(znsls401.t$dtep$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone 'America/Sao_Paulo') AS DATE) t$dtep$c,
-          max(znsls401.t$itpe$c)       t$itpe$c,
-          max(znsls401.t$mgrt$c)       t$mgrt$c,                                  
-          znsls401.t$orno$c       t$orno,
-          max(tcibd001.t$tptr$c)       t$tptr$c,                                  
-          brmcs941.t$opfc$l       t$opfc$l,
-          znsls401.t$idor$c      t$idor$c  
-         FROM baandb.tznsls401601 znsls401,
-              baandb.ttcibd001601 tcibd001,
-              baandb.ttdsls401601 tdsls401
-              LEFT JOIN 
-        (select o.t$orno, max(n.t$opfc$l) t$opfc$l  from baandb.tbrmcs941601 n, baandb.ttdsls401601 o
-        where n.T$LINE$L=(select min(n1.t$line$l)   from baandb.tbrmcs941601 n1
-                  where n1.T$GAMT$L=(select max(n2.T$GAMT$L) 
-                            from baandb.tbrmcs941601 n2
-                            where n2.T$TXRE$L=n1.T$TXRE$L))
-        and o.T$TXRE$L=n.T$TXRE$L
-    GROUP BY o.t$orno) brmcs941                                            
-        ON  brmcs941.t$orno=tdsls401.t$orno
-             WHERE  tcibd001.t$item=tdsls401.t$item
-         AND    znsls401.t$orno$c=tdsls401.t$orno
-         AND    znsls401.t$pono$c=tdsls401.t$pono
-         GROUP BY
-          znsls401.t$ncia$c,
-          znsls401.t$uneg$c,
-          znsls401.t$pecl$c,
-          znsls401.t$sqpd$c,
-          znsls401.t$entr$c,
-          znsls401.t$orno$c,
-      case when znsls401.t$qtve$c<0 then 2 else 1 end,
---      znsls401.t$sedt$c,
---      znsls401.t$endt$c,
-          brmcs941.t$opfc$l,
-      znsls401.t$idor$c) sls401q
-      LEFT JOIN  baandb.tznsls004601 znsls004 
-      ON znsls004.t$orno$c=sls401q.t$orno 
-      AND znsls004.t$entr$c=sls401q.t$entr$c,      
-        baandb.ttcemm124601 tcemm124,
-        baandb.ttcemm030601 tcemm030,
-        baandb.ttccom130601 endfat,
-        baandb.ttccom130601 endent,
-        baandb.ttdsls094201 tdsls094,                                        
-    ( SELECT Max(tznsls410601.t$poco$c) poco,
-                 tznsls410601.t$ncia$c ncia,
-                 tznsls410601.t$uneg$c uneg,
-                 tznsls410601.t$pecl$c pecl,
-         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(tznsls410601.t$dtoc$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE) dtoc
-          FROM baandb.tznsls410601
-          WHERE
-          tznsls410601.t$dtoc$c = (SELECT Max(b.t$dtoc$c)
-                                    FROM baandb.tznsls410601 b
-                                    WHERE   b.t$ncia$c=tznsls410601.t$ncia$c
-                                    AND     b.t$uneg$c=tznsls410601.t$uneg$c
-                                    AND     b.t$pecl$c=tznsls410601.t$pecl$c
-                                    AND     b.t$sqpd$c=tznsls410601.t$sqpd$c)
-          GROUP BY 
-                   tznsls410601.t$ncia$c,
-                   tznsls410601.t$uneg$c,
-                   tznsls410601.t$pecl$c) ulttrc  
-WHERE   sls401q.t$orno=tdsls400.t$orno
-AND     znsls400.t$ncia$c=sls401q.t$ncia$c
-AND     znsls400.t$uneg$c=sls401q.t$uneg$c
-AND     znsls400.t$pecl$c=sls401q.t$pecl$c
-AND     znsls400.t$sqpd$c=sls401q.t$sqpd$c
-AND     tdsls400.t$cofc=tcemm124.t$cwoc
-AND    tcemm124.t$dtyp=1
-AND    tcemm030.t$eunt=tcemm124.t$grid
-AND     endfat.t$cadr=tdsls400.t$itad
-AND     endent.t$cadr=tdsls400.t$stad
-AND     ulttrc.ncia=sls401q.t$ncia$c
-AND     ulttrc.uneg=sls401q.t$uneg$c
-AND     ulttrc.pecl=sls401q.t$pecl$c
-AND    tdsls094.t$sotp=tdsls400.t$sotp  
+                      on c940.t$fire$l = c941.T$REFR$L
+           group by  c245.T$SLSO, c940.T$DOCN$L, c940.t$seri$l ) consold 
+       ON consold.T$SLSO = tdsls400.t$orno
+                        
+INNER JOIN (SELECT
+                znsls401.t$ncia$c       t$ncia$c,
+                znsls401.t$uneg$c       t$uneg$c,
+                znsls401.t$pecl$c       t$pecl$c,
+                znsls401.t$sqpd$c       t$sqpd$c,
+                znsls401.t$entr$c       t$entr$c,
+                case when znsls401.t$qtve$c<0 then 2 else 1 end cancela,
+                max(znsls401.t$pztr$c)  t$pztr$c,
+                max(znsls401.t$pzcd$c)  t$pzcd$c,
+                max(znsls401.t$pcga$c)  t$pcga$c,                                  
+                CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(znsls401.t$dtep$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone 'America/Sao_Paulo') AS DATE) t$dtep$c,
+                max(znsls401.t$itpe$c)   t$itpe$c,
+                max(znsls401.t$mgrt$c)   t$mgrt$c,                                  
+                znsls401.t$orno$c        t$orno,
+                max(tcibd001.t$tptr$c)   t$tptr$c,                                  
+                brmcs941.t$opfc$l        t$opfc$l,
+                znsls401.t$idor$c        t$idor$c  
+           FROM baandb.tznsls401601 znsls401
+                INNER JOIN baandb.ttdsls401601 tdsls401
+                        ON tdsls401.t$orno = znsls401.t$orno$c
+                       AND tdsls401.t$pono = znsls401.t$pono$c
+                       
+                INNER JOIN baandb.ttcibd001601 tcibd001
+                        ON tcibd001.t$item = tdsls401.t$item
+                        
+                LEFT JOIN (select o.t$orno, 
+                                  max(n.t$opfc$l) t$opfc$l   
+                           from   baandb.tbrmcs941601 n, 
+                                  baandb.ttdsls401601 o
+                           where  n.T$LINE$L = ( select min(n1.t$line$l)   
+                                                 from baandb.tbrmcs941601 n1
+                                                 where n1.T$GAMT$L = ( select max(n2.T$GAMT$L)  
+                                                                       from baandb.tbrmcs941601 n2
+                                                                       where n2.T$TXRE$L = n1.T$TXRE$L))
+                           and o.T$TXRE$L = n.T$TXRE$L
+                           GROUP BY o.t$orno) brmcs941                                            
+                       ON  brmcs941.t$orno = tdsls401.t$orno
+--          WHERE  tcibd001.t$item = tdsls401.t$item
+--            AND  znsls401.t$orno$c = tdsls401.t$orno
+--            AND  znsls401.t$pono$c = tdsls401.t$pono
+          GROUP BY
+            znsls401.t$ncia$c,
+            znsls401.t$uneg$c,
+            znsls401.t$pecl$c,
+            znsls401.t$sqpd$c,
+            znsls401.t$entr$c,
+            znsls401.t$orno$c,
+            case when znsls401.t$qtve$c < 0 then 2 else 1 end,
+            brmcs941.t$opfc$l,
+            znsls401.t$idor$c) sls401q
+        ON sls401q.t$orno = tdsls400.t$orno
+        
+INNER JOIN baandb.tznsls400601 znsls400
+        ON znsls400.t$ncia$c = sls401q.t$ncia$c
+       AND znsls400.t$uneg$c = sls401q.t$uneg$c
+       AND znsls400.t$pecl$c = sls401q.t$pecl$c
+       AND znsls400.t$sqpd$c = sls401q.t$sqpd$c
+        
+LEFT JOIN  baandb.tznsls004601 znsls004 
+       ON znsls004.t$orno$c = sls401q.t$orno
+      AND znsls004.t$entr$c = sls401q.t$entr$c
+      
+INNER JOIN baandb.ttcemm124601 tcemm124
+        ON tcemm124.t$cwoc = tdsls400.t$cofc  
+       AND tcemm124.t$dtyp = 1
+        
+INNER JOIN baandb.ttcemm030601 tcemm030
+        ON tcemm030.t$eunt = tcemm124.t$grid
+        
+        
+INNER JOIN baandb.ttccom130601 endfat
+        ON endfat.t$cadr = tdsls400.t$itad
+
+INNER JOIN baandb.ttccom130601 endent
+        ON endent.t$cadr = tdsls400.t$stad
+        
+INNER JOIN baandb.ttdsls094301 tdsls094
+        ON tdsls094.t$sotp = tdsls400.t$sotp
+        
+INNER JOIN ( select a.t$ncia$c ncia,
+                    a.t$uneg$c uneg,
+                    a.t$pecl$c pecl,
+                    a.t$sqpd$c sqpd,
+                    max(a.t$dtoc$c) dtoc,
+                    MAX(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C,  a.T$SEQN$C) poco
+               from baandb.tznsls410601 a
+           group by a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c ) ulttrc
+        ON  ulttrc.ncia = sls401q.t$ncia$c
+       AND  ulttrc.uneg = sls401q.t$uneg$c
+       AND  ulttrc.pecl = sls401q.t$pecl$c
+       AND  ulttrc.sqpd = sls401q.t$sqpd$c
+
+--        ( SELECT Max(tznsls410601.t$poco$c) poco,
+--                 tznsls410601.t$ncia$c ncia,
+--                 tznsls410601.t$uneg$c uneg,
+--                 tznsls410601.t$pecl$c pecl,
+--         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(tznsls410601.t$dtoc$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--          AT time zone 'America/Sao_Paulo') AS DATE) dtoc
+--          FROM baandb.tznsls410601
+--          WHERE
+--          tznsls410601.t$dtoc$c  =  (SELECT Max(b.t$dtoc$c)
+--                                    FROM baandb.tznsls410601 b
+--                                    WHERE   b.t$ncia$c = tznsls410601.t$ncia$c
+--                                    AND     b.t$uneg$c = tznsls410601.t$uneg$c
+--                                    AND     b.t$pecl$c = tznsls410601.t$pecl$c
+--                                    AND     b.t$sqpd$c = tznsls410601.t$sqpd$c)
+--          GROUP BY 
+--                   tznsls410601.t$ncia$c,
+--                   tznsls410601.t$uneg$c,
+--                   tznsls410601.t$pecl$c) ulttrc
+                   
+--WHERE   sls401q.t$orno = tdsls400.t$orno
+--AND     znsls400.t$ncia$c = sls401q.t$ncia$c
+--AND     znsls400.t$uneg$c = sls401q.t$uneg$c
+--AND     znsls400.t$pecl$c = sls401q.t$pecl$c
+--AND     znsls400.t$sqpd$c = sls401q.t$sqpd$c
+--AND     tdsls400.t$cofc = tcemm124.t$cwoc
+--AND    tcemm124.t$dtyp = 1
+--AND    tcemm030.t$eunt = tcemm124.t$grid
+--AND     endfat.t$cadr = tdsls400.t$itad
+--AND     endent.t$cadr = tdsls400.t$stad
+--AND     ulttrc.ncia = sls401q.t$ncia$c
+--AND     ulttrc.uneg = sls401q.t$uneg$c
+--AND     ulttrc.pecl = sls401q.t$pecl$c
+--AND    tdsls094.t$sotp = tdsls400.t$sotp  
