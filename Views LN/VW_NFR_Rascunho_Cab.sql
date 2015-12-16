@@ -1,8 +1,8 @@
-SELECT 
+﻿SELECT 
   brnfe940.t$fire$l NR_NF_RASCUNHO,
 	brnfe941.t$opfc$l CD_NATUREZA_OPERACAO_COMPRA,
 	tcmcs940.t$opor$l SQ_NATUREZA_OPERACAO_COMPRA,
-    1 CD_CIA,
+  1 CD_CIA,
 	case when (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
 	WHERE tcemm124.t$cwoc = tdpur400.t$cofc
 	AND tcemm030.t$eunt = tcemm124.t$grid
@@ -15,20 +15,27 @@ SELECT
 	tdpur400.t$otbp CD_FORNECEDOR,	
 	TO_CHAR(brnfe940.t$docn$l) NR_NF_REFERENCIA,															--#FAF.022.1.n																
 	brnfe940.t$seri$l NR_SERIE_NFR_REFERENCIA,											
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(brnfe940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone 'America/Sao_Paulo') AS DATE)DT_EMISSAO_NF,
-	--brnfe940.t$iodt$l DT_SAIDA_NF,																			--#FAF.095.o
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(brnfe940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone 'America/Sao_Paulo') AS DATE)DT_SAIDA_NF,
-	--CASE WHEN brnfe940.t$iodt$l<TO_DATE('01-01-1990', 'DD-MM-YYYY') THEN
-	--brnfe940.t$idat$l ELSE brnfe940.t$iodt$l END DT_SAIDA_NF,												--#FAF.095.n
+
+--foi feito esse tratamento pq no LN existem Referências que estão com a Data de Emissão em branco
+--e quando importamos os dados, eles estão vindo como 31/12/4711
+  case when to_date(brnfe940.t$idat$l) = to_date('4712-01-01','yyyy-mm-dd HH24:MI:SS')
+    then null else to_date(brnfe940.t$idat$l) end DT_EMISSAO_NF,
+
+--  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(brnfe940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--		AT time zone 'America/Sao_Paulo') AS DATE)DT_EMISSAO_NF,
+
+  case when to_date(brnfe940.t$idat$l) = to_date('4712-01-01','yyyy-mm-dd HH24:MI:SS')
+    then null else to_date(brnfe940.t$idat$l) end DT_SAIDA_NF,
+
+--  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(brnfe940.t$idat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--		AT time zone 'America/Sao_Paulo') AS DATE)DT_SAIDA_NF,
+    
 	tdpur400.t$orno NR_PEDIDO_COMPRA,
 	brnfe940.t$gtam$l VL_PRODUTO,
 	brnfe940.t$gexp$l VL_DESPESA,
 	brnfe940.t$addc$l VL_DESCONTO,
 	brnfe940.t$fght$l VL_FRETE,
 	brnfe940.t$insr$l VL_SEGURO,
---	brnfe940.t$addc$l VL_DESCONTO_INCONDICIONAL,															--#FAF.235.o
 	(SELECT SUM(i.t$amnt$l)
 	FROM baandb.tbrnfe942201 i
 	WHERE i.t$fire$l = brnfe940.t$fire$l
