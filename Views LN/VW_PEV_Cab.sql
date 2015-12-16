@@ -200,3 +200,5 @@ FROM    baandb.ttdsls400201 tdsls400
         ON ulttrc.ncia = sls401q.t$ncia$c
        AND ulttrc.uneg = sls401q.t$uneg$c
        AND ulttrc.pecl = sls401q.t$pecl$c
+       
+where tdsls400.t$fdty$l != 14 --Retorno de Mercadoria Cliente
