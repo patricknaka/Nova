@@ -52,7 +52,10 @@ select Q1.*
                   AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )
                                 DATA_OCORRENCIA,
           
-             znfmd630.t$stat$c  SITUACAO,
+             CASE WHEN znfmd630.t$stat$c = 2
+                    THEN 'F'
+                  ELSE   'P'
+             END                SITUACAO,
              znsls401.t$cide$c  CIDADE,
              znsls401.t$cepe$c  CEP,
              znsls401.t$ufen$c  UF,
@@ -85,7 +88,7 @@ select Q1.*
                   and znfmd062.t$cono$c = znfmd630.t$cono$c
                   and znfmd062.t$cepd$c <= tccom130.t$pstc
                   and znfmd062.t$cepa$c >= tccom130.t$pstc
-                  and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
+-                  and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
                   and znfmd061.t$cono$c = znfmd062.t$cono$c
                   and znfmd061.t$creg$c = znfmd062.t$creg$c
                   and rownum = 1 )
@@ -198,13 +201,15 @@ INNER JOIN ( SELECT d.t$cnst CNST,
                                             and l1.t$cpac = l.t$cpac ) ) FGET
   ON FGET.CNST = cisli940.t$fdty$l
 
-WHERE ( SELECT znfmd640.t$coci$c
-          FROM BAANDB.tznfmd640601 znfmd640
-         WHERE znfmd640.t$coci$c = 'ETR'
-           AND znfmd640.t$fili$c = znfmd630.t$fili$c
-           AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
-           AND ROWNUM = 1 ) IS NOT NULL
-  AND cisli940.t$fdty$l = 1 ) Q1
+INNER JOIN ( SELECT znfmd640.t$coci$c,
+                    znfmd640.t$fili$c,
+                    znfmd640.t$etiq$c
+               FROM BAANDB.tznfmd640601 znfmd640
+              WHERE znfmd640.t$coci$c = 'ETR' ) fmd640
+        ON fmd640.t$fili$c = znfmd630.t$fili$c
+       AND fmd640.t$etiq$c = znfmd630.t$etiq$c
+  
+WHERE cisli940.t$fdty$l = 1 ) Q1
 
 where Q1.OCORRENCIA IS NOT NULL
   and Q1.DATA_PROMETIDA
@@ -271,7 +276,11 @@ where Q1.OCORRENCIA IS NOT NULL
 "                   AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )  " &
 "                                 DATA_OCORRENCIA,  " &
 "  " &
-"              znfmd630.t$stat$c  SITUACAO,  " &
+"              CASE WHEN znfmd630.t$stat$c = 2  " &
+"                     THEN 'F'  " &
+"                   ELSE   'P'  " &
+"              END                SITUACAO,  " &
+"  " &
 "              znsls401.t$cide$c  CIDADE,  " &
 "              znsls401.t$cepe$c  CEP,  " &
 "              znsls401.t$ufen$c  UF,  " &
@@ -417,13 +426,15 @@ where Q1.OCORRENCIA IS NOT NULL
 "                                             and l1.t$cpac = l.t$cpac ) ) FGET  " &
 "   ON FGET.CNST = cisli940.t$fdty$l  " &
 "  " &
-" WHERE ( SELECT znfmd640.t$coci$c  " &
-"           FROM BAANDB.tznfmd640" + Parameters!Compania.Value + " znfmd640  " &
-"          WHERE znfmd640.t$coci$c = 'ETR'  " &
-"            AND znfmd640.t$fili$c = znfmd630.t$fili$c  " &
-"            AND znfmd640.t$etiq$c = znfmd630.t$etiq$c  " &
-"            AND ROWNUM = 1 ) IS NOT NULL  " &
-"   AND cisli940.t$fdty$l = 1 ) Q1  " &
+" INNER JOIN ( SELECT znfmd640.t$coci$c,  " &
+"                     znfmd640.t$fili$c,  " &
+"                     znfmd640.t$etiq$c  " &
+"                FROM BAANDB.tznfmd640601 znfmd640  " &
+"               WHERE znfmd640.t$coci$c = 'ETR' ) fmd640  " &
+"         ON fmd640.t$fili$c = znfmd630.t$fili$c  " &
+"        AND fmd640.t$etiq$c = znfmd630.t$etiq$c  " &
+"  " &
+" WHERE cisli940.t$fdty$l = 1 ) Q1  " &
 "  " &
 " where Q1.OCORRENCIA IS NOT NULL  " &
 "   and Q1.DATA_PROMETIDA  " &
