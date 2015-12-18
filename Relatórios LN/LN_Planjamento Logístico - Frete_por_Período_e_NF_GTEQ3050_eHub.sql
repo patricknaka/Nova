@@ -3,13 +3,14 @@ SELECT
     znfmd630.t$fili$c    FILIAL,
     NVL(tcmcs031.t$dsca,
         'Pedido Interno')MARCA,
+  
     ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$date$c,
-               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone 'America/Sao_Paulo') AS DATE)
-        from BAANDB.tznfmd640601 znfmd640_ETR
-       where znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
-         and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
-         and znfmd640_ETR.t$coct$c = 'ETR')
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone 'America/Sao_Paulo') AS DATE)
+       from BAANDB.tznfmd640601 znfmd640_ETR
+      where znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
+        and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
+        and znfmd640_ETR.t$coct$c = 'ETR')
                          DATA_EXPEDICAO,
     znfmd630.t$docn$c    NUME_NOTA,
     znfmd630.t$seri$c    NUME_SERIE,
@@ -43,9 +44,9 @@ SELECT
          and znfmd640_ENT.t$coci$c = 'ENT')
                          DATA_ENTREGA,
     znsls400.t$idca$c    CANAL_VENDA,
-    CASE WHEN znfmd630.t$stat$c = 'F'
-           THEN 'FECHADO'
-         ELSE 'ABERTO'
+    CASE WHEN znfmd630.t$stat$c = 2
+           THEN 'Fechado'
+         ELSE   'Aberto'
      END                 SITUACAO_ENTREGA,
     znfmd067.t$fate$c    FILIAL_TRANSPORTADORA,
     cisli940.t$styp$l    TIPO_VENDA,
@@ -86,12 +87,14 @@ SELECT
                   AT time zone 'America/Sao_Paulo') AS DATE)
     End                  DATA_CORRIGIDA,
     znfmd630.t$cono$c    CONTRATO,
-    znfmd640.t$coci$c    ULTIMA_OCORRENCIA,
-    znfmd640.t$dsci$c    OCORRENCIA,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c,
+ 
+    znsls410.CODE_OCORRENCIA    ULTIMA_OCORRENCIA,
+    znsls410.DESC_OCORRENCIA    OCORRENCIA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( znsls410.DATA_OCORRENCIA,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
                          DATA_OCORRENCIA,
+
     znsls401.t$pztr$c    PRAZO_ENTREGA,
     nvl( ( select sum(cisli941.t$dqua$l)
              from baandb.tcisli941601 cisli941
@@ -198,23 +201,25 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
  LEFT JOIN baandb.tcisli940601  cisli940
         ON cisli940.t$fire$l = znfmd630.t$fire$c
 
- LEFT JOIN ( select a.t$fili$c,
-                    a.t$etiq$c,
-                    znfmd030.t$dsci$c,
-                    max(a.t$coci$c) t$coci$c,
-                    max(a.t$date$c) t$date$c
-               from baandb.tznfmd640601 a
-         inner join baandb.tznfmd030601 znfmd030
-                 on znfmd030.t$ocin$c = a.t$coci$c
-              where a.t$udat$c = ( select max(oc.t$udat$c)
-                                     from baandb.tznfmd640601 oc
-                                    where oc.t$fili$c = a.t$fili$c
-                                      and oc.t$etiq$c = a.t$etiq$c )
-           group by a.t$fili$c,
-                    a.t$etiq$c,
-                    znfmd030.t$dsci$c ) znfmd640
-        ON znfmd640.t$fili$c = znfmd630.t$fili$c
-       AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
+ LEFT JOIN ( select znsls410.t$poco$c CODE_OCORRENCIA
+                  , znmcs002.t$desc$c DESC_OCORRENCIA
+                  , znsls410.t$dtoc$c DATA_OCORRENCIA
+                  , znsls410.t$ncia$c 
+                  , znsls410.t$uneg$c
+                  , znsls410.t$pecl$c
+                  , znsls410.t$sqpd$c
+                  , znsls410.t$entr$c
+               from baandb.tznsls410601 znsls410 
+         inner join baandb.tznmcs002301 znmcs002
+                 on znmcs002.t$poco$c = znsls410.t$poco$c
+              where znsls410.t$seqn$c = ( select max(a.t$seqn$c)
+                                            from baandb.tznsls410601 a
+                                           where znsls410.t$entr$c = a.t$entr$c ) ) znsls410
+        ON znsls410.t$ncia$c = znsls004.t$ncia$c
+       AND znsls410.t$uneg$c = znsls004.t$uneg$c
+       AND znsls410.t$pecl$c = znsls004.t$pecl$c
+       AND znsls410.t$sqpd$c = znsls004.t$sqpd$c
+       AND znsls410.t$entr$c = znsls004.t$entr$c  
 
  LEFT JOIN baandb.tznfmd610601  znfmd610
         ON znfmd610.t$fili$c = znfmd630.t$fili$c
@@ -268,8 +273,9 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
         BETWEEN :DtExpIni
             AND :DtExpFim
     AND NVL(znsls401.t$itpe$c, 16) IN (:TipoEntrega)
-    AND tcmcs080.t$cfrw = CASE WHEN :Transportadora = 'T' THEN tcmcs080.t$cfrw ELSE :Transportadora END
-    AND NVL(tcmcs031.t$cbrn, 'PI') = CASE WHEN :Marca = 'T' THEN NVL(tcmcs031.t$cbrn, 'PI') ELSE :Marca END  
+	
+    AND ((:Transportadora = 'T') or (znfmd630.t$cfrw$c = :Transportadora))
+    AND ((:Marca = 'T') or (NVL(znint002.t$cbrn$c, 'PI') = :Marca))
 
 
 
@@ -280,7 +286,7 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "     znfmd630.t$fili$c    FILIAL,  " &
 "     NVL(tcmcs031.t$dsca,  " &
 "         'Pedido Interno')MARCA,  " &
-" 		  " &
+"     " &
 "     ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$date$c,  " &
 "               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "                  AT time zone 'America/Sao_Paulo') AS DATE)  " &
@@ -321,9 +327,9 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "          and znfmd640_ENT.t$coci$c = 'ENT')  " &
 "                          DATA_ENTREGA,  " &
 "     znsls400.t$idca$c    CANAL_VENDA,  " &
-"     CASE WHEN znfmd630.t$stat$c = 'F'  " &
-"            THEN 'FECHADO'  " &
-"          ELSE 'ABERTO'  " &
+"     CASE WHEN znfmd630.t$stat$c = 2  " &
+"            THEN 'Fechado'  " &
+"          ELSE   'Aberto'  " &
 "      END                 SITUACAO_ENTREGA,  " &
 "     znfmd067.t$fate$c    FILIAL_TRANSPORTADORA,  " &
 "     cisli940.t$styp$l    TIPO_VENDA,  " &
@@ -364,9 +370,9 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "                   AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "     End                  DATA_CORRIGIDA,  " &
 "     znfmd630.t$cono$c    CONTRATO,  " &
-"     znfmd640.t$coci$c    ULTIMA_OCORRENCIA,  " &
-"     znfmd640.t$dsci$c    OCORRENCIA,  " &
-"     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c,  " &
+"     znsls410.CODE_OCORRENCIA    ULTIMA_OCORRENCIA,  " &
+"     znsls410.DESC_OCORRENCIA    OCORRENCIA,  " &
+"     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( znsls410.DATA_OCORRENCIA,  " &
 "       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "         AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                          DATA_OCORRENCIA,  " &
@@ -476,23 +482,25 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "  LEFT JOIN baandb.tcisli940" + Parameters!Compania.Value + "  cisli940  " &
 "         ON cisli940.t$fire$l = znfmd630.t$fire$c  " &
 "  " &
-"  LEFT JOIN ( select a.t$fili$c,  " &
-"                     a.t$etiq$c,  " &
-"                     znfmd030.t$dsci$c,  " &
-"                     max(a.t$coci$c) t$coci$c,  " &
-"                     max(a.t$date$c) t$date$c  " &
-"                from baandb.tznfmd640" + Parameters!Compania.Value + " a  " &
-"          inner join baandb.tznfmd030" + Parameters!Compania.Value + " znfmd030  " &
-"                  on znfmd030.t$ocin$c = a.t$coci$c  " &
-"               where a.t$udat$c = ( select max(oc.t$udat$c)  " &
-"                                      from baandb.tznfmd640" + Parameters!Compania.Value + " oc  " &
-"                                     where oc.t$fili$c = a.t$fili$c  " &
-"                                       and oc.t$etiq$c = a.t$etiq$c )  " &
-"            group by a.t$fili$c,  " &
-"                     a.t$etiq$c,  " &
-"                     znfmd030.t$dsci$c ) znfmd640  " &
-"         ON znfmd640.t$fili$c = znfmd630.t$fili$c  " &
-"        AND znfmd640.t$etiq$c = znfmd630.t$etiq$c  " &
+"  LEFT JOIN ( select znsls410.t$poco$c CODE_OCORRENCIA  " &
+"                   , znmcs002.t$desc$c DESC_OCORRENCIA  " &
+"                   , znsls410.t$dtoc$c DATA_OCORRENCIA  " &
+"                   , znsls410.t$ncia$c  " &
+"                   , znsls410.t$uneg$c  " &
+"                   , znsls410.t$pecl$c  " &
+"                   , znsls410.t$sqpd$c  " &
+"                   , znsls410.t$entr$c  " &
+"                from baandb.tznsls410" + Parameters!Compania.Value + " znsls410  " &
+"          inner join baandb.tznmcs002301 znmcs002  " &
+"                  on znmcs002.t$poco$c = znsls410.t$poco$c  " &
+"               where znsls410.t$seqn$c = ( select max(a.t$seqn$c)  " &
+"                                             from baandb.tznsls410601 a  " &
+"                                            where znsls410.t$entr$c = a.t$entr$c ) ) znsls410  " &
+"         ON znsls410.t$ncia$c = znsls004.t$ncia$c  " &
+"        AND znsls410.t$uneg$c = znsls004.t$uneg$c  " &
+"        AND znsls410.t$pecl$c = znsls004.t$pecl$c  " &
+"        AND znsls410.t$sqpd$c = znsls004.t$sqpd$c  " &
+"        AND znsls410.t$entr$c = znsls004.t$entr$c  " &
 "  " &
 "  LEFT JOIN baandb.tznfmd610" + Parameters!Compania.Value + "  znfmd610  " &
 "         ON znfmd610.t$fili$c = znfmd630.t$fili$c  " &
@@ -546,5 +554,5 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "         BETWEEN :DtExpIni  " &
 "             AND :DtExpFim  " &
 "     AND NVL(znsls401.t$itpe$c, 16) IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")  " &
-"     AND tcmcs080.t$cfrw = CASE WHEN '" + Parameters!Transportadora.Value + "' = 'T' THEN tcmcs080.t$cfrw ELSE '" + Parameters!Transportadora.Value + "' END  " &
-"     AND NVL(tcmcs031.t$cbrn, 'PI') = CASE WHEN '" + Parameters!Marca.Value + "' = 'T' THEN NVL(tcmcs031.t$cbrn, 'PI') ELSE '" + Parameters!Marca.Value + "' END  "
+"     AND (('" + Parameters!Transportadora.Value + "' = 'T') or (znfmd630.t$cfrw$c = '" + Parameters!Transportadora.Value + "'))  " &
+"     AND (('" + Parameters!Marca.Value + "' = 'T') or (NVL(znint002.t$cbrn$c, 'PI') = '" + Parameters!Marca.Value + "')) "
