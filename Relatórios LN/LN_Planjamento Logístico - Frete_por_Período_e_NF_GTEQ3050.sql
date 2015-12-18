@@ -1,5 +1,5 @@
 SELECT
-  DISTINCT 
+  DISTINCT
     znfmd630.t$fili$c    FILIAL,
     NVL(tcmcs031.t$dsca,
         'Pedido Interno')MARCA,  
@@ -32,7 +32,7 @@ SELECT
     znsls400.t$cepf$c    CEP,
     znsls400.t$cidf$c    CIDADE,
     znsls400.t$uffa$c    UF,
-    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ENT.t$date$c,
+    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ENT.t$date$c),
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                   AT time zone 'America/Sao_Paulo') AS DATE)
         from BAANDB.tznfmd640301 znfmd640_ENT
@@ -41,10 +41,10 @@ SELECT
          and znfmd640_ENT.t$coci$c = 'ENT')
                          DATA_ENTREGA,
     znsls400.t$idca$c    CANAL_VENDA,
-    CASE WHEN znfmd630.t$stat$c = 'F' --HOMOLOGACAO ALTERAR PARA 0 (ZERO)
-           THEN 'FECHADO'
-         ELSE 'ABERTO' 
-     END                 SITUACAO_ENTREGA,  
+    CASE WHEN znfmd630.t$stat$c = 2
+           THEN 'Fechado' 
+         ELSE   'Aberto' 
+     END                 SITUACAO_ENTREGA,
     znfmd067.t$fate$c    FILIAL_TRANSPORTADORA,
     cisli940.t$styp$l    TIPO_VENDA,
     
@@ -244,7 +244,6 @@ INNER JOIN baandb.ttcmcs080301  tcmcs080
              and a.t$coci$c IN ('ETR', 'ENT')
              and rownum = 1 ) IS NOT NULL
     AND cisli940.t$fdty$l != 14
-
  
     AND NVL(znsls401.t$itpe$c, 16) IN (:TipoEntrega)
     AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c, 
@@ -252,5 +251,5 @@ INNER JOIN baandb.ttcmcs080301  tcmcs080
                   AT time zone 'America/Sao_Paulo') AS DATE)) 
         BETWEEN :DtExpIni 
             AND :DtExpFim
-    AND tcmcs080.t$cfrw = CASE WHEN :Transportadora = 'T' THEN tcmcs080.t$cfrw ELSE :Transportadora END
-    AND NVL(tcmcs031.t$cbrn, 'PI') = CASE WHEN :Marca = 'T' THEN NVL(tcmcs031.t$cbrn, 'PI') ELSE :Marca END
+	AND ((:Transportadora = 'T') or (znfmd630.t$cfrw$c = :Transportadora))
+    AND ((:Marca = 'T') OR (NVL(znint002.t$cbrn$c, 'PI') = :Marca))
