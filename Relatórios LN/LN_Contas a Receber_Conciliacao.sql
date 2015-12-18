@@ -131,7 +131,8 @@
          
         FULL OUTER JOIN ( SELECT SQ.* 
                             FROM BAANDB.TTFACR200201 SQ 
-                           WHERE SQ.T$DOCN ! =  0 ) TFACR200 
+                           WHERE SQ.T$DOCN ! =  0 
+                           AND   SQ.T$STEP IN (7,10,16)) TFACR200     --7-Duplicata Aceita/Envidada, 10-DOCUMENTO ENVIADO AO BANCO, 16-Paga 
                      ON TFACR200.T$TTYP = TFACR201.T$TTYP 
                     AND TFACR200.T$NINV = TFACR201.T$NINV
                     AND TFACR200.T$SCHN = TFACR201.T$SCHN ) PRG_MOV
