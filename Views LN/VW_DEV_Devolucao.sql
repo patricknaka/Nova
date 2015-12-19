@@ -15,6 +15,7 @@ SELECT
     1 CD_CIA,
 	znsls401dev.t$uneg$c CD_FILIAL, 						-- MMF
 	tdrec940rec.t$docn$l NR_NF,													-- Nota fiscal recebimento devolução
+	tdrec941rec.T$line$l	NR_ITEM_NF,				-- MMF
 	tdrec940rec.t$seri$l NR_SERIE_NF,												-- Serie NF rec. devolucção
 	tdrec940rec.t$opfc$l CD_NATUREZA_OPERACAO,
 	tdrec940rec.t$opor$l SQ_NATUREZA_OPERACAO,	
@@ -34,8 +35,8 @@ SELECT
   CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
     ' '
 	ELSE znsls401org.t$pecl$c END   NR_PEDIDO,
-	znsls410.PT_CONTR	CD_STATUS,					-- MMF
-	znsls410.DATA_OCORR	DT_STATUS,					-- MMF		
+	znsls410.PT_CONTR	CD_STATUS,					
+	znsls410.DATA_OCORR	DT_STATUS,					
 	tdrec940rec.t$rfdt$l 	CD_TIPO_NF,
 	tdrec940rec.t$fire$l NR_REFERENCIA_FISCAL_DEVOLUCAO,										-- Ref. Fiscal recebimento devolção
 	ltrim(rtrim(znsls401dev.t$item$c)) CD_ITEM,
@@ -51,10 +52,13 @@ SELECT
   CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
     ' '
 	ELSE znsls401org.t$orno$c END     NR_PEDIDO_ORIGINAL,
+	
   CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
       NULL
-	ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--	ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400org.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+	ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400dev.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')	-- MMF
 		AT time zone 'America/Sao_Paulo') AS DATE) END DT_PEDIDO,
+		
   CASE WHEN znmcs095.t$sige$c IS NOT NULL THEN  --Pedido SIGE
     ' '
 	ELSE znsls400org.t$idca$c END   CD_CANAL_VENDAS,
@@ -194,6 +198,12 @@ FROM
    
   INNER JOIN  baandb.ttdsls400201 tdsls400
   ON tdsls400.t$orno = znsls401dev.t$orno$c
+  
+  LEFT JOIN	baandb.tznsls400201 znsls400dev					-- MMF
+	ON		znsls400dev.t$ncia$c=znsls401dev.t$ncia$c
+	AND		znsls400dev.t$uneg$c=znsls401dev.t$uneg$c
+	AND		znsls400dev.t$pecl$c=znsls401dev.t$pecl$c
+	AND		znsls400dev.t$sqpd$c=znsls401dev.t$sqpd$c
 							
   LEFT JOIN ( select znsls410.t$ncia$c,							-- MMF
                     znsls410.t$uneg$c,
@@ -209,7 +219,7 @@ FROM
         ON znsls410.t$ncia$c = znsls401dev.t$ncia$c
        AND znsls410.t$uneg$c = znsls401dev.t$uneg$c
        AND znsls410.t$pecl$c = znsls401dev.t$pecl$c
-       AND znsls410.t$sqpd$c = znsls401dev.t$sqpd$c
+       AND znsls410.t$sqpd$c = znsls401dev.t$sqpd$c 
 
 
 --	INNER JOIN	baandb.tznsls401201 znsls401org								-- Pedido de venda original
@@ -416,16 +426,3 @@ LEFT JOIN baandb.tznmcs095201 znmcs095    --Pedidos Sige
         
 where znsls401dev.t$qtve$c < 0 
 and   znsls401dev.t$idor$c = 'TD'
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
