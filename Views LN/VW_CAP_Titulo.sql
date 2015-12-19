@@ -27,11 +27,16 @@ SELECT DISTINCT
 		AT time zone 'America/Sao_Paulo') AS DATE) DT_SITUACAO_TITULO,
 	tfacp200.t$doty$l CD_TIPO_NF,
 	tfacp200.t$balh$1 VL_SALDO,
-	tfcmg011f.t$baoc$l CD_BANCO_DESTINO,
-	tfcmg011f.t$agcd$l NR_AGENCIA_DESTINO,
-	tfcmg011f.t$agdg$l NR_DIGITO_AGENCIA_DESTINO,
-	tfcmg001f.t$bano NR_CONTA_CORRENTE_DESTINO,
-	tfcmg001f.t$ofdg$l NR_DIG_CONTA_CORRENTE_DESTINO,
+--	tfcmg011f.t$baoc$l CD_BANCO_DESTINO,
+--	tfcmg011f.t$agcd$l NR_AGENCIA_DESTINO,
+--	tfcmg011f.t$agdg$l NR_DIGITO_AGENCIA_DESTINO,
+	tfcmg011.t$baoc$l CD_BANCO_DESTINO,
+	tfcmg011.t$agcd$l NR_AGENCIA_DESTINO,
+	tfcmg011.t$agdg$l NR_DIGITO_AGENCIA_DESTINO,
+--	tfcmg001f.t$bano NR_CONTA_CORRENTE_DESTINO,
+--	tfcmg001f.t$ofdg$l NR_DIG_CONTA_CORRENTE_DESTINO,
+	tccom125.t$bano		NR_CONTA_CORRENTE_DESTINO,				-- MMF
+	tccom125.t$dacc$d	NR_DIG_CONTA_CORRENTE_DESTINO,    -- MM
 	tfacp200.t$lapa VL_TAXA_MORA,																		--#FAF.001.n
 	nvl((select p.t$inra$l from baandb.ttfacp201201 p														--#FAF.003.sn 
 		where p.t$ttyp=tfacp200.t$ttyp and p.t$ninv=tfacp200.t$ninv
@@ -55,6 +60,7 @@ SELECT DISTINCT
 	 AND	tdrec952.t$trtp$l=2
 	 AND 	tdrec952.t$brty$l=0
 	 and rownum=1)	CD_CONTA_DESTINO																		--#FAF.288.en
+	 , tfacp201_f.t$bank		TESTE_MMF
 FROM
   baandb.ttfacp200201 tfacp200
   LEFT JOIN baandb.ttdrec940201 tdrec940
@@ -73,9 +79,17 @@ FROM
   
   LEFT JOIN baandb.ttdrec947201 tdrec947
   ON tdrec947.t$fire$l=tdrec940.t$fire$l
+  
+  LEFT JOIN baandb.ttfacp201201 tfacp201_f
+  ON		  tfacp201_f.t$ttyp = tfacp200.t$ttyp
+  AND	  tfacp201_f.t$ninv = tfacp200.t$ninv
+  AND	  rownum = 1
+  
   LEFT JOIN baandb.ttccom125201 tccom125
   ON  tccom125.t$ptbp=tfacp200.t$otbp
-  AND tccom125.t$cban=tfacp200.t$bank
+--  AND tccom125.t$cban=tfacp200.t$bank
+  AND tccom125.t$cban=tfacp201_f.t$bank
+
   LEFT JOIN baandb.ttfcmg011201 tfcmg011
   ON  tfcmg011.t$bank=tccom125.t$brch,
   (SELECT a.t$ttyp,
@@ -89,12 +103,15 @@ FROM
   FROM baandb.ttfacp201201 a
   GROUP BY a.t$ttyp,
        a.t$ninv) tfacp201
-  LEFT JOIN baandb.ttfcmg001201 tfcmg001f
-	ON tfcmg001f.t$bank=tfacp201.t$bank
-  LEFT JOIN baandb.ttfcmg011201 tfcmg011f
-	ON tfcmg011f.t$bank=tfcmg001f.t$brch
+       
+--  LEFT JOIN baandb.ttfcmg001201 tfcmg001f
+--	ON tfcmg001f.t$bank=tfacp201.t$bank
+--  LEFT JOIN baandb.ttfcmg011201 tfcmg011f
+--	ON tfcmg011f.t$bank=tfcmg001f.t$brch
+--	ON tfcmg011f.t$bank=tfcmg001f.t$brch
+	
+	
 WHERE
   tfacp201.t$ttyp=tfacp200.t$ttyp
 AND  tfacp201.t$ninv=tfacp200.t$ninv
 AND tfacp200.t$docn=0
-
