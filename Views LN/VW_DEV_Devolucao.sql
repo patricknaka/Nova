@@ -204,23 +204,26 @@ FROM
 	AND		znsls400dev.t$uneg$c=znsls401dev.t$uneg$c
 	AND		znsls400dev.t$pecl$c=znsls401dev.t$pecl$c
 	AND		znsls400dev.t$sqpd$c=znsls401dev.t$sqpd$c
-							
-  LEFT JOIN ( select znsls410.t$ncia$c,							-- MMF
-                    znsls410.t$uneg$c,
-                    znsls410.t$pecl$c,
-                    znsls410.t$sqpd$c,
-                    max(znsls410.t$dtoc$c) DATA_OCORR,
-                    MAX(znsls410.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C,  znsls410.T$SEQN$C) PT_CONTR
-               from baandb.tznsls410301 znsls410
-               group by znsls410.t$ncia$c,
-                    znsls410.t$uneg$c,
-                    znsls410.t$pecl$c,
-                    znsls410.t$sqpd$c ) znsls410
-        ON znsls410.t$ncia$c = znsls401dev.t$ncia$c
+	
+  LEFT JOIN (											-- MMF
+        select  znsls410int.t$ncia$c,						
+                znsls410int.t$uneg$c,
+                znsls410int.t$pecl$c,
+                znsls410int.t$entr$c,
+                znsls410int.t$sqpd$c,
+                max(znsls410int.t$dtoc$c) DATA_OCORR,
+                MAX(znsls410int.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY znsls410int.T$DTOC$C,  znsls410int.T$SEQN$C) PT_CONTR
+        from		baandb.tznsls410201 znsls410int
+        group by	znsls410int.t$ncia$c,						
+                  znsls410int.t$uneg$c,
+                  znsls410int.t$pecl$c,
+                  znsls410int.t$entr$c,
+                  znsls410int.t$sqpd$c ) znsls410
+    ON 	znsls410.t$ncia$c = znsls401dev.t$ncia$c
        AND znsls410.t$uneg$c = znsls401dev.t$uneg$c
        AND znsls410.t$pecl$c = znsls401dev.t$pecl$c
-       AND znsls410.t$sqpd$c = znsls401dev.t$sqpd$c 
-
+       AND znsls410.t$sqpd$c = znsls401dev.t$sqpd$c
+       AND znsls410.t$entr$c = znsls401dev.t$entr$c
 
 --	INNER JOIN	baandb.tznsls401201 znsls401org								-- Pedido de venda original
   LEFT JOIN	baandb.tznsls401201 znsls401org								-- Pedido de venda original
