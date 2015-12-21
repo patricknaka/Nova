@@ -402,7 +402,19 @@ INNER JOIN baandb.ttdsls094201 tdsls094       --#FAF.087.n
 WHERE cisli940.t$stat$l IN (5,6)    --Status Fatura: impresso e lançado
   AND cisli940.t$nfes$l IN (1,2,5)  --Status Sefaz: nenhum,transmitida,processada 
   AND cisli940.t$fdty$l != 14       --14-Retorno Mercadoria Cliente
-  
+  AND not exists ( select *         --Itens Market Place
+                   from  baandb.tznisa002201 znisa002,
+                         baandb.tznisa001201 znisa001
+                   where znisa002.t$npcl$c = tcibd001.t$npcl$c
+                   and   znisa001.t$nptp$c = znisa002.t$nptp$c
+                   and   znisa001.t$nfed$c = 1   --Gera Nota Fiscal de Entrada Devolução
+                   and   znisa001.t$bpti$c = 5 )  --5 tabela muro
+  AND not exists ( select *   --Faturas Pós-Consolidadas
+                   from   baandb.tznmcs010201 znmcs010
+                   where  znmcs010.t$fdtc$c = cisli940.t$fdtc$l
+                   and    znmcs010.t$ifdt$c = 16  --16-Fatura Operação Triangular
+                   and    znmcs010.t$opfi$c = 3 )  --Fatura Pós-Consolidada
+                   
 --WHERE cisli941f.t$fire$l = cisli940.t$fire$l
 --  AND cisli245.t$fire$l = cisli941.t$fire$l
 --  AND cisli245.t$line$l = cisli941.t$line$l
