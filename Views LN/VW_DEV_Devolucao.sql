@@ -15,7 +15,6 @@ SELECT
     1 CD_CIA,
 	znsls401dev.t$uneg$c CD_FILIAL, 						-- MMF
 	tdrec940rec.t$docn$l NR_NF,													-- Nota fiscal recebimento devolução
-	tdrec941rec.T$line$l	NR_ITEM_NF,				-- MMF
 	tdrec940rec.t$seri$l NR_SERIE_NF,												-- Serie NF rec. devolucção
 	tdrec940rec.t$opfc$l CD_NATUREZA_OPERACAO,
 	tdrec940rec.t$opor$l SQ_NATUREZA_OPERACAO,	
@@ -190,8 +189,9 @@ SELECT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_ORDEM_VENDA_DEVOLUCAO,
 	tcmcs080.t$suno			CD_PARCEIRO_TRANSPORTADORA_FAT,
-	cisli941dev.t$fire$l  	  NR_REFERENCIA_FISCAL,
-	SLI940DEV.STATUS         STATUS_REF_FISCAL_DEV	 
+	cisli941dev.t$fire$l  	  	NR_REFERENCIA_FISCAL,
+	cisli941dev.t$line$l		NR_ITEM_NF,				-- MMF
+	SLI940DEV.STATUS         	STATUS_REF_FISCAL_DEV	 
 	
 FROM
 				baandb.tznsls401201 znsls401dev								-- Pedido de devolução
