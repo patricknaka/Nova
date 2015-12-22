@@ -24,7 +24,9 @@ SELECT  DISTINCT
         znsls400.t$idca$c                           CD_CANAL_VENDA,
         znsls400.t$idpo$c                           CD_ORIGEM_PEDIDO,
         znsls400.t$ipor$c                           NR_IP_CLIENTE,
-        tdsls400.t$oamt                             VL_PEDIDO,                                  --#FAF.311
+        case when tdsls400.t$oamt = 0 then
+             tdsls401.VL_TOT
+        else tdsls400.t$oamt end                    VL_PEDIDO,                                  --#FAF.311
         nvl(znfmd630.vlfc,0)                        VL_FRETE_TABELA,
         endfat.t$ccit                               CD_CIDADE_FATURA,
         endfat.t$ccty                               CD_PAIS_FATURA,
@@ -208,8 +210,17 @@ FROM    baandb.ttdsls400201 tdsls400
 
  LEFT JOIN baandb.ttcmcs080201 tcmcs080
         ON tcmcs080.t$cfrw = tdsls400.t$cfrw --CD_TRANSPORTADORA,
-          
+
+ LEFT JOIN ( select a.t$orno,
+                    sum(a.t$qoor)             QTDE_TOT,
+                    sum(a.t$pric * a.t$qoor)  VL_TOT
+              from baandb.ttdsls401201 a
+              where a.t$oltp = 2  --linha da ordem/entrega
+              group by a.t$orno ) tdsls401
+        ON  tdsls401.t$orno = tdsls400.t$orno
+                 
 where tdsls400.t$fdty$l != 14 --Retorno de Mercadoria Cliente
 
+--and   tdsls400.t$orno = 'V20054804'
 --and TRUNC(tdsls400.t$odat) between to_date('01-11-2015','DD-MM-YYYY')
 --                        and to_date('30-11-2015','DD-MM-YYYY')
