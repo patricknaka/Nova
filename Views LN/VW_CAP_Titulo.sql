@@ -60,7 +60,6 @@ SELECT DISTINCT
 	 AND	tdrec952.t$trtp$l=2
 	 AND 	tdrec952.t$brty$l=0
 	 and rownum=1)	CD_CONTA_DESTINO																		--#FAF.288.en
-	 , tfacp201_f.t$bank		TESTE_MMF
 FROM
   baandb.ttfacp200201 tfacp200
   LEFT JOIN baandb.ttdrec940201 tdrec940
