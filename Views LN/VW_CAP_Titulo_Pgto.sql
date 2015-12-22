@@ -7,8 +7,8 @@
 	tfacp201.t$mopa$d                                     CD_MODALIDADE_PAGAMENTO,														
 	tfacp200.t$docn                                       SQ_DOCUMENTO,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacp600.t$sdat, 
-    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone 'America/Sao_Paulo') AS DATE)          DT_PAGAMENTO,
+    	'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    	AT time zone 'America/Sao_Paulo') AS DATE)            DT_PAGAMENTO,
  	ABS(tfacp200.t$amti + tfacp200.t$ramn$l)              VL_PAGAMENTO,
 	tfacP200.t$lino                                       NR_MOVIMENTO,
 	CASE WHEN tflcb230.t$revs$d=1 
