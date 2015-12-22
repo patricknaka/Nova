@@ -42,7 +42,7 @@ SELECT
     CASE WHEN znsls409.t$lbrd$c = 1 
            THEN 'Sim' -- FORÇADO
          ELSE   'Não' -- NÃO FORÇADO
-     END                                      LN_FORCADO,
+     END                                      IN_FORCADO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(EXPEDICAO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_EXPEDICAO_PEDIDO,
@@ -146,8 +146,8 @@ SELECT
            THEN 'Sim'
          ELSE   'Não' 
     END                                       PENDENTE_DEVOLUCAO,
-    CASE WHEN znfmd630.t$stat$c = 'F' OR tdrec947.t$fire$l IS NOT NULL 
-           THEN 'Nao'
+    CASE WHEN znfmd630.t$stat$c = 2
+           THEN 'Não'
          ELSE   'Sim'  
     END                                       PENDENTE_COLETA,
  
