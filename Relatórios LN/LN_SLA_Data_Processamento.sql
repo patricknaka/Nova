@@ -52,9 +52,9 @@ select Q1.*
              znsls401.t$itpe$c        TIPO_ENTREGA,
              znsls002.t$dsca$c        DESC_TIPO_ENTREGA,
              
-             CASE WHEN znfmd630.t$stat$c IS NULL OR znfmd630.t$stat$c = ' ' 
+             CASE WHEN znfmd630.t$stat$c = 2
                     THEN 'P'                     --PENDENTE
-                  ELSE   znfmd630.t$stat$c       --FINALIZADO 
+                  ELSE   'F'                     --FINALIZADO 
              END                      FINALIZADO_PENDENTE
                  
          FROM      baandb.tznfmd630301 znfmd630
@@ -111,8 +111,8 @@ select Q1.*
                      and znfmd640.t$etiq$c = znfmd630.t$etiq$c 
                      and znfmd640.t$coci$c = 'ETR'
                      and rownum = 1 ) IS NOT NULL ) Q1
-					 
-where NVL(Q1.DATA_PROCESSAMENTO, :DataProcessamentoDe)
+                     
+where NVL(Trunc(Q1.DATA_PROCESSAMENTO), :DataProcessamentoDe)
       Between :DataProcessamentoDe
           And :DataProcessamentoAte
-  and Q1.FINALIZADO_PENDENTE IN (:Status)
+  and Q1.FINALIZADO_PENDENTE IN (:FinalizadoPendente)
