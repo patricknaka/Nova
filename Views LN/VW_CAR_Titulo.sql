@@ -1,4 +1,4 @@
-﻿-- 06-mai-2014, Fabio Ferreira, Inclusão do numero do pedido
+-- 06-mai-2014, Fabio Ferreira, Inclusão do numero do pedido
 -- #FAF.001 - 06-mai-2014, Fabio Ferreira, 	Tratamento da data de vencimento	
 -- #FAF.002 - 09-mai-2014, Fabio Ferreira, 	Correção dos campos referente a situação do título				
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Adicionado campo método de pagamento/recebimento
@@ -13,6 +13,7 @@
 -- #FAF.282 - 14-ago-2014, Fabio Ferreira, 	Retirados campo  método de pagamento
 -- 21/08/2014    Atualização do timezone
 -- #FAF.282 - 23-ago-2014, Fabio Ferreira, 	Inclusão do campo conta controle
+-- #MMF.477	   Para datas não UTC verificar nulo
 --****************************************************************************************************************************************************************
 SELECT DISTINCT	
   CONCAT(tfacr200.t$ttyp, TO_CHAR(tfacr200.t$ninv)) CD_CHAVE_PRIMARIA,											
@@ -33,7 +34,8 @@ SELECT DISTINCT
 	tfacr200.t$seri$l NR_SERIE_NF,
 	tfacr200.t$docd DT_EMISSAO_TITULO,
 --	TO_DATE(REGEXP_REPLACE(tfacr200.T$LIQD,',''[[:punct:]]',''), 'DD-MM-YY HH:MI:SS AM') DT_VENCIMENTO,			
-  case when to_date(tfacr200.t$liqd) = to_date('4712-01-01','yyyy-mm-dd HH24:MI:SS')
+--  case when to_date(tfacr200.t$liqd) = to_date('4712-01-01','yyyy-mm-dd')
+  case when to_char(tfacr200.t$liqd, 'yyyy') = 4712				-- MMF.477
     then null else to_date(tfacr200.t$liqd) end DT_VENCIMENTO,
 	CASE WHEN tfacr200.t$balc=0 THEN																													 													
 	(select max(p.t$docd) 
