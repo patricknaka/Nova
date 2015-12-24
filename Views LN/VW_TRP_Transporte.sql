@@ -59,7 +59,7 @@ select distinct
      and znfmd062.t$cepa$c >= tccom130.t$pstc 
      and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c 
      and znfmd061.t$cono$c = znfmd062.t$cono$c 
-     and znfmd061.t$creg$c = znfmd062.t$creg$c and rownum = 1 ) REGIAO
+     and znfmd061.t$creg$c = znfmd062.t$creg$c and rownum = 1 ) DS_REGIAO
   
 from  BAANDB.TZNFMD630201 znfmd630,
 	  baandb.ttcmcs080201 tcmcs080,	
