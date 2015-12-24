@@ -48,7 +48,18 @@ select distinct
   znfmd060.T$REFE$C DS_OBS_ROMANEIO,
   znfmd630.T$PECL$C NR_ENTREGA,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO                                         --#MAR.258.en
+    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                                         --#MAR.258.en
+  znfmd630.t$etiq$c                       NR_ETIQUETA,
+  (select znfmd061.t$dzon$c 
+   from  baandb.tznfmd062201 znfmd062, 
+         baandb.tznfmd061201 znfmd061 
+   where znfmd062.t$cfrw$c = znfmd630.t$cfrw$c 
+     and znfmd062.t$cono$c = znfmd630.t$cono$c 
+     and znfmd062.t$cepd$c <= tccom130.t$pstc 
+     and znfmd062.t$cepa$c >= tccom130.t$pstc 
+     and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c 
+     and znfmd061.t$cono$c = znfmd062.t$cono$c 
+     and znfmd061.t$creg$c = znfmd062.t$creg$c and rownum = 1 ) REGIAO
   
 from  BAANDB.TZNFMD630201 znfmd630,
 	  baandb.ttcmcs080201 tcmcs080,	
