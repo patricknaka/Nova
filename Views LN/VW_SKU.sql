@@ -1,7 +1,7 @@
 -- FAF.008 - Fabio Ferreira, 21-mai-2014, Fabio Ferreira, 	Incluido campos OBSERVACAO, FLAG_UTILIZ_ATAC, PPB
 -- FAF.009 - Fabio Ferreira, 21-mai-2014, Fabio Ferreira, 	Incluido campo Armazem
--- #FAF.084 - Fabio Ferreira, 26-mai-2014, Fabio Ferreira, 	Inclus„o do campo MODELO_FABRICANTE
--- #FAF.120 - Fabio Ferreira, 09-jun-2014, Fabio Ferreira, 	Fitro de data de atualizaÁ„o
+-- #FAF.084 - Fabio Ferreira, 26-mai-2014, Fabio Ferreira, 	Inclus√£o do campo MODELO_FABRICANTE
+-- #FAF.120 - Fabio Ferreira, 09-jun-2014, Fabio Ferreira, 	Fitro de data de atualiza√ß√£o
 --	#FAF.151 - 20-jun-2014,	Fabio Ferreira,	Tratamento para o CNPJ
 --	#FAF.181 - 27-jun-2014,	Fabio Ferreira,	Adicionado o campo DS_APELIDO
 --  #FAF.296 - 21-aug-2014,	Fabio Ferreira,	Adicionado o campo NR_CNPJ_FABRICANTE
@@ -20,7 +20,9 @@ SELECT  ltrim(rtrim(tcibd001.t$item)) CD_ITEM,
         tcibd004.t$aitc CD_ITEM_FORNECEDOR,
         tcibd001.t$dsca DS_ITEM,
         tcibd936.t$frat$l NR_NBM,
-        tcibd001.t$ceat$l CD_EAN,
+        CASE WHEN tcibd001.t$ceat$l = ' ' THEN
+              tcibd001.t$cean 
+        ELSE  tcibd001.t$ceat$l END CD_EAN,
         whwmd400.t$abcc CD_STATUS_ABC,
         tdipu001.T$IXDN$C CD_CATEGORIA,
         tcibd001.t$citg CD_DEPARTAMENTO,
