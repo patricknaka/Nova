@@ -1,13 +1,13 @@
--- 05-mai-2014, Fabio Ferreira, CorreÁ„o timezone DATA_CHEGADA_PED
--- 07-mai-2014, Fabio Ferreira, CorreÁ„o cia 201
--- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	CorreÁ„o de alias
--- FAF.005 - Fabio Ferreira, 14-mai-2014, Fabio Ferreira, 	Iclus„o do camo ID_LISTA_CASAMENTO
+-- 05-mai-2014, Fabio Ferreira, Corre√ß√£o timezone DATA_CHEGADA_PED
+-- 07-mai-2014, Fabio Ferreira, Corre√ß√£o cia 201
+-- FAF.002 - Fabio Ferreira, 09-mai-2014, Fabio Ferreira, 	Corre√ß√£o de alias
+-- FAF.005 - Fabio Ferreira, 14-mai-2014, Fabio Ferreira, 	Iclus√£o do camo ID_LISTA_CASAMENTO
 -- #FAF.007 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.048 - 17-mai-2014, Fabio Ferreira, 	Retirado campo Pedido_Entrega
 -- #FAF.048.1 - 23-mai-2014, Fabio Ferreira, 	NUM_ENTREGA convertido para string
 -- #FAF.048.1 - 26-mai-2014, Fabio Ferreira, 	Agrupado registros duplicados
--- #FAF.113 - 	26-mai-2014, Fabio Ferreira, 	Inclus„o do campo CIA
--- #FAF.252 - 	30-jul-2014, Fabio Ferreira, 	CorreÁ„o data atualizaÁ„o
+-- #FAF.113 - 	26-mai-2014, Fabio Ferreira, 	Inclus√£o do campo CIA
+-- #FAF.252 - 	30-jul-2014, Fabio Ferreira, 	Corre√ß√£o data atualiza√ß√£o
 --***************************************************************************************************************************************************************
 SELECT 
 		znsls400.t$ncia$c CD_CIA,																								--#FAF.113.n
@@ -48,30 +48,34 @@ INNER JOIN baandb.tznsls400201 znsls400
       AND znsls400.t$uneg$c = znsls401.t$uneg$c
       AND znsls400.t$pecl$c = znsls401.t$pecl$c
       AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
-INNER JOIN (select 	znsls004q.t$ncia$c,
-                    znsls004q.t$uneg$c,
-                    znsls004q.t$pecl$c,
-                    znsls004q.t$sqpd$c,
-                    znsls004q.t$entr$c,
-                    znsls004q.t$sequ$c,
-					znsls004q.t$orno$c
-			from baandb.tznsls004201 znsls004q
-			where znsls004q.t$date$c=(select max(q004.t$date$c) from baandb.tznsls004201 q004
-									 where 	q004.t$ncia$c=znsls004q.t$ncia$c
-									 and	q004.t$uneg$c=znsls004q.t$uneg$c
-									 and	q004.t$pecl$c=znsls004q.t$pecl$c	
-									 and	q004.t$sqpd$c=znsls004q.t$sqpd$c										
-									 and	q004.t$entr$c=znsls004q.t$entr$c			
-									 and	q004.t$sequ$c=znsls004q.t$sequ$c)) znsls004						
-		ON  znsls004.t$ncia$c = znsls401.t$ncia$c
-        AND znsls004.t$uneg$c = znsls401.t$uneg$c
-        AND znsls004.t$pecl$c = znsls401.t$pecl$c
-        AND znsls004.t$sqpd$c = znsls401.t$sqpd$c
-		AND znsls004.t$entr$c = znsls401.t$entr$c
-		AND znsls004.t$sequ$c = znsls401.t$sequ$c		
-INNER JOIN baandb.ttdsls400201 tdsls400  on tdsls400.t$orno = znsls004.t$orno$c
+--INNER JOIN (select 	znsls004q.t$ncia$c,
+--                    znsls004q.t$uneg$c,
+--                    znsls004q.t$pecl$c,
+--                    znsls004q.t$sqpd$c,
+--                    znsls004q.t$entr$c,
+--                    znsls004q.t$sequ$c,
+--					znsls004q.t$orno$c
+--			from baandb.tznsls004201 znsls004q
+--			where znsls004q.t$date$c=(select max(q004.t$date$c) from baandb.tznsls004201 q004
+--									 where 	q004.t$ncia$c=znsls004q.t$ncia$c
+--									 and	q004.t$uneg$c=znsls004q.t$uneg$c
+--									 and	q004.t$pecl$c=znsls004q.t$pecl$c	
+--									 and	q004.t$sqpd$c=znsls004q.t$sqpd$c										
+--									 and	q004.t$entr$c=znsls004q.t$entr$c			
+--									 and	q004.t$sequ$c=znsls004q.t$sequ$c)) znsls004						
+--		ON  znsls004.t$ncia$c = znsls401.t$ncia$c
+--        AND znsls004.t$uneg$c = znsls401.t$uneg$c
+--        AND znsls004.t$pecl$c = znsls401.t$pecl$c
+--        AND znsls004.t$sqpd$c = znsls401.t$sqpd$c
+--		AND znsls004.t$entr$c = znsls401.t$entr$c
+--		AND znsls004.t$sequ$c = znsls401.t$sequ$c			
+--INNER JOIN baandb.ttdsls400201 tdsls400  on tdsls400.t$orno = znsls004.t$orno$c
+INNER JOIN baandb.ttdsls400201 tdsls400  on tdsls400.t$orno = znsls401.t$orno$c
 INNER JOIN baandb.ttccom130201 tccom130  on tccom130.t$cadr = tdsls400.t$itad
 INNER JOIN baandb.ttccom130201 tccom130c on tccom130c.t$cadr = tdsls400.t$stad
+
+where tdsls400.t$fdty$l != 14
+
 GROUP BY 
 znsls400.t$ncia$c,
 znsls401.t$pecl$c,
