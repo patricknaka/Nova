@@ -30,5 +30,5 @@ LEFT JOIN  baandb.ttfcmg948201 tfcmg948 		       --#FAF.294.sn
 	ON  	tfcmg948.t$ttyp$l=tfcmg401.t$ttyp   
 	AND 	tfcmg948.t$ninv$l=tfcmg401.t$ninv
 	AND 	tfcmg948.t$btno$l=tfcmg401.t$btno    	--#FAF.294.en
-	AND	tfcmg948.t$sern$l=tfcmg401.t$schn	        --#MMF.478.n
+	AND	tfcmg948.t$sern$l=to_char(tfcmg401.t$schn)	        --#MMF.478.n
 ORDER BY 2,5
