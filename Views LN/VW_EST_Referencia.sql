@@ -35,7 +35,7 @@ AND   whinr110.t$rcno = tdrec947.t$rcno$l
 AND   whinr110.t$rcln = tdrec947.t$rcln$l
 AND		tdrec940.t$fire$l=tdrec947.t$fire$l
 AND		(tdrec940.t$stat$l=4 OR tdrec940.t$stat$l=5)
-AND		tdrec940.t$rfdt$l not in (3,5,8,13,16,22,33)
+AND		tdrec940.t$rfdt$l not in (3,5,8,13,14,16,22,33)
 GROUP BY tcemm030.t$euca, 
          whina112.t$cwar, 
          whina112.t$item, 
