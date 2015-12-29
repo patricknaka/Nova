@@ -14,3 +14,11 @@ add DS_CAPITAL_INTERIOR nvarchar(40) null,
 	NR_TELEFONE2 NVARCHAR(15) NULL,
 	NR_PERIODO INT NULL
 
+--29/12/2015
+alter table dbo.stg_pev_cliente
+add DS_EMAIL NVARCHAR(100) NULL,
+	DS_NOME_CLIENTE NVARCHAR(70) null,
+	NR_CNPJ_CPF nvarchar(20) null
+
+alter table stg_pev_det
+add CD_LOJISTA_MKP int null
