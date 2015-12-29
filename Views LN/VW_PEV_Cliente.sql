@@ -48,7 +48,10 @@ SELECT
       AT time zone 'America/Sao_Paulo') AS DATE) 
                                       DT_ULT_ATUALIZACAO,
   znsls400.t$idli$c                   NR_LISTA_CASAMENTO,
-  znsls400.t$emaf$c                   DS_EMAIL
+  znsls400.t$emaf$c                   DS_EMAIL,
+  znsls400.t$nomf$c                   DS_NOME_CLIENTE,
+  znsls400.t$iclf$c                   NR_CNPJ_CPF
+  
 
 FROM baandb.tznsls401201 znsls401 
 
@@ -60,8 +63,10 @@ INNER JOIN baandb.tznsls400201 znsls400
 
 INNER JOIN baandb.ttdsls400201 tdsls400  
       on tdsls400.t$orno = znsls401.t$orno$c
+      
 INNER JOIN baandb.ttccom130201 tccom130  
       on tccom130.t$cadr = tdsls400.t$itad
+      
 INNER JOIN baandb.ttccom130201 tccom130c 
       on tccom130c.t$cadr = tdsls400.t$stad
 
@@ -100,4 +105,8 @@ GROUP BY
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE),
     znsls400.t$idli$c,
-    znsls400.t$emaf$c
+    znsls400.t$emaf$c,
+    znsls400.t$nomf$c,
+    znsls400.t$iclf$c 
+  
+  
