@@ -43,7 +43,7 @@
         znsls400.t$vlfr$c                               VL_FRETE_CLIENTE,
         nvl(znfmd630.vlft,0)                            VL_FRETE_CIA,
         znsls400.t$idca$c                               CD_CANAL_VENDA,
-        znsls400.t$idpo$c                               CD_ORIGEM_PEDIDO,
+        znsls004.t$orig$c                               CD_ORIGEM_PEDIDO,
         znsls400.t$ipor$c                               NR_IP_CLIENTE,
         case when tdsls400.t$oamt = 0 
                then tdsls401.VL_TOT
@@ -73,9 +73,7 @@
              ELSE   ' ' 
         END                                             NR_SERIE_NF_CONSOLIDADA,    --#FAF.006.n  
         znsls401.pcga                                   NR_PEDIDO_GARANTIA,
-        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone 'America/Sao_Paulo') AS DATE)  DT_LIMITE_EXPED,
+        znsls401.dtep                                   DT_LIMITE_EXPED,
         znsls400.t$tped$c                               CD_TIPO_PEDIDO,
         znsls402.idmp                                   CD_MEIO_PAGAMENTO_PRINCIPAL,
         znsls400.t$peex$c                               NR_PEDIDO_EXTERNO,
@@ -83,8 +81,8 @@
         znsls401.tptr                                   CD_TIPO_TRANSPORTE,
         tcmcs080.t$suno                                 CD_TRANSPORTADORA,
         znsls401.mgrt                                   CD_MEGA_ROTA,
-        null                                            CD_STATUS,
-        null                                            DT_STATUS_PEDIDO,
+        '     '                                         CD_STATUS,
+        cast(null as date)                              DT_STATUS_PEDIDO,
         tcemm124.t$grid                                 CD_UNIDADE_EMPRESARIAL,
         znsls401.idor                                   CD_TIPO_SITE,               --#FAF.143.n
         tdsls400.t$sotp                                 CD_TIPO_ORDEM_VENDA,        --#MAR.306.n
@@ -161,6 +159,10 @@ INNER JOIN ( select a.t$orno$c       orno,
        AND znsls400.t$pecl$c = znsls401.pecl
        AND znsls400.t$sqpd$c = znsls401.sqpd
        
+INNER JOIN  baandb.tznsls004201 znsls004 
+        ON znsls004.t$orno$c = znsls401.orno 
+       AND znsls004.t$entr$c = znsls401.entr                                        --#FAF.174.n
+
 INNER JOIN baandb.ttcemm124201 tcemm124
         ON tcemm124.t$cwoc = tdsls400.t$cofc
        AND tcemm124.t$dtyp = 1
@@ -220,4 +222,4 @@ INNER JOIN baandb.ttdsls094201 tdsls094                                         
 where tdsls400.t$fdty$l != 14
 and znsls401.cancela = 1
 
---and znsls401.pecl = '50257223'
+--and znsls401.pecl = '50257014'
