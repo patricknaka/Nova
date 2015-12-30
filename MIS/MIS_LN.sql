@@ -3,7 +3,7 @@
 alter table mis_ln.dbo.stg_pec_cab
 add DS_ORDEM_PN_FORNEC nvarchar(150)
 
---28/12/2015
+--29/12/2015
 alter table dbo.stg_trp_transporte
 add DS_CAPITAL_INTERIOR nvarchar(40) null,
 	NR_CARGA nvarchar(15) null,
@@ -12,7 +12,9 @@ add DS_CAPITAL_INTERIOR nvarchar(40) null,
 	NR_TELEFONE NVARCHAR(15) NULL,
 	NR_TELEFONE1 NVARCHAR(15) NULL,
 	NR_TELEFONE2 NVARCHAR(15) NULL,
-	NR_PERIODO INT NULL
+	NR_PERIODO INT NULL,
+	QT_VOLUME NUMERIC(38,4) NULL,
+	NR_CONTRATO NVARCHAR(10) NULL
 
 --29/12/2015
 alter table dbo.stg_pev_cliente
