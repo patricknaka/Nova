@@ -47,31 +47,11 @@
   znfmd630.T$PECL$C                                               NR_ENTREGA,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone 'America/Sao_Paulo') AS DATE)                  DT_ULT_ATUALIZACAO,                                         --#MAR.258.en
+      AT time zone 'America/Sao_Paulo') AS DATE)                  DT_ULT_ATUALIZACAO,              --#MAR.258.en
   znfmd630.t$etiq$c                                               NR_ETIQUETA,
-  (select znfmd061.t$dzon$c 
-   from  baandb.tznfmd062201 znfmd062, 
-         baandb.tznfmd061201 znfmd061 
-   where znfmd062.t$cfrw$c = znfmd630.t$cfrw$c 
-     and znfmd062.t$cono$c = znfmd630.t$cono$c 
-     and znfmd062.t$cepd$c <= tccom130.t$pstc 
-     and znfmd062.t$cepa$c >= tccom130.t$pstc 
-     and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c 
-     and znfmd061.t$cono$c = znfmd062.t$cono$c 
-     and znfmd061.t$creg$c = znfmd062.t$creg$c and rownum = 1 )   DS_REGIAO,
-
-  (select znfmd062.t$creg$c
-   from  baandb.tznfmd062201 znfmd062, 
-         baandb.tznfmd061201 znfmd061 
-   where znfmd061.t$cfrw$c = znfmd062.t$cfrw$c --Código da Transportadora
-     and znfmd061.t$cono$c = znfmd062.t$cono$c --Número do Contrato
-     and znfmd061.t$creg$c = znfmd062.t$creg$c --Regiao
-     and znfmd062.t$cfrw$c = znfmd630.t$cfrw$c --Código da Transportadora
-     and znfmd062.t$cono$c = znfmd630.t$cono$c --Número do Contrato
-     and znfmd062.t$cepd$c <= tccom130.t$pstc 
-     and znfmd062.t$cepa$c >= tccom130.t$pstc 
-     and rownum = 1 )                                            DS_CAPITAL_INTERIOR,
-    znfmd630.t$ncar$c                                            NR_CARGA,
+  regiao.t$dzon$c                                                 DS_REGIAO,
+  regiao.t$creg$c                                                 DS_CAPITAL_INTERIOR, 
+  znfmd630.t$ncar$c                                               NR_CARGA,
 
   case when to_char(to_date(znsls401.t$dtre$c), 'yyyy') = 1969 then null 
        when to_char(to_date(znsls401.t$dtre$c), 'yyyy') = 1970 then null 
@@ -82,37 +62,65 @@
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(pesovol.t$ddta, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE)                   DT_PREVISTA,
+
   znsls401.t$tele$c                                              NR_TELEFONE,
   znsls401.t$te1e$c                                              NR_TELEFONE1,
   znsls401.t$te2e$c                                              NR_TELEFONE2,
-  znsls401.t$idpa$c                                              NR_PERIODO
+  znsls401.t$idpa$c                                              NR_PERIODO,
+  znfmd630.t$qvol$c                                              QT_VOLUME,
+  znfmd630.t$cono$c                                              NR_CONTRATO
   
-from  baandb.tznfmd630201 znfmd630,
-      baandb.ttcmcs080201 tcmcs080,	
-      baandb.ttccom100201 tccom100,
-      baandb.ttccom130201 tccom130,
-      baandb.tznsls401201 znsls401,
+from  baandb.tznfmd630201 znfmd630
+
+INNER JOIN baandb.ttcmcs080201 tcmcs080
+        ON tcmcs080.t$cfrw=znfmd630.T$CFRW$C
+        
+INNER JOIN baandb.ttccom100201 tccom100
+        ON tccom100.t$bpid=tcmcs080.t$suno
+        
+INNER JOIN baandb.ttccom130201 tccom130
+        ON tccom130.t$cadr=tccom100.t$cadr
+        
+INNER JOIN baandb.tznsls401201 znsls401
+        ON znsls401.T$ORNO$C=znfmd630.T$ORNO$C
  
-      (select tdsls401.t$orno,tdsls401.t$ddta,
-        sum(whwmd400.t$hght * whwmd400.t$wdth * whwmd400.T$DPTH) vol,
-        sum(tcibd001.t$wght) peso
-      from  baandb.twhwmd400201 whwmd400,
-            baandb.ttdsls401201 tdsls401,
-            baandb.ttcibd001201 tcibd001
-      where tdsls401.t$item=whwmd400.t$item
-      and   tcibd001.t$item=tdsls401.t$item
-      group by tdsls401.t$orno, 
-               tdsls401.t$ddta) pesovol,
-
-      baandb.tcisli940201 cisli940,
-      baandb.tznfmd060201 znfmd060
-
-WHERE znsls401.T$ORNO$C=znfmd630.T$ORNO$C
-AND pesovol.t$orno=znsls401.T$ORNO$C
-AND cisli940.t$fire$l=znfmd630.t$fire$c
-AND znfmd060.T$CFRW$C=znfmd630.T$CFRW$C
-AND znfmd060.T$CONO$C=znfmd630.t$cono$c
-AND tcmcs080.t$cfrw=znfmd630.T$CFRW$C
-AND tccom100.t$bpid=tcmcs080.t$suno
-AND tccom130.t$cadr=tccom100.t$cadr
-
+LEFT JOIN (select  tdsls401.t$orno,tdsls401.t$ddta,
+                    sum(whwmd400.t$hght * whwmd400.t$wdth * whwmd400.T$DPTH) vol,
+                    sum(tcibd001.t$wght) peso
+            from  baandb.twhwmd400201 whwmd400,
+                  baandb.ttdsls401201 tdsls401,
+                  baandb.ttcibd001201 tcibd001
+            where tdsls401.t$item=whwmd400.t$item
+            and   tcibd001.t$item=tdsls401.t$item
+            group by  tdsls401.t$orno, 
+                      tdsls401.t$ddta) pesovol
+      ON  pesovol.t$orno=znsls401.T$ORNO$C
+      
+INNER JOIN baandb.tcisli940201 cisli940
+        ON cisli940.t$fire$l=znfmd630.t$fire$c
+        
+INNER JOIN baandb.tznfmd060201 znfmd060
+        ON znfmd060.T$CFRW$C=znfmd630.T$CFRW$C
+       AND znfmd060.T$CONO$C=znfmd630.t$cono$c 
+      
+LEFT JOIN (select znfmd062.t$creg$c, znfmd061.t$dzon$c,
+                  znfmd062.t$cfrw$c, znfmd062.t$cono$c, 
+                  znfmd062.t$cepd$c, znfmd062.t$cepa$c,
+                  max(znfmd061.t$udat$c) t$udat$c
+           from   baandb.tznfmd062201 znfmd062, 
+                  baandb.tznfmd061201 znfmd061 
+           where  znfmd061.t$cfrw$c = znfmd062.t$cfrw$c --Código da Transportadora
+           and    znfmd061.t$cono$c = znfmd062.t$cono$c --Número do Contrato
+           and    znfmd061.t$creg$c = znfmd062.t$creg$c --Regiao
+           and    znfmd061.t$ativ$c = 1    -- Ativo
+           and    znfmd062.t$ativ$c = 1    -- Ativo
+           group by znfmd062.t$creg$c, 
+                    znfmd061.t$dzon$c, 
+                    znfmd062.t$cfrw$c, 
+                    znfmd062.t$cono$c, 
+                    znfmd062.t$cepd$c, 
+                    znfmd062.t$cepa$c) regiao
+        ON regiao.t$cfrw$c = znfmd630.t$cfrw$c 
+       AND regiao.t$cono$c = znfmd630.t$cono$c 
+       AND regiao.t$cepd$c <= tccom130.t$pstc 
+       AND regiao.t$cepa$c >= tccom130.t$pstc 
