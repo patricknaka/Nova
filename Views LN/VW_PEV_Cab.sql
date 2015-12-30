@@ -1,4 +1,4 @@
- select tdsls400.t$rcd_utc                              DT_ULT_ATUALIZACAO,         --Capa Ordem de Venda LN - Data [Ult. Atualizacao
+select tdsls400.t$rcd_utc                              DT_ULT_ATUALIZACAO,         --Capa Ordem de Venda LN - Data [Ult. Atualizacao
         znsls400.t$ncia$c                               CD_CIA,
         tdsls400.t$orno                                 NR_ORDEM,
         tdsls400.t$ofbp                                 CD_CLIENTE,
@@ -73,7 +73,9 @@
              ELSE   ' ' 
         END                                             NR_SERIE_NF_CONSOLIDADA,    --#FAF.006.n  
         znsls401.pcga                                   NR_PEDIDO_GARANTIA,
-        znsls401.dtep                                   DT_LIMITE_EXPED,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  DT_LIMITE_EXPED, 
         znsls400.t$tped$c                               CD_TIPO_PEDIDO,
         znsls402.idmp                                   CD_MEIO_PAGAMENTO_PRINCIPAL,
         znsls400.t$peex$c                               NR_PEDIDO_EXTERNO,
@@ -221,5 +223,4 @@ INNER JOIN baandb.ttdsls094201 tdsls094                                         
                  
 where tdsls400.t$fdty$l != 14
 and znsls401.cancela = 1
-
 --and znsls401.pecl = '50257014'
