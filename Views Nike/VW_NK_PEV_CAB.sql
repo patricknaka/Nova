@@ -184,8 +184,10 @@ INNER JOIN ( select a.t$ncia$c ncia,
                     a.t$uneg$c uneg,
                     a.t$pecl$c pecl,
                     a.t$sqpd$c sqpd,
-                    max(a.t$dtoc$c) dtoc,
-                    MAX(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C,  a.T$SEQN$C) poco
+--                    max(a.t$dtoc$c) dtoc,
+                    max(a.t$dtoc$c) KEEP (DENSE_RANK LAST ORDER BY a.T$ENTR$C, a.T$SEQN$C) dtoc,
+--                    MAX(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C,  a.T$SEQN$C) poco
+                    MAX(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$ENTR$C, a.T$SEQN$C) poco
                from baandb.tznsls410601 a
            group by a.t$ncia$c,
                     a.t$uneg$c,
