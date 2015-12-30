@@ -1,16 +1,15 @@
--- 21/08/2014 Atualizacao timezone
---****************************************************************************************************************************************************************
 SELECT DISTINCT 
-    znsls412.t$ttyp$c || znsls412.t$ninv$c    CD_CHAVE_PRIMARIA,
-    1				              CD_CIA,
-    znsls412.t$pecl$c                         NR_PEDIDO,
-    znsls401.t$orno$c                         NR_ORDEM,
-	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls412.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-		AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
+    znsls412.t$ttyp$c || znsls412.t$ninv$c        CD_CHAVE_PRIMARIA,
+    1                                             CD_CIA,
+    znsls412.t$pecl$c                             NR_PEDIDO,
+    znsls401.t$orno$c                             NR_ORDEM,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls412.t$rcd_utc, 
+    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+      AT time zone 'America/Sao_Paulo') AS DATE)  DT_ULT_ATUALIZACAO,
     CASE WHEN znsls400.t$idcp$c = 0 THEN Null 
-         ELSE znsls400.t$idcp$c END           NR_CAMPANHA_B2B,
+         ELSE znsls400.t$idcp$c END               NR_CAMPANHA_B2B,
     CASE WHEN znsls400.t$idco$c = 0 THEN Null
-         ELSE znsls400.t$idco$c END           NR_CONTRATO_B2B
+         ELSE znsls400.t$idco$c END               NR_CONTRATO_B2B
 FROM
     baandb.tznsls412201 znsls412,
     baandb.tznsls401201 znsls401,
