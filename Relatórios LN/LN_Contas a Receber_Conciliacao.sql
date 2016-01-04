@@ -1,83 +1,83 @@
 ﻿SELECT Q1.*
   FROM ( SELECT
-             201                                                									CIA,
-									
-             CASE WHEN NVL( (FILIAL.T$STYP), '0' ) = '0' 									
-                    THEN 2 									
-                  ELSE 3 									
-             END                                                									FILIAL, 
-												
-             PRG_MOV.T$NINV                                     									TITULO,
-             PRG_MOV.T$RPST$L                                   									SITUACAO_TITULO, 
-             SIT_TIT.                                           									DESCR_SIT_TIT,
-             PRG_MOV.T$TTYP                                     									DOC,
-             TCCOM130.T$FOVN$L                                  									CNPJ,
-             TCCOM100.T$NAMA                                    									NOME,
-             PRG_MOV.T$DOCD                                     									DT_EMISSAO,
-             PRG_MOV.T$AMNT                                     									VL_TITULO,
-             PRG_MOV.T$BALC                                     									VL_SALDO_TITULO,
-             PRG_MOV.T$PAYM                                     									CARTEIRA,
-             TFCMG011.T$BAOC$L                                  									CD_BANCO,
-             TFCMG011.T$AGCD$L                                  									NR_AGENCIA,
-             TFCMG001.T$BANO                                    									NR_CONTA_CORRENTE,
-             PRG_MOV.T$SCHN                                     									NR_DOCUMENTO,
-             TITULO.T$LEAC                                      									CENTRO_CUSTO,
-             PRG_MOV.T$RECD                                     									DT_VENCIMENTO,
-             PRG_MOV.T$DUED$L                                   									DT_VENCIMENTO_ORIGINAL,
-				
-             CASE WHEN TITULO.T$BALC = 0 	
-                    THEN ( SELECT MAX(P.T$DOCD) 	
-                             FROM BAANDB.TTFACR200201 P	
-                            WHERE P.T$TTYP = TITULO.T$TTYP 	
-                           AND P.T$NINV = TITULO.T$NINV ) 	
-                  ELSE NULL 	
-              END                                               									DT_LIQUIDACAO_TITULO,
-											
-             TFCMG401.T$BTNO                                    									REMESSA,
-             TFCMG409.T$DATE                                    									DT_REMESSA,
-             CISLI940.T$DOCN$L                                  									NOTA,
-             CISLI940.T$SERI$L                                  									SERIE,
-             CISLI940.T$FIRE$L                                  									REF_FISCAL,
-             PRG_MOV.T$BREL                                     									NR_BANCARIO,
-             PEDIDO.T$UNEG$C                                  										UNID_NEGOCIO,
-             ZNINT002.T$DESC$C                                  									DESC_UNID_NEGOCIO,
---             NVL( (T.T$TEXT),' ' )                              									OBSERVACAO,
-             ZNREC007.T$LOGN$C                                  									USUARIO,
-             CASE WHEN C_IDCP=1 THEN PEDIDO.T$IDCP$C ELSE NULL END									CAMPANHA,
-             ZNREC007.T$CVPC$C                                  									CONTRATO_VPC,
-             PRG_MOV.T$TDOC                                     									ID_TRANSACAO,
-             GLD011.T$DESC                                      									TRANSACAO, 
-             PRG_MOV.T$DOCD                                     									DATA_TRANSACAO,
-				
-             CASE WHEN PRG_MOV.T$DOCN ! =  0 	
-                    THEN NVL(AGRUP.T$TTYP$C, TREF.T$TTYP) 	
-                  ELSE NULL 	
-              END                                               									TITULO_REFERENCIA,
-												
-             CASE WHEN PRG_MOV.T$DOCN ! =  0 									
-                    THEN NVL(AGRUP.T$NINV$C, TREF.T$NINV) 									
-                  ELSE NULL 									
-              END                                               									DOCUMENTO_REFERENCIA,
-												
-             CASE WHEN PRG_MOV.T$DOCN ! =  0 									
-                    THEN NVL(AGRUP.DT_VENC, TREF.DT_VENC) 									
-                  ELSE NULL 									
-              END                                               									DATA_VENCTO_TIT_REFM,
-													
-             CASE WHEN PRG_MOV.T$DOCN ! =  0 									
-                    THEN NVL(AGRUP.DT_LIQ, TREF.DT_LIQ) 									
-                  ELSE NULL 									
-              END                                               									DATA_LIQUID_TIT_REF,
-											
-             CASE WHEN PRG_MOV.T$DOCN ! =  0 								
-                    THEN NVL(AGRUP.T$DOCD, TREF.T$DOCD) 								
-                  ELSE NULL 								
-              END                                               									DATA_TRANSACAO_TIT_REF,
-											
-             CASE WHEN PRG_MOV.T$DOCN ! =  0 								
-                    THEN NVL(AGRUP.T$AMNT, TREF.T$AMNT) 								
-                  ELSE NULL 								
-              END                                               									VALOR_TRANSACAO_TIT_REF,
+             201                                                                  CIA,
+                  
+             CASE WHEN NVL( (FILIAL.T$STYP), '0' ) = '0'                  
+                    THEN 2                  
+                  ELSE 3                  
+             END                                                                  FILIAL, 
+                        
+             PRG_MOV.T$NINV                                                       TITULO,
+             PRG_MOV.T$RPST$L                                                     SITUACAO_TITULO, 
+             SIT_TIT.                                                             DESCR_SIT_TIT,
+             PRG_MOV.T$TTYP                                                       DOC,
+             TCCOM130.T$FOVN$L                                                    CNPJ,
+             TCCOM100.T$NAMA                                                      NOME,
+             PRG_MOV.T$DOCD                                                       DT_EMISSAO,
+             PRG_MOV.T$AMNT                                                       VL_TITULO,
+             PRG_MOV.T$BALC                                                       VL_SALDO_TITULO,
+             PRG_MOV.T$PAYM                                                       CARTEIRA,
+             TFCMG011.T$BAOC$L                                                    CD_BANCO,
+             TFCMG011.T$AGCD$L                                                    NR_AGENCIA,
+             TFCMG001.T$BANO                                                      NR_CONTA_CORRENTE,
+             PRG_MOV.T$SCHN                                                       NR_DOCUMENTO,
+             TITULO.T$LEAC                                                        CENTRO_CUSTO,
+             PRG_MOV.T$RECD                                                       DT_VENCIMENTO,
+             PRG_MOV.T$DUED$L                                                     DT_VENCIMENTO_ORIGINAL,
+        
+             CASE WHEN TITULO.T$BALC = 0  
+                    THEN ( SELECT MAX(P.T$DOCD)   
+                             FROM BAANDB.TTFACR200201 P 
+                            WHERE P.T$TTYP = TITULO.T$TTYP  
+                           AND P.T$NINV = TITULO.T$NINV )   
+                  ELSE NULL   
+              END                                                                 DT_LIQUIDACAO_TITULO,
+                      
+             TFCMG401.T$BTNO                                                      REMESSA,
+             TFCMG409.T$DATE                                                      DT_REMESSA,
+             CISLI940.T$DOCN$L                                                    NOTA,
+             CISLI940.T$SERI$L                                                    SERIE,
+             CISLI940.T$FIRE$L                                                    REF_FISCAL,
+             PRG_MOV.T$BREL                                                       NR_BANCARIO,
+             PEDIDO.T$UNEG$C                                                      UNID_NEGOCIO,
+             ZNINT002.T$DESC$C                                                    DESC_UNID_NEGOCIO,
+--             NVL( (T.T$TEXT),' ' )                                                OBSERVACAO,
+             ZNREC007.T$LOGN$C                                                    USUARIO,
+             CASE WHEN C_IDCP=1 THEN PEDIDO.T$IDCP$C ELSE NULL END                  CAMPANHA,
+             ZNREC007.T$CVPC$C                                                    CONTRATO_VPC,
+             PRG_MOV.T$TDOC                                                       ID_TRANSACAO,
+             GLD011.T$DESC                                                        TRANSACAO, 
+             PRG_MOV.T$DOCD                                                       DATA_TRANSACAO,
+        
+             CASE WHEN PRG_MOV.T$DOCN ! =  0  
+                    THEN NVL(AGRUP.T$TTYP$C, TREF.T$TTYP)   
+                  ELSE NULL   
+              END                                                                 TITULO_REFERENCIA,
+                        
+             CASE WHEN PRG_MOV.T$DOCN ! =  0                  
+                    THEN NVL(AGRUP.T$NINV$C, TREF.T$NINV)                   
+                  ELSE NULL                   
+              END                                                                 DOCUMENTO_REFERENCIA,
+                        
+             CASE WHEN PRG_MOV.T$DOCN ! =  0                  
+                    THEN NVL(AGRUP.DT_VENC, TREF.DT_VENC)                   
+                  ELSE NULL                   
+              END                                                                 DATA_VENCTO_TIT_REFM,
+                          
+             CASE WHEN PRG_MOV.T$DOCN ! =  0                  
+                    THEN NVL(AGRUP.DT_LIQ, TREF.DT_LIQ)                   
+                  ELSE NULL                   
+              END                                                                 DATA_LIQUID_TIT_REF,
+                      
+             CASE WHEN PRG_MOV.T$DOCN ! =  0                
+                    THEN NVL(AGRUP.T$DOCD, TREF.T$DOCD)                 
+                  ELSE NULL                 
+              END                                                                 DATA_TRANSACAO_TIT_REF,
+                      
+             CASE WHEN PRG_MOV.T$DOCN ! =  0                
+                    THEN NVL(AGRUP.T$AMNT, TREF.T$AMNT)                 
+                  ELSE NULL                 
+              END                                                                 VALOR_TRANSACAO_TIT_REF,
              
              CASE WHEN C_ENTR=1 THEN PEDIDO.T$LOGF$C ELSE NULL END                                  ENDERECO,
              CASE WHEN C_ENTR=1 THEN PEDIDO.T$NUMF$C ELSE NULL END                                  NUMERO,
@@ -88,29 +88,29 @@
              CASE WHEN C_ENTR=1 THEN PEDIDO.T$TELF$C ELSE NULL END                                  TELEFONE,
              CASE WHEN C_ENTR=1 THEN PEDIDO.T$ENTR$C ELSE NULL END                                  ENTREGA,
              CASE WHEN C_PEEX=1 THEN PEDIDO.T$PEEX$C ELSE NULL END                                  PEDIDO_EXTERNO,
-			 
-             TFCMG409.T$STDD                                    									SITUACAO_REMESSA,
-             SIT_REM.                                           									DESCR_SIT_REM,
+       
+             TFCMG409.T$STDD                                                      SITUACAO_REMESSA,
+             SIT_REM.                                                             DESCR_SIT_REM,
              CASE WHEN C_IDMP=1 THEN PEDIDO.T$IDMP$C ELSE NULL END                                  MEIO_PAGAMENTO,
-             ZNCMG007.T$DESC$C                                  									DESCR_MEIO_PGTO, 
-             CASE WHEN C_PEEX=1 THEN ZNSLS410.T$POCO$C ELSE NULL END								ULTIMO_PONTO,
-             CASE WHEN C_PEEX=1 THEN ZNMCS002.T$DESC$C ELSE NULL END								DESCR_ULT_PONTO, 
-			 
+             ZNCMG007.T$DESC$C                                                    DESCR_MEIO_PGTO, 
+             CASE WHEN C_PEEX=1 THEN ZNSLS410.T$POCO$C ELSE NULL END                ULTIMO_PONTO,
+             CASE WHEN C_PEEX=1 THEN ZNMCS002.T$DESC$C ELSE NULL END                DESCR_ULT_PONTO, 
+       
              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 
               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT TIME ZONE 'AMERICA/SAO_PAULO') AS DATE)
-																									DATA_EMISSAO_NF,
-			 
-             CISLI940.T$STAT$L                                  									SITUACAO_NF,
-             SITUACAO_NF.                                       									DESCR_SITUACAO_NF,
+                                                  DATA_EMISSAO_NF,
+       
+             CISLI940.T$STAT$L                                                    SITUACAO_NF,
+             SITUACAO_NF.                                                         DESCR_SITUACAO_NF,
 
              CASE WHEN ( PRG_MOV.T$RPST$L ! =  4 AND PRG_MOV.T$RECD < TRUNC(SYSDATE) )
                     THEN TRUNC(SYSDATE) - PRG_MOV.T$RECD
                   ELSE NULL 
-              END                                               									TEMPO_ATRASO,
-										
-             TITULO.T$ITBP                                      									COD_PARCEIRO,
-             PRG_MOV.T$AMNT                                     									VALOR_TRANSACAO,
-             TCCOM130.T$INFO                                    									EMAIL
+              END                                                                 TEMPO_ATRASO,
+                    
+             TITULO.T$ITBP                                                        COD_PARCEIRO,
+             PRG_MOV.T$AMNT                                                       VALOR_TRANSACAO,
+             TCCOM130.T$INFO                                                      EMAIL
 
          
         FROM    ( SELECT NVL(TFACR201.T$TTYP, TFACR200.T$TTYP) T$TTYP,
@@ -171,69 +171,73 @@
                 ON ZNREC007.T$TTYP$C = TITULO.T$TTYP
                AND ZNREC007.T$DOCN$C = TITULO.T$NINV
             
-		LEFT JOIN	(SELECT
-							LRF.T$REFR$L,
-							MIN(ZNSLS004.T$NCIA$C) T$NCIA$C,
-							MIN(ZNSLS004.T$UNEG$C) T$UNEG$C,
-							MIN(ZNSLS004.T$PECL$C) T$PECL$C,
-							MIN(ZNSLS004.T$SQPD$C) T$SQPD$C,
-							MIN(ZNSLS004.T$ENTR$C) T$ENTR$C,
-							COUNT(DISTINCT ZNSLS004.T$ENTR$C) C_ENTR,
-							MIN(ZNSLS400.T$LOGF$C) T$LOGF$C,
-							MIN(ZNSLS400.T$NUMF$C) T$NUMF$C,
-							MIN(ZNSLS400.T$BAIF$C) T$BAIF$C,
-							MIN(ZNSLS400.T$CIDF$C) T$CIDF$C,
-							MIN(ZNSLS400.T$UFFA$C) T$UFFA$C,
-							MIN(ZNSLS400.T$CEPF$C) T$CEPF$C,
-							MIN(ZNSLS400.T$TELF$C) T$TELF$C,
-							MIN(ZNSLS400.T$PEEX$C) T$PEEX$C,
-							COUNT(DISTINCT ZNSLS400.T$PEEX$C) C_PEEX,
-							MIN(ZNSLS402.T$IDMP$C) T$IDMP$C,
-							COUNT(DISTINCT ZNSLS402.T$IDMP$C) C_IDMP,
-							MIN(ZNSLS400.T$IDCP$C) T$IDCP$C,
-							COUNT(DISTINCT ZNSLS400.T$IDCP$C) C_IDCP
-					FROM 
-								BAANDB.TCISLI941201 LRF
-							
-					INNER JOIN	BAANDB.TCISLI245201	RRF 
-						ON	RRF.T$FIRE$L = LRF.T$FIRE$L
-						AND	RRF.T$LINE$L = LRF.T$LINE$L
-						
-					INNER JOIN	BAANDB.TZNSLS004201 ZNSLS004
-						ON	ZNSLS004.T$ORNO$C = RRF.T$SLSO
-						AND	ZNSLS004.T$PONO$C = RRF.T$PONO
+    LEFT JOIN (SELECT
+--              LRF.T$REFR$L,
+              LRF.T$FIRE$L,
+              MIN(ZNSLS004.T$NCIA$C) T$NCIA$C,
+              MIN(ZNSLS004.T$UNEG$C) T$UNEG$C,
+              MIN(ZNSLS004.T$PECL$C) T$PECL$C,
+              MIN(ZNSLS004.T$SQPD$C) T$SQPD$C,
+              MIN(ZNSLS004.T$ENTR$C) T$ENTR$C,
+              COUNT(DISTINCT ZNSLS004.T$ENTR$C) C_ENTR,
+              MIN(ZNSLS400.T$LOGF$C) T$LOGF$C,
+              MIN(ZNSLS400.T$NUMF$C) T$NUMF$C,
+              MIN(ZNSLS400.T$BAIF$C) T$BAIF$C,
+              MIN(ZNSLS400.T$CIDF$C) T$CIDF$C,
+              MIN(ZNSLS400.T$UFFA$C) T$UFFA$C,
+              MIN(ZNSLS400.T$CEPF$C) T$CEPF$C,
+              MIN(ZNSLS400.T$TELF$C) T$TELF$C,
+              MIN(ZNSLS400.T$PEEX$C) T$PEEX$C,
+              COUNT(DISTINCT ZNSLS400.T$PEEX$C) C_PEEX,
+              MIN(ZNSLS402.T$IDMP$C) T$IDMP$C,
+              COUNT(DISTINCT ZNSLS402.T$IDMP$C) C_IDMP,
+              MIN(ZNSLS400.T$IDCP$C) T$IDCP$C,
+              COUNT(DISTINCT ZNSLS400.T$IDCP$C) C_IDCP
+          FROM 
+                BAANDB.TCISLI941201 LRF
+              
+--          INNER JOIN  BAANDB.TCISLI245201 RRF                 #MMF.o
+--            ON  RRF.T$FIRE$L = LRF.T$FIRE$L
+--            AND RRF.T$LINE$L = LRF.T$LINE$L
 
-					LEFT JOIN BAANDB.TZNSLS400201 ZNSLS400 
-						ON ZNSLS400.T$NCIA$C = ZNSLS004.T$NCIA$C
-					   AND ZNSLS400.T$UNEG$C = ZNSLS004.T$UNEG$C
-					   AND ZNSLS400.T$PECL$C = ZNSLS004.T$PECL$C
-					   AND ZNSLS400.T$SQPD$C = ZNSLS004.T$SQPD$C
-
-					LEFT JOIN BAANDB.TZNSLS402201 ZNSLS402  
-						ON ZNSLS402.T$NCIA$C = ZNSLS004.T$NCIA$C
-					   AND ZNSLS402.T$UNEG$C = ZNSLS004.T$UNEG$C
-					   AND ZNSLS402.T$PECL$C = ZNSLS004.T$PECL$C
-					   AND ZNSLS402.T$SQPD$C = ZNSLS004.T$SQPD$C
-					 
-					GROUP BY LRF.T$REFR$L) PEDIDO
-						ON PEDIDO.T$REFR$L = CISLI940.T$FIRE$L
-			
-			
-			
-			
+          INNER JOIN  BAANDB.TCISLI245201 RRF                 #MMF.n
+            ON  RRF.T$FIRE$L = LRF.T$FIRE$L
+            AND RRF.T$LINE$L = LRF.T$LINE$L
             
-         LEFT JOIN (SELECT	A.T$NCIA$C,
-		                    A.T$UNEG$C,
-		                    A.T$PECL$C,
-		                    A.T$SQPD$C,
-		                    A.T$ENTR$C,
-		                    MAX(A.T$POCO$C) KEEP (DENSE_RANK LAST ORDER BY A.T$DTOC$C, A.T$SEQN$C) T$POCO$C
-					FROM BAANDB.TZNSLS410201 A
-					GROUP BY A.T$NCIA$C,
-					         A.T$UNEG$C,
-					         A.T$PECL$C,
-					         A.T$SQPD$C,
-					         A.T$ENTR$C) ZNSLS410  
+          INNER JOIN  BAANDB.TZNSLS004201 ZNSLS004
+            ON  ZNSLS004.T$ORNO$C = RRF.T$SLSO
+            AND ZNSLS004.T$PONO$C = RRF.T$PONO
+
+          LEFT JOIN BAANDB.TZNSLS400201 ZNSLS400 
+            ON ZNSLS400.T$NCIA$C = ZNSLS004.T$NCIA$C
+             AND ZNSLS400.T$UNEG$C = ZNSLS004.T$UNEG$C
+             AND ZNSLS400.T$PECL$C = ZNSLS004.T$PECL$C
+             AND ZNSLS400.T$SQPD$C = ZNSLS004.T$SQPD$C
+
+          LEFT JOIN BAANDB.TZNSLS402201 ZNSLS402  
+            ON ZNSLS402.T$NCIA$C = ZNSLS004.T$NCIA$C
+             AND ZNSLS402.T$UNEG$C = ZNSLS004.T$UNEG$C
+             AND ZNSLS402.T$PECL$C = ZNSLS004.T$PECL$C
+             AND ZNSLS402.T$SQPD$C = ZNSLS004.T$SQPD$C
+           
+--          GROUP BY LRF.T$REFR$L) PEDIDO
+          GROUP BY LRF.T$FIRE$L) PEDIDO
+--            ON PEDIDO.T$REFR$L = CISLI940.T$FIRE$L
+            ON PEDIDO.T$FIRE$L = CISLI940.T$FIRE$L
+
+            
+         LEFT JOIN (SELECT  A.T$NCIA$C,
+                        A.T$UNEG$C,
+                        A.T$PECL$C,
+                        A.T$SQPD$C,
+                        A.T$ENTR$C,
+                        MAX(A.T$POCO$C) KEEP (DENSE_RANK LAST ORDER BY A.T$DTOC$C, A.T$SEQN$C) T$POCO$C
+          FROM BAANDB.TZNSLS410201 A
+          GROUP BY A.T$NCIA$C,
+                   A.T$UNEG$C,
+                   A.T$PECL$C,
+                   A.T$SQPD$C,
+                   A.T$ENTR$C) ZNSLS410  
                 ON ZNSLS410.T$NCIA$C = PEDIDO.T$NCIA$C
                AND ZNSLS410.T$UNEG$C = PEDIDO.T$UNEG$C
                AND ZNSLS410.T$PECL$C = PEDIDO.T$PECL$C
