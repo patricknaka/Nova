@@ -11,43 +11,48 @@
   -- #MAT.001 - 24-jul-2014, Marcia Amador R. Torres,   Adicionado campo QT_PRAZO_GARANTIA
   --********************************************************************************************************************************************************
 SELECT
-    case when zncom005.t$cdve$c = ' ' then null else zncom005.t$cdve$c end NR_GARANTIA_ESTENDIDA,                              --#FAF.043.3.o
-    tdsls400.t$hdst CD_STATUS_PEDIDO,                     
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_GARANTIA,                      
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone 'America/Sao_Paulo') AS DATE) DT_PEDIDO_PRODUTO,                        
+    case when zncom005.t$cdve$c = ' ' 
+      then null else zncom005.t$cdve$c end                        NR_GARANTIA_ESTENDIDA,
+    tdsls400.t$hdst                                               CD_STATUS_PEDIDO,                     
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)                DT_EMISSAO_GARANTIA,                      
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)                DT_PEDIDO_PRODUTO,                        
     NVL(cast(ltrim(rtrim(tdsls401p.t$item)) as varchar2(15)),' ') CD_ITEM,              
-    NVL(cast(ltrim(rtrim(tdsls401.t$item)) as varchar2(15)),' ') CD_ITEM_GARANTIA,                                  
-    sum(tdsls401.t$pric)/count(tdsls401.t$qoor) VL_CUSTO,                        --#FAF.043.2.n
-    max(tdsls401.t$pric) VL_GARANTIA,                                  --#FAF.043.2.n
-    sum(zncom005.t$piof$c) VL_IOF,                    
-    sum(zncom005.t$ppis$c) VL_PIS,
-    sum(zncom005.t$pcof$c) VL_COFINS,
-    nvl((select a.t$amnt$l from baandb.tcisli943201 a
-    where a.t$fire$l=zncom005.t$fire$c
-    and a.t$line$l=zncom005.t$line$c
-    and a.t$brty$l=13),0) VL_CSLL,                            
-    sum(zncom005.t$irrf$c) VL_IRPF,
-    znsls400.T$PECL$C NR_PEDIDO,                                                           
-    to_char(znsls401.T$ENTR$C) NR_ENTREGA,
-    tdsls400.T$ORNO NR_ORDEM,                                        
-    avg(tdsls401.t$qoor) QT_GARANTIA,
-    znsls400.T$uneg$c CD_UNIDADE_NEGOCIO,                                --#FAF.134.n
-    znsls400.T$cven$c CD_VENDEDOR,
-    znsls400.T$idca$c CD_CANAL_VENDA,                                  --#FAF.134.sn
-    znsls400.t$idli$c NR_LISTA_CASAMENTO,
-  (select e.t$ftyp$l from baandb.ttccom130201 e where e.t$cadr=tdsls400.t$itbp) CD_TIPO_CLIENTE_FATURA,    --#FAF.134.en
-  
+    NVL(cast(ltrim(rtrim(tdsls401.t$item)) as varchar2(15)),' ')  CD_ITEM_GARANTIA,                                  
+    sum(tdsls401.t$pric)/count(tdsls401.t$qoor)                   VL_CUSTO,
+    max(tdsls401.t$pric)                                          VL_GARANTIA,
+    sum(zncom005.t$piof$c)                                        VL_IOF,                    
+    sum(zncom005.t$ppis$c)                                        VL_PIS,
+    sum(zncom005.t$pcof$c)                                        VL_COFINS,
+    nvl((select a.t$amnt$l 
+      from baandb.tcisli943201 a
+        where a.t$fire$l=zncom005.t$fire$c
+        and a.t$line$l=zncom005.t$line$c
+        and a.t$brty$l=13),0)                                     VL_CSLL,                            
+    sum(zncom005.t$irrf$c)                                        VL_IRPF,
+    znsls400.T$PECL$C                                             NR_PEDIDO,                                                           
+    to_char(znsls401.T$ENTR$C)                                    NR_ENTREGA,
+    tdsls400.T$ORNO                                               NR_ORDEM,                                        
+    avg(tdsls401.t$qoor)                                          QT_GARANTIA,
+    znsls400.T$uneg$c                                             CD_UNIDADE_NEGOCIO,
+    znsls400.T$cven$c                                             CD_VENDEDOR,
+    znsls400.T$idca$c                                             CD_CANAL_VENDA,
+    znsls400.t$idli$c                                             NR_LISTA_CASAMENTO,
+    (select e.t$ftyp$l 
+      from baandb.ttccom130201 e 
+        where e.t$cadr=tdsls400.t$itbp)                           CD_TIPO_CLIENTE_FATURA,
+    CASE WHEN zncom005.t$canc$c=1 
+      THEN 1 ELSE 0 END                                           IN_CANCELADO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(zncom005.t$rcd_utc), 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)                DT_ULT_ATUALIZACAO,
+    sum(zncom005.t$igva$c)                                        VL_ITEM_GARANTIA,
+    zncom005.t$enga$c                                             CD_PLANO_GARANTIA,
+    tcibd001.T$NRPE$C                                             QT_PRAZO_GARANTIA 
 
-CASE WHEN zncom005.t$canc$c=1 THEN 1 ELSE 0 END IN_CANCELADO,                    --#FAF.161.n
-   
-
- CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(zncom005.t$rcd_utc), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-    AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,                      --#FAF.205.n
-    sum(zncom005.t$igva$c) VL_ITEM_GARANTIA,                                  --#FAF.043.2.n
-    zncom005.t$enga$c CD_PLANO_GARANTIA,                                    --#FAF.043.2.n
-    tcibd001.T$NRPE$C QT_PRAZO_GARANTIA                                 --#MAT.001.n
   FROM
     BAANDB.tzncom005201 zncom005,
     baandb.ttcibd001201 tcibd001,                                            
@@ -55,6 +60,7 @@ CASE WHEN zncom005.t$canc$c=1 THEN 1 ELSE 0 END IN_CANCELADO,                   
     baandb.ttdsls401201 tdsls401,
     baandb.tznsls400201 znsls400,
     baandb.tznsls401201 znsls401
+    
     LEFT JOIN baandb.tznsls401201 znsls401p
       ON  znsls401p.t$ncia$c=znsls401.t$ncia$c
       AND  znsls401p.t$uneg$c=znsls401.t$uneg$c
@@ -62,28 +68,45 @@ CASE WHEN zncom005.t$canc$c=1 THEN 1 ELSE 0 END IN_CANCELADO,                   
       AND znsls401p.t$sqpd$c=znsls401.t$sqpd$c
       AND znsls401p.t$entr$c=znsls401.t$entr$c
       AND znsls401p.t$sequ$c=znsls401.t$sgar$c  
+
     LEFT JOIN baandb.ttdsls401201 tdsls401p
       ON tdsls401p.t$orno=znsls401p.t$orno$c
       AND tdsls401p.t$pono=znsls401p.t$pono$c
-  WHERE
-    tdsls400.t$orno=zncom005.t$orno$c
-  AND  znsls400.t$ncia$c=zncom005.t$ncia$c
-  AND  znsls400.t$uneg$c=zncom005.t$uneg$c
-  AND znsls400.t$pecl$c=zncom005.t$pecl$c
-  AND znsls400.t$sqpd$c=zncom005.t$sqpd$c
-  AND  znsls401.t$ncia$c=zncom005.t$ncia$c
-  AND  znsls401.t$uneg$c=zncom005.t$uneg$c
-  AND znsls401.t$pecl$c=zncom005.t$pecl$c
-  AND znsls401.t$sqpd$c=zncom005.t$sqpd$c
-  AND znsls401.t$entr$c=zncom005.t$entr$c
-  AND znsls401.t$sequ$c=zncom005.t$sequ$c
-  AND tdsls401.T$ORNO=znsls401.T$ORNO$C                                      
-  AND tdsls401.t$pono=znsls401.T$PONO$C
-  AND tcibd001.T$ITEM=tdsls401.T$ITEM
-  AND tcibd001.T$ITGA$C=1
-  AND zncom005.T$TPAP$C=2
-  AND zncom005.t$avpn$c!=0                                --#FAF.018.n
-  GROUP BY  znsls400.T$uneg$c, znsls400.T$PECL$C, znsls401.T$ENTR$C, tdsls400.T$ORNO, zncom005.t$cdve$c, tdsls400.t$hdst, znsls400.t$dtem$c,
-        tdsls400.t$odat, tdsls401p.t$item, tdsls401.t$item, zncom005.t$fire$c, zncom005.t$line$c, znsls400.T$idca$c,
-        znsls400.T$cven$c, znsls400.t$idli$c, tdsls400.t$itbp, zncom005.t$canc$c, zncom005.t$enga$c, 
-        tcibd001.T$NRPE$C                     --#MAT.001.n
+
+  WHERE tdsls400.t$orno=zncom005.t$orno$c
+    AND znsls400.t$ncia$c=zncom005.t$ncia$c
+    AND znsls400.t$uneg$c=zncom005.t$uneg$c
+    AND znsls400.t$pecl$c=zncom005.t$pecl$c
+    AND znsls400.t$sqpd$c=zncom005.t$sqpd$c
+    AND znsls401.t$ncia$c=zncom005.t$ncia$c
+    AND znsls401.t$uneg$c=zncom005.t$uneg$c
+    AND znsls401.t$pecl$c=zncom005.t$pecl$c
+    AND znsls401.t$sqpd$c=zncom005.t$sqpd$c
+    AND znsls401.t$entr$c=zncom005.t$entr$c
+    AND znsls401.t$sequ$c=zncom005.t$sequ$c
+    AND tdsls401.T$ORNO=znsls401.T$ORNO$C                                      
+    AND tdsls401.t$pono=znsls401.T$PONO$C
+    AND tcibd001.T$ITEM=tdsls401.T$ITEM
+    AND tcibd001.T$ITGA$C=1   --Item Garantia Estendida
+    AND zncom005.T$TPAP$C=2   --Tipo Aviso PN
+    AND zncom005.t$avpn$c!=0  --Aviso de Parceiro
+
+GROUP BY znsls400.T$uneg$c, 
+         znsls400.T$PECL$C, 
+         znsls401.T$ENTR$C, 
+         tdsls400.T$ORNO, 
+         zncom005.t$cdve$c, 
+         tdsls400.t$hdst, 
+         znsls400.t$dtem$c,
+         tdsls400.t$odat, 
+         tdsls401p.t$item, 
+         tdsls401.t$item, 
+         zncom005.t$fire$c, 
+         zncom005.t$line$c, 
+         znsls400.T$idca$c,
+         znsls400.T$cven$c, 
+         znsls400.t$idli$c, 
+         tdsls400.t$itbp, 
+         zncom005.t$canc$c, 
+         zncom005.t$enga$c, 
+         tcibd001.T$NRPE$C
