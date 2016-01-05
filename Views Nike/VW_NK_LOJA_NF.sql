@@ -377,7 +377,7 @@ SELECT DISTINCT
       '1'
   ELSE '0' END                                            ENTREGA_DEST_COMPR,                      --72
   CASE WHEN SLS004.ENTREGA IS NULL THEN
-      CASE WHEN cisli940.t$fdty$l = 16 THEN   --Fatura Triangular
+      CASE WHEN (cisli940.t$fdty$l = 16 and SLS004_REM.ENTREGA is not null) THEN   --Fatura Triangular e nota não cancelada
             TO_CHAR(SLS004_REM.ENTREGA)
       ELSE TO_CHAR(cisli940.t$docn$l) || cisli940.t$seri$l END
   ELSE TO_CHAR(SLS004.ENTREGA) END
