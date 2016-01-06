@@ -13,7 +13,7 @@ SELECT
     '01'                                            COR_PRODUTO,
     ZNIBD005.T$DESC$C                                TAMANHO,
     TDREC941.T$QNTY$L                                QTDE,
-    TDREC941.T$PRIC$L  + TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L            PRECO_LIQUIDO,
+    TDREC941.T$PRIC$L  + ROUND((TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L)/TDREC941.T$QNTY$L,4)            PRECO_LIQUIDO,
     (TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L)*(-1)                        DESCONTO_ITEM,
     0                                                QTDE_CANCELADA,
     0.0                                             CUSTO,
