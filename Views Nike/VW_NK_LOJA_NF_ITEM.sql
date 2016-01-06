@@ -20,7 +20,7 @@ SELECT DISTINCT
     tcibd001.t$cuni             UNIDADE,                  --12
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
-    ELSE tdrec941.t$pric$l + TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L END  PRECO_UNITARIO,           --13
+    ELSE tdrec941.t$pric$l + ROUND(((TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L)/tdrec941.t$qnty$l),4) END  PRECO_UNITARIO,           --13
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
