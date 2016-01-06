@@ -138,7 +138,7 @@ INNER JOIN ( select sls401.t$te1e$c,
        AND znsls410.t$sqpd$c = znsls400_LJ.t$sqpd$c
 
      WHERE znsls402.t$vlmr$c < 0
-       AND znsls402.t$idmp$c != 1
+       AND znsls402.t$idmp$c not in (1, 4) --cartao de credito e vale
        AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') AS DATE))
@@ -297,7 +297,7 @@ INNER JOIN ( select sls401.t$te1e$c,
 "        AND znsls410.t$sqpd$c = znsls400_LJ.t$sqpd$c  " &
 "  " &
 "      WHERE znsls402.t$vlmr$c < 0  " &
-"        AND znsls402.t$idmp$c != 1  " &
+"        AND znsls402.t$idmp$c not in (1, 4)  " &
 "        AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c,  " &
 "                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "                      AT time zone 'America/Sao_Paulo') AS DATE))  " &
