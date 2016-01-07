@@ -12,8 +12,7 @@ SELECT
     znsls410.T$UNEG$C CD_UNIDADE_NEGOCIO,
     znsls410.t$orno$c NR_ORDEM_VENDA,
     znsls410.t$seqn$c as SQ_PONTO_CONTROLE,
-    znsls410.t$sqpd$c as SQ_PEDIDO,
-    tdsls400.t$cwar
+    znsls410.t$sqpd$c as SQ_PEDIDO
 FROM
     baandb.tznsls410201 znsls410
     inner join baandb.ttdsls400201 tdsls400
