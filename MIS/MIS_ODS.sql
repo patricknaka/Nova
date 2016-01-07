@@ -24,3 +24,23 @@ add DS_EMAIL VARCHAR(100) NULL
 
 alter table mis_ods.ln.ods_pev_det
 add CD_LOJISTA_MKP int null
+
+--07/01/2016
+CREATE TABLE [ln].[ods_wms_tracking_pedido_hist](
+	[CD_TRACKING] [int] NOT NULL,
+	[NR_PEDIDO_WMS] [varchar](15) NOT NULL,
+	[CD_PLANTA] [varchar](30) NOT NULL,
+	[CD_OCORRENCIA] [varchar](3) NULL,
+	[CD_SISTEMA_HOST] [varchar](3) NULL,
+	[DT_INCLUSAO_TRACKING] [datetime] NULL,
+	[CD_ARMAZEM] [varchar](10) NULL,
+ CONSTRAINT [PK_ods_wms_tracking_pedido_hist] PRIMARY KEY CLUSTERED 
+(
+	[CD_TRACKING] ASC,
+	[NR_PEDIDO_WMS] ASC,
+	[CD_PLANTA] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+GO

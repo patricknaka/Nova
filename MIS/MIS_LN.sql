@@ -25,3 +25,8 @@ add DS_EMAIL NVARCHAR(100) NULL,
 
 alter table stg_pev_det
 add CD_LOJISTA_MKP int null
+
+--07/01/2016
+alter table stg_trk_status_pedido
+add SQ_PONTO_CONTROLE int null,
+    SQ_PEDIDO int null
