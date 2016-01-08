@@ -44,3 +44,7 @@ CREATE TABLE [ln].[ods_wms_tracking_pedido_hist](
 
 
 GO
+
+--08/01/2016
+ALTER TABLE ln.ods_pev_cab
+ADD DT_PROMETIDA_ENTREGA datetime null

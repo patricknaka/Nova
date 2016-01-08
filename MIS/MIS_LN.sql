@@ -30,3 +30,7 @@ add CD_LOJISTA_MKP int null
 alter table stg_trk_status_pedido
 add SQ_PONTO_CONTROLE int null,
     SQ_PEDIDO int null
+
+--08/01/2016
+ALTER TABLE STG_PEV_CAB
+ADD DT_PROMETIDA_ENTREGA datetime null
