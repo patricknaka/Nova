@@ -96,7 +96,11 @@ select
         tdsls400.t$sotp                                 CD_TIPO_ORDEM_VENDA,
         znsls401.cancela                                IN_CANCELADO,
         znsls401.seq_pedido_cancel                      SQ_PEDIDO_CANCELADO,
-        TO_CHAR(znsls401.entrega_cancel)                NR_ENTREGA_CANCELADO
+        TO_CHAR(znsls401.entrega_cancel)                NR_ENTREGA_CANCELADO,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  DT_PROMETIDA_ENTREGA 
+        
 
 FROM       baandb.ttdsls400201 tdsls400
 
