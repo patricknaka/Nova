@@ -1,4 +1,4 @@
-﻿-- #FAF.008 - 21-mai-2014, Fabio Ferreira,   Diversas correções e inclusão de campos
+  -- #FAF.008 - 21-mai-2014, Fabio Ferreira,   Diversas correções e inclusão de campos
   -- #FAF.043 - 22-mai-2014, Fabio Ferreira,   Rtrim Ltrim no codigo da garantia
   -- #FAF.043.1 - 23-mai-2014, Fabio Ferreira,   Ajustes
   -- #FAF.044 - 23-mai-2014, Fabio Ferreira,   Correção VALOR_CSLL
@@ -53,44 +53,48 @@ SELECT
     zncom005.t$enga$c                                             CD_PLANO_GARANTIA,
     tcibd001.T$NRPE$C                                             QT_PRAZO_GARANTIA 
 
-  FROM
-    BAANDB.tzncom005201 zncom005,
-    baandb.ttcibd001201 tcibd001,                                            
-    baandb.ttdsls400201 tdsls400,
-    baandb.ttdsls401201 tdsls401,
-    baandb.tznsls400201 znsls400,
-    baandb.tznsls401201 znsls401
+  FROM BAANDB.tzncom005201 zncom005
+      
+ INNER JOIN baandb.ttdsls400201 tdsls400
+         ON tdsls400.t$orno=zncom005.t$orno$c
+
+ INNER JOIN baandb.tznsls400201 znsls400
+         ON znsls400.t$ncia$c=zncom005.t$ncia$c
+        AND znsls400.t$uneg$c=zncom005.t$uneg$c
+        AND znsls400.t$pecl$c=zncom005.t$pecl$c
+        AND znsls400.t$sqpd$c=zncom005.t$sqpd$c
+
+ INNER JOIN baandb.tznsls401201 znsls401
+         ON znsls401.t$ncia$c=zncom005.t$ncia$c
+        AND znsls401.t$uneg$c=zncom005.t$uneg$c
+        AND znsls401.t$pecl$c=zncom005.t$pecl$c
+        AND znsls401.t$sqpd$c=zncom005.t$sqpd$c
+        AND znsls401.t$entr$c=zncom005.t$entr$c
+        AND znsls401.t$sequ$c=zncom005.t$sequ$c
     
-    LEFT JOIN baandb.tznsls401201 znsls401p
-      ON  znsls401p.t$ncia$c=znsls401.t$ncia$c
-      AND  znsls401p.t$uneg$c=znsls401.t$uneg$c
-      AND znsls401p.t$pecl$c=znsls401.t$pcga$c
-      AND znsls401p.t$sqpd$c=znsls401.t$sqpd$c
-      AND znsls401p.t$entr$c=znsls401.t$entr$c
-      AND znsls401p.t$sequ$c=znsls401.t$sgar$c  
+ INNER JOIN baandb.ttdsls401201 tdsls401
+         ON tdsls401.T$ORNO=znsls401.T$ORNO$C                                      
+        AND tdsls401.t$pono=znsls401.T$PONO$C
+        
+ INNER JOIN baandb.ttcibd001201 tcibd001
+         ON tcibd001.T$ITEM=tdsls401.T$ITEM
+        
+ LEFT JOIN baandb.tznsls401201 znsls401p
+        ON znsls401p.t$ncia$c=znsls401.t$ncia$c
+       AND znsls401p.t$uneg$c=znsls401.t$uneg$c
+       AND znsls401p.t$pecl$c=znsls401.t$pcga$c
+       AND znsls401p.t$sqpd$c=znsls401.t$sqpd$c
+       AND znsls401p.t$entr$c=znsls401.t$entr$c
+       AND znsls401p.t$sequ$c=znsls401.t$sgar$c  
 
-    LEFT JOIN baandb.ttdsls401201 tdsls401p
-      ON tdsls401p.t$orno=znsls401p.t$orno$c
-      AND tdsls401p.t$pono=znsls401p.t$pono$c
+ LEFT JOIN baandb.ttdsls401201 tdsls401p
+        ON tdsls401p.t$orno=znsls401p.t$orno$c
+       AND tdsls401p.t$pono=znsls401p.t$pono$c
 
-  WHERE tdsls400.t$orno=zncom005.t$orno$c
-    AND znsls400.t$ncia$c=zncom005.t$ncia$c
-    AND znsls400.t$uneg$c=zncom005.t$uneg$c
-    AND znsls400.t$pecl$c=zncom005.t$pecl$c
-    AND znsls400.t$sqpd$c=zncom005.t$sqpd$c
-    AND znsls401.t$ncia$c=zncom005.t$ncia$c
-    AND znsls401.t$uneg$c=zncom005.t$uneg$c
-    AND znsls401.t$pecl$c=zncom005.t$pecl$c
-    AND znsls401.t$sqpd$c=zncom005.t$sqpd$c
-    AND znsls401.t$entr$c=zncom005.t$entr$c
-    AND znsls401.t$sequ$c=zncom005.t$sequ$c
-    AND tdsls401.T$ORNO=znsls401.T$ORNO$C                                      
-    AND tdsls401.t$pono=znsls401.T$PONO$C
-    AND tcibd001.T$ITEM=tdsls401.T$ITEM
-    AND tcibd001.T$ITGA$C=1   --Item Garantia Estendida
-    AND zncom005.T$TPAP$C=2   --Tipo Aviso PN
+  WHERE tcibd001.T$ITGA$C=1   --Item Garantia Estendida
+    AND zncom005.T$TPAP$C=2   --Tipo Aviso PN (2-arquivo texto)
     AND zncom005.t$avpn$c!=0  --Aviso de Parceiro
-
+    
 GROUP BY znsls400.T$uneg$c, 
          znsls400.T$PECL$C, 
          znsls401.T$ENTR$C, 
