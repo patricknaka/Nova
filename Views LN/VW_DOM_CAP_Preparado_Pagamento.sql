@@ -1,7 +1,10 @@
-SELECT d.t$cnst CD_PREPARADO_PAGAMENTO,
-       l.t$desc DS_PREPARADO_PAGAMENTO
+SELECT 
+  d.t$cnst CD_PREPARADO_PAGAMENTO,
+  l.t$desc DS_PREPARADO_PAGAMENTO
+
 FROM baandb.tttadv401000 d,
      baandb.tttadv140000 l
+
 WHERE d.t$cpac='tf'
 AND d.t$cdom='acp.pyst.l'
 AND rpad(d.t$vers,4) || rpad(d.t$rele,2) || rpad(d.t$cust,4)=

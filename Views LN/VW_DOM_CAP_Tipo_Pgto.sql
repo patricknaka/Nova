@@ -1,8 +1,11 @@
---
-SELECT d.t$cnst CD_TIPO_PAGAMENTO,
-       l.t$desc DS_TIPO_PAGAMENTO
+
+SELECT 
+  d.t$cnst CD_TIPO_PAGAMENTO,
+  l.t$desc DS_TIPO_PAGAMENTO
+
 FROM baandb.tttadv401000 d,
      baandb.tttadv140000 l
+
 WHERE d.t$cpac='tf'
 AND d.t$cdom='acp.tpay'
 AND d.t$vers='B61U'
