@@ -85,6 +85,7 @@ FROM       WMWHSE5.lotxloc ll
 INNER JOIN WMWHSE5.lotxlocxid llid 
         ON llid.sku = ll.sku 
        AND llid.loc = ll.loc
+       AND llid.lot = ll.lot
      
 INNER JOIN WMSADMIN.PL_DB
         ON UPPER(WMSADMIN.PL_DB.DB_LOGID) = llid.WHSEID 
