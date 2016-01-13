@@ -25,9 +25,7 @@ SELECT
     zncmg009.t$desc$c             DSC_BANDEIRA,
     CASE WHEN znsls409.t$dved$c = 1     OR
               znsls409.t$lbrd$c = 1     OR
-              znsls410.PT_CONTR = 'CAN' OR
-              znsls410.PT_CONTR = 'AES' OR
-              znsls410.PT_CONTR = 'WMS'
+              Trim(znsls409.t$pecl$c) is null
            THEN 'Sim'
          ELSE   'Não'
     END                           LIBERADO,
@@ -65,7 +63,7 @@ INNER JOIN baandb.tznsls400601 znsls400
        AND znsls400.t$pecl$c = znsls402.t$pecl$c
        AND znsls400.t$sqpd$c = znsls402.t$sqpd$c
 
-INNER JOIN baandb.tznsls401601 znsls401
+ LEFT JOIN baandb.tznsls401601 znsls401
         ON znsls401.t$ncia$c = znsls400.t$ncia$c
        AND znsls401.t$uneg$c = znsls400.t$uneg$c
        AND znsls401.t$pecl$c = znsls400.t$pecl$c
@@ -73,47 +71,6 @@ INNER JOIN baandb.tznsls401601 znsls401
 
 INNER JOIN baandb.tzncmg009601 zncmg009
         ON zncmg009.t$bnds$c = znsls402.t$cccd$c
-
- LEFT JOIN ( select a.t$ncia$c,
-                    a.t$uneg$c,
-                    a.t$pecl$c,
-                    a.t$sqpd$c,
-                    a.t$entr$c,
-                    a.t$dorn$c,
-                    a.t$dved$c,
-                    a.t$lbrd$c
-               from baandb.tznsls409601 a ) znsls409
-        ON znsls409.t$ncia$c = znsls402.t$ncia$c
-       AND znsls409.t$uneg$c = znsls402.t$uneg$c
-       AND znsls409.t$pecl$c = znsls402.t$pecl$c
-       AND znsls409.t$sqpd$c = znsls402.t$sqpd$c
-       AND znsls409.t$dorn$c = znsls401.t$orno$c
-
- LEFT JOIN ( select a.t$ncia$c,
-                    a.t$uneg$c,
-                    a.t$pecl$c,
-                    a.t$sqpd$c,
-                    a.t$idpo$c
-             from baandb.tznsls400601 a ) znsls400_LJ
-       ON znsls400_LJ.t$ncia$c = znsls402.t$ncia$c
-      AND znsls400_LJ.t$uneg$c = znsls402.t$uneg$c
-      AND znsls400_LJ.t$pecl$c = znsls402.t$pecl$c
-      AND znsls400_LJ.t$idpo$c = 'LJ'
-      
- LEFT JOIN ( select znsls410.t$ncia$c,
-                    znsls410.t$uneg$c,
-                    znsls410.t$pecl$c,
-                    znsls410.t$sqpd$c,
-                    MAX(znsls410.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C,  znsls410.T$SEQN$C) PT_CONTR
-               from baandb.tznsls410601 znsls410
-           group by znsls410.t$ncia$c,
-                    znsls410.t$uneg$c,
-                    znsls410.t$pecl$c,
-                    znsls410.t$sqpd$c ) znsls410
-        ON znsls410.t$ncia$c = znsls402.t$ncia$c
-       AND znsls410.t$uneg$c = znsls402.t$uneg$c
-       AND znsls410.t$pecl$c = znsls402.t$pecl$c
-       AND znsls410.t$sqpd$c = znsls400_LJ.t$sqpd$c
 
  LEFT JOIN ( select tfcmg008.t$adqs$c   COD_ADQUIRENTE,
                     tccom100.t$nama     DSC_ADQUIRENTE
@@ -154,23 +111,34 @@ INNER JOIN baandb.tzncmg009601 zncmg009
          ON zncmg019.t$idad$c = zncmg015.t$idad$c
         AND zncmg019.t$rcod$c = zncmg015.t$rcod$c
 
-WHERE znsls400.T$IDPO$C = 'TD'
-  AND znsls402.t$idmp$c = 1
---  and znsls402.t$pecl$c = '1256515'
+  LEFT JOIN ( select sls409.t$ncia$c,
+                     sls409.t$uneg$c,
+                     sls409.t$pecl$c,
+                     sls409.t$sqpd$c,
+                     sls409.t$dved$c,
+                     sls409.t$lbrd$c
+                from baandb.tznsls409601 sls409 ) znsls409
+         ON znsls409.t$ncia$c = zncmg015.t$ncia$c
+        AND znsls409.t$uneg$c = zncmg015.t$uneg$c
+        AND znsls409.t$pecl$c = zncmg015.t$pecl$c
+        AND znsls409.t$sqpd$c = zncmg015.t$sqpd$c
 
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$date$c,
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE))
-      Between :DataOcorrenciaDe
-          And :DataOcorrenciaAte
+     WHERE znsls400.T$IDPO$C = 'TD'
+       AND znsls402.t$idmp$c = 1
+       AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$date$c,
+           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+             AT time zone 'America/Sao_Paulo') AS DATE))
+           Between :DataOcorrenciaDe
+               And :DataOcorrenciaAte
 
-  AND znsls402.t$idad$c IN (+ JOIN(Parameters!Adquirente.Value, , ) + ) &
-  AND zncmg015.t$situ$c IN (+ JOIN(Parameters!Situacao.Value, , ) + ) &
-  AND ( (zncmg015.t$nrem$c IN &
+  AND znsls402.t$idad$c IN (+ JOIN(Parameters!Adquirente.Value, , ) + )
+  AND zncmg015.t$situ$c IN (+ JOIN(Parameters!Situacao.Value, , ) + )
+
+  AND ( (zncmg015.t$nrem$c IN
         ( + IIF(Trim(Parameters!Remessa.Value) = , '', '+ Replace(Replace(Parameters!Remessa.Value, , ), ,, ',') + ')  + ))
-           OR (+ IIF(Parameters!Remessa.Value Is Nothing, 1, 0) + = 1) ) &
-  AND ( (zncmg015.t$pecl$c IN &
+           OR (+ IIF(Parameters!Remessa.Value Is Nothing, 1, 0) + = 1) )
+  AND ( (zncmg015.t$pecl$c IN
         ( + IIF(Trim(Parameters!Pedido.Value) = , '', '+ Replace(Replace(Parameters!Pedido.Value, , ), ,, ',') + ')  + ))
-           OR (+ IIF(Parameters!Pedido.Value Is Nothing, 1, 0) + = 1) ) &
+           OR (+ IIF(Parameters!Pedido.Value Is Nothing, 1, 0) + = 1) )
 
-ORDER BY znsls400.t$dtin$c  
+  ORDER BY znsls400.t$dtin$c  
