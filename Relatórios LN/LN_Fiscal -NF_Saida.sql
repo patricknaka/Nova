@@ -64,7 +64,11 @@ select Q1.*
                  IMPOSTO_1.                 TRIBUT_CST_ICMS,
                  IMPOSTO_1.ORIG_CST_ICMS ||
                  IMPOSTO_1.TRIBUT_CST_ICMS  ORIGEM_TRIBUTARIO_CST_ICMS,
-
+				 
+                 IMPOSTO_1.                 VL_FUNDO_COMB_POBREZA,
+                 IMPOSTO_1.                 VL_ESTADO_DESTINO,
+                 IMPOSTO_1.                 VL_ESTADO_ORIGEM,
+				 
                  IMPOSTO_2.                 BASE_ICMS_ST,
                  IMPOSTO_2.                 VL_ICMS_ST,
                  IMPOSTO_2.                 VL_ICMS_ST_DEST,      
@@ -223,10 +227,16 @@ select Q1.*
        LEFT JOIN ( select cisli943.t$fbtx$l          BASE_ICMS,
                           Round(cisli943.t$amnt$l,4) VL_ICMS,
                           Round(cisli943.t$fbam$l,4) VL_ICMS_DEST,
+						  
+                          Round(cisli943.t$vpbr$l,4) VL_FUNDO_COMB_POBREZA,
+                          Round(cisli943.t$vest$l,4) VL_ESTADO_DESTINO,
+                          Round(cisli943.t$oest$l,4) VL_ESTADO_ORIGEM,
+						  
                           cisli943.t$rate$l          PERC_ICMS,
                           cisli943.t$txsc$l          CST_ICMS,
                           tcmcs938.t$gdog$l          ORIG_CST_ICMS,      
                           tcmcs938.t$icmd$l          TRIBUT_CST_ICMS,
+						  
                           cisli943.t$fire$l,
                           cisli943.t$line$l
                      from baandb.ttcmcs938301 tcmcs938
@@ -325,7 +335,7 @@ select Q1.*
                                                                     from baandb.tznsls000301 b ) )    
 
         ORDER BY cisli940.t$fire$l ) Q1
-   
+        
 where Trunc(DATA_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DATA_EMISSAO) AND NVL(:DataEmissaoAte, DATA_EMISSAO)
   and Trunc(DATA_FATURAMENTO) BETWEEN NVL(:DataFaturamentoDe, DATA_FATURAMENTO) AND NVL(:DataFaturamentoAte, DATA_FATURAMENTO)
   and Q1.CHAVE_FILIAL IN (:Filial)
