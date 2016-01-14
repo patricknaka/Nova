@@ -78,7 +78,9 @@ select Q1.*
                  IMPOSTO_1.                          VL_ICMS_DEST, 
                  IMPOSTO_1.ORIG_CST_ICMS ||
                  IMPOSTO_1.TRIBUT_CST_ICMS           ORIGEM_TRIBUTARIO_CST_ICMS,
-                 
+                 IMPOSTO_1.                          VL_FUNDO_COMB_POBREZA,
+                 IMPOSTO_1.                          VL_ESTADO_DESTINO,
+                 IMPOSTO_1.                          VL_ESTADO_ORIGEM,
                  IMPOSTO_2.                          BASE_ICMS_ST,
                  IMPOSTO_2.                          VL_ICMS_ST,
                  IMPOSTO_2.                          VL_ICMS_ST_DEST,      
@@ -106,6 +108,10 @@ select Q1.*
                  IMPOSTO_ST_SCONV.                   BASE_ICMS_ST_SCONV,
                  IMPOSTO_ST_SCONV.                   PERC_ICMS_ST_SCONV,
                  IMPOSTO_ST_SCONV.                   VL_ICMS_ST_SCONV,
+                 
+                 
+                 
+                 
                    
                  tdrec941.t$tamt$l                   VALO_TOTAL,
                  tdrec940.t$fovn$l                   CNPJ_FORN,
@@ -210,14 +216,18 @@ select Q1.*
  
        LEFT JOIN ( SELECT tdrec942.t$fire$l,
                           tdrec942.t$line$l,
---                          tdrec942.t$fbtx$l         BASE_ICMS,
                           tdrec942.t$base$l         BASE_ICMS,
                           tdrec942.t$rate$l         PERC_ICMS,
                           tdrec942.t$amnt$l         VL_ICMS,
                           tdrec942.t$txsc$l         CST_ICMS,
                           tcmcs938.t$gdog$l         ORIG_CST_ICMS,      
                           tcmcs938.t$icmd$l         TRIBUT_CST_ICMS,
-                          tdrec942.t$fbam$l         VL_ICMS_DEST
+                          tdrec942.t$fbam$l         VL_ICMS_DEST,
+						  
+                          tdrec942.t$vpbr$l         VL_FUNDO_COMB_POBREZA,
+                          tdrec942.t$vest$l         VL_ESTADO_DESTINO,
+                          tdrec942.t$oest$l         VL_ESTADO_ORIGEM
+						  
                      FROM baandb.ttcmcs938301 tcmcs938
                INNER JOIN baandb.ttdrec942301 tdrec942
                        ON tcmcs938.t$txsc$l = tdrec942.t$txsc$l
