@@ -47,7 +47,7 @@ LEFT JOIN ( select a.t$ttyp,
         ON tfacr200.t$ttyp = znacr200.t$ttyp$c
        AND tfacr200.t$ninv = znacr200.t$ninv$c
        
- LEFT JOIN baandb.tzngld006301 zngld006
+ LEFT JOIN baandb.tzngld006201 zngld006
         ON zngld006.t$code$c = znacr200.t$code$c
  
 LEFT JOIN ( SELECT d.t$cnst CODE_STAT,
