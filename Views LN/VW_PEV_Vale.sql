@@ -1,14 +1,16 @@
 ﻿SELECT          
+    znacr200.t$ncia$c                   CD_CIA,
+    znacr200.t$uneg$c                   CD_UNIDADE_NEGOCIO,
     tfacr200.t$docd                     DT_EMISSAO_VALE,
     ABS(tfacr200.t$amnt)                VL_VALOR_VALE,
     ABS(tfacr200.t$balc)                VL_SALDO_VALE,
     tfacr201.t$liqd                     DT_VALIDADE,
     znacr200.t$bpi1$c                   CD_CLIENTE,
     CASE WHEN regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') IS NULL
-      THEN '00000000000000' 
+      THEN cast('000000000000000' as varchar(15))
 		WHEN LENGTH(regexp_replace(tccom130.t$fovn$l, '[^0-9]', ''))<11
-      THEN '00000000000000'
-		ELSE regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') 
+      THEN cast('000000000000000' as varchar(15))
+		ELSE cast(regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') as varchar(15)) 
       END                               NR_CNPJ_CPF,	
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tfacr200.t$rcd_utc,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -18,11 +20,12 @@
     SUBSTR(znsls401.t$entr$c, 
     LENGTH(znsls401.t$entr$c)-1, 2)     NR_SQ_ENTREGA,
     TIPO_VALE.DESCR                     DS_TIPO_VALE,
+    zngld006.t$desc$c                   DS_VALE,
     CONCAT(tfacr200.t$ttyp, 
     TO_CHAR(tfacr200.t$ninv))           CD_CHAVE_PRIMARIA
 --    ,TIPO_VALE.CODE_STAT                COD_VALE   --USEI PARA CONFERIR DADOS
 --    ,znsls401.t$entr$c                  NR_ENTREGA --USEI PARA CONFERIR DADOS
---    znsls401.t$orno$c                   NR_ORDEM   --USEI PARA CONFERIR DADOS
+--    ,znsls401.t$orno$c                  NR_ORDEM   --USEI PARA CONFERIR DADOS
  
 FROM    baandb.tznacr200201 znacr200
  
@@ -109,4 +112,4 @@ LEFT JOIN ( select a.t$ncia$c,
        
 WHERE pt_cancel.pecl IS NULL      --Pedidos não cancelados
   AND tfacr200.t$balc != 0        --Vales com saldo
-  --AND TO_DATE(tfacr200.t$rcd_utc) >= TO_DATE('01/11/2015')
+--  AND TO_DATE(tfacr200.t$rcd_utc) >= TO_DATE('01/11/2015')
