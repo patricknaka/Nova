@@ -25,7 +25,6 @@
     TO_CHAR(tfacr200.t$ninv))           CD_CHAVE_PRIMARIA
 --    ,TIPO_VALE.CODE_STAT                COD_VALE   --USEI PARA CONFERIR DADOS
 --    ,znsls401.t$entr$c                  NR_ENTREGA --USEI PARA CONFERIR DADOS
---    ,znsls401.t$orno$c                  NR_ORDEM   --USEI PARA CONFERIR DADOS
  
 FROM    baandb.tznacr200201 znacr200
  
@@ -98,18 +97,20 @@ LEFT JOIN ( select a.t$ncia$c,
                     a.t$uneg$c,
                     a.t$pecl$c,
                     a.t$sqpd$c,
-                    a.t$orno$c,
-                    min(a.t$entr$c) t$entr$c
+                    min(a.t$entr$c) t$entr$c     
               from baandb.tznsls401201 a
               group by a.t$ncia$c,
                        a.t$uneg$c,
                        a.t$pecl$c,
-                       a.t$sqpd$c, a.t$orno$c ) znsls401
+                       a.t$sqpd$c) znsls401
         ON znsls401.t$ncia$c = znacr200.t$ncia$c
        AND znsls401.t$uneg$c = znacr200.t$uneg$c
        AND znsls401.t$pecl$c = znacr200.t$pecl$c
        AND znsls401.t$sqpd$c = znacr200.t$sgpd$c
-       
+
 WHERE pt_cancel.pecl IS NULL      --Pedidos não cancelados
   AND tfacr200.t$balc != 0        --Vales com saldo
---  AND TO_DATE(tfacr200.t$rcd_utc) >= TO_DATE('01/11/2015')
+  --AND TO_DATE(tfacr200.t$rcd_utc) >= TO_DATE('01/11/2015')
+  --and znacr200.t$pecl$c = '50254746'
+  
+order by znacr200.t$pecl$c
