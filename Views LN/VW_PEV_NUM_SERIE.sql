@@ -1,13 +1,13 @@
 SELECT
-    cisli245.t$slso           NR_ORDEM,
-    cisli245.t$pono           NR_LINHA_ORDEM,
-    znsls004.t$entr$c         NR_ENTREGA,
-    znsls401.t$item$c         CD_ITEM,
-    whinh433.t$cser           NR_SERIE_PRODUTO,
+    to_char(cisli245.t$slso)    NR_ORDEM,
+    cisli245.t$pono             NR_LINHA_ORDEM,
+    to_char(znsls004.t$entr$c)  NR_ENTREGA,
+    to_char(znsls401.t$item$c)  CD_ITEM,
+    to_char(whinh433.t$cser)    NR_SERIE_PRODUTO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) 
-                              DT_EMISSAO_NF
+                                DT_EMISSAO_NF
     
 FROM  baandb.tcisli245201   cisli245
 
