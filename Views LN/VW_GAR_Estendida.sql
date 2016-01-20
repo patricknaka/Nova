@@ -71,7 +71,7 @@ SELECT
           AND tdsls401p.t$pono = znsls401p.t$pono$c
 
     INNER JOIN baandb.ttdsls400201 tdsls400
-            ON tdsls400.t$orno = zncom005.t$orno$c
+            ON tdsls400.t$orno = znsls401.t$orno$c
     
     INNER JOIN baandb.ttdsls401201 tdsls401
             ON tdsls401.T$ORNO = znsls401.T$ORNO$C                                      
