@@ -103,3 +103,296 @@ FROM  baandb.tcisli943601   cisli943
                   and   znnfe011.t$stfa$c = 5   --status nota impressa
                   and   znnfe011.t$nfes$c = 5)  --status nfe processada
    AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente;
+   
+UNION   --11
+
+SELECT
+
+  'NIKE.COM'                    FILIAL,                   --02
+  TO_CHAR(cisli940.t$docn$l,'000000000')
+                                NF_NUMERO,                --03
+  cisli940.t$seri$l             SERI_NF,                  --04
+  cisli943.t$line$l             ITEM_IMPRESSAO,           --05
+  '1'                           SUB_ITEM_TAMANHO,         --06
+  '11'                          ID_IMPOSTO,               --07
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+          0.0
+  WHEN cisli943.t$iest$l - cisli943.t$sest$l < 0 THEN 0            
+  ELSE cisli943.t$iest$l - cisli943.t$sest$l END TAXA_IMPOSTO,             --08
+
+  3                           INCIDENCIA,               --09
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli943.t$vest$l + cisli943.t$pest$l END            VALOR_IMPOSTO,            --10
+  CASE WHEN cisli943.t$amnt$l = 0 OR cisli940.t$stat$l = 2 THEN
+    0
+  ELSE cisli943.t$base$l END    BASE_IMPOSTO,             --11
+  ''                           AGREGA_APOS_ENCARGO,      --12
+  ''                           AGREGA_APOS_DESCONTO,     --13
+  ''                           CTB_LANCAMENTO_FINANCEIRO,--14
+  ''                           CTB_ITEM_FINANCEIRO,      --15
+  ''                           EMPRESA,                  --16
+  'S'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
+  cisli940.t$fire$l             REF_FISCAL,               --18
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone 'America/Sao_Paulo') AS DATE)         DT_ULT_ALTERACAO  --19
+
+FROM  baandb.tcisli943601   cisli943
+
+  LEFT JOIN baandb.tcisli940601 cisli940
+         ON cisli940.t$fire$l = cisli943.t$fire$l
+
+    LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
+                        cisli245.t$fire$l
+                from    baandb.tcisli245601 cisli245
+                group by cisli245.t$fire$l )  SLI245
+           ON SLI245.t$fire$l = cisli943.t$fire$l
+
+    WHERE cisli943.t$brty$l = 1   --ICMS
+    AND   cisli943.t$best$l != 0 OR
+          ( cisli943.t$iest$l != 0 OR
+            cisli943.t$sest$l != 0 OR
+            cisli943.t$vest$l != 0 OR
+            cisli943.t$oest$l != 0 )
+    AND   cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
+    AND   cisli940.t$cnfe$l != ' '
+    AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1   --faturamento
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5   --status nota impressa
+                  and   znnfe011.t$nfes$c = 5)  --status nfe processada
+   AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente;
+   
+UNION   --71
+
+SELECT
+
+  'NIKE.COM'                    FILIAL,                   --02
+  TO_CHAR(cisli940.t$docn$l,'000000000')
+                                NF_NUMERO,                --03
+  cisli940.t$seri$l             SERI_NF,                  --04
+  cisli943.t$line$l             ITEM_IMPRESSAO,           --05
+  '1'                           SUB_ITEM_TAMANHO,         --06
+  '71'                          ID_IMPOSTO,               --07
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+          0.0
+  ELSE 100 - cisli943.t$pest$l END                 TAXA_IMPOSTO,             --08
+
+  3                           INCIDENCIA,               --09
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli943.t$oest$l END    VALOR_IMPOSTO,            --10
+  CASE WHEN cisli943.t$best$l = 0 OR cisli940.t$stat$l = 2 THEN
+    0
+  ELSE cisli943.t$best$l * (cisli943.t$iest$l - cisli943.t$sest$l)/100 END    BASE_IMPOSTO,             --11
+  ''                           AGREGA_APOS_ENCARGO,      --12
+  ''                           AGREGA_APOS_DESCONTO,     --13
+  ''                           CTB_LANCAMENTO_FINANCEIRO,--14
+  ''                           CTB_ITEM_FINANCEIRO,      --15
+  ''                           EMPRESA,                  --16
+  'S'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
+  cisli940.t$fire$l             REF_FISCAL,               --18
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone 'America/Sao_Paulo') AS DATE)         DT_ULT_ALTERACAO  --19
+
+FROM  baandb.tcisli943601   cisli943
+
+  LEFT JOIN baandb.tcisli940601 cisli940
+         ON cisli940.t$fire$l = cisli943.t$fire$l
+
+    LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
+                        cisli245.t$fire$l
+                from    baandb.tcisli245601 cisli245
+                group by cisli245.t$fire$l )  SLI245
+           ON SLI245.t$fire$l = cisli943.t$fire$l
+
+    WHERE cisli943.t$brty$l = 1   --ICMS
+    AND   cisli943.t$best$l != 0 OR
+          ( cisli943.t$iest$l != 0 OR
+            cisli943.t$sest$l != 0 OR
+            cisli943.t$vest$l != 0 OR
+            cisli943.t$oest$l != 0 )
+    AND   cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
+    AND   cisli940.t$cnfe$l != ' '
+    AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1   --faturamento
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5   --status nota impressa
+                  and   znnfe011.t$nfes$c = 5)  --status nfe processada
+   AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente;
+
+UNION   --72
+
+SELECT
+
+  'NIKE.COM'                    FILIAL,                   --02
+  TO_CHAR(cisli940.t$docn$l,'000000000')
+                                NF_NUMERO,                --03
+  cisli940.t$seri$l             SERI_NF,                  --04
+  cisli943.t$line$l             ITEM_IMPRESSAO,           --05
+  '1'                           SUB_ITEM_TAMANHO,         --06
+  '72'                          ID_IMPOSTO,               --07
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+          0.0
+  ELSE cisli943.t$pest$l END    TAXA_IMPOSTO,             --08
+
+  3                           INCIDENCIA,               --09
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli943.t$vest$l END    VALOR_IMPOSTO,            --10
+  CASE WHEN cisli943.t$best$l = 0 OR cisli940.t$stat$l = 2 THEN
+    0
+  ELSE cisli943.t$best$l * (cisli943.t$iest$l - cisli943.t$sest$l)/100 END    BASE_IMPOSTO,             --11
+  ''                           AGREGA_APOS_ENCARGO,      --12
+  ''                           AGREGA_APOS_DESCONTO,     --13
+  ''                           CTB_LANCAMENTO_FINANCEIRO,--14
+  ''                           CTB_ITEM_FINANCEIRO,      --15
+  ''                           EMPRESA,                  --16
+  'S'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
+  cisli940.t$fire$l             REF_FISCAL,               --18
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone 'America/Sao_Paulo') AS DATE)         DT_ULT_ALTERACAO  --19
+
+FROM  baandb.tcisli943601   cisli943
+
+  LEFT JOIN baandb.tcisli940601 cisli940
+         ON cisli940.t$fire$l = cisli943.t$fire$l
+
+    LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
+                        cisli245.t$fire$l
+                from    baandb.tcisli245601 cisli245
+                group by cisli245.t$fire$l )  SLI245
+           ON SLI245.t$fire$l = cisli943.t$fire$l
+
+    WHERE cisli943.t$brty$l = 1   --ICMS
+    AND   cisli943.t$best$l != 0 OR
+          ( cisli943.t$iest$l != 0 OR
+            cisli943.t$sest$l != 0 OR
+            cisli943.t$vest$l != 0 OR
+            cisli943.t$oest$l != 0 )
+    AND   cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
+    AND   cisli940.t$cnfe$l != ' '
+    AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1   --faturamento
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5   --status nota impressa
+                  and   znnfe011.t$nfes$c = 5)  --status nfe processada
+   AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente;
+
+UNION   --73
+
+SELECT
+
+  'NIKE.COM'                    FILIAL,                   --02
+  TO_CHAR(cisli940.t$docn$l,'000000000')
+                                NF_NUMERO,                --03
+  cisli940.t$seri$l             SERI_NF,                  --04
+  cisli943.t$line$l             ITEM_IMPRESSAO,           --05
+  '1'                           SUB_ITEM_TAMANHO,         --06
+  '73'                          ID_IMPOSTO,               --07
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+          0.0
+  ELSE cisli943.t$iest$l END    TAXA_IMPOSTO,             --08
+
+  3                           INCIDENCIA,               --09
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli943.t$vest$l END    VALOR_IMPOSTO,            --10
+  CASE WHEN cisli943.t$best$l = 0 OR cisli940.t$stat$l = 2 THEN
+    0
+  ELSE cisli943.t$best$l * (cisli943.t$iest$l - cisli943.t$sest$l)/100 END    BASE_IMPOSTO,             --11
+  ''                           AGREGA_APOS_ENCARGO,      --12
+  ''                           AGREGA_APOS_DESCONTO,     --13
+  ''                           CTB_LANCAMENTO_FINANCEIRO,--14
+  ''                           CTB_ITEM_FINANCEIRO,      --15
+  ''                           EMPRESA,                  --16
+  'S'                           TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
+  cisli940.t$fire$l             REF_FISCAL,               --18
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone 'America/Sao_Paulo') AS DATE)         DT_ULT_ALTERACAO  --19
+
+FROM  baandb.tcisli943601   cisli943
+
+  LEFT JOIN baandb.tcisli940601 cisli940
+         ON cisli940.t$fire$l = cisli943.t$fire$l
+
+    LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
+                        cisli245.t$fire$l
+                from    baandb.tcisli245601 cisli245
+                group by cisli245.t$fire$l )  SLI245
+           ON SLI245.t$fire$l = cisli943.t$fire$l
+
+    WHERE cisli943.t$brty$l = 1   --ICMS
+    AND   cisli943.t$best$l != 0 OR
+          ( cisli943.t$iest$l != 0 OR
+            cisli943.t$sest$l != 0 OR
+            cisli943.t$vest$l != 0 OR
+            cisli943.t$oest$l != 0 )
+    AND   cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
+    AND   cisli940.t$cnfe$l != ' '
+    AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1   --faturamento
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5   --status nota impressa
+                  and   znnfe011.t$nfes$c = 5)  --status nfe processada
+   AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente;
+
+UNION   --70
+
+SELECT
+
+  'NIKE.COM'                    FILIAL,                   --02
+  TO_CHAR(cisli940.t$docn$l,'000000000')
+                                NF_NUMERO,                --03
+  cisli940.t$seri$l             SERI_NF,                  --04
+  cisli943.t$line$l             ITEM_IMPRESSAO,           --05
+  '1'                           SUB_ITEM_TAMANHO,         --06
+  '70'                          ID_IMPOSTO,               --07
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+          0.0
+  ELSE cisli943.t$ppbr$l END    TAXA_IMPOSTO,             --08
+
+  3                           INCIDENCIA,               --09
+  CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+        0.0
+  ELSE cisli943.t$vpbr$l END    VALOR_IMPOSTO,            --10
+  CASE WHEN cisli943.t$best$l = 0 OR cisli940.t$stat$l = 2 THEN
+    0
+  ELSE cisli943.t$best$l END   BASE_IMPOSTO,             --11
+  ''                           AGREGA_APOS_ENCARGO,      --12
+  ''                           AGREGA_APOS_DESCONTO,     --13
+  ''                           CTB_LANCAMENTO_FINANCEIRO,--14
+  ''                           CTB_ITEM_FINANCEIRO,      --15
+  ''                           EMPRESA,                  --16
+  'S'                          TP_MOVTO,                 --17 Criado para separar na tabela as entradas e saídas
+  cisli940.t$fire$l            REF_FISCAL,               --18
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$L, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    AT time zone 'America/Sao_Paulo') AS DATE)         DT_ULT_ALTERACAO  --19
+
+FROM  baandb.tcisli943601   cisli943
+
+  LEFT JOIN baandb.tcisli940601 cisli940
+         ON cisli940.t$fire$l = cisli943.t$fire$l
+
+    LEFT JOIN ( select  MIN(cisli245.t$slso)  OV,
+                        cisli245.t$fire$l
+                from    baandb.tcisli245601 cisli245
+                group by cisli245.t$fire$l )  SLI245
+           ON SLI245.t$fire$l = cisli943.t$fire$l
+
+    WHERE cisli943.t$brty$l = 1   --ICMS
+    AND   ( cisli943.t$ppbr$l != 0 OR
+            cisli943.t$vpbr$l != 0 )
+    AND   cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
+    AND   cisli940.t$cnfe$l != ' '
+    AND   exists (select *
+                  from  baandb.tznnfe011601 znnfe011
+                  where znnfe011.t$oper$c = 1   --faturamento
+                  and   znnfe011.t$fire$c = cisli940.t$fire$l
+                  and   znnfe011.t$stfa$c = 5   --status nota impressa
+                  and   znnfe011.t$nfes$c = 5)  --status nfe processada
+   AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente;
