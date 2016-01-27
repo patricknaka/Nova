@@ -6,7 +6,7 @@
         from BAANDB.TZNFMD640201 o
         where o.T$COCI$C='ETR'
         and o.T$ETIQ$C=znfmd630.T$ETIQ$C)                         DT_SAIDA_ENTREGA, -- Fazer relacionamentoa
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(pesovol.t$prdt, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE)                  DT_PROMETIDA,
   znfmd630.t$vlft$c                                               VL_FRETE_PAGAR_GARANTIA,
@@ -53,13 +53,13 @@
   regiao.t$creg$c                                                 DS_CAPITAL_INTERIOR, 
   znfmd630.t$ncar$c                                               NR_CARGA,
 
-  case when to_char(to_date(znsls401.t$dtre$c), 'yyyy') = 1969 then null 
-       when to_char(to_date(znsls401.t$dtre$c), 'yyyy') = 1970 then null 
-  else CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtre$c, 
+  case when to_char(to_date(znfmd630.t$dtco$c), 'yyyy') = 1969 then null 
+       when to_char(to_date(znfmd630.t$dtco$c), 'yyyy') = 1970 then null 
+  else CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtco$c, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE) end               DT_AJUSTADA,
 
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(pesovol.t$ddta, 
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtpe$c, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE)                   DT_PREVISTA,
 
@@ -68,9 +68,15 @@
   znsls401.t$te2e$c                                              NR_TELEFONE2,
   znsls401.t$idpa$c                                              NR_PERIODO,
   znfmd630.t$qvol$c                                              QT_VOLUME,
-  znfmd630.t$cono$c                                              NR_CONTRATO
+  znfmd630.t$cono$c                                              NR_CONTRATO,
+  znfmd630.t$cfrw$c                                              ID_TRANSP,
+  znfmd170.t$vplt$c                                              DS_PLACA
   
 from  baandb.tznfmd630201 znfmd630
+
+LEFT JOIN baandb.tznfmd170201 znfmd170
+       on znfmd170.t$cfrw$c = znfmd630.t$cfrw$c
+      and znfmd170.t$nent$c = znfmd630.t$nent$c
 
 INNER JOIN baandb.ttcmcs080201 tcmcs080
         ON tcmcs080.t$cfrw=znfmd630.T$CFRW$C
@@ -84,7 +90,7 @@ INNER JOIN baandb.ttccom130201 tccom130
 INNER JOIN baandb.tznsls401201 znsls401
         ON znsls401.T$ORNO$C=znfmd630.T$ORNO$C
  
-LEFT JOIN (select  tdsls401.t$orno,tdsls401.t$ddta,
+LEFT JOIN (select  tdsls401.t$orno, tdsls401.t$prdt,
                     sum(whwmd400.t$hght * whwmd400.t$wdth * whwmd400.T$DPTH) vol,
                     sum(tcibd001.t$wght) peso
             from  baandb.twhwmd400201 whwmd400,
@@ -92,8 +98,7 @@ LEFT JOIN (select  tdsls401.t$orno,tdsls401.t$ddta,
                   baandb.ttcibd001201 tcibd001
             where tdsls401.t$item=whwmd400.t$item
             and   tcibd001.t$item=tdsls401.t$item
-            group by  tdsls401.t$orno, 
-                      tdsls401.t$ddta) pesovol
+            group by  tdsls401.t$orno, tdsls401.t$prdt) pesovol
       ON  pesovol.t$orno=znsls401.T$ORNO$C
       
 INNER JOIN baandb.tcisli940201 cisli940
@@ -123,4 +128,6 @@ LEFT JOIN (select znfmd062.t$creg$c, znfmd061.t$dzon$c,
         ON regiao.t$cfrw$c = znfmd630.t$cfrw$c 
        AND regiao.t$cono$c = znfmd630.t$cono$c 
        AND regiao.t$cepd$c <= tccom130.t$pstc 
-       AND regiao.t$cepa$c >= tccom130.t$pstc 
+       AND regiao.t$cepa$c >= tccom130.t$pstc
+
+--where znfmd630.T$PECL$C = '5025701401'
