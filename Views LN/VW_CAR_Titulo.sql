@@ -1,4 +1,4 @@
-﻿SELECT DISTINCT	
+SELECT DISTINCT	
   CONCAT(tfacr200.t$ttyp, 
     TO_CHAR(tfacr200.t$ninv))                       CD_CHAVE_PRIMARIA,											
   tfacr200.t$ttyp                                   CD_TRANSACAO_TITULO,																		
@@ -76,7 +76,7 @@
       WHEN tfacr200.t$dim2>to_char(0) then 999 
       else TO_NUMBER(tfacr200.t$dim2) END
       and rownum = 1)                               CD_UNIDADE_EMPRESARIAL,
-  (select znsls401.t$pecl$c 
+  /*(select znsls401.t$pecl$c 
     from baandb.tznsls401201 znsls401, 
          baandb.tcisli940201 rf, 
          baandb.tcisli245201 ro
@@ -85,7 +85,20 @@
     and ro.t$fire$l=rf.t$fire$l
     and znsls401.t$orno$c=ro.t$slso
     and znsls401.t$pono$c=ro.t$pono
+    and rownum=1)                                   NR_PEDIDO,*/
+      (select znsls004.t$pecl$c 
+    from baandb.tznsls004201 znsls004, 
+         baandb.tcisli940201 rf, 
+         baandb.tcisli245201 ro,
+         baandb.tcisli941201 cisli941_ft
+    where rf.t$ityp$l=tfacr200.t$ttyp
+    and rf.t$idoc$l=tfacr200.t$ninv
+    and cisli941_ft.t$fire$l = rf.t$fire$l         
+    and ro.t$fire$l=cisli941_ft.t$refr$l
+    and znsls004.t$orno$c=ro.t$slso
+    and znsls004.t$pono$c=ro.t$pono
     and rownum=1)                                   NR_PEDIDO,
+
   (select a.t$send$l 
     from baandb.ttfcmg948201 a
     where a.t$ttyp$l=tfacr200.t$ttyp
