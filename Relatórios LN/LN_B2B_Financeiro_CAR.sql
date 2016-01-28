@@ -1,5 +1,7 @@
 SELECT
   DISTINCT
+    tfacr200r.t$itbp            PARCEIRO_NEGOCIOS,
+    tccom100r.t$nama            NOME_PARCEIRO,
     tcemm030.t$euca             FILIAL,
     znsls400b.t$idco$c          CONTRATO,
     znsls400b.t$idcp$c          CAMPANHA,
