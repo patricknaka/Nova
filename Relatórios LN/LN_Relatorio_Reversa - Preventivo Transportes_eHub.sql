@@ -565,7 +565,7 @@ WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
       Between :DataPedidoDe
           And :DataPedidoAte
   AND znfmd001.t$fili$c IN (:Filial)
-  AND tcibd001.t$citg IN (:Depto)
+  AND Trim(tcibd001.t$citg) IN (:Depto)
   AND znsls401.t$uneg$c IN (:UnidNegocio)
   AND znsls401.t$itpe$c IN (:TipoEntrega)
   AND CASE WHEN znsls409.t$lbrd$c = 1 
@@ -578,6 +578,7 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
          PEDIDO
 		 
 		 
+
 =
 
 " SELECT  " &
@@ -1144,13 +1145,9 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))  " &
 "       Between :DataPedidoDe  " &
 "           And :DataPedidoAte  " &
-"   AND tcibd001.t$citg IN (" + Replace(("'" + JOIN(Parameters!Depto.Value, "',") + "'"),",",",'") + ") " &
-"   AND znsls401.t$itpe$c IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
+"   AND znsls401.t$itpe$c IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")  " &
+"   AND Trim(tcibd001.t$citg) IN (" + Replace(("'" + JOIN(Parameters!Depto.Value,"',") + "'"),",",",'") + ")  " &
 "   AND CASE WHEN znsls409.t$lbrd$c = 1  " &
 "              THEN 1  " &
 "            ELSE   0  " &
-"       END IN (" + JOIN(Parameters!Forcado.Value, ", ") + ") " &
-"  " &
-" ORDER BY DATA_SOL_COLETA_POSTAGEM,  " &
-"          DATA_PEDIDO,  " &
-"          PEDIDO  "
+"       END IN (" + JOIN(Parameters!Forcado.Value, ", ") + ") "

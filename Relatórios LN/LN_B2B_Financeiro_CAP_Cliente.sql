@@ -4,6 +4,8 @@
 
 SELECT
   DISTINCT
+    tfacr200r.t$itbp            PARCEIRO_NEGOCIOS,
+    tccom100r.t$nama            NOME_PARCEIRO,
     znsls400b.t$idco$c        CONTRATO,
     znsls400b.t$idcp$c        CAMPANHA,
     znsls400b.t$fovn$c        CNPJ,
@@ -63,6 +65,9 @@ SELECT
 	cisli940b.t$bpid$l		  COD_PARCEIRO
 
 FROM       baandb.ttfacr200201  tfacr200r 
+
+LEFT JOIN BAANDB.TTCCOM100201 TCCOM100r
+       ON TCCOM100r.T$BPID = tfacr200r.t$itbp
 
  LEFT JOIN baandb.tcisli940201  cisli940b
 --        ON cisli940b.t$ityp$l = tfacr200r.t$ttyp
