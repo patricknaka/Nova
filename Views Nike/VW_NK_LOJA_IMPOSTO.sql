@@ -123,7 +123,7 @@ SELECT
   3                           INCIDENCIA,               --09
   CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
-  ELSE cisli943.t$vest$l + cisli943.t$pest$l END            VALOR_IMPOSTO,            --10
+  ELSE cisli943.t$vest$l + cisli943.t$oest$l END            VALOR_IMPOSTO,            --10
   CASE WHEN cisli943.t$amnt$l = 0 OR cisli940.t$stat$l = 2 THEN
     0
   ELSE cisli943.t$base$l END    BASE_IMPOSTO,             --11
@@ -163,6 +163,7 @@ FROM  baandb.tcisli943601   cisli943
                   and   znnfe011.t$stfa$c = 5   --status nota impressa
                   and   znnfe011.t$nfes$c = 5)  --status nfe processada
    AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente;
+--   and cisli943.t$fire$l = '000143555'
    
 UNION   --71
 
@@ -300,10 +301,10 @@ SELECT
   3                           INCIDENCIA,               --09
   CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
-  ELSE cisli943.t$vest$l END    VALOR_IMPOSTO,            --10
+  ELSE cisli943.t$best$l * cisli943.t$iest$l/100 END    VALOR_IMPOSTO,            --10
   CASE WHEN cisli943.t$best$l = 0 OR cisli940.t$stat$l = 2 THEN
     0
-  ELSE cisli943.t$best$l * (cisli943.t$iest$l - cisli943.t$sest$l)/100 END    BASE_IMPOSTO,             --11
+  ELSE cisli943.t$best$l END    BASE_IMPOSTO,             --11
   ''                           AGREGA_APOS_ENCARGO,      --12
   ''                           AGREGA_APOS_DESCONTO,     --13
   ''                           CTB_LANCAMENTO_FINANCEIRO,--14
@@ -340,7 +341,8 @@ FROM  baandb.tcisli943601   cisli943
                   and   znnfe011.t$stfa$c = 5   --status nota impressa
                   and   znnfe011.t$nfes$c = 5)  --status nfe processada
    AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente;
-
+--    and cisli943.t$fire$l = '000143555'
+    
 UNION   --70
 
 SELECT
