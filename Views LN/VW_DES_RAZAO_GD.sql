@@ -3,10 +3,10 @@ SELECT
   tfgld106.t$oyer                      NR_ANO_FISCAL,
   tfgld106.T$FPRD                      NR_MES_FISCAL,
   -- Filial.COD_FILIAL                    NR_FILIAL,
-  tfgld106.t$dim2					   NR_FILIAL,
+  tfgld106.t$dim2					             NR_FILIAL,
   tfgld106.t$dbcr                      NR_NATUREZA_LANCAMENTO,
   tfgld106.t$obat                      NR_LOTE,
-  tfgld106.t$otyp                      CD_TIPO_TRANSACAO,
+  tfgld106.t$otyp                      NR_TIPO_TRANSACAO,
   tfgld106.t$odoc					   NR_DOCUMENTO,				
   tfgld106.t$olin					   NR_LINHA_DOCUMENTO,
   CASE WHEN ( select count(*) 
