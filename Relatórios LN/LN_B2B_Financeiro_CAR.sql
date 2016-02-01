@@ -22,6 +22,7 @@ SELECT
    
     tfacr200r.t$amnt
      + TFACR200_DEV.t$amnt 		VL_BOLETO,												-- O titulo DEV tem valor negativo
+    tfacr200r.t$balc          SALDO, 
     TCCOM100r.T$BPID            PARCEIRO
 
 FROM      BAANDB.ttfacr200301 tfacr200r
@@ -97,7 +98,7 @@ WHERE tfacr200r.t$lino = 0
   AND tcemm124.t$dtyp = 1
   AND ZNINT002.T$WSTP$C = 'B2B'
   
-  and tfacr200r.t$ttyp='RE2' and tfacr200r.t$ninv=153
+ -- and tfacr200r.t$ttyp='RE2' and tfacr200r.t$ninv=153
 
   AND tfacr200r.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND ((tccom130r.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null))
