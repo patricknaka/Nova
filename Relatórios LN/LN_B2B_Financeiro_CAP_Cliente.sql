@@ -4,8 +4,9 @@
 
 SELECT
   DISTINCT
-    tfacr200r.t$itbp            PARCEIRO_NEGOCIOS,
-    tccom100r.t$nama            NOME_PARCEIRO,
+--    tfacr200r.t$itbp            PARCEIRO_NEGOCIOS,
+--    tccom100r.t$nama            NOME_PARCEIRO,
+    znsls400b.t$nomf$c        NOME_CLIENTE_PEDIDO,
     znsls400b.t$idco$c        CONTRATO,
     znsls400b.t$idcp$c        CAMPANHA,
     znsls400b.t$fovn$c        CNPJ,
@@ -21,7 +22,8 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400b.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
                               DTA_EMISSAO_PEDIDO,  
-                              
+    znsls401.t$nome$c         NOME_CLIENTE_ENTREGA,
+    znsls401.t$icle$c         ENTIDADE_FISCAL_ENTREGA,                           
     tccom130b.t$nama          NOME_CLIENTE,                      
     Trim(cisli941.t$item$l)   ID_ITEM,
     cisli941.t$desc$l         DESC_ITEM,
