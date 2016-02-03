@@ -55,7 +55,25 @@ select Q1.*
              CASE WHEN znfmd630.t$stat$c = 2
                     THEN 'P'                     --PENDENTE
                   ELSE   'F'                     --FINALIZADO 
-             END                      FINALIZADO_PENDENTE
+             END                      FINALIZADO_PENDENTE,
+             
+            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(WMS_ORDERS.SCHEDULEDSHIPDATE, 
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone 'America/Sao_Paulo') AS DATE)  
+                                      DATA_LIMITE_EXPEDICAO,
+                                           
+            CASE WHEN WMS_SKU.SUSR2 = '2'
+                  THEN 'PESADO'
+            ELSE 'LEVE' END               TIPO_ENTREGA_TRANSPORTES,
+            
+            znfmd630.t$fili$c             COD_FILIAL,
+            
+            ABS(znsls401.t$qtve$c * znsls401.t$vlun$c)   VL_PRODUTO,
+            
+            znsls401.t$vlfr$c             FRETE,
+            ABS(znsls401.t$qtve$c)        QTD_ITENS,
+            usuario.t$name                USUARIO
+            
                  
          FROM      baandb.tznfmd630301 znfmd630
          
@@ -104,7 +122,18 @@ select Q1.*
          LEFT JOIN baandb.tznint002301  znint002
                 ON znint002.t$ncia$c = znsls401.t$ncia$c
                AND znint002.t$uneg$c = znsls401.t$uneg$c
-                 
+        
+         LEFT JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_ORDERS
+                ON WMS_ORDERS.REFERENCEDOCUMENT = znsls401.t$orno$c
+          
+         LEFT JOIN WMWHSE5.SKU@DL_LN_WMS WMS_SKU
+                ON TRIM(WMS_SKU.SKU) = TRIM(ZNSLS401.T$ITEM$C)
+        
+           LEFT JOIN ( select ttaad200.t$user,
+                              ttaad200.t$name
+                        from baandb.tttaad200000 ttaad200 ) usuario
+                        ON usuario.t$user = znfmd630.t$ulog$c
+        
           WHERE ( select znfmd640.t$coci$c
                     from baandb.tznfmd640301 znfmd640
                    where znfmd640.t$fili$c = znfmd630.t$fili$c
