@@ -7,7 +7,8 @@ SELECT
         AT time zone 'America/Sao_Paulo') AS DATE) -       
     znsls401.t$pzcd$c         DATA_LIMITE,
     znfmd610.t$pecl$c         PEDIDO,
-	znsls004.t$orno$c         ORDEM_VENDA,
+    znsls401.t$entr$c         ENTREGA,
+	  znsls004.t$orno$c         ORDEM_VENDA,
     Trim(znsls401.t$itml$c)   ITEM,  
     tcibd001.t$dsca           ITEM_DESCR,     
     tcibd001.t$citg           DEPARTAMENTO,  
@@ -103,6 +104,9 @@ WHERE znfmd610.t$fili$c = :Planta
   AND NVL(Trim(znsls401.t$mgrt$c), 'SMR') in (:MegaRota)
   AND tcmcs080.t$cfrw in (:Transp)
   
+where znfmd610.t$ngai$c = '0000022466'
+  
 ORDER BY znfmd610.t$pecl$c,
+         znsls401.t$entr$c,
          tcmcs023.t$dsca,
          tcibd001.t$dsca
