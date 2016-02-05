@@ -72,7 +72,8 @@ select Q1.*
             
        znsls401.t$vlfr$c             FRETE,
        ABS(znsls401.t$qtve$c)        QTD_ITENS,
-       usuario.t$name                USUARIO
+       usuario.t$name                USUARIO,
+       znfmd061.t$dzon$c             CAPITAL_INTERIOR
 				
 		 FROM      baandb.tznfmd630601 znfmd630
 		
@@ -135,7 +136,23 @@ select Q1.*
                         ttaad200.t$name
                  from baandb.tttaad200000 ttaad200 ) usuario
             ON usuario.t$user = znfmd630.t$ulog$c
-				
+			
+     LEFT JOIN ( select znfmd062.t$creg$c,
+                        znfmd062.t$cfrw$c,
+                        znfmd062.t$cono$c,
+                        znfmd062.t$cepd$c,
+                        znfmd062.t$cepa$c
+                 from   baandb.tznfmd062601@pLN01 znfmd062 ) znfmd062
+            ON znfmd062.t$cfrw$c = znfmd630.t$cfrw$c
+           AND znfmd062.t$cono$c = znfmd630.t$cono$c
+           AND znfmd062.t$cepd$c <= ZNSLS401.t$cepe$c
+           AND znfmd062.t$cepa$c >= ZNSLS401.t$cepe$c
+             
+      LEFT JOIN baandb.tznfmd061601@pLN01 znfmd061
+             ON znfmd061.t$cfrw$c = znfmd630.t$cfrw$c
+            AND znfmd061.t$cono$c = znfmd630.t$cono$c
+            AND znfmd061.t$creg$c = znfmd062.t$creg$c
+      	
 		  WHERE ( select znfmd640.t$coci$c
 					from baandb.tznfmd640601 znfmd640
 				   where znfmd640.t$fili$c = znfmd630.t$fili$c
