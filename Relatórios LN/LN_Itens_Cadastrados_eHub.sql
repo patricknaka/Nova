@@ -18,7 +18,8 @@ SELECT
     tcibd001.t$wght           ITEM_PESO,
     tcibd001.t$tptr$C         TIPO_TRANSPORTE,
     tcibd004.t$aitc           ITEM_ALTERNATIVO,
-    znibd001.t$eanc$c         NUM_EAN,
+    znibd001.t$eanc$c         NUM_EAN_ITEM,
+    tcibd001.t$cean           NUM_EAN,
     tcibd001.t$csig           SINALIZACAO_ITEM,
     tccom130a.t$fovn$l        CNPJ_FORNECEDOR,
     tccom130a.t$nama          NOME_FORNECEDOR,
@@ -79,6 +80,9 @@ SELECT
 
 FROM      baandb.ttcibd001601 tcibd001
 
+LEFT JOIN baandb.tznibd001601 znibd001
+       ON znibd001.t$item$c = tcibd001.t$item
+
 LEFT JOIN baandb.tznisa002301 znisa002
        ON znisa002.t$npcl$c = tcibd001.t$npcl$c
 
@@ -110,9 +114,6 @@ LEFT JOIN baandb.ttccom130601 tccom130b
 
 LEFT JOIN baandb.ttcibd200601 tcibd200
        ON tcibd200.t$item   = tcibd001.t$item
-
-LEFT JOIN baandb.tznibd001601 znibd001
-       ON znibd001.t$item$c = tcibd001.t$item
 
 LEFT JOIN baandb.tznmcs030601 znmcs030
        ON znmcs030.t$seto$c = tcibd001.t$seto$c
@@ -295,8 +296,8 @@ LEFT JOIN baandb.tznibd005601  znibd005
 	  AND ( (Trim(tccom130a.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ is null) )
 	  
 	  
-=
 
+	  
 =
 
 " SELECT  " &
@@ -319,7 +320,8 @@ LEFT JOIN baandb.tznibd005601  znibd005
 "     tcibd001.t$wght           ITEM_PESO,  " &
 "     tcibd001.t$tptr$C         TIPO_TRANSPORTE,  " &
 "     tcibd004.t$aitc           ITEM_ALTERNATIVO,  " &
-"     znibd001.t$eanc$c         NUM_EAN,  " &
+"     znibd001.t$eanc$c         NUM_EAN_ITEM,  " &
+"     tcibd001.t$cean           NUM_EAN,  " &
 "     tcibd001.t$csig           SINALIZACAO_ITEM,  " &
 "     tccom130a.t$fovn$l        CNPJ_FORNECEDOR,  " &
 "     tccom130a.t$nama          NOME_FORNECEDOR,  " &
@@ -380,6 +382,9 @@ LEFT JOIN baandb.tznibd005601  znibd005
 "  " &
 " FROM      baandb.ttcibd001" + Parameters!Compania.Value + " tcibd001  " &
 "  " &
+" LEFT JOIN baandb.tznibd001601 znibd001  " &
+"        ON znibd001.t$item$c = tcibd001.t$item  " &
+"  " &
 " LEFT JOIN baandb.tznisa002301 znisa002  " &
 "        ON znisa002.t$npcl$c = tcibd001.t$npcl$c  " &
 "  " &
@@ -411,9 +416,6 @@ LEFT JOIN baandb.tznibd005601  znibd005
 "  " &
 " LEFT JOIN baandb.ttcibd200" + Parameters!Compania.Value + " tcibd200  " &
 "        ON tcibd200.t$item   = tcibd001.t$item  " &
-"  " &
-" LEFT JOIN baandb.tznibd001" + Parameters!Compania.Value + " znibd001  " &
-"        ON znibd001.t$item$c = tcibd001.t$item  " &
 "  " &
 " LEFT JOIN baandb.tznmcs030" + Parameters!Compania.Value + " znmcs030  " &
 "        ON znmcs030.t$seto$c = tcibd001.t$seto$c  " &
@@ -590,7 +592,7 @@ LEFT JOIN baandb.tznibd005601  znibd005
 "						   AND NVL(:DataAlteracaoAte,     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "													   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))" &
 "	  AND tcibd001.t$npcl$c IN (" + Replace(("'" + JOIN(Parameters!TipoClasse.Value, "',") + "'"),",",",'") + ")  " &
-"	  AND tcibd001.t$csig   IN (" + Replace(("'" + JOIN(Parameters!Situacao.Value, "',") + "'"),",",",'") + ")  " &
+"     AND NVL(Trim(tcibd001.t$csig), '000') IN (" + Replace(("'" + JOIN(Parameters!Situacao.Value, "',") + "'"),",",",'") + ")  " &
 "	  AND tdipu001.t$ixdn$c IN (" + Replace(("'" + JOIN(Parameters!TipoXD.Value, "',") + "'"),",",",'") + ")  " &
 "	  AND tcibd001.t$kitm IN (:TipoItem)" &
 "	  AND ( (Trim(tccom130a.t$fovn$l) Like '%' || :CNPJ || '%') OR (:CNPJ is null) )"
