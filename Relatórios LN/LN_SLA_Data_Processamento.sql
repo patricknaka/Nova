@@ -78,7 +78,8 @@ select Q1.*
          FROM      baandb.tznfmd630301 znfmd630
          
          LEFT JOIN baandb.tznsls401301 znsls401
-                ON znfmd630.t$orno$c = znsls401.t$orno$c
+--                ON znfmd630.t$orno$c = znsls401.t$orno$c                MMF. o
+                ON TO_CHAR(znsls401.t$entr$c) = znfmd630.t$pecl$c       --MMF.n
           
          LEFT JOIN ( SELECT znfmd640d.t$coci$c  PONTO,
                             znfmd640d.t$date$c  DT,
