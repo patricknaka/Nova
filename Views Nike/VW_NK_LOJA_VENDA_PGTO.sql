@@ -198,9 +198,10 @@ SELECT
 		1														                    PARCELA,
 		''														                  LANCAMENTO_CAIXA,
 		0														                    VALOR_CANCELADO,
-    CASE WHEN CISLI940.T$DOCN$L IS NULL THEN
-        ZNMCS095.T$DOCN$C
-		ELSE CISLI940.T$DOCN$L	END		                  NUMERO_FISCAL_TROCA,
+--    CASE WHEN CISLI940.T$DOCN$L IS NULL THEN
+--        ZNMCS095.T$DOCN$C
+--		ELSE CISLI940.T$DOCN$L	END		                  NUMERO_FISCAL_TROCA,
+    tdrec940.t$docn$l                               NUMERO_FISCAL_TROCA,
 		''														                  VENDA_FINALIZADA,
 		TDREC940.T$SERI$L										            SERIE_NF_ENTRADA,
 		''														                  SERIE_NF_SAIDA,
@@ -282,14 +283,14 @@ INNER JOIN (SELECT	L.T$FIRE$L,
                L.T$DVRF$C) TDREC941		ON	TDREC941.T$FIRE$L = TDREC940.T$FIRE$L
 			
 
-LEFT JOIN  BAANDB.TCISLI940601 CISLI940  
-       ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
-      AND CISLI940.T$DOCN$L != 0
-      AND CISLI940.T$STAT$L IN (5,6)    --impresso-5, lançado-6
+--LEFT JOIN  BAANDB.TCISLI940601 CISLI940  
+--       ON CISLI940.T$FIRE$L = TDREC941.T$DVRF$C
+--      AND CISLI940.T$DOCN$L != 0
+--      AND CISLI940.T$STAT$L IN (5,6)    --impresso-5, lanÃ§ado-6
 
-LEFT JOIN baandb.tznmcs095601  znmcs095
-        ON znmcs095.t$ncmp$c = 2     --Faturamento
-       AND znmcs095.t$fire$c = TDREC941.T$DVRF$C
+--LEFT JOIN baandb.tznmcs095601  znmcs095
+--        ON znmcs095.t$ncmp$c = 2     --Faturamento
+--       AND znmcs095.t$fire$c = TDREC941.T$DVRF$C
 
 WHERE
       tdrec940.t$stat$l IN (4,5,6)                --4-aprovado, 5-aprovado com problemas, 6-estornado
