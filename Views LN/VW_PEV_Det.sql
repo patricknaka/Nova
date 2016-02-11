@@ -1,5 +1,4 @@
-﻿
-SELECT DISTINCT
+﻿SELECT DISTINCT
 -- detalhe alterada Rosana
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(greatest(tdsls400.t$rcd_utc, tdsls401.t$rcd_utc), 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -96,7 +95,9 @@ SELECT DISTINCT
     then 2 
     else 1 end                                        IN_CANCELADO,
 
-  znsls401.t$idlo$c                                   CD_LOJISTA_MKP
+  znsls401.t$idlo$c                                   CD_LOJISTA_MKP,
+  znsls401.t$pzfo$c                                   CD_PRAZO_ENTREGA_FORNECEDOR, 
+  znsls401.t$tpes$c                                   CD_TIPO_ESTOQUE
   
 FROM ( select a.t$orno,
               a.t$pono,
