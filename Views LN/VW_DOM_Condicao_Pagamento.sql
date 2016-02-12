@@ -1,4 +1,5 @@
 SELECT
+
   1 AS                CD_CIA,
   tcmcs013.t$cpay     CD_CONDICAO_PAGAMENTO,
   tcmcs013.t$dsca     DS_CONDICAO_PAGAMENTO,
