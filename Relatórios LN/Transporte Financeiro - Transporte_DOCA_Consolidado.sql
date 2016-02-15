@@ -182,10 +182,9 @@ select Q1.*
           LEFT JOIN BAANDB.TZNFMD630601@pln01 znfmd630
                  ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT
                 AND znfmd630.t$ngai$c = sq2.cageid
-                AND znfmd630.t$etiq$c = ox.NOTES1
 
-         INNER JOIN BAANDB.TTDSLS400601@pln01 TDSLS400
-                 ON TDSLS400.T$ORNO  = ZNFMD630.T$ORNO$C
+          LEFT JOIN BAANDB.TTDSLS400601@pln01 TDSLS400
+                 ON TDSLS400.T$ORNO = ZNFMD630.T$ORNO$C
 
           LEFT JOIN ( select znsls004.t$entr$c,
                              znsls004.t$orno$c,
@@ -429,9 +428,8 @@ select Q1.*
 "           LEFT JOIN BAANDB.TZNFMD630" + IIF(Parameters!Compania.Value = "WMWHSE10","602", "601") + "@pln01 znfmd630  " &
 "                  ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT  " &
 "                 AND znfmd630.t$ngai$c = sq2.cageid  " &
-"                 AND znfmd630.t$etiq$c = ox.NOTES1  " &
 "  " &
-"          INNER JOIN BAANDB.TTDSLS400" + IIF(Parameters!Compania.Value = "WMWHSE10","602", "601") + "@pln01 TDSLS400  " &
+"           LEFT JOIN BAANDB.TTDSLS400" + IIF(Parameters!Compania.Value = "WMWHSE10","602", "601") + "@pln01 TDSLS400  " &
 "                  ON TDSLS400.T$ORNO  = ZNFMD630.T$ORNO$C  " &
 "  " &
 "           LEFT JOIN ( select znsls004.t$entr$c,  " &
@@ -491,40 +489,7 @@ select Q1.*
 
 ,
 
-" select Q1.data_limite_exped,  " &
-"        Q1.pedido_entrega,  " &
-"        Q1.ordem_venda,  " &
-"        Q1.num_nota,  " &
-"        Q1.serie_nota,  " &
-"        Q1.evento_cod,  " &
-"        Q1.ult_evento_nome,  " &
-"        Q1.ult_evento_data,  " &
-"        Q1.carga,  " &
-"        Q1.item_sku,  " &
-"        Q1.item_descricao,  " &
-"        Q1.item_departamento,  " &
-"        Q1.descr_depto,  " &
-"        Q1.item_altura,  " &
-"        Q1.item_largura,  " &
-"        Q1.item_comprimento,  " &
-"        Q1.item_quantidade,  " &
-"        Q1.item_valor,  " &
-"        Q1.item_peso,  " &
-"        Q1.item_cubagem,  " &
-"        Q1.mega_rota,  " &
-"        Q1.tipo_entrega_nome,  " &
-"        Q1.descr_tipo_entrega,  " &
-"        Q1.transp_cod,  " &
-"        Q1.transp_nome,  " &
-"        Q1.transp_cnpj,  " &
-"        Q1.destinatario_nome,  " &
-"        Q1.destinatario_cep,  " &
-"        Q1.municipio,  " &
-"        Q1.uf,  " &
-"        Q1.etiqueta,  " &
-"        Q1.cd_filial,  " &
-"        Q1.descr_filial,  " &
-"        Q1.peso_tarifado  " &
+" select Q1.*  " &
 "   from ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE,  " &
 "                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "                     AT time zone 'America/Sao_Paulo') AS DATE)  " &
@@ -706,9 +671,8 @@ select Q1.*
 "           LEFT JOIN BAANDB.TZNFMD630601@pln01 znfmd630  " &
 "                  ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT  " &
 "                 AND znfmd630.t$ngai$c = sq2.cageid  " &
-"                 AND znfmd630.t$etiq$c = ox.NOTES1  " &
 "  " &
-"          INNER JOIN BAANDB.TTDSLS400601@pln01 TDSLS400  " &
+"           LEFT JOIN BAANDB.TTDSLS400601@pln01 TDSLS400  " &
 "                  ON TDSLS400.T$ORNO  = ZNFMD630.T$ORNO$C  " &
 "  " &
 "           LEFT JOIN ( select znsls004.t$entr$c,  " &
@@ -767,40 +731,7 @@ select Q1.*
 "  " &
 "Union All  " &
 "  " &
-" select Q1.data_limite_exped,  " &
-"        Q1.pedido_entrega,  " &
-"        Q1.ordem_venda,  " &
-"        Q1.num_nota,  " &
-"        Q1.serie_nota,  " &
-"        Q1.evento_cod,  " &
-"        Q1.ult_evento_nome,  " &
-"        Q1.ult_evento_data,  " &
-"        Q1.carga,  " &
-"        Q1.item_sku,  " &
-"        Q1.item_descricao,  " &
-"        Q1.item_departamento,  " &
-"        Q1.descr_depto,  " &
-"        Q1.item_altura,  " &
-"        Q1.item_largura,  " &
-"        Q1.item_comprimento,  " &
-"        Q1.item_quantidade,  " &
-"        Q1.item_valor,  " &
-"        Q1.item_peso,  " &
-"        Q1.item_cubagem,  " &
-"        Q1.mega_rota,  " &
-"        Q1.tipo_entrega_nome,  " &
-"        Q1.descr_tipo_entrega,  " &
-"        Q1.transp_cod,  " &
-"        Q1.transp_nome,  " &
-"        Q1.transp_cnpj,  " &
-"        Q1.destinatario_nome,  " &
-"        Q1.destinatario_cep,  " &
-"        Q1.municipio,  " &
-"        Q1.uf,  " &
-"        Q1.etiqueta,  " &
-"        Q1.cd_filial,  " &
-"        Q1.descr_filial,  " &
-"        Q1.peso_tarifado  " &
+" select Q1.*  " &
 "   from ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE,  " &
 "                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "                     AT time zone 'America/Sao_Paulo') AS DATE)  " &
@@ -982,9 +913,8 @@ select Q1.*
 "           LEFT JOIN BAANDB.TZNFMD630602@pln01 znfmd630  " &
 "                  ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT  " &
 "                 AND znfmd630.t$ngai$c = sq2.cageid  " &
-"                 AND znfmd630.t$etiq$c = ox.NOTES1  " &
 "  " &
-"          INNER JOIN BAANDB.TTDSLS400602@pln01 TDSLS400  " &
+"           LEFT JOIN BAANDB.TTDSLS400602@pln01 TDSLS400  " &
 "                  ON TDSLS400.T$ORNO  = ZNFMD630.T$ORNO$C  " &
 "  " &
 "           LEFT JOIN ( select znsls004.t$entr$c,  " &
