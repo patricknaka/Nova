@@ -168,7 +168,6 @@ INNER JOIN WMWHSE1.sku sku
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
         ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT
        AND znfmd630.t$ngai$c = sq2.cageid
-       AND znfmd630.t$etiq$c = ox.NOTES1
  
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
@@ -388,7 +387,6 @@ INNER JOIN WMWHSE2.sku sku
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
         ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT
        AND znfmd630.t$ngai$c = sq2.cageid
-       AND znfmd630.t$etiq$c = ox.NOTES1
  
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
@@ -608,7 +606,6 @@ INNER JOIN WMWHSE3.sku sku
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
         ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT
        AND znfmd630.t$ngai$c = sq2.cageid
-       AND znfmd630.t$etiq$c = ox.NOTES1
  
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
@@ -828,7 +825,6 @@ INNER JOIN WMWHSE4.sku sku
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
         ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT
        AND znfmd630.t$ngai$c = sq2.cageid
-       AND znfmd630.t$etiq$c = ox.NOTES1
  
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
@@ -1048,7 +1044,6 @@ INNER JOIN WMWHSE5.sku sku
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
         ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT
        AND znfmd630.t$ngai$c = sq2.cageid
-       AND znfmd630.t$etiq$c = ox.NOTES1
  
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
@@ -1268,7 +1263,6 @@ INNER JOIN WMWHSE6.sku sku
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
         ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT
        AND znfmd630.t$ngai$c = sq2.cageid
-       AND znfmd630.t$etiq$c = ox.NOTES1
  
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
@@ -1488,7 +1482,6 @@ INNER JOIN WMWHSE7.sku sku
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
         ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT
        AND znfmd630.t$ngai$c = sq2.cageid
-       AND znfmd630.t$etiq$c = ox.NOTES1
  
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
