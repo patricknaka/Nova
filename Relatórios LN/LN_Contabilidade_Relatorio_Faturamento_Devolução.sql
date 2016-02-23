@@ -23,15 +23,15 @@ SELECT
    
     (select CASE WHEN t.t$dcdt < TO_DATE('01/01/1990','DD/MM/YYYY') THEN NULL
                  ELSE t.t$dcdt END AS t$dcdt
-       from baandb.ttfgld018201 t
+       from baandb.ttfgld018301 t
       where t.t$ttyp = cisli940.t$ityp$l
         and t.t$docn = cisli940.t$idoc$l
         and t.t$docn!= 0)
                                  DATA_DOC_LIGADO_TRANSACAO
  
-FROM      baandb.tcisli940201 cisli940
+FROM      baandb.tcisli940301 cisli940
 
-LEFT JOIN baandb.tcisli245201 cisli245
+LEFT JOIN baandb.tcisli245301 cisli245
        ON cisli245.t$fire$l = cisli940.t$fire$l
  
 LEFT JOIN (select r.t$ncia$c, 
@@ -43,13 +43,13 @@ LEFT JOIN (select r.t$ncia$c,
                   r.t$orno$c,
                   r.t$pono$c,
                   r.t$orig$c
-             from baandb.tznsls004201 r
+             from baandb.tznsls004301 r
             where r.t$entr$c = (SELECT r0.t$entr$c 
-                                  FROM baandb.tznsls004201 r0
+                                  FROM baandb.tznsls004301 r0
                                  WHERE r0.t$orno$c = r.t$orno$c
                                    AND ROWNUM = 1
                                    AND r0.t$date$c = (select max(r1.t$date$c)
-                                                        from baandb.tznsls004201 r1
+                                                        from baandb.tznsls004301 r1
                                                        where r1.t$orno$c = r0.t$orno$c))) znsls004
        ON znsls004.t$orno$c = cisli245.t$slso
    
@@ -167,15 +167,15 @@ SELECT
    
     (select CASE WHEN t.t$dcdt < TO_DATE('01/01/1990','DD/MM/YYYY') THEN NULL
                  ELSE t.t$dcdt END AS t$dcdt
-       from baandb.ttfgld018201 t
+       from baandb.ttfgld018301 t
       where t.t$ttyp = cisli940.t$ityp$l
         and t.t$docn = cisli940.t$idoc$l
         and t.t$docn!= 0)
                                  DATA_DOC_LIGADO_TRANSACAO
  
-FROM      baandb.tcisli940201 cisli940
+FROM      baandb.tcisli940301 cisli940
 
-LEFT JOIN baandb.tcisli245201 cisli245
+LEFT JOIN baandb.tcisli245301 cisli245
        ON cisli245.t$slcp = cisli940.t$sfcp$l
       AND cisli245.t$ityp = cisli940.t$ityp$l
       AND cisli245.t$idoc = cisli940.t$idoc$l
@@ -189,13 +189,13 @@ LEFT JOIN (select r.t$ncia$c,
                   r.t$orno$c,
                   r.t$pono$c,
                   r.t$orig$c
-             from baandb.tznsls004201 r
+             from baandb.tznsls004301 r
             where r.t$entr$c = (SELECT r0.t$entr$c
-                                  FROM baandb.tznsls004201 r0
+                                  FROM baandb.tznsls004301 r0
                                  WHERE r0.t$orno$c = r.t$orno$c
                                    AND ROWNUM = 1
                                    AND r0.t$date$c = (select max(r1.t$date$c)
-                                                        from baandb.tznsls004201 r1
+                                                        from baandb.tznsls004301 r1
                                                        where r1.t$orno$c = r0.t$orno$c))) znsls004
        ON znsls004.t$orno$c = cisli245.t$slso
    
@@ -315,18 +315,17 @@ SELECT
   
    (select CASE WHEN t.t$dcdt < TO_DATE('01/01/1990','DD/MM/YYYY') THEN NULL
                 ELSE t.t$dcdt END AS t$dcdt 
-      from baandb.ttfgld018201 t
+      from baandb.ttfgld018301 t
      where t.t$ttyp = tdrec940.t$ttyp$l
        and t.t$docn = tdrec940.t$invn$l
        and t.t$docn!= 0)
                                 DATA_DOC_LIGADO_TRANSACAO
 
-FROM       baandb.ttdrec947201 tdrec947
-  
-INNER JOIN baandb.ttdrec940201 tdrec940
-        ON tdrec947.t$fire$l = tdrec940.t$fire$l
-       AND tdrec947.t$oorg$l = 1
-  
+FROM  baandb.ttdrec940301 tdrec940
+ 
+LEFT JOIN baandb.ttdrec947301 tdrec947
+       ON tdrec947.t$fire$l = tdrec940.t$fire$l
+
  LEFT JOIN (select r.t$ncia$c, 
                    r.t$uneg$c,
                    r.t$pecl$c,
@@ -336,13 +335,13 @@ INNER JOIN baandb.ttdrec940201 tdrec940
                    r.t$orno$c,
                    r.t$pono$c,
                    r.t$orig$c
-              from baandb.tznsls004201 r
+              from baandb.tznsls004301 r
              where r.t$entr$c = ( SELECT r0.t$entr$c 
-                                    FROM baandb.tznsls004201 r0
+                                    FROM baandb.tznsls004301 r0
                                    WHERE r0.t$orno$c = r.t$orno$c
                                      AND ROWNUM = 1
                                      AND r0.t$date$c = ( select max(r1.t$date$c)
-                                                           from baandb.tznsls004201 r1
+                                                           from baandb.tznsls004301 r1
                                                           where r1.t$orno$c = r0.t$orno$c ) )) znsls004
         ON znsls004.t$orno$c = tdrec947.t$orno$l
     
@@ -428,4 +427,8 @@ LEFT JOIN (select l.t$desc DESCR_DOC_FISCAL,
                                         WHERE l1.t$clab = l.t$clab 
                                           AND l1.t$clan = l.t$clan 
                                           AND l1.t$cpac = l.t$cpac)) DOC_FISCAL
-       ON DOC_FISCAL.t$cnst = tdrec940.t$rfdt$l
+       ON DOC_FISCAL.t$cnst = tdrec940.t$rfdt$l 
+ 
+WHERE tdrec940.t$rfdt$l = 10      --retorno de mercadoria
+and   tdrec940.t$stat$l IN (4,5)  --aprovado, aprovado com problemas
+       
