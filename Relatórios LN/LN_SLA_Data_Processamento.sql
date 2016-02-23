@@ -70,17 +70,43 @@ select Q1.*
             
             ABS(znsls401.t$qtve$c * znsls401.t$vlun$c)   VL_PRODUTO,
             
-            znsls401.t$vlfr$c             FRETE,
+            znsls401.t$vlfr$c             FRETE_COBRADO_SITE,
             ABS(znsls401.t$qtve$c)        QTD_ITENS,
             usuario.t$name                USUARIO,
-            znfmd061.t$dzon$c             CAPITAL_INTERIOR
+            znfmd061.t$dzon$c             CAPITAL_INTERIOR,
+            znfmd630.t$vlfc$c             FRETE_TRANSPORTADORA,
+            ULT_OCOR.PONTO                ID_OCORRENCIA,          --Ultima ocorrencia da transportadora
+            CASE WHEN znfmd630.t$dtco$c < = to_date('01-01-1980','DD-MM-YYYY') 
+                    THEN NULL
+            ELSE
+                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtco$c, 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone 'America/Sao_Paulo') AS DATE)   
+            END                              DATA_CORRIGIDA,
+            CASE WHEN tdsls400.t$ddat < = to_date('01-01-1980','DD-MM-YYYY') 
+                    THEN NULL
+            ELSE
+                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone 'America/Sao_Paulo') AS DATE)  
+            END                              DATA_LIMITE_CD,
+            CASE WHEN OCORR_FIM.t$date$c < = to_date('01-01-1980','DD-MM-YYYY') 
+                    THEN NULL
+            ELSE
+                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCORR_FIM.t$date$c, 
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone 'America/Sao_Paulo') AS DATE)
+            END                               DATA_ENTREGA            --Ocorrencia finalizadora
                  
          FROM      baandb.tznfmd630301 znfmd630
          
          LEFT JOIN baandb.tznsls401301 znsls401
---                ON znfmd630.t$orno$c = znsls401.t$orno$c                MMF. o
+--              ON znfmd630.t$orno$c = znsls401.t$orno$c                MMF. o
                 ON TO_CHAR(znsls401.t$entr$c) = znfmd630.t$pecl$c       --MMF.n
-          
+         
+         LEFT JOIN baandb.ttdsls400301 tdsls400
+                ON tdsls400.t$orno = znsls401.t$orno$c
+                   
          LEFT JOIN ( SELECT znfmd640d.t$coci$c  PONTO,
                             znfmd640d.t$date$c  DT,
                             znfmd640d.t$udat$c  DT_PROC,
@@ -150,7 +176,17 @@ select Q1.*
                  ON znfmd061.t$cfrw$c = znfmd630.t$cfrw$c
                 AND znfmd061.t$cono$c = znfmd630.t$cono$c
                 AND znfmd061.t$creg$c = znfmd062.t$creg$c
-            
+
+          LEFT JOIN ( SELECT  MAX(a.t$date$c) t$date$c,
+                              a.t$fili$c,
+                              a.t$etiq$c
+                      FROM    BAANDB.tznfmd640301 a
+                      WHERE   a.t$coci$c IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD') 
+                      GROUP BY a.t$fili$c, 
+                               a.t$etiq$c) OCORR_FIM
+                 ON OCORR_FIM.t$fili$c = znfmd630.t$fili$c
+                AND OCORR_FIM.t$etiq$c = znfmd630.t$etiq$c 
+          
           WHERE ( select znfmd640.t$coci$c
                     from baandb.tznfmd640301 znfmd640
                    where znfmd640.t$fili$c = znfmd630.t$fili$c
