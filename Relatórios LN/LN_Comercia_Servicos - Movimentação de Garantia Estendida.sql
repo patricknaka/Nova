@@ -58,6 +58,7 @@ SELECT ZNCOM005.T$UNEG$C                               UNEG,
        TCIBD001_I.T$FAMI$C                             ID_FAMILIA,
        ZNMCS031.T$DSCA$C                               DESCR_FAMILIA,
        ZNSLS401_P.T$QTVE$C * ZNSLS401_P.T$VLUN$C       VL_PRODUTO,
+       ZNSLS401_P.T$VLDI$C                             VL_DESCONTO_INCONDICIONAL,
        (ZNSLS401_P.T$QTVE$C * ZNSLS401_P.T$VLUN$C) - 
        ZNSLS401_P.T$VLDI$C                             VL_PRODUTO_PAGO,
        ZNCOM005.T$PRIS$C                               VL_GARANTIA,
