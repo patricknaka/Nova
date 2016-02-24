@@ -22,7 +22,7 @@ SELECT ZNCOM005.T$UNEG$C                               UNEG,
 
      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_G.t$dtoc$c, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE)  DT_EMISSAO_GARANTIA, 
+          AT time zone 'America/Sao_Paulo') AS DATE)   DT_EMISSAO_GARANTIA, 
     
        ZNSLS400.T$CVEN$C                               VENDEDOR,
        ZNCOM005.T$CAST$C                               CERTIFICADO,
@@ -57,10 +57,10 @@ SELECT ZNCOM005.T$UNEG$C                               UNEG,
        TCMCS023.T$DSCA                                 DESCR_DEPARTAMENTO,
        TCIBD001_I.T$FAMI$C                             ID_FAMILIA,
        ZNMCS031.T$DSCA$C                               DESCR_FAMILIA,
-       ZNSLS401_P.T$QTVE$C * ZNSLS401_P.T$VLUN$C       VL_PRODUTO,
+       ZNSLS401_P.T$VLUN$C                             VL_PRODUTO,
+       (ZNSLS401_P.T$VLUN$C / ZNSLS401_P.T$QTVE$C) - 
+       (ZNSLS401_P.T$VLDI$C / ZNSLS401_P.T$QTVE$C)     VL_PRODUTO_PAGO,
        ZNSLS401_P.T$VLDI$C                             VL_DESCONTO_INCONDICIONAL,
-       (ZNSLS401_P.T$QTVE$C * ZNSLS401_P.T$VLUN$C) - 
-       ZNSLS401_P.T$VLDI$C                             VL_PRODUTO_PAGO,
        ZNCOM005.T$PRIS$C                               VL_GARANTIA,
        ZNCOM005.T$VRSG$C                               CUSTO,
        ZNCOM005.T$PELI$C                               PREMIO_LIQ,
@@ -149,16 +149,16 @@ LEFT  JOIN BAANDB.TZNINT002201 ZNINT002
        AND ZNINT002.T$UNEG$C = ZNCOM005.T$UNEG$C
   
 LEFT JOIN BAANDB.TZNSLS400201 ZNSLS400                  --Pedido Garantia
-        ON ZNSLS400.T$NCIA$C = ZNCOM005.T$NCIA$C
-       AND ZNSLS400.T$UNEG$C = ZNCOM005.T$UNEG$C
-       AND ZNSLS400.T$PECL$C = ZNCOM005.T$PECL$C
-       AND ZNSLS400.T$SQPD$C = ZNCOM005.T$SQPD$C
+       ON ZNSLS400.T$NCIA$C = ZNCOM005.T$NCIA$C
+      AND ZNSLS400.T$UNEG$C = ZNCOM005.T$UNEG$C
+      AND ZNSLS400.T$PECL$C = ZNCOM005.T$PECL$C
+      AND ZNSLS400.T$SQPD$C = ZNCOM005.T$SQPD$C
 
 LEFT JOIN BAANDB.TTCMCS045201 TCMCS045
-        ON TCMCS045.T$CREG  = ZNSLS400.T$IDCA$C
+       ON TCMCS045.T$CREG  = ZNSLS400.T$IDCA$C
   
 LEFT JOIN BAANDB.TTCIBD001201 TCIBD001_I                --Item Produto
-        ON TRIM(TCIBD001_I.T$ITEM) = TO_CHAR(ZNCOM005.T$IGAR$C)
+       ON TRIM(TCIBD001_I.T$ITEM) = TO_CHAR(ZNCOM005.T$IGAR$C)
 
 LEFT JOIN BAANDB.TTDIPU001201 TDIPU001
        ON TDIPU001.T$ITEM = TCIBD001_I.T$ITEM
@@ -204,11 +204,11 @@ LEFT JOIN ( select a.t$ncia$c,
                    a.t$dtoc$c
               from baandb.tznsls410201 a
              where a.t$poco$c = 'DNF' ) znsls410_G      --Emissão Nota Garantia
-      ON ZNSLS410_G.T$NCIA$C = ZNCOM005.T$NCIA$C
-     AND ZNSLS410_G.T$UNEG$C = ZNCOM005.T$UNEG$C
-     AND ZNSLS410_G.T$PECL$C = ZNCOM005.T$PECL$C
-     AND ZNSLS410_G.T$SQPD$C = ZNCOM005.T$SQPD$C
-     AND ZNSLS410_G.T$ENTR$C = ZNCOM005.T$ENTR$C
+       ON ZNSLS410_G.T$NCIA$C = ZNCOM005.T$NCIA$C
+      AND ZNSLS410_G.T$UNEG$C = ZNCOM005.T$UNEG$C
+      AND ZNSLS410_G.T$PECL$C = ZNCOM005.T$PECL$C
+      AND ZNSLS410_G.T$SQPD$C = ZNCOM005.T$SQPD$C
+      AND ZNSLS410_G.T$ENTR$C = ZNCOM005.T$ENTR$C
 
 LEFT JOIN ( select a.t$ncia$c,
                    a.t$uneg$c,
