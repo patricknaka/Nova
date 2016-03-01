@@ -21,8 +21,8 @@ SELECT
   znmcs030.t$dsca$c             SETOR,
   loc.PUTAWAYZONE               ZONA,
   putawayzone.DESCR             DESC_ZONA,
-  itrn.FROMLOC                  LOCAL
---  Q1.mauc                       PRECO
+  itrn.FROMLOC                  LOCAL,
+  Q1.mauc                       PRECO
       
                                                                            
 FROM    WMWHSE9.pickdetail                  
@@ -49,15 +49,6 @@ INNER JOIN baandb.tznmcs030601@pln01 znmcs030
         ON znmcs030.t$seto$c = tcibd001.t$seto$c
        AND znmcs030.t$citg$c = tcibd001.t$citg
        
---INNER JOIN  WMWHSE9.sku                        
---        ON sku.SKU = taskdetail.SKU                                         
-                                                                           
---INNER JOIN (select max(b.WAVEKEY) WAVEKEY,                                 
---                       b.ORDERKEY                                          
---                  from  WMWHSE9.WAVEDETAIL b         
---              group by b.ORDERKEY) wavedetail                                 
---        ON wavedetail.ORDERKEY = orderdetail.ORDERKEY                                       
---
 left JOIN WMWHSE9.itrn
         ON itrn.TRANTYPE = 'MV'
        AND itrn.SOURCEKEY = pickdetail.PICKDETAILKEY
@@ -72,17 +63,14 @@ INNER JOIN WMWHSE9.putawayzone
 LEFT JOIN baandb.tznsls002601@pln01 znsls002
         ON znsls002.t$tpen$c = znsls401.t$itpe$c
 
---LEFT JOIN ( select whwmd217.t$item,
-----                   whwmd217.t$cwar,
---                   case when (max(whwmd215.t$qhnd)) = 0 then 0
---                   else round(sum(whwmd217.t$mauc$1) / (max(whwmd215.t$qhnd)), 4) end mauc
---             from baandb.twhwmd217301@pln01 whwmd217
---                    inner join baandb.twhwmd215301@pln01 whwmd215
-----                            on whwmd215.t$cwar = whwmd217.t$cwar
---                            on whwmd215.t$item = whwmd217.t$item
---             group by  whwmd217.t$item) Q1 
---        ON Q1.t$item = znsls401.t$item$c 
-----       AND Q1.t$cwar = est.t$cwar
+LEFT JOIN ( select whwmd217.t$item,
+                   case when (max(whwmd215.t$qhnd)) = 0 then 0
+                   else round(sum(whwmd217.t$mauc$1) / (max(whwmd215.t$qhnd)), 4) end mauc
+             from baandb.twhwmd217601@pln01 whwmd217
+                    inner join baandb.twhwmd215601@pln01 whwmd215
+                            on whwmd215.t$item = whwmd217.t$item
+             group by  whwmd217.t$item) Q1 
+        ON Q1.t$item = znsls401.t$itml$c 
                   
  LEFT JOIN  WMWHSE9.taskmanageruser tu               
         ON tu.userkey = taskdetail.EDITWHO,                                
@@ -94,7 +82,7 @@ WHERE taskdetail.status = 9
   AND UPPER(PL_DB.db_logid) = UPPER(taskdetail.whseid)                     
   AND PL_DB.ISACTIVE = 1                                                   
   AND PL_DB.DB_ENTERPRISE = 0
-                                                                           
+                                                                             
 GROUP BY  
           TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,             
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           
@@ -113,7 +101,7 @@ GROUP BY
           znmcs030.t$dsca$c,
           loc.PUTAWAYZONE,
           putawayzone.DESCR,
-          itrn.FROMLOC
---          Q1.mauc
+          itrn.FROMLOC,
+          Q1.mauc
           
 ORDER BY DATA, HORA_FECHADA, PEDIDO
