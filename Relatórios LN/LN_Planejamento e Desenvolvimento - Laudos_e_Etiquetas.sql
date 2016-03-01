@@ -18,7 +18,8 @@ SELECT
   znsls401.t$entr$c                  NUME_ENTREGA,
   cisli940.t$docn$l                  NUME_NOTA,
   cisli940.t$seri$l                  NUME_SERIE,   
-  znsls401.t$trre$c                  NOME_TRANSPORTADORA,
+--  znsls401.t$trre$c                  NOME_TRANSPORTADORA,
+  tcmcs080.t$dsca                      NOME_TRANSPORTADORA,
   znsls401.t$nome$c                  NOME_CLIENTE,
   znsls401.t$refe$c                  OBSERVACAO,
     
@@ -64,7 +65,10 @@ INNER JOIN baandb.tznsls401301 znsls401
  LEFT JOIN baandb.tcisli940301 cisli940
         ON cisli940.t$fire$l = znfmd630.t$fire$c 
        AND cisli940.t$docn$l = znfmd630.t$docn$c 
-       AND cisli940.t$seri$l = znfmd630.t$seri$c         
+       AND cisli940.t$seri$l = znfmd630.t$seri$c    
+
+INNER JOIN baandb.ttcmcs080301  tcmcs080
+        ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
   
  LEFT JOIN (SELECT MAX(a.t$date$c) t$date$c,
                    a.t$fili$c,
