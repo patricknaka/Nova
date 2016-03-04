@@ -55,9 +55,10 @@ INNER JOIN WMWHSE4.LOC
        AND CODELKUP.LISTNAME = 'EANTYPE'
        AND (CODELKUP.CODE = 1 OR CODELKUP.CODE = 4)   -- 1 - KIT PRIMARY EAN, 4 - TIK Component EAN
                                                                           
-WHERE TASKDETAIL.STATUS = 9 
+WHERE TASKDETAIL.STATUS = 9        --Concluido
   AND TASKDETAIL.TASKTYPE = 'PA'
   AND ENT.LISTNAME = 'SCHEMA'
+  AND SKU.SUSR8 IS NULL            --filtro para não trazer itens tipo MINUCIOSO
   
 --AND RECEIPTDETAIL.RECEIPTKEY = '0000005685'
 --AND RECEIPTDETAIL.RECEIPTKEY = '0000005698'
