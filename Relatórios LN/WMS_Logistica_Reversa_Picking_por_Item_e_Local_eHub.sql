@@ -6,14 +6,14 @@ SELECT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                   
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           
       AT time zone 'America/Sao_Paulo') AS DATE)                               
-                                HORA_FECHADA,                                    
+                                HORA_FECHADA,                                
   znsls401.t$pecl$c             PEDIDO,
   znsls002.t$dsca$c             TIPO_ENTREGA,
   taskdetail.addwho             OPERADOR,                                  
   subStr( tu.usr_name, 4,                                                  
           inStr(tu.usr_name, ',') -4 )                                     
                                 NOME_OPERADOR,                                   
-  SUM(taskdetail.qty)           QUANT,
+  taskdetail.qty                QUANT,
   pickdetail.sku                ITEM,                                      
   tcibd001.t$dscb$c             DESCR_ITEM,
   tcibd001.t$cean               EAN,
@@ -22,14 +22,38 @@ SELECT
   loc.PUTAWAYZONE               ZONA,
   putawayzone.DESCR             DESC_ZONA,
   itrn.FROMLOC                  LOCAL,
-  Q1.mauc                       PRECO
-      
+  ( select case when (max(whwmd215.t$qhnd)) = 0 then 0
+            else round(sum(whwmd217.t$mauc$1) / (max(whwmd215.t$qhnd)), 4) end mauc
+    from baandb.twhwmd217601@pln01 whwmd217
+         inner join baandb.twhwmd215601@pln01 whwmd215
+                 on whwmd215.t$item = whwmd217.t$item
+    where whwmd217.t$item = znsls401.t$itml$c
+    group by  whwmd217.t$item ) PRECO      
                                                                            
 FROM    WMWHSE9.pickdetail                  
 
-INNER JOIN WMWHSE9.taskdetail
-        ON taskdetail.SOURCETYPE = 'PICKDETAIL'
-       AND taskdetail.SOURCEKEY = pickdetail.PICKDETAILKEY
+INNER JOIN ( select a.ORDERKEY,
+                    a.ORDERLINENUMBER,
+                    a.SOURCEKEY,
+                    a.ADDWHO,
+                    a.EDITWHO,
+                    a.WHSEID,
+                    a.TASKTYPE,
+                    a.STATUS,
+                    a.ENDTIME,
+                    SUM(a.qty) qty
+             from   WMWHSE9.taskdetail a
+             where a.SOURCETYPE = 'PICKDETAIL'
+             group by a.ORDERKEY,
+                      a.ORDERLINENUMBER,
+                      a.SOURCEKEY,
+                      a.ADDWHO,
+                      a.EDITWHO,
+                      a.WHSEID,
+                      a.TASKTYPE,
+                      a.STATUS,
+                      a.ENDTIME) taskdetail
+       ON taskdetail.SOURCEKEY = pickdetail.PICKDETAILKEY
 
 INNER JOIN  WMWHSE9.orderdetail                        
         ON orderdetail.ORDERKEY = pickdetail.ORDERKEY
@@ -54,54 +78,24 @@ left JOIN WMWHSE9.itrn
        AND itrn.SOURCEKEY = pickdetail.PICKDETAILKEY
        AND itrn.SOURCETYPE = 'PICKING'
 
-INNER JOIN WMWHSE9.loc
+left JOIN WMWHSE9.loc
         ON loc.LOC = itrn.FROMLOC
+       AND loc.LOCATIONTYPE = 'PICK'
+       AND loc.LOCATIONCATEGORY = 'PICKING'
 
-INNER JOIN WMWHSE9.putawayzone
+LEFT JOIN WMWHSE9.putawayzone
         ON putawayzone.PUTAWAYZONE = loc.PUTAWAYZONE
 
-LEFT JOIN baandb.tznsls002601@pln01 znsls002
+INNER JOIN baandb.tznsls002601@pln01 znsls002
         ON znsls002.t$tpen$c = znsls401.t$itpe$c
-
-LEFT JOIN ( select whwmd217.t$item,
-                   case when (max(whwmd215.t$qhnd)) = 0 then 0
-                   else round(sum(whwmd217.t$mauc$1) / (max(whwmd215.t$qhnd)), 4) end mauc
-             from baandb.twhwmd217601@pln01 whwmd217
-                    inner join baandb.twhwmd215601@pln01 whwmd215
-                            on whwmd215.t$item = whwmd217.t$item
-             group by  whwmd217.t$item) Q1 
-        ON Q1.t$item = znsls401.t$itml$c 
-                  
- LEFT JOIN  WMWHSE9.taskmanageruser tu               
-        ON tu.userkey = taskdetail.EDITWHO,                                
+  
+LEFT JOIN  WMWHSE9.taskmanageruser tu               
+       ON tu.userkey = taskdetail.EDITWHO                                
                                                                            
-           WMSADMIN.PL_DB                                                  
-                                                                           
+LEFT JOIN WMSADMIN.PL_DB
+  ON UPPER(PL_DB.db_logid) = UPPER(taskdetail.whseid)                     
+ AND PL_DB.ISACTIVE = 1                                                   
+ AND PL_DB.DB_ENTERPRISE = 0
+        
 WHERE taskdetail.status = 9                                                
   AND taskdetail.tasktype = 'PK'                                           
-  AND UPPER(PL_DB.db_logid) = UPPER(taskdetail.whseid)                     
-  AND PL_DB.ISACTIVE = 1                                                   
-  AND PL_DB.DB_ENTERPRISE = 0
-                                                                             
-GROUP BY  
-          TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,             
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           
-          AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),                        
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(taskdetail.endtime,                   
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')           
-          AT time zone 'America/Sao_Paulo') AS DATE),                                                                   
-          znsls401.t$pecl$c,
-          znsls002.t$dsca$c,
-          taskdetail.addwho,                                  
-          subStr( tu.usr_name, 4, inStr(tu.usr_name, ',') -4 ),
-          pickdetail.sku,                                      
-          tcibd001.t$dscb$c,
-          tcibd001.t$cean,
-          tcmcs023.t$dsca,
-          znmcs030.t$dsca$c,
-          loc.PUTAWAYZONE,
-          putawayzone.DESCR,
-          itrn.FROMLOC,
-          Q1.mauc
-          
-ORDER BY DATA, HORA_FECHADA, PEDIDO
