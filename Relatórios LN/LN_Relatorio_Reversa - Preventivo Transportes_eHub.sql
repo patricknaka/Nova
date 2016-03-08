@@ -60,38 +60,47 @@
                                               
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(REALIZ_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                                              DATA_COLETA_REALIZADA,                                         
+                                              DATA_COLETA_REALIZADA,
                                               
-    CASE WHEN EXPEDICAO.NOME_TRANSP IS NULL 
-           THEN VENDA_TRANSP.t$dsca
-         ELSE   EXPEDICAO.NOME_TRANSP 
-    END                                       NOME_TRANSP_ENTREGA,
-      
-    CASE WHEN tcmcs080.t$dsca IS NULL 
-           THEN NVL( cisli940.t$cfrn$l, ( select Trim(A.T$NTRA$C)
-                                            from BAANDB.TZNSLS410601 A
-                                           where A.T$NCIA$C = ZNSLS401.T$NCIA$C
-                                             and A.T$UNEG$C = ZNSLS401.T$UNEG$C
-                                             and A.T$PECL$C = ZNSLS401.T$PECL$C
-                                             and A.T$SQPD$C = ZNSLS401.T$SQPD$C
-                                             and A.T$ENTR$C = ZNSLS401.T$ENTR$C
-                                             and A.T$NTRA$C != ' '
-                                             and ROWNUM = 1 ) )                   
-         ELSE tcmcs080.t$dsca 
-    END                                       Nome_Transportadora_Coleta,
-    Trim(tcmcs080.t$seak)                     APELIDO_TRANSP_COLETA,
-    NVL( tccom130transp.t$fovn$l, 
-         ( select Trim(A.T$FOVT$C)
-             from BAANDB.TZNSLS410601 A
-            where A.T$NCIA$C = ZNSLS401.T$NCIA$C
-              and A.T$UNEG$C = ZNSLS401.T$UNEG$C
-              and A.T$PECL$C = ZNSLS401.T$PECL$C
-              and A.T$SQPD$C = ZNSLS401.T$SQPD$C
-              and A.T$ENTR$C = ZNSLS401.T$ENTR$C
-              and A.T$NTRA$C != ' '
-              and ROWNUM = 1 ) )              CNPJ_TRANSP_COLETA,
-											  
-    Trim(znsls401.t$nome$c)                   Nome_Cliente_Coleta,       
+        CASE WHEN EXPEDICAO.NOME_TRANSP IS NULL 
+             THEN VENDA_TRANSP.t$dsca
+             ELSE   EXPEDICAO.NOME_TRANSP 
+        END                                    NOME_TRANSP_ENTREGA,
+    
+    CASE WHEN cisli940.t$stat$l = 5 or cisli940.t$stat$l = 6 THEN  
+          CASE WHEN tcmcs080.t$dsca IS NULL 
+                 THEN NVL( cisli940.t$cfrn$l, ( select Trim(A.T$NTRA$C)
+                                                  from BAANDB.TZNSLS410601 A
+                                                 where A.T$NCIA$C = ZNSLS401.T$NCIA$C
+                                                   and A.T$UNEG$C = ZNSLS401.T$UNEG$C
+                                                   and A.T$PECL$C = ZNSLS401.T$PECL$C
+                                                   and A.T$SQPD$C = ZNSLS401.T$SQPD$C
+                                                   and A.T$ENTR$C = ZNSLS401.T$ENTR$C
+                                                   and A.T$NTRA$C != ' '
+                                                   and ROWNUM = 1 ) )                   
+               ELSE tcmcs080.t$dsca 
+          END                                       
+    ELSE '' END                               NOME_TRANSPORTADORA_COLETA,
+    
+    CASE WHEN cisli940.t$stat$l = 5 or cisli940.t$stat$l = 6 THEN    
+          Trim(tcmcs080.t$seak)                     
+    ELSE '' END                               APELIDO_TRANSP_COLETA,
+    
+    CASE WHEN cisli940.t$stat$l = 5 or cisli940.t$stat$l = 6 THEN    
+        NVL( tccom130transp.t$fovn$l, 
+             ( select Trim(A.T$FOVT$C)
+                 from BAANDB.TZNSLS410601 A
+                where A.T$NCIA$C = ZNSLS401.T$NCIA$C
+                  and A.T$UNEG$C = ZNSLS401.T$UNEG$C0
+                  and A.T$PECL$C = ZNSLS401.T$PECL$C
+                  and A.T$SQPD$C = ZNSLS401.T$SQPD$C
+                  and A.T$ENTR$C = ZNSLS401.T$ENTR$C
+                  and A.T$NTRA$C != ' '
+                  and ROWNUM = 1 ) )              
+    ELSE '' END                               CNPJ_TRANSP_COLETA,
+
+    Trim(znsls401.t$nome$c)                   Nome_Cliente_Coleta,
+          
     znsls401.t$fovn$c                         CPF_Cliente,
     znsls401.t$cepe$c                         CEP,
     Trim(znsls401.t$loge$c)                   ENDERECO,
@@ -579,7 +588,6 @@ INNER JOIN baandb.tznsls400601 znsls400
 WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
   AND znsls401.t$qtve$c < 0               -- Devolução
   AND tdsls094.t$reto in (1, 3)           -- Ordem Devolução, Ordem Devolução Rejeitada
---  AND znsls401.t$itpe$c in (8, 15, 9)     -- Postagem, Reversa, Insucesso
 
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
