@@ -27,12 +27,6 @@ select Q1.*
              znsls401.t$ufen$c  UF,
              znsls401.t$nome$c  DESTINATARIO,
 
-             CASE WHEN Trunc(znsls401.t$dtep$c) = '01/01/1970'
-                    THEN NULL	 
-                  ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'),			 
-                         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  			 
-             END                DATA_PROMETIDA,
-
              ( SELECT MAX(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.t$date$c,
                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                          AT time zone 'America/Sao_Paulo') AS DATE))
@@ -42,10 +36,23 @@ select Q1.*
                   AND A.T$COCI$C = 'ETR' )
                                  DATA_EXPEDICAO,
 
-             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l + znsls401.t$pzcd$c,
-               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') AS DATE)
-                                DATA_PREVISTA,
+             CASE WHEN Trunc(znsls401.t$dtep$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')
+                    THEN NULL	 
+                  ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'),			 
+                         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  			 
+             END                  DATA_PROMETIDA,
+
+             CASE WHEN TRUNC(znfmd630.t$dtco$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')
+                    Then null
+                  Else CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtco$c, 'DD-MON-YYYY HH24:MI:SS'), 
+                         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+             END                  DATA_CORRIGIDA,
+
+             CASE WHEN TRUNC(znfmd630.t$dtpe$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')
+                    THEN NULL
+                  ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtpe$c, 'DD-MON-YYYY HH24:MI:SS'), 
+                           'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+             END                  DATA_PREVISTA,
 
              cisli940.t$amnt$l  VALOR,
 
@@ -189,8 +196,7 @@ select Q1.*
           ON znfmd640.t$fili$c = znfmd630.t$fili$c
          AND znfmd640.t$etiq$c = znfmd630.t$etiq$c ) Q1
 
-where Q1.OCORRENCIA IS NOT NULL
-  and Trunc(Q1.DT_EMISSAO)
+where Trunc(Q1.DT_EMISSAO)
       Between :DataEmissaoDe
           And :DataEmissaoAte
   and Q1.CODI_TRANSP IN (:Transportadora)
@@ -230,11 +236,23 @@ where Q1.OCORRENCIA IS NOT NULL
 "              znsls401.t$ufen$c  UF,  " &
 "              znsls401.t$nome$c  DESTINATARIO,  " &
 "  " &
-"              CASE WHEN Trunc(znsls401.t$dtep$c) = '01/01/1970'  " &
+"              CASE WHEN Trunc(znsls401.t$dtep$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')  " &
 "                     THEN NULL  " &
 "                   ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "                          'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
-"              END                DATA_PROMETIDA,  " &
+"              END                  DATA_PROMETIDA,  " &
+"  " &
+"              CASE WHEN TRUNC(znfmd630.t$dtco$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')  " &
+"                     Then null  " &
+"                   Else CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtco$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
+"                          'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"              END                  DATA_CORRIGIDA,  " &
+"  " &
+"              CASE WHEN TRUNC(znfmd630.t$dtpe$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')  " &
+"                     THEN NULL  " &
+"                   ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtpe$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
+"                            'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"              END                  DATA_PREVISTA,  " &
 "  " &
 "              ( SELECT MAX(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(A.t$date$c,  " &
 "                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
@@ -244,11 +262,6 @@ where Q1.OCORRENCIA IS NOT NULL
 "                   AND A.T$ETIQ$C = ZNFMD630.T$ETIQ$C  " &
 "                   AND A.T$COCI$C = 'ETR' )  " &
 "                                  DATA_EXPEDICAO,  " &
-"  " &
-"              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l + znsls401.t$pzcd$c,  " &
-"                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"                  AT time zone 'America/Sao_Paulo') AS DATE)  " &
-"                                 DATA_PREVISTA,  " &
 "  " &
 "              cisli940.t$amnt$l  VALOR,  " &
 "  " &
@@ -392,8 +405,7 @@ where Q1.OCORRENCIA IS NOT NULL
 "           ON znfmd640.t$fili$c = znfmd630.t$fili$c  " &
 "          AND znfmd640.t$etiq$c = znfmd630.t$etiq$c ) Q1  " &
 "  " &
-" where Q1.OCORRENCIA IS NOT NULL  " &
-"   and Trunc(Q1.DT_EMISSAO)  " &
+" where Trunc(Q1.DT_EMISSAO)  " &
 "       Between :DataEmissaoDe  " &
 "           And :DataEmissaoAte  " &
 "   and Q1.CODI_TRANSP IN (" + Replace(("'" + JOIN(Parameters!Transportadora.Value, "',") + "'"),",",",'") + ")  " &
