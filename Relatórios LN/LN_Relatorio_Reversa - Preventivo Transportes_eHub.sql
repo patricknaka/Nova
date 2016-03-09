@@ -46,6 +46,12 @@
            THEN 'Sim' -- FORÇADO
          ELSE   'Não' -- NÃO FORÇADO
      END                                      IN_FORCADO,
+    CASE WHEN znsls409.t$dved$c = 1     OR
+              znsls409.t$lbrd$c = 1     OR
+              Trim(znsls409.t$pecl$c) is null
+           THEN 'Sim'
+         ELSE   'Não'
+    END                                       LIBERADO,     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(EXPEDICAO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_EXPEDICAO_PEDIDO,
