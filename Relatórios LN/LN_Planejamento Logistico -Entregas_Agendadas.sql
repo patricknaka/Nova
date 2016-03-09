@@ -74,7 +74,7 @@ SELECT
                                  DATA_PROMETIDA,
 
     CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
+           THEN 'ManhÃ£'
          WHEN ZNSLS401.T$IDPA$C = '2'
            THEN 'Tarde'
          WHEN ZNSLS401.T$IDPA$C = '3'
@@ -107,7 +107,34 @@ SELECT
          and znfmd061.t$creg$c = znfmd062.t$creg$c
          and rownum = 1 )        REGIAO, 
 		 
-    TDSLS400.T$ORNO              ORDEM_VENDA
+    TDSLS400.T$ORNO              ORDEM_VENDA,
+    
+       CASE WHEN (ORDERS.STATUS = '02' or ORDERS.STATUS = '09' or ORDERS.STATUS = '04' or ORDERS.STATUS = '00') and ORDERS.wavekey is null 
+              THEN 'Recebimento_host'
+            WHEN (ORDERS.INVOICESTATUS = '2' and ORDERS.STATUS >  = '55') or ORDERS.STATUS = '100' 
+              THEN 'Estorno'
+            WHEN (ORDERS.STATUS >  = '95' or ORDERS.status2 = 6) 
+              THEN 'Expedicao_concluida'
+            WHEN (ORDERS.status2 = 3 or ORDERS.status2 = 4) and ORDERS.STATUS >  = '55' 
+              THEN 'Fechamento_Gaiola'
+            WHEN ORDERS.status2 = 5 and ORDERS.STATUS >  = '55' 
+              THEN 'Entregue_Doca'
+            WHEN ORDERS.orderid IS NOT NULL and ORDERS.status2 = 2 and ORDERS.STATUS >  = '55' 
+              THEN 'Inclusao_Carga'
+            WHEN ORDERS.INVOICESTATUS = '1' and ORDERS.STATUS >  = '55' 
+              THEN 'DANFE_Solicitada'
+            WHEN ORDERS.INVOICESTATUS = '3' and ORDERS.STATUS >  = '55' 
+              THEN 'DANFE_Aprovada'
+            WHEN ORDERS.INVOICESTATUS = '4' and ORDERS.STATUS >  = '55' 
+              THEN 'Fim_Conferencia'
+            WHEN (ORDERS.STATUS< = '22') and ORDERS.wavekey is not null 
+              THEN 'Incluido_Onda'
+            WHEN (ORDERS.STATUS = '29' and ORDERS.Released > 0 and ORDERS.InPicking = 0 and ORDERS.PartPicked = 0) 
+              THEN 'Picking_Liberado'
+            WHEN (ORDERS.STATUS = '29' and (ORDERS.InPicking > 0 or ORDERS.PartPicked > 0)) 
+              THEN 'Inicio_Picking' 
+            ELSE   'Picking_Completo'
+        END                            ULT_EVENTO
  
 FROM       BAANDB.tznfmd630301 znfmd630
 
@@ -191,8 +218,72 @@ INNER JOIN BAANDB.tznsls400301 znsls400
 INNER JOIN BAANDB.TZNINT002301 ZNINT002
         ON ZNINT002.T$NCIA$C = ZNSLS400.T$NCIA$C
        AND ZNINT002.T$UNEG$C = ZNSLS400.T$UNEG$C
+       
+ LEFT JOIN BAANDB.tznsls401301 ZNSLS401b
+        ON ZNSLS401b.T$NCIA$C = ZNSLS004.T$NCIA$C
+       AND ZNSLS401b.T$UNEG$C = ZNSLS004.T$UNEG$C
+       AND ZNSLS401b.T$PECL$C = ZNSLS004.T$PECL$C
+       AND ZNSLS401b.T$SQPD$C = ZNSLS004.T$SQPD$C    
+       AND ZNSLS401b.T$ENTR$C = ZNSLS004.T$ENTR$C   
+LEFT JOIN
+	( SELECT	ORD.ORDERKEY,
+			ORD.REFERENCEDOCUMENT,
+			ORD.INVOICESTATUS, 
+			ORD.STATUS,
+			w.WAVEKEY,
+			sq2.ORDERID,
+			sq2.status STATUS2,
+			sq1.released,
+			sq1.inPicking,
+			sq1.PartPicked,
+			sq1.PickedComplete,
+			ORD_DET.SKU
+	  FROM 	WMWHSE5.ORDERS@DL_LN_WMS ORD
+	  LEFT JOIN ( select 	wv.orderkey,
+					max(wv.wavekey) wavekey
+			    from	WMWHSE5.wavedetail@DL_LN_WMS wv
+			    group by wv.orderkey ) w
+		    ON w.orderkey = ORD.orderkey
+		    
+	  LEFT JOIN ( select distinct 
+				    cd.orderid, 
+				    cg.CAGEID, 
+				    max(cg.status) status,
+				    max(cg.closedate) closedate,
+				    max(cd.adddate) adddate,
+				    max(cg.editdate) editdate
+			  from 	WMWHSE5.CAGEID@DL_LN_WMS cg, 
+					WMWHSE5.CAGEIDDETAIL@DL_LN_WMS cd 
+			  where cd.CAGEID = cg.CAGEID 
+			  group by cd.orderid, 
+					cg.CAGEID ) sq2
+		    ON sq2.orderid = ORD.orderkey	
+		    
+	  INNER JOIN ( SELECT o1.orderkey, 
+				  ( select count(*) 
+				      from WMWHSE5.orderdetail@DL_LN_WMS od1 
+				     where od1.orderkey = o1.orderkey 
+				       and od1.status = '29' ) Released, 
+				  ( select count(*) 
+				      from WMWHSE5.orderdetail@DL_LN_WMS od1 
+				     where od1.orderkey = o1.orderkey 
+				       and od1.status = '51' ) InPicking, 
+				  ( select count(*) 
+				      from WMWHSE5.orderdetail@DL_LN_WMS od1 
+				     where od1.orderkey = o1.orderkey 
+				       and od1.status = '52' ) PartPicked, 
+				  ( select count(*) 
+				      from WMWHSE5.orderdetail@DL_LN_WMS od1 
+				     where od1.orderkey = o1.orderkey 
+				       and od1.status = '55' ) PickedComplete 
+			  FROM WMWHSE5.orders@DL_LN_WMS o1 ) sq1
+		    ON sq1.orderkey = ORD.orderkey
+	  INNER JOIN WMWHSE5.ORDERDETAIL@DL_LN_WMS ORD_DET
+			ON ORD_DET.ORDERKEY = ORD.ORDERKEY) ORDERS
+ON ORDERS.REFERENCEDOCUMENT = znfmd630.t$orno$c
+AND trim(ORDERS.SKU) = trim(znsls401b.t$item$c) 
   
-WHERE znsls401.t$itpe$c = 5 --Agendado
+ WHERE znsls401.t$itpe$c = 5 --Agendado
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS401.T$DTEP$C, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))
