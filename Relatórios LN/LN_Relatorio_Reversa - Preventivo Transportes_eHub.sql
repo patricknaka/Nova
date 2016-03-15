@@ -42,9 +42,9 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_PED.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_CANC_PEDIDO,
-    CASE WHEN znsls409.t$lbrd$c = 1 
-           THEN 'Sim' -- FORÇADO
-         ELSE   'Não' -- NÃO FORÇADO
+    CASE WHEN znsls409.t$lbrd$c = 1 or znsls409.t$dved$c = 1
+           THEN 'Sim' -- Liberado
+         ELSE   'Não' -- Não Liberado
      END                                      IN_FORCADO,
     CASE WHEN znsls409.t$dved$c = 1     OR
               znsls409.t$lbrd$c = 1     OR
