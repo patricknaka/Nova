@@ -42,10 +42,12 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_PED.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_CANC_PEDIDO,
+                                              
     CASE WHEN znsls409.t$lbrd$c = 1 or znsls409.t$dved$c = 1
            THEN 'Sim' -- Liberado
          ELSE   'Não' -- Não Liberado
      END                                      IN_FORCADO,
+     
     CASE WHEN znsls409.t$dved$c = 1     OR
               znsls409.t$lbrd$c = 1     OR
               Trim(znsls409.t$pecl$c) is null
@@ -186,7 +188,17 @@ SELECT
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_CANC_COLETA,
     REC_COLETA.DATA_OCORR                     RETORNO_RDV,
-    cisli940.t$cnfe$l                         CHAVE_DANFE
+    cisli940.t$cnfe$l                         CHAVE_DANFE,
+    
+    CASE WHEN znsls409.t$lbrd$c = 1 OR 
+              znsls409.t$dved$c = 1 OR
+              znsls410.PT_CONTR = 'VAL' OR 
+              znsls410.PT_CONTR = 'RDV' OR 
+              znsls410.PT_CONTR = 'RIE' THEN
+            'ENCERRADO' 
+    ELSE
+            'PENDENTE' 
+    END                                       SITUACAO_ATENDIMENTO
   
 FROM       baandb.tznsls401601 znsls401
 
@@ -313,8 +325,8 @@ INNER JOIN baandb.tznsls400601 znsls400
                     znsls000.t$itmf$c IT_FRETE,
                     znsls000.t$itmd$c IT_DESP,
                     znsls000.t$itjl$c IT_JUROS
-                from baandb.tznsls000601 znsls000
-                where rownum = 1 ) PARAM
+                from baandb.tznsls000601 znsls000 ) PARAM
+--                where rownum = 1 ) PARAM
         ON PARAM.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
               
  LEFT JOIN ( select cisli941.t$fire$l,
