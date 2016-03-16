@@ -48,12 +48,20 @@ SELECT
          ELSE   'Não' -- Não Liberado
      END                                      IN_FORCADO,
      
-    CASE WHEN znsls409.t$dved$c = 1     OR
-              znsls409.t$lbrd$c = 1     OR
+    CASE WHEN znsls409.t$dved$c = 1 OR
+              znsls409.t$lbrd$c = 1 OR
               Trim(znsls409.t$pecl$c) is null
            THEN 'Sim'
          ELSE   'Não'
-    END                                       LIBERADO,     
+    END                                       LIBERADO,
+    
+    CASE WHEN znsls409.t$lbrd$c = 1 OR 
+              znsls409.t$dved$c = 1 OR
+              znsls410.PT_CONTR IN ('VAL', 'RDV', 'RIE')
+           THEN 'ENCERRADO'
+         ELSE   'PENDENTE'
+    END                                       SITUACAO_ATENDIMENTO
+	
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(EXPEDICAO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_EXPEDICAO_PEDIDO,
@@ -188,17 +196,7 @@ SELECT
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_CANC_COLETA,
     REC_COLETA.DATA_OCORR                     RETORNO_RDV,
-    cisli940.t$cnfe$l                         CHAVE_DANFE,
-    
-    CASE WHEN znsls409.t$lbrd$c = 1 OR 
-              znsls409.t$dved$c = 1 OR
-              znsls410.PT_CONTR = 'VAL' OR 
-              znsls410.PT_CONTR = 'RDV' OR 
-              znsls410.PT_CONTR = 'RIE' THEN
-            'ENCERRADO' 
-    ELSE
-            'PENDENTE' 
-    END                                       SITUACAO_ATENDIMENTO
+    cisli940.t$cnfe$l                         CHAVE_DANFE
   
 FROM       baandb.tznsls401601 znsls401
 
@@ -326,7 +324,6 @@ INNER JOIN baandb.tznsls400601 znsls400
                     znsls000.t$itmd$c IT_DESP,
                     znsls000.t$itjl$c IT_JUROS
                 from baandb.tznsls000601 znsls000 ) PARAM
---                where rownum = 1 ) PARAM
         ON PARAM.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
               
  LEFT JOIN ( select cisli941.t$fire$l,
@@ -629,6 +626,7 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 
 		 
 =
+
 " SELECT  " &
 "   DISTINCT  " &
 "     CASE WHEN znsls401.t$itpe$c = 15  " &
@@ -673,10 +671,22 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_PED.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                               DATA_CANC_PEDIDO,  " &
-"     CASE WHEN znsls409.t$lbrd$c = 1  " &
+"     CASE WHEN znsls409.t$lbrd$c = 1 or znsls409.t$dved$c = 1  " &
 "            THEN 'Sim'  " &
 "          ELSE   'Não'  " &
-"      END                                      IN_FORCADO,  " &
+"     END                                      IN_FORCADO,  " &
+"     CASE WHEN znsls409.t$dved$c = 1 OR  " &
+"               znsls409.t$lbrd$c = 1 OR  " &
+"               Trim(znsls409.t$pecl$c) is null  " &
+"            THEN 'Sim'  " &
+"          ELSE   'Não'  " &
+"     END                                       LIBERADO,  " &
+"     CASE WHEN znsls409.t$lbrd$c = 1 OR  " &
+"               znsls409.t$dved$c = 1 OR  " &
+"               znsls410.PT_CONTR IN ('VAL', 'RDV', 'RIE')  " &
+"            THEN 'ENCERRADO'  " &
+"          ELSE   'PENDENTE'  " &
+"     END                                       SITUACAO_ATENDIMENTO,  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(EXPEDICAO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                               DATA_EXPEDICAO_PEDIDO,  " &
@@ -937,8 +947,7 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "                     znsls000.t$itmf$c IT_FRETE,  " &
 "                     znsls000.t$itmd$c IT_DESP,  " &
 "                     znsls000.t$itjl$c IT_JUROS  " &
-"                 from baandb.tznsls000" + Parameters!Compania.Value + " znsls000  " &
-"                 where rownum = 1 ) PARAM  " &
+"                 from baandb.tznsls000" + Parameters!Compania.Value + " znsls000 ) PARAM  " &
 "         ON PARAM.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')  " &
 "  " &
 "  LEFT JOIN ( select cisli941.t$fire$l,  " &
@@ -1227,8 +1236,10 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "           And :DataPedidoAte  " &
 "   AND znsls401.t$itpe$c IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")  " &
 "   AND Trim(tcibd001.t$citg) IN (" + Replace(("'" + JOIN(Parameters!Depto.Value,"',") + "'"),",",",'") + ")  " &
-"   AND CASE WHEN znsls409.t$lbrd$c = 1  " &
-"              THEN 1  " &
-"            ELSE   0  " &
-"       END IN (" + JOIN(Parameters!Forcado.Value, ", ") + ") "&
-"	AND znmcs002.t$poco$c IN (" + Replace(("'" + JOIN(Parameters!Status.Value,"',") + "'"),",",",'") + ")"
+"	AND znmcs002.t$poco$c IN (" + Replace(("'" + JOIN(Parameters!Status.Value,"',") + "'"),",",",'") + ")  " &
+"   AND CASE WHEN znsls409.t$lbrd$c = 1 OR  " &
+"              znsls409.t$dved$c = 1 OR  " &
+"              znsls410.PT_CONTR IN ('VAL', 'RDV', 'RIE')  " &
+"           THEN 1  " &
+"         ELSE   2  " &
+"       END IN (" + JOIN(Parameters!Atendimento.Value, ", ") + ") " 
