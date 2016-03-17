@@ -4,5 +4,5 @@
   A.T$TPEN$C CD_TIPO_ENTREGA,
   A.T$DSCA$C DS_TIPO_ENTREGA,
   CAST(15 AS INT) CD_CIA
-FROM baandb.tznsls002201 a
+FROM baandb.tznsls002602 a
 order by 1
