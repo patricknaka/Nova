@@ -141,7 +141,12 @@ FROM  baandb.ttdrec940601  tdrec940
 
     LEFT JOIN ( select  sum(a.t$qnty$l)  QTDE,
                         a.t$fire$l
-                from    baandb.ttdrec941601 a
+                from    baandb.ttdrec941601 a,
+                        baandb.tznsls000601 b
+                where a.t$item$l != b.t$itmf$c      --ITEM FRETE
+                  and a.t$item$l != b.t$itmd$c      --ITEM DESPESAS
+                  and a.t$item$l != b.t$itjl$c      --ITEM JUROS
+                  and b.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
                 group by a.t$fire$l ) TDREC941
            ON TDREC941.t$fire$l=tdrec940.t$fire$l
 
