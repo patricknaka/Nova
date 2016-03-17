@@ -142,4 +142,4 @@ WHERE tcemm124.t$dtyp = 2
              AND  tdrec949.t$fire$l = tdrec941.t$fire$l
              AND  tdrec949.t$brty$l = 2
              AND  tdrec942.t$line$l = tdrec941.t$line$l
-             AND  tdrec942.t$brty$l = 2 )  = :Convenio ) OR (:Convenio = 0) )  
+             AND  tdrec942.t$brty$l = 2 )  = :Convenio ) OR (:Convenio = 0) )
