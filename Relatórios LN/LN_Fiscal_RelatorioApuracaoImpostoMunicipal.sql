@@ -54,11 +54,11 @@ SELECT
      
      tdrec940.t$tfda$l                              		VALOR_TOTAL_NF,
      
-     nvl( ( SELECT t.t$text 
+     ( SELECT SUBSTR( TRIM(t.t$text),1,15)
               FROM baandb.ttttxt010301 t 
              WHERE t$clan = 'p' 
                AND t.t$ctxt = tdrec940.t$obse$l
-               AND rownum = 1 ),' ' )               		OBSERVACAO,
+               AND rownum = 1 )               		OBSERVACAO,
      tdrec940.t$logn$l                              		USUSARIO,
      nvl(nvl(tfacp201.payd, tfacp200.t$docd), tdrec940.t$date$l) DT_VENC,
      
