@@ -166,7 +166,7 @@ LEFT JOIN WMWHSE9.SKU@DL_LN_WMS  WMS_SKU
 LEFT JOIN ( select ttaad200.t$user,
                    ttaad200.t$name
               from baandb.tttaad200000 ttaad200 ) usuario
-       ON usuario.t$user = znfmd630.t$ulog$c
+       ON usuario.t$user = ULT_OCOR.LOGIN_PROC
   
 LEFT JOIN ( select znfmd062.t$creg$c,
                    znfmd062.t$cfrw$c,
@@ -212,56 +212,56 @@ LEFT JOIN ( SELECT MAX(a.t$date$c) t$date$c,
 
 " SELECT  " &
 "   DISTINCT  " &
-"     znsls401.t$entr$c        ENTREGA,  " &
-"     znfmd630.t$docn$c        NOTA,  " &
-"     znfmd630.t$seri$c        SERIE,  " &
-"     znfmd630.t$fili$c        FILIAL,  " &
-"     znfmd001.T$dsca$c        DESC_FILIAL,  " &
-"     znfmd630.t$cfrw$c        TRANSPORTADOR,  " &
-"     tcmcs080.t$dsca          DESC_TRANSP,  " &
+"   znsls401.t$entr$c        ENTREGA,  " &
+"   znfmd630.t$docn$c        NOTA,  " &
+"   znfmd630.t$seri$c        SERIE,  " &
+"   znfmd630.t$fili$c        FILIAL,  " &
+"   znfmd001.T$dsca$c        DESC_FILIAL,  " &
+"   znfmd630.t$cfrw$c        TRANSPORTADOR,  " &
+"   tcmcs080.t$dsca          DESC_TRANSP,  " &
 "  " &
-"     CASE WHEN ETR_OCCUR.DT < = to_date('01-01-1980','DD-MM-YYYY')  " &
-"            THEN NULL  " &
-"          ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( ETR_OCCUR.DT,  " &
-"                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"                   AT time zone 'America/Sao_Paulo') AS DATE)  " &
-"     END                      DATA_SAIDA,  " &
+"   CASE WHEN ETR_OCCUR.DT < = to_date('01-01-1980','DD-MM-YYYY')  " &
+"          THEN NULL  " &
+"        ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( ETR_OCCUR.DT,  " &
+"               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"   END                      DATA_SAIDA,  " &
 "  " &
-"     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt,  " &
-"        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"           AT time zone 'America/Sao_Paulo') AS DATE)  " &
-"                              DATA_PROMETIDA,  " &
+"   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt,  " &
+"      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"         AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"                            DATA_PROMETIDA,  " &
 "  " &
-"     CASE WHEN ULT_OCOR.DT_PROC < = to_date('01-01-1980','DD-MM-YYYY')  " &
-"            THEN NULL  " &
-"          ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT_PROC,  " &
-"                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"                   AT time zone 'America/Sao_Paulo') AS DATE)  " &
-"     END                      DATA_PROCESSAMENTO,  " &
+"   CASE WHEN ULT_OCOR.DT_PROC < = to_date('01-01-1980','DD-MM-YYYY')  " &
+"          THEN NULL  " &
+"        ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT_PROC,  " &
+"           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"             AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"   END                      DATA_PROCESSAMENTO,  " &
 "  " &
-"     ULT_OCOR.PONTO           STATUS,  " &
-"     znfmd040.t$dotr$c        DESC_STATUS,  " &
+"   ULT_OCOR.PONTO           STATUS,  " &
+"   znfmd040.t$dotr$c        DESC_STATUS,  " &
 "  " &
-"     CASE WHEN ULT_OCOR.DT < = to_date('01-01-1980','DD-MM-YYYY')  " &
-"            THEN NULL  " &
-"          ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT,  " &
-"                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
-"                   AT time zone 'America/Sao_Paulo') AS DATE)  " &
-"      END                     DATA_STATUS,  " &
+"   CASE WHEN ULT_OCOR.DT < = to_date('01-01-1980','DD-MM-YYYY')  " &
+"          THEN NULL  " &
+"        ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT,  " &
+"               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"                 AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"    END                     DATA_STATUS,  " &
 "  " &
-"     CASE WHEN ULT_OCOR.LOGIN_PROC = 'job_prod'  " &
-"            THEN 'EDI'  " &
-"          ELSE   'MANUAL'  " &
-"     END                      BAIXA_MANUAL_EDI,  " &
-"     znsls401.t$uneg$c        UNIDADE_NEGOCIO,  " &
-"     znint002.t$desc$c        DESC_UN_NEGOCIO,  " &
-"     znsls401.t$orno$c        ORDEM_VENDA,  " &
-"     znsls401.t$ufen$c        UF,  " &
-"     znsls401.t$cepe$c        CEP,  " &
-"     znsls401.t$cide$c        CIDADE,  " &
-"     znsls401.t$baie$c        REGIAO,  " &
-"     znsls401.t$itpe$c        TIPO_ENTREGA,  " &
-"     znsls002.t$dsca$c        DESC_TIPO_ENTREGA,  " &
+"   CASE WHEN ULT_OCOR.LOGIN_PROC = 'j601ptri'  " &
+"          THEN 'EDI'  " &
+"        ELSE   'MANUAL'  " &
+"   END                      BAIXA_MANUAL_EDI,  " &
+"   znsls401.t$uneg$c        UNIDADE_NEGOCIO,  " &
+"   znint002.t$desc$c        DESC_UN_NEGOCIO,  " &
+"   znsls401.t$orno$c        ORDEM_VENDA,  " &
+"   znsls401.t$ufen$c        UF,  " &
+"   znsls401.t$cepe$c        CEP,  " &
+"   znsls401.t$cide$c        CIDADE,  " &
+"   znsls401.t$baie$c        REGIAO,  " &
+"   znsls401.t$itpe$c        TIPO_ENTREGA,  " &
+"   znsls002.t$dsca$c        DESC_TIPO_ENTREGA,  " &
 "  " &
 "     CASE WHEN znfmd630.t$stat$c = 2  " &
 "            THEN 'P'  " &
@@ -336,7 +336,7 @@ LEFT JOIN ( SELECT MAX(a.t$date$c) t$date$c,
 "              WHERE znfmd640d.t$coci$c = ( select max(znfmd640x.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640x.t$date$c,  znfmd640x.t$udat$c)  " &
 "                                             from BAANDB.tznfmd640" + Parameters!Compania.Value + " znfmd640x  " &
 "                                            where znfmd640x.t$fili$c = znfmd640d.t$fili$c  " &
-"                                              and znfmd640x.t$etiq$c = znfmd640d.t$etiq$c ) ) ULT_OCOR  " &
+"                                              and   znfmd640x.t$etiq$c = znfmd640d.t$etiq$c ) ) ULT_OCOR  " &
 "        ON ULT_OCOR.t$fili$c = znfmd630.t$fili$c  " &
 "       AND ULT_OCOR.t$etiq$c = znfmd630.t$etiq$c  " &
 "  " &
@@ -378,7 +378,7 @@ LEFT JOIN ( SELECT MAX(a.t$date$c) t$date$c,
 " LEFT JOIN ( select ttaad200.t$user,  " &
 "                    ttaad200.t$name  " &
 "               from baandb.tttaad200000 ttaad200 ) usuario  " &
-"        ON usuario.t$user = znfmd630.t$ulog$c  " &
+"        ON usuario.t$user = ULT_OCOR.LOGIN_PROC  " &
 "  " &
 " LEFT JOIN ( select znfmd062.t$creg$c,  " &
 "                    znfmd062.t$cfrw$c,  " &
@@ -396,12 +396,12 @@ LEFT JOIN ( SELECT MAX(a.t$date$c) t$date$c,
 "       AND znfmd061.t$cono$c = znfmd630.t$cono$c  " &
 "       AND znfmd061.t$creg$c = znfmd062.t$creg$c  " &
 "  " &
-" LEFT JOIN ( select MAX(a.t$date$c) t$date$c,  " &
+" LEFT JOIN ( SELECT MAX(a.t$date$c) t$date$c,  " &
 "                    a.t$fili$c,  " &
 "                    a.t$etiq$c  " &
-"               from BAANDB.tznfmd640" + Parameters!Compania.Value + " a  " &
-"              where a.t$coci$c IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD')  " &
-"           group by a.t$fili$c,  " &
+"               FROM BAANDB.tznfmd640" + Parameters!Compania.Value + " a  " &
+"              WHERE a.t$coci$c IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD')  " &
+"           GROUP BY a.t$fili$c,  " &
 "                    a.t$etiq$c ) OCORR_FIM  " &
 "        ON OCORR_FIM.t$fili$c = znfmd630.t$fili$c  " &
 "       AND OCORR_FIM.t$etiq$c = znfmd630.t$etiq$c  " &
@@ -412,7 +412,6 @@ LEFT JOIN ( SELECT MAX(a.t$date$c) t$date$c,
 "             and znfmd640.t$etiq$c = znfmd630.t$etiq$c  " &
 "             and znfmd640.t$coci$c = 'ETR'  " &
 "             and rownum = 1 ) IS NOT NULL  " &
-"  " &
 "    AND NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT_PROC,  " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "            AT time zone 'America/Sao_Paulo') AS DATE), :DataProcessamentoDe)  " &
