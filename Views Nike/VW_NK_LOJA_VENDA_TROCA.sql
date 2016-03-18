@@ -109,11 +109,16 @@ LEFT JOIN (  SELECT   A.T$FIRE$L,
 
 LEFT JOIN baandb.tznibd005601 znibd005
        ON znibd005.t$size$c = tcibd001.t$size$c
-
+       
+LEFT JOIN baandb.tznsls000601 znsls000
+       ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+       
 WHERE TDREC947.T$NCMP$L = 601
   AND TDREC947.T$OORG$L = 1
   AND tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
   AND tdrec940.t$cnfe$l != ' '
   AND TDREC940.T$RFDT$L = 10            --10 - retorno de mercadoria
   AND tdrec940.t$rfdt$l NOT IN (19,20,21,22,23); --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
-    
+  AND tdrec941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
+  AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
+  AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS  
