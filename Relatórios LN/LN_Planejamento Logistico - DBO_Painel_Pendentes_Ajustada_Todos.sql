@@ -125,8 +125,7 @@ select Q1.*
                   AND ROWNUM = 1
                   AND znfmd640.t$fili$c = znfmd630.t$fili$c
                   AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )
-                                DT_INSERCAO,
-          znfmd060.t$refe$c                   ID_EXT_CONTRATO
+                                DT_INSERCAO
  
 FROM       BAANDB.tznfmd630301 znfmd630
 
