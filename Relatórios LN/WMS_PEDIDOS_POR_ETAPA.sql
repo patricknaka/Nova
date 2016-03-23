@@ -69,11 +69,7 @@
     ORDERS.type                         COD_TIPO_PEDIDO,
     TIPO_PEDIDO.                        DSC_TIPO_PEDIDO,
     ORDERDETAIL.UOM                     UNIDADE,
-    SLS400.t$eftr$c                     TRANSP_REDESPACHO,
-    znfmd630.t$cfrw$c                   COD_TRANSPORTADORA,
-    znfmd630.t$cono$c                   COD_CONTRATO,
-    znfmd060.t$cdes$c                   DESC_CONTRATO,
-    znfmd060.t$refe$c                   ID_EXT_CONTRATO
+    SLS400.t$eftr$c                     TRANSP_REDESPACHO
 
 FROM       WMWHSE5.ORDERS
 
@@ -210,26 +206,14 @@ INNER JOIN WMSADMIN.PL_DB
                 and Trim(clkp.code) is not null  ) TIPO_PEDIDO
       ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type
  
-  LEFT JOIN ( select   a.t$cfrw$c,
-                      a.t$cono$c,
-                      a.t$orno$c
-             from     baandb.tznfmd630301@pln01 a
-             group by a.t$cfrw$c,
-                      a.t$cono$c,
-                      a.t$orno$c ) znfmd630
-        ON znfmd630.t$orno$c = SLS400.t$orno$c
- 
- LEFT JOIN baandb.tznfmd060301@pln01 znfmd060
-        ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
-       AND znfmd060.t$cono$c = znfmd630.t$cono$c
   
---WHERE NVL(SLS002.T$TPEN$C, 0) IN (:TipoEntrega)
---  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
---          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---          AT time zone 'America/Sao_Paulo') AS DATE)) 
---    Between :DataUltEventoDe 
---      And :DataUltEventoAte
---  AND ORDERSTATUSSETUP.CODE IN (:ClasseEventos)
---  AND NVL(ORDERS.C_VAT, 'N/A') IN (:MegaRota)
+WHERE NVL(SLS002.T$TPEN$C, 0) IN (:TipoEntrega)
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE)) 
+    Between :DataUltEventoDe 
+      And :DataUltEventoAte
+  AND ORDERSTATUSSETUP.CODE IN (:ClasseEventos)
+  AND NVL(ORDERS.C_VAT, 'N/A') IN (:MegaRota)
   
 ORDER BY ORDERS.ORDERKEY
