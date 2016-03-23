@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
   DISTINCT
     WMSADMIN.PL_DB.DB_ALIAS            DSC_PLANTA,
 
@@ -75,9 +75,9 @@
     znfmd060.t$cdes$c                   DESC_CONTRATO,
     znfmd060.t$refe$c                   ID_EXT_CONTRATO
 
-FROM       WMWHSE5.ORDERS
+FROM       WMWHSE9.ORDERS
 
-INNER JOIN WMWHSE5.ORDERDETAIL
+INNER JOIN WMWHSE9.ORDERDETAIL
         ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY
 
 INNER JOIN WMWHSE5.SKU
@@ -90,13 +90,13 @@ INNER JOIN WMWHSE5.SKU
  LEFT JOIN ( select trim(whina113.t$item) item,
                     whina113.t$cwar cwar,
                     sum(whina113.t$mauc$1) mauc
-               from BAANDB.Twhina113301@pln01 whina113
+               from BAANDB.Twhina113601@pln01 whina113
               where (whina113.t$trdt, whina113.t$seqn) = ( select max(b.t$trdt), max(b.t$seqn)
-                                                             from BAANDB.Twhina113301@pln01 b
+                                                             from BAANDB.Twhina113601@pln01 b
                                                             where b.t$item = whina113.t$item
                                                               and b.t$cwar = whina113.t$cwar
                                                               and b.t$trdt = ( select max(c.t$trdt)
-                                                                                 from BAANDB.Twhina113301@pln01 c
+                                                                                 from BAANDB.Twhina113601@pln01 c
                                                                                 where c.t$item = b.t$item
                                                                                   and c.t$cwar = b.t$cwar ) )
            group by whina113.t$item,
@@ -104,22 +104,22 @@ INNER JOIN WMWHSE5.SKU
         ON maucLN.cwar = subStr(cl.DESCRIPTION,3,6)
        AND maucLN.item = sku.sku
 
- LEFT JOIN WMWHSE5.WAVEDETAIL
+ LEFT JOIN WMWHSE9.WAVEDETAIL
         ON WAVEDETAIL.ORDERKEY = ORDERDETAIL.ORDERKEY
 
- LEFT JOIN WMWHSE5.CAGEIDDETAIL
+ LEFT JOIN WMWHSE9.CAGEIDDETAIL
         ON CAGEIDDETAIL.ORDERID = ORDERDETAIL.ORDERKEY
 
- LEFT JOIN WMWHSE5.CAGEID
+ LEFT JOIN WMWHSE9.CAGEID
         ON CAGEID.CAGEID = CAGEIDDETAIL.CAGEID
 
 INNER JOIN WMSADMIN.PL_DB
         ON UPPER(WMSADMIN.PL_DB.DB_LOGID) = ORDERS.WHSEID
 
- LEFT JOIN BAANDB.TZNSLS002301@pln01 SLS002
+ LEFT JOIN BAANDB.TZNSLS002601@pln01 SLS002
         ON UPPER(TRIM(SLS002.t$dsca$c)) = UPPER(TRIM(ORDERS.SUSR1))
 
- LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400
+ LEFT JOIN BAANDB.TWHWMD400601@pln01 whwmd400
         ON TRIM(whwmd400.t$item) = TRIM(SKU.SKU)
 
  LEFT JOIN ( SELECT a.ORDERKEY,
@@ -127,9 +127,9 @@ INNER JOIN WMSADMIN.PL_DB
                     max(a.STATUS) STATUS,
                     max(a.ADDDATE) ADDDATE,
                     max(a.ADDWHO) ADDWHO
-               FROM WMWHSE5.ORDERSTATUSHISTORY a
+               FROM WMWHSE9.ORDERSTATUSHISTORY a
               WHERE a.ADDDATE = ( select max(b.adddate)
-                                    from WMWHSE5.ORDERSTATUSHISTORY b
+                                    from WMWHSE9.ORDERSTATUSHISTORY b
                                    where b.ORDERKEY = a.ORDERKEY
                                      and b.ORDERLINENUMBER = a.ORDERLINENUMBER )
            GROUP BY a.ORDERKEY,
@@ -138,10 +138,10 @@ INNER JOIN WMSADMIN.PL_DB
        AND ORDERSTATUSHISTORY.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER
        AND ORDERSTATUSHISTORY.STATUS = ORDERDETAIL.STATUS
 
- LEFT JOIN WMWHSE5.ORDERSTATUSSETUP
+ LEFT JOIN WMWHSE9.ORDERSTATUSSETUP
         ON ORDERSTATUSSETUP.CODE = ORDERS.STATUS
 
- LEFT JOIN WMWHSE5.ORDERSTATUSSETUP ORDERSTATUSSETUP2
+ LEFT JOIN WMWHSE9.ORDERSTATUSSETUP ORDERSTATUSSETUP2
         ON ORDERSTATUSSETUP2.CODE = ORDERSTATUSHISTORY.STATUS
 
  LEFT JOIN ( select max(a.TASKDETAILKEY) keep (dense_rank last order by a.ENDTIME) TASKDETAILKEY,
@@ -149,14 +149,14 @@ INNER JOIN WMSADMIN.PL_DB
                     a.ORDERLINENUMBER,
                     max(a.LOT) LOT,
                     max(a.FROMLOC) FROMLOC
-               from WMWHSE5.TASKDETAIL a
+               from WMWHSE9.TASKDETAIL a
               where a.tasktype = 'PK'
            group by a.ORDERKEY,
                     a.ORDERLINENUMBER ) TASKDETAIL
         ON TASKDETAIL.ORDERKEY = ORDERDETAIL.ORDERKEY
        AND TASKDETAIL.ORDERLINENUMBER = ORDERDETAIL.ORDERLINENUMBER
 
- LEFT JOIN WMWHSE5.LOTXLOC LL
+ LEFT JOIN WMWHSE9.LOTXLOC LL
         ON LL.LOT = TASKDETAIL.LOT
        AND LL.LOC = TASKDETAIL.FROMLOC
        AND LL.SKU = SKU.SKU
@@ -170,13 +170,13 @@ INNER JOIN WMSADMIN.PL_DB
                         znsls401.t$vldi$c +
                         znsls401.t$vlfr$c +
                         znsls401.t$vlde$c ) VALOR
-               from BAANDB.TZNSLS004301@pln01 ZNSLS004
-         inner join BAANDB.TZNSLS400301@pln01 q
+               from BAANDB.TZNSLS004601@pln01 ZNSLS004
+         inner join BAANDB.TZNSLS400601@pln01 q
                  on ZNSLS004.T$NCIA$C = q.T$NCIA$C
                 and ZNSLS004.T$UNEG$C = q.T$UNEG$C
                 and ZNSLS004.T$PECL$C = q.T$PECL$C
                 and ZNSLS004.T$SQPD$C = q.T$SQPD$C
-         inner join BAANDB.TZNSLS401301@pln01 ZNSLS401
+         inner join BAANDB.TZNSLS401601@pln01 ZNSLS401
                  on znsls401.T$NCIA$C = znsls004.T$NCIA$C
                 and znsls401.T$UNEG$C = znsls004.T$UNEG$C
                 and znsls401.T$PECL$C = znsls004.T$PECL$C
@@ -193,15 +193,15 @@ INNER JOIN WMSADMIN.PL_DB
 
  LEFT JOIN ( select clkp.description,
                     clkp.code
-               from WMWHSE5.codelkup clkp
+               from WMWHSE9.codelkup clkp
               where clkp.listname = 'INCOTERMS' )  REDESPACHO
         ON REDESPACHO.code = orders.INCOTERM
 
  LEFT JOIN ( select clkp.code          COD_TIPO_PEDIDO,
                     NVL(trans.description,
                     clkp.description)  DSC_TIPO_PEDIDO
-               from WMWHSE5.codelkup clkp
-          left join WMWHSE5.translationlist trans
+               from WMWHSE9.codelkup clkp
+          left join WMWHSE9.translationlist trans
                  on trans.code = clkp.code
                 and trans.joinkey1 = clkp.listname
                 and trans.locale = 'pt'
@@ -210,26 +210,26 @@ INNER JOIN WMSADMIN.PL_DB
                 and Trim(clkp.code) is not null  ) TIPO_PEDIDO
       ON TIPO_PEDIDO.COD_TIPO_PEDIDO = ORDERS.type
  
-  LEFT JOIN ( select   a.t$cfrw$c,
+ LEFT JOIN ( select   a.t$cfrw$c,
                       a.t$cono$c,
                       a.t$orno$c
-             from     baandb.tznfmd630301@pln01 a
+             from     baandb.tznfmd630601@pln01 a
              group by a.t$cfrw$c,
                       a.t$cono$c,
                       a.t$orno$c ) znfmd630
         ON znfmd630.t$orno$c = SLS400.t$orno$c
  
- LEFT JOIN baandb.tznfmd060301@pln01 znfmd060
+ LEFT JOIN baandb.tznfmd060601@pln01 znfmd060
         ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
        AND znfmd060.t$cono$c = znfmd630.t$cono$c
-  
-WHERE NVL(SLS002.T$TPEN$C, 0) IN (:TipoEntrega)
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE)) 
-    Between :DataUltEventoDe 
-      And :DataUltEventoAte
-  AND ORDERSTATUSSETUP.CODE IN (:ClasseEventos)
-  AND NVL(ORDERS.C_VAT, 'N/A') IN (:MegaRota)
+       
+--WHERE NVL(SLS002.T$TPEN$C, 0) IN (:TipoEntrega)
+--  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE, 
+--          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--          AT time zone 'America/Sao_Paulo') AS DATE)) 
+--    Between :DataUltEventoDe 
+--      And :DataUltEventoAte
+--  AND ORDERSTATUSSETUP.CODE IN (:ClasseEventos)
+--  AND NVL(ORDERS.C_VAT, 'N/A') IN (:MegaRota)
   
 ORDER BY ORDERS.ORDERKEY
