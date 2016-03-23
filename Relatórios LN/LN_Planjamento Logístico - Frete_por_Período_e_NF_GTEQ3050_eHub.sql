@@ -69,7 +69,7 @@ SELECT
          and znfmd061.t$creg$c = znfmd062.t$creg$c
          and rownum = 1 )REGIAO,
     CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manh„'
+           THEN 'Manh√£'
          WHEN ZNSLS401.T$IDPA$C = '2'
            THEN 'Tarde'
          WHEN ZNSLS401.T$IDPA$C = '3'
@@ -144,7 +144,12 @@ SELECT
          ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PAP_TD.DATA_OCORR,
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                   AT time zone 'America/Sao_Paulo') AS DATE)
-    END                  DATA_APROVACAO_PAGTO
+    END                  DATA_APROVACAO_PAGTO,
+    
+    znfmd630.t$cfrw$c                   COD_TRANSPORTADORA,
+    znfmd630.t$cono$c                   COD_CONTRATO,
+    znfmd060.t$cdes$c                   DESC_CONTRATO,
+    znfmd060.t$refe$c                   ID_EXT_CONTRATO
 
 
 FROM       baandb.tznfmd630601  znfmd630
@@ -303,6 +308,10 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
                                             and l1.t$cpac = l.t$cpac ) ) FGET
         ON cisli940.t$fdty$l = FGET.CODE_STAT
 
+ LEFT JOIN BAANDB.tznfmd060601 znfmd060
+        ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c 
+       AND znfmd060.t$cono$c = znfmd630.t$cono$c
+       
   WHERE ( select a.t$coci$c
             from baandb.tznfmd640601 a
            where a.t$fili$c = znfmd630.t$fili$c
@@ -399,7 +408,7 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "          and znfmd061.t$creg$c = znfmd062.t$creg$c  " &
 "          and rownum = 1 )REGIAO,  " &
 "     CASE WHEN ZNSLS401.T$IDPA$C = '1'  " &
-"            THEN 'Manh„'  " &
+"            THEN 'Manh√£'  " &
 "          WHEN ZNSLS401.T$IDPA$C = '2'  " &
 "            THEN 'Tarde'  " &
 "          WHEN ZNSLS401.T$IDPA$C = '3'  " &
