@@ -44,4 +44,4 @@ LEFT JOIN baandb.tzncmg007301 zncmg007
 LEFT JOIN baandb.tzncmg009301 zncmg009
        ON zncmg009.t$band$c = znsls402.t$cccd$c
 
-WHERE NVL(znsls412.t$ttyp$c,' ') != 'LPJ'
+WHERE NVL(znsls412.t$ttyp$c,' ') NOT IN ('LPJ', 'FAT', 'RWC')
