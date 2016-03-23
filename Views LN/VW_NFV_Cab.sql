@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
     1 CD_CIA,
     case when (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
@@ -134,7 +134,10 @@
   (SELECT tdsls400.t$sotp                                        --#MAT.308.sn
    FROM baandb.ttdsls400201 tdsls400            
    WHERE tdsls400.t$orno=entr.t$orno$c
-   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA        --#MAT.308.en 
+   group by tdsls400.t$sotp)        CD_TIPO_ORDEM_VENDA,        --#MAT.308.en 
+
+cisli940.t$prot$l as NR_PROTOCOLO,
+cisli940.t$cnfe$l as NR_CHAVE_ACESSO_NFE
 
 FROM
 		baandb.tcisli940201 cisli940
