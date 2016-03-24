@@ -1,15 +1,4 @@
-﻿?-- #FAF.021 - 27-mai-2014, Fabio Ferreira, 	Correções de pendencias funcionais da área fiscal	
--- #FAF.051 - 27-mai-2014, Fabio Ferreira, 	Adicionado o campo CNPJ_CPF_ENTREGA	
--- #FAF.114 - 07-jun-2014, Fabio Ferreira, 	Correção QTD_FISICA_RECEBIDA
--- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Inclusão do campo IVA (margem)	
--- #FAF.119 - 09-jun-2014, Fabio Ferreira, 	Retirado campo VL_ICMS_ST1
--- #FAF.151 - 20-jun-2014, Fabio Ferreira,	Tratamento para o CNPJ			
--- #MAT.001 - 31-jul-2014, Marcia A. Torres, Correção do campo DT_ATUALIZACAO
--- #FAF.242 - 04-ago-2014, Fabio Ferreira,	Correções	
--- #FAF.279 - 12-ago-2014, Fabio Ferreira,	Correções ICMS não redutor
--- #FAF.279 - 13-ago-2014, Fabio Ferreira,	Divisão percentual de redução base de cálculo
---************************************************************************************************************************************************************
-SELECT
+﻿SELECT
   1 CD_CIA,
   CASE WHEN (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
   WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
@@ -275,6 +264,12 @@ SELECT
 	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
 	AND tdrec947.t$line$l=tdrec941.t$line$l
 	AND rownum=1)  NR_PEDIDO_COMPRA,
+
+  	(SELECT tdrec947.t$pono$l FROM baandb.ttdrec947201 tdrec947
+	WHERE tdrec947.t$fire$l=tdrec941.t$fire$l
+	AND tdrec947.t$line$l=tdrec941.t$line$l
+	AND rownum=1)  NR_LINHA_PEDIDO_COMPRA,
+
   (SELECT tcemm124.t$grid FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
   WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
   AND tcemm124.t$loco=201
