@@ -152,20 +152,53 @@ SELECT
     NVL(cisli941.t$dqua$l, ABS(znsls401.t$qtve$c))*
         tcibd001.t$wght                       PESO_KG,
     CUBAGEM.TOT                               CUBAGEM,
-    CASE WHEN cisli940.t$docn$l = 0 
-           THEN NULL
-         ELSE cisli940.t$docn$l 
-    END                                       Nota,
-    CASE WHEN cisli940.t$docn$l = 0 
-           THEN NULL
-         ELSE cisli940.t$seri$l 
-    END                                       Serie,
-    CASE WHEN NVL(cisli940.t$date$l, to_date('01-01-1980','DD-MM-YYYY')) > to_date('01-01-1980','DD-MM-YYYY') 
-           THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+
+    case when znsls002.t$stat$c = 4 then   --Insucesso na Entrega
+          case when znsls400.t$sige$c = 1 then znmcs096.t$docn$c
+               when NFS.t$docn$c != 0     then NFS.t$docn$c
+               when NFS.t$docf$c != 0     then NFS.t$docf$c
+          end                                         
+    else
+          cisli940.t$docn$l
+    end                                       NOTA,
+        
+    case when znsls002.t$stat$c = 4 then   --Insucesso na Entrega      
+          case when znsls400.t$sige$c = 1 then znmcs096.t$seri$c
+               when NFS.t$docn$c != 0     then NFS.t$seri$c
+               when NFS.t$docf$c != 0     then NFS.t$serf$c
+          end
+     else
+          cisli940.t$seri$l
+     end                                      SERIE,
+ 
+  case when znsls002.t$stat$c = 4 then   --Insucesso na Entrega  
+          case when znsls400.t$sige$c = 1 and znmcs096.t$trdt$c > to_date('01-01-1980','DD-MM-YYYY') then
+               znmcs096.t$trdt$c
+
+                  when NFS.t$docn$c != 0 then
+                   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(NFS.t$dtem$c, 
+                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                            AT time zone 'America/Sao_Paulo') AS DATE)
+                            
+                  when NFS.t$docf$c != 0 then
+                      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(NFS.t$dtef$c, 
+                          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                            AT time zone 'America/Sao_Paulo') AS DATE)
+                            
+                  when (znsls400.t$sige$c = 1 and znmcs096.t$docn$c = 0) or
+                       (znsls400.t$sige$c = 2 and NFS.t$docn$c = 0 and NFS.t$docf$c = 0) then
+                    NULL
+          end                                           
+  else 
+          case when cisli940.t$docn$l = 0 then
+                NULL
+          else
+              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone 'America/Sao_Paulo') AS DATE)
-           ELSE NULL
-     END                                      DATA_EMISSAO_NF,
+                  AT time zone 'America/Sao_Paulo') AS DATE)
+          end
+  end                                         DATA_EMISSAO_NF,
+
     cisli941.t$pric$l                         VALOR_PRODUTO,
     NVL(cisli941.t$amnt$l,0) + 
     NVL(znsls401.t$vlfr$c,0)                  VL_TOTAL_NF,
@@ -481,6 +514,25 @@ INNER JOIN baandb.tznsls400601 znsls400
         ON EXPEDICAO.t$ncia$c = znsls401.t$ncia$c
        AND EXPEDICAO.t$uneg$c = znsls401.t$uneg$c
        AND EXPEDICAO.t$pecl$c = znsls401.t$pecl$c
+
+  LEFT JOIN ( select znsls410.t$ncia$c,
+                     znsls410.t$uneg$c,
+                     znsls410.t$pecl$c,
+                     max(znsls410.t$dtoc$c) t$dtoc$c,
+                     max(znsls410.t$docf$c) t$docf$c,
+                     max(znsls410.t$serf$c) t$serf$c,
+                     max(znsls410.t$dtef$c) t$dtef$c,
+                     max(znsls410.t$docn$c) t$docn$c,
+                     max(znsls410.t$seri$c) t$seri$c,
+                     max(znsls410.t$dtem$c) t$dtem$c
+              from baandb.tznsls410601 znsls410
+              where znsls410.t$poco$c = 'NFS'  --NOTA FISCAL DE SAIDA
+           group by znsls410.t$ncia$c,
+                    znsls410.t$uneg$c,
+                    znsls410.t$pecl$c ) NFS
+        ON NFS.t$ncia$c = znsls401.t$ncia$c
+       AND NFS.t$uneg$c = znsls401.t$uneg$c
+       AND NFS.t$pecl$c = znsls401.t$pecl$c
               
  LEFT JOIN baandb.ttcmcs080601 tcmcs080           --Transportadora da Coleta
         ON tcmcs080.t$cfrw = cisli940.t$cfrw$l
@@ -601,7 +653,33 @@ INNER JOIN baandb.tznsls400601 znsls400
        AND PAP_TD.t$pecl$c = znsls401.t$pecl$c
        AND PAP_TD.t$sqpd$c = znsls401.t$sqpd$c
        AND PAP_TD.t$entr$c = znsls401.t$entr$c
-       
+
+LEFT JOIN ( select a.t$ncmp$c,
+                   a.t$cref$c,
+                   a.t$cfoc$c,
+                   a.t$docn$c,
+                   a.t$seri$c,
+                   a.t$doty$c,
+                   a.t$trdt$c,
+                   a.t$creg$c,
+                   a.t$cfov$c,
+                   a.t$orno$c,
+                   a.t$pono$c
+            from baandb.tznmcs096601 a 
+            group by a.t$ncmp$c,
+                     a.t$cref$c,
+                     a.t$cfoc$c,
+                     a.t$docn$c,
+                     a.t$seri$c,
+                     a.t$doty$c,
+                     a.t$trdt$c,
+                     a.t$creg$c,
+                     a.t$cfov$c,
+                     a.t$orno$c,
+                     a.t$pono$c ) znmcs096
+        ON znmcs096.t$orno$c = cisli245.t$slso
+       AND znmcs096.t$pono$c = cisli245.t$pono
+       AND znmcs096.t$ncmp$c = 2    --Faturamento       
 
 WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
   AND znsls401.t$qtve$c < 0               -- Devolução
