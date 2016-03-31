@@ -3,7 +3,7 @@ select
   b.t$adqs$c as cod_adquirente_front,
   a.t$band$c as cod_bandeira,
   a.t$cias$c as cod_cia,
-  a.t$prct$c as parcelas,
+  a.t$prct$c as nr_parcelas,
   a.t$trbd$c as vl_tarifa,
   a.t$cobr$c as ds_detalhe,
   a.t$txjr$c as vl_tarifacjuros,
@@ -18,4 +18,3 @@ from baandb.tzncmg010201 a
   inner join baandb.tzncmg009201 c
   on c.t$band$c = a.t$band$c
   and c.t$cias$c = a.t$cias$c
-
