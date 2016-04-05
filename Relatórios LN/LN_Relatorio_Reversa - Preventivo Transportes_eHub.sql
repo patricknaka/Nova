@@ -83,7 +83,7 @@ SELECT
          ELSE   EXPEDICAO.NOME_TRANSP 
     END                                       NOME_TRANSP_ENTREGA,
     
-    CASE WHEN cisli940.t$stat$l in (5, 6) 
+    CASE WHEN cisli940.t$stat$l in (5, 6) or cisli940.t$cfrw$l = 'T01' THEN       --Definido no SDP 1092957 
            THEN CASE WHEN tcmcs080.t$dsca IS NULL 
                        THEN NVL( cisli940.t$cfrn$l, ( select Trim(A.T$NTRA$C)
                                                         from BAANDB.TZNSLS410601 A
@@ -99,12 +99,12 @@ SELECT
          ELSE NULL
     END                                       NOME_TRANSPORTADORA_COLETA,
     
-    CASE WHEN cisli940.t$stat$l in (5, 6)
+    CASE WHEN cisli940.t$stat$l in (5, 6) or cisli940.t$cfrw$l = 'T01' THEN       --Definido no SDP 1092957 
            THEN Trim(tcmcs080.t$seak)                     
          ELSE NULL 
     END                                       APELIDO_TRANSP_COLETA,
     
-    CASE WHEN cisli940.t$stat$l in (5, 6)
+    CASE WHEN cisli940.t$stat$l in (5, 6) or cisli940.t$cfrw$l = 'T01' THEN       --Definido no SDP 1092957 
            THEN NVL( tccom130transp.t$fovn$l, 
                      ( select Trim(A.T$FOVT$C)
                          from BAANDB.TZNSLS410601 A
