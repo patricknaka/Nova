@@ -60,7 +60,7 @@ SELECT
               znsls410.PT_CONTR IN ('VAL', 'RDV', 'RIE')
            THEN 'ENCERRADO'
          ELSE   'PENDENTE'
-    END                                       SITUACAO_ATENDIMENTO
+    END                                       SITUACAO_ATENDIMENTO,
 	
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(EXPEDICAO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -83,7 +83,7 @@ SELECT
          ELSE   EXPEDICAO.NOME_TRANSP 
     END                                       NOME_TRANSP_ENTREGA,
     
-    CASE WHEN cisli940.t$stat$l in (5, 6) or cisli940.t$cfrw$l = 'T01' THEN       --Definido no SDP 1092957 
+    CASE WHEN cisli940.t$stat$l in (5, 6) or cisli940.t$cfrw$l = 'T01'        --Definido no SDP 1092957 
            THEN CASE WHEN tcmcs080.t$dsca IS NULL 
                        THEN NVL( cisli940.t$cfrn$l, ( select Trim(A.T$NTRA$C)
                                                         from BAANDB.TZNSLS410601 A
@@ -99,12 +99,12 @@ SELECT
          ELSE NULL
     END                                       NOME_TRANSPORTADORA_COLETA,
     
-    CASE WHEN cisli940.t$stat$l in (5, 6) or cisli940.t$cfrw$l = 'T01' THEN       --Definido no SDP 1092957 
+    CASE WHEN cisli940.t$stat$l in (5, 6) or cisli940.t$cfrw$l = 'T01'        --Definido no SDP 1092957 
            THEN Trim(tcmcs080.t$seak)                     
          ELSE NULL 
     END                                       APELIDO_TRANSP_COLETA,
     
-    CASE WHEN cisli940.t$stat$l in (5, 6) or cisli940.t$cfrw$l = 'T01' THEN       --Definido no SDP 1092957 
+    CASE WHEN cisli940.t$stat$l in (5, 6) or cisli940.t$cfrw$l = 'T01'        --Definido no SDP 1092957 
            THEN NVL( tccom130transp.t$fovn$l, 
                      ( select Trim(A.T$FOVT$C)
                          from BAANDB.TZNSLS410601 A
@@ -229,7 +229,8 @@ SELECT
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_CANC_COLETA,
     REC_COLETA.DATA_OCORR                     RETORNO_RDV,
-    cisli940.t$cnfe$l                         CHAVE_DANFE
+    cisli940.t$cnfe$l                         CHAVE_DANFE,
+    znfmd060.t$refe$c                         DESCRICAO_CONTRATO
   
 FROM       baandb.tznsls401601 znsls401
 
@@ -681,6 +682,10 @@ LEFT JOIN ( select a.t$ncmp$c,
        AND znmcs096.t$pono$c = cisli245.t$pono
        AND znmcs096.t$ncmp$c = 2    --Faturamento       
 
+LEFT JOIN baandb.tznfmd060601 znfmd060
+       ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
+      AND znfmd060.t$cono$c = znfmd630.t$cono$c
+
 WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
   AND znsls401.t$qtve$c < 0               -- Devolução
   AND tdsls094.t$reto in (1, 3)           -- Ordem Devolução, Ordem Devolução Rejeitada
@@ -701,8 +706,6 @@ WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
 ORDER BY DATA_SOL_COLETA_POSTAGEM, 
          DATA_PEDIDO, 
          PEDIDO
-
-		 
 =
 
 " SELECT  " &
