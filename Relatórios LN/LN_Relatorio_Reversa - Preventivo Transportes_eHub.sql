@@ -698,8 +698,8 @@ LEFT JOIN baandb.ttdrec940601 tdrec940
        ON tdrec940.t$fire$l = tdrec947.t$fire$l
 
 WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
-  AND znsls401.t$qtve$c < 0               -- Devolução
-  AND tdsls094.t$reto in (1, 3)           -- Ordem Devolução, Ordem Devolução Rejeitada
+--  AND znsls401.t$qtve$c < 0               -- Devolução
+--  AND tdsls094.t$reto in (1, 3)           -- Ordem Devolução, Ordem Devolução Rejeitada
 
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
