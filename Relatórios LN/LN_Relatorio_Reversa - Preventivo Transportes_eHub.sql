@@ -160,7 +160,7 @@ SELECT
           end                                         
     else
           cisli940.t$docn$l
-    end                                       NOTA,
+    end                                       NOTA_SAIDA,
         
     case when znsls002.t$stat$c = 4 then   --Insucesso na Entrega      
           case when znsls400.t$sige$c = 1 then znmcs096.t$seri$c
@@ -169,8 +169,16 @@ SELECT
           end
      else
           cisli940.t$seri$l
-     end                                      SERIE,
+     end                                      SERIE_SAIDA,
  
+    case when znsls002.t$stat$c = 4 then   --Insucesso na Entrega
+          cisli940.t$docn$l                         
+    else tdrec940.t$docn$l end                NOTA_ENTRADA,
+        
+    case when znsls002.t$stat$c = 4 then   --Insucesso na Entrega
+          cisli940.t$seri$l                        
+    else tdrec940.t$seri$l end                SERIE_ENTRADA,
+    
   case when znsls002.t$stat$c = 4 then   --Insucesso na Entrega  
           case when znsls400.t$sige$c = 1 and znmcs096.t$trdt$c > to_date('01-01-1980','DD-MM-YYYY') then
                znmcs096.t$trdt$c
@@ -685,6 +693,9 @@ LEFT JOIN ( select a.t$ncmp$c,
 LEFT JOIN baandb.tznfmd060601 znfmd060
        ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
       AND znfmd060.t$cono$c = znfmd630.t$cono$c
+
+LEFT JOIN baandb.ttdrec940601 tdrec940
+       ON tdrec940.t$fire$l = tdrec947.t$fire$l
 
 WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
   AND znsls401.t$qtve$c < 0               -- Devolução
