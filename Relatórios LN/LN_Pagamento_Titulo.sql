@@ -58,18 +58,15 @@ SELECT
          ELSE tflcb230.t$send$d 
      END                    CODE_STAT_ARQ, 
     
-    CASE WHEN tflcb230.t$send$d = 0 
-           THEN iStatArq.DESCR
-         ELSE iStatArq2.DESCR 
-     END                    DESCR_STAT_ARQ
+    iStatArq.DESCR          DESCR_STAT_ARQ
  
-FROM       baandb.ttccom100301  tccom100
+FROM       baandb.ttfcmg101301   tfcmg101
 
-INNER JOIN baandb.ttccom130301  tccom130
-        ON tccom130.t$cadr = tccom100.t$cadr
-
-INNER JOIN baandb.ttfcmg101301  tfcmg101  
+INNER JOIN baandb.ttccom100301   tccom100
         ON tccom100.T$BPID = tfcmg101.t$ifbp
+
+INNER JOIN baandb.ttccom130301   tccom130
+        ON tccom130.t$cadr = tccom100.t$cadr
 
 INNER JOIN ( SELECT SUM(t.t$amnt) VALO_LOTE,
                     t.t$ninv,
@@ -88,7 +85,11 @@ INNER JOIN baandb.ttfcmg109301  tfcmg109
 
 INNER JOIN baandb.ttfcmg003301  tfcmg003
         ON tfcmg003.t$paym = tfcmg101.t$paym
-    
+		
+ LEFT JOIN baandb.ttfcmg103301 tfcmg103
+        ON tfcmg103.t$btno = tfcmg101.t$btno
+       AND tfcmg103.t$ptbp = tfcmg101.t$ifbp
+
  LEFT JOIN baandb.ttfcmg001301 tfcmg001 
         ON tfcmg001.t$bank = tfcmg101.t$bank
      
@@ -262,43 +263,6 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
                                     ELSE   tflcb230.t$send$d 
                                 END, 0)
         
- LEFT JOIN ( SELECT 0                 CODE,
-                    'Não vinculado'   DESCR
-               FROM Dual
-             
-              UNION
-     
-             SELECT d.t$cnst CODE,
-                    l.t$desc DESCR
-               FROM baandb.tttadv401000 d,
-                    baandb.tttadv140000 l
-              WHERE d.t$cpac = 'tf'
-                AND d.t$cdom = 'cmg.stat.l'
-                AND l.t$clan = 'p'
-                AND l.t$cpac = 'tf'
-                AND l.t$clab = d.t$za_clab
-                AND rpad(d.t$vers,4) ||
-                    rpad(d.t$rele,2) ||
-                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv401000 l1 
-                                          where l1.t$cpac = d.t$cpac 
-                                            and l1.t$cdom = d.t$cdom )
-                AND rpad(l.t$vers,4) ||
-                    rpad(l.t$rele,2) ||
-                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv140000 l1 
-                                          where l1.t$clab = l.t$clab 
-                                            and l1.t$clan = l.t$clan 
-                                            and l1.t$cpac = l.t$cpac ) ) iStatArq2 
-        ON iStatArq2.CODE = NVL(CASE WHEN tflcb230.t$send$d = 0 
-                                       THEN tflcb230.t$stat$d
-                                     ELSE   tflcb230.t$send$d 
-                                   END, 0)
-
  LEFT JOIN ( SELECT iDOMAIN.t$cnst CODE_MODAL, 
                     iLABEL.t$desc DESC_MODAL  
                FROM baandb.tttadv401000 iDOMAIN, 
@@ -384,11 +348,6 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
                                             and l1.t$cpac = l.t$cpac ) ) ACONSELHAMENTO
         ON ACONSELHAMENTO.t$cnst = tfcmg101.t$tadv
 
- LEFT JOIN baandb.ttfcmg103301 tfcmg103
-        ON tfcmg103.t$btno = tfcmg101.t$btno
-       AND tfcmg103.t$ptbp = tfcmg101.t$ifbp
-       AND ROWNUM = 1
-        
 WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
   AND tfcmg101.t$bank = NVL(:Banco,tfcmg101.t$bank)
   AND ((tfcmg011.t$agcd$l = :Agencia) or (:Agencia = '000'))
@@ -397,14 +356,25 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
   AND tfcmg101.t$paym = (CASE WHEN :TipoPagto = 'Todos' THEN tfcmg101.t$paym ELSE :TipoPagto END)
   AND tfcmg101.t$tadv IN (:TipoAconselhamento)
   AND tfcmg109.t$stpp IN (:Situacao)
-  AND NVL(iPrgStat.DESCR, 'Título não vinculado') IN (:StatusPagto)
+  AND CASE WHEN tfcmg101.t$tadv = 5 --Pagamento Adiantado
+             THEN CASE WHEN tfcmg103.t$paid = 1 
+                         THEN 'Pago'
+                       ELSE   'Criado'  
+                  END
+           WHEN tfcmg101.t$tadv = 4 --Nota de Credito de Venda
+             THEN StatusCreditoVenda.DESC_STATUSCREDITOVENDA
+           ELSE iPrgStat.DESCR 
+      END IN (:StatusPagto)
   AND NVL(CASE WHEN tflcb230.t$send$d = 0 
                  THEN tflcb230.t$stat$d
              ELSE     tflcb230.t$send$d 
            END, 0) IN (:StatusArquivo)
   AND ((:LoteTodos = 1) OR ((tfcmg101.t$btno IN (:Lote)) And :LoteTodos = 0))
   
+
   
+  
+=
   
 " SELECT  " &
 "   DISTINCT  " &
@@ -466,18 +436,15 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "          ELSE tflcb230.t$send$d  " &
 "      END                    CODE_STAT_ARQ,  " &
 "  " &
-"     CASE WHEN tflcb230.t$send$d = 0  " &
-"            THEN iStatArq.DESCR  " &
-"          ELSE iStatArq2.DESCR  " &
-"      END                    DESCR_STAT_ARQ  " &
+"     iStatArq.DESCR          DESCR_STAT_ARQ  " &
 "  " &
-" FROM       baandb.ttccom100" + Parameters!Compania.Value +  "  tccom100  " &
+" FROM       baandb.ttfcmg101" + Parameters!Compania.Value +  "  tfcmg101  " &
+"  " &
+" INNER JOIN baandb.ttccom100" + Parameters!Compania.Value +  "  tccom100  " &
+"         ON tccom100.T$BPID = tfcmg101.t$ifbp  " &
 "  " &
 " INNER JOIN baandb.ttccom130" + Parameters!Compania.Value +  "  tccom130  " &
 "         ON tccom130.t$cadr = tccom100.t$cadr  " &
-"  " &
-" INNER JOIN baandb.ttfcmg101" + Parameters!Compania.Value +  "  tfcmg101  " &
-"         ON tccom100.T$BPID = tfcmg101.t$ifbp  " &
 "  " &
 " INNER JOIN ( SELECT SUM(t.t$amnt) VALO_LOTE,  " &
 "                     t.t$ninv,  " &
@@ -496,6 +463,10 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "  " &
 " INNER JOIN baandb.ttfcmg003301  tfcmg003  " &
 "         ON tfcmg003.t$paym = tfcmg101.t$paym  " &
+"  " &
+"  LEFT JOIN baandb.ttfcmg103" + Parameters!Compania.Value +  " tfcmg103  " &
+"         ON tfcmg103.t$btno = tfcmg101.t$btno  " &
+"        AND tfcmg103.t$ptbp = tfcmg101.t$ifbp  " &
 "  " &
 "  LEFT JOIN baandb.ttfcmg001" + Parameters!Compania.Value +  " tfcmg001  " &
 "         ON tfcmg001.t$bank = tfcmg101.t$bank  " &
@@ -670,43 +641,6 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "                                     ELSE   tflcb230.t$send$d  " &
 "                                 END, 0)  " &
 "  " &
-"  LEFT JOIN ( SELECT 0                 CODE,  " &
-"                     'Não vinculado'   DESCR  " &
-"                FROM Dual  " &
-"  " &
-"               UNION  " &
-"  " &
-"              SELECT d.t$cnst CODE,  " &
-"                     l.t$desc DESCR  " &
-"                FROM baandb.tttadv401000 d,  " &
-"                     baandb.tttadv140000 l  " &
-"               WHERE d.t$cpac = 'tf'  " &
-"                 AND d.t$cdom = 'cmg.stat.l'  " &
-"                 AND l.t$clan = 'p'  " &
-"                 AND l.t$cpac = 'tf'  " &
-"                 AND l.t$clab = d.t$za_clab  " &
-"                 AND rpad(d.t$vers,4) ||  " &
-"                     rpad(d.t$rele,2) ||  " &
-"                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||  " &
-"                                                     rpad(l1.t$rele,2) ||  " &
-"                                                     rpad(l1.t$cust,4))  " &
-"                                            from baandb.tttadv401000 l1  " &
-"                                           where l1.t$cpac = d.t$cpac  " &
-"                                             and l1.t$cdom = d.t$cdom )  " &
-"                 AND rpad(l.t$vers,4) ||  " &
-"                     rpad(l.t$rele,2) ||  " &
-"                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||  " &
-"                                                     rpad(l1.t$rele,2) ||  " &
-"                                                     rpad(l1.t$cust,4))  " &
-"                                            from baandb.tttadv140000 l1  " &
-"                                           where l1.t$clab = l.t$clab  " &
-"                                             and l1.t$clan = l.t$clan  " &
-"                                             and l1.t$cpac = l.t$cpac ) ) iStatArq2  " &
-"         ON iStatArq2.CODE = NVL(CASE WHEN tflcb230.t$send$d = 0  " &
-"                                        THEN tflcb230.t$stat$d  " &
-"                                      ELSE   tflcb230.t$send$d  " &
-"                                    END, 0)  " &
-"  " &
 " LEFT JOIN ( SELECT iDOMAIN.t$cnst CODE_MODAL,  " &
 "                    iLABEL.t$desc DESC_MODAL  " &
 "               FROM baandb.tttadv401000 iDOMAIN,  " &
@@ -792,20 +726,23 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "                                             and l1.t$cpac = l.t$cpac ) ) ACONSELHAMENTO  " &
 "         ON ACONSELHAMENTO.t$cnst = tfcmg101.t$tadv  " &
 "  " &
-"  LEFT JOIN baandb.ttfcmg103" + Parameters!Compania.Value +  " tfcmg103  " &
-"         ON tfcmg103.t$btno = tfcmg101.t$btno  " &
-"        AND tfcmg103.t$ptbp = tfcmg101.t$ifbp  " &
-"  " &
 " WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte  " &
 "   AND ((tfcmg101.t$bank = '" + Mid(Parameters!Banco.Value,4,3) + "') or ('" + Mid(Parameters!Banco.Value,4,3) + "' = '000'))  " &
 "   AND ((tfcmg011.t$agcd$l = '" + Mid(Parameters!Agencia.Value,7,4) + "') or ('" + Mid(Parameters!Agencia.Value,7,4) + "' = '0000'))  " &
 "   AND ((tfcmg001.t$bano = '" + Mid(Parameters!Conta.Value,11,5) + "') or ('" + Mid(Parameters!Conta.Value,12,5) + "' = '00000'))  " &
 "   AND tfcmg101.t$mopa$d = (CASE WHEN :CodModal = 0 THEN tfcmg101.t$mopa$d ELSE :CodModal END)  " &
 "   AND tfcmg101.t$paym = (CASE WHEN :TipoPagto = 'Todos' THEN tfcmg101.t$paym ELSE :TipoPagto END)  " &
-
 "   AND tfcmg101.t$tadv IN (" + JOIN(Parameters!TipoAconselhamento.Value, ", ") + ") " &
 "   AND tfcmg109.t$stpp IN (" + JOIN(Parameters!Situacao.Value, ", ") + ") " &
-"   AND NVL(iPrgStat.DESCR, 'Título não vinculado') IN (" + Replace(("'" + JOIN(Parameters!StatusPagto.Value, "',") + "'"),",",",'") + ") " &
+"   AND CASE WHEN tfcmg101.t$tadv = 5  " &
+"              THEN CASE WHEN tfcmg103.t$paid = 1  " &
+"                          THEN 'Pago'  " &
+"                        ELSE   'Criado'  " &
+"                   END  " &
+"            WHEN tfcmg101.t$tadv = 4  " &
+"              THEN StatusCreditoVenda.DESC_STATUSCREDITOVENDA  " &
+"            ELSE iPrgStat.DESCR  " &
+"       END IN (" + Replace(("'" + JOIN(Parameters!StatusPagto.Value, "',") + "'"),",",",'") + ") " &
 "   AND NVL(CASE WHEN tflcb230.t$send$d = 0  " &
 "                  THEN tflcb230.t$stat$d  " &
 "                ELSE   tflcb230.t$send$d  " &
