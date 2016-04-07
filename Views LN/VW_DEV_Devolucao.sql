@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940dev.t$rcd_utc, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE)            DT_ULT_ATUALIZACAO,
@@ -414,3 +414,4 @@ FROM baandb.tznsls401201 znsls401dev								-- Pedido de devolução
         
 where znsls401dev.t$qtve$c < 0 
 and   znsls401dev.t$idor$c = 'TD'
+and tdrec940rec.t$stat$l IN (4,5)
