@@ -90,7 +90,8 @@ select Q1.*
                                              where znfmd640.t$fili$c = znfmd630.t$fili$c
                                                and znfmd640.t$etiq$c = znfmd630.t$etiq$c )
                   AND znfmd640.t$fili$c = znfmd630.t$fili$c
-                  AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )
+                  AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
+                  AND RowNum = 1 )
                                 DT_INSERCAO             
 
   FROM       baandb.tcisli940601 cisli940  
@@ -298,7 +299,8 @@ ORDER BY Q1.DT_EMISSAO, Q1.NUME_ENTREGA
 "                                              where znfmd640.t$fili$c = znfmd630.t$fili$c  " &
 "                                                and znfmd640.t$etiq$c = znfmd630.t$etiq$c )  " &
 "                   AND znfmd640.t$fili$c = znfmd630.t$fili$c  " &
-"                   AND znfmd640.t$etiq$c = znfmd630.t$etiq$c )  " &
+"                   AND znfmd640.t$etiq$c = znfmd630.t$etiq$c  " &
+"                   AND RowNum = 1 )  " &
 "                                 DT_INSERCAO               " &
 "   " &
 "   FROM       baandb.tcisli940" + Parameters!Compania.Value + " cisli940    " &
