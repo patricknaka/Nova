@@ -42,11 +42,10 @@ SELECT
        WHERE tdrec949.t$fire$l = tdrec940.t$fire$l
          AND tdrec949.t$brty$l = 7 ),0)                		VALOR_ISS,
 	 
-   nvl(SUM( ( SELECT SUM(tdrec942.t$amnt$l) 
-           FROM baandb.ttdrec942301 tdrec942
-          WHERE tdrec942.t$fire$l = tdrec941.t$fire$l
-            AND tdrec942.t$line$l = tdrec941.t$line$l
-            AND tdrec942.t$brty$l = 14 ) ), 0)       		VALOR_ISS_RETIDO,
+    nvl(( SELECT tdrec949.t$base$l 
+        FROM baandb.ttdrec949301 tdrec949
+       WHERE tdrec949.t$fire$l = tdrec940.t$fire$l
+         AND tdrec949.t$brty$l = 14 ),0)                	VALOR_ISS_RETIDO,
       
     nvl(( SELECT tdrec949.t$base$l 
         FROM baandb.ttdrec949301 tdrec949
