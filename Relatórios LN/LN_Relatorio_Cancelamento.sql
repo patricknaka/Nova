@@ -10,6 +10,7 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'),
     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                   DT_VENDA2,
+    znsls402.t$valo$c             VL_MEIOPAGTO,
     zncmg015.t$slst$c             VL_VENDA,
     zncmg015.t$slct$c             VL_CANCELAR,
     znsls402.t$auto$c             AUT,
@@ -34,6 +35,7 @@ SELECT
     znsls402.t$txju$c             TAXA_JUROS,
     znsls402.t$vlju$c             VALOR_JUROS,
     znsls402.t$vlja$c             VALOR_JUROS_ADMIN,
+    znsls402.t$tcar$c             NOME_TITULAR_CARTAO,
     znsls402.t$cpft$c             CPF_TITULAR_CARTAO,
     znsls402.t$nupa$c             NR_PARCELAS,
     CASE WHEN zncmg015.t$rdat$c = '01-JAN-1970'

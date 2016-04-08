@@ -1,13 +1,14 @@
 SELECT 
   DISTINCT
     znsls400.t$idcp$c             CAMPANHA,
-    znsls400.t$idco$c             CONTRATO,
+--    znsls400.t$idco$c             CONTRATO,
     tccom130f.t$fovn$l            CNPJ,
-    tccom130f.t$nama              NOME,
+    tccom130f.t$nama              CLIENTE_NOME,
+	                              CNPJ_CPF
     tccom130f.t$namc   || ' ' ||
     tccom130f.t$hono              ENDERECO,
-    cisli940f.t$docn$l            NF_FATURA,
-    cisli940f.t$seri$l            SERIE,
+    cisli940r.t$docn$l            NF_FATURA,
+    cisli940r.t$seri$l            SERIE,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940f.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) 
@@ -24,7 +25,7 @@ SELECT
     cisli941f.t$ldam$l            VL_DESC_ITEM,
     cisli941f.t$fght$l            VL_FRETE_ITEM,
     cisli941f.t$amnt$l            VL_TOTAL_ITEM,
-    cisli940f.t$cnfe$l            CHAVE_DE_ACESSO,
+    cisli940r.t$cnfe$l            CHAVE_DE_ACESSO,
     tccom130r.t$ccit              MUNICIPIO_ENTREGA,
     tccom139r.t$dscb$c            DESC_MUNICIPIO_ENTR,
     tccom130r.t$cste              UF_ENTREGA,

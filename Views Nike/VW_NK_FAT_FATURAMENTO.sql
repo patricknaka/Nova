@@ -6,38 +6,38 @@ SELECT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
   AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO,
   13 CD_CIA, --znsls400.t$ncia$c
-  CASE WHEN (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm030601 tcemm030	
+  CASE WHEN (  SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm030601 tcemm030
   WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
   AND tcemm030.t$eunt=tcemm124.t$grid
   AND tcemm124.t$loco=601
   AND rownum=1) = ''
 THEN
-  (	SELECT substr(tcemm124.t$grid,-2,2) FROM baandb.ttcemm124601 tcemm124
+  (  SELECT substr(tcemm124.t$grid,-2,2) FROM baandb.ttcemm124601 tcemm124
   WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
   AND tcemm124.t$loco=601
   AND rownum=1)
-ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm030601 tcemm030
+ELSE (  SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm030601 tcemm030
         WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
         AND tcemm030.t$eunt=tcemm124.t$grid
         AND tcemm124.t$loco=601
         AND rownum=1)
-  END AS CD_FILIAL,	
+  END AS CD_FILIAL,
   cisli940.t$docn$l NR_NF,
   cisli940.t$seri$l NR_SERIE_NF,
   CASE WHEN instr(cisli940.t$ccfo$l,'-')=0 THEN cisli940.t$ccfo$l
                                            ELSE regexp_replace(substr(cisli940.t$ccfo$l,0,instr(cisli940.t$ccfo$l,'-')-1), '[^0-9]', '')
-  END	CD_NATUREZA_OPERACAO,	
+  END  CD_NATUREZA_OPERACAO,
   CASE WHEN instr(cisli940.t$ccfo$l,'-')=0 THEN cisli940.t$opor$l
        ELSE regexp_replace(substr(cisli940.t$ccfo$l,instr(cisli940.t$ccfo$l,'-')+1,3), '[^0-9]', '')
-  END	SQ_NATUREZA_OPERACAO,	
+  END  SQ_NATUREZA_OPERACAO,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
   AT time zone 'America/Sao_Paulo') AS DATE) DT_FATURA,
   cisli940.t$itbp$l CD_CLIENTE_FATURA,
   cisli940.t$stbp$l CD_CLIENTE_ENTREGA,
   znsls401.t$sequ$c NR_SEQ_ENTREGA,
   znsls401.t$pecl$c NR_PEDIDO,
-  TO_CHAR(znsls401.t$entr$c) NR_ENTREGA, 
-  znsls401.t$orno$c NR_ORDEM,	-- origem OV
+  TO_CHAR(znsls401.t$entr$c) NR_ENTREGA,
+  znsls401.t$orno$c NR_ORDEM,  -- origem OV
   CASE WHEN cisli940.t$fdty$l=15 then (select distinct a.t$docn$l from baandb.tcisli940601 a, baandb.tcisli941601 b
                                                                 where b.t$fire$l=cisli940.t$fire$l
                                                                 and a.t$fire$l=b.t$refr$l and rownum=1) else 0
@@ -49,27 +49,28 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
   CASE WHEN cisli940.t$fdty$l=16 then (select distinct a.t$docn$l from baandb.tcisli940601 a, baandb.tcisli941601 b
                                                                   where b.t$fire$l=cisli940.t$fire$l and a.t$fire$l=b.t$refr$l and rownum=1) else 0
   end NR_NF_REMESSA,
-  CASE WHEN cisli940.t$fdty$l=16 then (select distinct a.t$seri$l from baandb.tcisli940601 a, baandb.tcisli941601 b 
+  CASE WHEN cisli940.t$fdty$l=16 then (select distinct a.t$seri$l from baandb.tcisli940601 a, baandb.tcisli941601 b
                                                                   where b.t$fire$l=cisli940.t$fire$l
                                                                   and a.t$fire$l=b.t$refr$l and rownum=1) else ' '
   end NR_SERIE_NF_REMESSA,
-  CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0 
-  END NR_NF_CONSOLIDADA, 
-  CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' ' 
-  END NR_SERIE_NF_CONSOLIDADA, 
+  CASE WHEN tdsls094.t$bill$c!=3 THEN consold.NOTA ELSE 0
+  END NR_NF_CONSOLIDADA,
+  CASE WHEN tdsls094.t$bill$c!=3 THEN consold.SERIE ELSE ' '
+  END NR_SERIE_NF_CONSOLIDADA,
   cisli940.t$stat$l CD_SITUACAO_NF,
   (Select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(brnfe020.t$date$l), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
    AT time zone 'America/Sao_Paulo') AS DATE)
    FROM baandb.tbrnfe020601 brnfe020
-   Where brnfe020.t$refi$l=cisli940.t$fire$l AND brnfe020.t$ncmp$l=601) 
+   Where brnfe020.t$refi$l=cisli940.t$fire$l AND brnfe020.t$ncmp$l=601)
   AS DT_STATUS,
   cisli940.t$fdty$l CD_TIPO_NF,
   ltrim(rtrim(cisli941f.t$item$l)) CD_ITEM,
   cisli941f.t$dqua$l QT_FATURADA,
-  nvl(ICMS.t$amnt$l, 0) VL_ICMS,	
+--  nvl(ICMS.t$amnt$l, 0) VL_ICMS,
+  nvl(ICMS.t$amnt$l, 0) +  nvl(ICMS.t$vest$l, 0) + nvl(ICMS.t$vpbr$l, 0) + nvl(ICMS.t$oest$l, 0) as VL_ICMS,
   Nvl((SELECT cisli943.t$amnt$l from baandb.tcisli943601 cisli943 WHERE cisli943.t$fire$l=cisli941f.t$fire$l
                                                                   AND cisli943.t$line$l=cisli941f.t$line$l
-                                                                  AND cisli943.t$brty$l=2),0) 
+                                                                  AND cisli943.t$brty$l=2),0)
   AS VL_ICMS_ST,
   cisli941f.t$gamt$l VL_PRODUTO,
   znsls401.t$vlfr$c VL_FRETE,
@@ -79,9 +80,9 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
                               and cisli941b.t$line$l=cisli941f.t$line$l
                               and tcibd001b.T$ITEM=cisli941b.t$item$l
                               and cisli941b.t$gamt$l!=0 --#FAF.008.n
-                              and tcibd001b.t$kitm<3),1)) 
+                              and tcibd001b.t$kitm<3),1))
   AS VL_FRETE_CIA,
-  TRUNC(case when cisli941.t$item$l not in	
+  TRUNC(case when cisli941.t$item$l not in
         (select a.t$itjl$c
         from baandb.tznsls000601 a
         where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
@@ -99,12 +100,12 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
     where c.t$fire$l=cisli941.t$fire$l
     and c.t$item$l=(select a.t$itmd$c
                     from baandb.tznsls000601 a
-                    where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))),0)/ (cisli941.t$gamt$l/cisli940.t$gamt$l)
+                    where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))),0)* (cisli941.t$gamt$l/cisli940.t$gamt$l)
                     else 0 end
-                    else 0 end,2) 
+                    else 0 end,2)
   AS VL_DESPESA,
   cisli941f.t$ldam$l VL_DESCONTO,
-  cisli941f.t$amnt$l VL_TOTAL_ITEM,	
+  cisli941f.t$amnt$l VL_TOTAL_ITEM,
   trunc(case when cisli941.t$item$l not in (select a.t$itjl$c
                                             from baandb.tznsls000601 a
                                             where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
@@ -122,36 +123,60 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
     where c.t$fire$l=cisli941.t$fire$l
     and c.t$item$l=(select a.t$itjl$c
     from baandb.tznsls000601 a
-    where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))),0)/ (cisli941.t$gamt$l/cisli940.t$gamt$l)
+    where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))),0)* (cisli941.t$gamt$l/cisli940.t$gamt$l)
     else 0 end
-    else 0 end,2) 
-  AS VL_DESPESA_FINANCEIRA,	
+    else 0 end,2)
+  AS VL_DESPESA_FINANCEIRA,
   nvl(PIS.t$amnt$l,0) VL_PIS,
-  cisli941f.t$iprt$l*(nvl(ICMS.t$rate$l,0)/100) VL_ICMS_PRODUTO,
-  cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100) VL_ICMS_FRETE,
-    CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN	
-    nvl(ICMS.t$amnt$l, 0)	  -cisli941f.t$iprt$l*(nvl(ICMS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100)
-    ELSE 0 END	
-  AS VL_ICMS_OUTROS,	
-  nvl(COFINS.t$amnt$l,0) VL_COFINS,	
-  cisli941f.t$iprt$l*(nvl(COFINS.t$rate$l,0)/100) VL_COFINS_PRODUTO, 
-  cisli941f.t$fght$l*(nvl(COFINS.t$rate$l,0)/100) VL_COFINS_FRETE, 
-    CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN	
+  --cisli941f.t$iprt$l*(nvl(ICMS.t$rate$l,0)/100) VL_ICMS_PRODUTO,
+  --cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100) VL_ICMS_FRETE,
+  case when ICMS.t$iest$l = 0 then
+        --(cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$rate$l,0)/100)
+        (cisli941f.t$iprt$l)*(nvl(ICMS.t$rate$l,0)/100)
+  else
+    case when ICMS.t$iest$l < ICMS.t$sest$l then
+         0
+    else
+      (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$rate$l,0)/100) +
+      (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$iest$l-ICMS.t$sest$l,0)/100) +
+      (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$ppbr$l,0)/100)
+    end
+  end as VL_ICMS_PRODUTO,
+  case when ICMS.t$iest$l = 0 then
+        cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100)
+  else
+    case when ICMS.t$iest$l < ICMS.t$sest$l then
+         0
+    else
+      cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100) +
+      cisli941f.t$fght$l*(nvl(ICMS.t$iest$l-ICMS.t$sest$l,0)/100) +
+      cisli941f.t$fght$l*(nvl(ICMS.t$ppbr$l,0)/100)
+    end
+  end as VL_ICMS_FRETE,
+
+    CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN
+    nvl(ICMS.t$amnt$l, 0)    -cisli941f.t$iprt$l*(nvl(ICMS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100)
+    ELSE 0 END
+  AS VL_ICMS_OUTROS,
+  nvl(COFINS.t$amnt$l,0) VL_COFINS,
+  (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(COFINS.t$rate$l,0)/100) VL_COFINS_PRODUTO, -- cisli941f.t$iprt$l
+  cisli941f.t$fght$l*(nvl(COFINS.t$rate$l,0)/100) VL_COFINS_FRETE,
+    CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN
     nvl(COFINS.t$amnt$l, 0) -cisli941f.t$iprt$l*(nvl(COFINS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(COFINS.t$rate$l,0)/100)
-    ELSE 0 END	VL_COFINS_OUTROS,	
-    cisli941f.t$iprt$l*(nvl(PIS.t$rate$l,0)/100) VL_PIS_PRODUTO,	
-    cisli941f.t$fght$l*(nvl(PIS.t$rate$l,0)/100) VL_PIS_FRETE,	
-    CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN	nvl(PIS.t$amnt$l, 0) -cisli941f.t$iprt$l*(nvl(PIS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(PIS.t$rate$l,0)/100)
-    ELSE 0 END 
-  AS 	VL_PIS_OUTROS, 
-  nvl(CSLL.t$amnt$l,0) VL_CSLL,	
-  cisli941f.t$iprt$l*(nvl(CSLL.t$rate$l,0)/100) VL_CSLL_PRODUTO,	
-  cisli941f.t$fght$l*(nvl(CSLL.t$rate$l,0)/100) VL_CSLL_FRETE,	
-    CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN 
+    ELSE 0 END  VL_COFINS_OUTROS,
+    (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(PIS.t$rate$l,0)/100) VL_PIS_PRODUTO,  -- cisli941f.t$iprt$l
+    cisli941f.t$fght$l*(nvl(PIS.t$rate$l,0)/100) VL_PIS_FRETE,
+    CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN  nvl(PIS.t$amnt$l, 0) -cisli941f.t$iprt$l*(nvl(PIS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(PIS.t$rate$l,0)/100)
+    ELSE 0 END
+  AS   VL_PIS_OUTROS,
+  nvl(CSLL.t$amnt$l,0) VL_CSLL,
+  (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(CSLL.t$rate$l,0)/100) VL_CSLL_PRODUTO,
+  cisli941f.t$fght$l*(nvl(CSLL.t$rate$l,0)/100) VL_CSLL_FRETE,
+    CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 THEN
     nvl(CSLL.t$amnt$l, 0) -cisli941f.t$iprt$l*(nvl(CSLL.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(CSLL.t$rate$l,0)/100)
-    ELSE 0 END	VL_CSLL_OUTROS, 
+    ELSE 0 END  VL_CSLL_OUTROS,
     cisli941f.t$tldm$l VL_DESCONTO_INCONDICIONAL,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
   AS DT_PEDIDO,
   znsls400.t$idca$c CD_CANAL,
   endfat.t$ccit CD_CIDADE_FATURA,
@@ -163,32 +188,32 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
        and b.t$seqn=A.T$SEQN
        and b.T$INWP=A.T$INWP
        and a.t$orno=tdsls401.t$orno
-       and a.t$pono=tdsls401.t$pono),0) 
+       and a.t$pono=tdsls401.t$pono),0)
   AS VL_CMV,
   znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
   ' ' CD_MODULO_GERENCIAL, -- *** AGUARDANDO DUVIDAS
     CASE WHEN instr(cisli941f.t$ccfo$l,'-')=0 THEN cisli941f.t$ccfo$l
                                               ELSE regexp_replace(substr(cisli941f.t$ccfo$l,0,instr(cisli941f.t$ccfo$l,'-')-1), '[^0-9]', '')
-  END	CD_NATUREZA_OPERACAO_ITEM,	
+  END  CD_NATUREZA_OPERACAO_ITEM,
     CASE WHEN instr(cisli941f.t$ccfo$l,'-')=0 THEN cisli941f.t$opor$l
                                               ELSE regexp_replace(substr(cisli941f.t$ccfo$l,instr(cisli941f.t$ccfo$l,'-')+1,3), '[^0-9]', '')
-  END	SQ_NATUREZA_OPERACAO_ITEM,	
-    CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END 
+  END  SQ_NATUREZA_OPERACAO_ITEM,
+    CASE WHEN znsls400.t$cven$c=100 THEN NULL ELSE znsls400.t$cven$c END
   AS CD_VENDEDOR,
-  nvl(ICMS.t$fbtx$l,0) VL_BASE_ICMS,	
+  nvl(ICMS.t$fbtx$l,0) VL_BASE_ICMS,
   Nvl((SELECT cisli943.t$base$l from baandb.tcisli943601 cisli943
        WHERE cisli943.t$fire$l=cisli941f.t$fire$l
        AND cisli943.t$line$l=cisli941f.t$line$l
        AND cisli943.t$brty$l=3),0) VL_BASE_IPI,
        CASE WHEN cisli940.t$fdty$l=16 THEN    --fatura triangular
-            nvl((select t.t$suno from baandb.ttcmcs080601 t where t.t$cfrw=SLI940_REM.t$cfrw$l and rownum=1),' ') 
+            nvl((select t.t$suno from baandb.ttcmcs080601 t where t.t$cfrw=SLI940_REM.t$cfrw$l and rownum=1),' ')
        ELSE
-            nvl((select t.t$suno from baandb.ttcmcs080601 t where t.t$cfrw=cisli940.t$cfrw$l and rownum=1),' ') 
+            nvl((select t.t$suno from baandb.ttcmcs080601 t where t.t$cfrw=cisli940.t$cfrw$l and rownum=1),' ')
        END
   AS CD_TRANSPORTADORA, --#FAF.063.n
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
   AS DT_ENTREGA,
-    (Select sum(znfmd630.t$qvol$c) From baandb.tznfmd630601 znfmd630 WHERE znfmd630.t$fire$c=cisli941f.t$fire$l and rownum=1) 
+    (Select sum(znfmd630.t$qvol$c) From baandb.tznfmd630601 znfmd630 WHERE znfmd630.t$fire$c=cisli941f.t$fire$l and rownum=1)
   AS QT_VOLUME,
   cisli940.t$gwgt$l VL_PESO_BRUTO,
   cisli940.t$nwgt$l VL_PESO_LIQUIDO,
@@ -197,28 +222,28 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
   znsls400.t$idli$c NR_LISTA_CASAMENTO,
     (SELECT tcemm124.t$grid FROM baandb.ttcemm124601 tcemm124
      WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
-    AND tcemm124.t$loco=601 AND rownum=1) 
+    AND tcemm124.t$loco=601 AND rownum=1)
   AS CD_UNIDADE_EMPRESARIAL,
     (select CASE WHEN regexp_replace(e.t$fovn$l, '[^0-9]', '') IS NULL
             THEN '00000000000000'
             WHEN LENGTH(regexp_replace(e.t$fovn$l, '[^0-9]', ''))<11
             THEN '00000000000000'
-            ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END 
-            from baandb.ttccom130601 e where e.t$cadr=cisli940.t$stoa$l and rownum=1) 
+            ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END
+            from baandb.ttccom130601 e where e.t$cadr=cisli940.t$stoa$l and rownum=1)
   AS NR_CNPJ_CPF_ENTREGA,
-    (select e.t$ftyp$l from baandb.ttccom130601 e where e.t$cadr=cisli940.t$stoa$l and rownum=1) 
+    (select e.t$ftyp$l from baandb.ttccom130601 e where e.t$cadr=cisli940.t$stoa$l and rownum=1)
   AS CD_TIPO_CLIENTE_ENTREGA,
     (select CASE WHEN regexp_replace(e.t$fovn$l, '[^0-9]', '') IS NULL
             THEN '00000000000000'
             WHEN LENGTH(regexp_replace(e.t$fovn$l, '[^0-9]', ''))<11
             THEN '00000000000000'
-            ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END 
-            from baandb.ttccom130601 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) 
+            ELSE regexp_replace(e.t$fovn$l, '[^0-9]', '') END
+            from baandb.ttccom130601 e where e.t$cadr=cisli940.t$itoa$l and rownum=1)
   AS NR_CNPJ_CPF_FATURA,
-    (select e.t$ftyp$l from baandb.ttccom130601 e where e.t$cadr=cisli940.t$itoa$l and rownum=1) 
+    (select e.t$ftyp$l from baandb.ttccom130601 e where e.t$cadr=cisli940.t$itoa$l and rownum=1)
   AS CD_TIPO_CLIENTE_FATURA,
   cisli941f.t$fire$l NR_REFERENCIA_FISCAL,
-  cisli940.t$nfes$l CD_STATUS_SEFAZ,	
+  cisli940.t$nfes$l CD_STATUS_SEFAZ,
     trunc(case when cisli941.t$item$l not in (select a.t$itjl$c
                                               from baandb.tznsls000601 a
                                               where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b)
@@ -236,27 +261,41 @@ ELSE (	SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm03
     where c.t$fire$l=cisli941.t$fire$l
     and c.t$item$l=(select a.t$itjl$c
     from baandb.tznsls000601 a
-    where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))),0)/ (cisli941.t$gamt$l/cisli940.t$gamt$l)
+    where a.t$indt$c=(select min(b.t$indt$c) from baandb.tznsls000601 b))),0)* (cisli941.t$gamt$l/cisli940.t$gamt$l)
     else 0 end
-    else 0 end,2) 
+    else 0 end,2)
   AS VL_JUROS,
-    CASE WHEN cisli940.t$gamt$l!=0 THEN 
+    CASE WHEN cisli940.t$gamt$l!=0 THEN
     case when cisli940.t$gamt$l!=0 then
     TRUNC(znsls402.t$vlja$c*(cisli941.t$gamt$l/cisli940.t$gamt$l) ,2)
     else 0 end
-    ELSE znsls402.t$vlja$c END 
-  AS VL_JUROS_ADMINISTRADORA,	
+    ELSE znsls402.t$vlja$c END
+  AS VL_JUROS_ADMINISTRADORA,
     CASE WHEN znsls401.t$igar$c=0 THEN ltrim(rtrim(tdsls401.t$item))
-    ELSE TO_CHAR(znsls401.t$igar$c) END 
-  AS CD_PRODUTO,	
+    ELSE TO_CHAR(znsls401.t$igar$c) END
+  AS CD_PRODUTO,
     CASE WHEN (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16) then cisli941f.t$refr$l
-    ELSE NULL END 
-  AS	NR_REFERENCIA_FISCAL_FATURA,
+    ELSE NULL END
+  AS  NR_REFERENCIA_FISCAL_FATURA,
     CASE WHEN (cisli940.t$fdty$l=15 or cisli940.t$fdty$l=16) then cisli941f.t$rfdl$l
-    ELSE NULL END 
-  AS	NR_ITEM_NF_FATURA,	
-  tdsls400.t$sotp CD_TIPO_ORDEM_VENDA 
-    
+    ELSE NULL END
+  AS  NR_ITEM_NF_FATURA,
+  tdsls400.t$sotp CD_TIPO_ORDEM_VENDA/*,
+
+  nvl(ICMS.t$vest$l, 0) AS VL_ICMS_DESTINO_NOTA,
+  nvl(ICMS.t$vpbr$l, 0) AS VL_ICMS_FUNDO_NOTA,
+  nvl(ICMS.t$oest$l, 0) AS VL_ICMS_ORIGEM_NOTA,
+  nvl(ICMS.t$amnt$l, 0) as VL_ICMS_INTERESTADUAL_NOTA,
+
+  (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$rate$l,0)/100) AS VL_ICMS_INTERESTADUAL_PROD,
+  (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$iest$l-ICMS.t$sest$l,0)/100) AS VL_ICMS_DIF_PROD,
+  (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$ppbr$l,0)/100) AS VL_ICMS_FUNDO_PROD,
+
+  cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100) as VL_ICMS_INTERESTADUAL_FRETE,
+  cisli941f.t$fght$l*(nvl(ICMS.t$iest$l-ICMS.t$sest$l,0)/100) VL_ICMS_DIF_FRETE,
+  cisli941f.t$fght$l*(nvl(ICMS.t$ppbr$l,0)/100) AS VL_ICMS_FUNDO_FRETE
+ */
+
 FROM baandb.tcisli940601 cisli940
 
 INNER JOIN baandb.tcisli941601 cisli941f
@@ -264,40 +303,40 @@ INNER JOIN baandb.tcisli941601 cisli941f
 
 INNER JOIN baandb.tcisli941601 cisli941
         ON (   (cisli941.T$fire$L =  cisli941f.T$REFR$L and (cisli940.t$fdty$l = 15 or cisli940.t$fdty$l = 16))
-            or (cisli941.T$fire$L =  cisli941f.T$fire$L) ) 
+            or (cisli941.T$fire$L =  cisli941f.T$fire$L) )
        AND (    (cisli941.T$line$L =  cisli941f.T$rfdl$L and (cisli940.t$fdty$l = 15 or cisli940.t$fdty$l = 16))
-             or (cisli941.T$line$L =  cisli941f.T$line$l) ) 
+             or (cisli941.T$line$L =  cisli941f.T$line$l) )
 
 INNER JOIN baandb.tcisli245601 cisli245
         ON cisli245.t$fire$l = cisli941.t$fire$l
        AND cisli245.t$line$l = cisli941.t$line$l
 
- LEFT JOIN baandb.tcisli943601 ICMS 
-        ON ICMS.t$fire$l = cisli941f.t$fire$l 
+ LEFT JOIN baandb.tcisli943601 ICMS
+        ON ICMS.t$fire$l = cisli941f.t$fire$l
        AND ICMS.t$line$l = cisli941f.t$line$l
        AND ICMS.t$brty$l = 1
-   
- LEFT JOIN baandb.tcisli943601 COFINS 
-        ON COFINS.t$fire$l = cisli941f.t$fire$l 
+
+ LEFT JOIN baandb.tcisli943601 COFINS
+        ON COFINS.t$fire$l = cisli941f.t$fire$l
        AND COFINS.t$line$l = cisli941f.t$line$l
        AND COFINS.t$brty$l = 6
-   
- LEFT JOIN baandb.tcisli943601 PIS 
-        ON PIS.t$fire$l = cisli941f.t$fire$l 
+
+ LEFT JOIN baandb.tcisli943601 PIS
+        ON PIS.t$fire$l = cisli941f.t$fire$l
        AND PIS.t$line$l = cisli941f.t$line$l
        AND PIS.t$brty$l = 5
-   
- LEFT JOIN baandb.tcisli943601 CSLL 
-        ON CSLL.t$fire$l = cisli941f.t$fire$l 
+
+ LEFT JOIN baandb.tcisli943601 CSLL
+        ON CSLL.t$fire$l = cisli941f.t$fire$l
        AND CSLL.t$line$l = cisli941f.t$line$l
        AND CSLL.t$brty$l = 13
-   
+
  LEFT JOIN ( select a.t$cfrw$l,
                     a.t$fire$l
              from   baandb.tcisli940601 a
              where  a.t$fdty$l = 15 )  SLI940_REM        --REMESSA TRIANGULAR
        ON  SLI940_REM.t$fire$l = cisli941f.t$refr$l
-     
+
 INNER JOIN baandb.ttdsls401601 tdsls401
         ON tdsls401.t$orno = cisli245.t$slso
        AND tdsls401.t$pono = cisli245.t$pono
@@ -319,7 +358,7 @@ INNER JOIN baandb.tznsls400601 znsls400
        AND znsls400.t$uneg$c = znsls401.t$uneg$c
        AND znsls400.t$pecl$c = znsls401.t$pecl$c
        AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
-   
+
  LEFT JOIN ( select znsls402q.t$ncia$c,
                     znsls402q.t$uneg$c,
                     znsls402q.t$pecl$c,
@@ -331,27 +370,27 @@ INNER JOIN baandb.tznsls400601 znsls400
                     znsls402q.t$uneg$c,
                     znsls402q.t$pecl$c,
                     znsls402q.t$sqpd$c) znsls402
-        ON znsls402.t$ncia$c = znsls401.t$ncia$c 
+        ON znsls402.t$ncia$c = znsls401.t$ncia$c
        AND znsls402.t$uneg$c = znsls401.t$uneg$c
        AND znsls402.t$pecl$c = znsls401.t$pecl$c
        AND znsls402.t$sqpd$c = znsls401.t$sqpd$c
-      
-INNER JOIN baandb.ttdsls400601 tdsls400
-        ON tdsls400.t$orno = tdsls401.t$orno 
 
- LEFT JOIN ( select c245.T$SLSO, 
-                    c940.T$DOCN$L NOTA, 
+INNER JOIN baandb.ttdsls400601 tdsls400
+        ON tdsls400.t$orno = tdsls401.t$orno
+
+ LEFT JOIN ( select c245.T$SLSO,
+                    c940.T$DOCN$L NOTA,
                     c940.t$seri$l SERIE
                from baandb.tcisli245601 c245
-                    inner join baandb.tcisli941601 c941 
-                            on c941.t$fire$l = c245.T$FIRE$L   
+                    inner join baandb.tcisli941601 c941
+                            on c941.t$fire$l = c245.T$FIRE$L
                     inner join baandb.tcisli940601 c940
                             on c940.t$fire$l = c941.T$REFR$L
-                    group by  c245.T$SLSO, 
-                              c940.T$DOCN$L, 
-                              c940.t$seri$l ) consold 
+                    group by  c245.T$SLSO,
+                              c940.T$DOCN$L,
+                              c940.t$seri$l ) consold
         ON consold.T$SLSO = tdsls400.t$orno
-  
+
 INNER JOIN baandb.ttccom130601 endfat
         ON endfat.t$cadr = cisli940.t$itoa$l
 
@@ -362,10 +401,15 @@ INNER JOIN baandb.ttcibd001601 tcibd001
         ON tcibd001.t$item = cisli941.t$item$l
 
 INNER JOIN baandb.ttdsls094301 tdsls094    --tabela compartilhada
-        ON tdsls094.t$sotp = tdsls400.t$sotp 
+        ON tdsls094.t$sotp = tdsls400.t$sotp
 
 WHERE ltrim(rtrim(tdsls401.t$item)) = ltrim(rtrim(znsls401.t$item$c)) -- Origem OV
-  AND cisli940.t$stat$l IN (5,6)   --Impresso, Lançado  
+  AND cisli940.t$stat$l IN (5,6)   --Impresso, Lançado
   AND cisli940.t$nfes$l IN (1,2,5) --Nenhum, Transmitida, Processada
   AND tdsls401.t$sqnb = 0
   AND cisli940.t$fdty$l != 14
+  /*
+and   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+  AT time zone 'America/Sao_Paulo') AS DATE) >= trunc(sysdate-15)
+  */
+ORDER BY cisli941f.t$fire$l DESC
