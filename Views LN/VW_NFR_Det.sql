@@ -218,7 +218,7 @@
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VL_PERCENTUAL_REDUTOR_ICMS,
   tdrec941.t$tamt$l VL_TOTAL_ITEM_NF,
-  tdrec941.t$ikit$c CD_ITEM_KIT,
+  rtrim(ltrim(tdrec941.t$ikit$c)) CD_ITEM_KIT,
   tdrec941.T$OPFC$L CD_NATUREZA_OPERACAO,
   tdrec941.t$opor$l SQ_NATUREZA_OPERACAO,
   (SELECT tdrec942.t$base$l FROM baandb.ttdrec942201 tdrec942
