@@ -414,3 +414,4 @@ FROM baandb.tznsls401201 znsls401dev								-- Pedido de devolução
         
 where znsls401dev.t$qtve$c < 0 
 and   znsls401dev.t$idor$c = 'TD'
+and   tdrec940rec.t$stat$l IN (4,5)
