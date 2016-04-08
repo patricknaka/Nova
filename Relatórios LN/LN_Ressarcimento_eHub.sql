@@ -1,4 +1,4 @@
-SELECT DISTINCT
+SELECT
 
       znsls400dev.t$idca$c                                  CANAL,
       
@@ -65,7 +65,12 @@ SELECT DISTINCT
       cisli940orig.t$date$l                                  DT_EMISSAO_NF_VENDA,
       cisli940dev.t$date$l                                   DT_NF_COLETA,
 --                                                             STATUS_COLETA,  --NAO ENCONTRADO
-      znint002.t$desc$c                                      BANDEIRA                    
+      znint002.t$desc$c                                      BANDEIRA,
+      case when trunc(znsls409.t$fdat$c) < TO_DATE('01-01-1980','DD-MM-YYYY') then
+          null
+      else
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE)   end   DATA_FORCADO
               
   FROM  BAANDB.tznsls401201 znsls401dev
   
@@ -197,17 +202,29 @@ SELECT DISTINCT
 
  LEFT JOIN baandb.tznsls002201 znsls002
         ON znsls002.t$tpen$c = znsls401dev.t$itpe$c
+
+ INNER JOIN ( select a.t$ncia$c,
+                     a.t$uneg$c,
+                     a.t$pecl$c,
+                     a.t$sqpd$c,
+                     a.t$entr$c,
+                     a.t$lbrd$c,
+                     a.t$fdat$c
+              from baandb.tznsls409201 a
+              group by a.t$ncia$c,
+                       a.t$uneg$c,
+                       a.t$pecl$c,
+                       a.t$sqpd$c,
+                       a.t$entr$c,
+                       a.t$lbrd$c,
+                       a.t$fdat$c ) znsls409
+         ON znsls409.t$ncia$c = znsls401dev.t$ncia$c
+        AND znsls409.t$uneg$c = znsls401dev.t$uneg$c
+        AND znsls409.t$pecl$c = znsls401dev.t$pecl$c
+        AND znsls409.t$sqpd$c = znsls401dev.t$sqpd$c
+        AND znsls409.t$entr$c = znsls401dev.t$entr$c
         
   WHERE znsls401dev.t$idor$c = 'TD'
     AND znsls401dev.t$qtve$c < 0
     AND znsls401orig.t$idor$c = 'LJ'
-    AND exists ( select znsls409.t$lbrd$c 
-                 from   baandb.tznsls409201 znsls409
-                 where znsls409.t$ncia$c = znsls401dev.t$ncia$c
-                   and znsls409.t$uneg$c = znsls401dev.t$uneg$c
-                   and znsls409.t$pecl$c = znsls401dev.t$pecl$c
-                   and znsls409.t$sqpd$c = znsls401dev.t$sqpd$c
-                   and znsls409.t$entr$c = znsls401dev.t$entr$c
-                   and znsls409.t$dseq$c = znsls401dev.t$sequ$c
-                   and znsls409.t$lbrd$c  =  1)
-
+    AND znsls409.t$lbrd$c = 1        --Forcado = Sim
