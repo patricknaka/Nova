@@ -8,6 +8,9 @@ SELECT
                                        DATA_LIMITE,
 
     ORDERS.ORDERKEY                    PEDIDO,
+    
+    ZNSLS420.PED_SITE			PEDIDO_SITE,
+    ZNSLS420.OP 				ORDEM_DE_PRODUCAO,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -190,6 +193,25 @@ INNER JOIN WMSADMIN.PL_DB
                     znsls401.t$eftr$c ) SLS400
       ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
      AND SLS400.t$item$c = ORDERDETAIL.SKU
+     
+ LEFT JOIN ( 	select 	ZNSLS004.t$ORNO$C,
+					SLS420.t$PECL$C			PED_SITE,
+					SLS420.t$PDNO$C		OP
+			from 	BAANDB.TZNSLS004601@pln01 ZNSLS004 
+			inner join BAANDB.TZNSLS400601@pln01 sls400
+				 on  	sls400.T$NCIA$C	= ZNSLS004.T$NCIA$C
+				and 	sls400.T$UNEG$C	= ZNSLS004.T$UNEG$C
+				and	sls400.T$PECL$C	=  ZNSLS004.T$PECL$C 
+				and 	sls400.T$SQPD$C	= ZNSLS004.T$SQPD$C
+		                           
+			inner join 	BAANDB.TZNSLS420601@pln01 SLS420
+				on 	SLS420.T$NCIA$C	= ZNSLS004.T$NCIA$C
+				and	SLS420.T$UNEG$C	= ZNSLS004.T$UNEG$C
+				and 	SLS420.T$PECL$C	= ZNSLS004.T$PECL$C
+				and 	SLS420.T$SQPD$C	= ZNSLS004.T$SQPD$C
+				and 	SLS420.t$ENTR$C	= ZNSLS004.t$ENTR$C
+				and 	SLS420.t$SEQU$C	= ZNSLS004.t$SEQU$C ) ZNSLS420
+	ON 	ZNSLS420.T$ORNO$C 	= ORDERS.REFERENCEDOCUMENT
 
  LEFT JOIN ( select clkp.description,
                     clkp.code
