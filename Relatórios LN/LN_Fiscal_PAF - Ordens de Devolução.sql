@@ -1,28 +1,29 @@
 SELECT
 	301																						CIA,
-	ZNFMD001.T$FILI$C																		FILIAL,
+	ZNFMD001.T$FILI$C																			FILIAL,
 	
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$ODAT, 'DD-MON-YYYY HH24:MI:SS'), 
-			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)	DT_ORDEM,
+			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)						DT_ORDEM,
 	
 	TDSLS400.T$ORNO																			ORDEM_DEVOLUCAO,
 	TDSLS400.T$SOTP																			TIPO_ORDEM,
 	TDSLS094.T$DSCA																			DESCR_ORDEM,
 	D_HDST.DSC																				STATUS_ORDEM,
-	CISLI940_ORG.T$DOCN$L																	NF_VENDA,
-	CISLI940_ORG.T$SERI$L																	SERIE_VENDA,
-	CISLI940_ORG.T$DATE$L																	DT_EMISS_VENDA,
-	TCCOM130C.T$FOVN$L																		CPF_CNPJ,
-	TCCOM130C.T$NAMA																		NOME_PARCEIRO,
+	CISLI940_ORG.T$DOCN$L																		NF_VENDA,
+	CISLI940_ORG.T$SERI$L																		SERIE_VENDA,
+	CISLI940_ORG.T$DATE$L																		DT_EMISS_VENDA,
+	TCCOM130C.T$FOVN$L																			CPF_CNPJ,
+	TCCOM130C.T$NAMA																			NOME_PARCEIRO,
 
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940.T$DATE$L, 'DD-MON-YYYY HH24:MI:SS'), 
 			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)	DT_EMISSAO_DEV,
 	
-	CISLI940.T$DOCN$L																		NFD,
-	CISLI940.T$SERI$L																		SERIE_ND,
+	CISLI940.T$DOCN$L																			NFD,
+	CISLI940.T$SERI$L																			SERIE_ND,
 	D_STAT.DSC																				STATUS_NFD,
-	TDREC940.T$FIRE$L																		REF_FISCAL_REC,
-	TDREC940.t$DATE$L																		DT_REC_FISCAL,
+	TDREC940.T$FIRE$L																			REF_FISCAL_REC,
+	TDREC941.T$DVRF$C																			REF_FISCAL_DEV,
+	TDREC940.t$DATE$L																			DT_REC_FISCAL,
 	D_RSTA.DSC																				STATUS_REC
 	
 
@@ -74,7 +75,7 @@ LEFT JOIN (	SELECT	DISTINCT
 		
 LEFT JOIN	BAANDB.TTDREC940301	TDREC940
 		ON	TDREC940.T$FIRE$L	=	TDREC941.T$FIRE$L
-		
+
 LEFT JOIN (	SELECT d.t$cnst COD,
 				   l.t$desc DSC
 			FROM baandb.tttadv401000 d,
@@ -147,4 +148,3 @@ LEFT JOIN (	SELECT d.t$cnst COD,
 WHERE
 		TDSLS094.T$RETO	!=	2
 		
---AND TDSLS400.T$ORNO = '010035730'
