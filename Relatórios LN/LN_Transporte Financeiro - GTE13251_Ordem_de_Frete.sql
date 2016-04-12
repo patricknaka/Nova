@@ -31,19 +31,20 @@ select Q1.DATA_EMISSAO,
         Q1.CFO_ENTREGA,
         DESC_CFO_ENTREGA,
 
-
-
-
         Q1.VLR_ICMS,
-        sum(Q1.PESO_VOLUME)              FRETE_TOTAL
-
+        sum(Q1.PESO_VOLUME)              FRETE_TOTAL,
+        
+        Q1.PESO_FRETE,
+        Q1.ADV,
+        Q1.DEMAIS_ADICIONAIS,
+        Q1.GRIS,
+        Q1.PEDAGIO
   
  from ( SELECT 
           DISTINCT
             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$date$c,
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') AS DATE)
-
                                            DATA_EMISSAO,
             znfmd630.t$fili$c              FILIAL,
             znfmd630.t$pecl$c              ENTREGA,
@@ -51,27 +52,10 @@ select Q1.DATA_EMISSAO,
             znfmd060.t$cdes$c              DESCR_CONTRATO, 
             znfmd630.t$docn$c              NOTA,
             znfmd630.t$seri$c              SERIE,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             znfmd610.t$wght$c              PESO,
             znfmd610.t$pcub$c              VOLUME_M3,
 
             nvl( ( select sum(wmd.t$hght   *
-
-
-
                               wmd.t$wdth   *
                               wmd.t$dpth   *
                               sli.t$dqua$l )
@@ -79,8 +63,6 @@ select Q1.DATA_EMISSAO,
                           baandb.twhwmd400301 wmd
                     where sli.t$fire$l = cisli940.t$fire$l
                       and wmd.t$item = sli.t$item$l), 0 )
-
-
                                            VOLUME_CUBICO,
        
             cisli940.t$amnt$l              VLR_TOTAL_NF,
@@ -91,7 +73,8 @@ select Q1.DATA_EMISSAO,
             znfmd068.t$adva$c *
             ( cisli940.t$amnt$l / 100 )    AD_VALOREM,
             znfmd068.t$peda$c              PEDAGIO,
-            NVL(znfmd660.valor_adic,0)     ADICIONAIS,
+            NVL(znfmd660.valor_adic,0)     DEMAIS_ADICIONAIS,
+            NVL(GER_RISCO.valor_adic,0)    GRIS,
             TCCOM130T.T$FOVN$L             CNPJ_TRANS,
             tcmcs080.t$seak                APELIDO,
             znfmd630.t$ncte$c              ID_CONHECIMENTO,
@@ -148,7 +131,10 @@ select Q1.DATA_EMISSAO,
             cisli940.t$doty$l              CODE_TIPO_DOC,
             TIPO_DOC.                      DESCR_TIPO_DOC,
             cisli940.t$ccfo$l              CFO_ENTREGA,
-            tcmcs940.t$dsca$l              DESC_CFO_ENTREGA 
+            tcmcs940.t$dsca$l              DESC_CFO_ENTREGA,
+            znfmd630.t$frpe$c              PESO_FRETE,
+            znfmd630.t$advc$c              ADV,
+            znfmd630.t$pedc$c              PEDAGIO_CALCULADO
   
        FROM BAANDB.tznfmd630301 znfmd630
 	   
@@ -158,120 +144,24 @@ select Q1.DATA_EMISSAO,
         AND znfmd610.t$ngai$c = znfmd630.t$ngai$c
         AND znfmd610.t$etiq$c = znfmd630.t$etiq$c 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  INNER JOIN BAANDB.tcisli942301 cisli943
          ON cisli943.t$fire$l = znfmd630.t$fire$c
         AND cisli943.t$brty$l = 1 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  INNER JOIN BAANDB.ttcmcs080301 tcmcs080
          ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
   
  INNER JOIN BAANDB.TTCCOM130301 TCCOM130T
-
          ON TCCOM130T.T$CADR = TCMCS080.T$CADR$L
   
   LEFT JOIN BAANDB.tcisli940301 cisli940
          ON cisli940.t$fire$l = znfmd630.t$fire$c
      
-
-
   LEFT JOIN BAANDB.tznfmd060301 znfmd060
          ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
         AND znfmd060.t$cono$c = znfmd630.t$cono$c
      
-
-
-
-
-
-
-
   LEFT JOIN ( select a.t$adva$c,
-
-
-
                      a.t$peda$c,
                      a.t$cfrw$c,
                      a.t$cono$c,
@@ -279,96 +169,19 @@ select Q1.DATA_EMISSAO,
                 from baandb.tznfmd068301 a
                where a.t$ativ$c = 1
             group by a.t$cfrw$c,
-
-
                      a.t$cono$c,
                      a.t$adva$c,
                      a.t$peda$c ) znfmd068
          ON znfmd068.t$cfrw$c = znfmd630.t$cfrw$c
         AND znfmd068.t$cono$c = znfmd630.t$cono$c
-
       
   LEFT JOIN BAANDB.ttcmcs940301 tcmcs940
          ON tcmcs940.t$ofso$l = cisli940.t$ccfo$l
-
           
   LEFT JOIN BAANDB.ttccom130301 tccom130
          ON tccom130.t$cadr = cisli940.t$stoa$l
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
   LEFT JOIN ( select l.t$desc DESCR_TIPO_DOC_FIS,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                      d.t$cnst
                 from baandb.tttadv401000 d,
                      baandb.tttadv140000 l
@@ -388,10 +201,6 @@ select Q1.DATA_EMISSAO,
                  and rpad(l.t$vers,4) ||
                      rpad(l.t$rele,2) ||
                      rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-
-
-
-
                                                  rpad(l1.t$rele,2) ||
                                                  rpad(l1.t$cust,4) )
                                             from baandb.tttadv140000 l1
@@ -400,11 +209,6 @@ select Q1.DATA_EMISSAO,
                                              and l1.t$cpac = l.t$cpac ) ) TIPO_DOC_FIS
          ON TIPO_DOC_FIS.t$cnst = cisli940.t$fdty$l
     
-
-
-
-
-
   LEFT JOIN ( select l.t$desc DESCR_TIPO_DOC,
                      d.t$cnst
                 from baandb.tttadv401000 d,
@@ -440,46 +244,36 @@ select Q1.DATA_EMISSAO,
                      a.t$etiq$c,
                      sum(a.t$vafr$c) valor_adic
                 from baandb.tznfmd660301 a
+                where substr(a.t$dsca$c,1,4) != 'GRIS'
             group by a.t$cfrw$c,
                      a.t$cono$c,
                      a.t$fili$c,
                      a.t$ngai$c,
-                     a.t$etiq$c ) znfmd660
+                     a.t$etiq$c) znfmd660
          ON ZNFMD660.t$cfrw$c = ZNFMD630.t$cfrw$c
         AND ZNFMD660.t$cono$c = ZNFMD630.t$cono$c
         AND ZNFMD660.t$fili$c = ZNFMD630.t$fili$c
         AND ZNFMD660.t$ngai$c = ZNFMD630.t$ngai$c
         AND ZNFMD660.t$etiq$c = ZNFMD630.t$etiq$c 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  LEFT JOIN ( select a.t$cfrw$c,
+                     a.t$cono$c,
+                     a.t$fili$c,
+                     a.t$ngai$c,
+                     a.t$etiq$c,
+                     sum(a.t$vafr$c) valor_adic
+                from baandb.tznfmd660301 a
+                where substr(a.t$dsca$c,1,4) = 'GRIS'
+            group by a.t$cfrw$c,
+                     a.t$cono$c,
+                     a.t$fili$c,
+                     a.t$ngai$c,
+                     a.t$etiq$c) GER_RISCO
+         ON GER_RISCO.t$cfrw$c = ZNFMD630.t$cfrw$c
+        AND GER_RISCO.t$cono$c = ZNFMD630.t$cono$c
+        AND GER_RISCO.t$fili$c = ZNFMD630.t$fili$c
+        AND GER_RISCO.t$ngai$c = ZNFMD630.t$ngai$c
+        AND GER_RISCO.t$etiq$c = ZNFMD630.t$etiq$c 
 
  WHERE ( select max(znfmd640.t$coci$c)
            from BAANDB.tznfmd640301 znfmd640
@@ -489,7 +283,6 @@ select Q1.DATA_EMISSAO,
 
  WHERE Q1.TIPO_NF IN (:TipoNF)
    AND TRUNC(Q1.DATA_EMISSAO)
-
       Between :DataDe
          And :DataAte
    AND ( (regexp_replace(Q1.CNPJ_TRANS, '[^0-9]', '')  like '%' || Trim(:CNPJ)  || '%' ) OR (Trim(:CNPJ) is null) )
@@ -523,4 +316,9 @@ select Q1.DATA_EMISSAO,
           Q1.CODE_TIPO_DOC,
           Q1.DESCR_TIPO_DOC,
           Q1.CFO_ENTREGA,
-          Q1.DESC_CFO_ENTREGA
+          Q1.DESC_CFO_ENTREGA,
+          Q1.PESO_FRETE,
+          Q1.ADV,
+          Q1.DEMAIS_ADICIONAIS,
+          Q1.GRIS,
+          Q1.PEDAGIO
