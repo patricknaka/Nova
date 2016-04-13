@@ -1,4 +1,4 @@
-﻿SELECT
+SELECT
   1 CD_CIA,
   CASE WHEN (SELECT tcemm030.t$euca FROM baandb.ttcemm124201 tcemm124, baandb.ttcemm030201 tcemm030
   WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
@@ -98,7 +98,7 @@
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) as numeric (12,2)) VL_BASE_ICMS_NAO_REDUTOR,  
 
-  (SELECT tdrec942.t$amni$l FROM baandb.ttdrec942201 tdrec942
+  (SELECT tdrec942.t$amnt$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=1) VL_ICMS_MERCADORIA,
@@ -123,7 +123,7 @@
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=6) VL_COFINS,
-  (SELECT tdrec942.t$amni$l FROM baandb.ttdrec942201 tdrec942
+  (SELECT tdrec942.t$amnt$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=6) VL_COFINS_MERCADORIA,
@@ -146,7 +146,7 @@
 		AND		tcibd001b.t$kitm>3
 		AND		tcibd001b.t$ctyp$l!=2
 		AND 	tdrec942.t$brty$l=6),0) VL_COFINS_OUTROS,									--#FAF.242.en
-  (SELECT tdrec942.t$amni$l FROM baandb.ttdrec942201 tdrec942
+  (SELECT tdrec942.t$amnt$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=5) VL_PIS_MERCADORIA,
@@ -187,7 +187,7 @@
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=13) VL_CSLL,
-  (SELECT tdrec942.t$amni$l FROM baandb.ttdrec942201 tdrec942
+  (SELECT tdrec942.t$amnt$l FROM baandb.ttdrec942201 tdrec942
   WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
   AND tdrec942.t$line$l=tdrec941.t$line$l
   AND tdrec942.t$brty$l=13) VL_CSLL_MERCADORIA,
