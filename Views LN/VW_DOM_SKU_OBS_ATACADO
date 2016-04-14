@@ -1,0 +1,16 @@
+CREATE OR REPLACE VIEW VW_DOM_SKU_OBS_ATACADO
+AS
+SELECT
+        cast(TRIM(A.T$ITEM) as int)          CD_ITEM,
+        A.T$DSCB$C              DS_ITEM,
+        CASE WHEN A.T$UATC$C=1
+          THEN 'SIM'
+          ELSE 'NÃO' END        IN_ATACADO,
+        CASE WHEN A.T$OBSE$C = ' ' then null else  A.T$OBSE$C END DS_OBSERVACAO,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$lmdt, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE) DT_ULT_ATUALIZACAO
+FROM
+        BAANDB.TTCIBD001201 A
+where A.t$kitm IN (1,2,4) 
+and A.t$ctyp$l = 1
+and LENGTH(TRIM(TRANSLATE(A.T$ITEM, ' +-.0123456789', ' '))) is null

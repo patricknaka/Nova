@@ -9,7 +9,7 @@ SELECT
 		  13 AS CD_CIA, --znsls400.t$ncia$c 
       znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
       tdsls401.t$orno NR_ORDEM,
-		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_COMPRA,			
 --		  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
 --        AT time zone 'America/Sao_Paulo') AS DATE) DT_ENTREGA,

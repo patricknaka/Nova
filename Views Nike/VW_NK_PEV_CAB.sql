@@ -1,4 +1,4 @@
-﻿SELECT  DISTINCT
+SELECT  DISTINCT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15) 
 --**********************************************************************************************************************************************************
 -- a tabela ttdsls094201 é compartilhada com a 201
@@ -9,7 +9,7 @@
         /*znsls400.t$ncia$c*/ 13 CD_CIA,
         tdsls400.t$orno NR_ORDEM,
         tdsls400.t$ofbp CD_CLIENTE,
-        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) DT_COMPRA,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) HR_COMPRA, -- * CAMPO DATA-HORA

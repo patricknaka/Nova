@@ -157,15 +157,6 @@ FROM       baandb.tznfmd630601  znfmd630
 INNER JOIN baandb.ttcmcs080601  tcmcs080
         ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
 
- LEFT JOIN baandb.ttdsls400601  tdsls400
-        ON tdsls400.t$orno = znfmd630.t$orno$c
-
- LEFT JOIN baandb.ttdsls401601  tdsls401
-        ON tdsls401.t$orno = tdsls400.t$orno
-
- LEFT JOIN baandb.ttccom130601  tccom130
-        ON tccom130.t$cadr = tdsls400.t$stad
-
  LEFT JOIN ( select a1.t$ncia$c,
                     a1.t$uneg$c,
                     a1.t$pecl$c,
@@ -186,6 +177,7 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
                     e.t$pecl$c,
                     e.t$sqpd$c,
                     e.t$entr$c,
+                    e.t$orno$c,
                     e.t$itpe$c,
                     e.t$obet$c,
                     e.t$pztr$c,
@@ -204,6 +196,7 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
                     e.t$pecl$c,
                     e.t$sqpd$c,
                     e.t$entr$c,
+                    e.t$orno$c,
                     e.t$itpe$c,
                     e.t$obet$c,
                     e.t$pztr$c,
@@ -214,6 +207,15 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
        AND znsls401.t$pecl$c = znsls004.t$pecl$c
        AND znsls401.t$sqpd$c = znsls004.t$sqpd$c
        AND znsls401.t$entr$c = znsls004.t$entr$c
+       
+ LEFT JOIN baandb.ttdsls400601 tdsls400
+        ON tdsls400.t$orno = znsls401.t$orno$c
+          
+ LEFT JOIN baandb.ttdsls401601  tdsls401
+        ON tdsls401.t$orno = tdsls400.t$orno       
+
+ LEFT JOIN baandb.ttccom130601  tccom130
+        ON tccom130.t$cadr = tdsls400.t$stad
 
  LEFT JOIN baandb.tznsls400601  znsls400
         ON znsls400.t$ncia$c = znsls401.t$ncia$c
@@ -482,15 +484,6 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 " INNER JOIN baandb.ttcmcs080" + Parameters!Compania.Value + "  tcmcs080  " &
 "         ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c  " &
 "  " &
-"  LEFT JOIN baandb.ttdsls400" + Parameters!Compania.Value + "  tdsls400  " &
-"         ON tdsls400.t$orno = znfmd630.t$orno$c  " &
-"  " &
-"  LEFT JOIN baandb.ttdsls401" + Parameters!Compania.Value + "  tdsls401  " &
-"         ON tdsls401.t$orno = tdsls400.t$orno  " &
-"  " &
-"  LEFT JOIN baandb.ttccom130" + Parameters!Compania.Value + "  tccom130  " &
-"         ON tccom130.t$cadr = tdsls400.t$stad  " &
-"  " &
 "  LEFT JOIN ( select a1.t$ncia$c,  " &
 "                     a1.t$uneg$c,  " &
 "                     a1.t$pecl$c,  " &
@@ -511,6 +504,7 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "                     e.t$pecl$c,  " &
 "                     e.t$sqpd$c,  " &
 "                     e.t$entr$c,  " &
+"                     e.t$orno$c,  " &
 "                     e.t$itpe$c,  " &
 "                     e.t$obet$c,  " &
 "                     e.t$pztr$c,  " &
@@ -529,6 +523,7 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "                     e.t$pecl$c,  " &
 "                     e.t$sqpd$c,  " &
 "                     e.t$entr$c,  " &
+"                     e.t$orno$c,  " &
 "                     e.t$itpe$c,  " &
 "                     e.t$obet$c,  " &
 "                     e.t$pztr$c,  " &
@@ -539,6 +534,15 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "        AND znsls401.t$pecl$c = znsls004.t$pecl$c  " &
 "        AND znsls401.t$sqpd$c = znsls004.t$sqpd$c  " &
 "        AND znsls401.t$entr$c = znsls004.t$entr$c  " &
+"  " &
+"  LEFT JOIN baandb.ttdsls400" + Parameters!Compania.Value + "  tdsls400  " &
+"         ON tdsls400.t$orno = znsls401.t$orno$c  " &
+"  " &
+"  LEFT JOIN baandb.ttdsls401" + Parameters!Compania.Value + "  tdsls401  " &
+"         ON tdsls401.t$orno = tdsls400.t$orno  " &
+"  " &
+"  LEFT JOIN baandb.ttccom130" + Parameters!Compania.Value + "  tccom130  " &
+"         ON tccom130.t$cadr = tdsls400.t$stad  " &
 "  " &
 "  LEFT JOIN baandb.tznsls400" + Parameters!Compania.Value + "  znsls400  " &
 "         ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &

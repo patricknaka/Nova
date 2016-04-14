@@ -28,7 +28,7 @@ SELECT
       AND a.t$item$l != b.t$itjl$c      --ITEM JUROS
       )                                                   QTDE_TOTAL,
     CISLI940.T$AMNT$L                                      VALOR_TOTAL,
-    REGEXP_REPLACE(TCCOM130_TRN.T$FOVN$L, '[^0-9]', '')    CGC,
+    REGEXP_REPLACE(NVL(TCCOM130_TRN.T$FOVN$L,TCCOM130_TRN_E.T$FOVN$L), '[^0-9]', '')    CGC,
     ''                                                    OBS,
     ''                                                    ENTRADA_SAIDA_ENCERRADA,
     ''                                                    ENTRADA_SAIDA_CANCELADA,
@@ -55,7 +55,12 @@ CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$SADT$L, 'DD-MON-YYYY HH24:MI:SS'),
 
 FROM  BAANDB.TCISLI940601  CISLI940
 INNER JOIN  BAANDB.TTCCOM130601  TCCOM130_ORG  ON  TCCOM130_ORG.T$CADR  =  CISLI940.T$SFRA$L
-INNER JOIN  BAANDB.TTCCOM130601 TCCOM130_TRN  ON  TCCOM130_TRN.T$CADR  =  CISLI940.T$ITOA$L
+
+LEFT JOIN  BAANDB.TTCCOM130601 TCCOM130_TRN  
+       ON  TCCOM130_TRN.T$CADR  =  CISLI940.T$ITOA$L
+
+LEFT JOIN  BAANDB.TTCCOM130601 TCCOM130_TRN_E 
+       ON  TCCOM130_TRN_E.T$CADR  =  CISLI940.T$IFBA$L
 
 LEFT JOIN baandb.ttcmcs940601 tcmcs940
        ON tcmcs940.t$ofso$l = cisli940.t$ccfo$l
