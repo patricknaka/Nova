@@ -139,7 +139,7 @@ LEFT JOIN (SELECT distinct znsls402.t$ncia$c
                         , znsls402.t$vlmr$c
           from baandb.tznsls402201 znsls402
           inner join baandb.tzncmg007201 zncmg007
-                  ON zncmg007.t$mpgt$c = znsls402.t$idmp$c 
+                  ON zncmg007.t$mpgs$c = znsls402.t$idmp$c 
                  and zncmg007.t$ctmp$c in (5,6)) znsls402_bol
                  
        ON znsls401.t$ncia$c = znsls402_bol.t$ncia$c
@@ -156,7 +156,7 @@ LEFT JOIN (SELECT distinct znsls402.t$ncia$c
                         , znsls402.t$vlmr$c
           from baandb.tznsls402201 znsls402
           inner join baandb.tzncmg007201 zncmg007
-                  ON zncmg007.t$mpgt$c = znsls402.t$idmp$c 
+                  ON zncmg007.t$mpgs$c = znsls402.t$idmp$c 
                  and zncmg007.t$ctmp$c = 1) znsls402_car
                  
        ON znsls401.t$ncia$c = znsls402_car.t$ncia$c
@@ -329,7 +329,7 @@ LEFT JOIN (SELECT distinct znsls402.t$ncia$c
                         , znsls402.t$vlmr$c
           from baandb.tznsls402201 znsls402
           inner join baandb.tzncmg007201 zncmg007
-                  ON zncmg007.t$mpgt$c = znsls402.t$idmp$c 
+                  ON zncmg007.t$mpgs$c = znsls402.t$idmp$c 
                  and zncmg007.t$ctmp$c in (5,6)) znsls402_bol
                  
        ON znsls401.t$ncia$c = znsls402_bol.t$ncia$c
@@ -346,7 +346,7 @@ LEFT JOIN (SELECT distinct znsls402.t$ncia$c
                         , znsls402.t$vlmr$c
           from baandb.tznsls402201 znsls402
           inner join baandb.tzncmg007201 zncmg007
-                  ON zncmg007.t$mpgt$c = znsls402.t$idmp$c 
+                  ON zncmg007.t$mpgs$c = znsls402.t$idmp$c 
                  and zncmg007.t$ctmp$c = 1) znsls402_car
                  
        ON znsls401.t$ncia$c = znsls402_car.t$ncia$c
