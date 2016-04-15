@@ -5,6 +5,7 @@ SELECT
     ABS(LOTE.VALO_LOTE)     VALO_LOTE,
        
     tfcmg101.t$ninv         NUME_TITULO,
+    tfacp200.t$docn$l       NUME_NF,	
     tfcmg101.t$ttyp         CODE_TRANSAC,
     tfcmg101.t$dued$l       DATA_VENC,
     regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
@@ -85,6 +86,15 @@ INNER JOIN baandb.ttfcmg109301  tfcmg109
 
 INNER JOIN baandb.ttfcmg003301  tfcmg003
         ON tfcmg003.t$paym = tfcmg101.t$paym
+		
+ LEFT JOIN baandb.ttfacp201301    tfacp201
+        ON tfacp201.t$ttyp = tfcmg101.t$ttyp
+       AND tfacp201.t$ninv = tfcmg101.t$ninv
+       AND tfacp201.t$schn = tfcmg101.t$schn
+	   
+ LEFT JOIN baandb.ttfacp200301     tfacp200
+        ON tfacp200.t$ttyp = tfacp201.t$ttyp
+       AND tfacp200.t$ninv = tfacp201.t$ninv
 		
  LEFT JOIN baandb.ttfcmg103301 tfcmg103
         ON tfcmg103.t$btno = tfcmg101.t$btno
@@ -348,7 +358,8 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
                                             and l1.t$cpac = l.t$cpac ) ) ACONSELHAMENTO
         ON ACONSELHAMENTO.t$cnst = tfcmg101.t$tadv
 
-WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
+WHERE tfacp200.t$docn = 0
+  AND tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
   AND tfcmg101.t$bank = NVL(:Banco,tfcmg101.t$bank)
   AND ((tfcmg011.t$agcd$l = :Agencia) or (:Agencia = '000'))
   AND ((tfcmg001.t$bano = :Conta) or (:Conta = '000'))  
@@ -372,8 +383,8 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
   AND ((:LoteTodos = 1) OR ((tfcmg101.t$btno IN (:Lote)) And :LoteTodos = 0))
   
 
-  
-  
+
+
 =
   
 " SELECT  " &
@@ -383,6 +394,7 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "     ABS(LOTE.VALO_LOTE)     VALO_LOTE,  " &
 "  " &
 "     tfcmg101.t$ninv         NUME_TITULO,  " &
+"     tfacp200.t$docn$l       NUME_NF,  " &
 "     tfcmg101.t$ttyp         CODE_TRANSAC,  " &
 "     tfcmg101.t$dued$l       DATA_VENC,  " &
 "     regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')  " &
@@ -463,6 +475,15 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "  " &
 " INNER JOIN baandb.ttfcmg003301  tfcmg003  " &
 "         ON tfcmg003.t$paym = tfcmg101.t$paym  " &
+"  " &
+"  LEFT JOIN baandb.ttfacp201" + Parameters!Compania.Value +  " tfacp201  " &
+"         ON tfacp201.t$ttyp = tfcmg101.t$ttyp  " &
+"        AND tfacp201.t$ninv = tfcmg101.t$ninv  " &
+"        AND tfacp201.t$schn = tfcmg101.t$schn  " &
+"  " &
+"  LEFT JOIN baandb.ttfacp200" + Parameters!Compania.Value +  " tfacp200  " &
+"         ON tfacp200.t$ttyp = tfacp201.t$ttyp  " &
+"        AND tfacp200.t$ninv = tfacp201.t$ninv  " &
 "  " &
 "  LEFT JOIN baandb.ttfcmg103" + Parameters!Compania.Value +  " tfcmg103  " &
 "         ON tfcmg103.t$btno = tfcmg101.t$btno  " &
@@ -726,7 +747,8 @@ WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
 "                                             and l1.t$cpac = l.t$cpac ) ) ACONSELHAMENTO  " &
 "         ON ACONSELHAMENTO.t$cnst = tfcmg101.t$tadv  " &
 "  " &
-" WHERE tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte  " &
+" WHERE tfacp200.t$docn = 0  " &
+"   AND tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte  " &
 "   AND ((tfcmg101.t$bank = '" + Mid(Parameters!Banco.Value,4,3) + "') or ('" + Mid(Parameters!Banco.Value,4,3) + "' = '000'))  " &
 "   AND ((tfcmg011.t$agcd$l = '" + Mid(Parameters!Agencia.Value,7,4) + "') or ('" + Mid(Parameters!Agencia.Value,7,4) + "' = '0000'))  " &
 "   AND ((tfcmg001.t$bano = '" + Mid(Parameters!Conta.Value,11,5) + "') or ('" + Mid(Parameters!Conta.Value,12,5) + "' = '00000'))  " &
