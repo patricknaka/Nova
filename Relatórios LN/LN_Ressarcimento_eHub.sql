@@ -57,7 +57,8 @@ SELECT
           null
       else
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE)   end   DATA_FORCADO
+          AT time zone 'America/Sao_Paulo') AS DATE)   end   DATA_FORCADO,
+      znfmd630dev.t$etiq$c                                   ETIQUETA
               
   FROM  BAANDB.tznsls401301 znsls401dev
   
