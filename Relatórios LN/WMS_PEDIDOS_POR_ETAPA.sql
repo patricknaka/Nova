@@ -1,13 +1,16 @@
-﻿SELECT
+SELECT
   DISTINCT
-    WMSADMIN.PL_DB.DB_ALIAS            DSC_PLANTA,
+   WMSADMIN.PL_DB.DB_ALIAS            DSC_PLANTA,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE,
      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
        AT time zone 'America/Sao_Paulo') AS DATE)
-                                       DATA_LIMITE,
+                                        DATA_LIMITE,
 
-    ORDERS.ORDERKEY                    PEDIDO,
+    ORDERS.ORDERKEY                     PEDIDO,
+    
+    ZNSLS420.PED_SITE			              PEDIDO_SITE,
+    ZNSLS420.OP 				                ORDEM_DE_PRODUCAO,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -186,6 +189,25 @@ INNER JOIN WMSADMIN.PL_DB
                     znsls401.t$eftr$c ) SLS400
       ON SLS400.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
      AND SLS400.t$item$c = ORDERDETAIL.SKU
+
+ LEFT JOIN ( 	select 	s_ZNSLS004.t$ORNO$C,
+					s_SLS400.t$PECL$C			PED_SITE,
+					s_SLS420.t$PDNO$C		OP
+			from 	BAANDB.TZNSLS004301@pln01 s_ZNSLS004 
+			left join BAANDB.TZNSLS400301@pln01 s_sls400
+				 on  	s_sls400.T$NCIA$C	= s_ZNSLS004.T$NCIA$C
+				and 	s_sls400.T$UNEG$C	= s_ZNSLS004.T$UNEG$C
+				and	s_sls400.T$PECL$C	=  s_ZNSLS004.T$PECL$C 
+				and 	s_sls400.T$SQPD$C	= s_ZNSLS004.T$SQPD$C
+		                           
+			left join 	BAANDB.TZNSLS420301@pln01 s_SLS420
+				on 	s_SLS420.T$NCIA$C	= s_ZNSLS004.T$NCIA$C
+				and	s_SLS420.T$UNEG$C	= s_ZNSLS004.T$UNEG$C
+				and 	s_SLS420.T$PECL$C	= s_ZNSLS004.T$PECL$C
+				and 	s_SLS420.T$SQPD$C	= s_ZNSLS004.T$SQPD$C
+				and 	s_SLS420.t$ENTR$C	= s_ZNSLS004.t$ENTR$C
+				and 	s_SLS420.t$SEQU$C	= s_ZNSLS004.t$SEQU$C ) ZNSLS420
+	ON 	ZNSLS420.T$ORNO$C 	= ORDERS.REFERENCEDOCUMENT
 
  LEFT JOIN ( select clkp.description,
                     clkp.code
