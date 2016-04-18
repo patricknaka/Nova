@@ -9,7 +9,7 @@ SELECT DISTINCT
   ELSE regexp_replace(znfmd001.t$fovn$c, '[^0-9]', '') 
   END                   CD_TERCEIRO, 
   znfmd001.t$dsca$c     NM_PLANTA,
-  znfmd001.t$fili$c     CD_FILIAL,
+  CAST(znfmd001.t$fili$c as int)    CD_FILIAL,
   WMSWHS.WHSEID         CD_ARMAZEM,
   CASE WHEN regexp_replace(znfmd001.t$fovn$c, '[^0-9]', '') IS NULL
     THEN '00000000000000' 
@@ -25,7 +25,7 @@ SELECT DISTINCT
 
 FROM baandb.tznfmd001201 znfmd001
 
-inner join baandb.TTCEMM030201 TCEMM030 -- sÛ n„o È compartilhada com a Nike
+inner join baandb.TTCEMM030201 TCEMM030 -- s√≥ n√£o √© compartilhada com a Nike
 on znfmd001.T$COFC$C=TCEMM030.t$dfpo
 
 inner join baandb.TTCEMM112201 TCEMM112
@@ -37,7 +37,7 @@ on TCMCS003.T$CWAR=TCEMM112.T$WAID
 inner join baandb.ttccom130201 TCCOM130
 on TCCOM130.T$CADR=TCMCS003.T$CADR
 
-inner join baandb.ttcemm300201 TCEMM300 -- sÛ n„o È compartilhada com a Nike
+inner join baandb.ttcemm300201 TCEMM300 -- s√≥ n√£o √© compartilhada com a Nike
  on TCEMM300.t$code=TCEMM112.T$WAID
 and tcemm300.t$code = TCMCS003.T$CWAR
 
@@ -80,7 +80,7 @@ SELECT DISTINCT
 
 FROM baandb.tznfmd001601 znfmd001
 
-inner join baandb.TTCEMM030601 TCEMM030 -- sÛ n„o È compartilhada com a Nike
+inner join baandb.TTCEMM030601 TCEMM030 -- s√≥ n√£o √© compartilhada com a Nike
 on znfmd001.T$COFC$C=TCEMM030.t$dfpo
 
 inner join baandb.TTCEMM112601 TCEMM112
@@ -92,7 +92,7 @@ on TCMCS003.T$CWAR=TCEMM112.T$WAID
 inner join baandb.ttccom130601 TCCOM130
 on TCCOM130.T$CADR=TCMCS003.T$CADR
 
-inner join baandb.ttcemm300601 TCEMM300 -- sÛ n„o È compartilhada com a Nike
+inner join baandb.ttcemm300601 TCEMM300 -- s√≥ n√£o √© compartilhada com a Nike
  on TCEMM300.t$code=TCEMM112.T$WAID
 and tcemm300.t$code = TCMCS003.T$CWAR
 
