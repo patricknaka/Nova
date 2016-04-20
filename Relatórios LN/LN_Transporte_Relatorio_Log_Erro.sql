@@ -15,7 +15,9 @@ select ordf.t$cfrw$c   Cod_transp,
        refc.t$cnfe$l   NFE,
      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(prec.t$idat$l,  
        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  
-      AT time zone 'America/Sao_Paulo') AS DATE)    DT_EMISSAO_PRE_REC
+      AT time zone 'America/Sao_Paulo') AS DATE)    DT_EMISSAO_PRE_REC,
+      
+             ULT_OCOR.PONTO           STATUS
 
   from baandb.tznnfe004301 logrec
   
@@ -27,6 +29,21 @@ select ordf.t$cfrw$c   Cod_transp,
                
        inner join baandb.tznfmd630301 ordf
                on ordf.t$cnfe$c = refc.t$cnfe$l
+
+         LEFT JOIN ( SELECT znfmd640d.t$coci$c  PONTO,
+                            znfmd640d.t$date$c  DT,
+                            znfmd640d.t$udat$c  DT_PROC,
+                            znfmd640d.t$ulog$c  LOGIN_PROC,
+                            znfmd640d.t$fili$c,
+                            znfmd640d.t$etiq$c
+                       FROM BAANDB.tznfmd640301 znfmd640d
+                      WHERE znfmd640d.t$coci$c = ( select max(znfmd640x.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640x.t$date$c,  znfmd640x.t$udat$c)
+                                                     from BAANDB.tznfmd640301 znfmd640x
+                                                    where znfmd640x.t$fili$c = znfmd640d.t$fili$c                                        
+                                                      and   znfmd640x.t$etiq$c = znfmd640d.t$etiq$c ) ) ULT_OCOR
+                ON ULT_OCOR.t$fili$c = ordf.t$fili$c
+               AND ULT_OCOR.t$etiq$c = ordf.t$etiq$c 
+	       
 	WHERE TRUNC(     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(prec.t$idat$l,  
        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  
       AT time zone 'America/Sao_Paulo') AS DATE)) 
@@ -48,6 +65,7 @@ select ordf.t$cfrw$c   Cod_transp,
                   ordf.t$seri$c,
                   refc.t$cnfe$l,
                   logrec.t$seqn$c,
-                  prec.t$idat$l
+                  prec.t$idat$l,
+		  ULT_OCOR.PONTO
 
 order by prec.t$fire$l desc
