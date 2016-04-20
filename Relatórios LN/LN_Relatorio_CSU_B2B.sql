@@ -1,19 +1,23 @@
 SELECT 
-  znsls401.t$pecl$c                 NR_RESGATE,
-  znsls401.t$entr$c                 NR_ENTREGA,
-  znsls401.t$nome$c                 NOME_DESTINATARIO,
-  replace(replace(znsls401.t$fovn$c,'-'),'/')                 
+  
+  CASE WHEN cisli940.t$fdty$l = 16 THEN         --Fatura operacao triangular
+        znsls401_tri.t$pecl$c
+  ELSE  znsls401.t$pecl$c END       NR_RESGATE,
+  CASE WHEN cisli940.t$fdty$l = 16 THEN         --Fatura operacao triangular
+        znsls401_tri.t$entr$c
+  ELSE  znsls401.t$entr$c END       NR_ENTREGA,
+  tccom130.t$nama                   NOME_DESTINATARIO,
+  replace(replace(tccom130.t$fovn$l,'-'),'/')                 
                                     CPF_CNPJ_CLIENTE,
-  znsls401.t$loge$c || ',' || ' ' ||               
-  znsls401.t$nume$c || ',' || ' ' ||        
-  znsls401.t$come$c                 ENDERECO,
-  znsls401.t$baie$c                 BAIRRO,
-  znsls401.t$cide$c                 CIDADE,
-  znsls401.t$ufen$c                 ESTADO,
-  znsls401.t$paie$c                 PAIS,
+  trim(tccom130.t$namc) ||',' ||
+  tccom130.t$hono                   ENDERECO,               
+  tccom130.t$dist$l                 BAIRRO,
+  tccom139.t$dsca                   CIDADE,
+  tccom130.t$cste                   ESTADO,
+  tccom130.t$ccty                   PAIS,
   tccom139.t$ibge$l                 COD_IBGE_MUN,
-  znsls401.t$cepe$c                 CEP,
-  znsls401.t$tele$c                 TELEFONE,
+  tccom130.t$pstc                   CEP,
+  tccom130.t$telp                   TELEFONE,
   cisli940.t$docn$l                 NR_NF,
   cisli940.t$seri$l                 SR_NF,
   cisli940.t$cnfe$l                 CHAVE_ACESSO,
@@ -27,7 +31,9 @@ SELECT
   cisli940.t$gamt$l                 VALOR_TOTAL_PRODUTOS,
   cisli940.t$fght$l                 VALOR_FRETE_NF,
   SLI941.DESCONTO                   DESCONTO_NF,
-  znsls400.t$cffb$c                 FOB,
+  CASE WHEN cisli940.t$fdty$l = 16 THEN         --Fatura operacao triangular
+        znsls400_tri.t$cffb$c
+  ELSE  znsls400.t$cffb$c END       FOB,
   PIS_NF.t$amnt$l                   VALOR_PIS_NF,
   COFINS_NF.t$amnt$l                VALOR_COFINS_NF,
   CSLL_NF.t$amnt$l                  VALOR_CSLL_NF,
@@ -44,12 +50,16 @@ SELECT
   cisli941.t$fght$l                 FRETE_PRODUTO,
   SLI941.QTDE                       QTDE_FATURADA_NF,
   cisli941.t$pric$l                 VALOR_UNIT_SEM_DESCONTO,
-  cisli940.t$gamt$l                 VALOR_TOTAL_MERCADORIA,
-  znsls400.t$vlfr$c                 VALOR_FRETE,
+  cisli941.t$gamt$l                 VALOR_TOTAL_MERCADORIA,
+  CASE WHEN cisli940.t$fdty$l = 16 THEN         --Fatura operacao triangular
+        znsls400_tri.t$vlfr$c
+  ELSE  znsls400.t$vlfr$c END       VALOR_FRETE,
   cisli941.t$cuqs$l                 UNIDADE_MEDIDA,
   tcibd936.t$frat$l                 NCM_SH,
   tcibd001.t$cean                   EAN,
-  ICMS.t$base$l                     BASE_CALC_ICMS,
+  CASE WHEN ICMS.t$amnt$l = 0.0 THEN
+        0.0
+  ELSE  ICMS.t$base$l END           BASE_CALC_ICMS,
   ICMS.t$rate$l                     ALIQUOTA_ICMS,
   ICMS.t$amnt$l                     VALOR_ICMS,
   IPI.t$base$l                      BASE_CALC_IPI,
@@ -78,23 +88,26 @@ SELECT
     cisli940_tri.t$opor$l
   else  NULL end                    NAT_OPER_REMESSA,
   cisli940.t$cnfe$l                 CHAVE_ACESSO,
-  znint002.t$desc$c                 UNIDADE_NEGOCIO,
-  znsls400.t$idcp$c                 CAMPANHA_B2B,
+  CASE WHEN cisli940.t$fdty$l = 16 THEN         --Fatura operacao triangular
+        znint002_tri.t$desc$c
+  ELSE  znint002.t$desc$c END       UNIDADE_NEGOCIO,
+  CASE WHEN cisli940.t$fdty$l = 16 THEN         --Fatura operacao triangular
+        znsls400_tri.t$idcp$c
+  ELSE znsls400.t$idcp$c END        CAMPANHA_B2B,
   ICMS.t$pest$l                     CST,
   replace(replace(tccom130_emi.t$fovn$l,'-'),'/')             
                                     EMISSOR
-  
-    
-FROM  baandb.tcisli941201 cisli941
+   
+FROM  baandb.tcisli941301 cisli941
 
-INNER JOIN baandb.tcisli940201 cisli940
+INNER JOIN baandb.tcisli940301 cisli940
         ON cisli940.t$fire$l = cisli941.t$fire$l
 
-INNER JOIN (select a.t$fire$l,
+LEFT JOIN (select a.t$fire$l,
                    a.t$line$l,
                    a.t$slso,
                    a.t$pono
-            from   baandb.tcisli245201 a
+            from   baandb.tcisli245301 a
             group by a.t$fire$l,
                      a.t$line$l,
                      a.t$slso,
@@ -110,11 +123,11 @@ LEFT JOIN (select a.t$ncia$c,
                   a.t$sequ$c,
                   a.t$orno$c,
                   a.t$pono$c 
-            from  baandb.tznsls004201 a ) znsls004
+            from  baandb.tznsls004301 a ) znsls004
        ON znsls004.t$orno$c = cisli245.t$slso
       AND znsls004.t$pono$c = cisli245.t$pono
 
-LEFT JOIN baandb.tznsls401201 znsls401
+LEFT JOIN baandb.tznsls401301 znsls401
        ON znsls401.t$ncia$c = znsls004.t$ncia$c
       AND znsls401.t$uneg$c = znsls004.t$uneg$c
       AND znsls401.t$pecl$c = znsls004.t$pecl$c
@@ -122,27 +135,32 @@ LEFT JOIN baandb.tznsls401201 znsls401
       AND znsls401.t$entr$c = znsls004.t$entr$c
       AND znsls401.t$sequ$c = znsls004.t$sequ$c
 
-INNER JOIN baandb.tznsls400201 znsls400
+LEFT JOIN baandb.tznsls400301 znsls400
         ON znsls400.t$ncia$c = znsls401.t$ncia$c
        AND znsls400.t$uneg$c = znsls401.t$uneg$c
        AND znsls400.t$pecl$c = znsls401.t$pecl$c
        AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
        
-INNER JOIN baandb.ttccom100201 tccom100
-        ON tccom100.t$bpid = znsls400.t$ofbp$c
+LEFT JOIN baandb.tznint002301 znint002
+       ON znint002.t$ncia$c = znsls004.t$ncia$c
+      AND znint002.t$uneg$c = znsls004.t$uneg$c
+      
+LEFT JOIN baandb.ttccom100301 tccom100
+        ON tccom100.t$bpid = cisli940.t$bpid$l
         
-INNER JOIN baandb.ttccom130201 tccom130
-        ON tccom130.t$cadr = tccom100.t$cadr
+LEFT JOIN baandb.ttccom130301 tccom130
+        ON tccom130.t$cadr = cisli940.t$stoa$l
 
-LEFT JOIN baandb.ttccom139201 tccom139
-       ON tccom139.t$ccty = znsls401.t$paie$c
-      AND tccom139.t$cste = znsls401.t$ufen$c
+LEFT JOIN baandb.ttccom139301 tccom139
+       ON tccom139.t$ccty = tccom130.t$ccty
+      AND tccom139.t$cste = tccom130.t$cste
+      AND tccom139.t$city = tccom130.t$ccit
 
 LEFT JOIN ( select sum(a.t$tldm$l) DESCONTO,
                    sum(a.t$dqua$l) QTDE,
                        a.t$fire$l
-             from  baandb.tcisli941201 a,
-                   baandb.tznsls000201 b
+             from  baandb.tcisli941301 a,
+                   baandb.tznsls000301 b
              where b.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
                and   a.t$item$l != b.t$itmf$c      --ITEM FRETE
                and   a.t$item$l != b.t$itmd$c      --ITEM DESPESAS
@@ -155,7 +173,7 @@ LEFT JOIN (select a.t$fire$l,
                    a.t$base$l,
                    a.t$rate$l,
                    a.t$amnt$l
-            from baandb.tcisli942201 a ) ICMS_NF
+            from baandb.tcisli942301 a ) ICMS_NF
         ON ICMS_NF.t$fire$l = cisli941.t$fire$l
        AND ICMS_NF.t$brty$l = 1    --ICMS
 
@@ -164,16 +182,16 @@ LEFT JOIN (select a.t$fire$l,
                    a.t$base$l,
                    a.t$rate$l,
                    a.t$amnt$l
-            from baandb.tcisli942201 a ) IPI_NF
+            from baandb.tcisli942301 a ) IPI_NF
         ON IPI_NF.t$fire$l = cisli941.t$fire$l
-       AND IPI_NF.t$brty$l = 2    --IPI
+       AND IPI_NF.t$brty$l = 3    --IPI
        
 LEFT JOIN (select a.t$fire$l,
                    a.t$brty$l,
                    a.t$base$l,
                    a.t$rate$l,
                    a.t$amnt$l
-            from baandb.tcisli942201 a ) PIS_NF
+            from baandb.tcisli942301 a ) PIS_NF
         ON PIS_NF.t$fire$l = cisli941.t$fire$l
        AND PIS_NF.t$brty$l = 5    --PIS
 
@@ -182,7 +200,7 @@ LEFT JOIN (select a.t$fire$l,
                    a.t$base$l,
                    a.t$rate$l,
                    a.t$amnt$l
-            from baandb.tcisli942201 a ) COFINS_NF
+            from baandb.tcisli942301 a ) COFINS_NF
         ON COFINS_NF.t$fire$l = cisli941.t$fire$l
        AND COFINS_NF.t$brty$l = 6    --COFINS
 
@@ -191,19 +209,22 @@ LEFT JOIN (select a.t$fire$l,
                    a.t$base$l,
                    a.t$rate$l,
                    a.t$amnt$l
-            from baandb.tcisli942201 a ) CSLL_NF
+            from baandb.tcisli942301 a ) CSLL_NF
         ON CSLL_NF.t$fire$l = cisli941.t$fire$l
        AND CSLL_NF.t$brty$l = 13    --CSLL RETIDO
        
-LEFT JOIN baandb.ttcibd001201 tcibd001
+LEFT JOIN baandb.ttcibd001301 tcibd001
        ON tcibd001.t$item = cisli941.t$item$l
 
-LEFT JOIN baandb.ttcibd936201 tcibd936
+LEFT JOIN baandb.ttcibd936301 tcibd936
        ON tcibd936.t$ifgc$l = tcibd001.t$ifgc$l
 
-LEFT JOIN baandb.ttcibd937201 tcibd937
+LEFT JOIN ( select  a.t$item$l,
+                    a.t$sour$l
+            from    baandb.ttcibd937301 a
+            group by a.t$item$l,
+                     a.t$sour$l ) tcibd937
        ON tcibd937.t$item$l = cisli941.t$item$l
-      AND tcibd937.t$cpid$l = cisli940.t$sfra$l
 
  LEFT JOIN ( select l.t$desc DESCR,
                     d.t$cnst
@@ -240,7 +261,7 @@ LEFT JOIN (select a.t$fire$l,
                    a.t$rate$l,
                    a.t$amnt$l,
                    a.t$pest$l
-            from baandb.tcisli943201 a ) ICMS
+            from baandb.tcisli943301 a ) ICMS
         ON ICMS.t$fire$l = cisli941.t$fire$l
        AND ICMS.t$line$l = cisli941.t$line$l
        AND ICMS.t$brty$l = 1    --ICMS
@@ -251,7 +272,7 @@ LEFT JOIN (select a.t$fire$l,
                    a.t$base$l,
                    a.t$rate$l,
                    a.t$amnt$l
-            from baandb.tcisli943201 a ) IPI
+            from baandb.tcisli943301 a ) IPI
         ON IPI.t$fire$l = cisli941.t$fire$l
        AND IPI.t$line$l = cisli941.t$line$l
        AND IPI.t$brty$l = 3    --IPI
@@ -262,7 +283,7 @@ LEFT JOIN (select a.t$fire$l,
                    a.t$base$l,
                    a.t$rate$l,
                    a.t$amnt$l
-            from baandb.tcisli943201 a ) PIS
+            from baandb.tcisli943301 a ) PIS
         ON PIS.t$fire$l = cisli941.t$fire$l
        AND PIS.t$line$l = cisli941.t$line$l
        AND PIS.t$brty$l = 5    --PIS
@@ -273,26 +294,72 @@ LEFT JOIN (select a.t$fire$l,
                    a.t$base$l,
                    a.t$rate$l,
                    a.t$amnt$l
-            from baandb.tcisli943201 a ) COFINS
+            from baandb.tcisli943301 a ) COFINS
         ON COFINS.t$fire$l = cisli941.t$fire$l
        AND COFINS.t$line$l = cisli941.t$line$l
        AND COFINS.t$brty$l = 6    --COFINS
-     
-LEFT JOIN baandb.tcisli940201 cisli940_tri
-       ON cisli940_tri.t$fire$l = cisli941.t$fire$l
-  
-LEFT JOIN baandb.tznint002201 znint002
-       ON znint002.t$ncia$c = znsls004.t$ncia$c
-      AND znint002.t$uneg$c = znsls004.t$uneg$c
+
+
+LEFT JOIN baandb.tcisli941301 cisli941_tri        --busca da nota triangular de remessa
+       ON cisli941_tri.t$fire$l = cisli941.t$refr$l
+      AND cisli941_tri.t$line$l = cisli941.t$rfdl$l
       
-LEFT JOIN baandb.ttccom130201 tccom130_emi
+LEFT JOIN baandb.tcisli940301 cisli940_tri        --busca da nota triangular de remessa
+       ON cisli940_tri.t$fire$l = cisli941_tri.t$fire$l 
+       
+LEFT JOIN (select a.t$fire$l,
+                   a.t$line$l,
+                   a.t$slso,
+                   a.t$pono
+            from   baandb.tcisli245301 a
+            group by a.t$fire$l,
+                     a.t$line$l,
+                     a.t$slso,
+                     a.t$pono ) cisli245_tri
+        ON cisli245_tri.t$fire$l = cisli941_tri.t$fire$l
+       AND cisli245_tri.t$line$l = cisli941_tri.t$line$l
+       
+LEFT JOIN (select a.t$ncia$c,
+                  a.t$uneg$c,
+                  a.t$pecl$c,
+                  a.t$sqpd$c,
+                  a.t$entr$c,
+                  a.t$sequ$c,
+                  a.t$orno$c,
+                  a.t$pono$c 
+            from  baandb.tznsls004301 a ) znsls004_tri
+       ON znsls004_tri.t$orno$c = cisli245_tri.t$slso
+      AND znsls004_tri.t$pono$c = cisli245_tri.t$pono
+
+LEFT JOIN baandb.tznsls401301 znsls401_tri
+       ON znsls401_tri.t$ncia$c = znsls004_tri.t$ncia$c
+      AND znsls401_tri.t$uneg$c = znsls004_tri.t$uneg$c
+      AND znsls401_tri.t$pecl$c = znsls004_tri.t$pecl$c
+      AND znsls401_tri.t$sqpd$c = znsls004_tri.t$sqpd$c
+      AND znsls401_tri.t$entr$c = znsls004_tri.t$entr$c
+      AND znsls401_tri.t$sequ$c = znsls004_tri.t$sequ$c
+  
+LEFT JOIN baandb.tznint002301 znint002_tri
+       ON znint002_tri.t$ncia$c = znsls004_tri.t$ncia$c
+      AND znint002_tri.t$uneg$c = znsls004_tri.t$uneg$c
+
+LEFT JOIN baandb.tznsls400301 znsls400_tri
+       ON znsls400_tri.t$ncia$c = znsls004_tri.t$ncia$c
+      AND znsls400_tri.t$uneg$c = znsls004_tri.t$uneg$c
+      AND znsls400_tri.t$pecl$c = znsls004_tri.t$pecl$c
+      AND znsls400_tri.t$sqpd$c = znsls004_tri.t$sqpd$c
+       
+LEFT JOIN baandb.ttccom130301 tccom130_emi
        ON tccom130_emi.t$cadr = cisli940.t$sfra$l
 
 LEFT JOIN baandb.tznsls000601 znsls000
        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
-                 
+                    
 WHERE cisli940.t$stat$l IN (2,5,6,101)  --Cancelada, Impressa, Lançada e Estornada
    AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
    AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
    AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
    AND cisli940.t$cnfe$l != ' '
+   
+ORDER BY cisli941.t$fire$l, cisli941.t$line$l
+   
