@@ -29,8 +29,8 @@ FROM ( SELECT DISTINCT
                                      ORDEM_REPOSICAO,
               tdipu001.t$prip        PRECO_COMPRA,
               tccom130a.t$fovn$l     CNPJ_FORNECEDOR,
-              tccom130a.t$nama       NOME_FORNECEDOR
-   
+              tccom100.t$nama       NOME_FORNECEDOR
+              
          FROM baandb.ttcibd001201  tcibd001
     LEFT JOIN baandb.ttcmcs023201  tcmcs023
            ON tcmcs023.t$citg = tcibd001.t$citg    
@@ -107,8 +107,8 @@ UNION
                                      ORDEM_REPOSICAO,
               tdipu001.t$prip        PRECO_COMPRA,
               tccom130a.t$fovn$l     CNPJ_FORNECEDOR,
-              tccom130a.t$nama       NOME_FORNECEDOR
-      
+              tccom100.t$nama       NOME_FORNECEDOR
+              
          FROM baandb.twhwmd630201  whwmd630,
               baandb.ttcibd001201  tcibd001
               
