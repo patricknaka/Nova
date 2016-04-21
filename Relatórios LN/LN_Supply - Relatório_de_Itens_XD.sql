@@ -17,7 +17,7 @@ SELECT
     tcibd001.t$espe$c  TIPO_ITEM,
     tcibd001.t$mdfb$c  MODELO_FABRICANTE,
     tdipu001.t$suti    TEMPO_FORNECIMENTO,
-    whwmd210.t$cwar    ARMAZEM,
+    znwmd200.t$cwar$c  ARMAZEM,
      
     CASE WHEN tdipu001.t$ixdn$c <> 3 THEN 1 
          ELSE 2 
@@ -26,12 +26,14 @@ SELECT
     tdipu001.t$ixdn$c  TIPO_XD_NOVA,
     iTIPOXD.DESCR      DECR_TIPO_XD_NOVA,
  
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whwmd210.t$rcd_utc, 
+--    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whwmd210.t$rcd_utc, 
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znwmd200.t$rcd_utc,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
                        DT_ALTERCAO,
       
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znwmd200.t$rcd_utc, 
+--    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znwmd200.t$rcd_utc,
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znwmd200.t$dtin$c,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
                        DT_ARQ,
@@ -40,35 +42,40 @@ SELECT
     znwmd200.T$prit$c  TEMPO_REPOS_ARQ,
     tcemm030.t$euca    ESTABELEC
 
-FROM       baandb.ttcibd001301 tcibd001
+--FROM       baandb.ttcibd001201 tcibd001
+FROM  baandb.tznwmd200201 znwmd200
   
-INNER JOIN baandb.twhwmd210301 whwmd210
-        ON whwmd210.t$item = tcibd001.t$item
-  
-INNER JOIN baandb.ttcibd200301 tcibd200
+--INNER JOIN baandb.twhwmd210201 whwmd210
+--        ON whwmd210.t$item = tcibd001.t$item
+
+ INNER JOIN baandb.ttcibd001201 tcibd001
+         ON tcibd001.t$item = znwmd200.t$item$c
+         
+INNER JOIN baandb.ttcibd200201 tcibd200
         ON tcibd200.t$item = tcibd001.t$item  
   
- LEFT JOIN baandb.ttcmcs023301 tcmcs023
+ LEFT JOIN baandb.ttcmcs023201 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
   
- LEFT JOIN baandb.ttdipu001301 tdipu001 
+ LEFT JOIN baandb.ttdipu001201 tdipu001 
         ON tdipu001.t$item = tcibd001.t$item
   
- LEFT JOIN baandb.ttccom100301 tccom100
+ LEFT JOIN baandb.ttccom100201 tccom100
         ON tccom100.t$bpid = tdipu001.t$otbp
   
- LEFT JOIN baandb.ttccom130301 tccom130
+ LEFT JOIN baandb.ttccom130201 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr      
   
- LEFT JOIN baandb.tznwmd200301 znwmd200
-        ON znwmd200.t$cwar$c = whwmd210.t$cwar
-       AND znwmd200.t$item$c = whwmd210.t$item
-       AND znwmd200.t$supl$c = tccom100.t$bpid
+-- LEFT JOIN baandb.tznwmd200201 znwmd200
+--        ON znwmd200.t$cwar$c = whwmd210.t$cwar
+--       AND znwmd200.t$item$c = whwmd210.t$item
+--       AND znwmd200.t$supl$c = tccom100.t$bpid
     
- LEFT JOIN baandb.ttcemm112301 tcemm112  
-        ON tcemm112.t$waid = whwmd210.t$cwar       
+ LEFT JOIN baandb.ttcemm112201 tcemm112  
+--        ON tcemm112.t$waid = whwmd210.t$cwar
+        ON tcemm112.t$waid = znwmd200.t$cwar$c
  
- LEFT JOIN baandb.ttcemm030301 tcemm030  
+ LEFT JOIN baandb.ttcemm030201 tcemm030  
         ON tcemm030.t$eunt = tcemm112.t$grid
  
  LEFT JOIN ( SELECT d.t$cnst CODE_STAT, 
@@ -130,3 +137,5 @@ INNER JOIN baandb.ttcibd200301 tcibd200
 WHERE ( (tdipu001.t$ixdn$c = :XD) or (:XD = 0 and tdipu001.t$ixdn$c !=  3) )
   AND tcibd001.t$citg IN (:Depto)  
   AND ( (tccom130.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null) )
+
+--where trim(tcibd001.t$item) = '1723651'
