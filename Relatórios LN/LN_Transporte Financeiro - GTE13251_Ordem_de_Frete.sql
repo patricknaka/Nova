@@ -68,7 +68,7 @@ select Q1.DATA_EMISSAO,
             cisli940.t$amnt$l              VLR_TOTAL_NF,
             znfmd630.t$vlfr$c              VLR_FRETE_CLIENTE,
 	    znfmd637.t$rate$c		ALIQUOTA,
-	    znfmd637.t$base$c		VLR_ICMS,
+	    znfmd637.t$amnt$c		VLR_ICMS,
             znfmd630.t$vlfc$c              PESO_VOLUME,
             znfmd068.t$adva$c *
             ( cisli940.t$amnt$l / 100 )    AD_VALOREM,
