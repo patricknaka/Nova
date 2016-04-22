@@ -9,6 +9,8 @@ SELECT
   tccom130.t$nama                      NOME_FORNECEDOR,  
   tcemm030.t$euca                      NUME_FILIAL,
   tdpur400.t$orno                      NUME_ORDEM,
+  tdpur400.t$cotp                      COD_TIPO_ORDEM_COMPRA,
+  tdpur094.t$dsca                      DSC_TIPO_ORDEM_COMPRA,
   tcmcs041.t$dsca                      TIPO_GER,
   Trim(tdpur401.t$item)                NUME_ITEM,
   tcibd001.t$dsca                      DESC_ITEM,  
@@ -51,7 +53,7 @@ FROM       baandb.ttdpur401301 tdpur401
 
 INNER JOIN baandb.ttdpur400301 tdpur400
         ON tdpur400.t$orno = tdpur401.t$orno
-		
+        
 INNER JOIN ( select tdpur450.t$orno,
                     tdpur450.t$logn,
                     tdpur450.t$trdt
@@ -78,6 +80,9 @@ INNER JOIN baandb.ttdrec941301 tdrec941
 INNER JOIN baandb.ttcibd001301 tcibd001
         ON tcibd001.t$item = tdpur401.t$item
 
+ LEFT JOIN baandb.ttdpur094301 tdpur094
+        ON tdpur094.t$potp = tdpur400.t$cotp
+        
  LEFT JOIN baandb.ttcemm124301 tcemm124
         ON tcemm124.t$cwoc = tdpur400.t$cofc 
        AND tcemm124.t$dtyp = 2
@@ -124,7 +129,9 @@ INNER JOIN baandb.ttcibd001301 tcibd001
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) StatusPedido  
       ON StatusPedido.CODE = tdpur400.t$hdst
-WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
+      
+WHERE tcibd001.t$citg != '001'
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))
       between NVL(:DtGeraOCDe, Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
@@ -137,4 +144,4 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt,
   AND tcibd001.t$csig IN (:Situacao)
   AND Trim(tcibd001.t$citg) IN (:GrupoItem)
   AND tdpur400.t$hdst IN (:StatusPedido)
-  AND tcemm030.t$euca = NVL(:Filial, tcemm030.t$euca)
+  AND tcemm030.t$euca IN (:Filial)
