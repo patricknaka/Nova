@@ -32,7 +32,9 @@ SELECT
         WHERE tcemm124.t$cwoc = SLI940_orig.t$cofc$l
           AND tcemm030.t$eunt = tcemm124.t$grid
           AND tcemm124.t$loco = 301
-          AND rownum = 1)                                    FILIAL_DE_ORIGEM,      
+          AND rownum = 1)                                    FILIAL_DE_ORIGEM,
+      tcibd001dev.t$item                                     SKU_ITEM,
+      tcibd001dev.t$dscb$c                                   DESCRICAO_ITEM,
       (SELECT tcemm030.t$euca FROM BAANDB.ttcemm124301 tcemm124, BAANDB.ttcemm030301 tcemm030
         WHERE tcemm124.t$cwoc = tdrec940rec.t$cofc$l
           AND tcemm030.t$eunt = tcemm124.t$grid
@@ -48,8 +50,6 @@ SELECT
       tdrec940rec.t$fire$l                                   NR,
       cisli940dev.t$docn$l                                   NFS,
       cisli940dev.t$seri$l                                   SERIE_NFS,
-      tcibd001dev.t$item                                     COD_ITEM_SKU,
-      tcibd001dev.t$dscb$c                                   DESCR_ITEM_SKU,
       cisli941dev.t$gamt$l                                   VALOR_TOTAL_DO_ITEM,
       cisli941dev.t$fght$l                                   VALOR_TOTAL_DO_FRETE,
       cisli941dev.t$gamt$l + cisli941dev.t$fght$l            VALOR_TOTAL,
