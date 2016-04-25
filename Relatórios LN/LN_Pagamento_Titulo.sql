@@ -116,7 +116,8 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
        AND tfacr201.t$ninv = tfcmg101.t$ninv
        AND tfacr201.t$recd = tfcmg101.t$dued$l
 	   
- LEFT JOIN ( select iDOMAIN.t$cnst CODE_STATUSCREDITOVENDA, 
+ LEFT JOIN ( select distinct
+                    iDOMAIN.t$cnst CODE_STATUSCREDITOVENDA, 
                     iLABEL.t$desc  DESC_STATUSCREDITOVENDA  
                from baandb.tttadv401000 iDOMAIN, 
                     baandb.tttadv140000 iLABEL 
@@ -358,7 +359,7 @@ INNER JOIN baandb.ttfcmg003301  tfcmg003
                                             and l1.t$cpac = l.t$cpac ) ) ACONSELHAMENTO
         ON ACONSELHAMENTO.t$cnst = tfcmg101.t$tadv
 
-WHERE tfacp200.t$docn = 0
+WHERE NVL(tfacp200.t$docn, 0) = 0
   AND tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte
   AND tfcmg101.t$bank = NVL(:Banco,tfcmg101.t$bank)
   AND ((tfcmg011.t$agcd$l = :Agencia) or (:Agencia = '000'))
@@ -505,7 +506,8 @@ WHERE tfacp200.t$docn = 0
 "        AND tfacr201.t$ninv = tfcmg101.t$ninv  " &
 "        AND tfacr201.t$recd = tfcmg101.t$dued$l  " &
 "  " &
-"  LEFT JOIN ( select iDOMAIN.t$cnst CODE_STATUSCREDITOVENDA,  " &
+"  LEFT JOIN ( select distinct  " &
+"                     iDOMAIN.t$cnst CODE_STATUSCREDITOVENDA,  " &
 "                     iLABEL.t$desc  DESC_STATUSCREDITOVENDA  " &
 "                from baandb.tttadv401000 iDOMAIN,  " &
 "                     baandb.tttadv140000 iLABEL  " &
@@ -747,7 +749,7 @@ WHERE tfacp200.t$docn = 0
 "                                             and l1.t$cpac = l.t$cpac ) ) ACONSELHAMENTO  " &
 "         ON ACONSELHAMENTO.t$cnst = tfcmg101.t$tadv  " &
 "  " &
-" WHERE tfacp200.t$docn = 0  " &
+" WHERE NVL(tfacp200.t$docn, 0) = 0  " &
 "   AND tfcmg101.t$plan BETWEEN :DataPagamentoDe AND :DataPagamentoAte  " &
 "   AND ((tfcmg101.t$bank = '" + Mid(Parameters!Banco.Value,4,3) + "') or ('" + Mid(Parameters!Banco.Value,4,3) + "' = '000'))  " &
 "   AND ((tfcmg011.t$agcd$l = '" + Mid(Parameters!Agencia.Value,7,4) + "') or ('" + Mid(Parameters!Agencia.Value,7,4) + "' = '0000'))  " &
