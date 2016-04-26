@@ -9,12 +9,14 @@ SELECT
     tdipu001.t$otbp    NUM_FORNECEDOR,
     tccom100.t$nama    DESC_FORNECEDOR,
     tcibd001.t$cean    NUM_EAN,
+    tcibd001.t$seab    CHAVE_DE_BUSCA_II,
     tcibd001.t$csig    SITUACAO_ITEM,
     tccom130.t$fovn$l  CNPJ_FORNECEDOR,
     tccom130.t$nama    NOME_FORNECEDOR,
     tcibd001.t$ceat$l  NUM_EAN_GTIN,
     tcibd200.t$mioq    QTDE_MIN_ORDEM,
     tcibd001.t$espe$c  TIPO_ITEM,
+    iTABLE.DESC_TIPO_ITEM   ITEM_ESPECIAL,
     tcibd001.t$mdfb$c  MODELO_FABRICANTE,
     tdipu001.t$suti    TEMPO_FORNECIMENTO,
     znwmd200.t$cwar$c  ARMAZEM,
@@ -121,3 +123,4 @@ WHERE tdipu001.t$ixdn$c IN (:XD)
   AND tcibd001.t$citg IN (:Depto)  
   AND ( (tccom130.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null) )
 
+        
