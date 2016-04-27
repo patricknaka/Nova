@@ -54,6 +54,9 @@ FROM       baandb.ttdpur401301 tdpur401
 INNER JOIN baandb.ttdpur400301 tdpur400
         ON tdpur400.t$orno = tdpur401.t$orno
         
+INNER JOIN baandb.ttcibd001301 tcibd001
+        ON tcibd001.t$item = tdpur401.t$item
+
 INNER JOIN ( select tdpur450.t$orno,
                     tdpur450.t$logn,
                     tdpur450.t$trdt
@@ -64,22 +67,25 @@ INNER JOIN ( select tdpur450.t$orno,
                                             and rownum = 1 ) ) tdpur450
         ON tdpur450.t$orno = tdpur400.t$orno
 
-INNER JOIN baandb.ttdrec947301 tdrec947
+ LEFT JOIN ( select rec947.t$orno$l,
+                    rec947.t$pono$l,
+                    rec947.t$seqn$l,
+                    rec947.t$oorg$l,
+                    rec947.t$fire$l, 
+                    rec947.t$line$l
+               from baandb.ttdrec947301 rec947
+              where rec947.t$oorg$l = 80  ) tdrec947 --Ordem de Compra 
         ON tdrec947.t$orno$l = tdpur401.t$orno
        AND tdrec947.t$pono$l = tdpur401.t$pono
        AND tdrec947.t$seqn$l = tdpur401.t$sqnb
-       AND tdrec947.t$oorg$l = 80 
    
-INNER JOIN baandb.ttdrec940301 tdrec940
+ LEFT JOIN baandb.ttdrec940301 tdrec940
         ON tdrec940.t$fire$l = tdrec947.t$fire$l
     
-INNER JOIN baandb.ttdrec941301 tdrec941
+ LEFT JOIN baandb.ttdrec941301 tdrec941
         ON tdrec941.t$fire$l = tdrec947.t$fire$l 
        AND tdrec941.t$line$l = tdrec947.t$line$l
   
-INNER JOIN baandb.ttcibd001301 tcibd001
-        ON tcibd001.t$item = tdpur401.t$item
-
  LEFT JOIN baandb.ttdpur094301 tdpur094
         ON tdpur094.t$potp = tdpur400.t$cotp
         
@@ -126,22 +132,27 @@ INNER JOIN baandb.ttcibd001301 tcibd001
                                                     rpad(l1.t$cust,4))      
                                            from baandb.tttadv140000 l1      
                                           where l1.t$clab = l.t$clab 
-                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$clan = l.t$clan
                                             and l1.t$cpac = l.t$cpac ) ) StatusPedido  
       ON StatusPedido.CODE = tdpur400.t$hdst
       
 WHERE tcibd001.t$citg != '001'
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone 'America/Sao_Paulo') AS DATE))
-      between NVL(:DtGeraOCDe, Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
-                                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                   AT time zone 'America/Sao_Paulo') AS DATE)))
-          And NVL(:DtGeraOCAte, Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
-                                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                    AT time zone 'America/Sao_Paulo') AS DATE)))
-	  
-  AND tcibd001.t$csig IN (:Situacao)
+  AND tdpur400.t$cotp != '200'
+
+  AND (          (:ValData = 0) 
+        OR (   ( (:ValData = 1) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
+                                              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                                AT time zone 'America/Sao_Paulo') AS DATE)) = :DtGeraOCDe ) ) 
+            OR ( (:ValData = 2) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
+                                              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                                AT time zone 'America/Sao_Paulo') AS DATE)) = :DtGeraOCAte ) ) 
+            OR ( (:ValData = 3) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
+                                              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                                AT time zone 'America/Sao_Paulo') AS DATE)) 
+                                      Between :DtGeraOCDe
+                                          And :DtGeraOCAte ) ) ) )
+
+  AND NVL(Trim(tcibd001.t$csig), '000') IN (:Situacao)
   AND Trim(tcibd001.t$citg) IN (:GrupoItem)
   AND tdpur400.t$hdst IN (:StatusPedido)
   AND tcemm030.t$euca IN (:Filial)
