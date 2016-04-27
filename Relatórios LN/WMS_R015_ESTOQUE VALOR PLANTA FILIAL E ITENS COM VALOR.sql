@@ -1,20 +1,23 @@
 SELECT
   WMSADMIN.PL_DB.DB_ALIAS              ARMAZEM,
   subStr(cl.DESCRIPTION,3,6) || 
-  ll.sku                               CHAVE,
+  ll.sku                               	CHAVE,
   subStr(cl.DESCRIPTION,3,6)           ARMAZEM_LN,
-  
+
+nvl(
   CASE WHEN sku.SUSR5 IS NULL
          THEN LN_IPU001.t$otbp
        ELSE   TO_CHAR(sku.SUSR5) 
-   END                                 COD_FORN,
+   END, FORN_LN.COD_FORN)             COD_FORN,
+   
+nvl(   
   CASE WHEN SKU.SUSR5 IS NULL 
          THEN LN_COM100.T$NAMA
        ELSE   CASE WHEN STORER.COMPANY IS NULL 
                      THEN LN_COM100_WMS.T$NAMA
                    ELSE   TO_CHAR(STORER.COMPANY) 
                END  
-   END                                 FORNECEDOR,
+   END, FORN_LN.NOME_FORN)        FORNECEDOR,
   
   ll.sku                               ITEM,
   sku.DESCR                            DECR_ITEM,
@@ -152,7 +155,15 @@ INNER JOIN WMWHSE5.loc
 
   LEFT JOIN BAANDB.ttccom100301@PLN01 LN_COM100_WMS
          ON LN_COM100_WMS.T$BPID = sku.SUSR5
-         
+
+  LEFT JOIN (	select 	s_tccom100.t$nama	NOME_FORN, 
+					s_tccom100.t$bpid	COD_FORN,
+					s_tccom130.t$fovn$l
+			from   	baandb.ttccom130301@PLN01 s_tccom130
+			inner join 	baandb.ttccom100301@PLN01 s_tccom100
+			on s_tccom100.t$cadr = s_tccom130.t$cadr ) FORN_LN
+	ON	FORN_LN.t$fovn$l = sku.SUSR5
+
  LEFT JOIN ( select clkp.code          COD_TIPO, 
                     NVL(trans.description, 
                     clkp.description)  DSC_TIPO
@@ -175,7 +186,8 @@ INNER JOIN WMWHSE5.loc
         
 WHERE departSector.ID_DEPART IN (:Depto)
   AND ( (Trim(ll.sku) IN (:Itens) And (:ItensTodos = 0)) OR (:ItensTodos = 1) )
-  
+
+
 GROUP BY WMSADMIN.PL_DB.DB_ALIAS, 
          cl.DESCRIPTION, 
          STORER.COMPANY, 
@@ -206,7 +218,16 @@ GROUP BY WMSADMIN.PL_DB.DB_ALIAS,
          TIPO_ITEM.DSC_TIPO,
          BOM.SEQUENCE,
          LN_IPU001.t$otbp,
+	 FORN_LN.COD_FORN,
          LN_COM100.T$NAMA,
          LN_COM100_WMS.T$NAMA,
+nvl(   
+  CASE WHEN SKU.SUSR5 IS NULL 
+         THEN LN_COM100.T$NAMA
+       ELSE   CASE WHEN STORER.COMPANY IS NULL 
+                     THEN LN_COM100_WMS.T$NAMA
+                   ELSE   TO_CHAR(STORER.COMPANY) 
+               END  
+   END, FORN_LN.NOME_FORN)  ,
          LN_DEPTO.t$dsca,
          LN_SETOR.t$dsca$c
