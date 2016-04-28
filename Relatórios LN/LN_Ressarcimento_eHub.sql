@@ -76,8 +76,7 @@ SELECT
           AT time zone 'America/Sao_Paulo') AS DATE)
                                                              DT_NF_COLETA,
       znint002.t$desc$c                                      BANDEIRA
-
-                
+              
   FROM  BAANDB.tznsls401301 znsls401dev
   
   INNER JOIN BAANDB.tznsls400301 znsls400dev
@@ -219,7 +218,11 @@ SELECT
     LEFT JOIN BAANDB.ttccom130301 tccom130_orig
            ON tccom130_orig.t$cadr = tcmcs080_orig.t$cadr$l 
 
-    LEFT JOIN baandb.tznfmd630301 znfmd630_orig       --JOIN PARA ENCONTRAR OVs NOVAS QUE SUBSTITUIRAM AS OVs CANCELADAS NO PEDIDO DO SITE
+    LEFT JOIN ( select  a.t$pecl$c,
+                        a.t$orno$c
+                from baandb.tznfmd630301 a 
+                group by a.t$pecl$c,
+                         a.t$orno$c ) znfmd630_orig       --JOIN PARA ENCONTRAR OVs NOVAS QUE SUBSTITUIRAM AS OVs CANCELADAS NO PEDIDO DO SITE
            ON TO_CHAR(znfmd630_orig.t$pecl$c) = TO_CHAR(znsls401orig.t$entr$c)
            
     LEFT JOIN ( select a.t$fire$l,
@@ -290,7 +293,8 @@ SELECT
 
  LEFT JOIN baandb.tznfmd630301 znfmd630dev
         ON znfmd630dev.t$orno$c = znsls401dev.t$orno$c
-    
+       AND znfmd630dev.t$fire$c = cisli940dev.t$fire$l
+        
  LEFT JOIN ( Select a.t$fili$c,
                     a.t$etiq$c,
                     MAX(a.t$ulog$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DATE$C) t$ulog$c
