@@ -1,4 +1,4 @@
-SELECT
+SELECT 
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE)
@@ -9,6 +9,7 @@ SELECT
   tccom130.t$nama                      NOME_FORNECEDOR,  
   tcemm030.t$euca                      NUME_FILIAL,
   tdpur400.t$orno                      NUME_ORDEM,
+  tdrec940.t$fire$l                    REFE_FISCAL,
   tdpur400.t$cotp                      COD_TIPO_ORDEM_COMPRA,
   tdpur094.t$dsca                      DSC_TIPO_ORDEM_COMPRA,
   tcmcs041.t$dsca                      TIPO_GER,
@@ -17,11 +18,13 @@ SELECT
   tcibd001.t$citg                      NUME_GRUPO_ITEM,  
   tcmcs023.t$dsca                      DESC_GRUPO_ITEM,  
   
-  CASE WHEN tdpur401.t$fire = 1 
-         THEN tdpur401.t$qoor - tdpur401.t$qidl 
+  CASE WHEN tdpur401.t$clyn = 1 
+         THEN tdpur401.t$qoor
        ELSE 0 
-   END                                 QTDE_CANCELADA,
-   
+  END                                  QTDE_CANCELADA,
+  tdrec947.t$qnty$l                    QTDE_RECEBIDA,
+  tdpur401.t$disc$1                    PERCE_DESCONTO,
+  tdpur401.t$ldam$1                    VALOR_DESCONTO,
   tdpur401.t$qibo                      QTDE_REPOSICAO,
   tdpur401.t$pric                      PRECO_UNITARIO,
   tdpur401.t$qoor                      QTDE_ORDENADA,
@@ -49,10 +52,10 @@ SELECT
   tdpur400.t$hdst                      COD_STATUS_PEDIDO,
   StatusPedido.DESCR                   DSC_STATUS_PEDIDO
 
-FROM       baandb.ttdpur401301 tdpur401
+FROM       baandb.ttdpur400301 tdpur400
 
-INNER JOIN baandb.ttdpur400301 tdpur400
-        ON tdpur400.t$orno = tdpur401.t$orno
+INNER JOIN baandb.ttdpur401301 tdpur401
+        ON tdpur401.t$orno = tdpur400.t$orno
         
 INNER JOIN baandb.ttcibd001301 tcibd001
         ON tcibd001.t$item = tdpur401.t$item
@@ -72,9 +75,10 @@ INNER JOIN ( select tdpur450.t$orno,
                     rec947.t$seqn$l,
                     rec947.t$oorg$l,
                     rec947.t$fire$l, 
-                    rec947.t$line$l
+                    rec947.t$line$l,
+                    rec947.t$qnty$l
                from baandb.ttdrec947301 rec947
-              where rec947.t$oorg$l = 80  ) tdrec947 --Ordem de Compra 
+              where rec947.t$oorg$l = 80 ) tdrec947 --Ordem de Compra 
         ON tdrec947.t$orno$l = tdpur401.t$orno
        AND tdrec947.t$pono$l = tdpur401.t$pono
        AND tdrec947.t$seqn$l = tdpur401.t$sqnb
@@ -138,7 +142,8 @@ INNER JOIN ( select tdpur450.t$orno,
       
 WHERE tcibd001.t$citg != '001'
   AND tdpur400.t$cotp != '200'
-
+  AND tcmcs023.t$tpit$c = 1    --Grupo de Item = Produtos
+  
   AND (          (:ValData = 0) 
         OR (   ( (:ValData = 1) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
                                               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
