@@ -47,7 +47,12 @@ SELECT
     zncmg015.t$rcod$c             COD_RETORNO,
     zncmg019.t$dsca$c             DESC_COD_RETORNO,
     znsls401.t$lmot$c             MOTIVO_COLETA,
-    Trim(znsls401.t$nome$c)       NOME_CLIENTE_COLETA
+    Trim(znsls401.t$nome$c)       NOME_CLIENTE_COLETA,
+    zncmg015.t$ncan$c             NRO_CANCELAMENTO,
+    CASE WHEN zncmg015.t$caau$c = 1
+           THEN 'Automático'
+         ELSE   'Manual'
+    END                           AUTOMATICO
 
 FROM       baandb.tznsls402301  znsls402
 
