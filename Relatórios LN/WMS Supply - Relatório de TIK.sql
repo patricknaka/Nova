@@ -6,6 +6,7 @@ SELECT
    SKC.STDCUBE           CUBO,
    SKC.STDGROSSWGT       PESO_BRUTO,
    SKC.STDNETWGT         PESO_LIQ,
+   TCIBD001.t$volu$c     VOLUME,
 --                       TARA    **** DESCONIDERAR
    TIPO_ITEM.DSC_TIPO    KIT_TIK,
    BOM.SEQUENCE          SEQUENCIA,
@@ -15,10 +16,10 @@ SELECT
           THEN 'SIM'  
         ELSE   'NÃO' 
     END                  APENAS_BOM,
-	
+    
    CASE WHEN BOM.PRIMARYCOMPONENT = 1
           THEN 'SIM'
-        ELSE 'NÃO' 
+        ELSE   'NÃO' 
     END                  COMPENENTE_MESTRE
 --                       PROPRIETARIO  *** DESCONIDERAR
 
@@ -26,10 +27,15 @@ FROM       ENTERPRISE.BILLOFMATERIAL  BOM
  
 INNER JOIN ENTERPRISE.SKU    SKP
         ON SKP.SKU = BOM.SKU
- 
+       AND SKP.STORERKEY = 301 
+
 INNER JOIN ENTERPRISE.SKU    SKC
         ON SKC.SKU = BOM.COMPONENTSKU
+       AND SKC.STORERKEY = 301 
    
+INNER JOIN baandb.ttcibd001301@pln01  TCIBD001
+        ON Trim(TCIBD001.t$item) = BOM.SKU
+ 
  LEFT JOIN ( select clkp.code          COD_TIPO, 
                     NVL(trans.description, 
                     clkp.description)  DSC_TIPO
@@ -42,5 +48,7 @@ INNER JOIN ENTERPRISE.SKU    SKC
               where clkp.listname = 'EANTYPE'
                 and Trim(clkp.code) is not null  ) TIPO_ITEM
         ON TIPO_ITEM.COD_TIPO = SKC.BOMITEMTYPE
-		
-ORDER BY 1
+
+WHERE BOM.STORERKEY = 301
+        
+ORDER BY LPAD(ID_PAI, 10, ' '), LPAD(ID_COMPONENTE, 10, ' ')
