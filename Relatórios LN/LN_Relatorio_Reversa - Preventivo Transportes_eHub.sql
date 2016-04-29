@@ -33,7 +33,9 @@ SELECT
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_ORDEM_DEVOLUCAO,
              
-    znsls401.t$entr$c                         ENTREGA,
+    znsls401.t$entr$c                         ENTREGA_DEVOLUCAO,
+    znsls401.t$endt$c                         ENTREGA_VENDA,
+    znsls401encerr.t$entr$c                   ENTREGA_ENCERRAMENTO,
     znsls002.t$dsca$c                         TIPO_ENTREGA,
     znsls401.t$lass$c                         ASSUNTO,
     znsls401.t$lmot$c                         Motivo_da_Coleta,
@@ -693,9 +695,26 @@ INNER JOIN baandb.tznsls400601 znsls400
  
  LEFT JOIN baandb.ttdrec940601 tdrec940
         ON tdrec940.t$fire$l = tdrec947.t$fire$l
+        
+ LEFT JOIN   ( select a.t$ncia$c,
+                     a.t$uneg$c,
+                     a.t$pecl$c,
+                     a.t$sqpd$c,
+                     max(a.t$entr$c) t$entr$c 
+              from BAANDB.tznsls401601 a 
+              group by  a.t$ncia$c,
+                        a.t$uneg$c,
+                        a.t$pecl$c,
+                        a.t$sqpd$c) znsls401encerr         
+        ON znsls401encerr.t$ncia$c = znsls401.t$ncia$c
+       AND znsls401encerr.t$uneg$c = znsls401.t$uneg$c
+       AND znsls401encerr.t$pecl$c = znsls401.t$pecl$c
+       AND znsls401encerr.t$sqpd$c = znsls401.t$sqpd$c
 
 WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
-
+  AND znsls401.t$qtve$c < 0               -- Devolução
+  AND tdsls094.t$reto in (1, 3)           -- Ordem Devolução, Ordem Devolução Rejeitada     
+  
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataPedidoDe
