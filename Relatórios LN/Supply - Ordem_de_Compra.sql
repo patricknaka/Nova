@@ -142,8 +142,7 @@ INNER JOIN ( select tdpur450.t$orno,
       
 WHERE tcibd001.t$citg != '001'
   AND tdpur400.t$cotp != '200'
-  AND tcmcs023.t$tpit$c = 1    --Grupo de Item = Produtos
-  
+
   AND (          (:ValData = 0) 
         OR (   ( (:ValData = 1) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
                                               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
