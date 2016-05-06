@@ -2,7 +2,7 @@ SELECT
   tfgld106.t$dcdt                      DATA_TRANS,
   tfgld106.t$oyer                      ANO_FISCAL,
   tfgld106.T$FPRD                      PERI_FISCAL,
-  CASE WHEN tfgld106.t$dim2 IS NULL 
+  CASE WHEN tfgld106.t$dim2 IS NULL or tfgld106.t$dim2 = ' ' 
          THEN NULL
        ELSE ( SELECT tfgld010_2.t$desc
                 FROM baandb.ttfgld010301 tfgld010_2
