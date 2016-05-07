@@ -35,9 +35,15 @@ INNER JOIN baandb.ttdrec941301  tdrec941
         
 INNER JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tdrec940.t$sfra$l
+	
+-- MMF.sn
+INNER JOIN baandb.ttccom100301 tccom100
+        ON tccom100.t$cadr = tccom130.t$cadr
+-- MMF.en
 
 INNER JOIN baandb.ttcemm122301  tcemm122
-        ON tcemm122.t$bupa = tdrec940.t$sfra$l
+        ON tcemm122.t$bupa = tccom100.t$bpid
+--        ON tcemm122.t$bupa = tdrec940.t$sfra$l
             
  LEFT JOIN ( SELECT d.t$cnst DESC_DOMAIN_STAT,  
                     l.t$desc DESC_STAT  
@@ -69,7 +75,7 @@ INNER JOIN baandb.ttcemm122301  tcemm122
 	   
  LEFT JOIN baandb.ttcmcs966301 tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
-		
+				
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,  
        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
          AT time zone 'America/Sao_Paulo') AS DATE)) 
