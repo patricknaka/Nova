@@ -5,6 +5,8 @@ SELECT
    tdrec940.t$seri$l      NUME_SERIE,
    whinh300.t$recd$c      NR_SUMARIZADO,
    tdrec940.t$fire$l      REF_FISCAL,
+   tdrec940.t$stat$l            ID_STATUS_NF,
+   SITUACAO_NF.DESCR_NF         DESCR_STATUS_NF,
    tdrec940.t$cpay$l      CONDICAO_PAGTO_NR,
    tcmcs013r.t$dsca       DESC_CONDICAO_PAGTO_NR,  
    tdrec940.t$fovn$l      CNPJ_FORNECEDOR,
@@ -118,8 +120,38 @@ INNER JOIN baandb.ttcemm030301 tcemm030
  LEFT JOIN baandb.ttcmcs013301 tcmcs013r 
         ON tcmcs013r.t$cpay  = tdrec940.t$cpay$l
 
+LEFT JOIN (select l.t$desc DESCR_NF,
+                  d.t$cnst
+             from baandb.tttadv401000 d,
+                  baandb.tttadv140000 l
+            where d.t$cpac = 'td'
+              and d.t$cdom = 'rec.stat.l'
+              and l.t$clan = 'p'
+              and l.t$cpac = 'td'
+              and l.t$clab = d.t$za_clab
+              and rpad(d.t$vers,4) ||
+                  rpad(d.t$rele,2) ||
+                  rpad(d.t$cust,4) = ( SELECT MAX(rpad(l1.t$vers,4) ||
+                                                  rpad(l1.t$rele,2) ||
+                                                  rpad(l1.t$cust,4) )
+                                         FROM baandb.tttadv401000 l1
+                                        WHERE l1.t$cpac = d.t$cpac
+                                          AND l1.t$cdom = d.t$cdom )
+              and rpad(l.t$vers,4) ||
+                  rpad(l.t$rele,2) ||
+                  rpad(l.t$cust,4) = ( SELECT MAX(rpad(l1.t$vers,4) ||
+                                                  rpad(l1.t$rele,2) ||
+                                                  rpad(l1.t$cust,4) )
+                                         FROM baandb.tttadv140000 l1
+                                        WHERE l1.t$clab = l.t$clab
+                                          AND l1.t$clan = l.t$clan
+                                          AND l1.t$cpac = l.t$cpac)) SITUACAO_NF
+       ON SITUACAO_NF.t$cnst = tdrec940.t$stat$l
+
+
 WHERE tcemm124.t$dtyp = 2
   
   AND ((:CNPJ Is Null) OR (tdrec940.t$fovn$l like '%' || Trim(:CNPJ) || '%'))
   AND Trunc(tdpur401.t$odat) BETWEEN :DtOrdemDe AND :DtOrdemAte
   AND Trim(tcibd001.t$citg) IN (:GrupoItem)
+  AND tdrec940.t$stat$l between :StatusDe AND :StatusAte
