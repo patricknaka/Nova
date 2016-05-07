@@ -33,7 +33,7 @@ SELECT
                           DATA_PLANEJADA,
         
    tcibd001.t$csig        SINALIZACAO_ITEM,
-   tdpur401.t$qidl        QTDE_RECEBIDA,
+   tdrec941.t$qnty$l      QTDE_RECEBIDA,
    tdpur401.t$qoor        QTDE_ORDENADA,
    tdrec941.t$pric$l      PRECO_UNITARIO,
    tdrec941.t$tamt$l      VALOR_TOTAL_LINHA,
