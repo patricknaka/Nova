@@ -17,8 +17,9 @@ SELECT
       AT time zone 'America/Sao_Paulo') AS DATE)
                                        DATA_REGISTRO,
 
-    ORDERSTATUSSETUP2.DESCRIPTION      EVENTO,
-
+--    ORDERSTATUSSETUP2.DESCRIPTION      EVENTO,
+	tsl.description					EVENTO,
+	
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERSTATUSHISTORY.ADDDATE,
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE)
@@ -77,6 +78,16 @@ SELECT
     SLS400.t$eftr$c                     TRANSP_REDESPACHO
 
 FROM       WMWHSE9.ORDERS
+
+left join 	WMWHSE9.CODELKUP cc
+on		cc.listname = 'NOVAORDSTS'
+and		cc.code = orders.novastatus
+
+left join 	WMWHSE9.TRANSLATIONLIST tsl
+on		tsl.tblname = 'CODELKUP'
+and 		tsl.locale = 'pt'
+and		tsl.code = cc.code
+and		tsl.joinkey1 = cc.listname
 
 INNER JOIN WMWHSE9.ORDERDETAIL
         ON ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY
