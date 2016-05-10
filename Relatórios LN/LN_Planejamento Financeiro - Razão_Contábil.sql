@@ -9,6 +9,13 @@ SELECT
                WHERE tfgld010_2.t$dimx = tfgld106.t$dim2
                  AND tfgld010_2.t$dtyp = 2 )      
    END                                 NOME_FILIAL,
+    CASE WHEN tfgld106.t$dim2 IS NULL or tfgld106.t$dim2 = ' ' 
+         THEN NULL
+       ELSE ( SELECT tfgld010_2.T$DIMX
+                FROM baandb.ttfgld010301 tfgld010_2
+               WHERE tfgld010_2.t$dimx = tfgld106.t$dim2
+                 AND tfgld010_2.t$dtyp = 2 )      
+   END                                 NUME_FILIAL, 
 --  Filial.COD_FILIAL                    NUME_FILIAL,
 --  
 --  CASE WHEN Filial.COD_FILIAL IS NULL 
@@ -98,4 +105,25 @@ INNER JOIN baandb.ttfgld100301 tfgld100
  LEFT JOIN baandb.ttfgld008301 tfgld008
         ON tfgld008.t$leac = tfgld106.t$leac
 
-WHERE  tfgld106.t$leac BETWEEN  '300000000' AND '399999999'
+WHERE TRUNC(tfgld106.t$dcdt) BETWEEN (:DataDe) AND (:DataAte)
+
+  AND (CASE WHEN tfgld106.t$dim2 IS NULL or tfgld106.t$dim2 = ' ' 
+         THEN '000'
+       ELSE ( SELECT tfgld010_2.T$DIMX
+                FROM baandb.ttfgld010301 tfgld010_2
+               WHERE tfgld010_2.t$dimx = tfgld106.t$dim2
+                 AND tfgld010_2.t$dtyp = 2 )END) IN (:Filial)
+            
+  AND tfgld106.t$leac BETWEEN  CASE WHEN Trim(:IdContaDe) IS NULL THEN ' ' 
+                                    ELSE :IdContaDe
+                               END
+                                    AND :IdContaAte
+  
+  AND tfgld106.t$dim1 BETWEEN CASE WHEN Trim(:IdCCustoDe) IS NULL THEN ' ' 
+                                   ELSE :IdCCustoDe 
+                               END  
+                                    AND :IdCCustoAte
+  
+  AND tfgld106.t$oyer = SUBSTR(:PeriodoFis, 4,4)
+  AND tfgld106.T$FPRD >= SUBSTR(:PeriodoFisDe,1,2)
+  AND tfgld106.T$FPRD <= SUBSTR(:PeriodoFisAte,1,2)
