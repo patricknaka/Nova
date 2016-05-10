@@ -21,7 +21,8 @@ SELECT
    tcibd001.t$dsca        DESC_ITEM,  
    tcibd001.t$citg        NUME_GRUPO_ITEM,
    tcmcs023.t$dsca        DESC_GRUPO_ITEM,
-   tdpur406.t$orno        NUME_ORDEM,
+--   tdpur406.t$orno        NUME_ORDEM,
+   tdpur401.t$orno        NUME_ORDEM,
    tdpur401.t$cpay        CONDICAO_PAGTO_PEDIDO,
    tcmcs013p.t$dsca       DESC_CONDICAO_PAGTO_PEDIDO,    
    tdpur401.t$cdec        CONDICAO_ENTREGA_NR,
@@ -76,24 +77,14 @@ SELECT
         AND tdrec942.t$brty$l = 3 )
                           VALOR_IPI
    
-FROM       baandb.twhinh312301 whinh312  
+FROM baandb.ttdrec941301 tdrec941
 
-INNER JOIN baandb.ttdpur406301 tdpur406
-        ON whinh312.t$rcno = tdpur406.t$rcno
-       AND whinh312.t$rcln = tdpur406.t$rseq
-  
- LEFT JOIN baandb.ttdrec947301 tdrec947  
-        ON tdrec947.t$oorg$l = whinh312.t$oorg
-       AND tdrec947.t$orno$l = tdpur406.t$orno
-       AND tdrec947.t$pono$l = tdpur406.t$pono
-       AND tdrec947.t$seqn$l = tdpur406.t$sqnb  
-
- LEFT JOIN baandb.ttdrec941301 tdrec941  
-        ON tdrec941.t$fire$l = tdrec947.t$fire$l
-       AND tdrec941.t$line$l = tdrec947.t$line$l
-       
- LEFT JOIN baandb.ttdrec940301 tdrec940  
+INNER JOIN baandb.ttdrec940301 tdrec940  
         ON tdrec940.t$fire$l = tdrec941.t$fire$l
+
+LEFT JOIN baandb.ttdrec947301 tdrec947
+       ON tdrec947.t$fire$l = tdrec941.t$fire$l
+      AND tdrec947.t$line$l = tdrec941.t$line$l
   
 INNER JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tdrec940.t$sfra$l
@@ -102,12 +93,12 @@ INNER JOIN baandb.ttccom130301 tccom130
         ON whinh300.t$fire$c = tdrec940.t$fire$l
 
 INNER JOIN baandb.ttdpur401301 tdpur401  
-        ON tdpur401.t$orno = tdpur406.t$orno
-       AND tdpur401.t$pono = tdpur406.t$pono
-       AND tdpur401.t$sqnb = tdpur406.t$sqnb
+        ON tdpur401.t$orno = tdrec947.t$orno$l
+       AND tdpur401.t$pono = tdrec947.t$pono$l
+       AND tdpur401.t$sqnb = tdrec947.t$seqn$l
 
 INNER JOIN baandb.ttdpur400301 tdpur400  
-        ON tdpur400.t$orno = tdpur406.t$orno
+        ON tdpur400.t$orno = tdpur401.t$orno
 
 INNER JOIN baandb.ttcemm124301 tcemm124   
         ON tcemm124.t$cwoc = tdpur400.t$cofc
