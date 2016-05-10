@@ -2,15 +2,22 @@ SELECT
   tfgld106.t$dcdt                      DATA_TRANS,
   tfgld106.t$oyer                      ANO_FISCAL,
   tfgld106.T$FPRD                      PERI_FISCAL,
-  Filial.COD_FILIAL                    NUME_FILIAL,
-  
-  CASE WHEN Filial.COD_FILIAL IS NULL 
+  CASE WHEN tfgld106.t$dim2 IS NULL or tfgld106.t$dim2 = ' ' 
          THEN NULL
        ELSE ( SELECT tfgld010_2.t$desc
                 FROM baandb.ttfgld010301 tfgld010_2
-               WHERE tfgld010_2.t$dimx = Filial.COD_FILIAL
+               WHERE tfgld010_2.t$dimx = tfgld106.t$dim2
                  AND tfgld010_2.t$dtyp = 2 )      
    END                                 NOME_FILIAL,
+--  Filial.COD_FILIAL                    NUME_FILIAL,
+--  
+--  CASE WHEN Filial.COD_FILIAL IS NULL 
+--         THEN NULL
+--       ELSE ( SELECT tfgld010_2.t$desc
+--                FROM baandb.ttfgld010301 tfgld010_2
+--               WHERE tfgld010_2.t$dimx = Filial.COD_FILIAL
+--                 AND tfgld010_2.t$dtyp = 2 )      
+--   END                                 NOME_FILIAL,
   
   tfgld106.t$dbcr                      NATU_LANCTO,
   tfgld106.t$obat                      LOTE,
@@ -73,16 +80,16 @@ SELECT
    END                                 VLR_CREDITO
 FROM       baandb.ttfgld106301  tfgld106
 
- LEFT JOIN ( select distinct 
-                    a.t$dim2 COD_FILIAL,
-                    a.t$otyp,
-                    a.t$odoc,
-                    a.t$leac
-               from baandb.ttfgld106301 a
-              where a.t$dim2 !=  ' ' ) Filial
-        ON Filial.t$otyp = tfgld106.t$otyp
-       AND Filial.t$odoc = tfgld106.t$odoc
-       AND Filial.t$leac = tfgld106.t$leac
+-- LEFT JOIN ( select distinct 
+--                    a.t$dim2 COD_FILIAL,
+--                    a.t$otyp,
+--                    a.t$odoc,
+--                    a.t$leac
+--               from baandb.ttfgld106301 a
+--              where a.t$dim2 !=  ' ' ) Filial
+--        ON Filial.t$otyp = tfgld106.t$otyp
+--       AND Filial.t$odoc = tfgld106.t$odoc
+--       AND Filial.t$leac = tfgld106.t$leac
        
 INNER JOIN baandb.ttfgld100301 tfgld100
         ON tfgld100.t$year = tfgld106.t$oyer 
