@@ -35,7 +35,10 @@ SELECT
       
     znwmd200.T$qtdf$c  QT_ARQUIVO,
     znwmd200.T$prit$c  TEMPO_REPOS_ARQ,
-    tcemm030.t$dsca    ESTABELEC
+    tcemm030.t$dsca    ESTABELEC,
+    TO_CHAR(tdipu001.t$ixdn$c) ||
+    '-'  || 
+    iTIPOXD.DESCR      DECRICAO_ITEM_XD_NOVA
 
 FROM       baandb.tznwmd200301 znwmd200
   
