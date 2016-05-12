@@ -180,9 +180,9 @@ INNER JOIN baandb.ttcemm030301 tcemm030
 
 WHERE tcemm124.t$dtyp = 2
 
-  AND Trunc(tdpur401.t$odat) 
-      Between :DtOrdemDe 
-          And :DtOrdemAte
+  AND Trunc(tdrec940.t$date$l) 
+      Between :DtFiscalDe 
+          And :DtFiscalAte
   AND Trim(tcibd001.t$citg) IN (:GrupoItem)
   AND tdrec940.t$stat$l IN (:Status)
   AND nvl(Trim(tdrec940.t$fdtc$l), '0') in (:TipoDocFiscal)
