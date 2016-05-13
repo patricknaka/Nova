@@ -1,3 +1,4 @@
+
 SELECT
   DISTINCT
     trim(tcibd001.t$item)    
@@ -10,7 +11,14 @@ SELECT
     tccom100.t$nama    DESC_FORNECEDOR,
     tcibd001.t$cean    NUM_EAN,
     tcibd001.t$seab    CHAVE_DE_BUSCA_II,
-    tcibd001.t$csig    SITUACAO_ITEM,
+    
+    CASE 
+    WHEN tcibd001.t$csig = '' OR tcibd001.t$csig = 'REA' OR tcibd001.t$csig = ' ' THEN 'Ativo'
+    WHEN tcibd001.t$csig  ='SUS' THEN 'Suspenso'
+    WHEN tcibd001.t$csig  ='CAN' THEN 'Cancelado'
+    WHEN tcibd001.t$csig  ='001' THEN 'Verificação Fiscal'
+    END SITUACAO_ITEM,
+    
     tccom130.t$fovn$l  CNPJ_FORNECEDOR,
     tccom130.t$nama    NOME_FORNECEDOR,
     tcibd001.t$ceat$l  NUM_EAN_GTIN,
