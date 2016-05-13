@@ -21,7 +21,10 @@ SELECT
     tdipu001.t$suti    TEMPO_FORNECIMENTO,
     znwmd200.t$cwar$c  ARMAZEM,
     tdipu001.t$ixdn$c  TIPO_XD_NOVA,
-    iTIPOXD.DESCR      DECR_TIPO_XD_NOVA,
+    case when tdipu001.t$ixdn$c = 3 then
+        '3-Vazio'
+    else
+        iTIPOXD.DESCR end     DECR_TIPO_XD_NOVA,
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znwmd200.t$rcd_utc,
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -36,22 +39,26 @@ SELECT
     znwmd200.T$qtdf$c  QT_ARQUIVO,
     znwmd200.T$prit$c  TEMPO_REPOS_ARQ,
     tcemm030.t$dsca    ESTABELEC,
-    TO_CHAR(tdipu001.t$ixdn$c) ||
-    '-'  || 
-    iTIPOXD.DESCR      DECRICAO_ITEM_XD_NOVA
+    
+    case when tdipu001.t$ixdn$c = 3 then
+        '3-Vazio'
+    else
+        TO_CHAR(tdipu001.t$ixdn$c) ||
+        '-'  || 
+        iTIPOXD.DESCR end     DECRICAO_ITEM_XD_NOVA
 
-FROM       baandb.tznwmd200301 znwmd200
+FROM baandb.ttcibd001301 tcibd001 
+
+ LEFT JOIN baandb.tznwmd200301 znwmd200
+       ON znwmd200.t$item$c = tcibd001.t$item
   
-INNER JOIN baandb.ttcibd001301 tcibd001
-        ON tcibd001.t$item = znwmd200.t$item$c
-         
-INNER JOIN baandb.ttcibd200301 tcibd200
+ INNER JOIN baandb.ttcibd200301 tcibd200
         ON tcibd200.t$item = tcibd001.t$item  
   
  LEFT JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
   
- LEFT JOIN baandb.ttdipu001301 tdipu001 
+ INNER JOIN baandb.ttdipu001301 tdipu001 
         ON tdipu001.t$item = tcibd001.t$item
   
  LEFT JOIN baandb.ttccom100301 tccom100
@@ -125,5 +132,3 @@ INNER JOIN baandb.ttcibd200301 tcibd200
 WHERE tdipu001.t$ixdn$c IN (:XD)
   AND tcibd001.t$citg IN (:Depto)  
   AND ( (tccom130.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null) )
-
-        
