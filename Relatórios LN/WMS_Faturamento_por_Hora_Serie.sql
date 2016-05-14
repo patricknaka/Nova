@@ -1,15 +1,15 @@
 SELECT
   wmsCODE.FILIAL                     FILIAL,     
   wmsCODE.ID_FILIAL                  DSC_PLANTA,
-  Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 
+  Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$date$l, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE), 'DD')     
                                      DT_EMISSAO,  
-  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 
+  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$date$l, 
             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')    
                                      HR_ANT,
-  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 
+  TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$date$l, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE), 'HH24')
                                      HR,
@@ -98,7 +98,7 @@ WHERE sli940.t$stat$l IN (5,6)
                                 where a.t$indt$c = ( select min(b.t$indt$c) from baandb.tznsls000301 b ) )
 
   AND ( (:Filial = 'AAA') OR (wmsCODE.FILIAL = :Filial) )
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$date$l, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE), 'DD')     
       Between :DataDe 
@@ -106,10 +106,10 @@ WHERE sli940.t$stat$l IN (5,6)
 
 GROUP BY wmsCODE.FILIAL,
          wmsCODE.ID_FILIAL,
-         Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 
+         Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$date$l, 
                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                    AT time zone 'America/Sao_Paulo') AS DATE), 'DD'),  
-         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$datg$l, 
+         TO_CHAR(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sli940.t$date$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') AS DATE), 'HH24'),
          sli940.t$seri$l
