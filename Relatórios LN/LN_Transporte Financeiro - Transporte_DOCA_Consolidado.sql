@@ -1,129 +1,135 @@
 select Q1.*
-  from ( SELECT  
-           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone 'America/Sao_Paulo') AS DATE)  
-                                           data_limite_exped,
-           znsls401.t$entr$c               pedido_entrega,
-           a.referencedocument             ordem_venda,
-           a.INVOICENUMBER                 num_nota,
-           a.LANE                          serie_nota, 
-           
-           CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
-                  THEN '10'
-                WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-                  THEN '41' 
-                WHEN (a.status >  = '95' or sq2.status = 6) 
-                  THEN '39'
-                WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
-                  THEN '32'
-                WHEN sq2.status = 5 and a.status >  = '55' 
-                  THEN '34'
-                WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
-                  THEN '31'
-                WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
-                  THEN '20'
-                WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
-                  THEN '22'
-                WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
-                  THEN '28'
-                WHEN (a.status< = '22') and w.wavekey is not null 
-                  THEN '12'
-                WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
-                  THEN '14'
-                WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
-                  THEN '16'
-                ELSE   '18'
-            END                            evento_cod, 
-           
-           CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
-                  THEN 'Recebimento_host'
-                WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-                  THEN 'Estorno'
-                WHEN (a.status >  = '95' or sq2.status = 6) 
-                  THEN 'Expedicao_concluida'
-                WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
-                  THEN 'Fechamento_Gaiola'
-                WHEN sq2.status = 5 and a.status >  = '55' 
-                  THEN 'Entregue_Doca'
-                WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
-                  THEN 'Inclusao_Carga'
-                WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
-                  THEN 'DANFE_Solicitada'
-                WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
-                  THEN 'DANFE_Aprovada'
-                WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
-                  THEN 'Fim_Conferencia'
-                WHEN (a.status< = '22') and w.wavekey is not null 
-                  THEN 'Incluido_Onda'
-                WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
-                  THEN 'Picking_Liberado'
-                WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
-                  THEN 'Inicio_Picking'
-                ELSE   'Picking_Completo'
-            END                            ult_evento_nome,
-       
-           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
-                  CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-                         THEN a.editdate
-                       WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' THEN
-                         sq2.closedate
-                       WHEN sq2.status = 5 and a.status >  = '55' THEN
-                         sq2.editdate
-                       WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' THEN
-                         sq2.adddate
-                       WHEN a.INVOICESTATUS = '1' and a.status >  = '55' THEN
-                         a.editdate
-                       WHEN a.INVOICESTATUS = '3' and a.status >  = '55' THEN
-                         a.editdate
-                       WHEN a.INVOICESTATUS = '4' and a.status >  = '55' THEN
-                         a.editdate
-                       ELSE NVL( ( SELECT MIN(h.adddate)
-                                     FROM WMWHSE1.ORDERSTATUSHISTORY h
-                                    WHERE h.orderkey = a.orderkey
-                                      AND h.status = a.status ), a.editdate ) 
-                   END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                          AT time zone 'America/Sao_Paulo') AS DATE)        
-                                           ult_evento_data,
-                       
-           sq2.CAGEID                      carga,
-           od.sku                          item_sku,
-           sku.descr                       item_descricao,
-           DPST.ID_DEPART                  item_departamento,
-           DPST.DEPART_NAME                descr_depto,
-           whwmd400.t$hght                 item_altura,
-           whwmd400.t$wdth                 item_largura,
-           whwmd400.t$dpth                 item_comprimento,
-           od.ORIGINALQTY                  item_quantidade,
-           znsls401.t$vlun$c               item_valor,
-           sku.STDNETWGT*od.ORIGINALQTY    item_peso,
-           sku.STDCUBE*od.ORIGINALQTY      item_cubagem,
-           a.C_VAT                         mega_rota,
-           NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,
-           
-           ( select sa.t$dsca$c 
-               from BAANDB.TZNSLS002301@pln01 sa
-              where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
-                                           descr_tipo_entrega,
-                  
-           a.carriercode                   transp_cod,
-           
-           a.carriername                   transp_nome,
-           
-           ( select tccom130.t$fovn$l 
-               from BAANDB.TTCCOM130301@pln01 tccom130,
-                    BAANDB.TTCMCS080301@pln01 tcmcs080
-              where tccom130.t$cadr = tcmcs080.t$cadr$l
-                and tcmcs080.t$cfrw = a.carriercode) transp_cnpj,
-           
-           a.c_address1                    destinatario_nome,
-           a.c_zip                         destinatario_cep,
-           a.c_city                        municipio,
-           a.c_state                       uf,
-           OX.NOTES1                       etiqueta,
-           a.whseid                        cd_filial,
-           schm.UDF2                       descr_filial,
-           znfmd630.t$wght$c               peso_tarifado
+  from ( SELECT 
+      schm.UDF2                       PLANTA,
+      znsls401.t$entr$c               ENTREGA,
+      a.referencedocument             NRO_ORDEM_DE_VENDA,
+      a.orderkey                      PEDIDO_LN,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  
+                                       LIMITE_EXPEDICAO,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  
+                                       DATA_PROMETIDA,
+       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
+              THEN 'Recebimento_host'
+            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+              THEN 'Estorno'
+            WHEN (a.status >  = '95' or sq2.status = 6) 
+              THEN 'Expedicao_concluida'
+            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
+              THEN 'Fechamento_Gaiola'
+            WHEN sq2.status = 5 and a.status >  = '55' 
+              THEN 'Entregue_Doca'
+            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
+              THEN 'Inclusao_Carga'
+            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
+              THEN 'DANFE_Solicitada'
+            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
+              THEN 'DANFE_Aprovada'
+            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
+              THEN 'Fim_Conferencia'
+            WHEN (a.status< = '22') and w.wavekey is not null 
+              THEN 'Incluido_Onda'
+            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
+              THEN 'Picking_Liberado'
+            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
+              THEN 'Inicio_Picking'
+            ELSE   'Picking_Completo'
+        END                            ULTIMO_EVENTO,
+        
+      sq2.loc                          DOCA_SAIDA,
+
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
+              CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+                     THEN a.editdate
+                   WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' THEN
+                     sq2.closedate
+                   WHEN sq2.status = 5 and a.status >  = '55' THEN
+                     sq2.editdate
+                   WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' THEN
+                     sq2.adddate
+                   WHEN a.INVOICESTATUS = '1' and a.status >  = '55' THEN
+                     a.editdate
+                   WHEN a.INVOICESTATUS = '3' and a.status >  = '55' THEN
+                     a.editdate
+                   WHEN a.INVOICESTATUS = '4' and a.status >  = '55' THEN
+                     a.editdate
+                   ELSE NVL( ( SELECT MIN(h.adddate)
+                                 FROM WMWHSE1.ORDERSTATUSHISTORY h
+                                WHERE h.orderkey = a.orderkey
+                                  AND h.status = a.status ), a.editdate ) 
+               END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                      AT time zone 'America/Sao_Paulo') AS DATE)        
+                                       DATA_ULTIMO_EVENTO,                                       
+ 
+
+      a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
+      sq2.CAGEID                       GAIOLA,
+       ( select tccom130.t$fovn$l 
+           from BAANDB.TTCCOM130301@pln01 tccom130,
+                BAANDB.TTCMCS080301@pln01 tcmcs080
+          where tccom130.t$cadr = tcmcs080.t$cadr$l
+            and tcmcs080.t$cfrw = a.carriercode)
+                                        CNPJ_TRANSPORTADOR,
+       a.carriername                    TRANSPORTADOR_NOME,
+       a.C_VAT                          MEGA_ROTA,
+       ( select sa.t$dsca$c 
+           from BAANDB.TZNSLS002301@pln01 sa
+          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
+                                        TIPO_ENTREGA,                                        
+            
+       a.INVOICENUMBER                  NF_NUMERO,
+       a.LANE                           NF_SERIE,
+       a.c_company                      NOME_CLIENTE,
+       od.sku                           ITEM_SKU,
+       sku.descr                        ITEM_DESCRICAO,
+       DPST.DEPART_NAME                 ITEM_DEPTO,
+       whwmd400.t$hght                  ITEM_ALTURA,
+       whwmd400.t$wdth                  ITEM_LARGURA,
+       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
+       od.ORIGINALQTY                   ITEM_QUANTIDADE,
+       znsls401.t$vlun$c                ITEM_VALOR,
+       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
+       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
+       a.c_zip                          CEP_DESTINO,
+       a.c_city                         MUNICIPIO,
+       a.c_state                        UF,
+
+       DPST.ID_DEPART                  COD_ITEM_DEPTO,
+       OX.NOTES1                       ETIQUETA,      
+       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
+       a.carriercode                   transp_cod,
+       a.c_address1                    destinatario_nome,
+       a.whseid                        cd_filial,
+       znfmd630.t$wght$c               peso_tarifado,
+       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
+              THEN '10'
+            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+              THEN '41' 
+            WHEN (a.status >  = '95' or sq2.status = 6) 
+              THEN '39'
+            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
+              THEN '32'
+            WHEN sq2.status = 5 and a.status >  = '55' 
+              THEN '34'
+            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
+              THEN '31'
+            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
+              THEN '20'
+            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
+              THEN '22'
+            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
+              THEN '28'
+            WHEN (a.status< = '22') and w.wavekey is not null 
+              THEN '12'
+            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
+              THEN '14'
+            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
+              THEN '16'
+            ELSE   '18'
+        END                            evento_cod
          
 FROM       WMWHSE1.ORDERS a
          
@@ -153,7 +159,8 @@ INNER JOIN WMWHSE1.sku sku
            
  LEFT JOIN ( select distinct 
                     cd.orderid, 
-                    cg.CAGEID, 
+                    cg.CAGEID,
+                    cg.loc,
                     max(cg.status) status,
                     max(cg.closedate) closedate,
                     max(cd.adddate) adddate,
@@ -162,7 +169,8 @@ INNER JOIN WMWHSE1.sku sku
                     WMWHSE1.CAGEIDDETAIL cd 
               where cd.CAGEID = cg.CAGEID 
            group by cd.orderid, 
-                    cg.CAGEID ) sq2 
+                    cg.CAGEID,
+                    cg.loc ) sq2 
         ON sq2.orderid = a.orderkey
            
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
@@ -172,7 +180,8 @@ INNER JOIN WMWHSE1.sku sku
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
-                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c 
+                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
+                    max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
                     baandb.tznsls004301@pln01 znsls004
               where sq401.t$ncia$c = znsls004.t$ncia$c
@@ -208,53 +217,30 @@ INNER JOIN ( SELECT o1.orderkey,
                        and od1.status = '55' ) PickedComplete 
                FROM WMWHSE1.orders o1 ) sq1
         ON sq1.orderkey = a.orderkey
-             
+              
 WHERE schm.listname = 'SCHEMA' 
   AND a.status NOT IN ('98', '99')
   AND CASE WHEN a.FISCALDECISION like 'CANCELADO%' 
              THEN 1
            ELSE 0 
-       END = 0
+       END = 0 
+
   
 UNION 
 
-SELECT  
+SELECT 
+      schm.UDF2                       PLANTA,
+      znsls401.t$entr$c               ENTREGA,
+      a.referencedocument             NRO_ORDEM_DE_VENDA,
+      a.orderkey                      PEDIDO_LN,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       data_limite_exped,
-       znsls401.t$entr$c               pedido_entrega,
-       a.referencedocument             ordem_venda,
-       a.INVOICENUMBER                 num_nota,
-       a.LANE                          serie_nota, 
-       
-       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
-              THEN '10'
-            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-              THEN '41' 
-            WHEN (a.status >  = '95' or sq2.status = 6) 
-              THEN '39'
-            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
-              THEN '32'
-            WHEN sq2.status = 5 and a.status >  = '55' 
-              THEN '34'
-            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
-              THEN '31'
-            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
-              THEN '20'
-            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
-              THEN '22'
-            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
-              THEN '28'
-            WHEN (a.status< = '22') and w.wavekey is not null 
-              THEN '12'
-            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
-              THEN '14'
-            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
-              THEN '16'
-            ELSE   '18'
-        END                            evento_cod, 
-       
+                                       LIMITE_EXPEDICAO,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  
+                                       DATA_PROMETIDA,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -280,7 +266,9 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN 'Inicio_Picking'
             ELSE   'Picking_Completo'
-        END                            ult_evento_nome,
+        END                            ULTIMO_EVENTO,
+        
+      sq2.loc                          DOCA_SAIDA,
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
               CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -303,46 +291,74 @@ SELECT
                                   AND h.status = a.status ), a.editdate ) 
                END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                       AT time zone 'America/Sao_Paulo') AS DATE)        
-                                       ult_evento_data,
-                   
-       sq2.CAGEID                      carga,
-       od.sku                          item_sku,
-       sku.descr                       item_descricao,
-       DPST.ID_DEPART                  item_departamento,
-       DPST.DEPART_NAME                descr_depto,
-       whwmd400.t$hght                 item_altura,
-       whwmd400.t$wdth                 item_largura,
-       whwmd400.t$dpth                 item_comprimento,
-       od.ORIGINALQTY                  item_quantidade,
-       znsls401.t$vlun$c               item_valor,
-       sku.STDNETWGT*od.ORIGINALQTY    item_peso,
-       sku.STDCUBE*od.ORIGINALQTY      item_cubagem,
-       a.C_VAT                         mega_rota,
-       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,
-       
-       ( select sa.t$dsca$c 
-           from BAANDB.TZNSLS002301@pln01 sa
-          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
-                                       descr_tipo_entrega,
-              
-       a.carriercode                   transp_cod,
-       
-       a.carriername                   transp_nome,
-       
+                                       DATA_ULTIMO_EVENTO,                                       
+ 
+
+      a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
+      sq2.CAGEID                       GAIOLA,
        ( select tccom130.t$fovn$l 
            from BAANDB.TTCCOM130301@pln01 tccom130,
                 BAANDB.TTCMCS080301@pln01 tcmcs080
           where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode) transp_cnpj,
-       
+            and tcmcs080.t$cfrw = a.carriercode)
+                                        CNPJ_TRANSPORTADOR,
+       a.carriername                    TRANSPORTADOR_NOME,
+       a.C_VAT                          MEGA_ROTA,
+       ( select sa.t$dsca$c 
+           from BAANDB.TZNSLS002301@pln01 sa
+          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
+                                        TIPO_ENTREGA,                                        
+            
+       a.INVOICENUMBER                  NF_NUMERO,
+       a.LANE                           NF_SERIE,
+       a.c_company                      NOME_CLIENTE,
+       od.sku                           ITEM_SKU,
+       sku.descr                        ITEM_DESCRICAO,
+       DPST.DEPART_NAME                 ITEM_DEPTO,
+       whwmd400.t$hght                  ITEM_ALTURA,
+       whwmd400.t$wdth                  ITEM_LARGURA,
+       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
+       od.ORIGINALQTY                   ITEM_QUANTIDADE,
+       znsls401.t$vlun$c                ITEM_VALOR,
+       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
+       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
+       a.c_zip                          CEP_DESTINO,
+       a.c_city                         MUNICIPIO,
+       a.c_state                        UF,
+
+       DPST.ID_DEPART                   COD_ITEM_DEPTO,
+       OX.NOTES1                       ETIQUETA,      
+       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
+       a.carriercode                   transp_cod,
        a.c_address1                    destinatario_nome,
-       a.c_zip                         destinatario_cep,
-       a.c_city                        municipio,
-       a.c_state                       uf,
-       OX.NOTES1                       etiqueta,
        a.whseid                        cd_filial,
-       schm.UDF2                       descr_filial,
-       znfmd630.t$wght$c               peso_tarifado
+       znfmd630.t$wght$c               peso_tarifado,
+       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
+              THEN '10'
+            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+              THEN '41' 
+            WHEN (a.status >  = '95' or sq2.status = 6) 
+              THEN '39'
+            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
+              THEN '32'
+            WHEN sq2.status = 5 and a.status >  = '55' 
+              THEN '34'
+            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
+              THEN '31'
+            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
+              THEN '20'
+            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
+              THEN '22'
+            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
+              THEN '28'
+            WHEN (a.status< = '22') and w.wavekey is not null 
+              THEN '12'
+            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
+              THEN '14'
+            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
+              THEN '16'
+            ELSE   '18'
+        END                            evento_cod
          
 FROM       WMWHSE2.ORDERS a
          
@@ -372,7 +388,8 @@ INNER JOIN WMWHSE2.sku sku
            
  LEFT JOIN ( select distinct 
                     cd.orderid, 
-                    cg.CAGEID, 
+                    cg.CAGEID,
+                    cg.loc,
                     max(cg.status) status,
                     max(cg.closedate) closedate,
                     max(cd.adddate) adddate,
@@ -381,7 +398,8 @@ INNER JOIN WMWHSE2.sku sku
                     WMWHSE2.CAGEIDDETAIL cd 
               where cd.CAGEID = cg.CAGEID 
            group by cd.orderid, 
-                    cg.CAGEID ) sq2 
+                    cg.CAGEID,
+                    cg.loc ) sq2 
         ON sq2.orderid = a.orderkey
            
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
@@ -391,7 +409,8 @@ INNER JOIN WMWHSE2.sku sku
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
-                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c 
+                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
+                    max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
                     baandb.tznsls004301@pln01 znsls004
               where sq401.t$ncia$c = znsls004.t$ncia$c
@@ -427,53 +446,30 @@ INNER JOIN ( SELECT o1.orderkey,
                        and od1.status = '55' ) PickedComplete 
                FROM WMWHSE2.orders o1 ) sq1
         ON sq1.orderkey = a.orderkey
-             
+              
 WHERE schm.listname = 'SCHEMA' 
   AND a.status NOT IN ('98', '99')
   AND CASE WHEN a.FISCALDECISION like 'CANCELADO%' 
              THEN 1
            ELSE 0 
-       END = 0  
+       END = 0 
+
   
 UNION 
   
-SELECT  
+SELECT 
+      schm.UDF2                       PLANTA,
+      znsls401.t$entr$c               ENTREGA,
+      a.referencedocument             NRO_ORDEM_DE_VENDA,
+      a.orderkey                      PEDIDO_LN,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       data_limite_exped,
-       znsls401.t$entr$c               pedido_entrega,
-       a.referencedocument             ordem_venda,
-       a.INVOICENUMBER                 num_nota,
-       a.LANE                          serie_nota, 
-       
-       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
-              THEN '10'
-            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-              THEN '41' 
-            WHEN (a.status >  = '95' or sq2.status = 6) 
-              THEN '39'
-            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
-              THEN '32'
-            WHEN sq2.status = 5 and a.status >  = '55' 
-              THEN '34'
-            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
-              THEN '31'
-            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
-              THEN '20'
-            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
-              THEN '22'
-            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
-              THEN '28'
-            WHEN (a.status< = '22') and w.wavekey is not null 
-              THEN '12'
-            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
-              THEN '14'
-            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
-              THEN '16'
-            ELSE   '18'
-        END                            evento_cod, 
-       
+                                       LIMITE_EXPEDICAO,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  
+                                       DATA_PROMETIDA,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -499,7 +495,9 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN 'Inicio_Picking'
             ELSE   'Picking_Completo'
-        END                            ult_evento_nome,
+        END                            ULTIMO_EVENTO,
+        
+      sq2.loc                          DOCA_SAIDA,
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
               CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -522,46 +520,74 @@ SELECT
                                   AND h.status = a.status ), a.editdate ) 
                END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                       AT time zone 'America/Sao_Paulo') AS DATE)        
-                                       ult_evento_data,
-                   
-       sq2.CAGEID                      carga,
-       od.sku                          item_sku,
-       sku.descr                       item_descricao,
-       DPST.ID_DEPART                  item_departamento,
-       DPST.DEPART_NAME                descr_depto,
-       whwmd400.t$hght                 item_altura,
-       whwmd400.t$wdth                 item_largura,
-       whwmd400.t$dpth                 item_comprimento,
-       od.ORIGINALQTY                  item_quantidade,
-       znsls401.t$vlun$c               item_valor,
-       sku.STDNETWGT*od.ORIGINALQTY    item_peso,
-       sku.STDCUBE*od.ORIGINALQTY      item_cubagem,
-       a.C_VAT                         mega_rota,
-       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,
-       
-       ( select sa.t$dsca$c 
-           from BAANDB.TZNSLS002301@pln01 sa
-          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
-                                       descr_tipo_entrega,
-              
-       a.carriercode                   transp_cod,
-       
-       a.carriername                   transp_nome,
-       
+                                       DATA_ULTIMO_EVENTO,                                       
+ 
+
+      a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
+      sq2.CAGEID                       GAIOLA,
        ( select tccom130.t$fovn$l 
            from BAANDB.TTCCOM130301@pln01 tccom130,
                 BAANDB.TTCMCS080301@pln01 tcmcs080
           where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode) transp_cnpj,
-       
+            and tcmcs080.t$cfrw = a.carriercode)
+                                        CNPJ_TRANSPORTADOR,
+       a.carriername                    TRANSPORTADOR_NOME,
+       a.C_VAT                          MEGA_ROTA,
+       ( select sa.t$dsca$c 
+           from BAANDB.TZNSLS002301@pln01 sa
+          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
+                                        TIPO_ENTREGA,                                        
+            
+       a.INVOICENUMBER                  NF_NUMERO,
+       a.LANE                           NF_SERIE,
+       a.c_company                      NOME_CLIENTE,
+       od.sku                           ITEM_SKU,
+       sku.descr                        ITEM_DESCRICAO,
+       DPST.DEPART_NAME                 ITEM_DEPTO,
+       whwmd400.t$hght                  ITEM_ALTURA,
+       whwmd400.t$wdth                  ITEM_LARGURA,
+       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
+       od.ORIGINALQTY                   ITEM_QUANTIDADE,
+       znsls401.t$vlun$c                ITEM_VALOR,
+       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
+       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
+       a.c_zip                          CEP_DESTINO,
+       a.c_city                         MUNICIPIO,
+       a.c_state                        UF,
+
+       DPST.ID_DEPART                  COD_ITEM_DEPTO,
+       OX.NOTES1                       ETIQUETA,      
+       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
+       a.carriercode                   transp_cod,
        a.c_address1                    destinatario_nome,
-       a.c_zip                         destinatario_cep,
-       a.c_city                        municipio,
-       a.c_state                       uf,
-       OX.NOTES1                       etiqueta,
        a.whseid                        cd_filial,
-       schm.UDF2                       descr_filial,
-       znfmd630.t$wght$c               peso_tarifado
+       znfmd630.t$wght$c               peso_tarifado,
+       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
+              THEN '10'
+            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+              THEN '41' 
+            WHEN (a.status >  = '95' or sq2.status = 6) 
+              THEN '39'
+            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
+              THEN '32'
+            WHEN sq2.status = 5 and a.status >  = '55' 
+              THEN '34'
+            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
+              THEN '31'
+            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
+              THEN '20'
+            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
+              THEN '22'
+            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
+              THEN '28'
+            WHEN (a.status< = '22') and w.wavekey is not null 
+              THEN '12'
+            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
+              THEN '14'
+            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
+              THEN '16'
+            ELSE   '18'
+        END                            evento_cod
          
 FROM       WMWHSE3.ORDERS a
          
@@ -591,7 +617,8 @@ INNER JOIN WMWHSE3.sku sku
            
  LEFT JOIN ( select distinct 
                     cd.orderid, 
-                    cg.CAGEID, 
+                    cg.CAGEID,
+                    cg.loc,
                     max(cg.status) status,
                     max(cg.closedate) closedate,
                     max(cd.adddate) adddate,
@@ -600,7 +627,8 @@ INNER JOIN WMWHSE3.sku sku
                     WMWHSE3.CAGEIDDETAIL cd 
               where cd.CAGEID = cg.CAGEID 
            group by cd.orderid, 
-                    cg.CAGEID ) sq2 
+                    cg.CAGEID,
+                    cg.loc ) sq2 
         ON sq2.orderid = a.orderkey
            
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
@@ -610,7 +638,8 @@ INNER JOIN WMWHSE3.sku sku
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
-                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c 
+                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
+                    max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
                     baandb.tznsls004301@pln01 znsls004
               where sq401.t$ncia$c = znsls004.t$ncia$c
@@ -646,53 +675,30 @@ INNER JOIN ( SELECT o1.orderkey,
                        and od1.status = '55' ) PickedComplete 
                FROM WMWHSE3.orders o1 ) sq1
         ON sq1.orderkey = a.orderkey
-             
+              
 WHERE schm.listname = 'SCHEMA' 
   AND a.status NOT IN ('98', '99')
   AND CASE WHEN a.FISCALDECISION like 'CANCELADO%' 
              THEN 1
            ELSE 0 
-       END = 0
+       END = 0 
+
 	   
 UNION 
 
-SELECT  
+SELECT 
+      schm.UDF2                       PLANTA,
+      znsls401.t$entr$c               ENTREGA,
+      a.referencedocument             NRO_ORDEM_DE_VENDA,
+      a.orderkey                      PEDIDO_LN,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       data_limite_exped,
-       znsls401.t$entr$c               pedido_entrega,
-       a.referencedocument             ordem_venda,
-       a.INVOICENUMBER                 num_nota,
-       a.LANE                          serie_nota, 
-       
-       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
-              THEN '10'
-            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-              THEN '41' 
-            WHEN (a.status >  = '95' or sq2.status = 6) 
-              THEN '39'
-            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
-              THEN '32'
-            WHEN sq2.status = 5 and a.status >  = '55' 
-              THEN '34'
-            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
-              THEN '31'
-            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
-              THEN '20'
-            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
-              THEN '22'
-            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
-              THEN '28'
-            WHEN (a.status< = '22') and w.wavekey is not null 
-              THEN '12'
-            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
-              THEN '14'
-            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
-              THEN '16'
-            ELSE   '18'
-        END                            evento_cod, 
-       
+                                       LIMITE_EXPEDICAO,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  
+                                       DATA_PROMETIDA,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -718,7 +724,9 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN 'Inicio_Picking'
             ELSE   'Picking_Completo'
-        END                            ult_evento_nome,
+        END                            ULTIMO_EVENTO,
+        
+      sq2.loc                          DOCA_SAIDA,
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
               CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -741,46 +749,74 @@ SELECT
                                   AND h.status = a.status ), a.editdate ) 
                END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                       AT time zone 'America/Sao_Paulo') AS DATE)        
-                                       ult_evento_data,
-                   
-       sq2.CAGEID                      carga,
-       od.sku                          item_sku,
-       sku.descr                       item_descricao,
-       DPST.ID_DEPART                  item_departamento,
-       DPST.DEPART_NAME                descr_depto,
-       whwmd400.t$hght                 item_altura,
-       whwmd400.t$wdth                 item_largura,
-       whwmd400.t$dpth                 item_comprimento,
-       od.ORIGINALQTY                  item_quantidade,
-       znsls401.t$vlun$c               item_valor,
-       sku.STDNETWGT*od.ORIGINALQTY    item_peso,
-       sku.STDCUBE*od.ORIGINALQTY      item_cubagem,
-       a.C_VAT                         mega_rota,
-       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,
-       
-       ( select sa.t$dsca$c 
-           from BAANDB.TZNSLS002301@pln01 sa
-          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
-                                       descr_tipo_entrega,
-              
-       a.carriercode                   transp_cod,
-       
-       a.carriername                   transp_nome,
-       
+                                       DATA_ULTIMO_EVENTO,                                       
+ 
+
+      a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
+      sq2.CAGEID                       GAIOLA,
        ( select tccom130.t$fovn$l 
            from BAANDB.TTCCOM130301@pln01 tccom130,
                 BAANDB.TTCMCS080301@pln01 tcmcs080
           where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode) transp_cnpj,
-       
+            and tcmcs080.t$cfrw = a.carriercode)
+                                        CNPJ_TRANSPORTADOR,
+       a.carriername                    TRANSPORTADOR_NOME,
+       a.C_VAT                          MEGA_ROTA,
+       ( select sa.t$dsca$c 
+           from BAANDB.TZNSLS002301@pln01 sa
+          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
+                                        TIPO_ENTREGA,                                        
+            
+       a.INVOICENUMBER                  NF_NUMERO,
+       a.LANE                           NF_SERIE,
+       a.c_company                      NOME_CLIENTE,
+       od.sku                           ITEM_SKU,
+       sku.descr                        ITEM_DESCRICAO,
+       DPST.DEPART_NAME                 ITEM_DEPTO,
+       whwmd400.t$hght                  ITEM_ALTURA,
+       whwmd400.t$wdth                  ITEM_LARGURA,
+       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
+       od.ORIGINALQTY                   ITEM_QUANTIDADE,
+       znsls401.t$vlun$c                ITEM_VALOR,
+       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
+       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
+       a.c_zip                          CEP_DESTINO,
+       a.c_city                         MUNICIPIO,
+       a.c_state                        UF,
+
+       DPST.ID_DEPART                   COD_ITEM_DEPTO,
+       OX.NOTES1                       ETIQUETA,      
+       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
+       a.carriercode                   transp_cod,
        a.c_address1                    destinatario_nome,
-       a.c_zip                         destinatario_cep,
-       a.c_city                        municipio,
-       a.c_state                       uf,
-       OX.NOTES1                       etiqueta,
        a.whseid                        cd_filial,
-       schm.UDF2                       descr_filial,
-       znfmd630.t$wght$c               peso_tarifado
+       znfmd630.t$wght$c               peso_tarifado,
+       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
+              THEN '10'
+            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+              THEN '41' 
+            WHEN (a.status >  = '95' or sq2.status = 6) 
+              THEN '39'
+            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
+              THEN '32'
+            WHEN sq2.status = 5 and a.status >  = '55' 
+              THEN '34'
+            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
+              THEN '31'
+            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
+              THEN '20'
+            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
+              THEN '22'
+            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
+              THEN '28'
+            WHEN (a.status< = '22') and w.wavekey is not null 
+              THEN '12'
+            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
+              THEN '14'
+            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
+              THEN '16'
+            ELSE   '18'
+        END                            evento_cod
          
 FROM       WMWHSE4.ORDERS a
          
@@ -810,7 +846,8 @@ INNER JOIN WMWHSE4.sku sku
            
  LEFT JOIN ( select distinct 
                     cd.orderid, 
-                    cg.CAGEID, 
+                    cg.CAGEID,
+                    cg.loc,
                     max(cg.status) status,
                     max(cg.closedate) closedate,
                     max(cd.adddate) adddate,
@@ -819,7 +856,8 @@ INNER JOIN WMWHSE4.sku sku
                     WMWHSE4.CAGEIDDETAIL cd 
               where cd.CAGEID = cg.CAGEID 
            group by cd.orderid, 
-                    cg.CAGEID ) sq2 
+                    cg.CAGEID,
+                    cg.loc ) sq2 
         ON sq2.orderid = a.orderkey
            
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
@@ -829,7 +867,8 @@ INNER JOIN WMWHSE4.sku sku
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
-                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c 
+                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
+                    max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
                     baandb.tznsls004301@pln01 znsls004
               where sq401.t$ncia$c = znsls004.t$ncia$c
@@ -865,53 +904,29 @@ INNER JOIN ( SELECT o1.orderkey,
                        and od1.status = '55' ) PickedComplete 
                FROM WMWHSE4.orders o1 ) sq1
         ON sq1.orderkey = a.orderkey
-             
+              
 WHERE schm.listname = 'SCHEMA' 
   AND a.status NOT IN ('98', '99')
   AND CASE WHEN a.FISCALDECISION like 'CANCELADO%' 
              THEN 1
            ELSE 0 
-       END = 0
+       END = 0 
 	   
 UNION 
 
-SELECT  
+SELECT 
+      schm.UDF2                       PLANTA,
+      znsls401.t$entr$c               ENTREGA,
+      a.referencedocument             NRO_ORDEM_DE_VENDA,
+      a.orderkey                      PEDIDO_LN,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       data_limite_exped,
-       znsls401.t$entr$c               pedido_entrega,
-       a.referencedocument             ordem_venda,
-       a.INVOICENUMBER                 num_nota,
-       a.LANE                          serie_nota, 
-       
-       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
-              THEN '10'
-            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-              THEN '41' 
-            WHEN (a.status >  = '95' or sq2.status = 6) 
-              THEN '39'
-            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
-              THEN '32'
-            WHEN sq2.status = 5 and a.status >  = '55' 
-              THEN '34'
-            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
-              THEN '31'
-            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
-              THEN '20'
-            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
-              THEN '22'
-            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
-              THEN '28'
-            WHEN (a.status< = '22') and w.wavekey is not null 
-              THEN '12'
-            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
-              THEN '14'
-            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
-              THEN '16'
-            ELSE   '18'
-        END                            evento_cod, 
-       
+                                       LIMITE_EXPEDICAO,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  
+                                       DATA_PROMETIDA,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -937,7 +952,9 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN 'Inicio_Picking'
             ELSE   'Picking_Completo'
-        END                            ult_evento_nome,
+        END                            ULTIMO_EVENTO,
+        
+      sq2.loc                          DOCA_SAIDA,
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
               CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -960,46 +977,74 @@ SELECT
                                   AND h.status = a.status ), a.editdate ) 
                END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                       AT time zone 'America/Sao_Paulo') AS DATE)        
-                                       ult_evento_data,
-                   
-       sq2.CAGEID                      carga,
-       od.sku                          item_sku,
-       sku.descr                       item_descricao,
-       DPST.ID_DEPART                  item_departamento,
-       DPST.DEPART_NAME                descr_depto,
-       whwmd400.t$hght                 item_altura,
-       whwmd400.t$wdth                 item_largura,
-       whwmd400.t$dpth                 item_comprimento,
-       od.ORIGINALQTY                  item_quantidade,
-       znsls401.t$vlun$c               item_valor,
-       sku.STDNETWGT*od.ORIGINALQTY    item_peso,
-       sku.STDCUBE*od.ORIGINALQTY      item_cubagem,
-       a.C_VAT                         mega_rota,
-       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,
-       
-       ( select sa.t$dsca$c 
-           from BAANDB.TZNSLS002301@pln01 sa
-          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
-                                       descr_tipo_entrega,
-              
-       a.carriercode                   transp_cod,
-       
-       a.carriername                   transp_nome,
-       
+                                       DATA_ULTIMO_EVENTO,                                       
+ 
+
+      a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
+      sq2.CAGEID                       GAIOLA,
        ( select tccom130.t$fovn$l 
            from BAANDB.TTCCOM130301@pln01 tccom130,
                 BAANDB.TTCMCS080301@pln01 tcmcs080
           where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode) transp_cnpj,
-       
+            and tcmcs080.t$cfrw = a.carriercode)
+                                        CNPJ_TRANSPORTADOR,
+       a.carriername                    TRANSPORTADOR_NOME,
+       a.C_VAT                          MEGA_ROTA,
+       ( select sa.t$dsca$c 
+           from BAANDB.TZNSLS002301@pln01 sa
+          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
+                                        TIPO_ENTREGA,                                        
+            
+       a.INVOICENUMBER                  NF_NUMERO,
+       a.LANE                           NF_SERIE,
+       a.c_company                      NOME_CLIENTE,
+       od.sku                           ITEM_SKU,
+       sku.descr                        ITEM_DESCRICAO,
+       DPST.DEPART_NAME                 ITEM_DEPTO,
+       whwmd400.t$hght                  ITEM_ALTURA,
+       whwmd400.t$wdth                  ITEM_LARGURA,
+       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
+       od.ORIGINALQTY                   ITEM_QUANTIDADE,
+       znsls401.t$vlun$c                ITEM_VALOR,
+       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
+       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
+       a.c_zip                          CEP_DESTINO,
+       a.c_city                         MUNICIPIO,
+       a.c_state                        UF,
+
+       DPST.ID_DEPART                   COD_ITEM_DEPTO,
+       OX.NOTES1                       ETIQUETA,      
+       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
+       a.carriercode                   transp_cod,
        a.c_address1                    destinatario_nome,
-       a.c_zip                         destinatario_cep,
-       a.c_city                        municipio,
-       a.c_state                       uf,
-       OX.NOTES1                       etiqueta,
        a.whseid                        cd_filial,
-       schm.UDF2                       descr_filial,
-       znfmd630.t$wght$c               peso_tarifado
+       znfmd630.t$wght$c               peso_tarifado,
+       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
+              THEN '10'
+            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+              THEN '41' 
+            WHEN (a.status >  = '95' or sq2.status = 6) 
+              THEN '39'
+            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
+              THEN '32'
+            WHEN sq2.status = 5 and a.status >  = '55' 
+              THEN '34'
+            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
+              THEN '31'
+            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
+              THEN '20'
+            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
+              THEN '22'
+            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
+              THEN '28'
+            WHEN (a.status< = '22') and w.wavekey is not null 
+              THEN '12'
+            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
+              THEN '14'
+            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
+              THEN '16'
+            ELSE   '18'
+        END                            evento_cod
          
 FROM       WMWHSE5.ORDERS a
          
@@ -1029,7 +1074,8 @@ INNER JOIN WMWHSE5.sku sku
            
  LEFT JOIN ( select distinct 
                     cd.orderid, 
-                    cg.CAGEID, 
+                    cg.CAGEID,
+                    cg.loc,
                     max(cg.status) status,
                     max(cg.closedate) closedate,
                     max(cd.adddate) adddate,
@@ -1038,7 +1084,8 @@ INNER JOIN WMWHSE5.sku sku
                     WMWHSE5.CAGEIDDETAIL cd 
               where cd.CAGEID = cg.CAGEID 
            group by cd.orderid, 
-                    cg.CAGEID ) sq2 
+                    cg.CAGEID,
+                    cg.loc ) sq2 
         ON sq2.orderid = a.orderkey
            
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
@@ -1048,7 +1095,8 @@ INNER JOIN WMWHSE5.sku sku
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
-                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c 
+                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
+                    max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
                     baandb.tznsls004301@pln01 znsls004
               where sq401.t$ncia$c = znsls004.t$ncia$c
@@ -1084,53 +1132,29 @@ INNER JOIN ( SELECT o1.orderkey,
                        and od1.status = '55' ) PickedComplete 
                FROM WMWHSE5.orders o1 ) sq1
         ON sq1.orderkey = a.orderkey
-             
+              
 WHERE schm.listname = 'SCHEMA' 
   AND a.status NOT IN ('98', '99')
   AND CASE WHEN a.FISCALDECISION like 'CANCELADO%' 
              THEN 1
            ELSE 0 
-       END = 0
+       END = 0 
 	   
 UNION 
 
-SELECT  
+SELECT 
+      schm.UDF2                       PLANTA,
+      znsls401.t$entr$c               ENTREGA,
+      a.referencedocument             NRO_ORDEM_DE_VENDA,
+      a.orderkey                      PEDIDO_LN,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       data_limite_exped,
-       znsls401.t$entr$c               pedido_entrega,
-       a.referencedocument             ordem_venda,
-       a.INVOICENUMBER                 num_nota,
-       a.LANE                          serie_nota, 
-       
-       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
-              THEN '10'
-            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-              THEN '41' 
-            WHEN (a.status >  = '95' or sq2.status = 6) 
-              THEN '39'
-            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
-              THEN '32'
-            WHEN sq2.status = 5 and a.status >  = '55' 
-              THEN '34'
-            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
-              THEN '31'
-            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
-              THEN '20'
-            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
-              THEN '22'
-            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
-              THEN '28'
-            WHEN (a.status< = '22') and w.wavekey is not null 
-              THEN '12'
-            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
-              THEN '14'
-            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
-              THEN '16'
-            ELSE   '18'
-        END                            evento_cod, 
-       
+                                       LIMITE_EXPEDICAO,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  
+                                       DATA_PROMETIDA,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1156,7 +1180,9 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN 'Inicio_Picking'
             ELSE   'Picking_Completo'
-        END                            ult_evento_nome,
+        END                            ULTIMO_EVENTO,
+        
+      sq2.loc                          DOCA_SAIDA,
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
               CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1179,46 +1205,74 @@ SELECT
                                   AND h.status = a.status ), a.editdate ) 
                END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                       AT time zone 'America/Sao_Paulo') AS DATE)        
-                                       ult_evento_data,
-                   
-       sq2.CAGEID                      carga,
-       od.sku                          item_sku,
-       sku.descr                       item_descricao,
-       DPST.ID_DEPART                  item_departamento,
-       DPST.DEPART_NAME                descr_depto,
-       whwmd400.t$hght                 item_altura,
-       whwmd400.t$wdth                 item_largura,
-       whwmd400.t$dpth                 item_comprimento,
-       od.ORIGINALQTY                  item_quantidade,
-       znsls401.t$vlun$c               item_valor,
-       sku.STDNETWGT*od.ORIGINALQTY    item_peso,
-       sku.STDCUBE*od.ORIGINALQTY      item_cubagem,
-       a.C_VAT                         mega_rota,
-       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,
-       
-       ( select sa.t$dsca$c 
-           from BAANDB.TZNSLS002301@pln01 sa
-          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
-                                       descr_tipo_entrega,
-              
-       a.carriercode                   transp_cod,
-       
-       a.carriername                   transp_nome,
-       
+                                       DATA_ULTIMO_EVENTO,                                       
+ 
+
+      a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
+      sq2.CAGEID                       GAIOLA,
        ( select tccom130.t$fovn$l 
            from BAANDB.TTCCOM130301@pln01 tccom130,
                 BAANDB.TTCMCS080301@pln01 tcmcs080
           where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode) transp_cnpj,
-       
+            and tcmcs080.t$cfrw = a.carriercode)
+                                        CNPJ_TRANSPORTADOR,
+       a.carriername                    TRANSPORTADOR_NOME,
+       a.C_VAT                          MEGA_ROTA,
+       ( select sa.t$dsca$c 
+           from BAANDB.TZNSLS002301@pln01 sa
+          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
+                                        TIPO_ENTREGA,                                        
+            
+       a.INVOICENUMBER                  NF_NUMERO,
+       a.LANE                           NF_SERIE,
+       a.c_company                      NOME_CLIENTE,
+       od.sku                           ITEM_SKU,
+       sku.descr                        ITEM_DESCRICAO,
+       DPST.DEPART_NAME                 ITEM_DEPTO,
+       whwmd400.t$hght                  ITEM_ALTURA,
+       whwmd400.t$wdth                  ITEM_LARGURA,
+       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
+       od.ORIGINALQTY                   ITEM_QUANTIDADE,
+       znsls401.t$vlun$c                ITEM_VALOR,
+       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
+       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
+       a.c_zip                          CEP_DESTINO,
+       a.c_city                         MUNICIPIO,
+       a.c_state                        UF,
+
+       DPST.ID_DEPART                   COD_ITEM_DEPTO,
+       OX.NOTES1                       ETIQUETA,      
+       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
+       a.carriercode                   transp_cod,
        a.c_address1                    destinatario_nome,
-       a.c_zip                         destinatario_cep,
-       a.c_city                        municipio,
-       a.c_state                       uf,
-       OX.NOTES1                       etiqueta,
        a.whseid                        cd_filial,
-       schm.UDF2                       descr_filial,
-       znfmd630.t$wght$c               peso_tarifado
+       znfmd630.t$wght$c               peso_tarifado,
+       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
+              THEN '10'
+            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+              THEN '41' 
+            WHEN (a.status >  = '95' or sq2.status = 6) 
+              THEN '39'
+            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
+              THEN '32'
+            WHEN sq2.status = 5 and a.status >  = '55' 
+              THEN '34'
+            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
+              THEN '31'
+            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
+              THEN '20'
+            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
+              THEN '22'
+            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
+              THEN '28'
+            WHEN (a.status< = '22') and w.wavekey is not null 
+              THEN '12'
+            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
+              THEN '14'
+            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
+              THEN '16'
+            ELSE   '18'
+        END                            evento_cod
          
 FROM       WMWHSE6.ORDERS a
          
@@ -1248,7 +1302,8 @@ INNER JOIN WMWHSE6.sku sku
            
  LEFT JOIN ( select distinct 
                     cd.orderid, 
-                    cg.CAGEID, 
+                    cg.CAGEID,
+                    cg.loc,
                     max(cg.status) status,
                     max(cg.closedate) closedate,
                     max(cd.adddate) adddate,
@@ -1257,7 +1312,8 @@ INNER JOIN WMWHSE6.sku sku
                     WMWHSE6.CAGEIDDETAIL cd 
               where cd.CAGEID = cg.CAGEID 
            group by cd.orderid, 
-                    cg.CAGEID ) sq2 
+                    cg.CAGEID,
+                    cg.loc ) sq2 
         ON sq2.orderid = a.orderkey
            
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
@@ -1267,7 +1323,8 @@ INNER JOIN WMWHSE6.sku sku
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
-                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c 
+                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
+                    max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
                     baandb.tznsls004301@pln01 znsls004
               where sq401.t$ncia$c = znsls004.t$ncia$c
@@ -1303,53 +1360,29 @@ INNER JOIN ( SELECT o1.orderkey,
                        and od1.status = '55' ) PickedComplete 
                FROM WMWHSE6.orders o1 ) sq1
         ON sq1.orderkey = a.orderkey
-             
+              
 WHERE schm.listname = 'SCHEMA' 
   AND a.status NOT IN ('98', '99')
   AND CASE WHEN a.FISCALDECISION like 'CANCELADO%' 
              THEN 1
            ELSE 0 
-       END = 0
+       END = 0 
 	   
 UNION 
 
-SELECT  
+SELECT 
+      schm.UDF2                       PLANTA,
+      znsls401.t$entr$c               ENTREGA,
+      a.referencedocument             NRO_ORDEM_DE_VENDA,
+      a.orderkey                      PEDIDO_LN,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       data_limite_exped,
-       znsls401.t$entr$c               pedido_entrega,
-       a.referencedocument             ordem_venda,
-       a.INVOICENUMBER                 num_nota,
-       a.LANE                          serie_nota, 
-       
-       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
-              THEN '10'
-            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-              THEN '41' 
-            WHEN (a.status >  = '95' or sq2.status = 6) 
-              THEN '39'
-            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
-              THEN '32'
-            WHEN sq2.status = 5 and a.status >  = '55' 
-              THEN '34'
-            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
-              THEN '31'
-            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
-              THEN '20'
-            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
-              THEN '22'
-            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
-              THEN '28'
-            WHEN (a.status< = '22') and w.wavekey is not null 
-              THEN '12'
-            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
-              THEN '14'
-            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
-              THEN '16'
-            ELSE   '18'
-        END                            evento_cod, 
-       
+                                       LIMITE_EXPEDICAO,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  
+                                       DATA_PROMETIDA,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1375,7 +1408,9 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN 'Inicio_Picking'
             ELSE   'Picking_Completo'
-        END                            ult_evento_nome,
+        END                            ULTIMO_EVENTO,
+        
+      sq2.loc                          DOCA_SAIDA,
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
               CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1398,46 +1433,74 @@ SELECT
                                   AND h.status = a.status ), a.editdate ) 
                END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                       AT time zone 'America/Sao_Paulo') AS DATE)        
-                                       ult_evento_data,
-                   
-       sq2.CAGEID                      carga,
-       od.sku                          item_sku,
-       sku.descr                       item_descricao,
-       DPST.ID_DEPART                  item_departamento,
-       DPST.DEPART_NAME                descr_depto,
-       whwmd400.t$hght                 item_altura,
-       whwmd400.t$wdth                 item_largura,
-       whwmd400.t$dpth                 item_comprimento,
-       od.ORIGINALQTY                  item_quantidade,
-       znsls401.t$vlun$c               item_valor,
-       sku.STDNETWGT*od.ORIGINALQTY    item_peso,
-       sku.STDCUBE*od.ORIGINALQTY      item_cubagem,
-       a.C_VAT                         mega_rota,
-       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,
-       
-       ( select sa.t$dsca$c 
-           from BAANDB.TZNSLS002301@pln01 sa
-          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
-                                       descr_tipo_entrega,
-              
-       a.carriercode                   transp_cod,
-       
-       a.carriername                   transp_nome,
-       
+                                       DATA_ULTIMO_EVENTO,                                       
+ 
+
+      a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
+      sq2.CAGEID                       GAIOLA,
        ( select tccom130.t$fovn$l 
            from BAANDB.TTCCOM130301@pln01 tccom130,
                 BAANDB.TTCMCS080301@pln01 tcmcs080
           where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode) transp_cnpj,
-       
+            and tcmcs080.t$cfrw = a.carriercode)
+                                        CNPJ_TRANSPORTADOR,
+       a.carriername                    TRANSPORTADOR_NOME,
+       a.C_VAT                          MEGA_ROTA,
+       ( select sa.t$dsca$c 
+           from BAANDB.TZNSLS002301@pln01 sa
+          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
+                                        TIPO_ENTREGA,                                        
+            
+       a.INVOICENUMBER                  NF_NUMERO,
+       a.LANE                           NF_SERIE,
+       a.c_company                      NOME_CLIENTE,
+       od.sku                           ITEM_SKU,
+       sku.descr                        ITEM_DESCRICAO,
+       DPST.DEPART_NAME                 ITEM_DEPTO,
+       whwmd400.t$hght                  ITEM_ALTURA,
+       whwmd400.t$wdth                  ITEM_LARGURA,
+       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
+       od.ORIGINALQTY                   ITEM_QUANTIDADE,
+       znsls401.t$vlun$c                ITEM_VALOR,
+       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
+       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
+       a.c_zip                          CEP_DESTINO,
+       a.c_city                         MUNICIPIO,
+       a.c_state                        UF,
+
+       DPST.ID_DEPART                   COD_ITEM_DEPTO,
+       OX.NOTES1                       ETIQUETA,      
+       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
+       a.carriercode                   transp_cod,
        a.c_address1                    destinatario_nome,
-       a.c_zip                         destinatario_cep,
-       a.c_city                        municipio,
-       a.c_state                       uf,
-       OX.NOTES1                       etiqueta,
        a.whseid                        cd_filial,
-       schm.UDF2                       descr_filial,
-       znfmd630.t$wght$c               peso_tarifado
+       znfmd630.t$wght$c               peso_tarifado,
+       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
+              THEN '10'
+            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+              THEN '41' 
+            WHEN (a.status >  = '95' or sq2.status = 6) 
+              THEN '39'
+            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
+              THEN '32'
+            WHEN sq2.status = 5 and a.status >  = '55' 
+              THEN '34'
+            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
+              THEN '31'
+            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
+              THEN '20'
+            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
+              THEN '22'
+            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
+              THEN '28'
+            WHEN (a.status< = '22') and w.wavekey is not null 
+              THEN '12'
+            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
+              THEN '14'
+            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
+              THEN '16'
+            ELSE   '18'
+        END                            evento_cod
          
 FROM       WMWHSE7.ORDERS a
          
@@ -1467,7 +1530,8 @@ INNER JOIN WMWHSE7.sku sku
            
  LEFT JOIN ( select distinct 
                     cd.orderid, 
-                    cg.CAGEID, 
+                    cg.CAGEID,
+                    cg.loc,
                     max(cg.status) status,
                     max(cg.closedate) closedate,
                     max(cd.adddate) adddate,
@@ -1476,7 +1540,8 @@ INNER JOIN WMWHSE7.sku sku
                     WMWHSE7.CAGEIDDETAIL cd 
               where cd.CAGEID = cg.CAGEID 
            group by cd.orderid, 
-                    cg.CAGEID ) sq2 
+                    cg.CAGEID,
+                    cg.loc ) sq2 
         ON sq2.orderid = a.orderkey
            
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
@@ -1486,7 +1551,8 @@ INNER JOIN WMWHSE7.sku sku
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
-                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c 
+                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
+                    max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
                     baandb.tznsls004301@pln01 znsls004
               where sq401.t$ncia$c = znsls004.t$ncia$c
@@ -1522,46 +1588,29 @@ INNER JOIN ( SELECT o1.orderkey,
                        and od1.status = '55' ) PickedComplete 
                FROM WMWHSE7.orders o1 ) sq1
         ON sq1.orderkey = a.orderkey
+              
+WHERE schm.listname = 'SCHEMA' 
+  AND a.status NOT IN ('98', '99')
+  AND CASE WHEN a.FISCALDECISION like 'CANCELADO%' 
+             THEN 1
+           ELSE 0 
+       END = 0 
 
 UNION     --JUNDIAI
 
-SELECT  
+SELECT 
+      schm.UDF2                       PLANTA,
+      znsls401.t$entr$c               ENTREGA,
+      a.referencedocument             NRO_ORDEM_DE_VENDA,
+      a.orderkey                      PEDIDO_LN,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       data_limite_exped,
-       znsls401.t$entr$c               pedido_entrega,
-       a.referencedocument             ordem_venda,
-       a.INVOICENUMBER                 num_nota,
-       a.LANE                          serie_nota, 
-       
-       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
-              THEN '10'
-            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
-              THEN '41' 
-            WHEN (a.status >  = '95' or sq2.status = 6) 
-              THEN '39'
-            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
-              THEN '32'
-            WHEN sq2.status = 5 and a.status >  = '55' 
-              THEN '34'
-            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
-              THEN '31'
-            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
-              THEN '20'
-            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
-              THEN '22'
-            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
-              THEN '28'
-            WHEN (a.status< = '22') and w.wavekey is not null 
-              THEN '12'
-            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
-              THEN '14'
-            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
-              THEN '16'
-            ELSE   '18'
-        END                            evento_cod, 
-       
+                                       LIMITE_EXPEDICAO,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') AS DATE)  
+                                       DATA_PROMETIDA,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1587,7 +1636,9 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN 'Inicio_Picking'
             ELSE   'Picking_Completo'
-        END                            ult_evento_nome,
+        END                            ULTIMO_EVENTO,
+        
+      sq2.loc                          DOCA_SAIDA,
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
               CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1610,46 +1661,74 @@ SELECT
                                   AND h.status = a.status ), a.editdate ) 
                END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                       AT time zone 'America/Sao_Paulo') AS DATE)        
-                                       ult_evento_data,
-                   
-       sq2.CAGEID                      carga,
-       od.sku                          item_sku,
-       sku.descr                       item_descricao,
-       DPST.ID_DEPART                  item_departamento,
-       DPST.DEPART_NAME                descr_depto,
-       whwmd400.t$hght                 item_altura,
-       whwmd400.t$wdth                 item_largura,
-       whwmd400.t$dpth                 item_comprimento,
-       od.ORIGINALQTY                  item_quantidade,
-       znsls401.t$vlun$c               item_valor,
-       sku.STDNETWGT*od.ORIGINALQTY    item_peso,
-       sku.STDCUBE*od.ORIGINALQTY      item_cubagem,
-       a.C_VAT                         mega_rota,
-       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,
-       
-       ( select sa.t$dsca$c 
-           from BAANDB.TZNSLS002301@pln01 sa
-          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
-                                       descr_tipo_entrega,
-              
-       a.carriercode                   transp_cod,
-       
-       a.carriername                   transp_nome,
-       
+                                       DATA_ULTIMO_EVENTO,                                       
+ 
+
+      a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
+      sq2.CAGEID                       GAIOLA,
        ( select tccom130.t$fovn$l 
            from BAANDB.TTCCOM130301@pln01 tccom130,
                 BAANDB.TTCMCS080301@pln01 tcmcs080
           where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode) transp_cnpj,
-       
+            and tcmcs080.t$cfrw = a.carriercode)
+                                        CNPJ_TRANSPORTADOR,
+       a.carriername                    TRANSPORTADOR_NOME,
+       a.C_VAT                          MEGA_ROTA,
+       ( select sa.t$dsca$c 
+           from BAANDB.TZNSLS002301@pln01 sa
+          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
+                                        TIPO_ENTREGA,                                        
+            
+       a.INVOICENUMBER                  NF_NUMERO,
+       a.LANE                           NF_SERIE,
+       a.c_company                      NOME_CLIENTE,
+       od.sku                           ITEM_SKU,
+       sku.descr                        ITEM_DESCRICAO,
+       DPST.DEPART_NAME                 ITEM_DEPTO,
+       whwmd400.t$hght                  ITEM_ALTURA,
+       whwmd400.t$wdth                  ITEM_LARGURA,
+       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
+       od.ORIGINALQTY                   ITEM_QUANTIDADE,
+       znsls401.t$vlun$c                ITEM_VALOR,
+       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
+       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
+       a.c_zip                          CEP_DESTINO,
+       a.c_city                         MUNICIPIO,
+       a.c_state                        UF,
+
+       DPST.ID_DEPART                   COD_ITEM_DEPTO,
+       OX.NOTES1                       ETIQUETA,      
+       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
+       a.carriercode                   transp_cod,
        a.c_address1                    destinatario_nome,
-       a.c_zip                         destinatario_cep,
-       a.c_city                        municipio,
-       a.c_state                       uf,
-       OX.NOTES1                       etiqueta,
        a.whseid                        cd_filial,
-       schm.UDF2                       descr_filial,
-       znfmd630.t$wght$c               peso_tarifado
+       znfmd630.t$wght$c               peso_tarifado,
+       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
+              THEN '10'
+            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
+              THEN '41' 
+            WHEN (a.status >  = '95' or sq2.status = 6) 
+              THEN '39'
+            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' 
+              THEN '32'
+            WHEN sq2.status = 5 and a.status >  = '55' 
+              THEN '34'
+            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' 
+              THEN '31'
+            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' 
+              THEN '20'
+            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' 
+              THEN '22'
+            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' 
+              THEN '28'
+            WHEN (a.status< = '22') and w.wavekey is not null 
+              THEN '12'
+            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0) 
+              THEN '14'
+            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
+              THEN '16'
+            ELSE   '18'
+        END                            evento_cod
          
 FROM       WMWHSE8.ORDERS a
          
@@ -1679,7 +1758,8 @@ INNER JOIN WMWHSE8.sku sku
            
  LEFT JOIN ( select distinct 
                     cd.orderid, 
-                    cg.CAGEID, 
+                    cg.CAGEID,
+                    cg.loc,
                     max(cg.status) status,
                     max(cg.closedate) closedate,
                     max(cd.adddate) adddate,
@@ -1688,7 +1768,8 @@ INNER JOIN WMWHSE8.sku sku
                     WMWHSE8.CAGEIDDETAIL cd 
               where cd.CAGEID = cg.CAGEID 
            group by cd.orderid, 
-                    cg.CAGEID ) sq2 
+                    cg.CAGEID,
+                    cg.loc ) sq2 
         ON sq2.orderid = a.orderkey
            
  LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630 
@@ -1698,7 +1779,8 @@ INNER JOIN WMWHSE8.sku sku
  LEFT JOIN ( select znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
-                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c 
+                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
+                    max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
                     baandb.tznsls004301@pln01 znsls004
               where sq401.t$ncia$c = znsls004.t$ncia$c
@@ -1734,16 +1816,17 @@ INNER JOIN ( SELECT o1.orderkey,
                        and od1.status = '55' ) PickedComplete 
                FROM WMWHSE8.orders o1 ) sq1
         ON sq1.orderkey = a.orderkey
-             
+              
 WHERE schm.listname = 'SCHEMA' 
   AND a.status NOT IN ('98', '99')
   AND CASE WHEN a.FISCALDECISION like 'CANCELADO%' 
              THEN 1
            ELSE 0 
-       END = 0  ) Q1
+       END = 0 
+ ) Q1
 
 WHERE evento_cod                  IN (:Evento)         -- Evento
   AND tipo_entrega_nome           IN (:TipoEntrega)    -- Tipo de Entrega
-  AND cd_filial                   IN (:Filial)         -- Planta
+  where cd_filial                   IN (:Filial)         -- Planta
   AND NVL(Trim(mega_rota), 'SMR') IN (:Rota)           -- Mega Rota
   AND transp_cod                  IN (:Transportadora) -- Transportadora
