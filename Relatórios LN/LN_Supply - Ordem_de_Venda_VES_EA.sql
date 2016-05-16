@@ -174,8 +174,11 @@ INNER JOIN baandb.ttcibd001301 tcibd001
  LEFT JOIN baandb.ttdipu001301 tdipu001
         ON tdipu001.t$item = tcibd001.t$item
  
+ INNER JOIN baandb.ttccom100301 tccom100
+        ON tccom100.t$bpid = tdipu001.t$otbp
+ 
  LEFT JOIN baandb.ttccom130301 tccom130
-        ON tccom130.t$cadr = tdipu001.t$otbp
+        ON tccom130.t$cadr = tccom100.t$cadr
        
 INNER JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
