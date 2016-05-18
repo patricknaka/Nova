@@ -61,7 +61,7 @@ SELECT
       
     CASE WHEN tcmcs080.t$dsca IS NULL 
            THEN NVL( cisli940.t$cfrn$l, ( select Trim(A.T$NTRA$C)
-                                            from BAANDB.TZNSLS410301 A
+                                            from BAANDB.TZNSLS410201 A
                                            where A.T$NCIA$C = ZNSLS401.T$NCIA$C
                                              and A.T$UNEG$C = ZNSLS401.T$UNEG$C
                                              and A.T$PECL$C = ZNSLS401.T$PECL$C
@@ -74,7 +74,7 @@ SELECT
     Trim(tcmcs080.t$seak)                     APELIDO_TRANSP_COLETA,
     NVL( tccom130transp.t$fovn$l, 
          ( select Trim(A.T$FOVT$C)
-             from BAANDB.TZNSLS410301 A
+             from BAANDB.TZNSLS410201 A
             where A.T$NCIA$C = ZNSLS401.T$NCIA$C
               and A.T$UNEG$C = ZNSLS401.T$UNEG$C
               and A.T$PECL$C = ZNSLS401.T$PECL$C
@@ -152,7 +152,8 @@ SELECT
     END                                       PENDENTE_COLETA,
  
     tdsls400_2.t$sotp,
-    tdsls094.t$dsca			      TIPO_ORDEM_DE_FRETE,
+    tdsls094.t$dsca			                      TIPO_ORDEM_DE_FRETE,
+    ORIGEM_O_FRETE.DESCR                      ORIGEM_ORDEM_DE_FRETE,
     ZNSLS401.T$ORNO$C,
     cisli940.t$fire$l                         REF_FISCAL,
 	
@@ -174,9 +175,9 @@ SELECT
 --NOME_ATENDENTE_ABERTURA                   --RIGHT NOW
 --OBSERVACOES                               --RIGHT NOW
   
-FROM       baandb.tznsls401301 znsls401
+FROM       baandb.tznsls401201 znsls401
 
-INNER JOIN baandb.tznsls400301 znsls400
+INNER JOIN baandb.tznsls400201 znsls400
         ON znsls400.t$ncia$c = znsls401.t$ncia$c
        AND znsls400.t$uneg$c = znsls401.t$uneg$c
        AND znsls400.t$pecl$c = znsls401.t$pecl$c
@@ -191,7 +192,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     r.t$sequ$c,
                     r.t$orno$c,
                     r.t$pono$c
-               from baandb.tznsls004301 r ) znsls004
+               from baandb.tznsls004201 r ) znsls004
         ON znsls004.t$ncia$c = znsls401.t$ncia$c
        AND znsls004.t$uneg$c = znsls401.t$uneg$c
        AND znsls004.t$pecl$c = znsls401.t$pecl$c
@@ -207,7 +208,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     F.t$entr$c,
                     MAX(F.T$LBRD$C) T$LBRD$C,
                     MAX(F.T$DVED$C) T$DVED$C
-               from BAANDB.TZNSLS409301 F
+               from BAANDB.TZNSLS409201 F
            group by F.t$ncia$c,
                     F.t$uneg$c,
                     F.t$pecl$c,
@@ -219,58 +220,58 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND ZNSLS409.t$sqpd$c = znsls401.t$sqpd$c
        AND ZNSLS409.t$entr$c = znsls401.t$entr$c
     
- LEFT JOIN baandb.tcisli245301 cisli245
+ LEFT JOIN baandb.tcisli245201 cisli245
         ON cisli245.t$slso = znsls004.t$orno$c        -- OV de Devolução
        AND cisli245.t$pono = znsls004.t$pono$c
        
- LEFT JOIN baandb.ttdsls401301  tdsls401
+ LEFT JOIN baandb.ttdsls401201  tdsls401
         ON tdsls401.t$orno = cisli245.t$slso
        AND tdsls401.t$pono = cisli245.t$pono 
 
- LEFT JOIN baandb.ttdrec947301  tdrec947
+ LEFT JOIN baandb.ttdrec947201  tdrec947
         ON tdrec947.t$orno$l = tdsls401.t$orno
        AND tdrec947.t$pono$l = tdsls401.t$pono
        AND tdrec947.t$oorg$l = 1
        
- LEFT JOIN baandb.tcisli940301 cisli940
+ LEFT JOIN baandb.tcisli940201 cisli940
         ON cisli940.t$fire$l = cisli245.t$fire$l        --Nota de Retorno de Mercadoria ao Cliente
                   
- LEFT JOIN baandb.tcisli941301 cisli941
+ LEFT JOIN baandb.tcisli941201 cisli941
         ON cisli941.t$fire$l = cisli245.t$fire$l
        AND cisli941.t$line$l = cisli245.t$line$l
       
- LEFT JOIN baandb.ttdsls400301 tdsls400
+ LEFT JOIN baandb.ttdsls400201 tdsls400
         ON tdsls400.t$orno = NVL(znsls004.t$orno$c, znsls401.t$orno$c)
         
- LEFT JOIN baandb.ttdsls400301 tdsls400_2
+ LEFT JOIN baandb.ttdsls400201 tdsls400_2
         ON tdsls400_2.t$orno = znsls401.t$orno$c
         
- LEFT JOIN baandb.ttdsls094301 tdsls094
+ LEFT JOIN baandb.ttdsls094201 tdsls094
         ON tdsls094.t$sotp = tdsls400_2.t$sotp
     
- LEFT JOIN baandb.ttcmcs065301 tcmcs065
+ LEFT JOIN baandb.ttcmcs065201 tcmcs065
         ON tcmcs065.t$cwoc = tdsls400.t$cofc
 
- LEFT JOIN baandb.ttccom130301 tccom130
+ LEFT JOIN baandb.ttccom130201 tccom130
         ON tccom130.t$cadr = tcmcs065.t$cadr
     
- LEFT JOIN baandb.tznfmd001301 znfmd001
+ LEFT JOIN baandb.tznfmd001201 znfmd001
         ON znfmd001.t$fovn$c = tccom130.t$fovn$l
     
- LEFT JOIN baandb.tznfmd630301 znfmd630
+ LEFT JOIN baandb.tznfmd630201 znfmd630
         ON znfmd630.t$orno$c = znsls401.t$orno$c
     
  LEFT JOIN ( Select znfmd640.t$fili$c,
                     znfmd640.t$etiq$c,
                     MAX(znfmd640.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640.T$DATE$C) OCORR,
                     max(znfmd640.t$date$c) DATA_OCORR
-               from baandb.tznfmd640301 znfmd640
+               from baandb.tznfmd640201 znfmd640
            group by znfmd640.t$fili$c,
                     znfmd640.t$etiq$c ) znfmd640
         ON znfmd640.t$fili$c = znfmd630.t$fili$c
        AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
 
- LEFT JOIN baandb.tznfmd030301 znfmd030
+ LEFT JOIN baandb.tznfmd030201 znfmd030
         ON znfmd030.t$ocin$c = znfmd640.OCORR
 
  LEFT JOIN ( select znsls410.t$ncia$c,
@@ -280,7 +281,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$sqpd$c,
                     max(znsls410.t$dtoc$c) DATA_OCORR,
                     MAX(znsls410.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C,  znsls410.T$SEQN$C) PT_CONTR
-               from baandb.tznsls410301 znsls410
+               from baandb.tznsls410201 znsls410
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
@@ -292,35 +293,35 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND znsls410.t$entr$c = znsls401.t$entr$c
        AND znsls410.t$sqpd$c = znsls401.t$sqpd$c
     
- LEFT JOIN baandb.tznmcs002301 znmcs002
+ LEFT JOIN baandb.tznmcs002201 znmcs002
         ON znmcs002.t$poco$c = znsls410.PT_CONTR
     
  LEFT JOIN ( select znsls000.t$indt$c,
                     znsls000.t$itmf$c IT_FRETE,
                     znsls000.t$itmd$c IT_DESP,
                     znsls000.t$itjl$c IT_JUROS
-                from baandb.tznsls000301 znsls000
+                from baandb.tznsls000201 znsls000
                 where rownum = 1 ) PARAM
         ON PARAM.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
               
  LEFT JOIN ( select cisli941.t$fire$l,
                     cisli941.t$item$l,
                     cisli941.t$amnt$l TOTAL
-               from baandb.tcisli941301 cisli941 ) DESPESA
+               from baandb.tcisli941201 cisli941 ) DESPESA
         ON DESPESA.t$fire$l = cisli940.t$fire$l
        AND TRIM(DESPESA.t$item$l) = TRIM(PARAM.IT_DESP)
      
  LEFT JOIN ( select cisli941.t$fire$l,
                     cisli941.t$item$l,
                     cisli941.t$amnt$l TOTAL
-               from baandb.tcisli941301 cisli941 ) JUROS
+               from baandb.tcisli941201 cisli941 ) JUROS
         ON JUROS.t$fire$l = cisli940.t$fire$l
        AND TRIM(JUROS.t$item$l) = TRIM(PARAM.IT_JUROS)
     
- LEFT JOIN baandb.ttcibd001301 tcibd001
+ LEFT JOIN baandb.ttcibd001201 tcibd001
         ON TRIM(tcibd001.t$item) = TRIM(znsls401.t$item$c)
 
- LEFT JOIN baandb.tznsls002301 znsls002
+ LEFT JOIN baandb.tznsls002201 znsls002
         ON znsls002.t$tpen$c = znsls401.t$itpe$c
    
  LEFT JOIN ( select sum( wmd.t$hght   * 
@@ -330,9 +331,9 @@ INNER JOIN baandb.tznsls400301 znsls400
                          znmcs.t$cuba$c ) TOT,
                     sli.t$fire$l,
                     znmcs.t$cfrw$c
-               from baandb.tcisli941301 sli,
-                    baandb.twhwmd400301 wmd,
-                    baandb.tznmcs080301 znmcs 
+               from baandb.tcisli941201 sli,
+                    baandb.twhwmd400201 wmd,
+                    baandb.tznmcs080201 znmcs 
               where wmd.t$item = sli.t$item$l     
            group by sli.t$fire$l, znmcs.t$cfrw$c ) CUBAGEM
         ON CUBAGEM.t$fire$l = cisli940.t$fire$l
@@ -344,7 +345,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     MAX(znsls410.t$dtoc$c) DATA_OCORR,
                     MAX(znsls410.t$dpco$c) DATA_DTPR,
                     MAX(znsls410.t$dtpr$c) DATA_DTCD
-               from baandb.tznsls410301 znsls410
+               from baandb.tznsls410201 znsls410
               where znsls410.t$poco$c = 'APD'
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -357,7 +358,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
-               from baandb.tznsls410301 znsls410
+               from baandb.tznsls410201 znsls410
               where znsls410.t$poco$c = 'POS'       --POSTAGEM
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -372,7 +373,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$entr$c,
                     znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
-               from baandb.tznsls410301 znsls410
+               from baandb.tznsls410201 znsls410
               where znsls410.t$poco$c = 'CPC'       --Cancelamento da Coleta
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -391,7 +392,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$entr$c,
                     znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
-               from baandb.tznsls410301 znsls410
+               from baandb.tznsls410201 znsls410
               where znsls410.t$poco$c = 'RDV'       --Retorno da Mercadoria ao CD
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -404,14 +405,14 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND REC_COLETA.t$entr$c = znsls401.t$entr$c
        AND REC_COLETA.t$sqpd$c = znsls401.t$sqpd$c
        
- LEFT JOIN baandb.ttccom000301  tccom000
+ LEFT JOIN baandb.ttccom000201  tccom000
         ON tccom000.t$indt < to_date('01-01-1980','DD-MM-YYYY') 
-       AND tccom000.t$ncmp = 301
+       AND tccom000.t$ncmp = 201
          
- LEFT JOIN baandb.ttccom130301  tccom130cnova
+ LEFT JOIN baandb.ttccom130201  tccom130cnova
         ON tccom130cnova.t$cadr = tccom000.t$cadr
           
- LEFT JOIN baandb.tznint002301 znint002
+ LEFT JOIN baandb.tznint002201 znint002
         ON znint002.t$ncia$c = znsls401.t$ncia$c
        AND znint002.t$uneg$c = znsls401.t$uneg$c
        
@@ -421,7 +422,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     MAX(znsls410.t$orno$c)  OV,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR,
                     MAX(znsls410.t$ntra$c) NOME_TRANSP
-               from baandb.tznsls410301 znsls410
+               from baandb.tznsls410201 znsls410
               where znsls410.t$poco$c = 'ETR'  --ENTREGUE À TRANSPORTADORA
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -430,23 +431,23 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND EXPEDICAO.t$uneg$c = znsls401.t$uneg$c
        AND EXPEDICAO.t$pecl$c = znsls401.t$pecl$c
               
- LEFT JOIN baandb.ttcmcs080301 tcmcs080           --Transportadora da Coleta
+ LEFT JOIN baandb.ttcmcs080201 tcmcs080           --Transportadora da Coleta
         ON tcmcs080.t$cfrw = cisli940.t$cfrw$l
         
- LEFT JOIN baandb.ttccom130301 tccom130transp
+ LEFT JOIN baandb.ttccom130201 tccom130transp
         ON tccom130transp.t$cadr = tcmcs080.t$cadr$l
   
- LEFT JOIN baandb.ttcmcs023301 tcmcs023
+ LEFT JOIN baandb.ttcmcs023201 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
  
- LEFT JOIN baandb.tznmcs030301 znmcs030
+ LEFT JOIN baandb.tznmcs030201 znmcs030
         ON znmcs030.t$citg$c = tcibd001.t$citg
        AND znmcs030.t$seto$c = tcibd001.t$seto$c
        
- LEFT JOIN baandb.ttcmcs060301 tcmcs060 
+ LEFT JOIN baandb.ttcmcs060201 tcmcs060 
         ON tcmcs060.t$cmnf = tcibd001.t$cmnf
      
- LEFT JOIN baandb.ttdipu001301 tdipu001
+ LEFT JOIN baandb.ttdipu001201 tdipu001
         ON tdipu001.t$item = tcibd001.t$item
     
  LEFT JOIN ( select a.t$ncia$c,
@@ -454,7 +455,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     a.t$pecl$c,
                     min(a.t$sqpd$c) t$sqpd$c,
                     min(a.t$entr$c) t$entr$c
-             from   baandb.tznsls401301 a
+             from   baandb.tznsls401201 a
              where  a.t$idor$c = 'LJ'
              group by a.t$ncia$c, 
                       a.t$uneg$c,
@@ -470,7 +471,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     a.t$entr$c,
                     min(a.t$orno$c) t$orno$c,
                     min(a.t$pono$c) t$pono$c
-             from   baandb.tznsls004301 a
+             from   baandb.tznsls004201 a
              group by a.t$ncia$c, 
                       a.t$uneg$c,
                       a.t$pecl$c,
@@ -485,15 +486,15 @@ INNER JOIN baandb.tznsls400301 znsls400
   LEFT JOIN ( select  a.t$slso,
                       a.t$pono,
                       max(a.t$fire$l) t$fire$l
-              from    baandb.tcisli245301 a
+              from    baandb.tcisli245201 a
               group by  a.t$slso, a.t$pono ) SLI245
          ON SLI245.t$slso = ORIG_PED.t$orno$c
         AND SLI245.t$pono = ORIG_PED.t$pono$c
  
-  LEFT JOIN baandb.tcisli940301 VENDA_REF
+  LEFT JOIN baandb.tcisli940201 VENDA_REF
          ON VENDA_REF.t$fire$l = SLI245.t$fire$l
          
-  LEFT JOIN baandb.ttcmcs080301  VENDA_TRANSP
+  LEFT JOIN baandb.ttcmcs080201  VENDA_TRANSP
          ON VENDA_TRANSP.t$cfrw = VENDA_REF.t$cfrw$l
 
   LEFT JOIN ( select a.t$ncia$c,
@@ -501,7 +502,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                      a.t$pecl$c,
                      a.t$sqpd$c,
                      a.t$dtem$c
-             from   baandb.tznsls400301 a
+             from   baandb.tznsls400201 a
              group by a.t$ncia$c, 
                       a.t$uneg$c,
                       a.t$pecl$c,
@@ -518,7 +519,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     znsls410.t$entr$c,
                     znsls410.t$sqpd$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR
-               from baandb.tznsls410301 znsls410
+               from baandb.tznsls410201 znsls410
               where znsls410.t$poco$c = 'CAN'      --PEDIDO CANCELADO
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -537,7 +538,7 @@ INNER JOIN baandb.tznsls400301 znsls400
                     a.t$sqpd$c,
                     a.t$entr$c,
                     MIN(a.t$dtoc$c) DATA_OCORR
-              from baandb.tznsls410301 a
+              from baandb.tznsls410201 a
               where a.t$poco$c = 'PAP'      --APROVAÇÃO PAGTO DEVOLUÇÃO
               group by a.t$ncia$c,
                        a.t$uneg$c,
@@ -550,6 +551,33 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND PAP_TD.t$sqpd$c = znsls401.t$sqpd$c
        AND PAP_TD.t$entr$c = znsls401.t$entr$c
        
+ LEFT JOIN ( select l.t$desc DESCR,
+                    d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'zn'
+                and d.t$cdom = 'mcs.trans.c'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'zn'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) ORIGEM_O_FRETE
+        ON ORIGEM_O_FRETE.t$cnst = znfmd630.t$torg$c
 
 WHERE TRIM(znsls401.t$idor$c) = 'TD'  -- Troca / Devolução
   AND znsls401.t$qtve$c < 0           -- Devolução
