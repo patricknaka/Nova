@@ -58,14 +58,16 @@ SELECT
     tccom130.t$fovn$l     CNPJ_FORN,
     tccom130.t$nama       NOME_FORNEC,
     
-    ( select sum(a.t$tamt$l) 
+/*    ( select sum(a.t$tamt$l) 
         from baandb.tbrmcs941301 a
   inner join baandb.tbrmcs940301 b 
           on a.t$txre$l = b.t$txre$l 
        where a.t$txre$l = tdsls401.t$txre$l 
          and a.t$line$l = tdsls401.t$txli$l 
          and b.t$txor$l = 2 ) 
-                          VALO_PREVIMP,
+                          VALO_PREVIMP,*/
+
+    znsls401.t$vlun4c     VALO_PREVIMP,     -- MMF
  
     ( select case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)) = 0 
                     then 0
@@ -251,6 +253,7 @@ INNER JOIN baandb.tznsls002301 znsls002
 WHERE tcemm124.t$dtyp = 1 
   AND whinp100.t$koor = 3 
   AND whinp100.t$kotr = 2
+  AND tdsls401.t$clyn = 1         -- MMF
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))
