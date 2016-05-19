@@ -383,6 +383,8 @@ LEFT JOIN ( select a.t$ncmp$c,
   WHERE znsls401dev.t$idor$c = 'TD'
     AND znsls401dev.t$qtve$c < 0
     AND znsls409.t$lbrd$c = 1        --Forcado = Sim
-    
---    and znsls401dev.t$pecl$c IN 
-    
+   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400dev.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 
+              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
+      Between :DataOcorrenciaDe 
+          And :DataOcorrenciaAte
+  AND tcmcs080_dev.t$cfrw IN (:Transportadora)
