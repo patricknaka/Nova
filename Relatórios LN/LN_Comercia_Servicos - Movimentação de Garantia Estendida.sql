@@ -6,27 +6,27 @@ SELECT ZNCOM005.T$UNEG$C                               UNEG,
        ZNCOM005.T$PECL$C                               NR_PEDIDO_GARANTIA,       --Pedido Garantia
        zncom005.t$tpga$c                               TIPO_PLANO_GARANTIA,
     
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_G.t$dtoc$c,
-       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-         AT time zone 'America/Sao_Paulo') AS DATE)    DT_VENDA,                 --Data Venda Garantia - Ponto 'DNF'
-    
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_EMISSAO.t$dtoc$c,
+         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      
+           AT time zone 'America/Sao_Paulo') AS DATE)  DT_SOLICITACAO,           --Ponto DNF Venda/Cancelamento
 
        ZNSLS401_P.T$ENTR$C                             ENTREGA_PEDIDO,
        ZNCOM005.T$ENTR$C                               ENTREGA_GARANTIA,
     
        ZNCOM005.T$ENGA$C                               COD_PLANO_GAR,          
 
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C,                     --será necessario as duas Datas Original/Raiz (Pedido Produto e Pedido Garantia)
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C,                     --Data da Emissão do Pedido
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      
-           AT time zone 'America/Sao_Paulo') AS DATE)  DT_EMISSAO_PED_GARANTIA,  --Data da Emissão do Pedido
+           AT time zone 'America/Sao_Paulo') AS DATE)  DT_EMISSAO_PED_GARANTIA,
+		   
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_G.t$dtoc$c,
+         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+           AT time zone 'America/Sao_Paulo') AS DATE)  DT_EMISSAO_GARANTIA, 
 
-     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_G.t$dtoc$c, 
-        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-          AT time zone 'America/Sao_Paulo') AS DATE)   DT_EMISSAO_GARANTIA, 
-    
        ZNSLS400.T$CVEN$C                               VENDEDOR,
        ZNCOM005.T$CAST$C                               CERTIFICADO,
-        CASE WHEN ZNCOM005.T$QUAN$C < 0.0
+
+       CASE WHEN ZNCOM005.T$QUAN$C < 0.0
               THEN 'CANCELAMENTO'
             ELSE   'VENDA' 
        END                                             TIPO,
@@ -57,8 +57,8 @@ SELECT ZNCOM005.T$UNEG$C                               UNEG,
        TCMCS023.T$DSCA                                 DESCR_DEPARTAMENTO,
        TCIBD001_I.T$FAMI$C                             ID_FAMILIA,
        ZNMCS031.T$DSCA$C                               DESCR_FAMILIA,
-       ZNSLS401_P.T$VLUN$C                             VL_PRODUTO,
-       (ZNSLS401_P.T$VLUN$C / ZNSLS401_P.T$QTVE$C) - 
+       NVL(ZNSLS401_P.T$VLUN$C, ZNCOM005.T$IGVA$C)     VL_PRODUTO,
+       ZNSLS401_P.T$VLUN$C - 
        (ZNSLS401_P.T$VLDI$C / ZNSLS401_P.T$QTVE$C)     VL_PRODUTO_PAGO,
        ZNSLS401_P.T$VLDI$C                             VL_DESCONTO_INCONDICIONAL,
        ZNCOM005.T$PRIS$C                               VL_GARANTIA,
@@ -124,7 +124,7 @@ FROM ( SELECT A.T$NCIA$C,
               SUM(A.T$CANG$C) T$CANG$C,
               SUM(A.T$VRSG$C) T$VRSG$C,
               SUM(A.T$IGVA$C) T$IGVA$C
-         FROM BAANDB.TZNCOM005201 A
+         FROM BAANDB.TZNCOM005301 A
      GROUP BY A.T$NCIA$C,
               A.T$UNEG$C,
               A.T$PECL$C,
@@ -142,28 +142,28 @@ FROM ( SELECT A.T$NCIA$C,
               A.T$LINE$C,
               A.T$CANC$C,
               A.T$CAST$C,
-              A.T$TPGA$C) ZNCOM005
+              A.T$TPGA$C ) ZNCOM005
               
-LEFT  JOIN BAANDB.TZNINT002201 ZNINT002
+LEFT  JOIN BAANDB.TZNINT002301 ZNINT002
         ON ZNINT002.T$NCIA$C = ZNCOM005.T$NCIA$C
        AND ZNINT002.T$UNEG$C = ZNCOM005.T$UNEG$C
   
-LEFT JOIN BAANDB.TZNSLS400201 ZNSLS400                  --Pedido Garantia
+LEFT JOIN BAANDB.TZNSLS400301 ZNSLS400
        ON ZNSLS400.T$NCIA$C = ZNCOM005.T$NCIA$C
       AND ZNSLS400.T$UNEG$C = ZNCOM005.T$UNEG$C
       AND ZNSLS400.T$PECL$C = ZNCOM005.T$PECL$C
       AND ZNSLS400.T$SQPD$C = ZNCOM005.T$SQPD$C
 
-LEFT JOIN BAANDB.TTCMCS045201 TCMCS045
+LEFT JOIN BAANDB.TTCMCS045301 TCMCS045
        ON TCMCS045.T$CREG  = ZNSLS400.T$IDCA$C
   
-LEFT JOIN BAANDB.TTCIBD001201 TCIBD001_I                --Item Produto
+LEFT JOIN BAANDB.TTCIBD001301 TCIBD001_I                --Item Produto
        ON TRIM(TCIBD001_I.T$ITEM) = TO_CHAR(ZNCOM005.T$IGAR$C)
 
-LEFT JOIN BAANDB.TTDIPU001201 TDIPU001
+LEFT JOIN BAANDB.TTDIPU001301 TDIPU001
        ON TDIPU001.T$ITEM = TCIBD001_I.T$ITEM
        
-LEFT JOIN BAANDB.TZNSLS401201 ZNSLS401                  --Entrega Garantia
+LEFT JOIN BAANDB.TZNSLS401301 ZNSLS401                  --Entrega Garantia
        ON ZNSLS401.T$NCIA$C = ZNCOM005.T$NCIA$C
       AND ZNSLS401.T$UNEG$C = ZNCOM005.T$UNEG$C
       AND ZNSLS401.T$PECL$C = ZNCOM005.T$PECL$C
@@ -171,7 +171,7 @@ LEFT JOIN BAANDB.TZNSLS401201 ZNSLS401                  --Entrega Garantia
       AND ZNSLS401.T$ENTR$C = ZNCOM005.T$ENTR$C
       AND ZNSLS401.T$SEQU$C = ZNCOM005.T$SEQU$C
 
-LEFT JOIN BAANDB.TZNSLS401201 ZNSLS401_P               --Entrega Produto
+LEFT JOIN BAANDB.TZNSLS401301 ZNSLS401_P                --Entrega Produto
        ON ZNSLS401_P.T$NCIA$C = ZNSLS401.T$NCIA$C
       AND ZNSLS401_P.T$UNEG$C = ZNSLS401.T$UNEG$C
       AND ZNSLS401_P.T$PECL$C = ZNSLS401.T$PCGA$C
@@ -179,19 +179,19 @@ LEFT JOIN BAANDB.TZNSLS401201 ZNSLS401_P               --Entrega Produto
       AND ZNSLS401_P.T$ENTR$C = ZNSLS401.T$NEIG$C
       AND ZNSLS401_P.T$SEQU$C = ZNSLS401.T$SGAR$C
 
-LEFT JOIN BAANDB.TZNSLS400201 ZNSLS400_P               --Pedido Produto
+LEFT JOIN BAANDB.TZNSLS400301 ZNSLS400_P                --Pedido Produto
        ON ZNSLS400_P.T$NCIA$C = ZNSLS401_P.T$NCIA$C
       AND ZNSLS400_P.T$UNEG$C = ZNSLS401_P.T$UNEG$C
       AND ZNSLS400_P.T$PECL$C = ZNSLS401_P.T$PECL$C
       AND ZNSLS400_P.T$SQPD$C = ZNSLS401_P.T$SQPD$C
 
-LEFT JOIN BAANDB.TTCIBD001201 TCIBD001_G                --Item Garantia       
+LEFT JOIN BAANDB.TTCIBD001301 TCIBD001_G                 --Item Garantia       
        ON TCIBD001_G.T$ITEM = ZNSLS401.T$ITML$C
   
-LEFT JOIN BAANDB.TTCMCS023201 TCMCS023
+LEFT JOIN BAANDB.TTCMCS023301 TCMCS023
        ON TCMCS023.T$CITG  = TCIBD001_I.T$CITG
 
-LEFT JOIN BAANDB.TZNMCS031201 ZNMCS031
+LEFT JOIN BAANDB.TZNMCS031301 ZNMCS031
        ON ZNMCS031.T$CITG$C = TCIBD001_I.T$CITG
       AND ZNMCS031.T$SETO$C = TCIBD001_I.T$SETO$C
       AND ZNMCS031.T$FAMI$C = TCIBD001_I.T$FAMI$C
@@ -201,14 +201,47 @@ LEFT JOIN ( select a.t$ncia$c,
                    a.t$pecl$c,
                    a.t$sqpd$c,
                    a.t$entr$c,
-                   a.t$dtoc$c
-              from baandb.tznsls410201 a
-             where a.t$poco$c = 'DNF' ) znsls410_G      --Emissão Nota Garantia
+                   a.t$dtoc$c,
+                   min(a.t$seqn$c)
+              from baandb.tznsls410301 a
+        inner join baandb.tznsls401301 z    
+                on a.t$ncia$c = z.t$ncia$c
+               and a.t$uneg$c = z.t$uneg$c
+               and a.t$pecl$c = z.t$pcga$c
+               and a.t$sqpd$c = z.t$spig$c
+               and a.t$entr$c = z.t$neig$c
+             where a.t$poco$c = 'DNF'
+               and z.t$idor$c = 'LJ'
+          group by a.t$ncia$c,
+                   a.t$uneg$c,
+                   a.t$pecl$c,
+                   a.t$sqpd$c,
+                   a.t$entr$c,
+                   a.t$dtoc$c ) znsls410_G         --Emissão Venda Produto
        ON ZNSLS410_G.T$NCIA$C = ZNCOM005.T$NCIA$C
       AND ZNSLS410_G.T$UNEG$C = ZNCOM005.T$UNEG$C
       AND ZNSLS410_G.T$PECL$C = ZNCOM005.T$PECL$C
-      AND ZNSLS410_G.T$SQPD$C = ZNCOM005.T$SQPD$C
-      AND ZNSLS410_G.T$ENTR$C = ZNCOM005.T$ENTR$C
+
+LEFT JOIN ( select a.t$ncia$c,
+                   a.t$uneg$c,
+                   a.t$pecl$c,
+                   a.t$sqpd$c,
+                   a.t$entr$c,
+                   a.t$dtoc$c,
+                   min(a.t$seqn$c)
+              from baandb.tznsls410301 a
+             where a.t$poco$c = 'DNF'
+          group by a.t$ncia$c,
+                   a.t$uneg$c,
+                   a.t$pecl$c,
+                   a.t$sqpd$c,
+                   a.t$entr$c,
+                   a.t$dtoc$c ) znsls410_EMISSAO      --Data de Emissao
+       ON znsls410_EMISSAO.T$NCIA$C = ZNCOM005.T$NCIA$C
+      AND znsls410_EMISSAO.T$UNEG$C = ZNCOM005.T$UNEG$C
+      AND znsls410_EMISSAO.T$PECL$C = ZNCOM005.T$PECL$C
+      AND znsls410_EMISSAO.T$SQPD$C = ZNCOM005.T$SQPD$C
+      AND znsls410_EMISSAO.T$ENTR$C = ZNCOM005.T$ENTR$C
 
 LEFT JOIN ( select a.t$ncia$c,
                    a.t$uneg$c,
@@ -218,38 +251,45 @@ LEFT JOIN ( select a.t$ncia$c,
                    a.t$dtoc$c,
                    a.t$docn$c,
                    a.t$seri$c,
-                   a.t$dtem$c
-              from baandb.tznsls410201 a
-             where a.t$poco$c = 'NFS' ) znsls410_P      --Emissão Nota Produto
+                   a.t$dtem$c,
+                   max(a.t$seqn$c)
+              from baandb.tznsls410301 a
+             where a.t$poco$c = 'NFS'
+          group by a.t$ncia$c,
+                   a.t$uneg$c,
+                   a.t$pecl$c,
+                   a.t$sqpd$c,
+                   a.t$entr$c,
+                   a.t$dtoc$c,
+                   a.t$docn$c,
+                   a.t$seri$c,
+                   a.t$dtem$c ) znsls410_P      --Emissão Nota Produto
        ON ZNSLS410_P.T$NCIA$C = ZNSLS401_P.T$NCIA$C
       AND ZNSLS410_P.T$UNEG$C = ZNSLS401_P.T$UNEG$C
       AND ZNSLS410_P.T$PECL$C = ZNSLS401_P.T$PECL$C
       AND ZNSLS410_P.T$SQPD$C = ZNSLS401_P.T$SQPD$C
       AND ZNSLS410_P.T$ENTR$C = ZNSLS401_P.T$ENTR$C
 
-LEFT JOIN baandb.ttccom100201 tccom100
+LEFT JOIN baandb.ttccom100301 tccom100
        ON tccom100.t$bpid = znsls400.t$ofbp$c
        
-LEFT JOIN baandb.ttccom130201 tccom130
+LEFT JOIN baandb.ttccom130301 tccom130
        ON tccom130.t$cadr = tccom100.t$cadr
        
 WHERE EXISTS ( select *     --ITENS TIPO GARANTIA ESTENDIDA
-                 from baandb.tznisa002201 a,
-                      baandb.tznisa001201 b
+                 from baandb.tznisa002301 a,
+                      baandb.tznisa001301 b
                 where a.t$npcl$c = TCIBD001_G.T$NPCL$C     
                   and b.t$nptp$c = a.t$nptp$c
                   and b.t$emnf$c = 2    --Emissao de Nota Fiscal = Nao
                   and b.t$bpti$c = 2    --Tipo de Interface de Aviso = Arquivo Texto
                   and b.t$nfed$c = 2  ) --Gera Nota Fiscal de Entrada = Nao
       
-      
-  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C, 
-         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-           AT time zone 'America/Sao_Paulo') AS DATE)   
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_EMISSAO.t$dtoc$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+                AT time zone 'America/Sao_Paulo') AS DATE))  
       BETWEEN :DataPedidoDe AND :DataPedidoAte
   AND ( (:UNegocioTodos = 1) OR (TRIM(ZNCOM005.T$UNEG$C) IN (:UNegocio) AND (:UNegocioTodos = 0)) )
   AND ZNSLS400.T$IDCA$C IN (:CanalVendas)
-  AND CASE WHEN ZNCOM005.T$CANC$C = 1 
-             THEN 'CANCELAMENTO' 
-           ELSE   'VENDA' 
-      END IN (:Status)
+  AND ZNCOM005.T$CANC$C IN (:Status) --1 = Cancelamento, 2 = Venda
+  AND ( (:PedGarantiaTodos = 1) OR (TRIM(ZNCOM005.T$PECL$C) IN (:PedGarantia) AND (:PedGarantiaTodos = 0)) )
