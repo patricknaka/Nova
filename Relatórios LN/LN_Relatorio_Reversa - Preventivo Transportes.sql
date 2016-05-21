@@ -152,7 +152,7 @@ SELECT
     END                                       PENDENTE_COLETA,
  
     tdsls400_2.t$sotp,
-    tdsls094.t$dsca			                      TIPO_ORDEM_DE_FRETE,
+    tdsls094.t$dsca			                  TIPO_ORDEM_DE_FRETE,
     ORIGEM_O_FRETE.DESCR                      ORIGEM_ORDEM_DE_FRETE,
     ZNSLS401.T$ORNO$C,
     cisli940.t$fire$l                         REF_FISCAL,
