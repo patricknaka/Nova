@@ -194,7 +194,6 @@ LEFT JOIN ( select a.t$ncia$c,
                    a.t$uneg$c,
                    a.t$pecl$c,
                    a.t$sqpd$c,
-                   a.t$entr$c,
                    min(a.t$dtoc$c) t$dtoc$c,
                    min(a.t$seqn$c) t$seqn$c
               from baandb.tznsls410301 a
@@ -209,8 +208,7 @@ LEFT JOIN ( select a.t$ncia$c,
           group by a.t$ncia$c,
                    a.t$uneg$c,
                    a.t$pecl$c,
-                   a.t$sqpd$c,
-                   a.t$entr$c ) znsls410_G         --Emissão Venda Produto ***Problem
+                   a.t$sqpd$c ) znsls410_G         --Emissão Venda Produto
        ON ZNSLS410_G.T$NCIA$C = ZNCOM005.T$NCIA$C
       AND ZNSLS410_G.T$UNEG$C = ZNCOM005.T$UNEG$C
       AND ZNSLS410_G.T$PECL$C = ZNCOM005.T$PECL$C
