@@ -1,74 +1,123 @@
-select Q1.* from (
-
-SELECT 
-    znsls410.t$pecl$c                          PEDIDO,
-    znsls410.t$entr$c                          NO_ENTREGA,
-    MAX(znsls410.T$DOCN$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C) NF,
-    MAX(znsls410.T$SERI$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  SERIE,
-    MAX(znsls410.T$POCO$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C, znsls410.T$SEQN$C) CODIGO_OCORRENCIA,
+SELECT
+    znsls401.t$uneg$c                                     UNID_NEGOCIO,
+    znsls401.t$pecl$c                                     PEDIDO,
+    znsls401.t$sqpd$c                                     SEQ_PEDIDO,
+    znsls401.t$entr$c                                     NO_ENTREGA,
+    znsls410.t$docn$C                                     NF,
+    znsls410.t$seri$C                                     SERIE,
+    znsls410.t$poco$C                                     CODIGO_OCORRENCIA,
         
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.T$DTOC$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C, znsls410.T$SEQN$C),
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE) DATA_HORA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.T$DTOC$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)        DATA_HORA,
                 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.T$DATE$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C), 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE) DATA_PROCESSAMENTO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.T$DATE$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)        DATA_PROCESSAMENTO,
                                                                     
-    CASE WHEN (MAX(znsls410.T$DTEM$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)) < =    to_date('01-01-1980','DD-MM-YYYY') 
-    THEN  NULL
+    CASE WHEN znsls410.T$DTEM$C  <= to_date('01-01-1980','DD-MM-YYYY') 
+          THEN  NULL
     ELSE
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.T$DTEM$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C),
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.T$DTEM$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
            AT time zone 'America/Sao_Paulo') AS DATE) END 
-                                               DATA_SAIDA,
+                                                          DATA_SAIDA,
 
-    CASE WHEN (MAX(znsls410.T$DTEP$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)) < =    to_date('01-01-1980','DD-MM-YYYY') 
-    THEN  NULL
+    CASE WHEN znsls410.T$DTEP$C <= to_date('01-01-1980','DD-MM-YYYY') 
+          THEN  NULL
     ELSE
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(znsls410.T$DTEP$C) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C), 
-      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.T$DTEP$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE) END    
-                                               DATA_PROMETIDA,
+                                                          DATA_PROMETIDA,
         
+    znfmd630.t$cfrw$c                                     COD_TRANSPORTADORA,
     
-    MAX(znfmd630.t$cfrw$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  COD_TRANSPORTADORA,
+    tcmcs080.t$dsca                                       NOME_TRANSPORTADORA,
     
-    MAX(tcmcs080.t$dsca) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  NOME_TRANSPORTADORA,
+    znfmd630.t$cono$c                                     CONTRATO,
     
-    MAX(znfmd630.t$cono$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  CONTRATO,
+    znfmd060.t$cdes$c                                     DESC_CONTRATO,
     
-    MAX(znfmd060.t$cdes$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  DESC_CONTRATO,
+    tdsls401.t$oamt                                       VALOR_ENTREGA,
     
-    MAX(tdsls401.t$oamt) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  VALOR_ENTREGA,
+    tcemm030.t$euca                                       FILIAL,
+    tcemm030.t$dsca                                       NOME_FILIAL,
     
-    MAX(tcemm030.t$euca) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  FILIAL,
-    MAX(tcemm030.t$dsca) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  NOME_FILIAL,
+    znsls400.t$cepf$c                                     CEP,
     
-    MAX(znsls400.t$cepf$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  CEP,
+    znsls400.t$cidf$c                                     CIDADE,
     
-    MAX(znsls400.t$cidf$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  CIDADE,
+    znsls400.t$emaf$c                                     EMAIL_CLIENTE,
     
-    MAX(znsls400.t$emaf$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  EMAIL_CLIENTE,
+    znsls400.t$telf$c                                     TELEFONE_1,
     
-    MAX(znsls400.t$telf$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  TELEFONE_1,
+    znsls400.t$te1f$c                                     TELEFONE_2,
     
-    MAX(znsls400.t$te1f$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  TELEFONE_2,
+    znfmd640.t$ulog$c                                     MATRICULA,
     
-    MAX(znfmd640.t$ulog$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  MATRICULA,
+    ttaad200.t$name                                       NOME,
     
-    MAX(ttaad200.t$name) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DATE$C, znsls410.T$SEQN$C)  NOME
+    znsls400.t$tped$c                                     TIPO_DE_VENDA,
     
-FROM       baandb.tznsls410301 znsls410
+    znsls002.t$dsca$c                                     TIPO_DE_DEVOLUCAO,
+    
+    znsls401.t$lmot$c                                     MOTIVO, 
+    CASE WHEN znsls402.t$idmp$c IS NULL THEN
+        'REENVIO'
+    ELSE zncmg007.t$desc$c END                            FORMA_DE_RESTITUICAO,
+    OVENDA.STATUS                                         SITUACAO,
+    cisli940.t$amnt$l                                     VALOR_NOTA
 
-INNER JOIN baandb.tznsls400301 znsls400
-        ON znsls400.t$ncia$c = znsls410.t$ncia$c
-       AND znsls400.t$uneg$c = znsls410.t$uneg$c
-       AND znsls400.t$pecl$c = znsls410.t$pecl$c
-       AND znsls400.t$sqpd$c = znsls410.t$sqpd$c
-       
+    
+FROM ( select a.t$ncia$c,
+              a.t$uneg$c,
+              a.t$pecl$c,
+              a.t$sqpd$c,
+              a.t$entr$c,
+              a.t$lmot$c,
+              a.t$orno$c,
+              a.t$cwoc$c,
+              a.t$itpe$c
+        from baandb.tznsls401301 a
+        group by  a.t$ncia$c,
+                  a.t$uneg$c,
+                  a.t$pecl$c,
+                  a.t$sqpd$c,
+                  a.t$entr$c,
+                  a.t$lmot$c,
+                  a.t$orno$c,
+                  a.t$cwoc$c,
+                  a.t$itpe$c ) znsls401
+
+LEFT JOIN baandb.tznsls400301 znsls400
+        ON znsls400.t$ncia$c = znsls401.t$ncia$c
+       AND znsls400.t$uneg$c = znsls401.t$uneg$c
+       AND znsls400.t$pecl$c = znsls401.t$pecl$c
+       AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
+ 
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    max(a.t$docn$c) t$docn$c,
+                    max(a.t$seri$c) t$seri$c,
+                    max(a.t$date$c) t$date$c,
+                    max(a.t$dtem$c) t$dtem$c,
+                    max(a.t$dtep$c) t$dtep$c,
+                    max(a.t$dtoc$c) t$dtoc$c,
+                    max(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C,  a.T$SEQN$C) t$poco$c
+               from baandb.tznsls410301 a
+           group by a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c ) znsls410
+        ON znsls410.t$ncia$c = znsls401.t$ncia$c
+       AND znsls410.t$uneg$c = znsls401.t$uneg$c
+       AND znsls410.t$pecl$c = znsls401.t$pecl$c
+       AND znsls410.t$sqpd$c = znsls401.t$sqpd$c
+       AND znsls410.t$entr$c = znsls401.t$entr$c
+ 
  LEFT JOIN baandb.tznfmd630301 znfmd630
-        ON to_char(znfmd630.t$pecl$c) = to_char(znsls410.t$entr$c)
+        ON to_char(znfmd630.t$pecl$c) = to_char(znsls401.t$entr$c)
         
  LEFT JOIN baandb.tznfmd640301 znfmd640
         ON  znfmd640.t$fili$c = znfmd630.t$fili$c
@@ -84,30 +133,80 @@ INNER JOIN baandb.tznsls400301 znsls400
  LEFT JOIN baandb.tznfmd060301 znfmd060
         ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
        AND znfmd060.t$cono$c = znfmd630.t$cono$c
-       
- LEFT JOIN baandb.tznsls401301 znsls401
-        ON znsls401.t$ncia$c = znsls410.t$ncia$c
-       AND znsls401.t$uneg$c = znsls410.t$uneg$c
-       AND znsls401.t$pecl$c = znsls410.t$pecl$c
-       AND znsls401.t$sqpd$c = znsls410.t$sqpd$c
-       AND znsls401.t$entr$c = znsls410.t$entr$c
         
- LEFT JOIN baandb.ttdsls401301 tdsls401
+ LEFT JOIN (  select a.t$orno,
+                    sum(a.t$oamt) t$oamt
+              from baandb.ttdsls401301 a
+              group by a.t$orno ) tdsls401
         ON tdsls401.t$orno = znsls401.t$orno$c
-       AND tdsls401.t$pono = znsls401.t$pono$c
-    
+
+ LEFT JOIN baandb.ttdsls400301 tdsls400
+        ON tdsls400.t$orno = tdsls401.t$orno
+        
  LEFT JOIN baandb.ttcemm124301  tcemm124
         ON tcemm124.t$cwoc=znsls401.t$cwoc$c
  
  LEFT JOIN baandb.ttcemm030301 tcemm030
         ON tcemm030.t$eunt=tcemm124.t$grid
 
-GROUP BY  znsls410.t$pecl$c,
-          znsls410.t$entr$c 
-
- ORDER BY DATA_HORA, PEDIDO ) Q1
+ LEFT JOIN baandb.tznsls002301 znsls002
+        ON znsls002.t$tpen$c = znsls401.t$itpe$c
  
-where ((NO_ENTREGA in (:NumEntrega) and :Todos = 1  ) or :Todos = 0 )
+ LEFT JOIN baandb.tznsls402301 znsls402
+        ON znsls402.t$ncia$c = znsls401.t$ncia$c
+       AND znsls402.t$uneg$c = znsls401.t$uneg$c
+       AND znsls402.t$pecl$c = znsls401.t$pecl$c
+       AND znsls402.t$sqpd$c = znsls401.t$sqpd$c
+       
+ LEFT JOIN baandb.tzncmg007301 zncmg007
+        ON zncmg007.t$mpgt$c = znsls402.t$idmp$c
+
+ LEFT JOIN (select a.t$slso,
+                   a.t$fire$l
+            from  baandb.tcisli245301 a
+            where a.t$ortp = 1
+              and a.t$koor = 3 
+            group by a.t$slso,
+                     a.t$fire$l ) cisli245
+        ON cisli245.t$slso = znsls401.t$orno$c
+        
+ LEFT JOIN ( select a.t$fire$l,
+                    a.t$amnt$l
+             from   baandb.tcisli940301 a) cisli940
+        ON cisli940.t$fire$l = cisli245.t$fire$l
+        
+  LEFT JOIN ( select  l.t$desc STATUS,
+                      d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'td'
+                and d.t$cdom = 'sls.hdst'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'td'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) OVENDA
+        ON OVENDA.t$cnst = tdsls400.t$hdst
+        
+WHERE znsls410.t$poco$c IS NOT NULL
+ 
+and ((NO_ENTREGA in (:NumEntrega) and :Todos = 1  ) or :Todos = 0 )
   and trunc(DATA_HORA)   
       between nvl(:DataOcorrenciaDe,DATA_HORA)
           and nvl(:DataOcorrenciaAte,DATA_HORA)
+
