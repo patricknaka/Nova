@@ -42,10 +42,11 @@ SELECT
     tdipu001.t$suti       TEMP_REPOS,
     znsls401.t$qtve$c     QUAN_ORD,
     
-    CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
-           THEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) 
-         ELSE znsls401.t$qtve$c 
-     END                  QUAN_ALOC,
+--    CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
+--           THEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) 
+--         ELSE znsls401.t$qtve$c 
+--     END                  QUAN_ALOC,
+    0.0                   QUAN_ALOC,
     
     CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
            THEN znsls401.t$qtve$c - (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0))
@@ -53,6 +54,9 @@ SELECT
      END                  QUAN_FALT,
     
     nvl(tdpur401.oqua,0)  QUAN_EM_PED,
+    
+    nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0) - nvl(ALOCADO.qtde,0)   
+                          ESTOQUE_DISPONIVEL,
     
     tttxt010.t$text       TEXT_ORD,
     tccom130.t$fovn$l     CNPJ_FORN,
@@ -140,9 +144,18 @@ INNER JOIN baandb.ttdsls400301 tdsls400
        AND tttxt010.t$seqe = 1  
 
 INNER JOIN baandb.ttdsls401301 tdsls401
-        ON znsls401.t$orno$c = tdsls401.t$orno 
-       AND znsls401.t$pono$c = tdsls401.t$pono
+        ON tdsls401.t$orno = znsls401.t$orno$c 
+       AND tdsls401.t$pono = znsls401.t$pono$c
 
+INNER JOIN (  select a.t$orno,
+                     a.t$pono
+              from baandb.ttdsls420301 a
+              where a.t$hrea = 'AES' 
+              group by a.t$orno,
+                       a.t$pono ) tdsls420
+        ON tdsls420.t$orno = tdsls401.t$orno
+       AND tdsls420.t$pono = tdsls401.t$pono
+              
  LEFT JOIN baandb.twhwmd215301 whwmd215 
         ON whwmd215.t$cwar = tdsls401.t$cwar
        AND whwmd215.t$item = tdsls401.t$item
@@ -188,9 +201,9 @@ INNER JOIN baandb.ttcibd001301 tcibd001
 INNER JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
 
-INNER JOIN baandb.twhinp100301 whinp100
-        ON whinp100.t$item = tdsls401.t$item 
-       AND whinp100.t$orno = tdsls401.t$orno
+--INNER JOIN baandb.twhinp100301 whinp100
+--        ON whinp100.t$item = tdsls401.t$item 
+--       AND whinp100.t$orno = tdsls401.t$orno
 
 INNER JOIN baandb.tznsls004301 znsls004
         ON znsls004.t$ncia$c = znsls401.t$ncia$c 
@@ -222,9 +235,24 @@ INNER JOIN baandb.tznint002301 znint002
         ON znint002.t$uneg$c = znsls400.t$uneg$c
        AND znint002.t$ncia$c = znsls400.t$ncia$c
       
-INNER JOIN baandb.tznsls002301 znsls002
+LEFT JOIN baandb.tznsls002301 znsls002
         ON znsls002.t$tpen$c = znsls401.t$itpe$c
-  
+
+  LEFT JOIN ( select  inh200.t$cdis$c restricao,
+                      inh225.t$cwar   filial,
+                      inh225.t$item   item,
+                      sum(inh225.t$qads) qtde
+              from    baandb.twhinh225301 inh225,
+                      baandb.twhinh200301 inh200
+              where   inh225.t$oorg = inh200.t$oorg
+              and     inh225.t$orno = inh200.t$orno
+              and     inh225.t$oset = inh200.t$oset 
+              and     inh225.t$pckd = 2
+              and     inh200.t$cdis$c = ' '
+              group by inh200.t$cdis$c, inh225.t$cwar, inh225.t$item) ALOCADO
+       ON   ALOCADO.item = tdsls401.t$item
+       AND  ALOCADO.filial = tdsls401.t$cwar
+       
  LEFT JOIN( SELECT d.t$cnst CODE,
                    l.t$desc DESCR
               FROM baandb.tttadv401000 d,
@@ -254,8 +282,8 @@ INNER JOIN baandb.tznsls002301 znsls002
         ON iTIPOXD.CODE = tdipu001.t$ixdn$c
     
 WHERE tcemm124.t$dtyp = 1 
-  AND whinp100.t$koor = 3 
-  AND whinp100.t$kotr = 2
+--  AND whinp100.t$koor = 3 
+--  AND whinp100.t$kotr = 2
   AND tdsls401.t$clyn != 1         -- MMF
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
