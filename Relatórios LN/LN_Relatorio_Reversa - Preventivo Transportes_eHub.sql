@@ -1,3 +1,6 @@
+--reversa preventivo transporte ehub
+
+
 SELECT 
   DISTINCT
     CASE WHEN znsls401.t$itpe$c = 15   --REVERSA
@@ -13,16 +16,16 @@ SELECT
     END                                       DATA_SOL_COLETA_POSTAGEM,
                               
     znsls401.t$pecl$c                         PEDIDO,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_PEDIDO,
-    CASE WHEN PAP_TD.DATA_OCORR IS NULL THEN
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
-        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-    ELSE
-        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PAP_TD.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
-        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) END
-                                              DATA_APROVACAO_PEDIDO,
+											  
+    CASE WHEN PAP_TD.DATA_OCORR IS NULL 
+           THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
+                  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+         ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PAP_TD.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
+                'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
+    END                                       DATA_APROVACAO_PEDIDO,
              
     znfmd001.t$fili$c                         Estabelecimento,
     tccom130cnova.t$fovn$l                    CNPJ_NOVA,
@@ -35,7 +38,7 @@ SELECT
              
     znsls401.t$entr$c                         ENTREGA_DEVOLUCAO,
     znsls401.t$endt$c                         ENTREGA_VENDA,
-    znsls401troca.t$entr$c                   ENTREGA_TROCA,
+    znsls401troca.t$entr$c                    ENTREGA_TROCA,
     znsls002.t$dsca$c                         TIPO_ENTREGA,
     znsls401.t$lass$c                         ASSUNTO,
     znsls401.t$lmot$c                         Motivo_da_Coleta,
@@ -63,6 +66,12 @@ SELECT
            THEN 'ENCERRADO'
          ELSE   'PENDENTE'
     END                                       SITUACAO_ATENDIMENTO,
+
+    CASE WHEN Trunc(znsls409.t$fdat$c) = To_date('01-01-1970','DD-MM-YYYY') 
+           THEN NULL
+         ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 'DD-MON-YYYY HH24:MI:SS'),
+                  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)	
+    END                                        DATA_FORCADO,
  
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(EXPEDICAO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -270,6 +279,7 @@ INNER JOIN baandb.tznsls400601 znsls400
                     F.t$pecl$c,
                     F.t$sqpd$c,
                     F.t$entr$c,
+                    MAX(F.T$FDAT$C) T$FDAT$C,
                     MAX(F.T$LBRD$C) T$LBRD$C,
                     MAX(F.T$DVED$C) T$DVED$C
                from BAANDB.TZNSLS409601 F
@@ -716,22 +726,27 @@ WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
   AND znsls401.t$qtve$c < 0               -- Devolução
   AND tdsls094.t$reto in (1, 3)           -- Ordem Devolução, Ordem Devolução Rejeitada     
   
-  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 
+
+  AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataPedidoDe
           And :DataPedidoAte
   AND znfmd001.t$fili$c IN (:Filial)
-  AND Trim(tcibd001.t$citg) IN (:Depto)
   AND znsls401.t$uneg$c IN (:UnidNegocio)
   AND znsls401.t$itpe$c IN (:TipoEntrega)
-  AND CASE WHEN znsls409.t$lbrd$c = 1 
-             THEN 1 -- FORÇADO
-           ELSE   0 -- NÃO FORÇADO
-      END IN (:Forcado)
-  
+  AND Trim(tcibd001.t$citg) IN (:Depto)
+  AND znmcs002.t$poco$c IN (:Status)
+  AND CASE WHEN znsls409.t$lbrd$c = 1 OR
+                znsls409.t$dved$c = 1 OR
+                znsls410.PT_CONTR IN ('VAL', 'RDV', 'RIE')
+             THEN 1
+           ELSE   2
+      END IN (:Atendimento)
+	   
 ORDER BY DATA_SOL_COLETA_POSTAGEM, 
          DATA_PEDIDO, 
          PEDIDO
+		 
 		 
 		 
 =
@@ -751,16 +766,16 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "     END                                       DATA_SOL_COLETA_POSTAGEM,  " &
 "  " &
 "     znsls401.t$pecl$c                         PEDIDO,  " &
-"     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
+"     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                               DATA_PEDIDO,  " &
-"     CASE WHEN PAP_TD.DATA_OCORR IS NULL THEN  " &
-"           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
-"     ELSE  " &
-"         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PAP_TD.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) END  " &
-"                                               DATA_APROVACAO_PEDIDO,  " &
+" 											  " &
+"     CASE WHEN PAP_TD.DATA_OCORR IS NULL  " &
+"            THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
+"                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"          ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PAP_TD.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'),  " &
+"                 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"     END                                       DATA_APROVACAO_PEDIDO,  " &
 "  " &
 "     znfmd001.t$fili$c                         Estabelecimento,  " &
 "     tccom130cnova.t$fovn$l                    CNPJ_NOVA,  " &
@@ -771,7 +786,9 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                               DATA_ORDEM_DEVOLUCAO,  " &
 "  " &
-"     znsls401.t$entr$c                         ENTREGA,  " &
+"     znsls401.t$entr$c                         ENTREGA_DEVOLUCAO,  " &
+"     znsls401.t$endt$c                         ENTREGA_VENDA,  " &
+"     znsls401troca.t$entr$c                    ENTREGA_TROCA,  " &
 "     znsls002.t$dsca$c                         TIPO_ENTREGA,  " &
 "     znsls401.t$lass$c                         ASSUNTO,  " &
 "     znsls401.t$lmot$c                         Motivo_da_Coleta,  " &
@@ -799,6 +816,12 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "            THEN 'ENCERRADO'  " &
 "          ELSE   'PENDENTE'  " &
 "     END                                       SITUACAO_ATENDIMENTO,  " &
+" 	  " &
+"     CASE WHEN Trunc(znsls409.t$fdat$c) = To_date('01-01-1970','DD-MM-YYYY')  " &
+"            THEN NULL  " &
+"          ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
+"                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"     END                                        DATA_FORCADO,  " &
 "  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(EXPEDICAO.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
@@ -1006,6 +1029,7 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "                     F.t$pecl$c,  " &
 "                     F.t$sqpd$c,  " &
 "                     F.t$entr$c,  " &
+"                     MAX(F.T$FDAT$C) T$FDAT$C,  " &
 "                     MAX(F.T$LBRD$C) T$LBRD$C,  " &
 "                     MAX(F.T$DVED$C) T$DVED$C  " &
 "                from BAANDB.TZNSLS409" + Parameters!Compania.Value + " F  " &
@@ -1432,18 +1456,39 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "  LEFT JOIN baandb.ttdrec940" + Parameters!Compania.Value + " tdrec940  " &
 "         ON tdrec940.t$fire$l = tdrec947.t$fire$l  " &
 "  " &
-" WHERE TRIM(znsls401.t$idor$c) = 'TD'  " &
+"  LEFT JOIN   ( select a.t$ncia$c,  " &
+"                      a.t$uneg$c,  " &
+"                      a.t$pecl$c,  " &
+"                      a.t$sqpd$c,  " &
+"                      max(a.t$entr$c) t$entr$c  " &
+"               from BAANDB.tznsls401" + Parameters!Compania.Value + " a  " &
+"               where a.t$qtve$c > 0  " &
+"               group by  a.t$ncia$c,  " &
+"                         a.t$uneg$c,  " &
+"                         a.t$pecl$c,  " &
+"                         a.t$sqpd$c) znsls401troca  " &
+"         ON znsls401troca.t$ncia$c = znsls401.t$ncia$c  " &
+"        AND znsls401troca.t$uneg$c = znsls401.t$uneg$c  " &
+"        AND znsls401troca.t$pecl$c = znsls401.t$pecl$c  " &
+"        AND znsls401troca.t$sqpd$c = znsls401.t$sqpd$c  " &
 "  " &
-"   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
+" WHERE TRIM(znsls401.t$idor$c) = 'TD'  " &
+"   AND znsls401.t$qtve$c < 0  " &
+"   AND tdsls094.t$reto in (1, 3)  " &
+"  " &
+"   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))  " &
 "       Between :DataPedidoDe  " &
 "           And :DataPedidoAte  " &
 "   AND znsls401.t$itpe$c IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")  " &
 "   AND Trim(tcibd001.t$citg) IN (" + Replace(("'" + JOIN(Parameters!Depto.Value,"',") + "'"),",",",'") + ")  " &
-" AND znmcs002.t$poco$c IN (" + Replace(("'" + JOIN(Parameters!Status.Value,"',") + "'"),",",",'") + ")  " &
+"   AND znmcs002.t$poco$c IN (" + Replace(("'" + JOIN(Parameters!Status.Value,"',") + "'"),",",",'") + ")  " &
 "   AND CASE WHEN znsls409.t$lbrd$c = 1 OR  " &
-"              znsls409.t$dved$c = 1 OR  " &
-"              znsls410.PT_CONTR IN ('VAL', 'RDV', 'RIE')  " &
-"           THEN 1  " &
-"         ELSE   2  " &
-"       END IN (" + JOIN(Parameters!Atendimento.Value, ", ") + ") " 
+"                 znsls409.t$dved$c = 1 OR  " &
+"                 znsls410.PT_CONTR IN ('VAL', 'RDV', 'RIE')  " &
+"              THEN 1  " &
+"            ELSE   2  " &
+"       END IN (" + JOIN(Parameters!Atendimento.Value, ", ") + ") "  &
+"  " &
+" ORDER BY PEDIDO,  " &
+"          DATA_PEDIDO  "
