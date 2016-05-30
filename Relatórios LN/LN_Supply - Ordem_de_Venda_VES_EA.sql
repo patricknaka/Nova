@@ -14,7 +14,7 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtap$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
-                          DATA_APR, 
+                          DATA_APRVACAO, 
         
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -97,9 +97,9 @@ SELECT
     tcmcs031.t$dsca       NOME_UNIDADE_NEGOCIO,
     znsls400.t$nomf$c     NOME_COBR,
     znsls400.t$emaf$c     EMAIL,
-    znsls400.t$telf$c     TELEFONE_RESIDENCIAL,
-    znsls400.t$te1f$c     TELEFONE_CELULAR,
-    znsls400.t$te2f$c     TELEFONE_COMERCIAL,
+    znsls400.t$telf$c     TEL_RESIDENCIAL,
+    znsls400.t$te1f$c     TEL_CELULAR,
+    znsls400.t$te2f$c     TEL_COMERCIAL,
     znsls002.t$dsca$c     DECR_TIPO_ENTREGA,
     iTIPOXD.DESCR         DESCR_XD,
     ULT_PONTO.t$poco$c    COD_ULT_PONTO,
