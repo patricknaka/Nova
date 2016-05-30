@@ -103,7 +103,25 @@ SELECT
     znsls002.t$dsca$c     DECR_TIPO_ENTREGA,
     iTIPOXD.DESCR         DESCR_XD,
     ULT_PONTO.t$poco$c    COD_ULT_PONTO,
-    znmcs002.t$desc$c     DESCR_ULT_PONTO
+    znmcs002.t$desc$c     DESCR_ULT_PONTO,
+    
+    (SELECT zncmg007.t$desc$c Pag
+            FROM baandb.tznsls402301 znsls402_S
+            INNER JOIN baandb.tzncmg007301 zncmg007
+              on zncmg007.t$mpgt$c = znsls402_S.T$IDMP$C
+            WHERE 	znsls402_S.t$ncia$c = znsls400.t$ncia$c   
+            AND	znsls402_S.t$uneg$c = znsls400.t$uneg$c   
+            AND 	znsls402_S.t$pecl$c = znsls400.t$pecl$c   
+            AND znsls402_S.T$SEQU$C = 1)  MEIO_PAG1,
+            
+      (SELECT zncmg007.t$desc$c Pag 
+            FROM baandb.tznsls402301 znsls402_S
+            INNER JOIN baandb.tzncmg007301 zncmg007
+              on zncmg007.t$mpgt$c = znsls402_S.T$IDMP$C
+            WHERE 	znsls402_S.t$ncia$c = znsls400.t$ncia$c   
+            AND	znsls402_S.t$uneg$c = znsls400.t$uneg$c   
+            AND 	znsls402_S.t$pecl$c = znsls400.t$pecl$c    
+            AND znsls402_S.T$SEQU$C = 2) MEIO_PAG2
    
 FROM       baandb.tznsls400301 znsls400
 
