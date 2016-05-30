@@ -46,12 +46,19 @@ SELECT
 --           THEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) 
 --         ELSE znsls401.t$qtve$c 
 --     END                  QUAN_ALOC,
-    0.0                   QUAN_ALOC,
+    case when tdsls420.t$orno is null then
+          znsls401.t$qtve$c        
+    else  0.0 end         QUAN_ALOC,
     
-    CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
-           THEN znsls401.t$qtve$c - (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0))
-         ELSE 0 
-     END                  QUAN_FALT,
+--    CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
+--           THEN znsls401.t$qtve$c - (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0))
+--         ELSE 0 
+--     END                  QUAN_FALT,
+
+    case when tdsls420.t$orno is null then
+          0.0
+    else  znsls401.t$qtve$c end
+                           QUAN_FALT,
     
     nvl(tdpur401.oqua,0)  QUAN_EM_PED,
     
@@ -165,7 +172,7 @@ INNER JOIN baandb.ttdsls401301 tdsls401
         ON tdsls401.t$orno = znsls401.t$orno$c 
        AND tdsls401.t$pono = znsls401.t$pono$c
 
-INNER JOIN (  select a.t$orno,
+LEFT JOIN (  select a.t$orno,
                      a.t$pono
               from baandb.ttdsls420301 a
               where a.t$hrea = 'AES' 
@@ -219,9 +226,9 @@ INNER JOIN baandb.ttcibd001301 tcibd001
 INNER JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
 
---INNER JOIN baandb.twhinp100301 whinp100
---        ON whinp100.t$item = tdsls401.t$item 
---       AND whinp100.t$orno = tdsls401.t$orno
+INNER JOIN baandb.twhinp100301 whinp100
+        ON whinp100.t$item = tdsls401.t$item 
+       AND whinp100.t$orno = tdsls401.t$orno
 
 INNER JOIN baandb.tznsls004301 znsls004
         ON znsls004.t$ncia$c = znsls401.t$ncia$c 
@@ -300,8 +307,8 @@ LEFT JOIN baandb.tznsls002301 znsls002
         ON iTIPOXD.CODE = tdipu001.t$ixdn$c
     
 WHERE tcemm124.t$dtyp = 1 
---  AND whinp100.t$koor = 3 
---  AND whinp100.t$kotr = 2
+  AND whinp100.t$koor = 3 
+  AND whinp100.t$kotr = 2
   AND tdsls401.t$clyn != 1         -- MMF
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
