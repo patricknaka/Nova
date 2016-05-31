@@ -77,9 +77,11 @@ SELECT
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_EXPEDICAO_PEDIDO,
 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTPR, 'DD-MON-YYYY HH24:MI:SS'), 
-      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                                              DATA_COLETA_PROMETIDA,
+    CASE WHEN znsls401.t$itpe$c = 8
+           THEN NULL
+         ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTPR, 'DD-MON-YYYY HH24:MI:SS'),
+                'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+    END                                       DATA_COLETA_PROMETIDA,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTCD, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -221,6 +223,10 @@ SELECT
     NVL(znsls401.t$vlfr$c,0)                  VL_TOTAL_NF,
     znsls401.t$vlfr$c                         VL_FRETE_SITE,
     cisli941.t$amnt$l                         VL_TOTAL_ITEM,
+	
+    zncmg007.t$mpgt$c                         COD_MEIO_PAGTO,
+    zncmg007.t$desc$c                         DSC_MEIO_PAGTO,
+	
     znmcs002.t$desc$c                         OCORRENCIA,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
@@ -706,21 +712,44 @@ INNER JOIN baandb.tznsls400601 znsls400
  LEFT JOIN baandb.ttdrec940601 tdrec940
         ON tdrec940.t$fire$l = tdrec947.t$fire$l
         
- LEFT JOIN   ( select a.t$ncia$c,
-                     a.t$uneg$c,
-                     a.t$pecl$c,
-                     a.t$sqpd$c,
-                     max(a.t$entr$c) t$entr$c 
-              from BAANDB.tznsls401601 a
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    max(a.t$entr$c) t$entr$c 
+               from BAANDB.tznsls401601 a
               where a.t$qtve$c > 0
-              group by  a.t$ncia$c,
-                        a.t$uneg$c,
-                        a.t$pecl$c,
-                        a.t$sqpd$c) znsls401troca         
+           group by a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c ) znsls401troca         
         ON znsls401troca.t$ncia$c = znsls401.t$ncia$c
        AND znsls401troca.t$uneg$c = znsls401.t$uneg$c
        AND znsls401troca.t$pecl$c = znsls401.t$pecl$c
        AND znsls401troca.t$sqpd$c = znsls401.t$sqpd$c
+	   
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    max(a.t$sqpd$c) t$sqpd$c,
+                    max(a.t$entr$c) t$entr$c
+               from BAANDB.tznsls401601 a
+              where a.t$qtve$c < 0 
+           group by a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c ) znsls401pagto
+        ON znsls401pagto.t$ncia$c = znsls401.t$ncia$c
+       AND znsls401pagto.t$uneg$c = znsls401.t$uneg$c
+       AND znsls401pagto.t$pecl$c = znsls401.t$pecl$c
+
+ LEFT JOIN BAANDB.tznsls402601 znsls402
+        ON znsls402.t$ncia$c = znsls401pagto.t$ncia$c
+       AND znsls402.t$uneg$c = znsls401pagto.t$uneg$c
+       AND znsls402.t$pecl$c = znsls401pagto.t$pecl$c
+       AND znsls402.t$sqpd$c = znsls401pagto.t$sqpd$c
+
+ LEFT JOIN BAANDB.tzncmg007601 zncmg007
+        ON zncmg007.t$mpgt$c = znsls402.t$idmp$c
 
 WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
   AND znsls401.t$qtve$c < 0               -- Devolução
@@ -827,9 +856,11 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "                                               DATA_EXPEDICAO_PEDIDO,  " &
 "  " &
-"     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTPR, 'DD-MON-YYYY HH24:MI:SS'),  " &
-"       'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
-"                                               DATA_COLETA_PROMETIDA,  " &
+"     CASE WHEN znsls401.t$itpe$c = 8  " &
+"            THEN NULL  " &
+"          ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTPR, 'DD-MON-YYYY HH24:MI:SS'),  " &
+"                 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"     END                                       DATA_COLETA_PROMETIDA,  " &
 "  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_DTCD, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
@@ -972,6 +1003,9 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "     znsls401.t$vlfr$c                         VL_FRETE_SITE,  " &
 "     cisli941.t$amnt$l                         VL_TOTAL_ITEM,  " &
 "     znmcs002.t$desc$c                         OCORRENCIA,  " &
+"  " &
+"     zncmg007.t$mpgt$c                         COD_MEIO_PAGTO,  " &
+"     zncmg007.t$desc$c                         DSC_MEIO_PAGTO,  " &
 "  " &
 "     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
@@ -1456,21 +1490,44 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "  LEFT JOIN baandb.ttdrec940" + Parameters!Compania.Value + " tdrec940  " &
 "         ON tdrec940.t$fire$l = tdrec947.t$fire$l  " &
 "  " &
-"  LEFT JOIN   ( select a.t$ncia$c,  " &
-"                      a.t$uneg$c,  " &
-"                      a.t$pecl$c,  " &
-"                      a.t$sqpd$c,  " &
-"                      max(a.t$entr$c) t$entr$c  " &
-"               from BAANDB.tznsls401" + Parameters!Compania.Value + " a  " &
+"  LEFT JOIN ( select a.t$ncia$c,  " &
+"                     a.t$uneg$c,  " &
+"                     a.t$pecl$c,  " &
+"                     a.t$sqpd$c,  " &
+"                     max(a.t$entr$c) t$entr$c  " &
+"                from BAANDB.tznsls401" + Parameters!Compania.Value + " a  " &
 "               where a.t$qtve$c > 0  " &
-"               group by  a.t$ncia$c,  " &
-"                         a.t$uneg$c,  " &
-"                         a.t$pecl$c,  " &
-"                         a.t$sqpd$c) znsls401troca  " &
+"            group by a.t$ncia$c,  " &
+"                     a.t$uneg$c,  " &
+"                     a.t$pecl$c,  " &
+"                     a.t$sqpd$c ) znsls401troca  " &
 "         ON znsls401troca.t$ncia$c = znsls401.t$ncia$c  " &
 "        AND znsls401troca.t$uneg$c = znsls401.t$uneg$c  " &
 "        AND znsls401troca.t$pecl$c = znsls401.t$pecl$c  " &
 "        AND znsls401troca.t$sqpd$c = znsls401.t$sqpd$c  " &
+"  " &
+"  LEFT JOIN ( select a.t$ncia$c,  " &
+"                     a.t$uneg$c,  " &
+"                     a.t$pecl$c,  " &
+"                     max(a.t$sqpd$c) t$sqpd$c,  " &
+"                     max(a.t$entr$c) t$entr$c  " &
+"                from BAANDB.tznsls401" + Parameters!Compania.Value + " a  " &
+"               where a.t$qtve$c < 0   " &
+"            group by a.t$ncia$c,  " &
+"                     a.t$uneg$c,  " &
+"                     a.t$pecl$c ) znsls401pagto  " &
+"         ON znsls401pagto.t$ncia$c = znsls401.t$ncia$c  " &
+"        AND znsls401pagto.t$uneg$c = znsls401.t$uneg$c  " &
+"        AND znsls401pagto.t$pecl$c = znsls401.t$pecl$c  " &
+"  " &
+"  LEFT JOIN BAANDB.tznsls402" + Parameters!Compania.Value + " znsls402  " &
+"         ON znsls402.t$ncia$c = znsls401pagto.t$ncia$c  " &
+"        AND znsls402.t$uneg$c = znsls401pagto.t$uneg$c  " &
+"        AND znsls402.t$pecl$c = znsls401pagto.t$pecl$c  " &
+"        AND znsls402.t$sqpd$c = znsls401pagto.t$sqpd$c  " &
+"  " &
+"  LEFT JOIN BAANDB.tzncmg007" + Parameters!Compania.Value + " zncmg007  " &
+"         ON zncmg007.t$mpgt$c = znsls402.t$idmp$c  " &
 "  " &
 " WHERE TRIM(znsls401.t$idor$c) = 'TD'  " &
 "   AND znsls401.t$qtve$c < 0  " &
