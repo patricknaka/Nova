@@ -1,3 +1,4 @@
+
 SELECT 
   DISTINCT
     tcemm030.t$euca       NUME_FILIAL,
@@ -119,16 +120,18 @@ SELECT
             WHERE 	znsls402_S.t$ncia$c = znsls400.t$ncia$c   
             AND	znsls402_S.t$uneg$c = znsls400.t$uneg$c   
             AND 	znsls402_S.t$pecl$c = znsls400.t$pecl$c   
-            AND znsls402_S.T$SEQU$C = 1)  MEIO_PAG1,
+            AND znsls402_S.T$SQPD$C = 1
+            AND rownum = 1)  MEIO_PAG1,
             
-      (SELECT zncmg007.t$desc$c Pag 
+    (SELECT zncmg007.t$desc$c Pag 
             FROM baandb.tznsls402301 znsls402_S
             INNER JOIN baandb.tzncmg007301 zncmg007
               on zncmg007.t$mpgt$c = znsls402_S.T$IDMP$C
             WHERE 	znsls402_S.t$ncia$c = znsls400.t$ncia$c   
             AND	znsls402_S.t$uneg$c = znsls400.t$uneg$c   
             AND 	znsls402_S.t$pecl$c = znsls400.t$pecl$c    
-            AND znsls402_S.T$SEQU$C = 2) MEIO_PAG2
+            AND znsls402_S.T$SQPD$C = 2
+            AND rownum = 1) MEIO_PAG2
    
 FROM       baandb.tznsls400301 znsls400
 
@@ -331,6 +334,14 @@ WHERE tcemm124.t$dtyp = 1
   AND tcemm030.T$EUNT IN (:Filial)
   AND Trim(tcmcs023.t$citg) IN (:Depto)
   AND ULT_PONTO.t$poco$c IN (:Status)  
+  AND  ((:QtdeFalt = -1) 
+        OR
+        (:QtdeFalt = 0 and case when tdsls420.t$orno is null then    0.0
+          else  znsls401.t$qtve$c end > 0)
+       OR
+       (:QtdeFalt = 1 and case when tdsls420.t$orno is null then    0.0
+       else  znsls401.t$qtve$c end = 0)
+       )
 
 ORDER BY NUME_OV_LN,
          POSI_OV_LN
