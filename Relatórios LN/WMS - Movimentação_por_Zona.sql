@@ -1,0 +1,91 @@
+SELECT	ORDERS.WHSEID 				ID_FILIAL,
+		wmsCODE.UDF2 				NOME_FILIAL,
+		PEDIDO.T$ENTR$C			ID_ENTREGA,
+		ORDERDETAIL.SKU			ID_ITEM,
+		tcmcs023.t$dsca 			DEPARTAMENTO,
+		znmcs030.t$dsca$c   			SETOR,		
+		tcibd001.t$dscb$c 			DESCR_ITEM,
+		STORER.COMPANY			FORNECEDOR,
+		LOC.PUTAWAYZONE			CLASSE_LOCAL,
+		Trim(PZ.DESCR)				DESCR_LOCAL,
+		ORDERDETAIL.ORIGINALQTY		PECAS,
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR((	SELECT MAX(h.adddate) FROM WMWHSE5.ORDERSTATUSHISTORY h  
+										WHERE h.orderkey=orders.orderkey 
+										AND h.status=orders.novastatus), 
+		'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+		AT time zone sessiontimezone) AS DATE) DT_STATUS	
+
+FROM       WMWHSE5.ORDERS ORDERS
+
+LEFT JOIN 	WMWHSE5.ORDERDETAIL ORDERDETAIL
+ON			ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY
+
+LEFT JOIN 	WMWHSE5.TASKDETAIL TASKDETAIL
+ON			TASKDETAIL.ORDERKEY = ORDERS.ORDERKEY
+AND			TASKDETAIL.SKU = ORDERDETAIL.SKU
+
+LEFT JOIN 	WMWHSE5.LOC LOC
+ON			LOC.LOC = TASKDETAIL.FROMLOC
+
+LEFT JOIN 	WMWHSE5.PUTAWAYZONE PZ
+ON 			PZ.PUTAWAYZONE =  LOC.PUTAWAYZONE 
+
+LEFT JOIN 	WMWHSE5.SKU SKU
+ON			SKU.SKU = ORDERDETAIL.SKU
+
+LEFT JOIN 	WMWHSE5.STORER STORER
+ON 			STORER.STORERKEY = SKU.SUSR5
+
+LEFT JOIN 	WMWHSE5.CODELKUP CL 
+ON 			UPPER(CL.UDF1)=ORDERS.WHSEID
+
+LEFT JOIN ( 	select A.LONG_VALUE,
+			UPPER(A.UDF1) UDF1,
+			A.UDF2
+			from ENTERPRISE.CODELKUP A
+			where A.LISTNAME = 'SCHEMA' ) wmsCODE
+ON 			wmsCODE.UDF1 = ORDERS.WHSEID
+	
+LEFT JOIN 	baandb.tznsls401601@pln01 znsls401
+ON			znsls401.t$orno$c = orderdetail.SALESORDERDOCUMENT
+AND			znsls401.t$pono$c = orderdetail.SALESORDERLINE
+
+LEFT JOIN 	baandb.ttcibd001601@pln01 tcibd001
+ON			tcibd001.t$item = znsls401.t$itml$c
+
+LEFT JOIN 	baandb.ttcmcs023601@pln01 tcmcs023
+ON			tcmcs023.t$citg = tcibd001.t$citg
+	
+LEFT JOIN 	baandb.tznmcs030601@pln01 znmcs030
+ON			znmcs030.t$seto$c = tcibd001.t$seto$c
+AND 			znmcs030.t$citg$c = tcibd001.t$citg
+	
+LEFT JOIN ( select 	A.T$ORNO$C, 
+				A.T$PECL$C, 
+				A.T$ENTR$C, 
+				A.T$UNEG$C,
+				B.T$DTIN$C, 
+				B.T$IDLI$C
+		from 		BAANDB.TZNSLS004301@pln01 A 
+		inner join 	BAANDB.TZNSLS400301@pln01 B
+		on 		B.T$NCIA$C = A.T$NCIA$C
+		and 		B.T$UNEG$C = A.T$UNEG$C
+		and 		B.T$PECL$C = A.T$PECL$C
+		and 		B.T$SQPD$C = A.T$SQPD$C
+		group by	A.T$ORNO$C, 
+				A.T$PECL$C, 
+				A.T$ENTR$C, 
+				A.T$UNEG$C,
+				B.T$DTIN$C, 
+				B.T$IDLI$C ) PEDIDO
+		ON PEDIDO.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
+		
+WHERE  	ORDERS.WHSEID = :FILIAL
+AND 		Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
+				'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+				AT time zone 'America/Sao_Paulo') AS DATE))
+		Between		 :DataRegistroDe	AND	:DataRegistroAte
+AND 		LOC.PUTAWAYZONE in (:Zona)
+AND 		tcmcs023.t$dsca in (:Departamento)
+AND		znmcs030.t$dsca$c in (:Setor)
+		
