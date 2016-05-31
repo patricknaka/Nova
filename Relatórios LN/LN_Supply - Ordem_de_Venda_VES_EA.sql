@@ -63,8 +63,13 @@ SELECT
     
     nvl(tdpur401.oqua,0)  QUAN_EM_PED,
     
-    nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0) - nvl(ALOCADO.qtde,0)   
-                          ESTOQUE_DISPONIVEL,
+    nvl(whwmd215.t$qhnd,0)         QUAN_DISPONIVEL,
+    nvl(whwmd215.t$qblk,0)         QUAN_BLOQUEADO,
+   nvl(whwmd215.t$qlal,0)          QUAN_ALOCADO,
+    
+--    nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0) - nvl(ALOCADO.qtde,0)
+    nvl(whwmd215.t$qhnd,0) - nvl(whwmd215.t$qblk,0) - nvl(whwmd215.t$qlal,0)   
+                          SALDO,
     
     tttxt010.t$text       TEXT_ORD,
     tccom130.t$fovn$l     CNPJ_FORN,
@@ -188,20 +193,20 @@ LEFT JOIN (  select a.t$orno,
         ON whwmd215.t$cwar = tdsls401.t$cwar
        AND whwmd215.t$item = tdsls401.t$item
 
- LEFT JOIN ( SELECT whwmd630.t$item, 
-                    whwmd630.t$cwar, 
-                    sum(whwmd630.t$qbls) bloc
-               FROM baandb.twhwmd630301 whwmd630
-              WHERE NOT EXISTS ( select * 
-                                   from baandb.ttcmcs095301 tcmcs095
-                                  where tcmcs095.t$modu = 'BOD' 
-                                    and tcmcs095.t$sumd = 0 
-                                    and tcmcs095.t$prcd = 9999
-                                    and tcmcs095.t$koda = whwmd630.t$bloc )
-                               group by whwmd630.t$item, 
-                                        whwmd630.t$cwar ) q2 
-        ON q2.t$item = whwmd215.t$item 
-       AND q2.t$cwar = whwmd215.t$cwar
+-- LEFT JOIN ( SELECT whwmd630.t$item, 
+--                    whwmd630.t$cwar, 
+--                    sum(whwmd630.t$qbls) bloc
+--               FROM baandb.twhwmd630301 whwmd630
+--              WHERE NOT EXISTS ( select * 
+--                                   from baandb.ttcmcs095301 tcmcs095
+--                                  where tcmcs095.t$modu = 'BOD' 
+--                                    and tcmcs095.t$sumd = 0 
+--                                    and tcmcs095.t$prcd = 9999
+--                                    and tcmcs095.t$koda = whwmd630.t$bloc )
+--                               group by whwmd630.t$item, 
+--                                        whwmd630.t$cwar ) q2 
+--        ON q2.t$item = whwmd215.t$item 
+--       AND q2.t$cwar = whwmd215.t$cwar
 
  LEFT JOIN ( SELECT sum(pur401.t$qoor-pur401.t$qidl) oqua,
                     pur401.t$item,
@@ -266,20 +271,20 @@ INNER JOIN baandb.tznint002301 znint002
 LEFT JOIN baandb.tznsls002301 znsls002
         ON znsls002.t$tpen$c = znsls401.t$itpe$c
 
-  LEFT JOIN ( select  inh200.t$cdis$c restricao,
-                      inh225.t$cwar   filial,
-                      inh225.t$item   item,
-                      sum(inh225.t$qads) qtde
-              from    baandb.twhinh225301 inh225,
-                      baandb.twhinh200301 inh200
-              where   inh225.t$oorg = inh200.t$oorg
-              and     inh225.t$orno = inh200.t$orno
-              and     inh225.t$oset = inh200.t$oset 
-              and     inh225.t$pckd = 2
-              and     inh200.t$cdis$c = ' '
-              group by inh200.t$cdis$c, inh225.t$cwar, inh225.t$item) ALOCADO
-       ON   ALOCADO.item = tdsls401.t$item
-       AND  ALOCADO.filial = tdsls401.t$cwar
+--  LEFT JOIN ( select  inh200.t$cdis$c restricao,
+--                      inh225.t$cwar   filial,
+--                      inh225.t$item   item,
+--                      sum(inh225.t$qads) qtde
+--              from    baandb.twhinh225301 inh225,
+--                      baandb.twhinh200301 inh200
+--              where   inh225.t$oorg = inh200.t$oorg
+--              and     inh225.t$orno = inh200.t$orno
+--              and     inh225.t$oset = inh200.t$oset 
+--              and     inh225.t$pckd = 2
+--              and     inh200.t$cdis$c = ' '
+--              group by inh200.t$cdis$c, inh225.t$cwar, inh225.t$item) ALOCADO
+--       ON   ALOCADO.item = tdsls401.t$item
+--       AND  ALOCADO.filial = tdsls401.t$cwar
        
  LEFT JOIN( SELECT d.t$cnst CODE,
                    l.t$desc DESCR
