@@ -169,21 +169,16 @@ SELECT
         tcibd001.t$wght                       PESO_KG,
     CUBAGEM.TOT                               CUBAGEM,
 
-    CASE WHEN znsls002.t$stat$c = 4 --Insucesso na Entrega
-           THEN CASE WHEN znsls400.t$sige$c = 1 THEN znmcs096.t$docn$c
-                     WHEN NFS.t$docn$c     != 0 THEN NFS.t$docn$c
-                     WHEN NFS.t$docf$c     != 0 THEN NFS.t$docf$c
-                END                                         
-         ELSE cisli940.t$docn$l
-    END                                       NOTA_SAIDA,
+      CASE WHEN znsls400.t$sige$c = 1 THEN znmcs096.t$docn$c
+           WHEN NFS.t$docn$c     != 0 THEN NFS.t$docn$c
+           WHEN NFS.t$docf$c     != 0 THEN NFS.t$docf$c
+      END                                         
+                                               NOTA_SAIDA,
         
-    CASE WHEN znsls002.t$stat$c = 4 --Insucesso na Entrega
-           THEN CASE WHEN znsls400.t$sige$c = 1 THEN znmcs096.t$seri$c
-                     WHEN NFS.t$docn$c     != 0 THEN NFS.t$seri$c
-                     WHEN NFS.t$docf$c     != 0 THEN NFS.t$serf$c
-                END
-         ELSE cisli940.t$seri$l
-    END                                       SERIE_SAIDA,
+      CASE WHEN znsls400.t$sige$c = 1 THEN znmcs096.t$seri$c
+                WHEN NFS.t$docn$c     != 0 THEN NFS.t$seri$c
+                WHEN NFS.t$docf$c     != 0 THEN NFS.t$serf$c
+      END                                       SERIE_SAIDA,
  
     CASE WHEN znsls002.t$stat$c = 4 --Insucesso na Entrega
            THEN cisli940.t$docn$l                         
