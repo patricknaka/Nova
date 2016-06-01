@@ -1,28 +1,35 @@
-SELECT 
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
-    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-      AT time zone 'America/Sao_Paulo') AS DATE)
-                                       DATA_GERACAO,
+SELECT
+  CASE WHEN TRUNC(tdpur406.t$ddte) < TO_DATE('01-01-1980', 'DD-MM-YYYY') THEN
+        NULL
+  ELSE
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur406.t$ddte, 
+        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE) END
+                                       DATA_CONFIRMADA_RECEBIMENTO, --ALTERAR
   tdpur450.t$logn                      LOGIN,
-									   
+	nome_login.t$name                    NOME,								   
   tccom130.t$fovn$l                    CNPJ_FORNECEDOR,
   tccom130.t$nama                      NOME_FORNECEDOR,  
   tcemm030.t$euca                      NUME_FILIAL,
-  tdpur400.t$orno                      NUME_ORDEM,
-  tdrec940.t$fire$l                    REFE_FISCAL,
+  tdpur400.t$orno                      ORDEM_DE_COMPRA,           --ALTERAR
+  tdpur401.t$pono                      POSICAO,                   --INCLUIR
+--  tdrec940.t$fire$l                    REFE_FISCAL,             --EXCLUIR
   tdpur400.t$cotp                      COD_TIPO_ORDEM_COMPRA,
   tdpur094.t$dsca                      DSC_TIPO_ORDEM_COMPRA,
   tcmcs041.t$dsca                      TIPO_GER,
-  Trim(tdpur401.t$item)                NUME_ITEM,
+  Trim(tdpur401.t$item)                ITEM,                      --ALTERAR
   tcibd001.t$dsca                      DESC_ITEM,  
   tcibd001.t$citg                      NUME_GRUPO_ITEM,  
   tcmcs023.t$dsca                      DESC_GRUPO_ITEM,  
   
-  CASE WHEN tdpur401.t$clyn = 1 
-         THEN tdpur401.t$qoor
+--  CASE WHEN tdpur401.t$clyn = 1 
+--         THEN tdpur401.t$qoor
+--       ELSE 0 
+--  END                                  QTDE_CANCELADA,
+  CASE WHEN tdpur401.t$clyn = 1 THEN tdpur401.t$qoor - NVL(tdpur406.t$qidl,0) 
        ELSE 0 
-  END                                  QTDE_CANCELADA,
-  tdrec947.t$qnty$l                    QTDE_RECEBIDA,
+   END                                 QTDE_CANCELADA,    --ALTERAR
+  NVL(tdpur406.t$qidl,0)               QTDE_RECEBIDA,
   tdpur401.t$disc$1                    PERCE_DESCONTO,
   tdpur401.t$ldam$1                    VALOR_DESCONTO,
   tdpur401.t$qibo                      QTDE_REPOSICAO,
@@ -39,19 +46,46 @@ SELECT
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE)
                                        DATA_PLANEJADA,     
-  tdpur400.t$cdec                      CONDICAO_ENTREGA,
-  tcibd001.t$csig                      SINALIZACAO_ITEM,
+  tdpur400.t$cdec                      CONDICAO_ENTREGA,    --VERIFICAR
+  CASE WHEN tcibd001.t$csig = 'REA' OR tcibd001.t$csig = ' ' THEN 'Ativo'
+       WHEN tcibd001.t$csig = 'CAN' THEN 'CANCELADO'
+       WHEN tcibd001.t$csig = 'SUS' THEN 'SUSPENSO'
+       WHEN tcibd001.t$csig = '001' THEN 'VERIFICACAO FISCAL' END 
+                                       SINALIZACAO_ITEM,
   tdrec940.t$docn$l                    NUME_NOTA,
   tdrec940.t$seri$l                    SERIE_NOTA,
-  Trim(tdrec941.t$item$l)              ITEM_NOTA,
+--  Trim(tdrec941.t$item$l)              ITEM_NOTA,           --EXCLUIR
   whwmd400.t$abcc                      CODE_ABC, 
   tdpur400.t$sorn                      ORDEM_PN_FORNECEDOR,
   tdpur401.t$crcd                      LIN_RAZAO_ALTERAC,
   tdpur401.t$ctcd                      LIN_TIPO_ALTERAC,
   
-  tdpur400.t$hdst                      COD_STATUS_PEDIDO,
-  StatusPedido.DESCR                   DSC_STATUS_PEDIDO
+--  tdpur400.t$hdst                      COD_STATUS_PEDIDO,   --EXCLUIR
+--  StatusPedido.DESCR                   DSC_STATUS_PEDIDO,   --EXCLUIR
+  
+  CASE WHEN tdpur401.t$clyn = 2 THEN      --LINHA CANCELADA = NAO
+    (tdpur401.t$qoor - NVL(tdpur406.t$qidl,0)) * tdpur401.t$pric
+  ELSE 0.0 END
+                                       PRECO_SALDO,                   --INCLUIR
+  tdpur401.t$cpay                      CONDICAO_DE_PAGAMENTO,         --INCLUIR
 
+  CASE WHEN (tdpur401.t$qoor - NVL(tdpur406.t$qidl,0) > 0 ) AND tdpur401.t$clyn = 2 THEN
+            'Aberto'
+       WHEN tdpur401.t$qoor - NVL(tdpur406.t$qidl,0) = 0 THEN 
+            'Atendida'
+       WHEN tdpur401.t$clyn = 1 THEN
+            'Cancelada'
+  END                                   STATUS_PEDIDO,                --INCLUIR
+  CASE WHEN tdpur401.t$clyn = 2 THEN    --LINHA CANCELADA = NAO
+      tdpur401.t$qoor - NVL(tdpur406.t$qidl,0)
+  ELSE  0.0 END
+                                        SALDO,                        --INCLUIR
+ tcibd001.t$seab                        CHAVE_DE_BUSCA_II,            --INCLUIR
+ tcibd001.t$cean                        EAN,                          --INCLUIR
+ CASE WHEN tdpur406.t$fire = 1 THEN
+      'Receb.Total'
+ ELSE 'Receb.Parcial' END               STATUS_RECEBIMENTO            --INCLUIR
+  
 FROM       baandb.ttdpur400301 tdpur400
 
 INNER JOIN baandb.ttdpur401301 tdpur401
@@ -70,19 +104,25 @@ INNER JOIN ( select tdpur450.t$orno,
                                             and rownum = 1 ) ) tdpur450
         ON tdpur450.t$orno = tdpur400.t$orno
 
- LEFT JOIN ( select rec947.t$orno$l,
-                    rec947.t$pono$l,
-                    rec947.t$seqn$l,
-                    rec947.t$oorg$l,
-                    rec947.t$fire$l, 
-                    rec947.t$line$l,
-                    rec947.t$qnty$l
-               from baandb.ttdrec947301 rec947
-              where rec947.t$oorg$l = 80 ) tdrec947 --Ordem de Compra 
+ LEFT JOIN ( select ttaad200.t$user,
+                    ttaad200.t$name
+               from baandb.tttaad200000 ttaad200 ) nome_login
+        ON nome_login.t$user = tdpur450.t$logn
+        
+ LEFT JOIN ( select a.t$orno$l,
+                    a.t$pono$l,
+                    a.t$oorg$l,
+                    min(a.t$fire$l) t$fire$l, 
+                    min(a.t$line$l) t$line$l,
+                    SUM(a.t$qnty$l) t$qnty$l
+               from baandb.ttdrec947301 a
+              where a.t$oorg$l = 80 
+              group by  a.t$orno$l,
+                        a.t$pono$l,
+                        a.t$oorg$l ) tdrec947       --Rec.Fiscal x Ordem de Compra
         ON tdrec947.t$orno$l = tdpur401.t$orno
        AND tdrec947.t$pono$l = tdpur401.t$pono
-       AND tdrec947.t$seqn$l = tdpur401.t$sqnb
-   
+ 
  LEFT JOIN baandb.ttdrec940301 tdrec940
         ON tdrec940.t$fire$l = tdrec947.t$fire$l
     
@@ -111,7 +151,18 @@ INNER JOIN ( select tdpur450.t$orno,
    
  LEFT JOIN baandb.ttcmcs023301 tcmcs023
         ON tcmcs023.t$citg = tcibd001.t$citg
-		
+
+  LEFT JOIN ( select a.t$orno,
+                     a.t$pono,
+                     min(a.t$ddte) t$ddte,
+                     max(a.t$fire) t$fire,
+                     SUM(a.t$qidl) t$qidl
+               from baandb.ttdpur406301 a
+              group by  a.t$orno,
+                        a.t$pono ) tdpur406       --Recebimentos
+        ON tdpur406.t$orno = tdpur401.t$orno
+       AND tdpur406.t$pono = tdpur401.t$pono
+   		
  LEFT JOIN ( SELECT d.t$cnst CODE,
                     l.t$desc DESCR
                FROM baandb.tttadv401000 d,      
@@ -142,21 +193,22 @@ INNER JOIN ( select tdpur450.t$orno,
       
 WHERE tcibd001.t$citg != '001'
   AND tdpur400.t$cotp != '200'
-
+  AND tdpur401.t$oltp IN (1,4)
+    
   AND (          (:ValData = 0) 
-        OR (   ( (:ValData = 1) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
+        OR (   ( (:ValData = 1) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur406.t$ddte, 
                                               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                AT time zone 'America/Sao_Paulo') AS DATE)) = :DtGeraOCDe ) ) 
-            OR ( (:ValData = 2) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
+                                                AT time zone 'America/Sao_Paulo') AS DATE)) = :DtConfRECDe ) ) 
+            OR ( (:ValData = 2) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur406.t$ddte, 
                                               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                AT time zone 'America/Sao_Paulo') AS DATE)) = :DtGeraOCAte ) ) 
-            OR ( (:ValData = 3) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur450.t$trdt, 
+                                                AT time zone 'America/Sao_Paulo') AS DATE)) = :DtConfRECAte ) ) 
+            OR ( (:ValData = 3) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur406.t$ddte, 
                                               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                                                 AT time zone 'America/Sao_Paulo') AS DATE)) 
-                                      Between :DtGeraOCDe
-                                          And :DtGeraOCAte ) ) ) )
+                                      Between :DtConfRECDe
+                                          And :DtConfRECAte ) ) ) )
 
-  AND NVL(Trim(tcibd001.t$csig), '000') IN (:Situacao)
+--  AND NVL(Trim(tcibd001.t$csig), '000') IN (:Situacao)  -- EXCLUIR
   AND Trim(tcibd001.t$citg) IN (:GrupoItem)
   AND tdpur400.t$hdst IN (:StatusPedido)
   AND tcemm030.t$euca IN (:Filial)
