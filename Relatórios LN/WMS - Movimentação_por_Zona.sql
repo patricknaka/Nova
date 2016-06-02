@@ -1,91 +1,184 @@
-SELECT	ORDERS.WHSEID 				ID_FILIAL,
-		wmsCODE.UDF2 				NOME_FILIAL,
-		PEDIDO.T$ENTR$C			ID_ENTREGA,
-		ORDERDETAIL.SKU			ID_ITEM,
-		tcmcs023.t$dsca 			DEPARTAMENTO,
-		znmcs030.t$dsca$c   			SETOR,		
-		tcibd001.t$dscb$c 			DESCR_ITEM,
-		STORER.COMPANY			FORNECEDOR,
-		LOC.PUTAWAYZONE			CLASSE_LOCAL,
-		Trim(PZ.DESCR)				DESCR_LOCAL,
-		ORDERDETAIL.ORIGINALQTY		PECAS,
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR((	SELECT MAX(h.adddate) FROM WMWHSE5.ORDERSTATUSHISTORY h  
-										WHERE h.orderkey=orders.orderkey 
-										AND h.status=orders.novastatus), 
-		'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-		AT time zone sessiontimezone) AS DATE) DT_STATUS	
+SELECT ORDERS.WHSEID                 ID_FILIAL,
+       wmsCODE.UDF2                  NOME_FILIAL,
+       znsls401.T$ENTR$C             ID_ENTREGA, ORDERS.ORDERKEY,
+       ORDERDETAIL.SKU               ID_ITEM,
+       tcmcs023.t$dsca               DEPARTAMENTO,
+       znmcs030.t$dsca$c             SETOR,
+       tcibd001.t$dscb$c             DESCR_ITEM,
+       tccom130a.t$fovn$l            CNPJ_FORNECEDOR,
+       tccom130a.t$nama              NOME_FORNECEDOR,
+       LOC.PUTAWAYZONE               CLASSE_LOCAL,
+       Trim(PZ.DESCR)                DESCR_LOCAL,
+       ORDERDETAIL.ORIGINALQTY       PECAS,
+       ORDERS.NOVASTATUS             STATUS_NF,
+       STATUSSETUP.DESCRIPTION       DSC_STATUS_NF,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(HISTORY.ADDDATE,
+         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+           AT time zone sessiontimezone) AS DATE)
+                                     DATA_STATUS
 
-FROM       WMWHSE5.ORDERS ORDERS
+FROM        WMWHSE8.ORDERDETAIL ORDERDETAIL
 
-LEFT JOIN 	WMWHSE5.ORDERDETAIL ORDERDETAIL
-ON			ORDERDETAIL.ORDERKEY = ORDERS.ORDERKEY
+INNER JOIN baandb.tznsls401301@pln01 znsls401
+        ON ORDERDETAIL.SALESORDERDOCUMENT = znsls401.t$orno$c
+       AND ORDERDETAIL.SALESORDERLINE = znsls401.t$pono$c
+      
+INNER JOIN WMWHSE8.ORDERS ORDERS
+        ON ORDERS.ORDERKEY = ORDERDETAIL.ORDERKEY
+        
+INNER JOIN ( SELECT h.orderkey     orderkey, 
+                    h.status       status,
+                    MAX(h.adddate) adddate
+               FROM  WMWHSE8.ORDERSTATUSHISTORY h 
+           GROUP BY h.orderkey, 
+                    h.status ) HISTORY
+        ON HISTORY.ORDERKEY = ORDERS.ORDERKEY
+       AND HISTORY.STATUS = ORDERS.NOVASTATUS
 
-LEFT JOIN 	WMWHSE5.TASKDETAIL TASKDETAIL
-ON			TASKDETAIL.ORDERKEY = ORDERS.ORDERKEY
-AND			TASKDETAIL.SKU = ORDERDETAIL.SKU
+ LEFT JOIN WMWHSE8.TASKDETAIL TASKDETAIL
+        ON TASKDETAIL.ORDERKEY = ORDERS.ORDERKEY
+       AND TASKDETAIL.SKU = ORDERDETAIL.SKU
 
-LEFT JOIN 	WMWHSE5.LOC LOC
-ON			LOC.LOC = TASKDETAIL.FROMLOC
+ LEFT JOIN WMWHSE8.LOC LOC
+        ON LOC.LOC = TASKDETAIL.FROMLOC
 
-LEFT JOIN 	WMWHSE5.PUTAWAYZONE PZ
-ON 			PZ.PUTAWAYZONE =  LOC.PUTAWAYZONE 
+ LEFT JOIN WMWHSE8.PUTAWAYZONE PZ
+        ON PZ.PUTAWAYZONE = LOC.PUTAWAYZONE
 
-LEFT JOIN 	WMWHSE5.SKU SKU
-ON			SKU.SKU = ORDERDETAIL.SKU
+ LEFT JOIN WMWHSE8.SKU SKU
+        ON SKU.SKU = ORDERDETAIL.SKU
 
-LEFT JOIN 	WMWHSE5.STORER STORER
-ON 			STORER.STORERKEY = SKU.SUSR5
+ LEFT JOIN ( select A.LONG_VALUE,
+                    UPPER(A.UDF1) UDF1,
+                    A.UDF2
+               from ENTERPRISE.CODELKUP A
+              where A.LISTNAME = 'SCHEMA' ) wmsCODE
+        ON wmsCODE.UDF1 = ORDERS.WHSEID
+    
+ LEFT JOIN baandb.ttcibd001301@pln01 tcibd001
+        ON Trim(tcibd001.t$item) = ORDERDETAIL.SKU
 
-LEFT JOIN 	WMWHSE5.CODELKUP CL 
-ON 			UPPER(CL.UDF1)=ORDERS.WHSEID
+ LEFT JOIN baandb.ttcmcs023301@pln01 tcmcs023
+        ON tcmcs023.t$citg = tcibd001.t$citg
+    
+ LEFT JOIN baandb.tznmcs030301@pln01 znmcs030
+        ON znmcs030.t$seto$c = tcibd001.t$seto$c
+       AND znmcs030.t$citg$c = tcibd001.t$citg
+     
+ LEFT JOIN baandb.ttdipu001301@pln01 tdipu001
+        ON tdipu001.t$item = tcibd001.t$item
 
-LEFT JOIN ( 	select A.LONG_VALUE,
-			UPPER(A.UDF1) UDF1,
-			A.UDF2
-			from ENTERPRISE.CODELKUP A
-			where A.LISTNAME = 'SCHEMA' ) wmsCODE
-ON 			wmsCODE.UDF1 = ORDERS.WHSEID
-	
-LEFT JOIN 	baandb.tznsls401601@pln01 znsls401
-ON			znsls401.t$orno$c = orderdetail.SALESORDERDOCUMENT
-AND			znsls401.t$pono$c = orderdetail.SALESORDERLINE
+ LEFT JOIN baandb.ttccom100301@pln01 tccom100
+        ON tccom100.t$bpid = tdipu001.t$otbp
 
-LEFT JOIN 	baandb.ttcibd001601@pln01 tcibd001
-ON			tcibd001.t$item = znsls401.t$itml$c
+ LEFT JOIN baandb.ttccom130301@pln01 tccom130a
+        ON tccom130a.t$cadr = tccom100.t$cadr
+        
+ LEFT JOIN WMWHSE8.ORDERSTATUSSETUP STATUSSETUP 
+        ON STATUSSETUP.CODE = ORDERS.NOVASTATUS
+        
+WHERE TASKDETAIL.TASKTYPE = 'PK'
+  AND TASKDETAIL.STATUS = 9
+  AND ORDERS.NOVASTATUS not in (95, 98, 100)
+  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(HISTORY.ADDDATE, 
+        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE))
+      Between :DataRegistroDe
+          And :DataRegistroAte
+  AND ORDERS.NOVASTATUS IN (:StatusNF)
+  AND ((:Depto = '000') OR (tcmcs023.t$citg = :Depto))
+  AND ((:Setor = '000') OR (znmcs030.t$seto$c = :Setor))
+  
 
-LEFT JOIN 	baandb.ttcmcs023601@pln01 tcmcs023
-ON			tcmcs023.t$citg = tcibd001.t$citg
-	
-LEFT JOIN 	baandb.tznmcs030601@pln01 znmcs030
-ON			znmcs030.t$seto$c = tcibd001.t$seto$c
-AND 			znmcs030.t$citg$c = tcibd001.t$citg
-	
-LEFT JOIN ( select 	A.T$ORNO$C, 
-				A.T$PECL$C, 
-				A.T$ENTR$C, 
-				A.T$UNEG$C,
-				B.T$DTIN$C, 
-				B.T$IDLI$C
-		from 		BAANDB.TZNSLS004301@pln01 A 
-		inner join 	BAANDB.TZNSLS400301@pln01 B
-		on 		B.T$NCIA$C = A.T$NCIA$C
-		and 		B.T$UNEG$C = A.T$UNEG$C
-		and 		B.T$PECL$C = A.T$PECL$C
-		and 		B.T$SQPD$C = A.T$SQPD$C
-		group by	A.T$ORNO$C, 
-				A.T$PECL$C, 
-				A.T$ENTR$C, 
-				A.T$UNEG$C,
-				B.T$DTIN$C, 
-				B.T$IDLI$C ) PEDIDO
-		ON PEDIDO.T$ORNO$C = ORDERS.REFERENCEDOCUMENT
-		
-WHERE  	ORDERS.WHSEID = :FILIAL
-AND 		Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE, 
-				'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-				AT time zone 'America/Sao_Paulo') AS DATE))
-		Between		 :DataRegistroDe	AND	:DataRegistroAte
-AND 		LOC.PUTAWAYZONE in (:Zona)
-AND 		tcmcs023.t$dsca in (:Departamento)
-AND		znmcs030.t$dsca$c in (:Setor)
-		
+=
+
+" SELECT ORDERS.WHSEID                 ID_FILIAL,  " &
+"        wmsCODE.UDF2                  NOME_FILIAL,  " &
+"        znsls401.T$ENTR$C             ID_ENTREGA, ORDERS.ORDERKEY,  " &
+"        ORDERDETAIL.SKU               ID_ITEM,  " &
+"        tcmcs023.t$dsca               DEPARTAMENTO,  " &
+"        znmcs030.t$dsca$c             SETOR,  " &
+"        tcibd001.t$dscb$c             DESCR_ITEM,  " &
+"        tccom130a.t$fovn$l            CNPJ_FORNECEDOR,  " &
+"        tccom130a.t$nama              NOME_FORNECEDOR,  " &
+"        LOC.PUTAWAYZONE               CLASSE_LOCAL,  " &
+"        Trim(PZ.DESCR)                DESCR_LOCAL,  " &
+"        ORDERDETAIL.ORIGINALQTY       PECAS,  " &
+"        ORDERS.NOVASTATUS             STATUS_NF,  " &
+"        STATUSSETUP.DESCRIPTION       DSC_STATUS_NF,  " &
+"        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(HISTORY.ADDDATE,  " &
+"          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"            AT time zone sessiontimezone) AS DATE)  " &
+"                                      DATA_STATUS  " &
+"  " &
+" FROM       " + Parameters!Compania.Value + ".ORDERDETAIL ORDERDETAIL  " &
+"  " &
+" INNER JOIN baandb.tznsls401301@pln01 znsls401  " &
+"         ON ORDERDETAIL.SALESORDERDOCUMENT = znsls401.t$orno$c  " &
+"        AND ORDERDETAIL.SALESORDERLINE = znsls401.t$pono$c  " &
+"  " &
+" INNER JOIN " + Parameters!Compania.Value + ".ORDERS ORDERS  " &
+"         ON ORDERS.ORDERKEY = ORDERDETAIL.ORDERKEY  " &
+"  " &
+" INNER JOIN ( SELECT h.orderkey     orderkey,  " &
+"                     h.status       status,  " &
+"                     MAX(h.adddate) adddate  " &
+"                FROM " + Parameters!Compania.Value + ".ORDERSTATUSHISTORY h  " &
+"            GROUP BY h.orderkey,  " &
+"                     h.status ) HISTORY  " &
+"         ON HISTORY.ORDERKEY = ORDERS.ORDERKEY  " &
+"        AND HISTORY.STATUS = ORDERS.NOVASTATUS  " &
+"  " &
+"  LEFT JOIN " + Parameters!Compania.Value + ".TASKDETAIL TASKDETAIL  " &
+"         ON TASKDETAIL.ORDERKEY = ORDERS.ORDERKEY  " &
+"        AND TASKDETAIL.SKU = ORDERDETAIL.SKU  " &
+"  " &
+"  LEFT JOIN " + Parameters!Compania.Value + ".LOC LOC  " &
+"         ON LOC.LOC = TASKDETAIL.FROMLOC  " &
+"  " &
+"  LEFT JOIN " + Parameters!Compania.Value + ".PUTAWAYZONE PZ  " &
+"         ON PZ.PUTAWAYZONE =  LOC.PUTAWAYZONE  " &
+"  " &
+"  LEFT JOIN " + Parameters!Compania.Value + ".SKU SKU  " &
+"         ON SKU.SKU = ORDERDETAIL.SKU  " &
+"  " &
+"  LEFT JOIN ( select A.LONG_VALUE,  " &
+"                     UPPER(A.UDF1) UDF1,  " &
+"                     A.UDF2  " &
+"                from ENTERPRISE.CODELKUP A  " &
+"               where A.LISTNAME = 'SCHEMA' ) wmsCODE  " &
+"         ON wmsCODE.UDF1 = ORDERS.WHSEID  " &
+"  " &
+"  LEFT JOIN baandb.ttcibd001301@pln01 tcibd001  " &
+"         ON Trim(tcibd001.t$item) = ORDERDETAIL.SKU  " &
+"  " &
+"  LEFT JOIN baandb.ttcmcs023301@pln01 tcmcs023  " &
+"         ON tcmcs023.t$citg = tcibd001.t$citg  " &
+"  " &
+"  LEFT JOIN baandb.tznmcs030301@pln01 znmcs030  " &
+"         ON znmcs030.t$seto$c = tcibd001.t$seto$c  " &
+"        AND znmcs030.t$citg$c = tcibd001.t$citg  " &
+"  " &
+"  LEFT JOIN baandb.ttdipu001301@pln01 tdipu001  " &
+"         ON tdipu001.t$item   = tcibd001.t$item  " &
+"  " &
+"  LEFT JOIN baandb.ttccom100301@pln01 tccom100  " &
+"         ON tccom100.t$bpid   = tdipu001.t$otbp  " &
+"  " &
+"  LEFT JOIN baandb.ttccom130301@pln01 tccom130a  " &
+"         ON tccom130a.t$cadr  = tccom100.t$cadr  " &
+"  " &
+"  LEFT JOIN " + Parameters!Compania.Value + ".ORDERSTATUSSETUP STATUSSETUP  " &
+"         ON STATUSSETUP.CODE = ORDERS.NOVASTATUS  " &
+"  " &
+" WHERE TASKDETAIL.TASKTYPE = 'PK'  " &
+"   AND TASKDETAIL.STATUS = 9  " &
+"   AND ORDERS.NOVASTATUS not in (95, 98, 100)  " &
+"   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(HISTORY.ADDDATE,  " &
+"         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"           AT time zone 'America/Sao_Paulo') AS DATE))  " &
+"       Between :DataRegistroDe  " &
+"           And :DataRegistroAte  " &
+"   AND ORDERS.NOVASTATUS IN (:StatusNF)  " &
+"   AND ((:Depto = '000') OR (tcmcs023.t$citg = :Depto))  " &
+"   AND ((:Setor = '000') OR (znmcs030.t$seto$c = :Setor))  "
