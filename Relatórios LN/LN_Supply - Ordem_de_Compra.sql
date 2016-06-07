@@ -17,6 +17,7 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
        Q1.QTDE_CANCELADA                                  "Qtde Cancelada",
        Q1.QTDE_RECEBIDA                                   "Qtde Recebida",
        Q1.QTDE_SALDO                                      "Qtde Saldo",
+       Q1.QTDE_DEVOLVIDA                                  "Qtde Devolvida",
        Q1.PRECO_TOTAL_ITEM_S_IMPOSTOS                     "Preço Total Item S Impostos",
        Q1.PRECO_SALDO_ITEM_S_IMPOSTOS                     "Preço Saldo Item S Impostos",
        Q1.VALOR_DESCONTO                                  "Valor Desconto",
@@ -61,10 +62,14 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                      ELSE 0 
                 END                                  QTDE_CANCELADA,
                 NVL(tdpur406.t$qidl,0)               QTDE_RECEBIDA,
-                CASE WHEN tdpur401.t$clyn = 2 --LINHA CANCELADA = NAO
-                       THEN tdpur401.t$qoor - NVL(tdpur406.t$qidl,0)
-                     ELSE  0.0 
+                CASE WHEN tdpur401.t$qibo = 0 
+                       THEN CASE WHEN tdpur401.t$clyn = 2 --LINHA CANCELADA = NAO
+                                   THEN tdpur401.t$qoor - NVL(tdpur406.t$qidl, 0) - NVL(ABS(tdrec941.t$qnty$l), 0)
+                                 ELSE  0 
+                            END
+                     ELSE   tdpur401.t$qibo
                 END                                  QTDE_SALDO,
+                NVL(ABS(tdrec941.t$qnty$l), 0)       QTDE_DEVOLVIDA,
                 tdpur401.t$oamt                      PRECO_TOTAL_ITEM_S_IMPOSTOS,
                 CASE WHEN tdpur401.t$clyn = 2 --LINHA CANCELADA = NAO
                        THEN (tdpur401.t$qoor - NVL(tdpur406.t$qidl,0)) * tdpur401.t$pric
@@ -154,9 +159,28 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
           LEFT JOIN baandb.ttdrec940301 tdrec940
                  ON tdrec940.t$fire$l = tdrec947.t$fire$l
              
+          LEFT JOIN ( select a.t$orno$l,
+                             a.t$pono$l,
+                             a.t$oorg$l,
+                             a.t$fire$l,
+                             a.t$line$l,
+                             sum(a.t$qnty$l) t$qnty$l
+                        from baandb.ttdrec947301 a
+                  inner join baandb.ttdrec940301 b
+                          on b.t$fire$l = a.t$fire$l
+                       where a.t$oorg$l = 80
+                         and b.t$rfdt$l = 14
+                    group by a.t$orno$l,
+                             a.t$pono$l,
+                             a.t$oorg$l,
+                             a.t$fire$l,
+                             a.t$line$l ) tdrec947_Dev       --Devolucao
+                 ON tdrec947_Dev.t$orno$l = tdpur401.t$orno
+                AND tdrec947_Dev.t$pono$l = tdpur401.t$pono
+
           LEFT JOIN baandb.ttdrec941301 tdrec941
-                 ON tdrec941.t$fire$l = tdrec947.t$fire$l 
-                AND tdrec941.t$line$l = tdrec947.t$line$l
+                 ON tdrec941.t$fire$l = tdrec947_Dev.t$fire$l 
+                AND tdrec941.t$line$l = tdrec947_Dev.t$line$l
            
           LEFT JOIN baandb.ttdpur094301 tdpur094
                  ON tdpur094.t$potp = tdpur400.t$cotp
