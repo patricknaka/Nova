@@ -1,7 +1,8 @@
 SELECT Q1.*
 	  FROM ( SELECT 301                                                               CIA,
-				 CASE WHEN NVL( (FILIAL.T$STYP), '0' ) = '0'                  
-						THEN 2 ELSE 3 END                                             FILIAL, 
+--				 CASE WHEN NVL( (FILIAL.T$STYP), '0' ) = '0'                  
+--						THEN 2 ELSE 3 END                                                 FILIAL,
+         znfmd001_fili.t$fili$c                                               FILIAL,
 				 PRG_MOV.T$NINV                                                       TITULO,
 				 PRG_MOV.T$RPST$L                                                     SITUACAO_TITULO, 
 				 SIT_TIT.                                                             DESCR_SIT_TIT,
@@ -635,8 +636,18 @@ SELECT Q1.*
 													   WHERE L1.T$CLAB = L.T$CLAB 
 														 AND L1.T$CLAN = L.T$CLAN 
 														 AND L1.T$CPAC = L.T$CPAC )) SITUACAO_NF
-					ON SITUACAO_NF.T$CNST = CISLI940.T$STAT$L) Q1 
-              
+					ON SITUACAO_NF.T$CNST = CISLI940.T$STAT$L
+          
+      LEFT JOIN baandb.ttcmcs065301 tcmcs065_fili
+             ON tcmcs065_fili.t$cwoc = cisli940.t$cofc$l
+             
+      LEFT JOIN baandb.ttccom130301 tccom130_fili
+             ON tccom130_fili.t$cadr = tcmcs065_fili.t$cadr
+             
+      LEFT JOIN baandb.tznfmd001301 znfmd001_fili
+             ON znfmd001_fili.t$fovn$c = tccom130_fili.t$fovn$l   ) Q1 
+
+
 	WHERE TRUNC(DT_EMISSAO) BETWEEN :DATAEMISSAODE AND :DATAEMISSAOATE
 	  AND TRUNC(DT_VENCIMENTO) BETWEEN NVL(:DATAVENCTODE, DT_VENCIMENTO) AND NVL(:DATAVENCTOATE, DT_VENCIMENTO)
 	  AND TRUNC(DATA_TRANSACAO) BETWEEN NVL(:DATATRANSACAODE, DATA_TRANSACAO) AND NVL(:DATATRANSACAOATE, DATA_TRANSACAO)
