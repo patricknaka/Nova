@@ -37,7 +37,7 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
        Q1.LINHAS_RAZAO_ALTERACAO                          "Linhas Razão Alteração",
        Q1.LINHAS_TIPO_ALTERACAO                           "Linhas Tipo Alteração"
 	   
-  FROM ( SELECT tccom130.t$fovn$l                    CNPJ_FORNECEDOR,
+  FROM ( SELECT tccom130.t$fovn$l                    CNPJ_FORNECEDOR, tdpur401.t$oltp,
                 tccom130.t$nama                      NOME_FORNECEDOR,
                 tcemm030.t$euca                      FILIAL,
                 tdpur400.t$orno                      ORDEM_DE_COMPRA,
@@ -57,17 +57,20 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                 END                                  SITUACAO_ITEM,
                 tdpur401.t$pric                      PRECO_COMPRA_UNITARIO,
                 tdpur401.t$qoor                      QTDE_ORDENADA_ITEM_TOTAL,
-                CASE WHEN tdpur401.t$clyn = 1 
-                       THEN tdpur401.t$qoor - NVL(tdpur406.t$qidl,0) 
+                CASE WHEN OrdemReposicao.t$clyn = 1  THEN OrdemReposicao.t$qoor
+                     WHEN tdpur401.t$clyn = 1        THEN tdpur401.t$qoor
                      ELSE 0 
                 END                                  QTDE_CANCELADA,
                 NVL(tdpur406.t$qidl,0)               QTDE_RECEBIDA,
                 CASE WHEN tdpur401.t$qibo = 0 
-                       THEN CASE WHEN tdpur401.t$clyn = 2 --LINHA CANCELADA = NAO
-                                   THEN tdpur401.t$qoor - NVL(tdpur406.t$qidl, 0) - NVL(ABS(tdrec941.t$qnty$l), 0)
+                       THEN CASE WHEN tdpur401.t$clyn = 2                       --LINHA CANCELADA = NAO
+                                   THEN tdpur401.t$qoor              -          --qtde ordenada
+                                        NVL(tdpur406.t$qidl, 0)      -          --qtde recebida
+                                        NVL(OrdemReposicao.t$qoor,0) -          --qtde reposicao
+                                        NVL(ABS(tdrec941.t$qnty$l), 0)          --qtde devolvida
                                  ELSE  0 
                             END
-                     ELSE   tdpur401.t$qibo
+                     ELSE   NVL(OrdemReposicao.t$qoor, tdpur401.t$qibo)
                 END                                  QTDE_SALDO,
                 NVL(ABS(tdrec941.t$qnty$l), 0)       QTDE_DEVOLVIDA,
                 tdpur401.t$oamt                      PRECO_TOTAL_ITEM_S_IMPOSTOS,
@@ -102,13 +105,28 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                 END                                  STATUS_DE_RECEBIMENTO,
                 tdrec940.t$docn$l                    NOTA_FISCAL,
                 tdrec940.t$seri$l                    SERIE_NF,
-                CASE WHEN (tdpur401.t$qoor - NVL(tdpur406.t$qidl,0) > 0 ) AND tdpur401.t$clyn = 2 
+                
+                CASE WHEN     tdpur401.t$qibo = 0 
+                          AND tdpur401.t$clyn = 2                               --LINHA CANCELADA = NAO
+                          AND ( tdpur401.t$qoor                           -     --qtde ordenada
+                                NVL(tdpur406.t$qidl, 0)                   -     --qtde recebida
+                                NVL(OrdemReposicao.t$qoor,0)              -     --qtde reposicao
+                                NVL(ABS(tdrec941.t$qnty$l),0))            > 0   --qtde devolvida
+                           OR tdpur401.t$qibo                             > 0 
                        THEN 'Aberto'
-                     WHEN tdpur401.t$qoor - NVL(tdpur406.t$qidl,0) = 0 
+                       
+                     WHEN     tdpur401.t$qibo = 0 
+                          AND tdpur401.t$clyn = 2                               --LINHA CANCELADA = NAO
+                          AND ( tdpur401.t$qoor                           -     --qtde ordenada
+                                NVL(tdpur406.t$qidl,0)                    -     --qtde recebida
+                                NVL(OrdemReposicao.t$qoor,0)              -     --qtde reposicao
+                                NVL(ABS(tdrec941.t$qnty$l),0))            = 0   --qtde devolvida
                        THEN 'Atendida'
+                       
                      WHEN tdpur401.t$clyn = 1 
                        THEN 'Cancelada'
                 END                                  STATUS_DO_PEDIDO,
+                
                 whwmd400.t$abcc                      CODIGO_ABC,
                 tdpur450.t$logn                      LOGIN_GEROU_OC,
                 nome_login.t$name                    DSC_LOGIN_GEROU_OC,
@@ -207,16 +225,36 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
           LEFT JOIN baandb.ttcmcs013301 tcmcs013
                  ON tcmcs013.t$cpay = tdpur401.t$cpay
          
-           LEFT JOIN ( select a.t$orno,
-                              a.t$pono,
-                              min(a.t$ddte) t$ddte,
-                              max(a.t$fire) t$fire,
-                              SUM(a.t$qidl) t$qidl
-                         from baandb.ttdpur406301 a
-                     group by a.t$orno,
-                              a.t$pono ) tdpur406       --Recebimentos
+          LEFT JOIN ( select a.t$orno,
+                             a.t$pono,
+                             min(a.t$ddte) t$ddte,
+                             max(a.t$fire) t$fire,
+                             sum(a.t$qidl) t$qidl
+                        from baandb.ttdpur406301 a
+                    group by a.t$orno,
+                             a.t$pono ) tdpur406       --Recebimentos
                  ON tdpur406.t$orno = tdpur401.t$orno
                 AND tdpur406.t$pono = tdpur401.t$pono
+                
+          LEFT JOIN ( select tdpur401.t$orno,
+                             tdpur401.t$pono,
+                             tdpur401.t$item,
+                             tdpur401.t$oltp, --tipo linha
+                             tdpur401.t$clyn, --cancelado
+                             tdpur401.t$qibo, --editada
+                             tdpur401.t$qoor, --ordenada
+                             tdpur401.t$sqnb  --sequencia 
+                        from baandb.ttdpur401301 tdpur401
+                       where tdpur401.t$oltp = 3
+                         and tdpur401.t$sqnb = ( select max(a.t$sqnb) 
+                                                   from baandb.ttdpur401301 a
+                                                  where tdpur401.t$oltp = 3
+                                                    and tdpur401.t$orno = a.t$orno
+                                                    and tdpur401.t$item = a.t$item
+                                                    and tdpur401.t$pono = a.t$pono ) ) OrdemReposicao
+                 ON OrdemReposicao.t$orno = tdpur401.t$orno
+                AND OrdemReposicao.t$pono = tdpur401.t$pono
+                AND OrdemReposicao.t$item = tdpur401.t$item
                     
          WHERE tcibd001.t$citg != '001'
            AND tdpur400.t$cotp != '200'
