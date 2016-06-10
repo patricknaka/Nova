@@ -14,7 +14,7 @@ SELECT
    
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                          DATA_FISCAL,
+                          DATA_RECEB_FISCAL,
         
    tdrec940.t$opfc$l      NUME_CFOP,
    Trim(tdpur401.t$item)  NUME_ITEM,
@@ -28,13 +28,16 @@ SELECT
    
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                          DATA_ORDEM,   
+                          DATA_GERACAO_PEDIDO,   
         
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$ddta, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                          DATA_PLANEJADA,
+                          DATA_PLANEJAMENTO_RECEBIMENTO,
         
-   tcibd001.t$csig        SINALIZACAO_ITEM,
+   CASE WHEN tcibd001.t$csig = 'SUS' THEN 'SUSPENSO' 
+   WHEN tcibd001.t$csig = 'CAN' THEN 'CANCELADO'
+   WHEN tcibd001.t$csig = '001' THEN 'VERIFICAÇÃO FISCAL'
+   ELSE 'ATIVO' END   SINALIZACAO_ITEM,
    tdrec941.t$qnty$l      QTDE_RECEBIDA,
    tdpur401.t$qoor        QTDE_ORDENADA,
    tdrec941.t$pric$l      PRECO_UNITARIO,
@@ -79,8 +82,11 @@ SELECT
     tcibd001.t$cean       EAN,
     tdpur400.t$cotp || '-' || tdpur094.t$dsca               
                           TIPO_ORDEM_COMPRA,
-    tdpur450.t$logn || '-' || login.t$name
-                          LOGIN_GEROU_OC
+    tdpur094.t$dsca                      DESCRICAO_TIPO_ORDEM_DE_COMPRA,                   
+    tdpur450.t$logn  LOGIN_GEROU_OC,
+    login.t$name DSC_LOGIN_GEROU_OC,
+       twhinh312.t$exrr NUM_ASN,
+       tdrec940.t$lipl$l PLACA_VEICULO
    
 FROM       baandb.ttdrec941301 tdrec941
 
@@ -200,7 +206,10 @@ INNER JOIN baandb.ttcemm030301 tcemm030
                       a.t$name
                from baandb.tttaad200000 a ) login
         ON login.t$user = tdpur450.t$logn
-
+LEFT JOIN baandb.twhinh312301 twhinh312
+    ON twhinh312.t$rcno = tdrec947.t$rcno$l
+    AND   twhinh312.t$rcln = tdrec947.t$rcln$l    
+    
 WHERE tcemm124.t$dtyp = 2
 
   AND Trunc(tdrec940.t$date$l) 
