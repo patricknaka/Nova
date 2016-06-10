@@ -62,15 +62,14 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                      ELSE 0 
                 END                                  QTDE_CANCELADA,
                 NVL(tdpur406.t$qidl,0)               QTDE_RECEBIDA,
-                CASE WHEN tdpur401.t$qibo = 0 
+                CASE WHEN NVL(OrdemReposicao.t$qibo, 0) = 0 
                        THEN CASE WHEN tdpur401.t$clyn = 2                       --LINHA CANCELADA = NAO
                                    THEN tdpur401.t$qoor              -          --qtde ordenada
                                         NVL(tdpur406.t$qidl, 0)      -          --qtde recebida
-                                        NVL(OrdemReposicao.t$qoor,0) -          --qtde reposicao
                                         NVL(ABS(tdrec941.t$qnty$l), 0)          --qtde devolvida
                                  ELSE  0 
                             END
-                     ELSE   NVL(OrdemReposicao.t$qoor, tdpur401.t$qibo)
+                     ELSE   OrdemReposicao.t$qibo
                 END                                  QTDE_SALDO,
                 NVL(ABS(tdrec941.t$qnty$l), 0)       QTDE_DEVOLVIDA,
                 tdpur401.t$oamt                      PRECO_TOTAL_ITEM_S_IMPOSTOS,
@@ -106,27 +105,24 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                 tdrec940.t$docn$l                    NOTA_FISCAL,
                 tdrec940.t$seri$l                    SERIE_NF,
                 
-                CASE WHEN     tdpur401.t$qibo = 0 
+                CASE WHEN     NVL(OrdemReposicao.t$qibo, 0) = 0
                           AND tdpur401.t$clyn = 2                               --LINHA CANCELADA = NAO
                           AND ( tdpur401.t$qoor                           -     --qtde ordenada
                                 NVL(tdpur406.t$qidl, 0)                   -     --qtde recebida
-                                NVL(OrdemReposicao.t$qoor,0)              -     --qtde reposicao
                                 NVL(ABS(tdrec941.t$qnty$l),0))            > 0   --qtde devolvida
-                           OR tdpur401.t$qibo                             > 0 
+                           OR OrdemReposicao.t$qibo                       > 0 
                        THEN 'Aberto'
                        
-                     WHEN     tdpur401.t$qibo = 0 
+                     WHEN     NVL(OrdemReposicao.t$qibo, 0) = 0 
                           AND tdpur401.t$clyn = 2                               --LINHA CANCELADA = NAO
                           AND ( tdpur401.t$qoor                           -     --qtde ordenada
                                 NVL(tdpur406.t$qidl,0)                    -     --qtde recebida
-                                NVL(OrdemReposicao.t$qoor,0)              -     --qtde reposicao
                                 NVL(ABS(tdrec941.t$qnty$l),0))            = 0   --qtde devolvida
                        THEN 'Atendida'
                        
                      WHEN tdpur401.t$clyn = 1 
                        THEN 'Cancelada'
-                END                                  STATUS_DO_PEDIDO,
-                
+                END                                  STATUS_DO_PEDIDO,                   
                 whwmd400.t$abcc                      CODIGO_ABC,
                 tdpur450.t$logn                      LOGIN_GEROU_OC,
                 nome_login.t$name                    DSC_LOGIN_GEROU_OC,
@@ -246,6 +242,7 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                              tdpur401.t$sqnb  --sequencia 
                         from baandb.ttdpur401301 tdpur401
                        where tdpur401.t$oltp = 3
+                         and tdpur401.t$clyn = 2
                          and tdpur401.t$sqnb = ( select max(a.t$sqnb) 
                                                    from baandb.ttdpur401301 a
                                                   where tdpur401.t$oltp = 3
