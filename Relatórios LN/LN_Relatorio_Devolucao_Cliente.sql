@@ -1,12 +1,19 @@
 SELECT
-  tdrec940.t$fire$l,
-  tdrec940.t$fdtc$l,
+  tdrec941.t$fire$l,
+  tdrec941.t$line$l,
   
   znfmd001.t$fili$c         FILIAL,
   znfmd001.t$dsca$c         NOME_FILIAL,
   znsls004.t$pecl$c         PEDIDO,
-  cisli940.t$docn$l         NOTA_ORIGINAL,
-  cisli940.t$seri$l         SERIE_ORIGINAL,
+  znsls004.t$uneg$c         UN_NEGOCIO,
+  CASE WHEN znsls400.t$sige$c = 1 THEN
+        znmcs095.t$docn$c 
+  ELSE  cisli940.t$docn$l END        
+                            NOTA_ORIGINAL,
+  CASE WHEN znsls400.t$sige$c = 1 THEN
+        znmcs095.t$seri$c
+  ELSE  cisli940.t$seri$l END   
+                            SERIE_ORIGINAL,
   tdrec940.t$docn$l         NOTA_ENTRADA,
   tdrec940.t$seri$l         SERIE_ENTRADA,
   tdrec940.t$date$l         DATA_FISCAL,
@@ -37,9 +44,11 @@ LEFT JOIN baandb.tznmcs031301 znmcs031
       AND znmcs031.t$fami$c = tcibd001.t$fami$c
       
 LEFT JOIN baandb.tcisli940301 cisli940
-       ON cisli940.t$docn$l = tdrec940.t$docn$l
-      AND cisli940.t$seri$l = tdrec940.t$seri$l
-      
+       ON cisli940.t$fire$l = tdrec941.t$dvrf$c
+
+LEFT JOIN baandb.tznmcs095301 znmcs095
+       ON znmcs095.t$fire$c = tdrec941.t$dvrf$c
+       
 INNER JOIN ( select a.t$fire$l,
                     a.t$line$l,
                     a.t$orno$l,
@@ -71,7 +80,7 @@ LEFT JOIN ( select  a.t$ncia$c,
                     a.t$pono$c ) znsls004
       ON znsls004.t$orno$c = tdrec947.t$orno$l
      AND znsls004.t$pono$c = tdrec947.t$pono$l
-                          
+
 LEFT JOIN baandb.tznsls401301 znsls401
        ON znsls401.t$ncia$c = znsls004.t$ncia$c
       AND znsls401.t$uneg$c = znsls004.t$uneg$c
@@ -79,6 +88,12 @@ LEFT JOIN baandb.tznsls401301 znsls401
       AND znsls401.t$sqpd$c = znsls004.t$sqpd$c
       AND znsls401.t$entr$c = znsls004.t$entr$c
       AND znsls401.t$sequ$c = znsls004.t$sequ$c
+                          
+LEFT JOIN baandb.tznsls400301 znsls400
+       ON znsls400.t$ncia$c = znsls004.t$ncia$c
+      AND znsls400.t$uneg$c = znsls004.t$uneg$c
+      AND znsls400.t$pecl$c = znsls004.t$pecl$c
+      AND znsls400.t$sqpd$c = znsls004.t$sqpd$c
 
 LEFT JOIN  ( select case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)) = 0 
                     then 0
@@ -108,3 +123,4 @@ INNER JOIN baandb.tznfmd001301 znfmd001
         ON znfmd001.t$fovn$c = tccom130.t$fovn$l
         
 where tdrec940.t$rfdt$l = 10    --retorno de mercadoria
+
