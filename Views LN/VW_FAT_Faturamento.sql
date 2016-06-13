@@ -157,7 +157,7 @@ SELECT DISTINCT
         (cisli941f.t$iprt$l)*(nvl(ICMS.t$rate$l,0)/100)
   else
     case when ICMS.t$iest$l < ICMS.t$sest$l then
-         0
+      (cisli941.t$gamt$l-cisli941.t$tldm$l)*(ICMS.t$sest$l/100)
     else
       (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$rate$l,0)/100) +
       (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$iest$l-ICMS.t$sest$l,0)/100) +
