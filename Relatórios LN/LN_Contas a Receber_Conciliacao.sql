@@ -1,25 +1,23 @@
 SELECT Q1.*
 	  FROM ( SELECT 301                                                               CIA,
---				 CASE WHEN NVL( (FILIAL.T$STYP), '0' ) = '0'                  
---						THEN 2 ELSE 3 END                                                 FILIAL,
-         znfmd001_fili.t$fili$c                                               FILIAL,
-				 PRG_MOV.T$NINV                                                       TITULO,
-				 PRG_MOV.T$RPST$L                                                     SITUACAO_TITULO, 
-				 SIT_TIT.                                                             DESCR_SIT_TIT,
-				 PRG_MOV.T$TTYP                                                       DOC,
-				 TCCOM130.T$FOVN$L                                                    CNPJ,
-				 TCCOM100.T$NAMA                                                      NOME,
-				 PRG_MOV.T$DOCD                                                       DT_EMISSAO,
-				 PRG_MOV.T$AMNT                                                       VL_TITULO,
-				 PRG_MOV.T$BALC                                                       VL_SALDO_TITULO,
-				 PRG_MOV.T$PAYM                                                       CARTEIRA,
-				 TFCMG011.T$BAOC$L                                                    CD_BANCO,
-				 TFCMG011.T$AGCD$L                                                    NR_AGENCIA,
-				 TFCMG001.T$BANO                                                      NR_CONTA_CORRENTE,
-				 PRG_MOV.T$SCHN                                                       NR_DOCUMENTO,
-				 TITULO.T$LEAC                                                        CENTRO_CUSTO,
-				 PRG_MOV.T$RECD                                                       DT_VENCIMENTO,
-				 PRG_MOV.T$DUED$L                                                     DT_VENCIMENTO_ORIGINAL,
+               znfmd001_fili.t$fili$c                                               FILIAL,
+               PRG_MOV.T$NINV                                                       TITULO,
+               PRG_MOV.T$RPST$L                                                     SITUACAO_TITULO, 
+               SIT_TIT.                                                             DESCR_SIT_TIT,
+               PRG_MOV.T$TTYP                                                       DOC,
+               TCCOM130.T$FOVN$L                                                    CNPJ,
+               TCCOM100.T$NAMA                                                      NOME,
+               PRG_MOV.T$DOCD                                                       DT_EMISSAO,
+               PRG_MOV.T$AMNT                                                       VL_TITULO,
+               PRG_MOV.T$BALC                                                       VL_SALDO_TITULO,
+               PRG_MOV.T$PAYM                                                       CARTEIRA,
+               TFCMG011.T$BAOC$L                                                    CD_BANCO,
+               TFCMG011.T$AGCD$L                                                    NR_AGENCIA,
+               TFCMG001.T$BANO                                                      NR_CONTA_CORRENTE,
+               PRG_MOV.T$SCHN                                                       NR_DOCUMENTO,
+               TITULO.T$LEAC                                                        CENTRO_CUSTO,
+               PRG_MOV.T$RECD                                                       DT_VENCIMENTO,
+               PRG_MOV.T$DUED$L                                                     DT_VENCIMENTO_ORIGINAL,
          CASE WHEN PRG_MOV.T$RPST$L IN (3,4) THEN  --PARCIALMENTE PAGO 0U PAGO
              CASE WHEN TITULO.T$BALC = 0
                 THEN ( SELECT MAX(P.T$DOCD)   
@@ -39,8 +37,8 @@ SELECT Q1.*
                      AND P.T$DOCN != 0
                      AND P.T$LINO != 0)  
                   END
-         ELSE NULL END                                                                DT_LIQUIDACAO_TITULO,				 
-         TFCMG401.T$BTNO                                                              REMESSA,
+         ELSE NULL END                                                        DT_LIQUIDACAO_TITULO,				 
+         TFCMG401.T$BTNO                                                      REMESSA,
 				 TFCMG409.T$DATE                                                      DT_REMESSA,
 				 CISLI940.T$DOCN$L                                                    NOTA,
 				 CISLI940.T$SERI$L                                                    SERIE,
@@ -49,11 +47,11 @@ SELECT Q1.*
 				 CASE WHEN(PEDIDO_REL.T$FIRE$L) IS NULL 
             THEN PEDIDO.T$UNEG$C 
             ELSE PEDIDO_REL.T$UNEG$C 
-          END                                                                         UNID_NEGOCIO,
+          END                                                                 UNID_NEGOCIO,
 				 CASE WHEN (PEDIDO_REL.T$FIRE$L) IS NULL
             THEN ZNINT002.T$DESC$C
             ELSE ZNINT002_REL.T$DESC$C
-         END                                                                          DESC_UNID_NEGOCIO,
+         END                                                                  DESC_UNID_NEGOCIO,
 				 ZNREC007.T$LOGN$C                                                    USUARIO,
          CASE WHEN (PEDIDO_REL.T$FIRE$L) IS NULL THEN
             CASE WHEN PEDIDO.C_IDCP=1 
@@ -64,11 +62,11 @@ SELECT Q1.*
               THEN PEDIDO_REL.T$IDCP$C 
               ELSE NULL 
               END
-         END                                                                          CAMPANHA,
+         END                                                                  CAMPANHA,
 				 ZNREC007.T$CVPC$C                                                    CONTRATO_VPC,
 				 PRG_MOV.T$TDOC                                                       ID_TRANSACAO,
 				 GLD011.T$DESC                                                        TRANSACAO, 
-				 PRG_MOV.T$DOCD                                                       DATA_TRANSACAO,
+         PRG_MOV.DT_REC                                                       DATA_TRANSACAO,
 				 CASE WHEN PRG_MOV.T$DOCN ! =  0  
 						THEN NVL(AGRUP.T$TTYP$C, TREF.T$TTYP)   
 					  ELSE NULL   
@@ -111,6 +109,7 @@ SELECT Q1.*
 				 SITUACAO_NF.                                                         DESCR_SITUACAO_NF,
 				 TITULO.T$ITBP                                                        COD_PARCEIRO,
 				 PRG_MOV.T$RECA                                                       VALOR_TRANSACAO,
+         ABS(PRG_MOV.T$INAM$L)                                                JUROS,
          CASE WHEN (PEDIDO_REL.T$FIRE$L) IS NULL 
             THEN ZNCMG007.t$desc$c 
             ELSE ZNCMG007_REL.t$desc$c
@@ -216,18 +215,38 @@ SELECT Q1.*
 							 TFACR201.T$BREL,
 							 TFACR200.T$TDOC,
 							 TFACR200.T$DOCN,
+               TFACR200.T$LINO,
 							 TFACR201.T$RECD,
 							 TFACR201.T$DUED$L,
                TFACR201.T$RECA,
 							 NVL(TFACR200.T$ITBP, TFACR200.T$ITBP) T$ITBP,
-               EBF.T$BANU$L T$BANU$L
+               EBF.T$BANU$L T$BANU$L,
+               TFACR200.T$INAM$L,      --JUROS
+               TFACR200.T$DOCN$L,
+               TFACR200.T$TEXT,
+               TFACR200.T$LEAC,
+               TFACR200.T$LINE
+               
 						FROM BAANDB.TTFACR201301 TFACR201
 			 
-			FULL OUTER JOIN ( SELECT SQ.*
-								FROM BAANDB.TTFACR200301 SQ 
-							   WHERE SQ.T$DOCN ! =  0 
-							   --AND   SQ.T$STEP IN (7,10,16,20) --7-Duplicata Aceita/Enviada, 10-DOCUMENTO ENVIADO AO BANCO, 16-Paga, 20-Não Aplicável 
-                 --and SQ.T$AMNT > 0
+      LEFT JOIN ( SELECT        SQ.T$TTYP,
+                                SQ.T$NINV,
+                                SQ.T$SCHN,
+                                MAX(SQ.T$DOCD) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$DOCD,
+                                MAX(SQ.T$AMNT) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$AMNT,
+                                MAX(SQ.T$TDOC) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$TDOC,
+                                MAX(SQ.T$ITBP) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$ITBP,
+                                MAX(SQ.T$DOCN) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$DOCN,
+                                MAX(SQ.T$LINO) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$LINO,
+                                MAX(SQ.T$INAM$L) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$INAM$L,
+                                MAX(SQ.T$DOCN$L) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$DOCN$L,
+                                MAX(SQ.T$TEXT) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$TEXT,
+                                MAX(SQ.T$LEAC) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$LEAC,
+                                MAX(SQ.T$LINE) KEEP (DENSE_RANK LAST ORDER BY SQ.T$DOCN,  SQ.T$LINO) T$LINE
+                        FROM BAANDB.TTFACR200301 SQ 
+                        GROUP BY SQ.T$TTYP,
+                                 SQ.T$NINV,
+                                 SQ.T$SCHN
                  ) TFACR200     
 						 ON TFACR200.T$TTYP = TFACR201.T$TTYP 
 						AND TFACR200.T$NINV = TFACR201.T$NINV
@@ -658,7 +677,8 @@ SELECT Q1.*
 	  AND SITUACAO_TITULO IN (:STATUSTITULO)
 	  AND ( (ID_TRANSACAO = TRIM(:TRANSACAO)) OR (TRIM(:TRANSACAO) IS NULL) )
 	  AND ( (REGEXP_REPLACE(CNPJ, '[^0-9]', '') = TRIM(:CNPJ)) OR (TRIM(:CNPJ) IS NULL) )
-    and ( Q1.DOC in ('RB3','RE1','RE2','RE4','RWC','RG4','RGC',
-                     'SB3','SE1','SE2','SE4','SWC','SG4','SGC' )
+    AND ( Q1.DOC in ('RB3','RE1','RE2','RE4','RWC','RG4','RGC',
+                     'SB3','SE1','SE2','SE4','SWC','SG4','SGC',
+                     'RWA','SWC','SSO')
     or (q1.doc = 'FAT' and Q1.COD_TIPO_DOC_FISCAL IN ('S00001','S00005','S00008','S00200','S00201')) -- VDA P/REVENDA, VDA P/CONSUMO, MODELO C, PÓS CONSOLIDADO, PRÉ CONSOLIDADO
     AND Q1.CATEGORIA_MP IN (5,6))
