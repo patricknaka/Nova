@@ -1,5 +1,10 @@
 SELECT
            DISTINCT
+            
+            znsls401.t$uneg$c,
+            znsls401.t$pecl$c,
+            znsls401.t$sqpd$c,
+            
              znsls401.t$entr$c        ENTREGA,
              znfmd630.t$docn$c        NOTA,
              znfmd630.t$seri$c        SERIE,
@@ -37,10 +42,11 @@ SELECT
                                   AT time zone 'America/Sao_Paulo') AS DATE)
               END                     DATA_STATUS,
                  
-             CASE WHEN ULT_OCOR.LOGIN_PROC = 'job_prod'
+             CASE WHEN ULT_OCOR.LOGIN_PROC IN ('job_prod','jobptms')
                     THEN 'EDI'
                   ELSE   'MANUAL' 
              END                      BAIXA_MANUAL_EDI,
+             
              znsls401.t$uneg$c        UNIDADE_NEGOCIO,
              znint002.t$desc$c        DESC_UN_NEGOCIO,
              znsls401.t$orno$c        ORDEM_VENDA,
@@ -61,10 +67,10 @@ SELECT
                  AT time zone 'America/Sao_Paulo') AS DATE)  
                                       DATA_COMPRA,
                                             
-             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(WMS_ORDERS.SCHEDULEDSHIPDATE, 
-               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') AS DATE)  
-                                      DATA_LIMITE_EXPEDICAO,
+--             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(WMS_ORDERS.SCHEDULEDSHIPDATE, 
+--               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--                 AT time zone 'America/Sao_Paulo') AS DATE)  
+--                                      DATA_LIMITE_EXPEDICAO,
                                             
              CASE WHEN TRIM(WMS_SKU.SUSR2) = '2'
                     THEN 'PESADO'
@@ -161,8 +167,8 @@ SELECT
                 ON znint002.t$ncia$c = znsls401.t$ncia$c
                AND znint002.t$uneg$c = znsls401.t$uneg$c
         
-         LEFT JOIN WMWHSE5.ORDERS@DL_LN_WMS  WMS_ORDERS
-                ON WMS_ORDERS.REFERENCEDOCUMENT = znsls401.t$orno$c
+--         LEFT JOIN WMWHSE5.ORDERS@DL_LN_WMS  WMS_ORDERS
+--                ON WMS_ORDERS.REFERENCEDOCUMENT = znsls401.t$orno$c
           
          LEFT JOIN WMWHSE5.SKU@DL_LN_WMS  WMS_SKU
                 ON TRIM(WMS_SKU.SKU) = TRIM(ZNSLS401.T$ITEM$C)
@@ -170,7 +176,8 @@ SELECT
          LEFT JOIN ( select ttaad200.t$user,
                             ttaad200.t$name
                        from baandb.tttaad200000 ttaad200 ) usuario
-                ON usuario.t$user = znfmd630.t$ulog$c
+--                ON usuario.t$user = znfmd630.t$ulog$c
+                  ON usuario.t$user = ULT_OCOR.LOGIN_PROC
                         
          LEFT JOIN ( select znfmd062.t$creg$c,
                             znfmd062.t$cfrw$c,
@@ -204,7 +211,7 @@ SELECT
                      and znfmd640.t$etiq$c = znfmd630.t$etiq$c 
                      and znfmd640.t$coci$c = 'ETR'
                      and rownum = 1 ) IS NOT NULL 
-					 
+  
             AND NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT_PROC, 					 
 	          		  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')		 
 	          		    AT time zone 'America/Sao_Paulo') AS DATE), :DataProcessamentoDe)
