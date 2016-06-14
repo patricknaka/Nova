@@ -7,45 +7,47 @@ SELECT ORDERS.WHSEID                 ID_FILIAL,
        tcibd001.t$dscb$c             DESCR_ITEM,
        tccom130a.t$fovn$l            CNPJ_FORNECEDOR,
        tccom130a.t$nama              NOME_FORNECEDOR,
-       LOC.PUTAWAYZONE               CLASSE_LOCAL,
-       Trim(PZ.DESCR)                DESCR_LOCAL,
+       LOC.PUTAWAYZONE               ZONA,
+       Trim(PZ.DESCR)                DESCR_ZONA,
+       TASKDETAIL.FROMLOC            LOCAL_INICIO,
+       TASKDETAIL.EDITWHO            USUARIO_NOME_SEPARACAO,
        ORDERDETAIL.ORIGINALQTY       PECAS,
-       ORDERS.NOVASTATUS             STATUS_NF,
-       STATUSSETUP.DESCRIPTION       DSC_STATUS_NF,
+       ORDERS.NOVASTATUS             STATUS_PEDIDO,
+       STATUSSETUP.DESCRIPTION       DESCR_STATUS_PEDIDO,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(HISTORY.ADDDATE,
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
            AT time zone sessiontimezone) AS DATE)
                                      DATA_STATUS
 
-FROM        WMWHSE8.ORDERDETAIL ORDERDETAIL
+FROM       WMWHSE5.ORDERDETAIL ORDERDETAIL
 
 INNER JOIN baandb.tznsls401301@pln01 znsls401
         ON ORDERDETAIL.SALESORDERDOCUMENT = znsls401.t$orno$c
        AND ORDERDETAIL.SALESORDERLINE = znsls401.t$pono$c
-      
-INNER JOIN WMWHSE8.ORDERS ORDERS
+
+INNER JOIN WMWHSE5.ORDERS ORDERS
         ON ORDERS.ORDERKEY = ORDERDETAIL.ORDERKEY
-        
+
 INNER JOIN ( SELECT h.orderkey     orderkey, 
                     h.status       status,
                     MAX(h.adddate) adddate
-               FROM  WMWHSE8.ORDERSTATUSHISTORY h 
+               FROM  WMWHSE5.ORDERSTATUSHISTORY h 
            GROUP BY h.orderkey, 
                     h.status ) HISTORY
         ON HISTORY.ORDERKEY = ORDERS.ORDERKEY
        AND HISTORY.STATUS = ORDERS.NOVASTATUS
 
- LEFT JOIN WMWHSE8.TASKDETAIL TASKDETAIL
+ LEFT JOIN WMWHSE5.TASKDETAIL TASKDETAIL
         ON TASKDETAIL.ORDERKEY = ORDERS.ORDERKEY
        AND TASKDETAIL.SKU = ORDERDETAIL.SKU
 
- LEFT JOIN WMWHSE8.LOC LOC
+ LEFT JOIN WMWHSE5.LOC LOC
         ON LOC.LOC = TASKDETAIL.FROMLOC
 
- LEFT JOIN WMWHSE8.PUTAWAYZONE PZ
+ LEFT JOIN WMWHSE5.PUTAWAYZONE PZ
         ON PZ.PUTAWAYZONE = LOC.PUTAWAYZONE
 
- LEFT JOIN WMWHSE8.SKU SKU
+ LEFT JOIN WMWHSE5.SKU SKU
         ON SKU.SKU = ORDERDETAIL.SKU
 
  LEFT JOIN ( select A.LONG_VALUE,
@@ -74,7 +76,7 @@ INNER JOIN ( SELECT h.orderkey     orderkey,
  LEFT JOIN baandb.ttccom130301@pln01 tccom130a
         ON tccom130a.t$cadr = tccom100.t$cadr
         
- LEFT JOIN WMWHSE8.ORDERSTATUSSETUP STATUSSETUP 
+ LEFT JOIN WMWHSE5.ORDERSTATUSSETUP STATUSSETUP 
         ON STATUSSETUP.CODE = ORDERS.NOVASTATUS
         
 WHERE TASKDETAIL.TASKTYPE = 'PK'
@@ -101,11 +103,13 @@ WHERE TASKDETAIL.TASKTYPE = 'PK'
 "        tcibd001.t$dscb$c             DESCR_ITEM,  " &
 "        tccom130a.t$fovn$l            CNPJ_FORNECEDOR,  " &
 "        tccom130a.t$nama              NOME_FORNECEDOR,  " &
-"        LOC.PUTAWAYZONE               CLASSE_LOCAL,  " &
-"        Trim(PZ.DESCR)                DESCR_LOCAL,  " &
+"        LOC.PUTAWAYZONE               ZONA,  " &
+"        Trim(PZ.DESCR)                DESCR_ZONA,  " &
+"        TASKDETAIL.FROMLOC            LOCAL_INICIO,  " &
+"        TASKDETAIL.EDITWHO            USUARIO_NOME_SEPARACAO,  " &
 "        ORDERDETAIL.ORIGINALQTY       PECAS,  " &
-"        ORDERS.NOVASTATUS             STATUS_NF,  " &
-"        STATUSSETUP.DESCRIPTION       DSC_STATUS_NF,  " &
+"        ORDERS.NOVASTATUS             STATUS_PEDIDO,  " &
+"        STATUSSETUP.DESCRIPTION       DESCR_STATUS_PEDIDO,  " &
 "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(HISTORY.ADDDATE,  " &
 "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "            AT time zone sessiontimezone) AS DATE)  " &
