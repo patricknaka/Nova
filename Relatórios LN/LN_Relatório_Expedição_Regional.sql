@@ -31,6 +31,7 @@ select
 	tcmcs080.t$dsca			TRANSPORTADORA,
 	tccom130.t$fovn$l  		CNPJ,
 	trim(cisli941.t$item$l)		ITEM,
+	tcibd001.t$dsca			ITEM_DSCA,
 	znfmd630.t$vlmr$c    		VALOR_ITEM,
 	cisli941.t$dqua$l			QTDE_ITEM,
 	whwmd400.t$hght 		ALTURA,
@@ -70,11 +71,12 @@ on		tccom139.t$ccty = tccom130_cli.t$ccty
 and		tccom139.t$cste = tccom130_cli.t$cste
 and		tccom139.t$city = tccom130_cli.t$ccit
 
-inner join 	baandb.ttdrec955301 tdrec955			-- recbto pendente
+left join 	baandb.ttdrec955301 tdrec955			
 on 		tdrec955.t$fire$l = cisli941.t$fire$l
 and 		tdrec955.t$line$l = cisli941.t$line$l
 
 where	
-	  znfmd630.t$pecl$c between :EntregaDe and :EntregaAte
-and cisli940.t$stat$l = 6
-and	cisli940.t$fdty$l = 17                 -- remessa para terceiros
+	znfmd630.t$pecl$c between :EntregaDe and :EntregaAte
+and	cisli940.t$stat$l = 6
+and	cisli940.t$fdty$l = 17			-- remessa para terceiros
+and	tdrec955.t$fire$l is null 		-- recebimento pendente
