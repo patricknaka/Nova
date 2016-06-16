@@ -172,15 +172,9 @@ SELECT
     CASE WHEN znsls400.t$sige$c = 1 THEN znmcs096.t$seri$c
     ELSE VENDA_REF.T$SERI$L  END              SERIE_SAIDA,
 
-    CASE WHEN znsls002.t$stat$c = 4 --Insucesso na Entrega
-           THEN cisli940.t$docn$l                         
-         ELSE   tdrec940.t$docn$l 
-    END                                       NOTA_ENTRADA,
+    cisli940.t$docn$l                         NOTA_ENTRADA,
 
-    CASE WHEN znsls002.t$stat$c = 4 --Insucesso na Entrega
-           THEN cisli940.t$seri$l                        
-         ELSE   tdrec940.t$seri$l 
-    END                                       SERIE_ENTRADA,
+    cisli940.t$seri$l                         SERIE_ENTRADA,
 
     CASE WHEN znsls002.t$stat$c = 4 --Insucesso na Entrega  
            THEN CASE WHEN znsls400.t$sige$c = 1 and znmcs096.t$trdt$c > to_date('01-01-1980','DD-MM-YYYY') 
@@ -614,9 +608,6 @@ INNER JOIN baandb.tznsls400601 znsls400
         ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
        AND znfmd060.t$cono$c = znfmd630.t$cono$c
  
- LEFT JOIN baandb.ttdrec940601 tdrec940
-        ON tdrec940.t$fire$l = tdrec947.t$fire$l
-        
  LEFT JOIN ( select a.t$ncia$c,
                     a.t$uneg$c,
                     a.t$pecl$c,
@@ -855,15 +846,8 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "     CASE WHEN znsls400.t$sige$c = 1 THEN znmcs096.t$seri$c  " &
 "     ELSE VENDA_REF.T$SERI$L  END              SERIE_SAIDA,  " &
 "  " &
-"     CASE WHEN znsls002.t$stat$c = 4  " &
-"            THEN cisli940.t$docn$l  " &
-"          ELSE   tdrec940.t$docn$l  " &
-"     END                                       NOTA_ENTRADA,  " &
-"  " &
-"     CASE WHEN znsls002.t$stat$c = 4  " &
-"            THEN cisli940.t$seri$l  " &
-"          ELSE   tdrec940.t$seri$l  " &
-"     END                                       SERIE_ENTRADA,  " &
+"     cisli940.t$docn$l                         NOTA_ENTRADA,  " &
+"     cisli940.t$seri$l                         SERIE_ENTRADA,  " &
 "  " &
 "     CASE WHEN znsls002.t$stat$c = 4  " &
 "            THEN CASE WHEN znsls400.t$sige$c = 1 and znmcs096.t$trdt$c > to_date('01-01-1980','DD-MM-YYYY')  " &
@@ -1280,9 +1264,6 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "  LEFT JOIN baandb.tznfmd060" + Parameters!Compania.Value + " znfmd060  " &
 "         ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c  " &
 "        AND znfmd060.t$cono$c = znfmd630.t$cono$c  " &
-"  " &
-"  LEFT JOIN baandb.ttdrec940" + Parameters!Compania.Value + " tdrec940  " &
-"         ON tdrec940.t$fire$l = tdrec947.t$fire$l  " &
 "  " &
 "  LEFT JOIN ( select a.t$ncia$c,  " &
 "                     a.t$uneg$c,  " &
