@@ -14,8 +14,8 @@ SELECT
       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400dev.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE) 
                                                             DATA_OCORRENCIA,
-      znsls002.t$dsca$c                                     DEVOLUCAO,  
-      znsls401dev.t$lmot$c                                  MOTIVO_ABERTURA_NOVA, 
+      znsls002.t$dsca$c                                     TIPO_DE_ENTREGA,  
+      znsls401dev.t$lmot$c                                  MOTIVO_ABERTURA, 
       znmcs002_TIPO.t$desc$c                                TIPO_DA_ORDEM_DE_VENDA,      
       ORDEM_COLETA.STATUS                                   STATUS_DA_ORDEM_DE_COLETA,
       tdsls420dev.t$hrea                                    MOTIVO_STATUS_ORDEM_DE_COLETA,
@@ -29,8 +29,8 @@ SELECT
           'Sim' ELSE 'Nao' END                              PEDIDO_SIGE,
       CASE WHEN znsls400dev.t$sige$c = 1 THEN
           znmcs096dev.t$sige$c
-      ELSE znsls401orig.t$entr$c END                        ENTREGA_VENDA,
-      znsls401dev.t$entr$c                                  ENTREGA_DEVOLUCAO,
+      ELSE znsls401orig.t$entr$c END                        ENTREGA_ORIGINAL,
+      znsls401dev.t$entr$c                                  SEQUENCIAL_FORCADO,
       CASE WHEN znsls400dev.t$sige$c = 1 THEN 
             znmcs096dev.t$docn$c
 --      ELSE NVL(cisli940orig.t$docn$l, SLI940_orig.t$docn$l) END
@@ -78,7 +78,7 @@ SELECT
       'Sim'                                                  FORCADA,
       znsls410.t$poco$c                                      ULT_PONTO_ENTREGA,
       znmcs002.t$desc$c                                      DESCRICAO_ULT_PONTO_ENTREGA,
-      ttaad200.t$name                                        USUARIO,
+      ttaad200.t$name                                        USUARIO_DA_BAIXA_DO_PONTO,
       ''                                                     USUARIO_QUE_FORCOU_PEDIDO,   --NAO TEM NO LN
       znsls401dev.t$cepe$c                                   CEP_DESTINATARIO,
       znsls401dev.t$cide$c                                   CIDADE,
