@@ -1,6 +1,7 @@
 SELECT ORDERS.WHSEID                 ID_FILIAL,
        wmsCODE.UDF2                  NOME_FILIAL,
-       znsls401.T$ENTR$C             ID_ENTREGA, ORDERS.ORDERKEY,
+       znsls401.T$ENTR$C             ID_ENTREGA,
+       ORDERS.ORDERKEY               PEDIDO_SCE,
        ORDERDETAIL.SKU               ID_ITEM,
        tcmcs023.t$dsca               DEPARTAMENTO,
        znmcs030.t$dsca$c             SETOR,
@@ -79,16 +80,15 @@ INNER JOIN ( SELECT h.orderkey     orderkey,
  LEFT JOIN WMWHSE5.ORDERSTATUSSETUP STATUSSETUP 
         ON STATUSSETUP.CODE = ORDERS.NOVASTATUS
         
-WHERE TASKDETAIL.TASKTYPE = 'PK'
-  AND TASKDETAIL.STATUS = 9
-  AND ORDERS.NOVASTATUS not in (95, 98, 100)
+WHERE TASKDETAIL.TASKTYPE = 'PK'             --Piking
+  AND TASKDETAIL.STATUS = 9                  --Concluída
+  AND ORDERS.NOVASTATUS not in (98, 100)     --98-Cancelado extern., 100-Perda logistica
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(HISTORY.ADDDATE, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataRegistroDe
           And :DataRegistroAte
-  AND ORDERS.NOVASTATUS IN (:StatusNF)
-  AND ((:Depto = '000') OR (tcmcs023.t$citg = :Depto))
+  AND tcmcs023.t$citg IN (:Depto)
   AND ((:Setor = '000') OR (znmcs030.t$seto$c = :Setor))
   
 
@@ -96,7 +96,8 @@ WHERE TASKDETAIL.TASKTYPE = 'PK'
 
 " SELECT ORDERS.WHSEID                 ID_FILIAL,  " &
 "        wmsCODE.UDF2                  NOME_FILIAL,  " &
-"        znsls401.T$ENTR$C             ID_ENTREGA, ORDERS.ORDERKEY,  " &
+"        znsls401.T$ENTR$C             ID_ENTREGA,  " &
+"        ORDERS.ORDERKEY               PEDIDO_SCE,  " &
 "        ORDERDETAIL.SKU               ID_ITEM,  " &
 "        tcmcs023.t$dsca               DEPARTAMENTO,  " &
 "        znmcs030.t$dsca$c             SETOR,  " &
@@ -177,12 +178,12 @@ WHERE TASKDETAIL.TASKTYPE = 'PK'
 "  " &
 " WHERE TASKDETAIL.TASKTYPE = 'PK'  " &
 "   AND TASKDETAIL.STATUS = 9  " &
-"   AND ORDERS.NOVASTATUS not in (95, 98, 100)  " &
+"   AND ORDERS.NOVASTATUS not in (98, 100)  " &
 "   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(HISTORY.ADDDATE,  " &
 "         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
 "           AT time zone 'America/Sao_Paulo') AS DATE))  " &
 "       Between :DataRegistroDe  " &
 "           And :DataRegistroAte  " &
-"   AND ORDERS.NOVASTATUS IN (:StatusNF)  " &
-"   AND ((:Depto = '000') OR (tcmcs023.t$citg = :Depto))  " &
-"   AND ((:Setor = '000') OR (znmcs030.t$seto$c = :Setor))  "
+"   AND tcmcs023.t$citg IN (:Depto)  " &
+"   AND ((" + Parameters!Setor.Value + " = '000') OR (znmcs030.t$seto$c = '" + Parameters!Setor.Value + "'))  "
+
