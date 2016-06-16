@@ -75,9 +75,12 @@ and		tccom139.t$city = tccom130_cli.t$ccit
 left join 	baandb.ttdrec955301 tdrec955			
 on 		tdrec955.t$fire$l = cisli941.t$fire$l
 and 		tdrec955.t$line$l = cisli941.t$line$l
-
+ LEFT JOIN baandb.tznsls000601 znsls000
+        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+        
 where	cisli940.t$stat$l = 6
-and	cisli940.t$fdty$l = 17			-- remessa para terceiros
-and trim(tdrec955.t$lfir$l) is null		-- recebimento pendente
-AND ( :Entrega IS NULL
-      OR znfmd630.t$pecl$c IN (:Entrega))
+AND ((znfmd630.t$pecl$c IN (:Entrega))
+	OR (:EntregaTodos = '0'))
+AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
+AND cisli941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
+AND cisli941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS
