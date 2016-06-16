@@ -1,4 +1,4 @@
-select	
+select	distinct
 	znfmd630.t$pecl$c		ENTREGA,
 	cisli940.t$docn$l			NOTA,
 	cisli940.t$seri$l			SERIE,
@@ -12,27 +12,28 @@ select
         and		znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
         and		znfmd640_ETR.t$coct$c = 'ETR' )
 						DATA_EXPEDICAO,
-	nvl( 
-	case when trunc(znfmd630.t$dtpe$c) <= to_date('01/01/1970','dd/mm/yyyy')
+
+	case when znfmd630.t$dtpe$c <= '01/01/70'
 	then 	
 		null	
 	else   	
 		cast((from_tz(to_timestamp(to_char(znfmd630.t$dtpe$c, 'dd-mon-yyyy hh24:mi:ss'),
 			'dd-mon-yyyy hh24:mi:ss'), 'gmt') at time zone 'america/sao_paulo') as date) 
-	end, ' ' )				DATA_PROMETIDA,
-	nvl( 
-	case when trunc(znfmd630.t$dtco$c) <= to_date('01/01/1970','DD/MM/YYYY')
+	end			DATA_PROMETIDA,
+
+	case when znfmd630.t$dtco$c <= '01/01/70'
 	then 
 		null
          else 
 		cast((from_tz(to_timestamp(to_char(znfmd630.t$dtco$c, 'dd-mon-yyyy hh24:mi:ss'),
                 'dd-mon-yyyy hh24:mi:ss'), 'gmt') at time zone 'america/sao_paulo') as date)
-	end, ' ' )                  	DATA_AJUSTADA,
+	end                  	DATA_AJUSTADA,
 	tcmcs080.t$dsca			TRANSPORTADORA,
 	tccom130.t$fovn$l  		CNPJ,
 	trim(cisli941.t$item$l)		ITEM,
 	tcibd001.t$dsca			ITEM_DSCA,
-	znfmd630.t$vlmr$c    		VALOR_ITEM,
+	cisli941.T$PRIC$L VALOR_ITEM,
+	--znfmd630.t$vlmr$c    		VALOR_ITEM,
 	cisli941.t$dqua$l			QTDE_ITEM,
 	whwmd400.t$hght 		ALTURA,
 	whwmd400.t$wdth 		LARGURA,
@@ -75,8 +76,8 @@ left join 	baandb.ttdrec955301 tdrec955
 on 		tdrec955.t$fire$l = cisli941.t$fire$l
 and 		tdrec955.t$line$l = cisli941.t$line$l
 
-where	
-	znfmd630.t$pecl$c between :EntregaDe and :EntregaAte
-and	cisli940.t$stat$l = 6
+where	cisli940.t$stat$l = 6
 and	cisli940.t$fdty$l = 17			-- remessa para terceiros
-and	tdrec955.t$fire$l is null 		-- recebimento pendente
+and trim(tdrec955.t$lfir$l) is null		-- recebimento pendente
+AND ( :Entrega IS NULL
+      OR znfmd630.t$pecl$c IN (:Entrega))
