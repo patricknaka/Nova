@@ -212,10 +212,10 @@ SELECT
                      and znfmd640.t$coci$c = 'ETR'
                      and rownum = 1 ) IS NOT NULL 
   
-            AND NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT_PROC, 					 
-	          		  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')		 
-	          		    AT time zone 'America/Sao_Paulo') AS DATE), :DataProcessamentoDe)
+            AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT_PROC, 
+                         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                           AT time zone 'America/Sao_Paulo') AS DATE))
                 Between :DataProcessamentoDe
                     And :DataProcessamentoAte
             AND znfmd630.t$stat$c IN (:FinalizadoPendente)
-            AND ULT_OCOR.PONTO IN (:ocorrencia)
+            --AND ULT_OCOR.PONTO IN (:ocorrencia)
