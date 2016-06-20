@@ -257,7 +257,7 @@ SELECT
     LEFT JOIN baandb.tcisli940601 SLI940_orig
              ON SLI940_orig.t$fire$l = znfmd630_orig.t$fire$c
            
-    LEFT JOIN baandb.tznmcs002601 znmcs002
+    LEFT JOIN baandb.tznmcs002301 znmcs002
            ON znmcs002.t$poco$c = znsls410.t$poco$c
        
  LEFT JOIN ( select znsls410.t$ncia$c,
@@ -301,7 +301,7 @@ SELECT
        AND TIPO_INST.t$sqpd$c = znsls401dev.t$sqpd$c
        AND TIPO_INST.t$entr$c = znsls401dev.t$entr$c
        
- LEFT JOIN baandb.tznmcs002601 znmcs002_TIPO
+ LEFT JOIN baandb.tznmcs002301 znmcs002_TIPO
         ON znmcs002_TIPO.t$poco$c = TIPO_INST.t$poco$c
        
  LEFT JOIN baandb.tznint002601 znint002
@@ -369,7 +369,7 @@ SELECT
   
  LEFT JOIN ( select a.t$hrea,
                     a.t$dsca
-             from   baandb.ttdsls090601 a ) tdsls090dev
+             from   baandb.ttdsls090301 a ) tdsls090dev
         ON tdsls090dev.t$hrea = tdsls420dev.t$hrea
 
 LEFT JOIN ( select a.t$ncmp$c,
@@ -431,8 +431,8 @@ LEFT JOIN ( select a.t$ncmp$c,
     AND znsls409.t$lbrd$c = 1        --Forcado = Sim
     AND NVL(znisa002.t$nptp$c, ' ') != 'K'
     
-   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400dev.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 
-              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
-      Between :DataOcorrenciaDe 
-          And :DataOcorrenciaAte
-  AND tcmcs080_dev.t$cfrw IN (:Transportadora)
+--   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400dev.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 
+--              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
+--      Between :DataOcorrenciaDe 
+--          And :DataOcorrenciaAte
+--  AND tcmcs080_dev.t$cfrw IN (:Transportadora)
