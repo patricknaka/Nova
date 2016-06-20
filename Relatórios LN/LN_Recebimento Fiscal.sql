@@ -1,92 +1,92 @@
 SELECT
   DISTINCT
-   tcemm030.t$euca        NUME_FILIAL,
-   tdrec940.t$docn$l      NUME_NOTA,
-   tdrec940.t$seri$l      NUME_SERIE,
-   whinh300.t$recd$c      NR_SUMARIZADO,
-   tdrec940.t$fire$l      REF_FISCAL,
-   tdrec940.t$stat$l      ID_STATUS_NF,
-   SITUACAO_NF.DESCR_NF   DESCR_STATUS_NF,
-   tdrec940.t$cpay$l      CONDICAO_PAGTO_NR,
-   tcmcs013r.t$dsca       DESC_CONDICAO_PAGTO_NR,  
-   tdrec940.t$fovn$l      CNPJ_FORNECEDOR,
-   tdrec940.t$fids$l      NOME_FORNECEDOR,
+   tcemm030.t$euca 		NUME_FILIAL,
+   tdrec940.t$docn$l		NUME_NOTA,
+   tdrec940.t$seri$l 		NUME_SERIE,
+   whinh300.t$recd$c 		NR_SUMARIZADO,
+   tdrec940.t$fire$l 		REF_FISCAL,
+   tdrec940.t$stat$l 		ID_STATUS_NF,
+   SITUACAO_NF.DESCR_NF	DESCR_STATUS_NF,
+   tdrec940.t$cpay$l		CONDICAO_PAGTO_NR,
+   tcmcs013r.t$dsca 		DESC_CONDICAO_PAGTO_NR,  
+   tdrec940.t$fovn$l		CNPJ_FORNECEDOR,			
+   tdrec940.t$fids$l 		NOME_FORNECEDOR,
    
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                          DATA_RECEB_FISCAL,
+					DATA_RECEB_FISCAL,
         
-   tdrec940.t$opfc$l      NUME_CFOP,
-   Trim(tdpur401.t$item)  NUME_ITEM,
-   tcibd001.t$dsca        DESC_ITEM,  
-   tcibd001.t$citg        NUME_GRUPO_ITEM,
-   tcmcs023.t$dsca        DESC_GRUPO_ITEM,
-   tdpur401.t$orno        NUME_ORDEM,
-   tdpur401.t$cpay        CONDICAO_PAGTO_PEDIDO,
-   tcmcs013p.t$dsca       DESC_CONDICAO_PAGTO_PEDIDO,    
-   tdpur401.t$cdec        CONDICAO_ENTREGA_NR,
+   tdrec940.t$opfc$l      	NUME_CFOP,
+   Trim(tdpur401.t$item) 	NUME_ITEM,
+   tcibd001.t$dsca        	DESC_ITEM,  
+   tcibd001.t$citg        		NUME_GRUPO_ITEM,
+   tcmcs023.t$dsca        	DESC_GRUPO_ITEM,
+   tdpur401.t$orno        	NUME_ORDEM,
+   tdpur401.t$cpay        	CONDICAO_PAGTO_PEDIDO,
+   tcmcs013p.t$dsca       	DESC_CONDICAO_PAGTO_PEDIDO,  	
+   tdpur401.t$cdec        	CONDICAO_ENTREGA_NR,
    
    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                          DATA_GERACAO_PEDIDO,   
+					DATA_GERACAO_PEDIDO,   
         
-   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$ddta, 'DD-MON-YYYY HH24:MI:SS'), 
+   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$ddat, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                          DATA_PLANEJAMENTO_RECEBIMENTO,
+					DATA_PLANEJ_RECEBIMENTO,
         
    CASE WHEN tcibd001.t$csig = 'SUS' THEN 'SUSPENSO' 
    WHEN tcibd001.t$csig = 'CAN' THEN 'CANCELADO'
    WHEN tcibd001.t$csig = '001' THEN 'VERIFICAÇÃO FISCAL'
-   ELSE 'ATIVO' END   SINALIZACAO_ITEM,
-   tdrec941.t$qnty$l      QTDE_RECEBIDA,
-   tdpur401.t$qoor        QTDE_ORDENADA,
-   tdrec941.t$pric$l      PRECO_UNITARIO,
-   tdrec941.t$tamt$l      VALOR_TOTAL_LINHA,
-   tdrec941.t$iprt$l      PRECO_TOTAL_ITEM,
+   ELSE 'ATIVO' END   	SINALIZACAO_ITEM,
+   tdrec941.t$qnty$l      	QTDE_RECEBIDA,
+   tdpur401.t$qoor        	QTDE_ORDENADA,
+   WMS_REC_DETAIL.QTDE	QTDE_RECEBIDA_WMS,
+   tdrec941.t$pric$l      	PRECO_UNITARIO,
+   tdrec941.t$tamt$l      	VALOR_TOTAL_LINHA,
+   tdrec941.t$iprt$l      		PRECO_TOTAL_ITEM,
+   tdrec940.t$fdtc$l      	COD_TIPO_DOCFISCAL,			
+   tcmcs966.t$dsca$l  		DSC_TIPO_DOCFISCAL,
+   tdrec940.t$rfdt$l 		COD_TIPO_DOC_RECFISCAL,
+   TP_Doc_RecFiscal.DESCR 	DSC_TIPO_DOC_RECFISCAL,
    
-   tdrec940.t$fdtc$l      COD_TIPO_DOCFISCAL,
-   tcmcs966.t$dsca$l      DSC_TIPO_DOCFISCAL,
-   tdrec940.t$rfdt$l      COD_TIPO_DOC_RECFISCAL,
-   TP_Doc_RecFiscal.DESCR DSC_TIPO_DOC_RECFISCAL,
-   
-   tdrec940.t$cnfe$l      CHAVE_ACESSO,                    
+   tdrec940.t$cnfe$l 		CHAVE_ACESSO,                    
    
    ( SELECT tdrec942.t$amnt$l 
        FROM baandb.ttdrec942301  tdrec942 
       WHERE tdrec942.t$fire$l = tdrec941.t$fire$l 
         AND tdrec942.t$line$l = tdrec941.t$line$l 
         AND tdrec942.t$brty$l = 1 )
-                          VALOR_ICMS,
+					VALOR_ICMS,
         
    ( SELECT tdrec942.t$amnt$l 
        FROM baandb.ttdrec942301  tdrec942 
       WHERE tdrec942.t$fire$l = tdrec941.t$fire$l 
         AND tdrec942.t$line$l = tdrec941.t$line$l 
         AND tdrec942.t$brty$l = 5 )
-                          VALOR_PIS,
+					VALOR_PIS,
         
    ( SELECT tdrec942.t$amnt$l 
        FROM baandb.ttdrec942301  tdrec942 
       WHERE tdrec942.t$fire$l = tdrec941.t$fire$l 
         AND tdrec942.t$line$l = tdrec941.t$line$l 
         AND tdrec942.t$brty$l = 6 )
-                          VALOR_COFINS,
+					VALOR_COFINS,
         
    ( SELECT tdrec942.t$amnt$l 
        FROM baandb.ttdrec942301  tdrec942 
       WHERE tdrec942.t$fire$l = tdrec941.t$fire$l 
         AND tdrec942.t$line$l = tdrec941.t$line$l 
         AND tdrec942.t$brty$l = 3 )
-                          VALOR_IPI,
-    tcibd001.t$seab       CHAVE_BUSCA_II,
-    tcibd001.t$cean       EAN,
-    tdpur400.t$cotp || '-' || tdpur094.t$dsca               
-                          TIPO_ORDEM_COMPRA,
-    tdpur094.t$dsca                      DESCRICAO_TIPO_ORDEM_DE_COMPRA,                   
-    tdpur450.t$logn  LOGIN_GEROU_OC,
-    login.t$name DSC_LOGIN_GEROU_OC,
-       twhinh312.t$exrr NUM_ASN,
-       tdrec940.t$lipl$l PLACA_VEICULO
+					VALOR_IPI,
+    tcibd001.t$seab 		CHAVE_BUSCA_II,
+    tcibd001.t$cean 		EAN,
+--    tdpur400.t$cotp || '-' || tdpur094.t$dsca               
+    tdpur400.t$cotp  		TIPO_ORDEM_COMPRA,
+    tdpur094.t$dsca 		DESCRICAO_TIPO_ORDEM_DE_COMPRA,                   
+    tdpur450.t$logn  		LOGIN_GEROU_OC,
+    login.t$name 			DSC_LOGIN_GEROU_OC,
+       twhinh312.t$exrr 		NUM_ASN,
+       tdrec940.t$lipl$l 		PLACA_VEICULO
    
 FROM       baandb.ttdrec941301 tdrec941
 
@@ -102,6 +102,34 @@ INNER JOIN baandb.ttccom130301 tccom130
 
  LEFT JOIN baandb.twhinh300301 whinh300  
         ON whinh300.t$fire$c = tdrec940.t$fire$l
+	
+  LEFT JOIN ( select a.RECEIPTKEY,  
+                     a.EXTERNRECEIPTKEY,
+                     a.CLOSEDDATE,
+                     a.STATUS,
+                     a.TYPE
+                from WMWHSE8.RECEIPT@DL_LN_WMS  a  
+            group by a.RECEIPTKEY,  
+                     a.EXTERNRECEIPTKEY,
+                     a.CLOSEDDATE,
+                     a.STATUS,
+                     a.TYPE ) WMS_RECEIPT  
+         ON SUBSTR(WMS_RECEIPT.EXTERNRECEIPTKEY, 3,9) = TRIM(whinh300.t$sfbp)
+         AND SUBSTR(WMS_RECEIPT.EXTERNRECEIPTKEY,13,9) = TRIM(whinh300.t$shid)
+	 
+  LEFT JOIN ( select a.RECEIPTKEY,  
+                     a.SKU,  
+                     a.TOID,  
+                     a.DATERECEIVED,  
+                     sum(a.QTYRECEIVED) QTDE  
+                from WMWHSE8.RECEIPTDETAIL@DL_LN_WMS  a  
+            group by a.RECEIPTKEY,  
+                     a.EXTERNRECEIPTKEY,  
+                     a.SKU,  
+                     a.TOID,  
+                     a.DATERECEIVED ) WMS_REC_DETAIL  
+         ON WMS_REC_DETAIL.RECEIPTKEY = WMS_RECEIPT.RECEIPTKEY  
+        AND TRIM(WMS_REC_DETAIL.SKU) = TRIM(tdrec941.t$item$l)  
 
 INNER JOIN baandb.ttdpur401301 tdpur401  
         ON tdpur401.t$orno = tdrec947.t$orno$l
