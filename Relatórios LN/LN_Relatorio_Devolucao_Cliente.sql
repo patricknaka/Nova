@@ -47,6 +47,8 @@ INNER JOIN baandb.ttcibd001301 tcibd001
  
  LEFT JOIN baandb.tznmcs095301 znmcs095
         ON znmcs095.t$fire$c = tdrec941.t$dvrf$c
+       AND znmcs095.t$fire$c != ' '
+
        
 INNER JOIN ( select a.t$fire$l,
                     a.t$line$l,
