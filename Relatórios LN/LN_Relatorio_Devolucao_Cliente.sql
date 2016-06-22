@@ -4,26 +4,26 @@
            znfmd001.t$dsca$c         NOME_FILIAL,
            znsls004.t$pecl$c         PEDIDO,
            znsls004.t$uneg$c         UN_NEGOCIO,
-           CASE WHEN znsls400.t$sige$c = 1 THEN
-                 znmcs095.t$docn$c 
-           ELSE  cisli940.t$docn$l END        
-                                     NOTA_ORIGINAL,
-           CASE WHEN znsls400.t$sige$c = 1 THEN
-                 znmcs095.t$seri$c
-           ELSE  cisli940.t$seri$l END   
-                                     SERIE_ORIGINAL,
+           CASE WHEN znsls400.t$sige$c = 1 
+                  THEN znmcs095.t$docn$c 
+                ELSE cisli940.t$docn$l
+           END                       NOTA_ORIGINAL,
+           CASE WHEN znsls400.t$sige$c = 1 
+                  THEN znmcs095.t$seri$c
+                ELSE   cisli940.t$seri$l 
+           END                       SERIE_ORIGINAL,
            tdrec940.t$docn$l         NOTA_ENTRADA,
            tdrec940.t$seri$l         SERIE_ENTRADA,
            tdrec940.t$date$l         DATA_FISCAL,
-           TRIM(tdrec941.t$item$l)         ITEM,
+           TRIM(tdrec941.t$item$l)   ITEM,
            tcibd001.t$dscb$c         DESCRICAO,
            znmcs030.t$dsca$c         SETOR,
            znmcs031.t$dsca$c         FAMILIA,
            znsls401.t$lmot$c         MOTIVO_DEVOLUCAO,
-           tdrec941.t$qnty$l         QTDE--,
---           CMV.mauc_unit             CMV_UNITARIO,
---           (CMV.mauc_unit * tdrec941.t$qnty$l)  CMV_TOTAL
-           --CMV.mauc_tot              CMV_TOTAL
+           tdrec941.t$qnty$l         QTDE,
+           CMV.mauc_unit             CMV_UNITARIO,
+           CMV.mauc_unit * 
+           tdrec941.t$qnty$l         CMV_TOTAL
                             
       FROM baandb.ttdrec941301 tdrec941
 
@@ -48,7 +48,6 @@ INNER JOIN baandb.ttcibd001301 tcibd001
  LEFT JOIN baandb.tznmcs095301 znmcs095
         ON znmcs095.t$fire$c = tdrec941.t$dvrf$c
        AND znmcs095.t$fire$c != ' '
-
        
 INNER JOIN ( select a.t$fire$l,
                     a.t$line$l,
@@ -126,7 +125,7 @@ INNER JOIN baandb.tznfmd001301 znfmd001
  LEFT JOIN baandb.tznsls000601 znsls000
         ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')        
         
-where tdrec940.t$rfdt$l = 10    --retorno de mercadoria
+where tdrec940.t$rfdt$l = 10                        --retorno de mercadoria
   AND tdrec941.t$item$l   != znsls000.t$itmf$c      --ITEM FRETE
   AND tdrec941.t$item$l   != znsls000.t$itmd$c      --ITEM DESPESAS
   AND tdrec941.t$item$l   != znsls000.t$itjl$c      --ITEM JUROS
@@ -135,4 +134,3 @@ where tdrec940.t$rfdt$l = 10    --retorno de mercadoria
       Between :DataEntradaDe 
           And :DataEntradaAte
   AND znfmd001.t$fili$c IN (:filial)
-  
