@@ -56,11 +56,15 @@ SELECT
              znsls401.t$baie$c        REGIAO,
              znsls401.t$itpe$c        TIPO_ENTREGA,
              znsls002.t$dsca$c        DESC_TIPO_ENTREGA,
-             
-             CASE WHEN znfmd630.t$stat$c = 2
-                    THEN 'F'                     --PENDENTE
-                  ELSE   'P'                     --FINALIZADO 
-             END                      FINALIZADO_PENDENTE,
+             znsls401.t$iitm$c        PRODUTO_NAO_PRODUTO,
+--             CASE WHEN znfmd630.t$stat$c = 2
+--                    THEN 'F'                     --PENDENTE
+--                  ELSE   'P'                     --FINALIZADO 
+--             END                      FINALIZADO_PENDENTE,
+
+            CASE WHEN OCORR_FIM.t$coci$c IS NOT NULL THEN
+                  'F'
+            ELSE  'P' END              FINALIZADO_PENDENTE, 
              
              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.T$DTEM$C, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -131,7 +135,7 @@ SELECT
                             znfmd640d.t$fili$c,
                             znfmd640d.t$etiq$c
                        from BAANDB.tznfmd640301 znfmd640d
-                      where znfmd640d.t$coci$c = ( SELECT max(znfmd640x.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640x.t$date$c,  znfmd640x.t$udat$c)
+                      where znfmd640d.t$coci$c = ( SELECT max(znfmd640x.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640x.t$udat$c, znfmd640x.t$date$c )
                                                      FROM BAANDB.tznfmd640301 znfmd640x
                                                     WHERE znfmd640x.t$fili$c = znfmd640d.t$fili$c                                        
                                                       AND   znfmd640x.t$etiq$c = znfmd640d.t$etiq$c ) ) ULT_OCOR
@@ -197,9 +201,10 @@ SELECT
         
          LEFT JOIN ( select MAX(a.t$date$c) t$date$c,
                             a.t$fili$c,
-                            a.t$etiq$c
+                            a.t$etiq$c,
+                            max(a.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY a.t$date$c,  a.t$udat$c) t$coci$c
                        from BAANDB.tznfmd640301 a
-                      where a.t$coci$c IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD') 
+                      where a.t$coci$c IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD', 'IDE') 
                    group by a.t$fili$c, 
                             a.t$etiq$c ) OCORR_FIM
                 ON OCORR_FIM.t$fili$c = znfmd630.t$fili$c
@@ -212,10 +217,10 @@ SELECT
                      and znfmd640.t$coci$c = 'ETR'
                      and rownum = 1 ) IS NOT NULL 
   
-            AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT_PROC, 
-                         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                           AT time zone 'America/Sao_Paulo') AS DATE))
+            AND NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ULT_OCOR.DT_PROC, 					 
+	          		  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')		 
+	          		    AT time zone 'America/Sao_Paulo') AS DATE), :DataProcessamentoDe)
                 Between :DataProcessamentoDe
                     And :DataProcessamentoAte
             AND znfmd630.t$stat$c IN (:FinalizadoPendente)
-            --AND ULT_OCOR.PONTO IN (:ocorrencia)
+            AND ULT_OCOR.PONTO IN (:ocorrencia)
