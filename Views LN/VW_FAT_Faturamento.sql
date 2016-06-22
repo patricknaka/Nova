@@ -154,7 +154,7 @@ SELECT DISTINCT
   
   --ICMS PRODUTO PARTILHA
   case when ICMS.t$iest$l = 0 then
-        (cisli941f.t$iprt$l)*(nvl(ICMS.t$rate$l,0)/100)
+        (cisli941f.t$iprt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$rate$l,0)/100)
   else
     case when ICMS.t$iest$l < ICMS.t$sest$l then
       (cisli941.t$gamt$l-cisli941.t$tldm$l)*(ICMS.t$sest$l/100)
@@ -186,20 +186,20 @@ SELECT DISTINCT
       THEN cisli941f.t$amnt$l*(nvl(ICMS.t$rate$l,0)/100)-cisli941f.t$iprt$l*(nvl(ICMS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(ICMS.t$rate$l,0)/100)
       ELSE 0 END                                     VL_ICMS_OUTROS,     
   nvl(COFINS.t$amnt$l,0)                            VL_COFINS,        
-  cisli941f.t$iprt$l*(nvl(COFINS.t$rate$l,0)/100)   VL_COFINS_PRODUTO, 
+  (cisli941f.t$iprt$l-cisli941.t$tldm$l)*(nvl(COFINS.t$rate$l,0)/100)   VL_COFINS_PRODUTO, 
   cisli941f.t$fght$l*(nvl(COFINS.t$rate$l,0)/100)   VL_COFINS_FRETE, 
   CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 
 --      THEN nvl(COFINS.t$amnt$l, 0)-cisli941f.t$iprt$l*(nvl(COFINS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(COFINS.t$rate$l,0)/100)
       THEN cisli941f.t$amnt$l*(nvl(COFINS.t$rate$l,0)/100)-cisli941f.t$iprt$l*(nvl(COFINS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(COFINS.t$rate$l,0)/100)
       ELSE 0 END                                     VL_COFINS_OUTROS,                
-  cisli941f.t$iprt$l*(nvl(PIS.t$rate$l,0)/100)      VL_PIS_PRODUTO,            
+  (cisli941f.t$iprt$l-cisli941.t$tldm$l)*(nvl(PIS.t$rate$l,0)/100)      VL_PIS_PRODUTO,            
   cisli941f.t$fght$l*(nvl(PIS.t$rate$l,0)/100)      VL_PIS_FRETE,   
   CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 
 --    THEN nvl(PIS.t$amnt$l, 0) -cisli941f.t$iprt$l*(nvl(PIS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(PIS.t$rate$l,0)/100)
     THEN cisli941f.t$amnt$l*(nvl(PIS.t$rate$l,0)/100) -cisli941f.t$iprt$l*(nvl(PIS.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(PIS.t$rate$l,0)/100)    
     ELSE 0 END                                      VL_PIS_OUTROS, 
   nvl(CSLL.t$amnt$l,0)                              VL_CSLL,   
-  cisli941f.t$iprt$l*(nvl(CSLL.t$rate$l,0)/100)     VL_CSLL_PRODUTO,       
+  (cisli941f.t$iprt$l-cisli941.t$tldm$l)*(nvl(CSLL.t$rate$l,0)/100)     VL_CSLL_PRODUTO,       
   cisli941f.t$fght$l*(nvl(CSLL.t$rate$l,0)/100)     VL_CSLL_FRETE,               
   CASE WHEN cisli941f.t$insr$l+cisli941f.t$gexp$l+cisli941f.t$cchr$l>0 
 --    THEN nvl(CSLL.t$amnt$l, 0) -cisli941f.t$iprt$l*(nvl(CSLL.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(CSLL.t$rate$l,0)/100)
