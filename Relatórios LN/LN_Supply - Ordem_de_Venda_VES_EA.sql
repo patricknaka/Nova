@@ -6,6 +6,10 @@ SELECT
     tccom130b.t$fovn$l    CNPJ_FILIAL,
     znsls401.t$entr$c     NUME_PEDIDO_ENTREGA,
     znsls401.t$orno$c     NUME_OV_LN,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
+                          DATA_INTEGRACAO_LN,            --NOVO
     znsls401.t$pono$c     POSI_OV_LN,
     znsls401.t$sequ$c     NUME_ITEM,
     znsls400.t$pecl$c     NUME_PEDIDO,
@@ -15,7 +19,7 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtap$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
-                          DATA_APRVACAO, 
+                          DATA_APRVACAO,            --data da ordem de venda - tdsls400.t$odat
         
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -36,11 +40,11 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
-                          DATA_ORDEM,
+                          DATA_EMISSAO,       --ALTERADO
         
     Trim(tdsls401.t$item) CODE_ITEM,
     tcibd001.t$dsca       DECR_ITEM,
-    tdipu001.t$suti       TEMP_REPOS,
+    znsls401.t$pzfo$c     TEMP_REPOS,         --ALTERADO
     znsls401.t$qtve$c     QUAN_ORD,
     
 --    CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
@@ -49,7 +53,7 @@ SELECT
 --     END                  QUAN_ALOC,
     case when tdsls420.t$orno is null then
           znsls401.t$qtve$c        
-    else  0.0 end         QUAN_ALOC,
+    else  0.0 end         QUAN_RESERVADO,         --ALTERADO
     
 --    CASE WHEN (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0)) < znsls401.t$qtve$c 
 --           THEN znsls401.t$qtve$c - (nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0))
@@ -65,10 +69,10 @@ SELECT
     
     nvl(whwmd215.t$qhnd,0)         QUAN_DISPONIVEL,
     nvl(whwmd215.t$qblk,0)         QUAN_BLOQUEADO,
-   nvl(whwmd215.t$qlal,0)          QUAN_ALOCADO,
+   nvl(whwmd215.t$qall,0)          QUAN_ALOCADO,          --ALTERADO
     
 --    nvl(whwmd215.t$qhnd,0) - nvl(q2.bloc,0) - nvl(ALOCADO.qtde,0)
-    nvl(whwmd215.t$qhnd,0) - nvl(whwmd215.t$qblk,0) - nvl(whwmd215.t$qlal,0)   
+    nvl(whwmd215.t$qhnd,0) - nvl(whwmd215.t$qblk,0) - nvl(whwmd215.t$qall,0)   
                           SALDO,
     
     tttxt010.t$text       TEXT_ORD,
@@ -318,6 +322,8 @@ WHERE tcemm124.t$dtyp = 1
   AND whinp100.t$koor = 3 
   AND whinp100.t$kotr = 2
   AND tdsls401.t$clyn != 1         -- MMF
+--  AND whinp100.t$item = '         ' || '1892652'
+
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))
@@ -347,6 +353,6 @@ WHERE tcemm124.t$dtyp = 1
        (:QtdeFalt = 1 and case when tdsls420.t$orno is null then    0.0
        else  znsls401.t$qtve$c end = 0)
        )
-
+ 
 ORDER BY NUME_OV_LN,
          POSI_OV_LN
