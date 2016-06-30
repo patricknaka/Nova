@@ -1,60 +1,58 @@
 SELECT 
   DISTINCT
-    tcemm030.t$euca               NUME_FILIAL,
-    tcemm030.T$EUNT               CHAVE_FILIAL,
-    tccom130b.t$fovn$l            CNPJ_FILIAL,
-    znsls401.t$entr$c             NUME_PEDIDO_ENTREGA,
-    znsls401.t$orno$c             NUME_OV_LN,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,  --ALTERADO
+    tcemm030.t$euca       NUME_FILIAL,
+    tcemm030.T$EUNT       CHAVE_FILIAL,
+    tccom130b.t$fovn$l    CNPJ_FILIAL,
+    znsls401.t$entr$c     NUME_PEDIDO_ENTREGA,
+    znsls401.t$orno$c     NUME_OV_LN,
+	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,  --ALTERADO
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
-                                  DATA_INTEGRACAO_LN, 
-    znsls401.t$pono$c             POSI_OV_LN,
-    znsls401.t$sequ$c             NUME_ITEM,
-    znsls400.t$pecl$c             NUME_PEDIDO,
-    znsls401.t$ufen$c             UF,
-    znsls401.t$idor$c             ORIGEM,
+                          DATA_INTEGRACAO_LN, 
+    znsls401.t$pono$c     POSI_OV_LN,
+    znsls401.t$sequ$c     NUME_ITEM,
+    znsls400.t$pecl$c     NUME_PEDIDO,
+    znsls401.t$ufen$c     UF,
+    znsls401.t$idor$c     ORIGEM,
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtap$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
-                                  DATA_APROVACAO, --Renomeada
+                          DATA_APROVACAO, --Renomeada
         
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
-                                  DATA_ENTR_PLANEJ,   
+                          DATA_ENTR_PLANEJ,   
         
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
-                                  DATA_PLANEJ_RECEB,   
+                          DATA_PLANEJ_RECEB,   
     
     CASE WHEN znsls401.t$tpes$c = 'X' THEN 'Crossdocking'
          WHEN znsls401.t$tpes$c = 'F' THEN 'Fingido'
          WHEN znsls401.t$tpes$c = 'P' THEN 'Pré-Venda'
          ELSE 'NORMAL' 
-       END                        TIPO_ESTOQUE,
+       END                TIPO_ESTOQUE,
     
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
-                                  DATA_EMISSAO,  --ALTERADO DE ORDEM PARA EMISSAO
-
-    Trim(tdsls401.t$item)         CODE_ITEM,
-    tcibd001.t$dsca               DECR_ITEM,
-    tdipu001.t$suti               TEMP_REPOS,
-    znsls401.t$qtve$c             QUAN_ORD,
+                          DATA_EMISSAO,  --ALTERADO DE ORDEM PARA EMISSAO
+        
+    Trim(tdsls401.t$item) CODE_ITEM,
+    tcibd001.t$dsca       DECR_ITEM,
+    znsls401.t$pzfo$c     TEMP_REPOS, 
+    znsls401.t$qtve$c     QUAN_ORD,
     
-    CASE WHEN tdsls420.t$orno is null 
-           THEN znsls401.t$qtve$c        
-         ELSE  0.0 
-    END                           QUAN_RESERVADO, --ALTERADO DE RESERV PARA RESERVADO
+    case when tdsls420.t$orno is null then
+          znsls401.t$qtve$c        
+    else  0.0 end         QUAN_RESERVADO, --ALTERADO DE RESERV PARA RESERVADO
     
-    CASE WHEN tdsls420.t$orno is null 
-           THEN 0.0
-         ELSE  znsls401.t$qtve$c 
-    END
+    case when tdsls420.t$orno is null then
+          0.0
+    else  znsls401.t$qtve$c end
                                   QUAN_FALT, --Renomeada
     
     nvl(whwmd215.t$qord,0)        QUAN_EM_PED,
@@ -105,25 +103,25 @@ SELECT
     ULT_PONTO.t$poco$c    COD_ULT_PONTO,
     znmcs002.t$desc$c     DESCR_ULT_PONTO,
     
-    ( SELECT zncmg007.t$desc$c Pag
-        FROM baandb.tznsls402301 znsls402_S
-  INNER JOIN baandb.tzncmg007301 zncmg007
-          ON zncmg007.t$mpgt$c = znsls402_S.T$IDMP$C
-       WHERE znsls402_S.t$ncia$c = znsls400.t$ncia$c   
-         AND znsls402_S.t$uneg$c = znsls400.t$uneg$c   
-         AND znsls402_S.t$pecl$c = znsls400.t$pecl$c   
-         AND znsls402_S.T$SQPD$C = 1
-         AND rownum = 1 ) MEIO_PAG1,
+    (SELECT zncmg007.t$desc$c Pag
+            FROM baandb.tznsls402301 znsls402_S
+            INNER JOIN baandb.tzncmg007301 zncmg007
+              on zncmg007.t$mpgt$c = znsls402_S.T$IDMP$C
+            WHERE 	znsls402_S.t$ncia$c = znsls400.t$ncia$c   
+            AND	znsls402_S.t$uneg$c = znsls400.t$uneg$c   
+            AND 	znsls402_S.t$pecl$c = znsls400.t$pecl$c   
+            AND znsls402_S.T$SQPD$C = 1
+            AND rownum = 1)  MEIO_PAG1,
             
-    ( SELECT zncmg007.t$desc$c Pag 
-        FROM baandb.tznsls402301 znsls402_S
-  INNER JOIN baandb.tzncmg007301 zncmg007
-          ON zncmg007.t$mpgt$c = znsls402_S.T$IDMP$C
-       WHERE znsls402_S.t$ncia$c = znsls400.t$ncia$c   
-         AND znsls402_S.t$uneg$c = znsls400.t$uneg$c   
-         AND znsls402_S.t$pecl$c = znsls400.t$pecl$c    
-         AND znsls402_S.T$SQPD$C = 2
-         AND rownum = 1 ) MEIO_PAG2
+    (SELECT zncmg007.t$desc$c Pag 
+            FROM baandb.tznsls402301 znsls402_S
+            INNER JOIN baandb.tzncmg007301 zncmg007
+              on zncmg007.t$mpgt$c = znsls402_S.T$IDMP$C
+            WHERE 	znsls402_S.t$ncia$c = znsls400.t$ncia$c   
+            AND	znsls402_S.t$uneg$c = znsls400.t$uneg$c   
+            AND 	znsls402_S.t$pecl$c = znsls400.t$pecl$c    
+            AND znsls402_S.T$SQPD$C = 2
+            AND rownum = 1) MEIO_PAG2
    
 FROM       baandb.tznsls400301 znsls400
 
@@ -167,12 +165,12 @@ INNER JOIN baandb.ttdsls401301 tdsls401
         ON tdsls401.t$orno = znsls401.t$orno$c 
        AND tdsls401.t$pono = znsls401.t$pono$c
 
- LEFT JOIN (  select a.t$orno,
+LEFT JOIN (  select a.t$orno,
                      a.t$pono
-                from baandb.ttdsls420301 a
-               where a.t$hrea = 'AES' 
-            group by a.t$orno,
-                     a.t$pono ) tdsls420
+              from baandb.ttdsls420301 a
+              where a.t$hrea = 'AES' 
+              group by a.t$orno,
+                       a.t$pono ) tdsls420
         ON tdsls420.t$orno = tdsls401.t$orno
        AND tdsls420.t$pono = tdsls401.t$pono
               
