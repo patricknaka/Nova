@@ -57,19 +57,20 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                 END                                  SITUACAO_ITEM,
                 tdpur401.t$pric                      PRECO_COMPRA_UNITARIO,
                 tdpur401.t$qoor                      QTDE_ORDENADA_ITEM_TOTAL,
-                CASE WHEN OrdemReposicao.t$clyn = 1  THEN OrdemReposicao.t$qoor
+                CASE WHEN OrdemReposicao.t$clyn = 1  THEN ABS(OrdemReposicao.t$qoor)
                      WHEN tdpur401.t$clyn = 1        THEN tdpur401.t$qoor
                      ELSE 0 
                 END                                  QTDE_CANCELADA,
                 NVL(tdpur406.t$qidl,0)               QTDE_RECEBIDA,
-                CASE WHEN NVL(OrdemReposicao.t$qibo, 0) = 0 
+                CASE WHEN NVL(ABS(OrdemReposicao.t$qibo), 0) = 0 
                        THEN CASE WHEN tdpur401.t$clyn = 2                       --LINHA CANCELADA = NAO
-                                   THEN tdpur401.t$qoor              -          --qtde ordenada
-                                        NVL(tdpur406.t$qidl, 0)      -          --qtde recebida
-                                        NVL(ABS(tdrec941.t$qnty$l), 0)          --qtde devolvida
+                                   THEN tdpur401.t$qoor                -        --qtde ordenada
+                                        NVL(tdpur406.t$qidl, 0)        -        --qtde recebida
+                                        NVL(ABS(tdrec941.t$qnty$l), 0) -        --qtde devolvida
+                                        NVL(ABS(OrdemReposicao.t$qoor), 0)      --ordem cancelada
                                  ELSE  0 
                             END
-                     ELSE   OrdemReposicao.t$qibo
+                     ELSE   ABS(OrdemReposicao.t$qibo)
                 END                                  QTDE_SALDO,
                 NVL(ABS(tdrec941.t$qnty$l), 0)       QTDE_DEVOLVIDA,
                 tdpur401.t$oamt                      PRECO_TOTAL_ITEM_S_IMPOSTOS,
@@ -109,18 +110,24 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                           AND tdpur401.t$clyn = 2                               --LINHA CANCELADA = NAO
                           AND ( tdpur401.t$qoor                           -     --qtde ordenada
                                 NVL(tdpur406.t$qidl, 0)                   -     --qtde recebida
-                                NVL(ABS(tdrec941.t$qnty$l),0))            > 0   --qtde devolvida
+                                NVL(ABS(tdrec941.t$qnty$l),0)             -     --qtde devolvida
+                                NVL(ABS(OrdemReposicao.t$qoor), 0))       > 0   --ordem cancelada
                            OR OrdemReposicao.t$qibo                       > 0 
                        THEN 'Aberto'
                        
                      WHEN     NVL(OrdemReposicao.t$qibo, 0) = 0 
                           AND tdpur401.t$clyn = 2                               --LINHA CANCELADA = NAO
+                          AND (    OrdemReposicao.t$clyn = 1 
+                               and ABS(OrdemReposicao.t$qoor) - ABS(tdpur401.t$qoor) != 0 )
                           AND ( tdpur401.t$qoor                           -     --qtde ordenada
                                 NVL(tdpur406.t$qidl,0)                    -     --qtde recebida
-                                NVL(ABS(tdrec941.t$qnty$l),0))            = 0   --qtde devolvida
-                       THEN 'Atendida'
+                                NVL(ABS(tdrec941.t$qnty$l),0)             -     --qtde devolvida
+                                NVL(ABS(OrdemReposicao.t$qoor), 0))       = 0   --ordem cancelada
+                       THEN 'Atendida'                
                        
-                     WHEN tdpur401.t$clyn = 1 
+                     WHEN tdpur401.t$clyn = 1 OR
+                          ( OrdemReposicao.t$clyn = 1  AND 
+                            ABS(OrdemReposicao.t$qoor) - ABS(tdpur401.t$qoor) = 0 )
                        THEN 'Cancelada'
                 END                                  STATUS_DO_PEDIDO,                   
                 whwmd400.t$abcc                      CODIGO_ABC,
@@ -242,7 +249,7 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                              tdpur401.t$sqnb  --sequencia 
                         from baandb.ttdpur401301 tdpur401
                        where tdpur401.t$oltp = 3
-                         and tdpur401.t$clyn = 2
+                         and tdpur401.t$clyn = 1
                          and tdpur401.t$sqnb = ( select max(a.t$sqnb) 
                                                    from baandb.ttdpur401301 a
                                                   where tdpur401.t$oltp = 3
