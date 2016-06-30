@@ -27,6 +27,7 @@ SELECT
     tccom130cnova.t$fovn$l                    CNPJ_NOVA,
     znint002.t$desc$c                         UNIDADE_NEGOCIO,
     znsls401.t$orno$c                         ORDEM_DEVOLUCAO,
+    OrigemOrdemFrete.DESCR                    ORIGEM_ORDEM_FRETE,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -324,6 +325,34 @@ INNER JOIN baandb.tznsls400301 znsls400
  LEFT JOIN baandb.tznfmd630301 znfmd630
         ON TO_CHAR(znfmd630.t$pecl$c) = TO_CHAR(znsls401.t$entr$c)
     
+ LEFT JOIN ( SELECT d.t$cnst CODE,
+                    l.t$desc DESCR
+               FROM baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              WHERE d.t$cpac = 'zn'
+                AND d.t$cdom = 'mcs.trans.c'
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'zn' 
+                AND l.t$clab = d.t$za_clab
+                AND rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
+                                                    rpad(l1.t$rele,2) || 
+                                                    rpad(l1.t$cust,4) ) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4) ) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) OrigemOrdemFrete
+        ON OrigemOrdemFrete.CODE = znfmd630.t$torg$c
+        
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
@@ -699,18 +728,19 @@ WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataPedidoDe
           And :DataPedidoAte
-  AND znfmd001.t$fili$c IN (:Filial)
   AND znsls401.t$uneg$c IN (:UnidNegocio)
   AND znsls401.t$itpe$c IN (:TipoEntrega)
-  AND Trim(tcibd001.t$citg) IN (:Depto)
-  AND znmcs002.t$poco$c IN (:Status)
   AND CASE WHEN znsls409.t$lbrd$c = 1 OR
                 znsls409.t$dved$c = 1 OR
                 znsls410.PT_CONTR IN ('VAL', 'RDV', 'RIE')
              THEN 1
            ELSE   2
       END IN (:Atendimento)
-	   
+--  AND znfmd001.t$fili$c IN (:Filial)
+--  AND Trim(tcibd001.t$citg) IN (:Depto)
+--  AND znmcs002.t$poco$c IN (:Status)
+--  AND NVL(znfmd630.t$torg$c, 0) IN (:OrigemOF)
+    
 ORDER BY DATA_SOL_COLETA_POSTAGEM, 
          DATA_PEDIDO, 
          PEDIDO
