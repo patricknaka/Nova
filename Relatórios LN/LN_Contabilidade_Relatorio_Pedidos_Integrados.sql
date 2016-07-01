@@ -7,7 +7,7 @@ SELECT
     znsls402.t$sequ$c                                  SEQ_PAGAMENTO,
     znsls402.t$cccd$c                                  NUM_BANDEIRA,
     nvl(zncmg009.t$desc$c, ' ')                        DSC_BANDEIRA,
-    CASE WHEN znsls402.t$idad$c = 0
+    CASE WHEN Trim(znsls402.t$idad$c) = '0'
            THEN NULL
          ELSE   znsls402.t$idad$c
     END                                                ID_ADQUIRENTE,
