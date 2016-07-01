@@ -7,7 +7,12 @@ SELECT
     znsls402.t$sequ$c                                  SEQ_PAGAMENTO,
     znsls402.t$cccd$c                                  NUM_BANDEIRA,
     nvl(zncmg009.t$desc$c, ' ')                        DSC_BANDEIRA,
-    znsls402.t$idad$c                                  ID_ADQUIRENTE, 
+    CASE WHEN znsls402.t$idad$c = 0
+           THEN NULL
+         ELSE   znsls402.t$idad$c
+    END                                                ID_ADQUIRENTE,
+    tccom100.t$nama                                    DSC_ADQUIRENTE,
+    tccom100.t$bpid                                    PARCEIRO_NEGOCIO,
     znsls402.t$idmp$c                                  NUM_MEIO_PAGTO,  
     zncmg007.t$desc$c                                  DSC_MEIO_PAGTO, 
     znsls400.t$nomf$c                                  NOME_CLIENTE, 
@@ -25,7 +30,7 @@ SELECT
            THEN NULL
          ELSE tfgld018.t$dcdt 
     END                                                DATA_DOC
- 
+
 FROM      baandb.tznsls400301 znsls400
 
 LEFT JOIN baandb.tznsls402301 znsls402 
@@ -91,9 +96,15 @@ LEFT JOIN baandb.tzncmg010301 zncmg010
       AND zncmg010.t$cias$c = znsls402.t$ncia$c
       AND zncmg010.t$prct$c = zncmg010_np.NUM_PARC
       AND zncmg010.t$dtin$c = zncmg010_dt.DATA_INICIO
+	  
+LEFT JOIN baandb.tzncmg008301 zncmg008
+       ON zncmg008.t$adqs$c = znsls402.t$idad$c
+	  
+LEFT JOIN baandb.ttccom100301 tccom100
+       ON tccom100.t$bpid = zncmg008.t$adqu$c
 
-WHERE NVL(Trim(znsls412.t$ttyp$c), '000') in (:Transacao)
-  AND NVL(tfgld018.t$dcdt, :DataDocDe) 
+WHERE NVL(tfgld018.t$dcdt, :DataDocDe) 
       Between :DataDocDe 
           And :DataDocAte
-  AND NVL(znsls412.t$ttyp$c,' ') NOT IN ('LPJ', 'FAT', 'RWC')
+  AND NVL(Trim(znsls412.t$ttyp$c), '000') in (:Transacao)
+--  AND NVL(znsls412.t$ttyp$c,' ') NOT IN ('LPJ', 'FAT', 'RWC')
