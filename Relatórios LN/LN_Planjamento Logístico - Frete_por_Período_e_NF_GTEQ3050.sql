@@ -33,13 +33,9 @@ SELECT
     znsls401.t$cepe$c    CEP,
     znsls401.t$cide$c    CIDADE,
     znsls401.t$ufen$c    UF,
-    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ENT.t$date$c,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_ENT.t$dtoc$c, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                   AT time zone 'America/Sao_Paulo') AS DATE)
-        from BAANDB.tznfmd640301 znfmd640_ENT
-       where znfmd640_ENT.t$fili$c = znfmd630.t$fili$c
-         and znfmd640_ENT.t$etiq$c = znfmd630.t$etiq$c
-         and znfmd640_ENT.t$coci$c = 'ENT')
                          DATA_ENTREGA,
     znsls400.t$idca$c    CANAL_VENDA,
     CASE WHEN znfmd630.t$stat$c = 2
@@ -235,6 +231,24 @@ INNER JOIN baandb.ttcmcs080301  tcmcs080
        AND znsls410_ETR.t$uneg$c = znsls401.t$uneg$c
        AND znsls410_ETR.t$pecl$c = znsls401.t$pecl$c
        AND znsls410_ETR.t$sqpd$c = znsls401.t$sqpd$c
+
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    max(a.t$dtoc$c) t$dtoc$c
+               from baandb.tznsls410301 a
+               where a.t$poco$c = 'ENT'
+           group by a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c) znsls410_ENT
+        ON znsls410_ENT.t$ncia$c = znsls401.t$ncia$c
+       AND znsls410_ENT.t$uneg$c = znsls401.t$uneg$c
+       AND znsls410_ENT.t$pecl$c = znsls401.t$pecl$c
+       AND znsls410_ENT.t$sqpd$c = znsls401.t$sqpd$c
 
  LEFT JOIN baandb.ttdsls400301  tdsls400
         ON tdsls400.t$orno = znsls401.t$orno$c
