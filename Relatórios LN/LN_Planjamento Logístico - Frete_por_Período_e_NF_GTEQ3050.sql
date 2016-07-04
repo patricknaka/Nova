@@ -3,14 +3,9 @@ SELECT
     znfmd630.t$fili$c    FILIAL,
     NVL(tcmcs031.t$dsca,
         'Pedido Interno')MARCA,
-
-    ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$date$c,
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') AS DATE)
-       from BAANDB.tznfmd640301 znfmd640_ETR
-      where znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
-        and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
-        and znfmd640_ETR.t$coct$c = 'ETR')
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_ETR.t$dtoc$c, 
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone 'America/Sao_Paulo') AS DATE)
                          DATA_EXPEDICAO,
     znfmd630.t$docn$c    NUME_NOTA,
     znfmd630.t$seri$c    NUME_SERIE,
@@ -222,6 +217,24 @@ INNER JOIN baandb.ttcmcs080301  tcmcs080
        AND znsls401.t$pecl$c = znsls004.t$pecl$c
        AND znsls401.t$sqpd$c = znsls004.t$sqpd$c
        AND znsls401.t$entr$c = znsls004.t$entr$c
+
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    max(a.t$dtoc$c) t$dtoc$c
+               from baandb.tznsls410301 a
+               where a.t$poco$c = 'ETR'
+           group by a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c) znsls410_ETR
+        ON znsls410_ETR.t$ncia$c = znsls401.t$ncia$c
+       AND znsls410_ETR.t$uneg$c = znsls401.t$uneg$c
+       AND znsls410_ETR.t$pecl$c = znsls401.t$pecl$c
+       AND znsls410_ETR.t$sqpd$c = znsls401.t$sqpd$c
 
  LEFT JOIN baandb.ttdsls400301  tdsls400
         ON tdsls400.t$orno = znsls401.t$orno$c
