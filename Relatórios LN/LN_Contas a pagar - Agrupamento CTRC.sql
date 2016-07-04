@@ -197,14 +197,15 @@ FROM       baandb.ttfacp200301   tfacp200
     
  LEFT JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
-          
- LEFT JOIN baandb.ttdrec940301 tdrec940
-        ON tdrec940.t$ttyp$l = tfacp200.t$ttyp
-       AND tdrec940.t$invn$l = tfacp200.t$ninv
-       
+
  LEFT JOIN baandb.tbrnfe940301 brnfe940
-        ON brnfe940.t$fire$l = tdrec940.t$fire$l
-   
+        ON brnfe940.t$fovn$l = tccom130.t$fovn$l
+       AND brnfe940.t$docn$l = tfacp200.t$docn$l
+       AND brnfe940.t$seri$l = tfacp200.t$seri$l
+        
+ LEFT JOIN baandb.ttdrec940301 tdrec940
+        ON tdrec940.t$fire$l = brnfe940.t$fire$l   
+
  LEFT JOIN baandb.ttcmcs065301 tcmcs065
         ON tcmcs065.t$cwoc = tdrec940.t$cofc$l
 
@@ -349,8 +350,11 @@ WHERE tfacp200.t$docn = 0
                     where tfacp601.t$icom = 301  
                       and tfacp601.t$ityp = tfacp200.t$ttyp
                       and tfacp601.t$idoc = tfacp200.t$ninv
-                      and tfacp601.t$step = 20 )
-					  
+                      and tfacp601.t$step = 20 )	
+                      
+--and tfacp200.t$ttyp = 'P00'
+--and tfacp200.t$ninv = 113658
+
   AND tfacp200.t$docd 
       Between :EmissaoDe 
           And :EmissaoAte
