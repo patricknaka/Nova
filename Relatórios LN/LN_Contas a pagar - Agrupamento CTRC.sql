@@ -1,3 +1,5 @@
+--agrupamento
+
 SELECT 
     tfacp201.t$mopa$d                  CODE_MODAL_PGTO,
     DESC_MODAL_PGTO.                   DESC_MODAL_PGTO,
@@ -17,11 +19,11 @@ SELECT
     tfacp936.t$ninv$l                  TITULO_AGRUPADOR,
     tfacp200.t$ninv                    NUME_TITULO,
     tfacp200.t$ttyp                    CODE_TRANS,
-    tdrec940.t$fire$l                  CODE_REFER,
+    brnfe940.t$fire$l                  CODE_REFER,    --Alterado
     
     brnfe940.t$docn$l                  NUME_CTE,
     brnfe940.t$seri$l                  SERI_CTE,
-    CASE WHEN TO_CHAR(brnfe940.t$idat$l) = '01/01/4712 00:00:00'
+    CASE WHEN TO_CHAR(brnfe940.t$idat$l) = '01/01/4712' --00:00:00'
            THEN NULL
          ELSE   brnfe940.t$idat$l
     END                                EMISSAO_CTE,
@@ -197,15 +199,18 @@ FROM       baandb.ttfacp200301   tfacp200
     
  LEFT JOIN baandb.ttccom130301 tccom130
         ON tccom130.t$cadr = tccom100.t$cadr
-
- LEFT JOIN baandb.tbrnfe940301 brnfe940
+          
+		  
+LEFT JOIN baandb.tbrnfe940301 brnfe940
         ON brnfe940.t$fovn$l = tccom130.t$fovn$l
-       AND brnfe940.t$docn$l = tfacp200.t$docn$l
+       AND brnfe940.t$docn$l = tfacp200.t$docn$l      --Join estava invertido
        AND brnfe940.t$seri$l = tfacp200.t$seri$l
         
- LEFT JOIN baandb.ttdrec940301 tdrec940
-        ON tdrec940.t$fire$l = brnfe940.t$fire$l   
+ LEFT JOIN baandb.ttdrec940301 tdrec940               --Join estava invertido  
+        ON tdrec940.t$fire$l = brnfe940.t$fire$l
 
+
+   
  LEFT JOIN baandb.ttcmcs065301 tcmcs065
         ON tcmcs065.t$cwoc = tdrec940.t$cofc$l
 
@@ -350,11 +355,8 @@ WHERE tfacp200.t$docn = 0
                     where tfacp601.t$icom = 301  
                       and tfacp601.t$ityp = tfacp200.t$ttyp
                       and tfacp601.t$idoc = tfacp200.t$ninv
-                      and tfacp601.t$step = 20 )	
-                      
---and tfacp200.t$ttyp = 'P00'
---and tfacp200.t$ninv = 113658
-
+                      and tfacp601.t$step = 20 )
+					  
   AND tfacp200.t$docd 
       Between :EmissaoDe 
           And :EmissaoAte
