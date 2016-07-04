@@ -1,4 +1,3 @@
---agrupamento
 
 SELECT 
     tfacp201.t$mopa$d                  CODE_MODAL_PGTO,
@@ -253,9 +252,15 @@ LEFT JOIN baandb.tbrnfe940301 brnfe940
                                                  and l1.t$cpac = iLABEL.t$cpac ) ) DTRFD
         ON tdrec940.t$rfdt$l = DTRFD.iCODE 
          
- LEFT JOIN baandb.ttdrec947301 tdrec947
-        ON tdrec947.t$fire$l = tdrec940.t$fire$l
- 
+		 
+		 
+  LEFT JOIN  (select a.t$fire$l,
+                    a.t$orno$l
+             from baandb.ttdrec947301 a   -- Alterado o campo que irá filtrar pela ordem de compra
+             group by a.t$fire$l,
+                      a.t$orno$l) tdrec947
+        ON tdrec947.t$fire$l = tdrec940.t$fire$l		 
+		              
  LEFT JOIN baandb.ttcmcs966301 tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
            
@@ -348,6 +353,8 @@ LEFT JOIN baandb.tbrnfe940301 brnfe940
        AND tfacp200ag.t$ninv = tfacp936.t$ninv$l 
        AND tfacp200ag.t$docn = 0
 
+  
+	   
 WHERE tfacp200.t$docn = 0
   AND tfacp200.t$ttyp IN ('P00', 'NCC', 'PZZ')
   AND not exists ( select 1
