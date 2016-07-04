@@ -185,5 +185,5 @@ WHERE TASKDETAIL.TASKTYPE = 'PK'             --Piking
 "       Between :DataRegistroDe  " &
 "           And :DataRegistroAte  " &
 "   AND tcmcs023.t$citg IN (:Depto)  " &
-"   AND ((" + Parameters!Setor.Value + " = '000') OR (znmcs030.t$seto$c = '" + Parameters!Setor.Value + "'))  "
+"   AND ((" + Parameters!Setor.Value + " = '000') OR (znmcs030.t$seto$c = " + Parameters!Setor.Value + "))  "
 
