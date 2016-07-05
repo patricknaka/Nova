@@ -16,7 +16,7 @@ SELECT
     znsls402.t$idmp$c                                  NUM_MEIO_PAGTO,  
     zncmg007.t$desc$c                                  DSC_MEIO_PAGTO, 
     znsls400.t$nomf$c                                  NOME_CLIENTE, 
-    znsls402.t$cpft$c                                  CPF_CLIENTE, 
+    znsls400.t$fovn$c                                  CPF_CLIENTE, 
     znsls412.t$ttyp$c                                  TIPO_TRANSACAO,
     znsls412.t$ninv$c                                  DOC_TRANSACAO,
     ROUND(zncmg010.t$trbd$c, 2)                        TAXA_CARTAO,
