@@ -231,6 +231,7 @@ INNER JOIN baandb.ttcmcs080301  tcmcs080
        AND znsls410_ETR.t$uneg$c = znsls401.t$uneg$c
        AND znsls410_ETR.t$pecl$c = znsls401.t$pecl$c
        AND znsls410_ETR.t$sqpd$c = znsls401.t$sqpd$c
+       AND znsls410_ETR.t$entr$c = znsls401.t$entr$c
 
  LEFT JOIN ( select a.t$ncia$c,
                     a.t$uneg$c,
@@ -249,6 +250,7 @@ INNER JOIN baandb.ttcmcs080301  tcmcs080
        AND znsls410_ENT.t$uneg$c = znsls401.t$uneg$c
        AND znsls410_ENT.t$pecl$c = znsls401.t$pecl$c
        AND znsls410_ENT.t$sqpd$c = znsls401.t$sqpd$c
+       AND znsls410_ENT.t$entr$c = znsls401.t$entr$c
 
  LEFT JOIN baandb.ttdsls400301  tdsls400
         ON tdsls400.t$orno = znsls401.t$orno$c
