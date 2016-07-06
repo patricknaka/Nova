@@ -1,4 +1,4 @@
-SELECT
+SELECT 
     CASE WHEN znsls401.t$itpe$c = 15   --REVERSA
            THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -102,13 +102,13 @@ SELECT
                                                          and ROWNUM = 1 ) )                   
                      ELSE tcmcs080.t$dsca 
                 END                                       
-         ELSE NULL
+         ELSE tcmcs080OV.t$dsca 
     END                                       NOME_TRANSPORTADORA_COLETA,
 
     CASE WHEN cisli940.t$stat$l in (5, 6) OR 
               cisli940.t$cfrw$l = 'T01'  --Definido no SDP 1092957 
            THEN Trim(tcmcs080.t$seak)                     
-         ELSE NULL 
+         ELSE Trim(tcmcs080OV.t$seak)   
     END                                       APELIDO_TRANSP_COLETA,
 
     CASE WHEN cisli940.t$stat$l in (5, 6) OR 
@@ -123,7 +123,7 @@ SELECT
                           and A.T$ENTR$C = ZNSLS401.T$ENTR$C
                           and A.T$NTRA$C != ' '
                           and ROWNUM = 1 ) )              
-         ELSE NULL 
+         ELSE tccom130OV.t$fovn$l 
     END                                       CNPJ_TRANSP_COLETA,
 
     Trim(znsls401.t$nome$c)                   Nome_Cliente_Coleta,
@@ -309,7 +309,14 @@ INNER JOIN baandb.tznsls400301 znsls400
       
  LEFT JOIN baandb.ttdsls400301 tdsls400
         ON tdsls400.t$orno = znsls401.t$orno$c
+
+left JOIN baandb.ttcmcs080301 tcmcs080OV
+        ON tdsls400.t$cfrw=tcmcs080OV.T$CFRW    
         
+left JOIN baandb.ttccom130301 tccom130OV
+        ON tcmcs080OV.T$CADR$L=tccom130OV.t$cadr    
+      
+   
  LEFT JOIN baandb.ttdsls094301 tdsls094
         ON tdsls094.t$sotp = tdsls400.t$sotp
     
