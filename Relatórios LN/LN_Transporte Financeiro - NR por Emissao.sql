@@ -1,10 +1,10 @@
 select
    ( SELECT tcemm030.t$euca 
-       FROM baandb.ttcemm124201 tcemm124, 
-            baandb.ttcemm030201 tcemm030
+       FROM baandb.ttcemm124301 tcemm124, 
+            baandb.ttcemm030301 tcemm030
       WHERE tcemm124.t$cwoc=tdrec940.t$cofc$l
         AND tcemm030.t$eunt=tcemm124.t$grid
-        AND tcemm124.t$loco=201
+        AND tcemm124.t$loco=301
         AND rownum = 1 ) 
                           NOCA_ID_FILIAL,
 
@@ -29,23 +29,7 @@ select
     tcmcs023.t$dsca       DEPA_NOME,
     tdrec947.t$orno$l     PECD_NUM_PED,
     tdpur400.t$corg       TP_GERACAO,
-    
-    ( SELECT l.t$desc DS_TIPO_CADASTRO
-        FROM baandb.tttadv401000 d,
-             baandb.tttadv140000 l
-       WHERE d.t$cpac='td'
-         AND d.t$cdom='pur.corg'
-         AND d.t$vers='B61U'
-         AND d.t$rele='a'
-         AND d.t$cust='stnd'
-         AND l.t$clab=d.t$za_clab
-         AND l.t$clan='p'
-         AND l.t$cpac='td'
-         AND l.t$vers='B61'
-         AND l.t$rele='a'
-         AND l.t$cust=' '
-         AND d.t$cnst=tdpur400.t$corg ) 
-                          DESCR_TP_GERACAO,    
+    ORIGEM.DESCR          DESCR_TP_GERACAO,    
     tdpur400.t$cpay       CONPAG_PED,
     tcmcs013b.t$dsca      CONP_NOME_PED,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur400.t$odat, 
@@ -57,25 +41,7 @@ select
         AT time zone 'America/Sao_Paulo') AS DATE)
                           DT_ENTREGA_PED,
     tdpur400.t$hdst       NOCA_SITUACAO,
-    
-    ( SELECT l.t$desc DS_SITUACAO_PEDIDO
-        FROM baandb.tttadv401000 d,
-             baandb.tttadv140000 l
-       WHERE d.t$cpac='td'
-         AND d.t$cdom='pur.hdst'
-         AND d.t$vers='B61U'
-         AND d.t$rele='a'
-         AND d.t$cust='stnd'
-         AND l.t$clab=d.t$za_clab
-         AND l.t$clan='p'
-         AND l.t$cpac='td'
-         AND l.t$vers=( select max(l1.t$vers) 
-                          from baandb.tttadv140000 l1 
-                         where l1.t$clab=l.t$clab 
-                           AND l1.t$clan=l.t$clan 
-                           AND l1.t$cpac=l.t$cpac )
-         AND d.t$cnst=tdpur400.t$hdst) 
-                      DESCR_NOCA_SITUACAO,
+    ORDEM.STATUS          DESCR_NOCA_SITUACAO,
       
     tdpur401.t$qidl       QT_RECEBIDA,
     tdpur401.t$qoor       QT_PEDIDA,  
@@ -83,55 +49,134 @@ select
     tdrec941.t$tamt$l     VL_TOTAL,
  
     ( SELECT tdrec942.t$amnt$l 
-        FROM baandb.ttdrec942201 tdrec942
+        FROM baandb.ttdrec942301 tdrec942
        WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
          AND tdrec942.t$line$l=tdrec941.t$line$l
          AND tdrec942.t$brty$l=1 ) 
                           VL_ICMS,
 
     ( SELECT tdrec942.t$amnt$l 
-        FROM baandb.ttdrec942201 tdrec942
+        FROM baandb.ttdrec942301 tdrec942
        WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
          AND tdrec942.t$line$l=tdrec941.t$line$l
          AND tdrec942.t$brty$l=5) 
                           VL_PIS,
 
     ( SELECT tdrec942.t$amnt$l 
-        FROM baandb.ttdrec942201 tdrec942
+        FROM baandb.ttdrec942301 tdrec942
        WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
          AND tdrec942.t$line$l=tdrec941.t$line$l
          AND tdrec942.t$brty$l=6) 
                           VL_COFINS,
  
     ( SELECT tdrec942.t$amnt$l 
-        FROM baandb.ttdrec942201 tdrec942
+        FROM baandb.ttdrec942301 tdrec942
        WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
          AND tdrec942.t$line$l=tdrec941.t$line$l
          AND tdrec942.t$brty$l=3) 
                           VL_IPI
   
-from baandb.ttdrec940201 tdrec940,
-     baandb.ttdrec941201 tdrec941,
-     baandb.ttdrec947201 tdrec947,
-     baandb.ttcmcs940201 tcmcs940,
-     baandb.ttcmcs023201 tcmcs023,
-     baandb.ttcibd001201 tcibd001,
-     baandb.ttdpur400201 tdpur400,
-     baandb.ttdpur401201 tdpur401,
-     baandb.ttcmcs013201 tcmcs013a,
-     baandb.ttcmcs013201 tcmcs013b
+from baandb.ttdrec941301 tdrec941
 
-where tdrec947.t$fire$l = tdrec941.t$fire$l 
-  and tdrec947.t$line$l = tdrec941.t$line$l
-  and tcmcs940.t$ofso$l = tdrec940.t$opfc$l
-  and tcmcs023.t$citg   = tcibd001.t$citg
-  and tcibd001.t$item   = tdrec941.t$item$l
-  and tdpur400.t$orno   = tdrec947.t$orno$l
-  and tdpur401.t$orno   = tdrec947.t$orno$l 
-  and tdpur401.t$pono   = tdrec947.t$pono$l
-  and tcmcs013a.t$cpay  = tdrec940.t$cpay$l 
-  and tcmcs013b.t$cpay  = tdpur400.t$cpay
+INNER JOIN baandb.ttdrec940301 tdrec940
+        ON tdrec940.t$fire$l = tdrec941.t$fire$l
+     
+INNER JOIN ( select a.t$orno$l,
+                    a.t$pono$l,
+                    a.t$rcno$l,
+                    a.t$fire$l,
+                    a.t$line$l
+             from baandb.ttdrec947301 a 
+             group by a.t$orno$l,
+                      a.t$pono$l,
+                      a.t$rcno$l,
+                      a.t$fire$l,
+                      a.t$line$l ) tdrec947
+        ON tdrec947.t$fire$l = tdrec941.t$fire$l 
+       AND tdrec947.t$line$l = tdrec941.t$line$l
+     
+INNER JOIN baandb.ttcmcs940301 tcmcs940
+        ON tcmcs940.t$ofso$l = tdrec940.t$opfc$l
+
+INNER JOIN baandb.ttcibd001301 tcibd001
+        ON tcibd001.t$item = tdrec941.t$item$l
+        
+INNER JOIN baandb.ttcmcs023301 tcmcs023
+        ON tcmcs023.t$citg = tcibd001.t$citg
+        
+INNER JOIN baandb.ttdpur400301 tdpur400
+        ON tdpur400.t$orno = tdrec947.t$orno$l
+        
+INNER JOIN baandb.ttdpur401301 tdpur401
+        ON tdpur401.t$orno = tdrec947.t$orno$l 
+       AND tdpur401.t$pono = tdrec947.t$pono$l
+       AND (tdpur401.t$sqnb = 0 and tdpur401.t$oltp = 1 OR  --1-Total
+            tdpur401.t$sqnb = 1 and tdpur401.t$oltp = 4 )   --4-Linha da Ordem
+       
   
-  and Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
+INNER JOIN baandb.ttcmcs013301 tcmcs013a
+        ON tcmcs013a.t$cpay  = tdrec940.t$cpay$l 
+        
+INNER JOIN baandb.ttcmcs013301 tcmcs013b
+        ON tcmcs013b.t$cpay = tdpur400.t$cpay
+
+ LEFT JOIN ( select l.t$desc STATUS,
+                    d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'td'
+                and d.t$cdom = 'pur.hdst'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'td'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) ORDEM
+        ON ORDEM.t$cnst = tdpur400.t$hdst 
+
+ LEFT JOIN ( select l.t$desc DESCR,
+                    d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'td'
+                and d.t$cdom = 'pur.corg'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'td'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) ORIGEM
+        ON ORIGEM.t$cnst = tdpur400.t$corg
+        
+where Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$idat$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE)) Between &DataEmissaoNFDe and &DataEmissaoNFAte
+        AT time zone 'America/Sao_Paulo') AS DATE)) Between :DataEmissaoNFDe and :DataEmissaoNFAte
+        
