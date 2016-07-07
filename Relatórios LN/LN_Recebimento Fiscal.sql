@@ -1,8 +1,8 @@
-SELECT tcemm030.t$euca           NUME_FILIAL,
+    SELECT tcemm030.t$euca           NUME_FILIAL,
            tdrec940.t$docn$l         NUME_NOTA,
            tdrec940.t$seri$l         NUME_SERIE,
            whinh300.t$recd$c         NR_SUMARIZADO,
-           tdrec940.t$fire$l         REF_FISCAL,
+           brnfe940.t$fire$l         REF_FISCAL,
            brnfe940.t$frec$l         FISCAL_RECEIPT,
            tdrec940.t$stat$l         ID_STATUS_NF,
            SITUACAO_NF.DESCR_NF      DESCR_STATUS_NF,
@@ -82,6 +82,7 @@ SELECT tcemm030.t$euca           NUME_FILIAL,
            login.t$name              DSC_LOGIN_GEROU_OC,
            twhinh312.t$exrr          NUM_ASN,
            tdrec940.t$lipl$l         PLACA_VEICULO
+
       FROM baandb.ttdrec941301 tdrec941
 
  LEFT JOIN baandb.tcisli940301 cisli940
@@ -91,7 +92,9 @@ INNER JOIN baandb.ttdrec940301 tdrec940
         ON tdrec940.t$fire$l = tdrec941.t$fire$l
 
 INNER JOIN baandb.tbrnfe940301 brnfe940
-        ON brnfe940.t$fire$l = tdrec941.t$fire$l
+        ON brnfe940.t$docn$l = tdrec940.t$docn$l
+       AND brnfe940.t$seri$l = tdrec940.t$seri$l
+       AND brnfe940.t$fovn$l = tdrec940.t$fovn$l
         
  LEFT JOIN ( select tdrec947.t$fire$l,
                     tdrec947.t$line$l,
