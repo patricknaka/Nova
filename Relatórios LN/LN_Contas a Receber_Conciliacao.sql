@@ -679,6 +679,7 @@ SELECT Q1.*
 	  AND ( (REGEXP_REPLACE(CNPJ, '[^0-9]', '') = TRIM(:CNPJ)) OR (TRIM(:CNPJ) IS NULL) )
     AND ( Q1.DOC in ('RB3','RE1','RE2','RE4','RWC','RG4','RGC',
                      'SB3','SE1','SE2','SE4','SWC','SG4','SGC',
-                     'RWA','SWC','SSO')
+                     'RWA','SWC','SSO',
+                     'RSC','RSF', 'RSD') 
     or (q1.doc = 'FAT' and Q1.COD_TIPO_DOC_FISCAL IN ('S00001','S00005','S00008','S00200','S00201')) -- VDA P/REVENDA, VDA P/CONSUMO, MODELO C, PÓS CONSOLIDADO, PRÉ CONSOLIDADO
     AND Q1.CATEGORIA_MP IN (5,6))
