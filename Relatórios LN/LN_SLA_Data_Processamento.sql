@@ -1,11 +1,11 @@
-    SELECT 
-           znsls401.t$entr$c        ENTREGA,
-           znfmd630.t$docn$c        NOTA,
-           znfmd630.t$seri$c        SERIE,
-           znfmd630.t$fili$c        FILIAL,
-           znfmd001.T$dsca$c        DESC_FILIAL,
-           znfmd630.t$cfrw$c        TRANSPORTADOR,
-           tcmcs080.t$dsca          DESC_TRANSP,
+SELECT 
+           znsls401.t$entr$c          ENTREGA,
+           znfmd630.t$docn$c          NOTA,
+           znfmd630.t$seri$c          SERIE,
+           znfmd630.t$fili$c          FILIAL,
+           znfmd001.T$dsca$c          DESC_FILIAL,
+           znfmd630.t$cfrw$c          TRANSPORTADOR,
+           tcmcs080.t$dsca            DESC_TRANSP,
            
            CASE WHEN ETR_OCCUR.DT < = to_date('01-01-1980','DD-MM-YYYY') 
                   THEN NULL
@@ -50,11 +50,10 @@
            znsls401.t$itpe$c        TIPO_ENTREGA,
            znsls002.t$dsca$c        DESC_TIPO_ENTREGA,
       
-           CASE WHEN OCORR_FIM.t$coci$c IS NOT NULL 
+           CASE WHEN OCORR.PONTO IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD', 'IDE')  
                   THEN 'F'
                 ELSE   'P' 
            END                      FINALIZADO_PENDENTE, 
-           
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.T$DTEM$C, 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') AS DATE)  
@@ -87,7 +86,7 @@
            END                      DATA_CORRIGIDA,
            CASE WHEN tdsls400.t$ddat < = to_date('01-01-1980','DD-MM-YYYY') 
                   THEN NULL
-                ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
+                ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.t$ddta, 
                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                          AT time zone 'America/Sao_Paulo') AS DATE)  
            END                      DATA_LIMITE_CD,
@@ -119,7 +118,11 @@ INNER JOIN BAANDB.ttcibd001301 tcibd001
 
  LEFT JOIN baandb.ttdsls400301 tdsls400
         ON tdsls400.t$orno = znsls401.t$orno$c
- 
+        
+ LEFT JOIN baandb.ttdsls401301 tdsls401
+        ON tdsls401.t$orno = znsls401.t$orno$c
+       AND tdsls401.t$pono = znsls401.t$pono$c
+  
  LEFT JOIN baandb.tznsls400301 znsls400 --DTEM 
         ON znsls400.T$NCIA$C = znsls401.T$NCIA$C
        AND znsls400.T$UNEG$C = znsls401.T$UNEG$C
@@ -212,18 +215,19 @@ INNER JOIN BAANDB.ttcibd001301 tcibd001
                      where znfmd640.t$fili$c = znfmd630.t$fili$c
                        and znfmd640.t$etiq$c = znfmd630.t$etiq$c 
                        and znfmd640.t$coci$c = 'ETR' )
-                
+                                              
        AND NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCORR.DT_PROC,                      
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         
                      AT time zone 'America/Sao_Paulo') AS DATE), :DataProcessamentoDe)
            Between :DataProcessamentoDe
                And :DataProcessamentoAte
-       AND CASE WHEN OCORR_FIM.t$coci$c IS NOT NULL 
+       AND CASE WHEN OCORR.PONTO IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD', 'IDE') 
                   THEN 'F'
                 ELSE   'P' 
            END IN (:FinalizadoPendente)
                       
-ORDER BY znsls401.t$ncia$c,
+ORDER BY
+         znsls401.t$ncia$c,
          znsls401.t$uneg$c,
          znsls401.t$pecl$c,
          znsls401.t$sqpd$c,
