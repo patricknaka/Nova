@@ -91,7 +91,7 @@
 INNER JOIN baandb.ttdrec940301 tdrec940
         ON tdrec940.t$fire$l = tdrec941.t$fire$l
 
-INNER JOIN baandb.tbrnfe940301 brnfe940
+LEFT JOIN baandb.tbrnfe940301 brnfe940
         ON brnfe940.t$docn$l = tdrec940.t$docn$l
        AND brnfe940.t$seri$l = tdrec940.t$seri$l
        AND brnfe940.t$fovn$l = tdrec940.t$fovn$l
