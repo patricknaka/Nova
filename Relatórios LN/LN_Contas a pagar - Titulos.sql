@@ -1,5 +1,6 @@
 SELECT
   DISTINCT
+    tcmcs023.t$dsca					                    DEPARTAMENTO,		-- MMF
     Concat(tfacp200.t$ttyp, tfacp200.t$ninv)    TRANSCAO,
     tfacp200.t$ninv                             NUME_TITULO,
     tfacp200.t$ttyp                             CODE_TRANS,
@@ -334,6 +335,16 @@ FROM       baandb.ttfacp200301   tfacp200
    
  LEFT JOIN baandb.ttdrec947301  tdrec947
         ON tdrec947.t$fire$l = tdrec940.t$fire$l
+        
+ LEFT JOIN baandb.ttdrec941301  tdrec941			-- MMF.start
+        ON tdrec941.t$fire$l = tdrec947.t$fire$l
+       AND tdrec941.t$line$l = tdrec947.t$line$l
+       
+ LEFT JOIN baandb.ttcibd001301 tcibd001
+	ON tcibd001.t$item = tdrec941.t$item$l
+	
+ LEFT JOIN baandb.ttcmcs023301 tcmcs023
+	ON tcmcs023.t$citg = tcibd001.t$citg			-- MMF.end
  
  LEFT JOIN baandb.ttcmcs966301  tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
@@ -518,5 +529,6 @@ WHERE tfacp200.t$docn = 0
   AND ((UPPER(tdrec947.t$orno$l) like '%' || UPPER(:OrdemCompra) || '%') OR (:OrdemCompra is null))
   AND ((tdrec940.t$fovn$l like '%' || Trim(:CNPJ) || '%') OR (:CNPJ is null))
   AND ((Upper(Concat(Trim(tfacp200.t$ttyp), tfacp200.t$ninv)) = Upper(Trim(:Transacao))) OR (:Transacao is null))
+  AND Trim(tcmcs023.t$dsca) between :DepartamentoDe and :DepartamentoAte		-- MMF
 
 ORDER BY DATA_EMISSAO, NUME_TITULO
