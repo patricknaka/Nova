@@ -19,11 +19,11 @@ SELECT
     znsls400.t$fovn$c                                  CPF_CLIENTE, 
     znsls412.t$ttyp$c                                  TIPO_TRANSACAO,
     znsls412.t$ninv$c                                  DOC_TRANSACAO,
-    ROUND(zncmg010.t$trbd$c, 2)                        TAXA_CARTAO,
+    ROUND(znsls492.t$trbd$c, 2)                        TAXA_CARTAO,
     ABS(znsls402.t$vlmr$c)                             VALOR_MEIO_PGTO,
     CASE WHEN zncmg010.t$trbd$c IS NULL
            THEN NULL
-         ELSE ROUND((ABS(znsls402.t$vlmr$c) * zncmg010.t$trbd$c / 100), 2)
+         ELSE ROUND((ABS(znsls402.t$vlmr$c) * znsls492.t$trbd$c / 100), 2)
     END                                                VALOR_TAXA_CARTAO,
  
     CASE WHEN tfgld018.t$dcdt < TO_DATE('01/01/1990','DD/MM/YYYY') 
@@ -56,46 +56,19 @@ LEFT JOIN baandb.tzncmg007301 zncmg007
 LEFT JOIN baandb.tzncmg007301 zncmg007 
        ON zncmg007.t$mpgs$c = znsls402.t$idmp$c        -- buscar pelo codigo do site
        
+LEFT JOIN BAANDB.TZNSLS492301 znsls492
+	ON 	znsls492.t$ncia$c = znsls402.t$ncia$c
+	AND 	znsls492.t$uneg$c = znsls402.t$uneg$c
+	AND 	znsls492.t$pecl$c = znsls402.t$pecl$c
+	AND 	znsls492.t$sqpd$c = znsls402.t$sqpd$c
+	AND	znsls492.t$idmp$c = znsls402.t$idmp$c
+       
 LEFT JOIN baandb.tzncmg009301 zncmg009
        ON zncmg009.t$band$c = znsls402.t$cccd$c
 
 LEFT JOIN baandb.tzncmg008301 zncmg008                 -- BP do banco
        ON zncmg008.t$adqs$c = znsls402.t$idad$c
       AND zncmg008.t$cias$c = znsls402.t$ncia$c
-
-LEFT JOIN ( select zncmg010_.t$band$c,                 -- data de inicio da vigencia
-                   zncmg010_.t$adqu$c,
-                   zncmg010_.t$cias$c,
-                   max(zncmg010_.t$dtin$c) DATA_INICIO
-              from baandb.tzncmg010301 zncmg010_        
-          group by zncmg010_.t$band$c, 
-                   zncmg010_.t$adqu$c, 
-                   zncmg010_.t$cias$c ) zncmg010_dt
-      ON zncmg010_dt.t$band$c = zncmg009.t$band$c
-     AND zncmg010_dt.t$adqu$c = zncmg008.t$adqu$c
-     AND zncmg010_dt.t$cias$c = znsls402.t$ncia$c
- 
-LEFT JOIN ( select zncmg010_.t$band$c,                 -- numero de parcelas
-                   zncmg010_.t$adqu$c,
-                   zncmg010_.t$cias$c,
-                   zncmg010_.t$dtin$c,
-                   min(zncmg010_.t$prct$c) NUM_PARC
-              from baandb.tzncmg010301 zncmg010_        
-          group by zncmg010_.t$band$c, 
-                   zncmg010_.t$adqu$c, 
-                   zncmg010_.t$cias$c, 
-                   zncmg010_.t$dtin$c ) zncmg010_np
-       ON zncmg010_np.t$band$c = zncmg009.t$band$c
-      AND zncmg010_np.t$adqu$c = zncmg008.t$adqu$c
-      AND zncmg010_np.t$cias$c = znsls402.t$ncia$c
-      AND zncmg010_np.t$dtin$c = zncmg010_dt.DATA_INICIO
-
-LEFT JOIN baandb.tzncmg010301 zncmg010            
-       ON zncmg010.t$band$c = zncmg009.t$band$c
-      AND zncmg010.t$adqu$c = zncmg008.t$adqu$c
-      AND zncmg010.t$cias$c = znsls402.t$ncia$c
-      AND zncmg010.t$prct$c = zncmg010_np.NUM_PARC
-      AND zncmg010.t$dtin$c = zncmg010_dt.DATA_INICIO
 	  
 LEFT JOIN baandb.tzncmg008301 zncmg008
        ON zncmg008.t$adqs$c = znsls402.t$idad$c
@@ -106,5 +79,5 @@ LEFT JOIN baandb.ttccom100301 tccom100
 WHERE NVL(tfgld018.t$dcdt, :DataDocDe) 
       Between :DataDocDe 
           And :DataDocAte
-  AND NVL(Trim(znsls412.t$ttyp$c), '000') in (:Transacao)
---  AND NVL(znsls412.t$ttyp$c,' ') NOT IN ('LPJ', 'FAT', 'RWC')
+--  AND NVL(Trim(znsls412.t$ttyp$c), '000') in (:Transacao)
+  AND NVL(znsls412.t$ttyp$c,' ') NOT IN ('LPJ', 'FAT', 'RWC')
