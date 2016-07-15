@@ -21,7 +21,7 @@ SELECT
     znsls412.t$ninv$c                                  DOC_TRANSACAO,
     ROUND(znsls492.t$trbd$c, 2)                        TAXA_CARTAO,
     ABS(znsls402.t$vlmr$c)                             VALOR_MEIO_PGTO,
-    CASE WHEN zncmg010.t$trbd$c IS NULL
+    CASE WHEN znsls492.t$trbd$c IS NULL
            THEN NULL
          ELSE ROUND((ABS(znsls402.t$vlmr$c) * znsls492.t$trbd$c / 100), 2)
     END                                                VALOR_TAXA_CARTAO,
