@@ -60,7 +60,7 @@ SELECT
            ELSE tfcmg101.t$bank || '-' || tfcmg001_CMG.t$desc 
      END                                        REL_BANCARIA,
     
-    CASE WHEN tfcmg101.t$paym = ' ' 
+    CASE WHEN tfcmg101.t$paym is nul				-- MMF2 
            THEN NVL(TRIM(tfacp201.t$paym), 'N/A')
          ELSE NVL(TRIM(tfcmg101.t$paym), 'N/A') 
      END                                        METODO_PAGTO,
