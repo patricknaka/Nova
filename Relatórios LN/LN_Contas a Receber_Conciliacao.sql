@@ -668,9 +668,22 @@ SELECT Q1.*
 
 
 	WHERE TRUNC(DT_EMISSAO) BETWEEN :DATAEMISSAODE AND :DATAEMISSAOATE
-	  AND TRUNC(DT_VENCIMENTO) BETWEEN NVL(:DATAVENCTODE, DT_VENCIMENTO) AND NVL(:DATAVENCTOATE, DT_VENCIMENTO)
-	  AND TRUNC(DATA_TRANSACAO) BETWEEN NVL(:DATATRANSACAODE, DATA_TRANSACAO) AND NVL(:DATATRANSACAOATE, DATA_TRANSACAO)
-	  AND FILIAL IN (:FILIAL)
+	  
+      AND (           (:ValVencto = 0) 
+             OR (   ( (:ValVencto = 1) AND ( Trunc(Q1.DT_VENCIMENTO) = :DataVenctoDe ) ) 
+                 OR ( (:ValVencto = 2) AND ( Trunc(Q1.DT_VENCIMENTO) = :DataVenctoAte ) ) 
+                 OR ( (:ValVencto = 3) AND ( Trunc(Q1.DT_VENCIMENTO) 
+                                             Between :DataVenctoDe
+                                                 And :DataVenctoAte ) ) ) )
+	  
+      AND (           (:ValTrans = 0) 
+             OR (   ( (:ValTrans = 1) AND ( Trunc(Q1.DATA_TRANSACAO) = :DataTransacaoDe ) ) 
+                 OR ( (:ValTrans = 2) AND ( Trunc(Q1.DATA_TRANSACAO) = :DataTransacaoAte ) ) 
+                 OR ( (:ValTrans = 3) AND ( Trunc(Q1.DATA_TRANSACAO) 
+                                            Between :DataTransacaoDe
+                                                And :DataTransacaoAte ) ) ) ) 
+         
+	  AND NVL(FILIAL, -1) IN (:FILIAL)
 	  AND DOC IN (:TIPOTRANSACAO)
 	  AND NVL(UNID_NEGOCIO, 0) IN (:UNINEGOCIO)
 	  AND NVL(SITUACAO_NF, 0) IN (:SITUACAONF)
