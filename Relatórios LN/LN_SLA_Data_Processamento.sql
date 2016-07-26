@@ -1,5 +1,4 @@
-SELECT 
-           znsls401.t$entr$c          ENTREGA,
+    SELECT znsls401.t$entr$c          ENTREGA,
            znfmd630.t$docn$c          NOTA,
            znfmd630.t$seri$c          SERIE,
            znfmd630.t$fili$c          FILIAL,
@@ -50,10 +49,10 @@ SELECT
            znsls401.t$itpe$c        TIPO_ENTREGA,
            znsls002.t$dsca$c        DESC_TIPO_ENTREGA,
       
-           CASE WHEN OCORR.PONTO IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD', 'IDE')  
+           CASE WHEN OCORR.t$finz$c = 1
                   THEN 'F'
                 ELSE   'P' 
-           END                      FINALIZADO_PENDENTE, 
+           END                      FINALIZADO_PENDENTE,
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.T$DTEM$C, 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') AS DATE)  
@@ -90,13 +89,14 @@ SELECT
                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                          AT time zone 'America/Sao_Paulo') AS DATE)  
            END                      DATA_LIMITE_CD,
+
            CASE WHEN OCORR_FIM.t$date$c < = to_date('01-01-1980','DD-MM-YYYY') 
                   THEN NULL
                 ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCORR_FIM.t$date$c, 
                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                          AT time zone 'America/Sao_Paulo') AS DATE)
            END                      DATA_ENTREGA            --Ocorrencia finalizadora
-         
+
       FROM ( select znfmd630.t$pecl$c,
                     znfmd630.t$fili$c,
                     znfmd630.t$etiq$c,
@@ -107,9 +107,8 @@ SELECT
                     znfmd630.t$seri$c,
                     znfmd630.t$vlfc$c,
                     znfmd630.t$dtco$c 
-               from baandb.tznfmd630301 znfmd630
-              where znfmd630.t$sald$c > 0 ) znfmd630
- 
+               from baandb.tznfmd630301 znfmd630 ) znfmd630
+
  LEFT JOIN baandb.tznsls401301 znsls401
         ON TO_CHAR(znsls401.t$entr$c) = znfmd630.t$pecl$c
 
@@ -118,42 +117,35 @@ INNER JOIN BAANDB.ttcibd001301 tcibd001
 
  LEFT JOIN baandb.ttdsls400301 tdsls400
         ON tdsls400.t$orno = znsls401.t$orno$c
-        
+
  LEFT JOIN baandb.ttdsls401301 tdsls401
         ON tdsls401.t$orno = znsls401.t$orno$c
        AND tdsls401.t$pono = znsls401.t$pono$c
-  
+
  LEFT JOIN baandb.tznsls400301 znsls400 --DTEM 
         ON znsls400.T$NCIA$C = znsls401.T$NCIA$C
        AND znsls400.T$UNEG$C = znsls401.T$UNEG$C
        AND znsls400.T$PECL$C = znsls401.T$PECL$C
        AND znsls400.T$SQPD$C = znsls401.T$SQPD$C
-           
+
  LEFT JOIN ( select znfmd640d.t$coci$c        PONTO,
---                    max(znfmd640d.t$date$c)  DT,
---                    max(znfmd640d.t$udat$c)  DT_PROC,
                     znfmd640d.t$date$c        DT,
                     znfmd640d.t$udat$c        DT_PROC,
                     znfmd640d.t$ulog$c        LOGIN_PROC,
                     znfmd640d.t$fili$c,
-                    znfmd640d.t$etiq$c
-               from BAANDB.tznfmd640301 znfmd640d ) OCORR     --ALTERADO
---              where znfmd640d.t$coci$c = ( SELECT max(znfmd640x.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640x.t$udat$c, znfmd640x.t$date$c )
---                                             FROM BAANDB.tznfmd640301 znfmd640x
---                                            WHERE znfmd640x.t$fili$c = znfmd640d.t$fili$c                                        
---                                              AND   znfmd640x.t$etiq$c = znfmd640d.t$etiq$c ) 
---           group by znfmd640d.t$coci$c,
---                    znfmd640d.t$ulog$c,
---                    znfmd640d.t$fili$c,
---                    znfmd640d.t$etiq$c ) ULT_OCOR
+                    znfmd640d.t$etiq$c,
+                    znfmd030.t$finz$c
+               from BAANDB.tznfmd640301 znfmd640d 
+         inner join baandb.tznfmd030301 znfmd030
+                 on znfmd030.t$ocin$c = znfmd640d.t$coci$c ) OCORR     --ALTERADO
         ON OCORR.t$fili$c = znfmd630.t$fili$c
        AND OCORR.t$etiq$c = znfmd630.t$etiq$c 
-			   
+
  LEFT JOIN baandb.tznfmd040301  znfmd040
         ON znfmd040.t$cfrw$c = znfmd630.t$cfrw$c
        AND znfmd040.t$ocin$c = OCORR.PONTO
-                                                        
- LEFT JOIN ( select znfmd640d.t$date$c  DT,
+
+INNER JOIN ( select znfmd640d.t$date$c  DT,
                     znfmd640d.t$fili$c,
                     znfmd640d.t$etiq$c
                from BAANDB.tznfmd640301 znfmd640d
@@ -164,16 +156,16 @@ INNER JOIN BAANDB.ttcibd001301 tcibd001
                                                AND znfmd640x.t$coci$c = 'ETR' ) )   ETR_OCCUR
         ON ETR_OCCUR.t$fili$c = znfmd630.t$fili$c
        AND ETR_OCCUR.t$etiq$c = znfmd630.t$etiq$c 
- 
+
  LEFT JOIN baandb.ttcmcs080301  tcmcs080
         ON tcmcs080.t$cfrw = znfmd630.t$cfrw$c
-         
+
  LEFT JOIN baandb.tznfmd001301  znfmd001
         ON znfmd001.t$fili$c = znfmd630.t$fili$c
- 
+
  LEFT JOIN baandb.tznsls002301  znsls002
         ON znsls002.t$tpen$c = znsls401.t$itpe$c
-         
+
  LEFT JOIN baandb.tznint002301  znint002
         ON znint002.t$ncia$c = znsls401.t$ncia$c
        AND znint002.t$uneg$c = znsls401.t$uneg$c
@@ -181,8 +173,8 @@ INNER JOIN BAANDB.ttcibd001301 tcibd001
  LEFT JOIN ( select ttaad200.t$user,
                     ttaad200.t$name
                from baandb.tttaad200000 ttaad200 ) usuario
-          ON usuario.t$user = OCORR.LOGIN_PROC
-                
+        ON usuario.t$user = OCORR.LOGIN_PROC
+
  LEFT JOIN ( select znfmd062.t$creg$c,
                     znfmd062.t$cfrw$c,
                     znfmd062.t$cono$c,
@@ -193,7 +185,7 @@ INNER JOIN BAANDB.ttcibd001301 tcibd001
        AND znfmd062.t$cono$c = znfmd630.t$cono$c
        AND znfmd062.t$cepd$c <= ZNSLS401.t$cepe$c
        AND znfmd062.t$cepa$c >= ZNSLS401.t$cepe$c
-     
+
  LEFT JOIN baandb.tznfmd061301  znfmd061
         ON znfmd061.t$cfrw$c = znfmd630.t$cfrw$c
        AND znfmd061.t$cono$c = znfmd630.t$cono$c
@@ -202,32 +194,29 @@ INNER JOIN BAANDB.ttcibd001301 tcibd001
  LEFT JOIN ( select MAX(a.t$date$c) t$date$c,
                     a.t$fili$c,
                     a.t$etiq$c,
+                    b.t$finz$c,
                     max(a.t$coci$c) KEEP (DENSE_RANK LAST ORDER BY a.t$date$c,  a.t$udat$c) t$coci$c
                from BAANDB.tznfmd640301 a
-              where a.t$coci$c IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD', 'IDE') 
+         inner join baandb.tznfmd030301 b
+                 on b.t$ocin$c = a.t$coci$c
+              where b.t$finz$c = 1
            group by a.t$fili$c, 
-                    a.t$etiq$c ) OCORR_FIM
+                    a.t$etiq$c,
+                    b.t$finz$c ) OCORR_FIM
         ON OCORR_FIM.t$fili$c = znfmd630.t$fili$c
-       AND OCORR_FIM.t$etiq$c = znfmd630.t$etiq$c 
+       AND OCORR_FIM.t$etiq$c = znfmd630.t$etiq$c
 
-     WHERE EXISTS ( select znfmd640.t$etiq$c
-                      from baandb.tznfmd640301 znfmd640
-                     where znfmd640.t$fili$c = znfmd630.t$fili$c
-                       and znfmd640.t$etiq$c = znfmd630.t$etiq$c 
-                       and znfmd640.t$coci$c = 'ETR' )
-                                              
-       AND NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCORR.DT_PROC,                      
+     WHERE Trunc(NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCORR.DT_PROC,                      
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         
-                     AT time zone 'America/Sao_Paulo') AS DATE), :DataProcessamentoDe)
+                     AT time zone 'America/Sao_Paulo') AS DATE), :DataProcessamentoDe))
            Between :DataProcessamentoDe
                And :DataProcessamentoAte
-       AND CASE WHEN OCORR.PONTO IN ('ENT', 'EXT', 'ROU', 'AVA', 'DEV', 'EXF', 'RIE', 'RTD', 'IDE') 
+       AND CASE WHEN OCORR.t$finz$c = 1
                   THEN 'F'
                 ELSE   'P' 
            END IN (:FinalizadoPendente)
                       
-ORDER BY
-         znsls401.t$ncia$c,
+ORDER BY znsls401.t$ncia$c,
          znsls401.t$uneg$c,
          znsls401.t$pecl$c,
          znsls401.t$sqpd$c,
