@@ -187,6 +187,7 @@ ELSE (  SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm0
        and b.T$TRDT=A.T$TRDT
        and b.t$seqn=A.T$SEQN
        and b.T$INWP=A.T$INWP
+       and a.t$koor = 3   --Ordem de Venda
        and a.t$orno=tdsls401.t$orno
        and a.t$pono=tdsls401.t$pono),0)
   AS VL_CMV,
