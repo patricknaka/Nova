@@ -163,10 +163,11 @@ inner join baandb.ttccom100301 tccom100
                                             and l1.t$cpac = l.t$cpac ) ) STAT_REC
         on STAT_REC.t$cnst = tdrec940.t$stat$l
 
-where whinh200.t$oorg = 3
-  and whinh200.t$otyp in ('509', '511', '514', '515')  
+where 
+--whinh200.t$oorg = 3
+--and whinh200.t$otyp in ('509', '511', '514', '515')  
   
-  and Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+   Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)) 
       Between :EmissaoDe 
