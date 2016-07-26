@@ -12,7 +12,7 @@ select
                                 Data_de_Emissao,
 
     cisli940.t$stat$l           Status_da_NF,
-    Status_da_NF.               DESCR_Status_da_NF,  -- Descrição do staus da NF
+    Status_da_NF.               DESCR_Status_da_NF,  -- DescriÃ§Ã£o do staus da NF
     
     tccom130b.t$fovn$l          CNPJ,
     tccom100.t$nama             Nome_do_Parceiro,
@@ -51,7 +51,7 @@ from baandb.twhinh200301 whinh200
 inner join baandb.tcisli245301 cisli245
         on cisli245.t$slcp = 301
        and cisli245.t$ortp = 2
-       and cisli245.t$koor = 34
+       --and cisli245.t$koor = 34
        and cisli245.t$slso = whinh200.t$orno
        and cisli245.t$oset = whinh200.t$oset
   
