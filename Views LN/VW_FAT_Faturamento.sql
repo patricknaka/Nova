@@ -220,6 +220,7 @@ SELECT DISTINCT
        and   b.T$TRDT = A.T$TRDT
        and   b.t$seqn = A.T$SEQN
        and   b.T$INWP = A.T$INWP
+       and   a.t$koor = 3   --Ordem de Venda
        and   a.t$orno = tdsls401.t$orno
        and   a.t$pono = tdsls401.t$pono),0)         VL_CMV,
   znsls401.t$uneg$c                                 CD_UNIDADE_NEGOCIO,
