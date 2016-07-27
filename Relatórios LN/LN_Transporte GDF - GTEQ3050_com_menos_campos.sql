@@ -1,13 +1,13 @@
 SELECT DISTINCT
   znfmd630.t$fili$c                     FILIAL,
   
-   ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$date$c, 
+  ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$date$c, 
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                   AT time zone 'America/Sao_Paulo') AS DATE)
         from BAANDB.tznfmd640301 znfmd640_ETR
        where znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
          and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
-         and znfmd640_ETR.t$coct$c = 'ETR')
+         and znfmd640_ETR.t$coct$c = 'ETR')      
                                         DT_HR_EXPEDICAO, 
 
   znfmd630.t$docn$c                     NUME_NOTA,
@@ -16,13 +16,19 @@ SELECT DISTINCT
   znsls002.t$dsca$c                     DESC_TIPO_ENTREGA_NOME,
   znfmd630.t$wght$c                     PESO,
   znfmd630.t$qvol$c                     VOLUME,
+  
+  tcibd001.T$ITEM                       SKU,
+  tcibd001.T$DSCA                       DESCRICAO_ITEM,
+  tcibd001.t$seto$c                     COD_SETOR, 
+  znmcs030.t$dsca$c                     SETOR,
+  
   znsls401.t$vlun$c                     VL_SEM_FRETE,
   znfmd630.t$vlfc$c                     FRETE_GTE,
   cisli940.t$amnt$l                     VLR_TOTAL_NF,
   znsls400.t$cepf$c                     CEP,
   znsls400.t$cidf$c                     CIDADE, 
   NVL(REGIAO.DSC,'BR')                  ID_REGIAO,
-  NVL(ZNFMD061.T$DZON$C, 'BRASIL')		REGIAO,
+  NVL(ZNFMD061.T$DZON$C, 'BRASIL')		  REGIAO,
   znsls400.t$uffa$c                     UF,  
   znfmd067.t$fate$c                     ID_ESTAB,
   tcmcs080.t$cfrw                       ID_TRANSP,
@@ -46,7 +52,16 @@ INNER JOIN baandb.tcisli940301 cisli940
       
 INNER JOIN baandb.tznsls401301 znsls401
         ON TO_CHAR(znsls401.t$entr$c) = TO_CHAR(znfmd630.t$pecl$c)  
-       AND znsls401.t$orno$c = znfmd630.t$orno$c 
+       AND znsls401.t$orno$c = znfmd630.t$orno$c
+
+	   
+INNER JOIN baandb.ttcibd001301 tcibd001
+        ON TRIM(tcibd001.T$ITEM) = TRIM(znsls401.T$ITEM$C)
+        
+INNER JOIN baandb.tznmcs030301 znmcs030 
+        ON znmcs030.t$citg$c = tcibd001.t$citg  
+       AND znmcs030.t$seto$c = tcibd001.t$seto$c	
+	   
     
 INNER JOIN baandb.tznsls400301 znsls400
         ON znsls400.t$ncia$c = znsls401.t$ncia$c 
@@ -93,9 +108,13 @@ WHERE (   (znfmd640.t$date$c is null)
                                     and oc.t$etiq$c = znfmd640.t$etiq$c )) )
 
   AND znsls401.t$itpe$c IN (:TipoEntrega)
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone 'America/Sao_Paulo') AS DATE)) 
+  AND ( select Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$date$c, 
+                         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                           AT time zone 'America/Sao_Paulo') AS DATE))
+            from BAANDB.tznfmd640301 znfmd640_ETR
+           where znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
+             and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
+             and znfmd640_ETR.t$coct$c = 'ETR')
       BETWEEN :DtExpIni
           AND :DtExpFim
   AND tcmcs080.t$cfrw = CASE WHEN :Transportadora = 'T' THEN tcmcs080.t$cfrw ELSE :Transportadora END
