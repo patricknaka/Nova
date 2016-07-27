@@ -48,7 +48,7 @@ select Q1.* from ( SELECT
                      ON tfacr200t.t$ttyp = tfacr200.t$ttyp
                     AND tfacr200t.t$ninv = tfacr200.t$ninv       
     
-             INNER JOIN baandb.tznrec007201 znrec007
+             LEFT JOIN baandb.tznrec007201 znrec007
                      ON znrec007.t$ttyp$c = tfacr200.t$ttyp 
                     AND znrec007.t$docn$c = tfacr200.t$ninv   
              
@@ -65,6 +65,8 @@ select Q1.* from ( SELECT
              INNER JOIN baandb.ttfacp200201 tfacp200
                      ON tfacp200.t$tdoc = tfacr200.t$tdoc
                     AND tfacp200.t$docn = tfacr200.t$docn
+                    AND tfacp200.t$lino = tfacr200.t$lino - 1
+
              
              INNER JOIN baandb.ttfacp200201 tfacp200t
                      ON tfacp200t.t$ttyp = tfacp200.t$ttyp
