@@ -109,26 +109,28 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                 
                 CASE WHEN     NVL(OrdemReposicao.t$qibo, 0) = 0
                           AND tdpur401.t$clyn = 2                               --LINHA CANCELADA = NAO
-                          AND ( tdpur401.t$qoor                           -     --qtde ordenada
-                                NVL(tdpur406.t$qidl, 0)                   -     --qtde recebida
+                          AND NVL(OrdemReposicao.t$clyn, 2) = 2                 --Ordem Reposicao cancelada = Nao
+                          AND ( ABS(tdpur401.t$qoor)                      -     --qtde ordenada
+                                NVL(ABS(tdpur406.t$qidl), 0)              -     --qtde recebida
                                 NVL(ABS(tdrec941.t$qnty$l),0)             -     --qtde devolvida
-                                NVL(ABS(OrdemReposicao.t$qoor), 0))       > 0   --ordem cancelada
-                           OR OrdemReposicao.t$qibo                       > 0 
+                                NVL(ABS(OrdemReposicao.t$qoor), 0))   != 0   --ordem cancelada
+                           OR (NVL(ABS(OrdemReposicao.t$qibo),0) != 0 AND NVL(OrdemReposicao.t$clyn, 2) = 2)
                        THEN 'Aberto'
                        
                      WHEN     NVL(OrdemReposicao.t$qibo, 0) = 0 
                           AND tdpur401.t$clyn = 2                               --LINHA CANCELADA = NAO
-                          AND (    OrdemReposicao.t$clyn = 1 
-                               and ABS(OrdemReposicao.t$qoor) - ABS(tdpur401.t$qoor) != 0 )
-                          AND ( tdpur401.t$qoor                           -     --qtde ordenada
-                                NVL(tdpur406.t$qidl,0)                    -     --qtde recebida
+                          AND NVL(OrdemReposicao.t$clyn,2) = 2                  --Ordem Reposicao cancelada = Nao
+--                          AND (    OrdemReposicao.t$clyn = 1 
+--                               and ABS(OrdemReposicao.t$qoor) - ABS(tdpur401.t$qoor) != 0 )
+                          AND ( ABS(tdpur401.t$qoor)                      -     --qtde ordenada
+                                NVL(ABS(tdpur406.t$qidl),0)               -     --qtde recebida
                                 NVL(ABS(tdrec941.t$qnty$l),0)             -     --qtde devolvida
                                 NVL(ABS(OrdemReposicao.t$qoor), 0))       = 0   --ordem cancelada
                        THEN 'Atendida'                
                        
                      WHEN tdpur401.t$clyn = 1 OR
-                          ( OrdemReposicao.t$clyn = 1  AND 
-                            ABS(OrdemReposicao.t$qoor) - ABS(tdpur401.t$qoor) = 0 )
+                          ( NVL(OrdemReposicao.t$clyn,2) = 1 ) --AND 
+--                            ABS(OrdemReposicao.t$qoor) - ABS(tdpur401.t$qoor) = 0 )
                        THEN 'Cancelada'
                 END                                  STATUS_DO_PEDIDO,                   
                 whwmd400.t$abcc                      CODIGO_ABC,
