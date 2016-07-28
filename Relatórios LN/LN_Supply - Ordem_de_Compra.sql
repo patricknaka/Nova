@@ -35,7 +35,8 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
        Q1.LOGIN_GEROU_OC                                  "Login Gerou OC",
        Q1.DSC_LOGIN_GEROU_OC                              "Descrição do Login Gerou OC",
        Q1.LINHAS_RAZAO_ALTERACAO                          "Linhas Razão Alteração",
-       Q1.LINHAS_TIPO_ALTERACAO                           "Linhas Tipo Alteração"
+       Q1.LINHAS_TIPO_ALTERACAO                           "Linhas Tipo Alteração",
+       Q1.STATUS_CAPA_PEDIDO                              "Stauts Capa Pedido"
 	   
   FROM ( SELECT tccom130.t$fovn$l                    CNPJ_FORNECEDOR, tdpur401.t$oltp,
                 tccom130.t$nama                      NOME_FORNECEDOR,
@@ -138,7 +139,9 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
          
                 tdpur401.t$qibo                      QTDE_REPOSICAO,   --EXCLUIR
                 tdpur401.t$pric * tdpur401.t$qoor    VALO_ORDEM,       --EXCLUIR
-                tdrec940.t$fire$l                    REFE_FISCAL       --EXCLUIR
+                tdrec940.t$fire$l                    REFE_FISCAL,       --EXCLUIR
+                
+                StatusPedido.DESCR                   STATUS_CAPA_PEDIDO
            
          FROM       baandb.ttdpur400301 tdpur400
          
@@ -259,23 +262,52 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                  ON OrdemReposicao.t$orno = tdpur401.t$orno
                 AND OrdemReposicao.t$pono = tdpur401.t$pono
                 AND OrdemReposicao.t$item = tdpur401.t$item
-                    
+                
+                
+          LEFT JOIN (SELECT d.t$cnst CODE,
+                            l.t$desc DESCR
+                       FROM baandb.tttadv401000 d,      
+                            baandb.tttadv140000 l
+                      WHERE d.t$cpac = 'td'      
+                        AND d.t$cdom = 'pur.hdst'     
+                        AND l.t$clan = 'p'
+                        AND l.t$cpac = 'td'      
+                        AND l.t$clab = d.t$za_clab      
+                        AND rpad(d.t$vers,4) ||  
+                            rpad(d.t$rele,2) ||  
+                            rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||    
+                                                            rpad(l1.t$rele,2) ||    
+                                                            rpad(l1.t$cust,4))      
+                                                   from baandb.tttadv401000 l1      
+                                                  where l1.t$cpac = d.t$cpac 
+                                                    and l1.t$cdom = d.t$cdom )      
+                        AND rpad(l.t$vers,4) ||  
+                            rpad(l.t$rele,2) ||  
+                            rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||    
+                                                            rpad(l1.t$rele,2) ||    
+                                                            rpad(l1.t$cust,4))      
+                                                   from baandb.tttadv140000 l1      
+                                                  where l1.t$clab = l.t$clab 
+                                                    and l1.t$clan = l.t$clan
+                                                    and l1.t$cpac = l.t$cpac ) ) StatusPedido  
+                      ON StatusPedido.CODE = tdpur400.t$hdst
+
          WHERE tcibd001.t$citg != '001'
            AND tdpur400.t$cotp != '200'
            AND tdpur401.t$oltp IN (1,4)
          
            AND (          (:ValData = 0) 
-                 OR (   ( (:ValData = 1) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur406.t$ddte, 
+                 OR (   ( (:ValData = 1) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$odat, 
                                                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                         AT time zone 'America/Sao_Paulo') AS DATE)) = :DtConfRECDe ) ) 
-                     OR ( (:ValData = 2) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur406.t$ddte, 
+                                                         AT time zone 'America/Sao_Paulo') AS DATE)) = :DtEmissaoDe ) ) 
+                     OR ( (:ValData = 2) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$odat, 
                                                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                                         AT time zone 'America/Sao_Paulo') AS DATE)) = :DtConfRECAte ) ) 
-                     OR ( (:ValData = 3) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur406.t$ddte, 
+                                                         AT time zone 'America/Sao_Paulo') AS DATE)) = :DtEmissaoAte ) ) 
+                     OR ( (:ValData = 3) AND ( Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdpur401.t$odat, 
                                                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                                                          AT time zone 'America/Sao_Paulo') AS DATE)) 
-                                               Between :DtConfRECDe
-                                                   And :DtConfRECAte ) ) ) )
+                                               Between :DtEmissaoDe
+                                                   And :DtEmissaoAte ) ) ) )
          
            AND Trim(tcibd001.t$citg) IN (:GrupoItem)
            AND tcemm030.t$euca IN (:Filial) ) Q1
