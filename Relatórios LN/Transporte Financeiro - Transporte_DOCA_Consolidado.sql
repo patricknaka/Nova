@@ -2,99 +2,45 @@ select Q1.*
   from ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE,
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                     AT time zone 'America/Sao_Paulo') AS DATE)
-                                                data_limite_exped,
-                znsls401.t$entr$c               pedido_entrega,
-                a.referencedocument             ordem_venda,
-                a.INVOICENUMBER                 num_nota,
-                a.LANE                          serie_nota,
-
-                CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null
-                       THEN '10'
-                     WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100'
-                       THEN '41'
-                     WHEN (a.status >  = '95' or sq2.status = 6)
-                       THEN '39'
-                     WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55'
-                       THEN '32'
-                     WHEN sq2.status = 5 and a.status >  = '55'
-                       THEN '34'
-                     WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55'
-                       THEN '31'
-                     WHEN a.INVOICESTATUS = '1' and a.status >  = '55'
-                       THEN '20'
-                     WHEN a.INVOICESTATUS = '3' and a.status >  = '55'
-                       THEN '22'
-                     WHEN a.INVOICESTATUS = '4' and a.status >  = '55'
-                       THEN '28'
-                     WHEN (a.status< = '22') and w.wavekey is not null
-                       THEN '12'
-                     WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0)
-                       THEN '14'
-                     WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0))
-                       THEN '16'
-                     ELSE   '18'
-                 END                            evento_cod,
-
-                CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null
-                       THEN 'Recebimento_host'
-                     WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100'
-                       THEN 'Estorno'
-                     WHEN (a.status >  = '95' or sq2.status = 6)
-                       THEN 'Expedicao_concluida'
-                     WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55'
-                       THEN 'Fechamento_Gaiola'
-                     WHEN sq2.status = 5 and a.status >  = '55'
-                       THEN 'Entregue_Doca'
-                     WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55'
-                       THEN 'Inclusao_Carga'
-                     WHEN a.INVOICESTATUS = '1' and a.status >  = '55'
-                       THEN 'DANFE_Solicitada'
-                     WHEN a.INVOICESTATUS = '3' and a.status >  = '55'
-                       THEN 'DANFE_Aprovada'
-                     WHEN a.INVOICESTATUS = '4' and a.status >  = '55'
-                       THEN 'Fim_Conferencia'
-                     WHEN (a.status< = '22') and w.wavekey is not null
-                       THEN 'Incluido_Onda'
-                     WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0)
-                       THEN 'Picking_Liberado'
-                     WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0))
-                       THEN 'Inicio_Picking'
-                     ELSE   'Picking_Completo'
-                 END                            ult_evento_nome,
-
+							data_limite_exped,
+                znsls401.t$entr$c		pedido_entrega,
+                a.referencedocument		ordem_venda,
+                a.INVOICENUMBER		num_nota,
+                a.LANE				serie_nota,
+                a.novastatus			evento_cod,
+                statuscodes_t.description	ult_evento_nome,
                 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
-                       CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100'
+                       CASE WHEN (a.INVOICESTATUS = '2' and a.novastatus >  = '55') or a.novastatus = '100'
                               THEN a.editdate
-                            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' THEN
+                            WHEN (sq2.status = 3 or sq2.status = 4) and a.novastatus >  = '55' THEN
                               sq2.closedate
-                            WHEN sq2.status = 5 and a.status >  = '55' THEN
+                            WHEN sq2.status = 5 and a.novastatus >  = '55' THEN
                               sq2.editdate
-                            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' THEN
+                            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.novastatus >  = '55' THEN
                               sq2.adddate
-                            WHEN a.INVOICESTATUS = '1' and a.status >  = '55' THEN
+                            WHEN a.INVOICESTATUS = '1' and a.novastatus >  = '55' THEN
                               a.editdate
-                            WHEN a.INVOICESTATUS = '3' and a.status >  = '55' THEN
+                            WHEN a.INVOICESTATUS = '3' and a.novastatus >  = '55' THEN
                               a.editdate
-                            WHEN a.INVOICESTATUS = '4' and a.status >  = '55' THEN
+                            WHEN a.INVOICESTATUS = '4' and a.novastatus >  = '55' THEN
                               a.editdate
                             ELSE NVL( ( SELECT MIN(h.adddate)
-                                          FROM WMWHSE9.ORDERSTATUSHISTORY h
+                                          FROM WMWHSE8.ORDERSTATUSHISTORY h
                                          WHERE h.orderkey = a.orderkey
                                            AND h.status = a.status ), a.editdate )
                         END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                                AT time zone 'America/Sao_Paulo') AS DATE)
-                                                ult_evento_data,
-
-                sq2.CAGEID                      carga,
-                od.sku                          item_sku,
-                sku.descr                       item_descricao,
+							ult_evento_data,
+                sq2.CAGEID                      	carga,
+                od.sku                          	item_sku,
+                sku.descr                       	item_descricao,
                 DPST.ID_DEPART                  item_departamento,
-                DPST.DEPART_NAME                descr_depto,
-                whwmd400.t$hght                 item_altura,
-                whwmd400.t$wdth                 item_largura,
-                whwmd400.t$dpth                 item_comprimento,
+                DPST.DEPART_NAME             descr_depto,
+                whwmd400.t$hght                item_altura,
+                whwmd400.t$wdth               item_largura,
+                whwmd400.t$dpth                item_comprimento,
                 od.ORIGINALQTY                  item_quantidade,
-                znsls401.t$vlun$c               item_valor,
+                znsls401.t$vlun$c               	item_valor,
                 sku.STDNETWGT*od.ORIGINALQTY    item_peso,
                 sku.STDCUBE*od.ORIGINALQTY      item_cubagem,
                 a.C_VAT                         mega_rota,
@@ -130,7 +76,7 @@ select Q1.*
                                              DATA_PROMETIDA,
                 
                 CASE WHEN ZNSLS401.T$IDPA$C = '1'
-                       THEN 'Manh„'
+                       THEN 'Manh?'
                      WHEN ZNSLS401.T$IDPA$C = '2'
                        THEN 'Tarde'
                      WHEN ZNSLS401.T$IDPA$C = '3'
@@ -139,15 +85,15 @@ select Q1.*
                 END                          PERIODO
 				
 
-         FROM       WMWHSE9.ORDERS a
+         FROM       WMWHSE8.ORDERS a
 
-         INNER JOIN WMWHSE9.ORDERDETAIL od
+         INNER JOIN WMWHSE8.ORDERDETAIL od
                  ON od.orderkey = a.orderkey
 
-         INNER JOIN WMWHSE9.sku sku
+         INNER JOIN WMWHSE8.sku sku
                  ON od.sku = sku.sku
 
-          LEFT JOIN WMWHSE9.OrderDetailXvas OX
+          LEFT JOIN WMWHSE8.OrderDetailXvas OX
                  ON  OX.ORDERKEY = od.ORDERKEY
                 AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER
                 AND OX.UDF1 = 'SHIPPINGID'
@@ -161,7 +107,7 @@ select Q1.*
 
           LEFT JOIN ( select wv.orderkey,
                              max(wv.wavekey) wavekey
-                        from WMWHSE9.wavedetail wv
+                        from WMWHSE8.wavedetail wv
                     group by wv.orderkey ) w
                  ON w.orderkey = a.orderkey
 
@@ -172,8 +118,8 @@ select Q1.*
                              max(cg.closedate) closedate,
                              max(cd.adddate) adddate,
                              max(cg.editdate) editdate
-                        from WMWHSE9.CAGEID cg,
-                             WMWHSE9.CAGEIDDETAIL cd
+                        from WMWHSE8.CAGEID cg,
+                             WMWHSE8.CAGEIDDETAIL cd
                        where cd.CAGEID = cg.CAGEID
                     group by cd.orderid,
                              cg.CAGEID ) sq2
@@ -205,35 +151,46 @@ select Q1.*
                           sq401.t$itpe$c ) znsls401
                  ON znsls401.t$orno$c = a.referencedocument
 
-         INNER JOIN enterprise.codelkup schm
+          INNER JOIN enterprise.codelkup schm
                  ON UPPER(schm.UDF1) = a.whseid
+
+          LEFT JOIN WMWHSE8.codelkup statuscodes 
+		 ON  statuscodes.listname = 'NOVAORDSTS' 
+		AND statuscodes.code = a.novastatus 
+		
+          LEFT JOIN WMWHSE8.translationlist  statuscodes_t 
+		 ON  statuscodes_t.tblname = 'CODELKUP' 
+		AND statuscodes_t.locale = 'pt' 
+                AND statuscodes_t.code = statuscodes.code 
+                AND statuscodes_t.joinkey1 = statuscodes.listname 
 
          INNER JOIN ( SELECT o1.orderkey,
                            ( select count(*)
-                               from WMWHSE9.orderdetail od1
+                               from WMWHSE8.orderdetail od1
                               where od1.orderkey = o1.orderkey
                                 and od1.status = '29' ) Released,
                            ( select count(*)
-                               from WMWHSE9.orderdetail od1
+                               from WMWHSE8.orderdetail od1
                               where od1.orderkey = o1.orderkey
                                 and od1.status = '51' ) InPicking,
                            ( select count(*)
-                               from WMWHSE9.orderdetail od1
+                               from WMWHSE8.orderdetail od1
                               where od1.orderkey = o1.orderkey
                                 and od1.status = '52' ) PartPicked,
                            ( select count(*)
-                               from WMWHSE9.orderdetail od1
+                               from WMWHSE8.orderdetail od1
                               where od1.orderkey = o1.orderkey
                                 and od1.status = '55' ) PickedComplete
-                        FROM WMWHSE9.orders o1 ) sq1
+                        FROM WMWHSE8.orders o1 ) sq1
                  ON sq1.orderkey = a.orderkey
 
          WHERE schm.listname = 'SCHEMA'
-           AND a.status NOT IN ('98', '99')
+           AND a.NOVASTATUS NOT IN ('98', '99')
            AND CASE WHEN a.FISCALDECISION like 'CANCELADO%'
                       THEN 1
                     ELSE 0
                 END = 0 ) Q1
+
 
 " WHERE evento_cod IN (" + Replace(("'" + JOIN(Parameters!Evento.Value, "',") + "'"),",",",'") + ") " &
 "   AND tipo_entrega_nome IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ") " &
@@ -377,7 +334,7 @@ select Q1.*
 "                                                 data_prometida,  " &
 "  " &
 "                 CASE WHEN ZNSLS401.T$IDPA$C = '1'  " &
-"                        THEN 'Manh„'  " &
+"                        THEN 'Manh√£'  " &
 "                      WHEN ZNSLS401.T$IDPA$C = '2'  " &
 "                        THEN 'Tarde'  " &
 "                      WHEN ZNSLS401.T$IDPA$C = '3'  " &
@@ -620,7 +577,7 @@ select Q1.*
 "                                                 data_prometida,  " &
 "  " &
 "                 CASE WHEN ZNSLS401.T$IDPA$C = '1'  " &
-"                        THEN 'Manh„'  " &
+"                        THEN 'Manh√£'  " &
 "                      WHEN ZNSLS401.T$IDPA$C = '2'  " &
 "                        THEN 'Tarde'  " &
 "                      WHEN ZNSLS401.T$IDPA$C = '3'  " &
@@ -862,7 +819,7 @@ select Q1.*
 "                                                 data_prometida,  " &
 "  " &
 "                 CASE WHEN ZNSLS401.T$IDPA$C = '1'  " &
-"                        THEN 'Manh„'  " &
+"                        THEN 'Manh√£'  " &
 "                      WHEN ZNSLS401.T$IDPA$C = '2'  " &
 "                        THEN 'Tarde'  " &
 "                      WHEN ZNSLS401.T$IDPA$C = '3'  " &
