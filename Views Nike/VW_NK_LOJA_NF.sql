@@ -1,3 +1,4 @@
+CREATE OR REPLACE VIEW VW_NK_LOJA_NF AS
 SELECT DISTINCT
   'NIKE.COM'                FILIAL,                                 --02
   tccom130r.t$fovn$l        CGC_FILIAL_DESTINO,                     --03
@@ -301,7 +302,7 @@ SELECT DISTINCT
   ''                       EMPRESA,                                 --40
   cisli940.t$cnfe$l         CHAVE_NFE,                               --41
   cisli940.t$prot$l         PROTOCOLO_AUTORIZACAO_NFE,               --42
-  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(DT_NFE_FAT.AUTORIZADA, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_AUTORIZACAO_NFE,                    --43
   ''                       GERAR_AUTOMATICO,                        --44
@@ -386,7 +387,7 @@ SELECT DISTINCT
             TO_CHAR(SLS004_REM.ENTREGA)
       ELSE TO_CHAR(cisli940.t$docn$l) || cisli940.t$seri$l END
   ELSE TO_CHAR(SLS004.ENTREGA) END
-                            NUMERO_PEDIDO_VENDA,                     --73
+                            NUMERO_PEDIDO_VENDA,                    --73
   'S'                       TP_MOVTO,                                --74 Criado para separar na tabela as entradas e saídas
   cisli940.t$fdtc$l         COD_TIPO_DOC_FISCAL,                     --75 Criado para ser combinado junto com o CFOP
   tcmcs966.t$dsca$l         DESCR_COD_TIPO_DOC_FISCAL,               --76
@@ -468,10 +469,10 @@ FROM  baandb.tcisli940601  cisli940
            ON cisli959.t$rscd$l = cisli940.t$rscd$l
 
     LEFT JOIN baandb.ttccom130601 tccom130entr
-           ON tccom130entr.t$cadr = cisli940.t$stoa$l
+           ON tccom130entr.t$cadr = cisli940.t$itoa$l
 
     LEFT JOIN baandb.ttccom130601 tccom130fat
-           ON tccom130fat.t$cadr = cisli940.t$itoa$l
+           ON tccom130fat.t$cadr = cisli940.t$stoa$l
 
     LEFT JOIN baandb.ttccom139301  tccom139entr
            ON tccom139entr.t$ccty = tccom130entr.t$ccty
