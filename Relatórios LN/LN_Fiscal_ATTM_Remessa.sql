@@ -14,7 +14,7 @@ select Q1.* from
           AT time zone 'America/Sao_Paulo') AS DATE)  
                                DATA,
       tccom130.t$fovn$l        CNPJ,                                            
-      cisli940.t$itoa$l        COD_FORNECEDOR,
+      cisli940.t$stbp$l        COD_FORNECEDOR,
       tccom130.t$nama          NOME_FORNECEDOR,
       cisli941.t$ccfo$l        COD_CFOP,
       tcmcs940.t$dsca$l        DESC_CFOP,
@@ -93,13 +93,13 @@ select Q1.* from
           ON tcemm124.t$cwoc = cisli940.t$cofc$l 
   INNER JOIN baandb.ttcemm030301 tcemm030
           ON tcemm030.t$eunt = tcemm124.t$grid
-  WHERE cisli940.t$fdty$l = 17
+  WHERE cisli940.t$fdty$l = 17  
     AND tcemm124.t$dtyp = 1 
     AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)
         BETWEEN :DataDe
-            AND :DataAte
+            AND :DataAte 
     AND tcemm030.T$EUNT IN (:Filial)
-   AND STATUS.CNST IN (:StatusNF)
+   AND STATUS.CNST IN (:StatusNF) 
   ORDER BY cisli940.t$docn$l, cisli940.t$seri$l ) Q1
