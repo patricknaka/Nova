@@ -1,3 +1,4 @@
+CREATE OR REPLACE VIEW VW_NK_FAT_FATURAMENTO AS
 SELECT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
@@ -135,7 +136,7 @@ ELSE (  SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm0
         (cisli941f.t$iprt$l)*(nvl(ICMS.t$rate$l,0)/100)
   else
     case when ICMS.t$iest$l < ICMS.t$sest$l then
-        (cisli941.t$gamt$l-cisli941.t$tldm$l)*(ICMS.t$sest$l/100)
+         0
     else
       (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$rate$l,0)/100) +
       (cisli941.t$gamt$l-cisli941.t$tldm$l)*(nvl(ICMS.t$iest$l-ICMS.t$sest$l,0)/100) +
@@ -176,21 +177,22 @@ ELSE (  SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm0
     nvl(CSLL.t$amnt$l, 0) -cisli941f.t$iprt$l*(nvl(CSLL.t$rate$l,0)/100) -cisli941f.t$fght$l*(nvl(CSLL.t$rate$l,0)/100)
     ELSE 0 END  VL_CSLL_OUTROS,
     cisli941f.t$tldm$l VL_DESCONTO_INCONDICIONAL,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
   AS DT_PEDIDO,
   znsls400.t$idca$c CD_CANAL,
   endfat.t$ccit CD_CIDADE_FATURA,
   endent.t$ccit CD_CIDADE_ENTREGA,
-  nvl((select sum(b.t$mauc$1) from baandb.twhina114601 a, baandb.twhina113601 b
-       where b.t$item=A.T$ITEM
-       and b.T$CWAR=a.t$cwar
-       and b.T$TRDT=A.T$TRDT
-       and b.t$seqn=A.T$SEQN
-       and b.T$INWP=A.T$INWP
-       and a.t$koor = 3   --Ordem de Venda
-       and a.t$orno=tdsls401.t$orno
-       and a.t$pono=tdsls401.t$pono),0)
-  AS VL_CMV,
+  nvl((select sum(b.t$mauc$1) 
+        from (select T$ITEM, t$cwar,T$TRDT,max(T$SEQN) T$SEQN,T$INWP,t$orno,t$pono
+              from baandb.twhina114301 group by T$ITEM, t$cwar, T$TRDT, T$INWP, t$orno, t$pono) a, 
+             baandb.twhina113301 b
+       where b.t$item = A.T$ITEM
+       and   b.T$CWAR = a.t$cwar
+       and   b.T$TRDT = A.T$TRDT
+       and   b.t$seqn = A.T$SEQN
+       and   b.T$INWP = A.T$INWP
+       and   a.t$orno = tdsls401.t$orno
+       and   a.t$pono = tdsls401.t$pono),0)          VL_CMV,
   znsls401.t$uneg$c CD_UNIDADE_NEGOCIO,
   ' ' CD_MODULO_GERENCIAL, -- *** AGUARDANDO DUVIDAS
     CASE WHEN instr(cisli941f.t$ccfo$l,'-')=0 THEN cisli941f.t$ccfo$l
@@ -413,4 +415,4 @@ WHERE ltrim(rtrim(tdsls401.t$item)) = ltrim(rtrim(znsls401.t$item$c)) -- Origem 
 and   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
   AT time zone 'America/Sao_Paulo') AS DATE) >= trunc(sysdate-15)
   */
-ORDER BY cisli941f.t$fire$l DESC
+ORDER BY cisli941f.t$fire$l DESC;
