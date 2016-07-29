@@ -205,4 +205,4 @@ FROM  baandb.ttccom100601 tccom100
                           tdrec940.t$adat$l
                   from    baandb.ttdrec940601 tdrec940 ) REC940
           ON REC940.t$bpid$l = tccom100.t$bpid
-         AND REC940.t$stat$l IN (4,5,6);
+         AND REC940.t$stat$l IN (4,5,6)
