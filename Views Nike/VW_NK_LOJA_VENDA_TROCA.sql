@@ -1,3 +1,4 @@
+CREATE OR REPLACE VIEW VW_NK_LOJA_VENDA_TROCA AS
 SELECT
 --***************************************************************************************************************************
 --        TROCA
@@ -40,24 +41,24 @@ FROM (  select a.t$fire$l,
         group by a.t$fire$l,
                  a.t$line$l ) tdrec947
 
-INNER JOIN  BAANDB.TTDREC941601 TDREC941  
+INNER JOIN  BAANDB.TTDREC941601 TDREC941
         ON  TDREC941.T$FIRE$L = TDREC947.T$FIRE$L
        AND  TDREC941.T$LINE$L = TDREC947.T$LINE$L
 
-INNER JOIN  BAANDB.TTDREC940601 TDREC940  
+INNER JOIN  BAANDB.TTDREC940601 TDREC940
         ON  TDREC940.T$FIRE$L = TDREC941.T$FIRE$L
 
-INNER JOIN  BAANDB.TZNSLS004601  ZNSLS004  
+INNER JOIN  BAANDB.TZNSLS004601  ZNSLS004
         ON  ZNSLS004.T$ORNO$C = TDREC947.T$ORNO$L
        AND  ZNSLS004.T$PONO$C = TDREC947.T$PONO$L
 
-INNER JOIN  BAANDB.TZNSLS400601  ZNSLS400  
+INNER JOIN  BAANDB.TZNSLS400601  ZNSLS400
         ON  ZNSLS400.T$NCIA$C = ZNSLS004.T$NCIA$C
        AND  ZNSLS400.T$UNEG$C = ZNSLS004.T$UNEG$C
        AND  ZNSLS400.T$PECL$C = ZNSLS004.T$PECL$C
        AND  ZNSLS400.T$SQPD$C = ZNSLS004.T$SQPD$C
 
-INNER JOIN  BAANDB.TZNSLS401601 ZNSLS401  
+INNER JOIN  BAANDB.TZNSLS401601 ZNSLS401
         ON  ZNSLS401.T$NCIA$C = ZNSLS004.T$NCIA$C
        AND  ZNSLS401.T$UNEG$C = ZNSLS004.T$UNEG$C
        AND  ZNSLS401.T$PECL$C = ZNSLS004.T$PECL$C
@@ -65,7 +66,7 @@ INNER JOIN  BAANDB.TZNSLS401601 ZNSLS401
        AND  ZNSLS401.T$ENTR$C = ZNSLS004.T$ENTR$C
        AND  ZNSLS401.T$SEQU$C = ZNSLS004.T$SEQU$C
 
-INNER JOIN  BAANDB.TTCIBD001601  TCIBD001  
+INNER JOIN  BAANDB.TTCIBD001601  TCIBD001
         ON  TCIBD001.T$ITEM = TDREC941.T$ITEM$L
 
 LEFT JOIN (  SELECT  A.T$ORNO,
@@ -76,12 +77,12 @@ LEFT JOIN (  SELECT  A.T$ORNO,
              WHERE   A.T$CSTO = 2
              GROUP BY A.T$ORNO,
                       A.T$PONO,
-                      A.T$SQNB)  TDSLS415  
+                      A.T$SQNB)  TDSLS415
       ON  TDSLS415.T$ORNO = TDREC947.T$ORNO$L
      AND  TDSLS415.T$PONO = TDREC947.T$PONO$L
      AND  TDSLS415.T$SQNB = TDREC947.T$SEQN$L
 
-LEFT JOIN  BAANDB.TTCIBD004601  TCIBD004  
+LEFT JOIN  BAANDB.TTCIBD004601  TCIBD004
        ON  TCIBD004.T$CITT = '000'
       AND  TCIBD004.T$BPID = ' '
       AND  TCIBD004.T$ITEM = TCIBD001.T$ITEM
@@ -103,22 +104,22 @@ LEFT JOIN (  SELECT   A.T$FIRE$L,
                       A.T$AMNT$L,
                       A.T$RATE$L
              FROM BAANDB.TTDREC942601 A
-             WHERE  A.T$BRTY$L=3) Q_IPI    
+             WHERE  A.T$BRTY$L=3) Q_IPI
       ON  Q_IPI.T$FIRE$L = TDREC941.T$FIRE$L
      AND  Q_IPI.T$LINE$L = TDREC941.T$LINE$L
 
 LEFT JOIN baandb.tznibd005601 znibd005
        ON znibd005.t$size$c = tcibd001.t$size$c
-       
+
 LEFT JOIN baandb.tznsls000601 znsls000
        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
-       
+
 WHERE TDREC947.T$NCMP$L = 601
   AND TDREC947.T$OORG$L = 1
   AND tdrec940.t$stat$l IN (4,5,6)      --4-aprovado, 5-aprovado com problemas, 6-estornado
   AND tdrec940.t$cnfe$l != ' '
   AND TDREC940.T$RFDT$L = 10            --10 - retorno de mercadoria
-  AND tdrec940.t$rfdt$l NOT IN (19,20,21,22,23); --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
+  AND tdrec940.t$rfdt$l NOT IN (19,20,21,22,23) --Conhecimento de Frete Aéreo-19, Ferroviário-20, Aquaviário-21, Rodoviário--22, Multimodal-23
   AND tdrec941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
   AND tdrec941.t$item$l != znsls000.t$itmd$c      --ITEM DESPESAS
-  AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS  
+  AND tdrec941.t$item$l != znsls000.t$itjl$c      --ITEM JUROS;
