@@ -1,10 +1,13 @@
+CREATE OR REPLACE VIEW VW_NK_LOJA_NF_ITEM AS
 SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
     ''                         CODIGO_BARRA,              --03
-    CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+    CAST(CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
-    ELSE tdrec941.t$gamt$l + TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L END  VALOR,          --04
+    ELSE tdrec941.t$gamt$l + TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L END AS DECIMAL(38,4)) AS VALOR,
+
+--04
     CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
     ELSE tdrec941.t$qnty$l END  QTDE_ITEM,                --05
@@ -22,9 +25,9 @@ SELECT DISTINCT
           0.0
     ELSE tdrec941.t$pric$l + ROUND(((TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L)/tdrec941.t$qnty$l),4) END  PRECO_UNITARIO,           --13
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
-    CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
+    CAST(CASE WHEN tdrec940.t$stat$l = 6 THEN    -- ESTORNADO
           0.0
-    ELSE (TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L)*(-1) END  DESCONTO_ITEM,            --15
+    ELSE (TDREC941.T$ADDC$L + TDREC941.T$GEXP$L + TDREC941.T$CCHR$L)*(-1) END AS DECIMAL(38,4)) AS DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
     nvl(tttxt010r.t$text,'')   OBS_ITEM,                 --17
     ORIGEM.DESCR                TRIBUT_ORIGEM,            --18
@@ -58,7 +61,9 @@ SELECT DISTINCT
     tcmcs966.t$dsca$l           DESCR_TIPO_DOC_FISCAL,    --35
     tdrec941.t$fire$l           REF_FISCAL,               --36
     tdrec941.t$line$l           LIN_REF_FIS,              --37
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$adat$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY
+
+HH24:MI:SS'), 'GMT') --#FAF.004.sn
     AT time zone 'America/Sao_Paulo') AS DATE)         DT_ULT_ALTERACAO,          --38
     tcibd001.t$mdfb$c           MOD_FABR_ITEM             --39
 
@@ -146,9 +151,9 @@ SELECT DISTINCT
 
     'NIKE.COM'                  FILIAL,                   --02
     ''                         CODIGO_BARRA,             --03
-    CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+    CAST(CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
-    ELSE cisli941.t$gamt$l-cisli941.t$tldm$l END          VALOR,                    --04
+    ELSE cisli941.t$gamt$l-cisli941.t$tldm$l END AS DECIMAL(38,4)) AS VALOR,                    --04
     CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
     ELSE cisli941.t$dqua$l END          QTDE_ITEM,                --05
@@ -165,9 +170,9 @@ cisli941.t$line$l           ITEM_IMPRESSAO,           --08
           0.0
     ELSE cisli941.t$pric$l - cisli941.t$ldam$l END          PRECO_UNITARIO,           --13
     0                           PORCENTAGEM_ITEM_RATEIO,  --14
-    CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
+    CAST(CASE WHEN cisli940.t$stat$l = 2 THEN  --CANCELAR
         0.0
-    ELSE cisli941.t$tldm$l END          DESCONTO_ITEM,            --15
+    ELSE cisli941.t$tldm$l END AS DECIMAL(38,4)) AS  DESCONTO_ITEM,            --15
     tcibd001.t$wght             PESO,                     --16
     nvl(tttxt010r.t$text,'')   OBS_ITEM,                 --17
     ORIGEM.DESCR                TRIBUT_ORIGEM,            --18
@@ -200,7 +205,9 @@ cisli941.t$line$l           ITEM_IMPRESSAO,           --08
     tcmcs966.t$dsca$l           DESCR_COD_TIPO_DOC_FISCAL,--35
     cisli941.t$fire$l           REF_FISCAL,               --36
     cisli941.t$line$l           LIN_REF_FIS,              --37
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') --#FAF.004.sn
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$sadt$l, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY
+
+HH24:MI:SS'), 'GMT') --#FAF.004.sn
     AT time zone 'America/Sao_Paulo') AS DATE)         DT_ULT_ALTERACAO,          --38
     tcibd001.t$mdfb$c           MOD_FABR_ITEM             --39
 
