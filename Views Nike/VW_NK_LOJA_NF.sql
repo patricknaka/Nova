@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW VW_NK_LOJA_NF AS
+--CREATE OR REPLACE VIEW VW_NK_LOJA_NF AS
 SELECT DISTINCT
   'NIKE.COM'                FILIAL,                                 --02
   tccom130r.t$fovn$l        CGC_FILIAL_DESTINO,                     --03
@@ -343,43 +343,43 @@ SELECT DISTINCT
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SLS410.DT_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_SAIDA_ETR,                          --59
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
     tccom130entr.t$namc
   ELSE tccom130fat.t$namc  END                            ENTREGA_ENDERECO,                        --60
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       tccom130entr.t$hono
   ELSE tccom130fat.t$hono END                             ENTREGA_NUMERO,                          --61
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
        tccom130entr.t$bldg
   ELSE tccom130fat.t$bldg END                             ENTREGA_COMPLEMENTO,                     --62
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       tccom130entr.t$cste
   ELSE tccom130fat.t$cste END                             ENTREGA_UF,                              --63
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       tccom139entr.t$dscb$c
   ELSE tccom139fat.t$dscb$c END                           ENTREGA_CIDADE,                          --64
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       tccom130entr.t$dist$l
   ELSE tccom130fat.t$dist$l END                           ENTREGA_BAIRRO,                          --65
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       tccom130entr.t$pstc
   ELSE tccom130fat.t$pstc END                             ENTREGA_CEP,                             --66
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       SUBSTR(tccom130entr.t$telp,3,9)
   ELSE SUBSTR(tccom130fat.t$telp,3,9) END                 ENTREGA_TELEFONE,                        --67
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       SUBSTR(tccom130entr.t$telp,1,2)
   ELSE SUBSTR(tccom130fat.t$telp,1,2) END                 ENTREGA_DDD,                             --68
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       SUBSTR(tccom130entr.t$telx,1,2)
   ELSE SUBSTR(tccom130fat.t$telx,1,2) END                 ENTREGA_DDD_CELULAR,                     --69
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       SUBSTR(tccom130entr.t$telx,3,9)
   ELSE SUBSTR(tccom130fat.t$telx,3,9) END                 ENTREGA_CELULAR,                         --70
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       tccom130entr.t$nama
   ELSE tccom130fat.t$nama END                             ENTREGA_NOME_DESTINATARIO,               --71
-  CASE WHEN cisli940.t$itoa$l != cisli940.t$stoa$l THEN
+  CASE WHEN (cisli940.t$itoa$l != cisli940.t$stoa$l) or tcmcs939.t$vtyp$l = 3 THEN    --Nao Aplicavel
       '1'
   ELSE '0' END                                            ENTREGA_DEST_COMPR,                      --72
   CASE WHEN SLS004.ENTREGA IS NULL THEN
@@ -473,6 +473,9 @@ FROM  baandb.tcisli940601  cisli940
 
     LEFT JOIN baandb.ttccom130601 tccom130fat
            ON tccom130fat.t$cadr = cisli940.t$stoa$l
+           
+    LEFT JOIN baandb.ttcmcs939301 tcmcs939
+           ON tcmcs939.t$ftyp$l = tccom130fat.t$ftyp$l
 
     LEFT JOIN baandb.ttccom139301  tccom139entr
            ON tccom139entr.t$ccty = tccom130entr.t$ccty
