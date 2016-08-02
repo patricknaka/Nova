@@ -1,4 +1,4 @@
- CREATE OR REPLACE VIEW VW_NK_CLIENTES_VAREJO AS
+-- CREATE OR REPLACE VIEW VW_NK_CLIENTES_VAREJO AS
 SELECT DISTINCT
 
   ' '                           CODIGO_CLIENTE,     --02
@@ -70,8 +70,16 @@ FROM  baandb.ttccom100601 tccom100
                         cisli940.t$bpid$l,
                         cisli940.t$stat$l,
                         cisli940.t$sadt$l,
-                        NVL(nullif(trim(cisli940.t$stoa$l),''),nullif(trim(cisli940.t$sfba$l),'')) AS end_entrega   -- Endereço de Entrega
+                        case when tcmcs939.t$vtyp$l = 3 then   --cliente estrangeiro
+                            cisli940.t$itoa$l
+                        else
+                            NVL(nullif(trim(cisli940.t$stoa$l),''),nullif(trim(cisli940.t$sfba$l),'')) 
+                        end     end_entrega   -- Endereço de Entrega
                 from    baandb.tcisli940601 cisli940
+                left join baandb.ttccom130601 tccom130
+                       on tccom130.t$cadr = cisli940.t$stoa$l
+                left join baandb.ttcmcs939301 tcmcs939
+                       on tcmcs939.t$ftyp$l = tccom130.t$ftyp$l
                 where   exists (  select *
                               from  baandb.tznnfe011601 znnfe011
                               where znnfe011.t$oper$c = 1
