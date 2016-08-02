@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW VW_NK_FAT_FATURAMENTO AS
+--CREATE OR REPLACE VIEW VW_NK_FAT_FATURAMENTO AS
 SELECT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
@@ -181,7 +181,9 @@ ELSE (  SELECT tcemm030.t$euca FROM baandb.ttcemm124601 tcemm124, baandb.ttcemm0
   AS DT_PEDIDO,
   znsls400.t$idca$c CD_CANAL,
   endfat.t$ccit CD_CIDADE_FATURA,
-  endent.t$ccit CD_CIDADE_ENTREGA,
+  CASE WHEN tcmcs939.t$vtyp$l = 3 THEN    --venda para entrangeiros
+        endfat.t$ccit
+  ELSE  endent.t$ccit END CD_CIDADE_ENTREGA,
   nvl((select sum(b.t$mauc$1) 
         from (select T$ITEM, t$cwar,T$TRDT,max(T$SEQN) T$SEQN,T$INWP,t$orno,t$pono
               from baandb.twhina114301 group by T$ITEM, t$cwar, T$TRDT, T$INWP, t$orno, t$pono) a, 
@@ -399,6 +401,9 @@ INNER JOIN baandb.ttccom130601 endfat
 
 INNER JOIN baandb.ttccom130601 endent
         ON endent.t$cadr = cisli940.t$stoa$l
+        
+INNER JOIN baandb.ttcmcs939301 tcmcs939
+        ON tcmcs939.t$ftyp$l = endent.t$ftyp$l
 
 INNER JOIN baandb.ttcibd001601 tcibd001
         ON tcibd001.t$item = cisli941.t$item$l
