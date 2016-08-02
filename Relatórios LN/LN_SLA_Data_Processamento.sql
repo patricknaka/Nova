@@ -1,4 +1,5 @@
     SELECT znsls401.t$entr$c          ENTREGA,
+           znsls401.t$sequ$c          SEQUENCIAL,
            znfmd630.t$docn$c          NOTA,
            znfmd630.t$seri$c          SERIE,
            znfmd630.t$fili$c          FILIAL,
@@ -99,7 +100,7 @@
 
       FROM ( select znfmd630.t$pecl$c,
                     znfmd630.t$fili$c,
-                    znfmd630.t$etiq$c,
+                    min(znfmd630.t$etiq$c)t$etiq$c,
                     znfmd630.t$cfrw$c,
                     znfmd630.t$cono$c,
                     znfmd630.t$stat$c,
@@ -107,7 +108,16 @@
                     znfmd630.t$seri$c,
                     znfmd630.t$vlfc$c,
                     znfmd630.t$dtco$c 
-               from baandb.tznfmd630301 znfmd630 ) znfmd630
+               from baandb.tznfmd630301 znfmd630
+           group by znfmd630.t$pecl$c,
+                    znfmd630.t$fili$c,
+                    znfmd630.t$cfrw$c,
+                    znfmd630.t$cono$c,
+                    znfmd630.t$stat$c,
+                    znfmd630.t$docn$c,
+                    znfmd630.t$seri$c,
+                    znfmd630.t$vlfc$c,
+                    znfmd630.t$dtco$c ) znfmd630
 
  LEFT JOIN baandb.tznsls401301 znsls401
         ON TO_CHAR(znsls401.t$entr$c) = znfmd630.t$pecl$c
