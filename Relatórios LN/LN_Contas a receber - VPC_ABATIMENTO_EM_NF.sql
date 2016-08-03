@@ -3,6 +3,9 @@ select Q1.* from ( SELECT
                        tfacr200.t$ttyp         Tipo_Transacao,
                        tfacr200.t$ninv         Numero_Titulo,
                        
+                       tfacr301.t$amnt         Valor_Car,
+                       tfacr301.t$balc         Saldo_Car,
+
                        tfacr200.t$tdoc         Tipo_Transacao_mov,
                        tfacr200.t$docn         Numero_mov, 
                        
@@ -17,7 +20,7 @@ select Q1.* from ( SELECT
                      
                        CASE WHEN sum(tfacp200t.t$balc) = 0 
                               THEN ( select max(a.t$docd) 
-                                       from baandb.ttfacp200201 a 
+                                       from baandb.ttfacp200301 a 
                                       where a.t$ttyp = tfacp200t.t$ttyp 
                                         and a.t$ninv = tfacp200t.t$ninv )
                             ELSE NULL 
@@ -42,33 +45,33 @@ select Q1.* from ( SELECT
                         tfacp200t.t$balc       SALDO_CAP,
                         tfacp200.t$schn        PARCELA
                          
-                   FROM baandb.ttfacr200201 tfacr200
+                   FROM baandb.ttfacr200301 tfacr200
 
-             INNER JOIN baandb.ttfacr200201 tfacr200t
+             INNER JOIN baandb.ttfacr200301 tfacr200t
                      ON tfacr200t.t$ttyp = tfacr200.t$ttyp
                     AND tfacr200t.t$ninv = tfacr200.t$ninv       
     
-             LEFT JOIN baandb.tznrec007201 znrec007
+             LEFT JOIN baandb.tznrec007301 znrec007
                      ON znrec007.t$ttyp$c = tfacr200.t$ttyp 
                     AND znrec007.t$docn$c = tfacr200.t$ninv   
              
-             INNER JOIN baandb.ttccom100201 tccom100
+             INNER JOIN baandb.ttccom100301 tccom100
                      ON tccom100.t$bpid = tfacr200.t$itbp
                
-             INNER JOIN baandb.ttccom130201 tccom130
+             INNER JOIN baandb.ttccom130301 tccom130
                      ON tccom130.t$cadr = tccom100.t$cadr
              
-              LEFT JOIN baandb.ttfacr201201 tfacr301
+              LEFT JOIN baandb.ttfacr201301 tfacr301
                      ON tfacr301.t$ttyp = tfacr200.t$ttyp
                     AND tfacr301.t$ninv = tfacr200.t$ninv
              
-             INNER JOIN baandb.ttfacp200201 tfacp200
+             INNER JOIN baandb.ttfacp200301 tfacp200
                      ON tfacp200.t$tdoc = tfacr200.t$tdoc
                     AND tfacp200.t$docn = tfacr200.t$docn
                     AND tfacp200.t$lino = tfacr200.t$lino - 1
 
              
-             INNER JOIN baandb.ttfacp200201 tfacp200t
+             INNER JOIN baandb.ttfacp200301 tfacp200t
                      ON tfacp200t.t$ttyp = tfacp200.t$ttyp
                     AND tfacp200t.t$ninv = tfacp200.t$ninv
              
@@ -108,7 +111,9 @@ select Q1.* from ( SELECT
                  HAVING SUM(tfacr200t.t$balc) = 0 
 
                GROUP BY tfacr200.t$ttyp, 
-                        tfacr200.t$ninv, 
+                        tfacr200.t$ninv,
+                        tfacr301.t$amnt,
+                        tfacr301.t$balc,
                         tfacr200.t$tdoc,
                         tfacr200.t$docn,                         
                         tccom130.T$FOVN$L,
@@ -129,6 +134,6 @@ select Q1.* from ( SELECT
                  
 where Q1.Vencimento between nvl(:DataVenctoDe, Q1.Vencimento) and nvl(:DataVenctoAte, Q1.Vencimento)
   and Q1.Emissao between nvl(:DataEmissaoDe, Q1.Emissao) and nvl(:DataEmissaoAte, Q1.Emissao)
-  and ( (Q1.Numero_Titulo = Trim(:Docto)) or (Trim(:Docto) is null) )
+  and Q1.Tipo_Transacao in (:TipoTransacao)
   and ( (Trim(Q1.CNPJ) Like '%' || Trim(:CNPJ) || '%') or (Trim(:CNPJ) is null) )  
   and ( (Q1.Liquidacao between :DataLiquidacaoDe and :DataLiquidacaoAte) or (:DataLiquidacaoDe is null and :DataLiquidacaoAte is null) )
