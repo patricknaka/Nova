@@ -7,7 +7,7 @@ select Q1.*
                  cisli940.t$docn$l          NUME_NF,
                  cisli940.t$seri$l          SERI_NF,   
                  cisli940.t$cnfe$l          ID_CHAVE,     
-                 cisli940.t$fire$l          REFE_FISCAL,  
+                 cisli940.t$fire$l          REFE_FISCAL,
                  cisli941.t$ccfo$l          NUME_CFOP,
                  tcmcs940.t$dsca$l          CFOP_DESC,
                  tccom110.t$cbtp            COD_TIPO,
@@ -16,14 +16,16 @@ select Q1.*
                  CASE WHEN cisli940.t$itoa$l = cisli940.t$stoa$l 
                         THEN 'Fatura' 
                       ELSE   'Entrega' 
-                 END                        TIPO_ENDER, 
-                 cisli940.t$stoa$l          SEQ_ENDER,
+                 END                        TIPO_ENDER,
+                 CASE WHEN cisli940.t$stoa$l = ' ' THEN
+                      cisli940.t$sfba$l
+                 ELSE cisli940.t$stoa$l END SEQ_ENDER,
                  tccom130.t$dist$l          END_BAIRRO,
                  tccom130.t$hono            END_NUMERO,
                  tccom130.t$namd            END_COMPL,
                  tccom130.t$cste            UF,
                  tccom139.t$ibge$l          COD_IBGE,
-     
+                      
                  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$dats$l, 
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') AS DATE)  
@@ -165,9 +167,11 @@ select Q1.*
       INNER JOIN baandb.ttccom100301  tccom100 
               ON tccom100.t$bpid = cisli940.t$bpid$l   
 
-      INNER JOIN baandb.ttccom130301  tccom130
-              ON tccom130.t$cadr   = cisli940.t$stoa$l
-            
+      LEFT JOIN baandb.ttccom130301  tccom130
+              ON tccom130.t$cadr   = CASE WHEN cisli940.t$stoa$l = ' ' THEN 
+                                          cisli940.t$sfba$l
+                                     ELSE cisli940.t$stoa$l END
+              
        LEFT JOIN baandb.ttccom966301  tccom966
               ON baandb.tccom966.t$comp$d = tccom130.t$fovn$l
                  
@@ -179,7 +183,7 @@ select Q1.*
       INNER JOIN baandb.ttcemm124301  tcemm124
               ON tcemm124.t$cwoc  = cisli940.t$cofc$l 
 
-      INNER JOIN baandb.ttcemm030301  tcemm030
+      INNER JOIN baandb.ttcemm030301  tcemm030     
               ON tcemm030.t$eunt = tcemm124.t$grid
   
       INNER JOIN baandb.ttcmcs023301  tcmcs023
@@ -317,7 +321,7 @@ select Q1.*
              AND RECEITA.t$line$l = cisli941.t$line$l
  
            WHERE cisli940.t$stat$l = 6
-             AND tcemm124.t$dtyp = 1 
+             AND tcemm124.t$dtyp IN (1,2)   --1-Venda, 2-Compra
              AND cisli940.t$nfes$l = 5
              AND cisli941.t$item$l NOT IN ( select a.t$itjl$c
                                               from baandb.tznsls000301 a
@@ -335,7 +339,8 @@ select Q1.*
                                                                     from baandb.tznsls000301 b ) )    
 
         ORDER BY cisli940.t$fire$l ) Q1
-        
+
+
 where Trunc(DATA_EMISSAO) BETWEEN NVL(:DataEmissaoDe, DATA_EMISSAO) AND NVL(:DataEmissaoAte, DATA_EMISSAO)
   and Trunc(DATA_FATURAMENTO) BETWEEN NVL(:DataFaturamentoDe, DATA_FATURAMENTO) AND NVL(:DataFaturamentoAte, DATA_FATURAMENTO)
   and Q1.CHAVE_FILIAL IN (:Filial)
