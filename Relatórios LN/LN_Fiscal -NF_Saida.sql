@@ -110,8 +110,10 @@ select Q1.*
                   END                       SITUACAO,
                                             
                  cisli940.t$nfes$l          COD_STATUS_SEFAZ,
+				 cisli940.T$BPID$L          COD_PARCEIRO,
                  COD_SEFAZ.DESCR            DESC_SEFAZ,
-                 RECEITA.                   CODE_RECEITA
+                 RECEITA.                   CODE_RECEITA,
+				 cisli940.t$FDTC$l          COD_TIPO_DOC_FISCAL
            
             FROM baandb.tcisli940301  cisli940  
     
