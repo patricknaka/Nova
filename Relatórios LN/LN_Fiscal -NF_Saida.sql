@@ -14,15 +14,15 @@ select Q1.*
                  tccom966.t$stin$d          INSC_ESTADUAL,
                  tccom966.t$ctin$d          INSC_MUNICIPAL,
                  CASE WHEN cisli940.t$itoa$l = cisli940.t$stoa$l 
-                        THEN 'Fatura' 
+                      THEN 'Fatura' 
                       ELSE   'Entrega' 
                  END                        TIPO_ENDER,
                  CASE WHEN cisli940.t$stoa$l = ' ' THEN
                       cisli940.t$sfba$l
                  ELSE cisli940.t$stoa$l END SEQ_ENDER,
-                 tccom130.t$dist$l          END_BAIRRO,
+                cast(replace(replace(own_mis.filtro_mis(tccom130.t$dist$l),';',''),'"','')   as varchar(100)) as           END_BAIRRO,
                  tccom130.t$hono            END_NUMERO,
-                 tccom130.t$namd            END_COMPL,
+                 cast(replace(replace(own_mis.filtro_mis(tccom130.t$namd),';',''),'"','')   as varchar(150)) as            END_COMPL,
                  tccom130.t$cste            UF,
                  tccom139.t$ibge$l          COD_IBGE,
                       
@@ -39,7 +39,7 @@ select Q1.*
                  tcibd001.t$citg            ID_DEPTO,
                  tcmcs023.t$dsca            DESCR_DEPTO,
                  Trim(tcibd001.t$item)      ID_ITEM,
-                 tcibd001.t$dsca            DESC_ITEM,
+                 cast(replace(replace(own_mis.filtro_mis(tcibd001.t$dsca),';',''),'"','') as varchar(100))           DESC_ITEM,
                  tcibd936.t$sour$l          ID_PROC,
                  tcibd001.t$ceat$l          COD_EAN,
                  znmcs030.t$seto$c          COD_SETOR,
@@ -97,12 +97,12 @@ select Q1.*
                           
                  Round(cisli941.t$amnt$l,4) VL_TOTAL,
                  tccom130.t$fovn$l          CNPJ_CLIENTE,
-                 tccom130.t$namc            DESC_RUA,
+                 cast(replace(replace(own_mis.filtro_mis(tccom130.t$namc),';',''),'"','')   as varchar(100))            DESC_RUA,
                  Round(cisli941.t$gamt$l,4) VL_MERC,
                                             
                  cisli940.t$fdty$l          TIPO_DOCTO, 
                                             DESC_TIPO_DOCTO,
-                 cisli940.t$fids$l          RAZAO_SOCIAL,
+                 cast(replace(replace(own_mis.filtro_mis(cisli940.t$fids$l),';',''),'"','') as varchar(100))         RAZAO_SOCIAL,
              
                  CASE WHEN cisli940.t$stat$l = 2
                         THEN 'CANCELADA'
