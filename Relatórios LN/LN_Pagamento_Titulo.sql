@@ -1,4 +1,4 @@
- SELECT 
+SELECT 
   DISTINCT
     tfcmg101.t$btno         NUME_LOTE,
  
@@ -11,9 +11,14 @@
     regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
                             CNPJ_FORN,
     Trim(tccom100.t$nama)   NOME_FORN,
-    ABS(tfcmg101.t$amnt-
-    tfcmg101.t$ramn$l)      VALO_PAGA,
-    ABS(tfcmg101.t$amnt$l)  VALO_BRUTO,
+    CASE WHEN tfcmg101.t$tadv = 3 THEN    -- 3-Fatura de Venda
+          (tfcmg101.t$amnt-tfcmg101.t$ramn$l) * (-1)      
+    ELSE  (tfcmg101.t$amnt-tfcmg101.t$ramn$l) END 
+                            VALO_PAGA,
+    CASE WHEN tfcmg101.t$tadv = 3 THEN    -- 3-Fatura de Venda
+          tfcmg101.t$amnt$l * (-1)     
+    ELSE tfcmg101.t$amnt$l  END 
+                            VALO_BRUTO,
     tfcmg101.t$post         CODE_LIQUID, 
     tfcmg101.t$paym         CODE_METPGTO,
  
