@@ -234,3 +234,4 @@ ORDER BY znsls401.t$ncia$c,
          znsls401.t$sequ$c,
          OCORR.DT,
          OCORR.PONTO
+
