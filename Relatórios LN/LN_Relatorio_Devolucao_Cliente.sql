@@ -1,6 +1,4 @@
-    SELECT tdrec941.t$fire$l,
-           tdrec941.t$line$l,
-           znfmd001.t$fili$c         FILIAL,
+    SELECT znfmd001.t$fili$c         FILIAL,
            znfmd001.t$dsca$c         NOME_FILIAL,
            znsls004.t$pecl$c         PEDIDO,
            znsls004.t$uneg$c         UN_NEGOCIO,
@@ -19,6 +17,7 @@
            tcibd001.t$dscb$c         DESCRICAO,
            znmcs030.t$dsca$c         SETOR,
            znmcs031.t$dsca$c         FAMILIA,
+           znsls401.t$cmot$c         COD_MOTIVO_DEVOLUCAO,
            znsls401.t$lmot$c         MOTIVO_DEVOLUCAO,
            tdrec941.t$qnty$l         QTDE,
            CMV.mauc_unit             CMV_UNITARIO,
@@ -122,13 +121,25 @@ INNER JOIN baandb.ttccom130301 tccom130
 INNER JOIN baandb.tznfmd001301 znfmd001
         ON znfmd001.t$fovn$c = tccom130.t$fovn$l
             
- LEFT JOIN baandb.tznsls000601 znsls000
+ LEFT JOIN baandb.tznsls000301 znsls000
         ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')        
         
 where tdrec940.t$rfdt$l = 10                        --retorno de mercadoria
   AND tdrec941.t$item$l   != znsls000.t$itmf$c      --ITEM FRETE
   AND tdrec941.t$item$l   != znsls000.t$itmd$c      --ITEM DESPESAS
   AND tdrec941.t$item$l   != znsls000.t$itjl$c      --ITEM JUROS
+  AND NOT EXISTS ( select 1
+                     from baandb.tznsls410301 znsls410
+                    where znsls410.t$poco$c = 'INS'
+                      and znsls410.t$pecl$c = znsls004.t$pecl$c )
+  AND NOT EXISTS ( select *     --ITENS TIPO GARANTIA ESTENDIDA
+                     from baandb.tznisa002301 a,
+                          baandb.tznisa001301 b
+                    where a.t$npcl$c = tcibd001.t$npcl$c     
+                      and b.t$nptp$c = a.t$nptp$c
+                      and b.t$emnf$c = 2    --Emissao de Nota Fiscal = Nao
+                      and b.t$bpti$c = 2    --Tipo de Interface de Aviso = Arquivo Texto
+                      and b.t$nfed$c = 2  ) --Gera Nota Fiscal de Entrada = Nao
   
   AND TRUNC(tdrec940.t$date$l)
       Between :DataEntradaDe 
