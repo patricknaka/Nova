@@ -1,28 +1,37 @@
-    SELECT znfmd001.t$fili$c         FILIAL,
-           znfmd001.t$dsca$c         NOME_FILIAL,
-           znsls004.t$pecl$c         PEDIDO,
-           znsls004.t$uneg$c         UN_NEGOCIO,
+SELECT znfmd001.t$fili$c            FILIAL,
+           znfmd001.t$dsca$c            NOME_FILIAL,
+           znsls004.t$pecl$c            PEDIDO,
+           znsls004.t$uneg$c            UN_NEGOCIO,
            CASE WHEN znsls400.t$sige$c = 1 
                   THEN znmcs095.t$docn$c 
                 ELSE cisli940.t$docn$l
-           END                       NOTA_ORIGINAL,
+           END                          NOTA_ORIGINAL,
            CASE WHEN znsls400.t$sige$c = 1 
                   THEN znmcs095.t$seri$c
                 ELSE   cisli940.t$seri$l 
-           END                       SERIE_ORIGINAL,
-           tdrec940.t$docn$l         NOTA_ENTRADA,
-           tdrec940.t$seri$l         SERIE_ENTRADA,
-           tdrec940.t$date$l         DATA_FISCAL,
-           TRIM(tdrec941.t$item$l)   ITEM,
-           tcibd001.t$dscb$c         DESCRICAO,
-           znmcs030.t$dsca$c         SETOR,
-           znmcs031.t$dsca$c         FAMILIA,
-           znsls401.t$cmot$c         COD_MOTIVO_DEVOLUCAO,
-           znsls401.t$lmot$c         MOTIVO_DEVOLUCAO,
-           tdrec941.t$qnty$l         QTDE,
-           CMV.mauc_unit             CMV_UNITARIO,
+           END                          SERIE_ORIGINAL,
+           tdrec940.t$docn$l            NOTA_ENTRADA,
+           tdrec940.t$seri$l            SERIE_ENTRADA,
+           tdrec940.t$date$l            DATA_FISCAL,
+           TRIM(tdrec941.t$item$l)      ITEM,
+           tcibd001.t$dscb$c            DESCRICAO,
+           znmcs030.t$dsca$c            SETOR,
+           znmcs031.t$dsca$c            FAMILIA,
+           znsls401.t$ccat$c            COD_LAUDO_CATEGORIA,
+           znsls401.t$lcat$c            DSC_LAUDO_CATEGORIA,
+           znsls401.t$cass$c            COD_LAUDO_ASSUNTO,
+           znsls401.t$lass$c            DSC_LAUDO_ASSUNTO,
+           znsls401.t$cmot$c            COD_MOTIVO_DEVOLUCAO,
+           znsls401.t$lmot$c            MOTIVO_DEVOLUCAO,
+           tdrec941.t$qnty$l            QTDE,
+           CMV.mauc_unit                CMV_UNITARIO,
            CMV.mauc_unit * 
-           tdrec941.t$qnty$l         CMV_TOTAL
+           tdrec941.t$qnty$l            CMV_TOTAL,
+           tdrec940.t$rfdt$l            COD_TP_DOCTO_FISCAL_RECBTO,
+           TP_DOCTO_FISCAL_RECBTO.DSCR  DSC_TP_DOCTO_FISCAL_RECBTO,
+           tdrec940.t$cfrw$l            COD_TRANSPORTADORA,
+           tdrec940.t$cfrn$l            NOM_TRANSPORTADORA,
+           tdrec940.t$lipl$l            PLACA_VEICULO
                             
       FROM baandb.ttdrec941301 tdrec941
 
@@ -122,7 +131,35 @@ INNER JOIN baandb.tznfmd001301 znfmd001
         ON znfmd001.t$fovn$c = tccom130.t$fovn$l
             
  LEFT JOIN baandb.tznsls000301 znsls000
-        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')        
+        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+        
+ LEFT JOIN ( SELECT d.t$cnst CODE,
+                    l.t$desc DSCR
+               FROM baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              WHERE d.t$cpac = 'td'
+                AND d.t$cdom = 'rec.trfd.l'
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'td'
+                AND l.t$clab = d.t$za_clab
+                AND rpad(d.t$vers,4) || '|' ||
+                    rpad(d.t$rele,2) || '|' ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' ||
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv401000 l1
+                                          where l1.t$cpac = d.t$cpac
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) || '|' ||
+                    rpad(l.t$rele,2) || '|' ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' ||
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv140000 l1
+                                          where l1.t$clab = l.t$clab
+                                            and l1.t$clan = l.t$clan
+                                            and l1.t$cpac = l.t$cpac ) ) TP_DOCTO_FISCAL_RECBTO
+        ON TP_DOCTO_FISCAL_RECBTO.CODE = tdrec940.t$rfdt$l
         
 where tdrec940.t$rfdt$l = 10                        --retorno de mercadoria
   AND tdrec941.t$item$l   != znsls000.t$itmf$c      --ITEM FRETE
@@ -141,7 +178,8 @@ where tdrec940.t$rfdt$l = 10                        --retorno de mercadoria
                       and b.t$bpti$c = 2    --Tipo de Interface de Aviso = Arquivo Texto
                       and b.t$nfed$c = 2  ) --Gera Nota Fiscal de Entrada = Nao
   
+
   AND TRUNC(tdrec940.t$date$l)
       Between :DataEntradaDe 
           And :DataEntradaAte
-  AND znfmd001.t$fili$c IN (:filial)
+  AND znfmd001.t$fili$c IN (:Filial)
