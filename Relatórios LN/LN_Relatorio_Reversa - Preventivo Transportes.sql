@@ -1,4 +1,4 @@
-SELECT 
+SELECT DISTINCT 
     CASE WHEN znsls401.t$itpe$c = 15   --REVERSA
            THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -23,7 +23,7 @@ SELECT
                 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
     END                                       DATA_APROVACAO_PEDIDO,
 
-    znfmd001.t$fili$c                         Estabelecimento,
+    znfmd001.t$fili$c                         ESTABELECIMENTO,
     tccom130cnova.t$fovn$l                    CNPJ_NOVA,
     znint002.t$desc$c                         UNIDADE_NEGOCIO,
     znsls401.t$orno$c                         ORDEM_DEVOLUCAO,
@@ -38,7 +38,7 @@ SELECT
     znsls401troca.t$entr$c                    ENTREGA_TROCA,
     znsls002.t$dsca$c                         TIPO_ENTREGA,
     znsls401.t$lass$c                         ASSUNTO,
-    znsls401.t$lmot$c                         Motivo_da_Coleta,
+    znsls401.t$lmot$c                         MOTIVO_DA_COLETA,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_PED.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -126,9 +126,9 @@ SELECT
          ELSE tccom130OV.t$fovn$l 
     END                                       CNPJ_TRANSP_COLETA,
 
-    Trim(znsls401.t$nome$c)                   Nome_Cliente_Coleta,
+    Trim(znsls401.t$nome$c)                   NOME_CLIENTE_COLETA,
 
-    znsls401.t$fovn$c                         CPF_Cliente,
+    znsls401.t$fovn$c                         CPF_CLIENTE,
     znsls401.t$cepe$c                         CEP,
     Trim(znsls401.t$loge$c)                   ENDERECO,
     znsls401.t$nume$c                         NUMERO,
@@ -150,7 +150,7 @@ SELECT
                              ELSE tcibd001.t$dscb$c 
                         END          
                END 
-    END                                       Descricao_do_Item,
+    END                                       DESCRICAO_DO_ITEM,
     Trim(tcmcs023.t$dsca)                     DEPARTAMENTO,
     Trim(znmcs030.t$dsca$c)                   SETOR,
     Trim(tcmcs060.t$dsca)                     FABRICANTE,
@@ -215,17 +215,20 @@ SELECT
            THEN 'Não'
          ELSE   'Sim'  
     END                                       PENDENTE_COLETA,
-
-    tdsls400.t$sotp,
-    tdsls094.t$dsca,
-    ZNSLS401.T$ORNO$C,
     cisli940.t$fire$l                         REF_FISCAL,
 
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CANC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_CANC_COLETA,
     cisli940.t$cnfe$l                         CHAVE_DANFE,
+    znfmd630.t$cono$c                         NUMERO_CONTRATO,
     znfmd060.t$refe$c                         DESCRICAO_CONTRATO,
+    
+    CASE WHEN POSTAGEM.T$PECL$C IS NULL 
+           THEN NULL
+         ELSE znfmd630.t$etiq$c
+    END                                       NUMERO_ETIQUETA,
+    
     CASE WHEN COLETA.t$dtoc$c IS NOT NULL
            THEN 'COL'
          ELSE  ' '  
@@ -240,7 +243,6 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(REC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                               DATA_STATUS_DEVOLUCAO
-
 
 FROM       baandb.tznsls401301 znsls401
 
@@ -310,10 +312,10 @@ INNER JOIN baandb.tznsls400301 znsls400
  LEFT JOIN baandb.ttdsls400301 tdsls400
         ON tdsls400.t$orno = znsls401.t$orno$c
 
-left JOIN baandb.ttcmcs080301 tcmcs080OV
+ LEFT JOIN baandb.ttcmcs080301 tcmcs080OV
         ON tdsls400.t$cfrw=tcmcs080OV.T$CFRW    
         
-left JOIN baandb.ttccom130301 tccom130OV
+ LEFT JOIN baandb.ttccom130301 tccom130OV
         ON tcmcs080OV.T$CADR$L=tccom130OV.t$cadr    
       
    
@@ -648,7 +650,7 @@ left JOIN baandb.ttccom130301 tccom130OV
        AND znmcs096.t$pono$c = cisli245.t$pono
        AND znmcs096.t$ncmp$c = 2    --Faturamento       
 
- LEFT JOIN baandb.tznfmd060301 znfmd060
+ LEFT JOIN baandb.tznfmd060301 znfmd060         --Contrato Transportadora
         ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
        AND znfmd060.t$cono$c = znfmd630.t$cono$c
        
