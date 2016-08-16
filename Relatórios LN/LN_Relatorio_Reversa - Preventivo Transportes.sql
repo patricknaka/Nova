@@ -259,9 +259,16 @@ INNER JOIN baandb.tznsls400301 znsls400
                     r.t$sqpd$c,
                     r.t$entr$c,
                     r.t$sequ$c,
-                    r.t$orno$c,
-                    r.t$pono$c
-               from baandb.tznsls004301 r ) znsls004
+                    MAX(r.t$orno$c) KEEP (DENSE_RANK LAST ORDER BY r.t$date$c) t$orno$c,
+                    MAX(r.t$pono$c) KEEP (DENSE_RANK LAST ORDER BY r.t$date$c) t$pono$c
+               from baandb.tznsls004301 r 
+               group by r.t$date$c,
+                        r.t$ncia$c,
+                        r.t$uneg$c,
+                        r.t$pecl$c,
+                        r.t$sqpd$c,
+                        r.t$entr$c,
+                        r.t$sequ$c) znsls004
         ON znsls004.t$ncia$c = znsls401.t$ncia$c
        AND znsls004.t$uneg$c = znsls401.t$uneg$c
        AND znsls004.t$pecl$c = znsls401.t$pecl$c
@@ -290,8 +297,8 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND ZNSLS409.t$entr$c = znsls401.t$entr$c
     
  LEFT JOIN baandb.tcisli245301 cisli245
-        ON cisli245.t$slso = znsls004.t$orno$c        -- OV de Devolução
-       AND cisli245.t$pono = znsls004.t$pono$c
+        ON cisli245.t$slso = NVL(znsls004.t$orno$c, znsls401.t$orno$c)        -- OV de Devolução
+       AND cisli245.t$pono = NVL(znsls004.t$pono$c, znsls401.t$pono$c)
        
  LEFT JOIN baandb.ttdsls401301  tdsls401
         ON tdsls401.t$orno = cisli245.t$slso
