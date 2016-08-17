@@ -1,145 +1,161 @@
-select
-    nvl(trim(ID_ITEM), 0)       as  ID_ITEM,
-    znint001.t$ncia$c           as  ID_CIA,
-    znfmd001.t$fili$c           as  ESTABELECIMENTO,
-    MAX(ULTIMAATUAL)            as  ULTIMAATUAL,
-    ' '                         as  RESTRICAO,
-    0                           as  PZ_DISP,
-    sum(SCE_QAVA - LN_QOOR)     as  SALDO,
-    'NAO BLOQUEADO'             as  ORIGEM,
-    MAX(VL_CMV)                 as VL_CMV
- from
-       (select  
-          whwmd215.t$cwar       as  LN_CWAR,
-          tcibd001.t$item       as  LN_ITEM,
-          sceinv.sku            as  SCE_SKU,
-          sceinv.status,
-          case
-              when tcibd001.t$espe$c in (2, 3) then tibom010_kit.t$sitm
-              when tcibd001_tik.t$espe$c = 4 then tcibd001_tik.t$item --Tik
-              else tcibd001.t$item
-          end                   as  ID_ITEM,
-          case
-              when tcibd001.t$espe$c in (2, 3) then nvl(sceinv.qtyavailable, 0) * tibom010_kit.t$qana
-              else nvl(sceinv.qtyavailable, 0)
-          end                   as  SCE_QAVA,   
-          CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(whwmd215.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-             AT time zone 'America/Sao_Paulo') AS DATE) 
-                             as ULTIMAATUAL,
-          Q1.mauc               as VL_CMV,
-          (select nvl(sum(tdsls401.t$qoor * tdsls401.t$cvqs), 0)
-            from  baandb.ttdsls401301 tdsls401
-                  inner join  baandb.ttdsls400301 tdsls400  on  tdsls400.t$orno = tdsls401.t$orno
-                  inner join  baandb.ttdsls094301 tdsls094  on  tdsls094.t$sotp = tdsls400.t$sotp
-                  inner join  baandb.ttdsls420301 tdsls420  on  tdsls420.t$orno = tdsls401.t$orno
-                  inner join  baandb.ttdsls090301 tdsls090  on  tdsls090.t$hrea = tdsls420.t$hrea
-            where tdsls401.t$item = tcibd001.t$item
-              and tdsls401.t$cwar = whwmd215.t$cwar
-              and tdsls094.t$reto = 2  -- Retorno = N�o
-              and tdsls090.t$rest$c = 1
-          )                     as LN_QOOR
-         from    
-             baandb.twhwmd215301  whwmd215
-             left outer join WMWHSE5.VNOVAWEBSITEINVENTORY_NEW@DL_LN_WMS sceinv
-                          on sceinv.sku = trim(whwmd215.t$item)
-                         and sceinv.status = 'OK'
-             left outer join baandb.ttcibd001301 tcibd001          on  tcibd001.t$item = whwmd215.t$item
-             left outer join baandb.tznisa002301 znisa002          on  znisa002.t$npcl$c = tcibd001.t$npcl$c
-             left outer join baandb.tznisa001301 znisa001          on  znisa001.t$nptp$c = znisa002.t$nptp$c
-             left outer join baandb.ttibom010301 tibom010_comp     on  tibom010_comp.t$sitm = tcibd001.t$item
-             left outer join baandb.ttcibd001301 tcibd001_comp_pai on  tcibd001_comp_pai.t$item = tibom010_comp.t$mitm
-             left outer join baandb.ttibom010301 tibom010_kit      on  tibom010_kit.t$mitm = tcibd001.t$item
-             left outer join baandb.ttcibd001301 tcibd001_tik      on  tcibd001_tik.t$item = '         ' || sceinv.parentsku
-             left outer join ( SELECT whwmd217.t$item,
-                                      whwmd217.t$cwar,
-                                      case when (max(whwmd215.t$qhnd)) = 0 then 0
-                                      else round(sum(whwmd217.t$mauc$1) / (max(whwmd215.t$qhnd)), 4) 
-                                      end mauc
-                                 FROM baandb.twhwmd217301 whwmd217
-                           INNER JOIN baandb.twhwmd215301 whwmd215
-                                   ON whwmd215.t$cwar = whwmd217.t$cwar
-                                  AND whwmd215.t$item = whwmd217.t$item
-                             GROUP BY whwmd217.t$item, whwmd217.t$cwar) Q1 
-                          on Q1.t$item = whwmd215.t$item 
-                         and Q1.t$cwar = whwmd215.t$cwar 
-         where whwmd215.t$cwar = 'A01200'
-         --and trim (whwmd215.t$item) = '2427561'
-           and nvl(znisa001.t$siit$c, 0) <> 2
-           and tcibd001.t$kitm <> 2
-           and ((tcibd001.t$espe$c in (1, 2, 3)) -- N�o aplic�vel, Kit ou Kit com NF
-            or ( tcibd001.t$espe$c = 6 and tcibd001_comp_pai.t$espe$c = 5 ) -- Minucioso
-            or ( tcibd001_tik.t$espe$c = 4 )) --  Tik
-                 
-       --AND (whwmd215.t$rcd_utc BETWEEN 
-        --to_date('2015-03-06 22:15:13', 'YYYY-MM-DD HH24:MI:SS') AND
-        --to_date('2015-03-06 22:13:39', 'YYYY-MM-DD HH24:MI:SS') )                 
-       )
-       inner join baandb.ttcmcs003301 tcmcs003 on tcmcs003.t$cwar   = 'A01200'
-       inner join baandb.tznint001301 znint001 on znint001.t$comp$c = tcmcs003.t$comp
-       inner join baandb.ttccom130301 tccom130 on tccom130.t$cadr   = tcmcs003.t$cadr 
-       inner join baandb.tznfmd001301 znfmd001 on znfmd001.t$fovn$c = tccom130.t$fovn$l
- group by
-       ID_ITEM,
-       znint001.t$ncia$c,
-       znfmd001.t$fili$c
- 
-UNION 
-  --ESTOQUE CROSSDOCKING
-  SELECT  NVL(TRIM(est.T$ITEM$C), 0) AS ID_ITEM,  
-          int1.T$NCIA$C  AS ID_CIA,  
-          TO_NUMBER(est.T$CWAR$C) AS ESTABELECIMENTO,  
-           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS'),
-            'YYYY-MM-DD HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)       
-                         AS ULTIMAATUAL,                       
-          ' '            AS RESTRICAO,  
-          CASE  
-            WHEN dipu.PRAZO_NEW > est.T$PRIT$C THEN  dipu.PRAZO_NEW   
-            ELSE est.T$PRIT$C END AS PZ_DISP,  
-          est.T$SALD$C,  
-          'CROSSDOCKING' AS ORIGEM,
-          MAX(Q1.mauc)   AS VL_CMV     
-  FROM  
-    BAANDB.TZNWMD200301 est  
-    INNER JOIN BAANDB.TTCIBD001301 item  ON est.T$ITEM$C = item.T$item  
-    LEFT  JOIN BAANDB.TZNISA002301 clas1 ON item.T$NPCL$C = clas1.T$NPCL$C  
-    LEFT  JOIN BAANDB.TZNISA001301 clas2 ON clas1.T$NPTP$C = clas2.T$NPTP$C  
-    INNER JOIN BAANDB.TTCMCS003301 mcs   ON est.T$CWAR$C = mcs.T$CWAR  
-    INNER JOIN BAANDB.TZNINT001301 int1  ON mcs.T$COMP = int1.T$COMP$C  
-    INNER JOIN BAANDB.TTCCOM130301 com   ON mcs.T$CADR = com.T$CADR  
-    LEFT  JOIN BAANDB.TZNFMD001301 fmd   ON com.T$FOVN$L = fmd.T$FOVN$C  
-    LEFT  JOIN (SELECT T$ITEM AS ID_ITEM,  
-                       CASE 
-                        WHEN T$SUTU = 10 THEN T$SUTI  
-                        ELSE CAST(T$SUTI/24 AS NUMERIC(3))  
-                       END  AS PRAZO_NEW  
-                  FROM BAANDB.TTDIPU001301) dipu ON est.T$ITEM$C = dipu.ID_ITEM  
-         
-    LEFT JOIN ( select whwmd217.t$item,
-                       whwmd217.t$cwar,
-                       case when (max(whwmd215.t$qhnd)) = 0 then 0
-                       else round(sum(whwmd217.t$mauc$1)/(max(whwmd215.t$qhnd)), 4) 
-                       end mauc
-                  from baandb.twhwmd217301 whwmd217
-            inner join baandb.twhwmd215301 whwmd215
-                    on whwmd215.t$cwar = whwmd217.t$cwar
-                   and whwmd215.t$item = whwmd217.t$item
-              group by whwmd217.t$item, 
-                       whwmd217.t$cwar ) Q1 
-           ON Q1.t$item = est.T$ITEM$C 
-          AND Q1.t$cwar = est.T$CWAR$C
-  WHERE 1=1  
-    --AND (est.T$RCD_UTC BETWEEN 
-    --to_date('2015-03-06 22:15:13', 'YYYY-MM-DD HH24:MI:SS') AND
-    --to_date('2015-03-06 22:13:39', 'YYYY-MM-DD HH24:MI:SS') ) 
-    AND Nvl(clas2.T$SIIT$C,0) <> 2  
-    AND item.t$kitm <> 2
-  GROUP BY
-    NVL(TRIM(est.T$ITEM$C), 0),
-    int1.T$NCIA$C,
-    TO_NUMBER(est.T$CWAR$C),
-    TO_CHAR(est.T$RCD_UTC, 'YYYY-MM-DD HH24:MI:SS'),
-    CASE  
-      WHEN dipu.PRAZO_NEW > est.T$PRIT$C THEN  dipu.PRAZO_NEW   
-      ELSE est.T$PRIT$C END,  
-    est.T$SALD$C, 
-    'CROSSDOCKING'
+SELECT NVL(TRIM(ID_ITEM), 0) AS ID_ITEM,
+           ID_CIA,
+           ESTABELECIMENTO,
+           MAX(ULTIMAATUAL)      AS ULTIMAATUAL,
+           ' '                   AS RESTRICAO,
+           0                                   AS PZ_DISP,
+           SUM(QTDE)                  AS SALDO,
+           ARMAZEM,
+           'NAO BLOQUEADO'    AS ORIGEM,
+           ' '                                  AS TIPOPRODUTO,
+           MAX(VL_CMV)              AS VL_CMV,
+           DESC_COMPLETA         AS DESC_COMPLETA,    --CAMPO INCLUÍDO
+           DEPARTAMENTO          AS DEPARTAMENTO,     --CAMPO INCLUÍDO
+           SETOR                 AS SETOR             --CAMPO INCLUÍDO
+
+      FROM ( SELECT whwmd215.T$ITEM                                    AS ID_ITEM,
+                    znint001.T$NCIA$C                                  AS ID_CIA,
+                    whwmd215.t$cwar                                    AS ARMAZEM,
+                    znfmd001.T$FILI$C                                  AS ESTABELECIMENTO,
+                    whwmd215.T$QHND - whwmd215.t$qblk
+                    -
+                    ( select NVL(SUM(whinp100.t$qana),0) -- Vendas não bloqueadas
+                        from baandb.twhinp100301 whinp100
+                  inner join baandb.ttdsls401301 tdsls401
+                          on tdsls401.t$orno = whinp100.t$orno
+                         and tdsls401.t$pono = whinp100.t$pono
+                         and tdsls401.t$sqnb = whinp100.t$ponb
+                         and tdsls401.t$clyn = 2       -- Não cancelado
+                         and tdsls401.t$bkyn = 2       -- Não bloqueado
+                       where whinp100.t$item = whwmd215.T$ITEM
+                         and whinp100.t$cwar = whwmd215.T$CWAR
+                         and whinp100.t$koor = 3       -- Ordem de venda
+                         and whinp100.t$kotr = 2       -- Baixa
+                         and whinp100.t$cdis$c = ' ' ) -- Sem restrição
+                    -
+                    ( select nvl(sum(tdsls401.t$qoor * tdsls401.t$cvqs), 0) -- Vendas bloquedas que reservam estoque
+                        from baandb.ttdsls401301 tdsls401
+                  inner join baandb.ttdsls400301 tdsls400 on tdsls400.t$orno = tdsls401.t$orno
+                  inner join baandb.ttdsls094301 tdsls094 on tdsls094.t$sotp = tdsls400.t$sotp
+                  inner join baandb.ttdsls420301 tdsls420 on tdsls420.t$orno = tdsls401.t$orno
+                         and tdsls420.t$pono = 0
+                  inner join baandb.ttdsls090301 tdsls090  on  tdsls090.t$hrea = tdsls420.t$hrea
+                       where tdsls401.t$item = tcibd001.t$item
+                         and tdsls401.t$cwar = whwmd215.t$cwar
+                         and tdsls094.t$reto = 2               -- Retorno = Não
+                         and tdsls090.t$rest$c = 1 )           -- Reserva estoque = Sim
+                                                                        AS QTDE,
+                    TO_CHAR(zninh005.t$data$c, 'YYYY-MM-DD HH24:MI:SS') AS ULTIMAATUAL,
+                    Q1.mauc                                             AS VL_CMV,
+                    tcibd001.t$dscb$c                                   AS DESC_COMPLETA,
+                    tcmcs023.t$dsca                                     AS DEPARTAMENTO,
+                   znmcs030.t$dsca$c                                    AS SETOR
+
+           FROM BAANDB.TWHWMD215301 whwmd215
+     INNER JOIN BAANDB.TTCIBD001301 tcibd001 ON whwmd215.T$ITEM   = tcibd001.T$item
+     INNER JOIN BAANDB.ttcmcs023301 tcmcs023 ON tcibd001.T$CITG    = tcmcs023.T$CITG
+     INNER JOIN BAANDB.TZNMCS030301 znmcs030 ON tcibd001.T$CITG    = znmcs030.T$CITG$C
+     AND  tcibd001.T$SETO$C = znmcs030.t$seto$c
+      LEFT JOIN BAANDB.TZNISA002301 znisa002 ON tcibd001.T$NPCL$C = znisa002.T$NPCL$C
+      LEFT JOIN BAANDB.TZNISA001301 znisa001 ON znisa002.T$NPTP$C = znisa001.T$NPTP$C
+     INNER JOIN BAANDB.TTCMCS003301 tcmcs003 ON whwmd215.T$CWAR   = tcmcs003.T$CWAR
+     INNER JOIN BAANDB.TZNINT001301 znint001 ON tcmcs003.T$COMP   = znint001.T$COMP$C
+     INNER JOIN BAANDB.TTCCOM130301 tccom130 ON tcmcs003.T$CADR   = tccom130.T$CADR
+     INNER JOIN BAANDB.TZNFMD001301 znfmd001 ON tccom130.T$FOVN$L = znfmd001.T$FOVN$C
+LEFT OUTER JOIN BAANDB.TZNINH005301 zninh005 ON zninh005.t$cwar$c = whwmd215.t$cwar
+                                            AND zninh005.t$item$c = whwmd215.t$item
+                                            AND zninh005.t$rest$c = ' '
+LEFT OUTER JOIN ( select whwmd217.t$item,
+                         whwmd217.t$cwar,
+                         case when (max(whwmd215.t$qhnd)) = 0 then 0
+                         else round(sum(whwmd217.t$mauc$1) / (max(whwmd215.t$qhnd)), 4)
+                         end mauc
+                    from baandb.twhwmd217301 whwmd217
+              inner join baandb.twhwmd215301 whwmd215
+                      on whwmd215.t$cwar = whwmd217.t$cwar
+                     and whwmd215.t$item = whwmd217.t$item
+                group by whwmd217.t$item, whwmd217.t$cwar ) Q1
+             ON Q1.t$item = whwmd215.t$item
+            AND Q1.t$cwar = whwmd215.t$cwar
+
+          WHERE NVL(znisa001.T$SIIT$C,0) <> 2 
+            --AND whwmd215.t$cwar in ('A01200')  --Campo foi comentado pois estava limitado para o Armazen A01200
+            AND tcibd001.t$kitm <> 2 
+            AND znfmd001.T$FILI$C in (:Estabelecimento))
+       GROUP BY ID_ITEM,
+                ID_CIA,
+                ESTABELECIMENTO,
+                ARMAZEM,
+                DESC_COMPLETA,
+                DEPARTAMENTO,
+                SETOR
+
+      UNION ALL
+
+   -- Estoque CrossDocking
+         SELECT NVL(TRIM(est.T$ITEM$C), 0)                           AS ID_ITEM,
+                int1.T$NCIA$C                                        AS ID_CIA,
+                TO_NUMBER(est.T$CWAR$C)                              AS ESTABELECIMENTO,
+                TO_CHAR(max(est.T$RCD_UTC), 'YYYY-MM-DD HH24:MI:SS') AS ULTIMAATUAL,
+                ' '                                                  AS RESTRICAO,
+                CASE WHEN dipu.PRAZO_NEW > est.T$PRIT$C
+                       THEN dipu.PRAZO_NEW
+                     ELSE   est.T$PRIT$C
+                END                                                  AS PZ_DISP,
+                sum(est.T$SALD$C)                                    AS SALDO,
+		            ' '                                                  AS ARMAZEM,
+                'CROSSDOCKING'                                       AS ORIGEM,
+                clas1.T$NPTP$C                                       AS TIPOPRODUTO,
+                MAX(Q1.mauc)                                         AS VL_CMV,
+                item.t$dscb$c                                        AS DESC_COMPLETA,
+                tcmcs023.t$dsca                                      AS DEPARTAMENTO,
+                znmcs030.t$dsca$c                                        AS SETOR
+           FROM BAANDB.TZNWMD200301 est
+     INNER JOIN BAANDB.TTCIBD001301 item  ON est.T$ITEM$C = item.T$item
+     INNER JOIN BAANDB.ttcmcs023301 tcmcs023 ON item.T$CITG  = tcmcs023.T$CITG
+     INNER JOIN BAANDB.TZNMCS030301 znmcs030 ON item.T$CITG    = znmcs030.T$CITG$C
+     AND  item.T$SETO$C = znmcs030.t$seto$c
+     LEFT JOIN BAANDB.TZNISA002301 clas1 ON item.T$NPCL$C = clas1.T$NPCL$C
+     LEFT JOIN BAANDB.TZNISA001301 clas2 ON clas1.T$NPTP$C = clas2.T$NPTP$C
+     INNER JOIN BAANDB.TTCMCS003301 mcs   ON est.T$CWAR$C = mcs.T$CWAR
+     INNER JOIN BAANDB.TZNINT001301 int1  ON mcs.T$COMP = int1.T$COMP$C
+     INNER JOIN BAANDB.TTCCOM130301 com   ON mcs.T$CADR = com.T$CADR
+      LEFT JOIN BAANDB.TZNFMD001301 fmd   ON com.T$FOVN$L = fmd.T$FOVN$C
+      LEFT JOIN (SELECT T$ITEM AS ID_ITEM,
+                        CASE WHEN T$SUTU = 10
+                               THEN T$SUTI
+                             ELSE   CAST(T$SUTI/24 AS NUMERIC(3))
+                        END    AS PRAZO_NEW
+                   FROM BAANDB.TTDIPU001301) dipu
+             ON est.T$ITEM$C = dipu.ID_ITEM
+LEFT OUTER JOIN ( select whwmd217.t$item,
+                         whwmd217.t$cwar,
+                         case when (max(whwmd215.t$qhnd)) = 0 then 0
+                         else round(sum(whwmd217.t$mauc$1) / (max(whwmd215.t$qhnd)), 4)
+                         end mauc
+                    from baandb.twhwmd217301 whwmd217
+              inner join baandb.twhwmd215301 whwmd215
+                      on whwmd215.t$cwar = whwmd217.t$cwar
+                     and whwmd215.t$item = whwmd217.t$item
+                group by whwmd217.t$item, whwmd217.t$cwar ) Q1
+             ON Q1.t$item = est.t$item$c
+            AND Q1.t$cwar = est.t$cwar$c
+
+          WHERE Nvl(clas2.T$SIIT$C,0) <> 2
+            AND item.t$kitm <> 2
+    	    AND est.t$eina$c = 2
+			AND TO_NUMBER(est.T$CWAR$C)  in (:Estabelecimento)
+
+       GROUP BY NVL(TRIM(est.T$ITEM$C), 0),
+                int1.T$NCIA$C,
+                ITEM.t$dscb$c,
+                tcmcs023.t$dsca,
+                znmcs030.t$dsca$c,      
+                TO_NUMBER(est.T$CWAR$C),
+                CASE WHEN dipu.PRAZO_NEW > est.T$PRIT$C
+                       THEN dipu.PRAZO_NEW
+                	    ELSE  est.T$PRIT$C
+                END,
+                'CROSSDOCKING',
+                clas1.T$NPTP$C
+       ORDER BY ULTIMAATUAL DESC
