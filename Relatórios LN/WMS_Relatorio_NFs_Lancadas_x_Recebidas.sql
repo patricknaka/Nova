@@ -51,7 +51,8 @@ SELECT DISTINCT
        cisli940.t$cfrw$l             TRANSP_COLETA,                          --32
        tcmcs080.t$dsca               DESCR_TRANSP,                           --33
        MAX(j.ADDWHO)                 OPERADOR_FISCAL,                        --34
-       znsls401.                     PEDIDO_SITE                             --35
+       znsls401.                     PEDIDO_SITE,                            --35
+	   tdrec940.t$lipl$l             PLACA_FORNECEDOR                        --36
         
 FROM       WMWHSE5.RECEIPTDETAIL  d
 
@@ -180,12 +181,12 @@ INNER JOIN ENTERPRISE.SKU SKU
            cisli940.t$date$l,
            cisli940.t$cfrw$l,
            tcmcs080.t$dsca,
-           znsls401.PEDIDO_SITE
+           znsls401.PEDIDO_SITE,
+		   tdrec940.t$lipl$l
         
   ORDER BY ASN, LINHA_ASN 
 
 
-  
   =IIF(Parameters!Table.Value <> "AAA",
   
 "SELECT DISTINCT  " &
@@ -241,19 +242,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    cisli940.t$cfrw$l             TRANSP_COLETA,  " &
 "    tcmcs080.t$dsca               DESCR_TRANSP,  " &
 "    MAX(j.ADDWHO)                 OPERADOR_FISCAL,  " &
-"    znsls401.                     PEDIDO_SITE  " &
+"    znsls401.                     PEDIDO_SITE,  " &
+"    tdrec940.t$lipl$l             PLACA_FORNECEDOR " &
 "FROM       " + Parameters!Table.Value + ".RECEIPTDETAIL  d  " &
-"  " &
 "INNER JOIN " + Parameters!Table.Value + ".RECEIPT  r  " &
 "     ON r.RECEIPTKEY = d.RECEIPTKEY  " &
-"  " &
 "INNER JOIN ENTERPRISE.SKU SKU  " &
 "     ON SKU.SKU = d.SKU  " &
-"  " &
 " LEFT JOIN " + Parameters!Table.Value + ".DEPARTSECTORSKU DEPTO  " &
 "     ON TO_CHAR(DEPTO.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)  " &
 "    AND TO_CHAR(DEPTO.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)  " &
-"  " &
 " LEFT JOIN ( select clkp.code          COD,  " &
 "                 NVL(trans.description,  " &
 "                 clkp.description)  DSC  " &
@@ -266,15 +264,12 @@ INNER JOIN ENTERPRISE.SKU SKU
 "           where clkp.listname = 'RECEIPTYPE'  " &
 "             and Trim(clkp.code) is not null  ) TIPO_REC  " &
 "     ON TIPO_REC.COD = r.TYPE  " &
-"  " &
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "     ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
-"  " &
 " LEFT JOIN baandb.twhinh301301@pln01  whinh301  " &
 "     ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "    AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)  " &
 "    AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
-"  " &
 " LEFT JOIN (select distinct  " &
 "  a.t$ncmp$l,  " &
 "  a.t$oorg$l,  " &
@@ -289,21 +284,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND tdrec947.t$orno$l = whinh301.t$worn  " &
 "    AND tdrec947.t$pono$l = whinh301.t$wpon  " &
 "    AND tdrec947.t$seqn$l = whinh301.t$wsqn  " &
-"  " &
 " LEFT JOIN baandb.ttdrec941301@pln01  tdrec941  " &
 "     ON tdrec941.t$fire$l = tdrec947.t$fire$l  " &
 "    AND tdrec941.t$line$l = tdrec947.t$line$l  " &
-"  " &
 " LEFT JOIN baandb.ttdrec940301@pln01  tdrec940  " &
 "     ON tdrec940.t$fire$l = tdrec941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
 "     ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l  " &
-"  " &
 " LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
 "     ON cisli941.t$fire$l = tdrec941.t$dvrf$c  " &
 "    AND cisli941.t$line$l = tdrec941.t$dvln$c  " &
-"  " &
 " LEFT JOIN ( select sli245.t$fire$l,  " &
 "                 sli245.t$line$l,  " &
 "                 sli245.T$SLSO  " &
@@ -313,28 +303,22 @@ INNER JOIN ENTERPRISE.SKU SKU
 "                 sli245.T$SLSO ) cisli245  " &
 "     ON cisli245.t$fire$l = cisli941.t$fire$l  " &
 "    AND cisli245.t$line$l = cisli941.t$line$l  " &
-"  " &
 " LEFT JOIN ( select sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C PEDIDO_SITE  " &
 "            from baandb.tznsls401301@pln01 sls401  " &
 "        group by sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C )  znsls401  " &
 "     ON Trim(znsls401.T$ORNO$C) = cisli245.T$SLSO  " &
-"  " &
 " LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
 "     ON cisli940.t$fire$l = cisli941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
 "     ON tccom130.t$cadr = tdrec940.t$sfad$l  " &
-"  " &
 " LEFT JOIN " + Parameters!Table.Value + ".RECEIPTSTATUSHISTORY h  " &
 "     ON h.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND h.STATUS = 9  " &
-"  " &
 " LEFT JOIN " + Parameters!Table.Value + ".RECEIPTSTATUSHISTORY j  " &
 "     ON j.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND j.STATUS = 11  " &
-"  " &
 "  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
 "                  AT time zone sessiontimezone) AS DATE))  " &
@@ -344,10 +328,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND (    (Trim(d.RECEIPTKEY) IN ( " + IIF(Trim(Parameters!ASN.Value) = "", "''", "'" + Replace(Replace(Parameters!ASN.Value, " ", ""), ",", "','") + "'")  + " )  " &
 "         AND (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 1) )  " &
-"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "  " &
-"         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
+"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!Qtde_Pecas.Value)  = "", "1", "0") + " = 1) )  " &
-"  " &
 "  GROUP BY d.WHSEID,  " &
 "        cl.UDF2,  " &
 "        d.RECEIPTKEY,  " &
@@ -373,8 +355,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "        cisli940.t$date$l,  " &
 "        cisli940.t$cfrw$l,  " &
 "        tcmcs080.t$dsca,  " &
-"        znsls401.PEDIDO_SITE  " &
-"  " &
+"        znsls401.PEDIDO_SITE,  " &
+"    tdrec940.t$lipl$l      " &
 "ORDER BY DATA_LANCTO, ASN, ITEM "  
   
 ,
@@ -432,19 +414,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    cisli940.t$cfrw$l             TRANSP_COLETA,  " &
 "    tcmcs080.t$dsca               DESCR_TRANSP,  " &
 "    MAX(j.ADDWHO)                 OPERADOR_FISCAL,  " &
-"    znsls401.                     PEDIDO_SITE  " &
+"    znsls401.                     PEDIDO_SITE,  " &
+"    tdrec940.t$lipl$l             PLACA_FORNECEDOR " &
 "FROM       WMWHSE1.RECEIPTDETAIL  d  " &
-"  " &
 "INNER JOIN WMWHSE1.RECEIPT  r  " &
 "     ON r.RECEIPTKEY = d.RECEIPTKEY  " &
-"  " &
 "INNER JOIN ENTERPRISE.SKU SKU  " &
 "     ON SKU.SKU = d.SKU  " &
-"  " &
 " LEFT JOIN WMWHSE1.DEPARTSECTORSKU DEPTO  " &
 "     ON TO_CHAR(DEPTO.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)  " &
 "    AND TO_CHAR(DEPTO.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)  " &
-"  " &
 " LEFT JOIN ( select clkp.code          COD,  " &
 "                 NVL(trans.description,  " &
 "                 clkp.description)  DSC  " &
@@ -457,15 +436,12 @@ INNER JOIN ENTERPRISE.SKU SKU
 "           where clkp.listname = 'RECEIPTYPE'  " &
 "             and Trim(clkp.code) is not null  ) TIPO_REC  " &
 "     ON TIPO_REC.COD = r.TYPE  " &
-"  " &
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "     ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
-"  " &
 " LEFT JOIN baandb.twhinh301301@pln01  whinh301  " &
 "     ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "    AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)  " &
 "    AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
-"  " &
 " LEFT JOIN (select distinct  " &
 "  a.t$ncmp$l,  " &
 "  a.t$oorg$l,  " &
@@ -480,21 +456,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND tdrec947.t$orno$l = whinh301.t$worn  " &
 "    AND tdrec947.t$pono$l = whinh301.t$wpon  " &
 "    AND tdrec947.t$seqn$l = whinh301.t$wsqn  " &
-"  " &
 " LEFT JOIN baandb.ttdrec941301@pln01  tdrec941  " &
 "     ON tdrec941.t$fire$l = tdrec947.t$fire$l  " &
 "    AND tdrec941.t$line$l = tdrec947.t$line$l  " &
-"  " &
 " LEFT JOIN baandb.ttdrec940301@pln01  tdrec940  " &
 "     ON tdrec940.t$fire$l = tdrec941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
 "     ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l  " &
-"  " &
 " LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
 "     ON cisli941.t$fire$l = tdrec941.t$dvrf$c  " &
 "    AND cisli941.t$line$l = tdrec941.t$dvln$c  " &
-"  " &
 " LEFT JOIN ( select sli245.t$fire$l,  " &
 "                 sli245.t$line$l,  " &
 "                 sli245.T$SLSO  " &
@@ -504,28 +475,22 @@ INNER JOIN ENTERPRISE.SKU SKU
 "                 sli245.T$SLSO ) cisli245  " &
 "     ON cisli245.t$fire$l = cisli941.t$fire$l  " &
 "    AND cisli245.t$line$l = cisli941.t$line$l  " &
-"  " &
 " LEFT JOIN ( select sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C PEDIDO_SITE  " &
 "            from baandb.tznsls401301@pln01 sls401  " &
 "        group by sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C )  znsls401  " &
 "     ON Trim(znsls401.T$ORNO$C) = cisli245.T$SLSO  " &
-"  " &
 " LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
 "     ON cisli940.t$fire$l = cisli941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
 "     ON tccom130.t$cadr = tdrec940.t$sfad$l  " &
-"  " &
 " LEFT JOIN WMWHSE1.RECEIPTSTATUSHISTORY h  " &
 "     ON h.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND h.STATUS = 9  " &
-"  " &
 " LEFT JOIN WMWHSE1.RECEIPTSTATUSHISTORY j  " &
 "     ON j.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND j.STATUS = 11  " &
-"  " &
 "  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
 "                  AT time zone sessiontimezone) AS DATE))  " &
@@ -535,10 +500,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND (    (Trim(d.RECEIPTKEY) IN ( " + IIF(Trim(Parameters!ASN.Value) = "", "''", "'" + Replace(Replace(Parameters!ASN.Value, " ", ""), ",", "','") + "'")  + " )  " &
 "         AND (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 1) )  " &
-"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "  " &
-"         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
+"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!Qtde_Pecas.Value)  = "", "1", "0") + " = 1) )  " &
-"  " &
 "  GROUP BY d.WHSEID,  " &
 "        cl.UDF2,  " &
 "        d.RECEIPTKEY,  " &
@@ -564,8 +527,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "        cisli940.t$date$l,  " &
 "        cisli940.t$cfrw$l,  " &
 "        tcmcs080.t$dsca,  " &
-"        znsls401.PEDIDO_SITE  " &
-"  " &
+"        znsls401.PEDIDO_SITE,  " &
+"        tdrec940.t$lipl$l      " &
 "Union  " &
 "SELECT DISTINCT  " &
 "    d.WHSEID                      ARMAZEM,  " &
@@ -620,19 +583,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    cisli940.t$cfrw$l             TRANSP_COLETA,  " &
 "    tcmcs080.t$dsca               DESCR_TRANSP,  " &
 "    MAX(j.ADDWHO)                 OPERADOR_FISCAL,  " &
-"    znsls401.                     PEDIDO_SITE  " &
+"    znsls401.                     PEDIDO_SITE,  " &
+"    tdrec940.t$lipl$l             PLACA_FORNECEDOR " &
 "FROM       WMWHSE2.RECEIPTDETAIL  d  " &
-"  " &
 "INNER JOIN WMWHSE2.RECEIPT  r  " &
 "     ON r.RECEIPTKEY = d.RECEIPTKEY  " &
-"  " &
 "INNER JOIN ENTERPRISE.SKU SKU  " &
 "     ON SKU.SKU = d.SKU  " &
-"  " &
 " LEFT JOIN WMWHSE2.DEPARTSECTORSKU DEPTO  " &
 "     ON TO_CHAR(DEPTO.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)  " &
 "    AND TO_CHAR(DEPTO.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)  " &
-"  " &
 " LEFT JOIN ( select clkp.code          COD,  " &
 "                 NVL(trans.description,  " &
 "                 clkp.description)  DSC  " &
@@ -645,15 +605,12 @@ INNER JOIN ENTERPRISE.SKU SKU
 "           where clkp.listname = 'RECEIPTYPE'  " &
 "             and Trim(clkp.code) is not null  ) TIPO_REC  " &
 "     ON TIPO_REC.COD = r.TYPE  " &
-"  " &
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "     ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
-"  " &
 " LEFT JOIN baandb.twhinh301301@pln01  whinh301  " &
 "     ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "    AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)  " &
 "    AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
-"  " &
 " LEFT JOIN (select distinct  " &
 "  a.t$ncmp$l,  " &
 "  a.t$oorg$l,  " &
@@ -668,21 +625,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND tdrec947.t$orno$l = whinh301.t$worn  " &
 "    AND tdrec947.t$pono$l = whinh301.t$wpon  " &
 "    AND tdrec947.t$seqn$l = whinh301.t$wsqn  " &
-"  " &
 " LEFT JOIN baandb.ttdrec941301@pln01  tdrec941  " &
 "     ON tdrec941.t$fire$l = tdrec947.t$fire$l  " &
 "    AND tdrec941.t$line$l = tdrec947.t$line$l  " &
-"  " &
 " LEFT JOIN baandb.ttdrec940301@pln01  tdrec940  " &
 "     ON tdrec940.t$fire$l = tdrec941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
 "     ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l  " &
-"  " &
 " LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
 "     ON cisli941.t$fire$l = tdrec941.t$dvrf$c  " &
 "    AND cisli941.t$line$l = tdrec941.t$dvln$c  " &
-"  " &
 " LEFT JOIN ( select sli245.t$fire$l,  " &
 "                 sli245.t$line$l,  " &
 "                 sli245.T$SLSO  " &
@@ -692,28 +644,22 @@ INNER JOIN ENTERPRISE.SKU SKU
 "                 sli245.T$SLSO ) cisli245  " &
 "     ON cisli245.t$fire$l = cisli941.t$fire$l  " &
 "    AND cisli245.t$line$l = cisli941.t$line$l  " &
-"  " &
 " LEFT JOIN ( select sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C PEDIDO_SITE  " &
 "            from baandb.tznsls401301@pln01 sls401  " &
 "        group by sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C )  znsls401  " &
 "     ON Trim(znsls401.T$ORNO$C) = cisli245.T$SLSO  " &
-"  " &
 " LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
 "     ON cisli940.t$fire$l = cisli941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
 "     ON tccom130.t$cadr = tdrec940.t$sfad$l  " &
-"  " &
 " LEFT JOIN WMWHSE2.RECEIPTSTATUSHISTORY h  " &
 "     ON h.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND h.STATUS = 9  " &
-"  " &
 " LEFT JOIN WMWHSE2.RECEIPTSTATUSHISTORY j  " &
 "     ON j.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND j.STATUS = 11  " &
-"  " &
 "  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
 "                  AT time zone sessiontimezone) AS DATE))  " &
@@ -723,10 +669,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND (    (Trim(d.RECEIPTKEY) IN ( " + IIF(Trim(Parameters!ASN.Value) = "", "''", "'" + Replace(Replace(Parameters!ASN.Value, " ", ""), ",", "','") + "'")  + " )  " &
 "         AND (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 1) )  " &
-"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "  " &
-"         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
+"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!Qtde_Pecas.Value)  = "", "1", "0") + " = 1) )  " &
-"  " &
 "  GROUP BY d.WHSEID,  " &
 "        cl.UDF2,  " &
 "        d.RECEIPTKEY,  " &
@@ -752,8 +696,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "        cisli940.t$date$l,  " &
 "        cisli940.t$cfrw$l,  " &
 "        tcmcs080.t$dsca,  " &
-"        znsls401.PEDIDO_SITE  " &
-"  " &
+"        znsls401.PEDIDO_SITE,  " &
+"        tdrec940.t$lipl$l      " &
 "Union  " &
 "SELECT DISTINCT  " &
 "    d.WHSEID                      ARMAZEM,  " &
@@ -808,19 +752,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    cisli940.t$cfrw$l             TRANSP_COLETA,  " &
 "    tcmcs080.t$dsca               DESCR_TRANSP,  " &
 "    MAX(j.ADDWHO)                 OPERADOR_FISCAL,  " &
-"    znsls401.                     PEDIDO_SITE  " &
+"    znsls401.                     PEDIDO_SITE,  " &
+"    tdrec940.t$lipl$l             PLACA_FORNECEDOR " &
 "FROM       WMWHSE3.RECEIPTDETAIL  d  " &
-"  " &
 "INNER JOIN WMWHSE3.RECEIPT  r  " &
 "     ON r.RECEIPTKEY = d.RECEIPTKEY  " &
-"  " &
 "INNER JOIN ENTERPRISE.SKU SKU  " &
 "     ON SKU.SKU = d.SKU  " &
-"  " &
 " LEFT JOIN WMWHSE3.DEPARTSECTORSKU DEPTO  " &
 "     ON TO_CHAR(DEPTO.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)  " &
 "    AND TO_CHAR(DEPTO.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)  " &
-"  " &
 " LEFT JOIN ( select clkp.code          COD,  " &
 "                 NVL(trans.description,  " &
 "                 clkp.description)  DSC  " &
@@ -833,15 +774,12 @@ INNER JOIN ENTERPRISE.SKU SKU
 "           where clkp.listname = 'RECEIPTYPE'  " &
 "             and Trim(clkp.code) is not null  ) TIPO_REC  " &
 "     ON TIPO_REC.COD = r.TYPE  " &
-"  " &
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "     ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
-"  " &
 " LEFT JOIN baandb.twhinh301301@pln01  whinh301  " &
 "     ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "    AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)  " &
 "    AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
-"  " &
 " LEFT JOIN (select distinct  " &
 "  a.t$ncmp$l,  " &
 "  a.t$oorg$l,  " &
@@ -856,21 +794,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND tdrec947.t$orno$l = whinh301.t$worn  " &
 "    AND tdrec947.t$pono$l = whinh301.t$wpon  " &
 "    AND tdrec947.t$seqn$l = whinh301.t$wsqn  " &
-"  " &
 " LEFT JOIN baandb.ttdrec941301@pln01  tdrec941  " &
 "     ON tdrec941.t$fire$l = tdrec947.t$fire$l  " &
 "    AND tdrec941.t$line$l = tdrec947.t$line$l  " &
-"  " &
 " LEFT JOIN baandb.ttdrec940301@pln01  tdrec940  " &
 "     ON tdrec940.t$fire$l = tdrec941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
 "     ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l  " &
-"  " &
 " LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
 "     ON cisli941.t$fire$l = tdrec941.t$dvrf$c  " &
 "    AND cisli941.t$line$l = tdrec941.t$dvln$c  " &
-"  " &
 " LEFT JOIN ( select sli245.t$fire$l,  " &
 "                 sli245.t$line$l,  " &
 "                 sli245.T$SLSO  " &
@@ -880,28 +813,22 @@ INNER JOIN ENTERPRISE.SKU SKU
 "                 sli245.T$SLSO ) cisli245  " &
 "     ON cisli245.t$fire$l = cisli941.t$fire$l  " &
 "    AND cisli245.t$line$l = cisli941.t$line$l  " &
-"  " &
 " LEFT JOIN ( select sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C PEDIDO_SITE  " &
 "            from baandb.tznsls401301@pln01 sls401  " &
 "        group by sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C )  znsls401  " &
 "     ON Trim(znsls401.T$ORNO$C) = cisli245.T$SLSO  " &
-"  " &
 " LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
 "     ON cisli940.t$fire$l = cisli941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
 "     ON tccom130.t$cadr = tdrec940.t$sfad$l  " &
-"  " &
 " LEFT JOIN WMWHSE3.RECEIPTSTATUSHISTORY h  " &
 "     ON h.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND h.STATUS = 9  " &
-"  " &
 " LEFT JOIN WMWHSE3.RECEIPTSTATUSHISTORY j  " &
 "     ON j.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND j.STATUS = 11  " &
-"  " &
 "  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
 "                  AT time zone sessiontimezone) AS DATE))  " &
@@ -911,10 +838,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND (    (Trim(d.RECEIPTKEY) IN ( " + IIF(Trim(Parameters!ASN.Value) = "", "''", "'" + Replace(Replace(Parameters!ASN.Value, " ", ""), ",", "','") + "'")  + " )  " &
 "         AND (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 1) )  " &
-"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "  " &
-"         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
+"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!Qtde_Pecas.Value)  = "", "1", "0") + " = 1) )  " &
-"  " &
 "  GROUP BY d.WHSEID,  " &
 "        cl.UDF2,  " &
 "        d.RECEIPTKEY,  " &
@@ -940,8 +865,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "        cisli940.t$date$l,  " &
 "        cisli940.t$cfrw$l,  " &
 "        tcmcs080.t$dsca,  " &
-"        znsls401.PEDIDO_SITE  " &
-"  " &
+"        znsls401.PEDIDO_SITE,  " &
+"        tdrec940.t$lipl$l      " &
 "Union  " &
 "SELECT DISTINCT  " &
 "    d.WHSEID                      ARMAZEM,  " &
@@ -996,19 +921,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    cisli940.t$cfrw$l             TRANSP_COLETA,  " &
 "    tcmcs080.t$dsca               DESCR_TRANSP,  " &
 "    MAX(j.ADDWHO)                 OPERADOR_FISCAL,  " &
-"    znsls401.                     PEDIDO_SITE  " &
+"    znsls401.                     PEDIDO_SITE,  " &
+"    tdrec940.t$lipl$l             PLACA_FORNECEDOR " &
 "FROM       WMWHSE4.RECEIPTDETAIL  d  " &
-"  " &
 "INNER JOIN WMWHSE4.RECEIPT  r  " &
 "     ON r.RECEIPTKEY = d.RECEIPTKEY  " &
-"  " &
 "INNER JOIN ENTERPRISE.SKU SKU  " &
 "     ON SKU.SKU = d.SKU  " &
-"  " &
 " LEFT JOIN WMWHSE4.DEPARTSECTORSKU DEPTO  " &
 "     ON TO_CHAR(DEPTO.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)  " &
 "    AND TO_CHAR(DEPTO.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)  " &
-"  " &
 " LEFT JOIN ( select clkp.code          COD,  " &
 "                 NVL(trans.description,  " &
 "                 clkp.description)  DSC  " &
@@ -1021,15 +943,12 @@ INNER JOIN ENTERPRISE.SKU SKU
 "           where clkp.listname = 'RECEIPTYPE'  " &
 "             and Trim(clkp.code) is not null  ) TIPO_REC  " &
 "     ON TIPO_REC.COD = r.TYPE  " &
-"  " &
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "     ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
-"  " &
 " LEFT JOIN baandb.twhinh301301@pln01  whinh301  " &
 "     ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "    AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)  " &
 "    AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
-"  " &
 " LEFT JOIN (select distinct  " &
 "  a.t$ncmp$l,  " &
 "  a.t$oorg$l,  " &
@@ -1044,21 +963,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND tdrec947.t$orno$l = whinh301.t$worn  " &
 "    AND tdrec947.t$pono$l = whinh301.t$wpon  " &
 "    AND tdrec947.t$seqn$l = whinh301.t$wsqn  " &
-"  " &
 " LEFT JOIN baandb.ttdrec941301@pln01  tdrec941  " &
 "     ON tdrec941.t$fire$l = tdrec947.t$fire$l  " &
 "    AND tdrec941.t$line$l = tdrec947.t$line$l  " &
-"  " &
 " LEFT JOIN baandb.ttdrec940301@pln01  tdrec940  " &
 "     ON tdrec940.t$fire$l = tdrec941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
 "     ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l  " &
-"  " &
 " LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
 "     ON cisli941.t$fire$l = tdrec941.t$dvrf$c  " &
 "    AND cisli941.t$line$l = tdrec941.t$dvln$c  " &
-"  " &
 " LEFT JOIN ( select sli245.t$fire$l,  " &
 "                 sli245.t$line$l,  " &
 "                 sli245.T$SLSO  " &
@@ -1068,28 +982,22 @@ INNER JOIN ENTERPRISE.SKU SKU
 "                 sli245.T$SLSO ) cisli245  " &
 "     ON cisli245.t$fire$l = cisli941.t$fire$l  " &
 "    AND cisli245.t$line$l = cisli941.t$line$l  " &
-"  " &
 " LEFT JOIN ( select sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C PEDIDO_SITE  " &
 "            from baandb.tznsls401301@pln01 sls401  " &
 "        group by sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C )  znsls401  " &
 "     ON Trim(znsls401.T$ORNO$C) = cisli245.T$SLSO  " &
-"  " &
 " LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
 "     ON cisli940.t$fire$l = cisli941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
 "     ON tccom130.t$cadr = tdrec940.t$sfad$l  " &
-"  " &
 " LEFT JOIN WMWHSE4.RECEIPTSTATUSHISTORY h  " &
 "     ON h.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND h.STATUS = 9  " &
-"  " &
 " LEFT JOIN WMWHSE4.RECEIPTSTATUSHISTORY j  " &
 "     ON j.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND j.STATUS = 11  " &
-"  " &
 "  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
 "                  AT time zone sessiontimezone) AS DATE))  " &
@@ -1099,10 +1007,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND (    (Trim(d.RECEIPTKEY) IN ( " + IIF(Trim(Parameters!ASN.Value) = "", "''", "'" + Replace(Replace(Parameters!ASN.Value, " ", ""), ",", "','") + "'")  + " )  " &
 "         AND (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 1) )  " &
-"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "  " &
-"         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
+"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!Qtde_Pecas.Value)  = "", "1", "0") + " = 1) )  " &
-"  " &
 "  GROUP BY d.WHSEID,  " &
 "        cl.UDF2,  " &
 "        d.RECEIPTKEY,  " &
@@ -1128,8 +1034,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "        cisli940.t$date$l,  " &
 "        cisli940.t$cfrw$l,  " &
 "        tcmcs080.t$dsca,  " &
-"        znsls401.PEDIDO_SITE  " &
-"  " &
+"        znsls401.PEDIDO_SITE,  " &
+"        tdrec940.t$lipl$l      " &
 "Union  " &
 "SELECT DISTINCT  " &
 "    d.WHSEID                      ARMAZEM,  " &
@@ -1184,19 +1090,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    cisli940.t$cfrw$l             TRANSP_COLETA,  " &
 "    tcmcs080.t$dsca               DESCR_TRANSP,  " &
 "    MAX(j.ADDWHO)                 OPERADOR_FISCAL,  " &
-"    znsls401.                     PEDIDO_SITE  " &
+"    znsls401.                     PEDIDO_SITE,  " &
+"    tdrec940.t$lipl$l             PLACA_FORNECEDOR " &
 "FROM       WMWHSE5.RECEIPTDETAIL  d  " &
-"  " &
 "INNER JOIN WMWHSE5.RECEIPT  r  " &
 "     ON r.RECEIPTKEY = d.RECEIPTKEY  " &
-"  " &
 "INNER JOIN ENTERPRISE.SKU SKU  " &
 "     ON SKU.SKU = d.SKU  " &
-"  " &
 " LEFT JOIN WMWHSE5.DEPARTSECTORSKU DEPTO  " &
 "     ON TO_CHAR(DEPTO.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)  " &
 "    AND TO_CHAR(DEPTO.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)  " &
-"  " &
 " LEFT JOIN ( select clkp.code          COD,  " &
 "                 NVL(trans.description,  " &
 "                 clkp.description)  DSC  " &
@@ -1209,15 +1112,12 @@ INNER JOIN ENTERPRISE.SKU SKU
 "           where clkp.listname = 'RECEIPTYPE'  " &
 "             and Trim(clkp.code) is not null  ) TIPO_REC  " &
 "     ON TIPO_REC.COD = r.TYPE  " &
-"  " &
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "     ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
-"  " &
 " LEFT JOIN baandb.twhinh301301@pln01  whinh301  " &
 "     ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "    AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)  " &
 "    AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
-"  " &
 " LEFT JOIN (select distinct  " &
 "  a.t$ncmp$l,  " &
 "  a.t$oorg$l,  " &
@@ -1232,21 +1132,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND tdrec947.t$orno$l = whinh301.t$worn  " &
 "    AND tdrec947.t$pono$l = whinh301.t$wpon  " &
 "    AND tdrec947.t$seqn$l = whinh301.t$wsqn  " &
-"  " &
 " LEFT JOIN baandb.ttdrec941301@pln01  tdrec941  " &
 "     ON tdrec941.t$fire$l = tdrec947.t$fire$l  " &
 "    AND tdrec941.t$line$l = tdrec947.t$line$l  " &
-"  " &
 " LEFT JOIN baandb.ttdrec940301@pln01  tdrec940  " &
 "     ON tdrec940.t$fire$l = tdrec941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
 "     ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l  " &
-"  " &
 " LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
 "     ON cisli941.t$fire$l = tdrec941.t$dvrf$c  " &
 "    AND cisli941.t$line$l = tdrec941.t$dvln$c  " &
-"  " &
 " LEFT JOIN ( select sli245.t$fire$l,  " &
 "                 sli245.t$line$l,  " &
 "                 sli245.T$SLSO  " &
@@ -1256,28 +1151,22 @@ INNER JOIN ENTERPRISE.SKU SKU
 "                 sli245.T$SLSO ) cisli245  " &
 "     ON cisli245.t$fire$l = cisli941.t$fire$l  " &
 "    AND cisli245.t$line$l = cisli941.t$line$l  " &
-"  " &
 " LEFT JOIN ( select sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C PEDIDO_SITE  " &
 "            from baandb.tznsls401301@pln01 sls401  " &
 "        group by sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C )  znsls401  " &
 "     ON Trim(znsls401.T$ORNO$C) = cisli245.T$SLSO  " &
-"  " &
 " LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
 "     ON cisli940.t$fire$l = cisli941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
 "     ON tccom130.t$cadr = tdrec940.t$sfad$l  " &
-"  " &
 " LEFT JOIN WMWHSE5.RECEIPTSTATUSHISTORY h  " &
 "     ON h.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND h.STATUS = 9  " &
-"  " &
 " LEFT JOIN WMWHSE5.RECEIPTSTATUSHISTORY j  " &
 "     ON j.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND j.STATUS = 11  " &
-"  " &
 "  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
 "                  AT time zone sessiontimezone) AS DATE))  " &
@@ -1287,10 +1176,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND (    (Trim(d.RECEIPTKEY) IN ( " + IIF(Trim(Parameters!ASN.Value) = "", "''", "'" + Replace(Replace(Parameters!ASN.Value, " ", ""), ",", "','") + "'")  + " )  " &
 "         AND (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 1) )  " &
-"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "  " &
-"         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
+"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!Qtde_Pecas.Value)  = "", "1", "0") + " = 1) )  " &
-"  " &
 "  GROUP BY d.WHSEID,  " &
 "        cl.UDF2,  " &
 "        d.RECEIPTKEY,  " &
@@ -1316,8 +1203,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "        cisli940.t$date$l,  " &
 "        cisli940.t$cfrw$l,  " &
 "        tcmcs080.t$dsca,  " &
-"        znsls401.PEDIDO_SITE  " &
-"  " &
+"        znsls401.PEDIDO_SITE,  " &
+"        tdrec940.t$lipl$l    " &
 "Union  " &
 "SELECT DISTINCT  " &
 "    d.WHSEID                      ARMAZEM,  " &
@@ -1372,19 +1259,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    cisli940.t$cfrw$l             TRANSP_COLETA,  " &
 "    tcmcs080.t$dsca               DESCR_TRANSP,  " &
 "    MAX(j.ADDWHO)                 OPERADOR_FISCAL,  " &
-"    znsls401.                     PEDIDO_SITE  " &
+"    znsls401.                     PEDIDO_SITE,  " &
+"    tdrec940.t$lipl$l             PLACA_FORNECEDOR " &
 "FROM       WMWHSE6.RECEIPTDETAIL  d  " &
-"  " &
 "INNER JOIN WMWHSE6.RECEIPT  r  " &
 "     ON r.RECEIPTKEY = d.RECEIPTKEY  " &
-"  " &
 "INNER JOIN ENTERPRISE.SKU SKU  " &
 "     ON SKU.SKU = d.SKU  " &
-"  " &
 " LEFT JOIN WMWHSE6.DEPARTSECTORSKU DEPTO  " &
 "     ON TO_CHAR(DEPTO.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)  " &
 "    AND TO_CHAR(DEPTO.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)  " &
-"  " &
 " LEFT JOIN ( select clkp.code          COD,  " &
 "                 NVL(trans.description,  " &
 "                 clkp.description)  DSC  " &
@@ -1397,15 +1281,12 @@ INNER JOIN ENTERPRISE.SKU SKU
 "           where clkp.listname = 'RECEIPTYPE'  " &
 "             and Trim(clkp.code) is not null  ) TIPO_REC  " &
 "     ON TIPO_REC.COD = r.TYPE  " &
-"  " &
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "     ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
-"  " &
 " LEFT JOIN baandb.twhinh301301@pln01  whinh301  " &
 "     ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "    AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)  " &
 "    AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
-"  " &
 " LEFT JOIN (select distinct  " &
 "  a.t$ncmp$l,  " &
 "  a.t$oorg$l,  " &
@@ -1420,21 +1301,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND tdrec947.t$orno$l = whinh301.t$worn  " &
 "    AND tdrec947.t$pono$l = whinh301.t$wpon  " &
 "    AND tdrec947.t$seqn$l = whinh301.t$wsqn  " &
-"  " &
 " LEFT JOIN baandb.ttdrec941301@pln01  tdrec941  " &
 "     ON tdrec941.t$fire$l = tdrec947.t$fire$l  " &
 "    AND tdrec941.t$line$l = tdrec947.t$line$l  " &
-"  " &
 " LEFT JOIN baandb.ttdrec940301@pln01  tdrec940  " &
 "     ON tdrec940.t$fire$l = tdrec941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
 "     ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l  " &
-"  " &
 " LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
 "     ON cisli941.t$fire$l = tdrec941.t$dvrf$c  " &
 "    AND cisli941.t$line$l = tdrec941.t$dvln$c  " &
-"  " &
 " LEFT JOIN ( select sli245.t$fire$l,  " &
 "                 sli245.t$line$l,  " &
 "                 sli245.T$SLSO  " &
@@ -1444,28 +1320,22 @@ INNER JOIN ENTERPRISE.SKU SKU
 "                 sli245.T$SLSO ) cisli245  " &
 "     ON cisli245.t$fire$l = cisli941.t$fire$l  " &
 "    AND cisli245.t$line$l = cisli941.t$line$l  " &
-"  " &
 " LEFT JOIN ( select sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C PEDIDO_SITE  " &
 "            from baandb.tznsls401301@pln01 sls401  " &
 "        group by sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C )  znsls401  " &
 "     ON Trim(znsls401.T$ORNO$C) = cisli245.T$SLSO  " &
-"  " &
 " LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
 "     ON cisli940.t$fire$l = cisli941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
 "     ON tccom130.t$cadr = tdrec940.t$sfad$l  " &
-"  " &
 " LEFT JOIN WMWHSE6.RECEIPTSTATUSHISTORY h  " &
 "     ON h.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND h.STATUS = 9  " &
-"  " &
 " LEFT JOIN WMWHSE6.RECEIPTSTATUSHISTORY j  " &
 "     ON j.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND j.STATUS = 11  " &
-"  " &
 "  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
 "                  AT time zone sessiontimezone) AS DATE))  " &
@@ -1475,10 +1345,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND (    (Trim(d.RECEIPTKEY) IN ( " + IIF(Trim(Parameters!ASN.Value) = "", "''", "'" + Replace(Replace(Parameters!ASN.Value, " ", ""), ",", "','") + "'")  + " )  " &
 "         AND (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 1) )  " &
-"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "  " &
-"         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
+"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!Qtde_Pecas.Value)  = "", "1", "0") + " = 1) )  " &
-"  " &
 "  GROUP BY d.WHSEID,  " &
 "        cl.UDF2,  " &
 "        d.RECEIPTKEY,  " &
@@ -1504,8 +1372,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "        cisli940.t$date$l,  " &
 "        cisli940.t$cfrw$l,  " &
 "        tcmcs080.t$dsca,  " &
-"        znsls401.PEDIDO_SITE  " &
-"  " &
+"        znsls401.PEDIDO_SITE,  " &
+"        tdrec940.t$lipl$l    " &
 "Union  " &
 "SELECT DISTINCT  " &
 "    d.WHSEID                      ARMAZEM,  " &
@@ -1560,19 +1428,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    cisli940.t$cfrw$l             TRANSP_COLETA,  " &
 "    tcmcs080.t$dsca               DESCR_TRANSP,  " &
 "    MAX(j.ADDWHO)                 OPERADOR_FISCAL,  " &
-"    znsls401.                     PEDIDO_SITE  " &
+"    znsls401.                     PEDIDO_SITE,  " &
+"    tdrec940.t$lipl$l             PLACA_FORNECEDOR " &
 "FROM       WMWHSE7.RECEIPTDETAIL  d  " &
-"  " &
 "INNER JOIN WMWHSE7.RECEIPT  r  " &
 "     ON r.RECEIPTKEY = d.RECEIPTKEY  " &
-"  " &
 "INNER JOIN ENTERPRISE.SKU SKU  " &
 "     ON SKU.SKU = d.SKU  " &
-"  " &
 " LEFT JOIN WMWHSE7.DEPARTSECTORSKU DEPTO  " &
 "     ON TO_CHAR(DEPTO.ID_DEPART) = TO_CHAR(SKU.SKUGROUP)  " &
 "    AND TO_CHAR(DEPTO.ID_SECTOR) = TO_CHAR(SKU.SKUGROUP2)  " &
-"  " &
 " LEFT JOIN ( select clkp.code          COD,  " &
 "                 NVL(trans.description,  " &
 "                 clkp.description)  DSC  " &
@@ -1585,15 +1450,12 @@ INNER JOIN ENTERPRISE.SKU SKU
 "           where clkp.listname = 'RECEIPTYPE'  " &
 "             and Trim(clkp.code) is not null  ) TIPO_REC  " &
 "     ON TIPO_REC.COD = r.TYPE  " &
-"  " &
 " LEFT JOIN ENTERPRISE.CODELKUP cl  " &
 "     ON UPPER(cl.UDF1) = UPPER(r.WHSEID)  " &
-"  " &
 " LEFT JOIN baandb.twhinh301301@pln01  whinh301  " &
 "     ON whinh301.t$sfbp = SUBSTR(d.EXTERNRECEIPTKEY,3,9)  " &
 "    AND whinh301.t$shid = SUBSTR(d.EXTERNRECEIPTKEY,13,9)  " &
 "    AND TO_CHAR(whinh301.t$shsq) = TO_CHAR(d.EXTERNLINENO)  " &
-"  " &
 " LEFT JOIN (select distinct  " &
 "  a.t$ncmp$l,  " &
 "  a.t$oorg$l,  " &
@@ -1608,21 +1470,16 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND tdrec947.t$orno$l = whinh301.t$worn  " &
 "    AND tdrec947.t$pono$l = whinh301.t$wpon  " &
 "    AND tdrec947.t$seqn$l = whinh301.t$wsqn  " &
-"  " &
 " LEFT JOIN baandb.ttdrec941301@pln01  tdrec941  " &
 "     ON tdrec941.t$fire$l = tdrec947.t$fire$l  " &
 "    AND tdrec941.t$line$l = tdrec947.t$line$l  " &
-"  " &
 " LEFT JOIN baandb.ttdrec940301@pln01  tdrec940  " &
 "     ON tdrec940.t$fire$l = tdrec941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttcmcs080301@pln01 tcmcs080  " &
 "     ON tcmcs080.t$cfrw = tdrec940.t$cfrw$l  " &
-"  " &
 " LEFT JOIN baandb.tcisli941301@pln01 cisli941  " &
 "     ON cisli941.t$fire$l = tdrec941.t$dvrf$c  " &
 "    AND cisli941.t$line$l = tdrec941.t$dvln$c  " &
-"  " &
 " LEFT JOIN ( select sli245.t$fire$l,  " &
 "                 sli245.t$line$l,  " &
 "                 sli245.T$SLSO  " &
@@ -1632,28 +1489,22 @@ INNER JOIN ENTERPRISE.SKU SKU
 "                 sli245.T$SLSO ) cisli245  " &
 "     ON cisli245.t$fire$l = cisli941.t$fire$l  " &
 "    AND cisli245.t$line$l = cisli941.t$line$l  " &
-"  " &
 " LEFT JOIN ( select sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C PEDIDO_SITE  " &
 "            from baandb.tznsls401301@pln01 sls401  " &
 "        group by sls401.T$ORNO$C,  " &
 "                 sls401.T$PECL$C )  znsls401  " &
 "     ON Trim(znsls401.T$ORNO$C) = cisli245.T$SLSO  " &
-"  " &
 " LEFT JOIN baandb.tcisli940301@pln01 cisli940  " &
 "     ON cisli940.t$fire$l = cisli941.t$fire$l  " &
-"  " &
 " LEFT JOIN baandb.ttccom130301@pln01 tccom130  " &
 "     ON tccom130.t$cadr = tdrec940.t$sfad$l  " &
-"  " &
 " LEFT JOIN WMWHSE7.RECEIPTSTATUSHISTORY h  " &
 "     ON h.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND h.STATUS = 9  " &
-"  " &
 " LEFT JOIN WMWHSE7.RECEIPTSTATUSHISTORY j  " &
 "     ON j.RECEIPTKEY = d.RECEIPTKEY  " &
 "    AND j.STATUS = 11  " &
-"  " &
 "  WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(d.DATERECEIVED,  " &
 "                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')" &
 "                  AT time zone sessiontimezone) AS DATE))  " &
@@ -1663,10 +1514,8 @@ INNER JOIN ENTERPRISE.SKU SKU
 "    AND (    (Trim(d.RECEIPTKEY) IN ( " + IIF(Trim(Parameters!ASN.Value) = "", "''", "'" + Replace(Replace(Parameters!ASN.Value, " ", ""), ",", "','") + "'")  + " )  " &
 "         AND (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!ASN.Value) = "", "1", "0") + " = 1) )  " &
-"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "  " &
-"         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
+"    AND (    (tdrec941.t$qnty$l = " + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "''", Parameters!Qtde_Pecas.Value)  + "         AND (" + IIF(Trim(Parameters!Qtde_Pecas.Value) = "", "1", "0") + " = 0))  " &
 "          OR (" + IIF(Trim(Parameters!Qtde_Pecas.Value)  = "", "1", "0") + " = 1) )  " &
-"  " &
 "  GROUP BY d.WHSEID,  " &
 "        cl.UDF2,  " &
 "        d.RECEIPTKEY,  " &
@@ -1692,8 +1541,7 @@ INNER JOIN ENTERPRISE.SKU SKU
 "        cisli940.t$date$l,  " &
 "        cisli940.t$cfrw$l,  " &
 "        tcmcs080.t$dsca,  " &
-"        znsls401.PEDIDO_SITE  " &
-"  " &
+"        znsls401.PEDIDO_SITE,  " &
+"        tdrec940.t$lipl$l    " &
 "ORDER BY DESC_ARMAZEM, DATA_LANCTO, ASN, ITEM "
-
 )
