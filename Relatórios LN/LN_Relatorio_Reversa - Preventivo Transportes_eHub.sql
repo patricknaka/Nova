@@ -742,6 +742,10 @@ WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataPedidoDe
           And :DataPedidoAte
+ AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'),  
+              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))   
+      Between :DataDevolucaoDe 
+          And :DataDevolucaoAte 
   AND znsls401.t$uneg$c IN (:UnidNegocio)
   AND znsls401.t$itpe$c IN (:TipoEntrega)
   AND CASE WHEN znsls409.t$lbrd$c = 1 OR
@@ -989,9 +993,16 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "                    r.t$sqpd$c,   "  &
 "                    r.t$entr$c,   "  &
 "                    r.t$sequ$c,   "  &
-"                    r.t$orno$c,   "  &
-"                    r.t$pono$c    "  &
-"                from baandb.tznsls004" + Parameters!Compania.Value + " r ) znsls004  " &
+"                    MAX(r.t$orno$c) KEEP (DENSE_RANK LAST ORDER BY r.t$date$c) t$orno$c,   "  &
+"                    MAX(r.t$pono$c) KEEP (DENSE_RANK LAST ORDER BY r.t$date$c) t$pono$c    "  &
+"                from baandb.tznsls004" + Parameters!Compania.Value + " r   " &
+"				 group by r.t$date$c,  " &
+"						  r.t$ncia$c,  " &
+"						  r.t$uneg$c,  " &
+"						  r.t$pecl$c,  " &
+"						  r.t$sqpd$c,  " &
+"						  r.t$entr$c,  " &
+"						  r.t$sequ$c) znsls004  " &
 "        ON znsls004.t$ncia$c = znsls401.t$ncia$c  "  &
 "       AND znsls004.t$uneg$c = znsls401.t$uneg$c  "  &
 "       AND znsls004.t$pecl$c = znsls401.t$pecl$c  "  &
@@ -1018,8 +1029,8 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "       AND ZNSLS409.t$sqpd$c = znsls401.t$sqpd$c  "  &
 "       AND ZNSLS409.t$entr$c = znsls401.t$entr$c  "  &
 " LEFT JOIN baandb.tcisli245" + Parameters!Compania.Value + " cisli245    "  &
-"        ON cisli245.t$slso = znsls004.t$orno$c    "  &
-"       AND cisli245.t$pono = znsls004.t$pono$c    "  &
+"        ON cisli245.t$slso = NVL(znsls004.t$orno$c, znsls401.t$orno$c)    "  &
+"       AND cisli245.t$pono = NVL(znsls004.t$pono$c, znsls401.t$pono$c)    "  &
 " LEFT JOIN baandb.ttdsls401" + Parameters!Compania.Value + "  tdsls401   "  &
 "        ON tdsls401.t$orno = cisli245.t$slso      "  &
 "       AND tdsls401.t$pono = cisli245.t$pono      "  &
@@ -1410,6 +1421,10 @@ ORDER BY DATA_SOL_COLETA_POSTAGEM,
 "              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))    "  &
 "      Between :DataPedidoDe  " &
 "           And :DataPedidoAte  " &
+"   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'),    "  &
+"              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))    "  &
+"      Between :DataDevolucaoDe  " &
+"           And :DataDevolucaoAte  " &
 "   AND znsls401.t$itpe$c IN (" + JOIN(Parameters!TipoEntrega.Value, ", ") + ")  " &
 "   AND Trim(tcibd001.t$citg) IN (" + Replace(("'" + JOIN(Parameters!Depto.Value,"',") + "'"),",",",'") + ")  " &
 "   AND znmcs002.t$poco$c IN (" + Replace(("'" + JOIN(Parameters!Status.Value,"',") + "'"),",",",'") + ")  " &
