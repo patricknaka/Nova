@@ -1,6 +1,8 @@
 select 
         znfmd630.t$ncar$c     CARGA,
         znfmd630.t$pecl$c     ENTREGA,
+        znsls401.t$ufen$c     UF,
+        znsls401.t$cide$c     CIDADE,
         cisli940.t$docn$l     NOTA,
         cisli940.t$seri$l     SERIE,
         znfmd001.t$fili$c     FILIAL,
@@ -23,6 +25,9 @@ inner join baandb.tznfmd001301 znfmd001
 inner join baandb.tznfmd630301 znfmd630
        on znfmd630.t$fire$c = cisli940.t$fire$l
        
+inner join baandb.tznsls401301  znsls401
+        on to_char(znsls401.t$entr$c) = znfmd630.t$pecl$c 
+       
 inner join baandb.ttcmcs080301 tcmcs080
        on tcmcs080.t$cfrw = cisli940.t$cfrw$l
 
@@ -38,3 +43,4 @@ left join ( select  max(a.t$date$c) t$date$c,
        
 where cisli940.t$stat$l IN (5,6)
 and   cisli940.t$fdty$l not in (14)
+and znfmd630.t$ncar$c in (:Carga)
