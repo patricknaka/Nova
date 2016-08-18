@@ -80,9 +80,9 @@ SELECT
          ELSE ''
     END                  PERIODO,
  
-    CASE WHEN Trunc(tdsls401.t$prdt) <= TO_DATE('01/01/1970','DD/MM/YYYY')
+    CASE WHEN Trunc(znsls401.t$dtep$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')
            THEN NULL 
-         ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.t$prdt, 'DD-MON-YYYY HH24:MI:SS'),
+         ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'),
                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
     END                  DATA_PROMETIDA, 
 
@@ -92,9 +92,9 @@ SELECT
                 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
     END                  DATA_CORRIGIDA,
 
-    CASE WHEN TRUNC(znfmd630.t$dtpe$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')
+    CASE WHEN TRUNC(tdsls400.t$prdt) <= TO_DATE('01/01/1970','DD/MM/YYYY')
            THEN NULL
-         ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtpe$c, 'DD-MON-YYYY HH24:MI:SS'),
+         ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'),
                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
     END                  DATA_PREVISTA,
 
@@ -423,9 +423,9 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "          ELSE ''  " &
 "     END                  PERIODO,  " &
 " 	  " &
-"     CASE WHEN Trunc(tdsls401.t$prdt) <= TO_DATE('01/01/1970','DD/MM/YYYY')  " &
+"     CASE WHEN Trunc(znsls401.t$dtep$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')  " &
 "            THEN NULL	  " &
-"          ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.t$prdt, 'DD-MON-YYYY HH24:MI:SS'),  " &
+"          ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "     END                  DATA_PROMETIDA,	  " &
 "  " &
@@ -435,9 +435,9 @@ INNER JOIN baandb.ttcmcs080601  tcmcs080
 "                 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "     END                  DATA_CORRIGIDA,  " &
 "  " &
-"     CASE WHEN TRUNC(znfmd630.t$dtpe$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')  " &
+"     CASE WHEN TRUNC(tdsls400.t$prdt) <= TO_DATE('01/01/1970','DD/MM/YYYY')  " &
 "            THEN NULL  " &
-"          ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtpe$c, 'DD-MON-YYYY HH24:MI:SS'),  " &
+"          ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 'DD-MON-YYYY HH24:MI:SS'),  " &
 "                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "     END                  DATA_PREVISTA,  " &
 "  " &
