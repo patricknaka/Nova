@@ -23,6 +23,9 @@ select
         tcmcs080.t$dsca       NOME_TRANSPORTADORA,
         znsls401.t$uneg$c     UN_NEGOCIO,
         znsls401.t$pecl$c     PEDIDO,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+          AT time zone 'America/Sao_Paulo') AS DATE)     
+                              DATA_PEDIDO,
         znsls401.t$entr$c     ENTREGA,
         znsls410.t$poco$c     ULT_PONTO,
         znmcs002.t$desc$c     DESC_ULT_PONTO,
@@ -157,4 +160,8 @@ where not exists ( select *
                    and   a.t$etiq$c = znfmd630.t$etiq$c
                    and   a.t$coci$c = 'ENT' )
 and znsls401.valor > 0
-        
+and Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 
+           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+             AT time zone 'America/Sao_Paulo') AS DATE)) 
+           Between :DataPedidoDe 
+               And :DataPedidoAte
