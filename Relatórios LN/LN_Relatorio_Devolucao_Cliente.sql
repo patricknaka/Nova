@@ -165,10 +165,7 @@ where tdrec940.t$rfdt$l = 10                        --retorno de mercadoria
   AND tdrec941.t$item$l   != znsls000.t$itmf$c      --ITEM FRETE
   AND tdrec941.t$item$l   != znsls000.t$itmd$c      --ITEM DESPESAS
   AND tdrec941.t$item$l   != znsls000.t$itjl$c      --ITEM JUROS
-  AND NOT EXISTS ( select 1
-                     from baandb.tznsls410301 znsls410
-                    where znsls410.t$poco$c = 'INS'
-                      and znsls410.t$pecl$c = znsls004.t$pecl$c )
+  
   AND NOT EXISTS ( select *     --ITENS TIPO GARANTIA ESTENDIDA
                      from baandb.tznisa002301 a,
                           baandb.tznisa001301 b
@@ -177,7 +174,6 @@ where tdrec940.t$rfdt$l = 10                        --retorno de mercadoria
                       and b.t$emnf$c = 2    --Emissao de Nota Fiscal = Nao
                       and b.t$bpti$c = 2    --Tipo de Interface de Aviso = Arquivo Texto
                       and b.t$nfed$c = 2  ) --Gera Nota Fiscal de Entrada = Nao
-  
 
   AND TRUNC(tdrec940.t$date$l)
       Between :DataEntradaDe 
