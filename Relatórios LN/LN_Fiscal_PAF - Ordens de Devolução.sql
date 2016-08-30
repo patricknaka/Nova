@@ -9,16 +9,16 @@ SELECT
     TDSLS400.T$SOTP                                   TIPO_ORDEM,
     TDSLS094.T$DSCA                                   DESCR_ORDEM,
     D_HDST.DSC                                        STATUS_ORDEM,
-    CASE WHEN znsls400.t$sige$c = 1 
-           THEN znmcs095.t$docn$c
+  CASE WHEN znsls400.t$sige$c = 1 and znsls410.t$poco$c not in ('INS') THEN
+            znmcs095.t$docn$c
          ELSE CISLI940_ORG.T$DOCN$L 
     END                                               NF_VENDA,
-    CASE WHEN znsls400.t$sige$c = 1 
-           THEN znmcs095.t$seri$c
+      CASE WHEN znsls400.t$sige$c = 1 and znsls410.t$poco$c not in ('INS') THEN
+           znmcs095.t$seri$c
          ELSE CISLI940_ORG.T$SERI$L
     END                                               SERIE_VENDA,
-    CASE WHEN znsls400.t$sige$c = 1 
-           THEN znmcs095.t$trdt$C
+      CASE WHEN znsls400.t$sige$c = 1 and znsls410.t$poco$c not in ('INS') THEN
+            znmcs095.t$trdt$C
          ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940_ORG.T$DATE$L, 
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
                     AT time zone 'America/Sao_Paulo') AS DATE)    
@@ -64,6 +64,7 @@ INNER JOIN ( select a.t$ncia$c,
                     a.t$uneg$c,
                     a.t$pecl$c,
                     a.t$sqpd$c,
+                    a.t$entr$c,
                     a.t$orno$c
                from baandb.tznsls004301 a
            group by a.t$ncia$c,
@@ -153,7 +154,21 @@ INNER JOIN (SELECT DISTINCT
         ON tdrec947.t$ncmp$l = 301
        AND tdrec947.t$oorg$l = 1   --Venda
        AND tdrec947.t$orno$l = tdsls400.t$orno
-
+       
+LEFT JOIN ( select  a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    a.t$poco$c
+            from    baandb.tznsls410301 a
+            where   a.t$poco$c = 'INS' ) znsls410     --Quando há insucesso na entrega, o Ln grava o mesmo sequencial
+      ON  znsls410.t$ncia$c = znsls004.t$ncia$c       --do pedido na entrega de devolucao na znsls004. 
+     AND  znsls410.t$uneg$c = znsls004.t$uneg$c       --Desta forma, nao e possivel encontrar a entrega de devolucao.
+     AND  znsls410.t$pecl$c = znsls004.t$pecl$c       
+     AND  znsls410.t$sqpd$c = znsls004.t$sqpd$c       --Vide pedido 1/5/99970207
+     AND  znsls410.t$entr$c = znsls004.t$entr$c       
+       
  LEFT JOIN baandb.ttdrec940301 tdrec940_rec
         ON tdrec940_rec.t$fire$l = tdrec947.t$fire$l
 
