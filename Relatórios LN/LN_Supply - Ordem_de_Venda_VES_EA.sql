@@ -5,6 +5,7 @@ SELECT
     tccom130b.t$fovn$l    CNPJ_FILIAL,
     znsls401.t$entr$c     NUME_PEDIDO_ENTREGA,
     znsls401.t$orno$c     NUME_OV_LN,
+    OVENDA.STATUS         STATUS_OV,
 	CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,  --ALTERADO
       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)
@@ -43,6 +44,13 @@ SELECT
         
     Trim(tdsls401.t$item) CODE_ITEM,
     tcibd001.t$dsca       DECR_ITEM,
+    
+    CASE WHEN tcibd001.t$csig = 'REA' OR tcibd001.t$csig = ' ' THEN 'Ativo'
+                     WHEN tcibd001.t$csig = 'CAN'                          THEN 'Cancelado'
+                     WHEN tcibd001.t$csig = 'SUS'                          THEN 'Suspenso'
+                     WHEN tcibd001.t$csig = '001'                          THEN 'Verificacao Fiscal' 
+                END       SITUACAO_ITEM,  -- SDP 1192090
+                
     znsls401.t$pzfo$c     TEMP_REPOS, 
     znsls401.t$qtve$c     QUAN_ORD,
     
@@ -268,6 +276,34 @@ INNER JOIN baandb.tznint002301 znint002
                                            and l1.t$clan = l.t$clan 
                                            and l1.t$cpac = l.t$cpac ) ) iTIPOXD
         ON iTIPOXD.CODE = tdipu001.t$ixdn$c
+        
+LEFT JOIN ( select  l.t$desc STATUS,
+                      d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'td'
+                and d.t$cdom = 'sls.hdst'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'td'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) OVENDA
+        ON OVENDA.t$cnst = tdsls400.t$hdst		
     
 WHERE tcemm124.t$dtyp = 1 
   AND whinp100.t$koor = 3 
