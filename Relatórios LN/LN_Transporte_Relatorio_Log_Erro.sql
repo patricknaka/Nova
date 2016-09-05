@@ -21,16 +21,18 @@ select  *  from
            prec.t$docn$l   N_CTE,
            prec.t$seri$l   S_CTE,
            prec.t$cnfe$l   CTE,
-           ordf.t$orno$c   Ordem,
-           substr(ordf.t$pecl$c,0,length(ordf.t$pecl$c)-2)   PEDIDO,
-           ordf.t$docn$c                                     N_NF,
-           ordf.t$seri$c                                     S_NF,
+           nvl(ordf.t$orno$c,cisli245.t$slso)                Ordem,
+           nvl(substr(ordf.t$pecl$c,0,length(ordf.t$pecl$c)-2), znsls004.t$pecl$c)   
+                                                             PEDIDO,
+           nvl(ordf.t$docn$c,cisli940.t$docn$l)              N_NF,
+           nvl(ordf.t$seri$c,cisli940.t$seri$l)              S_NF,
            refc.t$cnfe$l                                     NFE,
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(prec.t$idat$l,  
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  
                AT time zone 'America/Sao_Paulo') AS DATE)    DT_EMISSAO_PRE_REC,
           
-           ULT_OCOR.PONTO                                    STATUS
+           ULT_OCOR.PONTO                                    STATUS,
+           prec.t$fdot$l        ENTRADA_SAIDA
 
       from baandb.tznnfe004301 logrec
   
@@ -40,9 +42,46 @@ inner join baandb.tbrnfe940301 Prec
 inner join baandb.tbrnfe944301 refc
         on refc.t$fire$l = Prec.t$fire$l
         
-left join baandb.tznfmd630301 ordf
-        on ordf.t$cnfe$c = refc.t$cnfe$l
+left join ( select a.t$fire$l,
+                   a.t$slso
+            from baandb.tcisli245301 a
+            where a.t$ortp = 1
+              and a.t$koor = 3
+            group by a.t$fire$l,
+                     a.t$slso ) cisli245
+       on cisli245.t$fire$l = prec.t$fire$l
+       
+left join baandb.tcisli940301 cisli940
+       on cisli940.t$fire$l = cisli245.t$fire$l
 
+left join ( select a.t$fire$c,
+                   a.t$orno$c,
+                   a.t$docn$c,
+                   a.t$seri$c,
+                   a.t$fili$c,
+                   a.t$pecl$c,
+                   min(a.t$etiq$c) t$etiq$c
+             from baandb.tznfmd630301 a 
+             group by a.t$fire$c,
+                      a.t$orno$c,
+                      a.t$docn$c,
+                      a.t$seri$c,
+                      a.t$fili$c,
+                      a.t$pecl$c) ordf
+        on ordf.t$fire$c =  refc.t$fire$l
+       and ordf.t$orno$c = cisli245.t$SLSO
+
+left join ( select a.t$ncia$c,
+                   a.t$uneg$c,
+                   a.t$pecl$c,
+                   a.t$orno$c
+            from   baandb.tznsls004301 a
+            group by a.t$ncia$c,
+                     a.t$uneg$c,
+                     a.t$pecl$c,
+                     a.t$orno$c ) znsls004
+        on znsls004.t$orno$c = cisli245.t$slso
+        
 inner join baandb.ttccom130301 tccom130
         on tccom130.t$fovn$l = Prec.t$fovn$l
        
@@ -82,13 +121,14 @@ left join ( SELECT znfmd640d.t$coci$c  PONTO,
            prec.t$docn$l,  
            prec.t$seri$l,  
            prec.t$cnfe$l,  
-           ordf.t$orno$c,  
-           ordf.t$pecl$c,  
-           ordf.t$docn$c,  
-           ordf.t$seri$c,  
+           nvl(ordf.t$orno$c,cisli245.t$slso),  
+           nvl(substr(ordf.t$pecl$c,0,length(ordf.t$pecl$c)-2), znsls004.t$pecl$c),  
+           nvl(ordf.t$docn$c,cisli940.t$docn$l),  
+           nvl(ordf.t$seri$c,cisli940.t$seri$l),  
            refc.t$cnfe$l,  
            logrec.t$seqn$c,  
-           prec.t$idat$l,  
+           prec.t$idat$l,
+           prec.t$fdot$l,   
            ULT_OCOR.PONTO   
   order by prec.t$fire$l desc
   )
@@ -117,16 +157,18 @@ left join ( SELECT znfmd640d.t$coci$c  PONTO,
            prec.t$docn$l   N_CTE,
            prec.t$seri$l   S_CTE,
            prec.t$cnfe$l   CTE,
-           ordf.t$orno$c   Ordem,
-           substr(ordf.t$pecl$c,0,length(ordf.t$pecl$c)-2)   PEDIDO,
-           ordf.t$docn$c                                     N_NF,
-           ordf.t$seri$c                                     S_NF,
+           nvl(ordf.t$orno$c,cisli245.t$slso)                 Ordem,
+           nvl(substr(ordf.t$pecl$c,0,length(ordf.t$pecl$c)-2), znsls004.t$pecl$c)   
+                                                             PEDIDO,
+           nvl(ordf.t$docn$c,cisli940.t$docn$l)              N_NF,
+           nvl(ordf.t$seri$c,cisli940.t$seri$l)              S_NF,
            refc.t$cnfe$l                                     NFE,
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(prec.t$idat$l,  
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  
                AT time zone 'America/Sao_Paulo') AS DATE)    DT_EMISSAO_PRE_REC,
           
-           ULT_OCOR.PONTO                                    STATUS
+           ULT_OCOR.PONTO                                    STATUS,
+           prec.t$fdot$l       ENTRADA_SAIDA
 
       from baandb.tznnfe004301 logrec
   
@@ -136,9 +178,46 @@ inner join baandb.tbrnfe940301 Prec
 inner join baandb.tbrnfe944301 refc
         on refc.t$fire$l = Prec.t$fire$l
         
-left join baandb.tznfmd630301 ordf
-        on ordf.t$cnfe$c = refc.t$cnfe$l
+left join ( select a.t$fire$l,
+                   a.t$slso
+            from baandb.tcisli245301 a
+            where a.t$ortp = 1
+              and a.t$koor = 3
+            group by a.t$fire$l,
+                     a.t$slso ) cisli245
+       on cisli245.t$fire$l = prec.t$fire$l
 
+left join ( select a.t$ncia$c,
+                   a.t$uneg$c,
+                   a.t$pecl$c,
+                   a.t$orno$c
+            from   baandb.tznsls004301 a
+            group by a.t$ncia$c,
+                     a.t$uneg$c,
+                     a.t$pecl$c,
+                     a.t$orno$c ) znsls004
+        on znsls004.t$orno$c = cisli245.t$slso
+        
+left join baandb.tcisli940301 cisli940
+       on cisli940.t$fire$l = cisli245.t$fire$l
+       
+left join ( select a.t$fire$c,
+                   a.t$orno$c,
+                   a.t$docn$c,
+                   a.t$seri$c,
+                   a.t$fili$c,
+                   a.t$pecl$c,
+                   min(a.t$etiq$c) t$etiq$c
+             from baandb.tznfmd630301 a 
+             group by a.t$fire$c,
+                      a.t$orno$c,
+                      a.t$docn$c,
+                      a.t$seri$c,
+                      a.t$fili$c,
+                      a.t$pecl$c ) ordf
+        on ordf.t$fire$c =  refc.t$fire$l
+       and ordf.t$orno$c = cisli245.t$SLSO
+      
 inner join baandb.ttccom130301 tccom130
         on tccom130.t$fovn$l = Prec.t$fovn$l
        
@@ -169,7 +248,7 @@ left join ( SELECT znfmd640d.t$coci$c  PONTO,
                    and Prec.t$stpr$c in (2,3)
                    and logrec.t$line$c = 1
                    and logrec.t$seqn$c = 1
-         group by tcmcs080.t$cfrw,  
+         group by tcmcs080.t$cfrw, 
            Prec.t$fovn$l,  
            Prec.t$fids$l,  
            Prec.t$fire$l,  
@@ -178,11 +257,12 @@ left join ( SELECT znfmd640d.t$coci$c  PONTO,
            prec.t$docn$l,  
            prec.t$seri$l,  
            prec.t$cnfe$l,  
-           ordf.t$orno$c,  
-           ordf.t$pecl$c,  
-           ordf.t$docn$c,  
-           ordf.t$seri$c,  
+           nvl(ordf.t$orno$c,cisli245.t$slso),  
+           nvl(substr(ordf.t$pecl$c,0,length(ordf.t$pecl$c)-2), znsls004.t$pecl$c),  
+           nvl(ordf.t$docn$c,cisli940.t$docn$l),  
+           nvl(ordf.t$seri$c,cisli940.t$seri$l),  
            refc.t$cnfe$l,  
            logrec.t$seqn$c,  
-           prec.t$idat$l,  
-           ULT_OCOR.PONTO) 
+           prec.t$idat$l,
+           prec.t$fdot$l,
+           ULT_OCOR.PONTO)
