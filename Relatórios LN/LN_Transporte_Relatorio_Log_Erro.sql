@@ -31,8 +31,8 @@ select  *  from
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  
                AT time zone 'America/Sao_Paulo') AS DATE)    DT_EMISSAO_PRE_REC,
           
-           ULT_OCOR.PONTO                                    STATUS,
-           prec.t$fdot$l        ENTRADA_SAIDA
+           ULT_OCOR.PONTO                                    STATUS
+--           prec.t$fdot$l        ENTRADA_SAIDA
 
       from baandb.tznnfe004301 logrec
   
@@ -41,6 +41,10 @@ inner join baandb.tbrnfe940301 Prec
         
 inner join baandb.tbrnfe944301 refc
         on refc.t$fire$l = Prec.t$fire$l
+
+left join baandb.tcisli940301 cisli940
+       on cisli940.t$cnfe$l = refc.t$cnfe$l
+      and cisli940.t$cnfe$l != ' '
         
 left join ( select a.t$fire$l,
                    a.t$slso
@@ -49,12 +53,10 @@ left join ( select a.t$fire$l,
               and a.t$koor = 3
             group by a.t$fire$l,
                      a.t$slso ) cisli245
-       on cisli245.t$fire$l = prec.t$fire$l
-       
-left join baandb.tcisli940301 cisli940
-       on cisli940.t$fire$l = cisli245.t$fire$l
+       on cisli245.t$fire$l = cisli940.t$fire$l
 
 left join ( select a.t$fire$c,
+                   a.t$cnfe$c,
                    a.t$orno$c,
                    a.t$docn$c,
                    a.t$seri$c,
@@ -63,13 +65,15 @@ left join ( select a.t$fire$c,
                    min(a.t$etiq$c) t$etiq$c
              from baandb.tznfmd630301 a 
              group by a.t$fire$c,
+                      a.t$cnfe$c,
                       a.t$orno$c,
                       a.t$docn$c,
                       a.t$seri$c,
                       a.t$fili$c,
                       a.t$pecl$c) ordf
-        on ordf.t$fire$c =  refc.t$fire$l
-       and ordf.t$orno$c = cisli245.t$SLSO
+        on ordf.t$cnfe$c = refc.t$cnfe$l
+       and ordf.t$cnfe$c != ' '
+--       and ordf.t$orno$c = cisli245.t$SLSO
 
 left join ( select a.t$ncia$c,
                    a.t$uneg$c,
@@ -167,8 +171,8 @@ left join ( SELECT znfmd640d.t$coci$c  PONTO,
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  
                AT time zone 'America/Sao_Paulo') AS DATE)    DT_EMISSAO_PRE_REC,
           
-           ULT_OCOR.PONTO                                    STATUS,
-           prec.t$fdot$l       ENTRADA_SAIDA
+           ULT_OCOR.PONTO                                    STATUS
+--           prec.t$fdot$l       ENTRADA_SAIDA
 
       from baandb.tznnfe004301 logrec
   
@@ -177,7 +181,11 @@ inner join baandb.tbrnfe940301 Prec
         
 inner join baandb.tbrnfe944301 refc
         on refc.t$fire$l = Prec.t$fire$l
-        
+
+left join baandb.tcisli940301 cisli940
+       on cisli940.t$cnfe$l = refc.t$cnfe$l
+      and cisli940.t$cnfe$l != ' '
+       
 left join ( select a.t$fire$l,
                    a.t$slso
             from baandb.tcisli245301 a
@@ -185,7 +193,7 @@ left join ( select a.t$fire$l,
               and a.t$koor = 3
             group by a.t$fire$l,
                      a.t$slso ) cisli245
-       on cisli245.t$fire$l = prec.t$fire$l
+       on cisli245.t$fire$l = cisli940.t$fire$l
 
 left join ( select a.t$ncia$c,
                    a.t$uneg$c,
@@ -197,11 +205,9 @@ left join ( select a.t$ncia$c,
                      a.t$pecl$c,
                      a.t$orno$c ) znsls004
         on znsls004.t$orno$c = cisli245.t$slso
-        
-left join baandb.tcisli940301 cisli940
-       on cisli940.t$fire$l = cisli245.t$fire$l
        
 left join ( select a.t$fire$c,
+                   a.t$cnfe$c,
                    a.t$orno$c,
                    a.t$docn$c,
                    a.t$seri$c,
@@ -210,14 +216,16 @@ left join ( select a.t$fire$c,
                    min(a.t$etiq$c) t$etiq$c
              from baandb.tznfmd630301 a 
              group by a.t$fire$c,
+                      a.t$cnfe$c,
                       a.t$orno$c,
                       a.t$docn$c,
                       a.t$seri$c,
                       a.t$fili$c,
                       a.t$pecl$c ) ordf
-        on ordf.t$fire$c =  refc.t$fire$l
-       and ordf.t$orno$c = cisli245.t$SLSO
-      
+        on ordf.t$cnfe$c = refc.t$cnfe$l
+--       and ordf.t$orno$c = cisli245.t$SLSO
+       and ordf.t$cnfe$c != ' '
+       
 inner join baandb.ttccom130301 tccom130
         on tccom130.t$fovn$l = Prec.t$fovn$l
        
