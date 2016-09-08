@@ -1,4 +1,4 @@
-SELECT 
+SELECT    
     FILIAL.DSC_FILIAL                              FILIAL,
     cisli940.t$docn$l                              NF,
     cisli940.t$seri$l                              SERIE,
@@ -69,17 +69,20 @@ SELECT
                 where cisli943.t$fire$l = cisli941.t$fire$l
                   and cisli943.t$line$l = cisli941.t$line$l
                   and cisli943.t$brty$l = 6 ), 0) )VL_COFINS,
-       
-    cisli940.t$itbp$l                              ID_CLIENTE,
-    cisli940.t$itbn$l                              NOME_CLIENTE,
-    tccom130.t$namc                                ENDERECO,
-    tccom130.t$dist$l                              BAIRRO,
-    tccom130.t$pstc                                CEP,
-    tccom130.t$dsca                                MUNICIPIO,
-    tccom130.t$cste                                UF,
-    tccom130.t$telp                                TEL1,
-    tccom130.t$telx                                TEL2,
-    tccom130.t$enfs$l                              EMAIL,
+    case when cisli940.t$itbp$l = ' ' then
+        cisli940.t$ifbp$l
+    else  cisli940.t$itbp$l end                    ID_CLIENTE,
+    case when cisli940.t$itbn$l = ' ' then
+          cisli940.t$ifbn$l
+    else  cisli940.t$itbn$l end                    NOME_CLIENTE,
+    nvl(tccom130.t$namc,tccom130d.t$namc)          ENDERECO,
+    nvl(tccom130.t$dist$l,tccom130d.t$dist$l)      BAIRRO,
+    nvl(tccom130.t$pstc,tccom130d.t$pstc)          CEP,
+    nvl(tccom130.t$dsca,tccom130d.t$dsca)          MUNICIPIO,
+    nvl(tccom130.t$cste,tccom130d.t$cste)          UF,
+    nvl(tccom130.t$telp,tccom130d.t$telp)          TEL1,
+    nvl(tccom130.t$telx,tccom130d.t$telx)          TEL2,
+    nvl(tccom130.t$enfs$l,tccom130d.t$enfs$l)       EMAIL,
     cisli940.t$fdtc$l                              ID_TIPO_DOC_FIS,
     tcmcs966.t$dsca$l                              DESCR_TIPO_DOC_FIS,
     FGET.DESC_TIPO_DOCTO                           DESC_TIPO_DOCTO,
@@ -121,9 +124,13 @@ INNER JOIN baandb.tcisli941301 cisli941
         ON Q1.t$item = cisli941.t$item$l 
        AND Q1.t$cwar = cisli941.t$cwar$l
   
-INNER JOIN baandb.tcisli245301 cisli245
+ LEFT JOIN baandb.tcisli245301 cisli245                --era INNER
         ON cisli245.t$fire$l = cisli941.t$fire$l
        AND cisli245.t$line$l = cisli941.t$line$l
+
+ LEFT JOIN baandb.tcisli951301 cisli951             --Devolucao de fornecedor
+        ON cisli951.t$fire$l = cisli941.t$fire$l
+       AND cisli941.t$line$l = cisli941.t$line$l
 
  LEFT JOIN baandb.tznsls401301 znsls401
         ON znsls401.t$orno$c = cisli245.t$slso
@@ -139,9 +146,12 @@ INNER JOIN baandb.tcisli245301 cisli245
        AND znsls400.t$pecl$c = znsls401.t$pecl$c
        AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
   
-INNER JOIN baandb.ttccom130301 tccom130
+LEFT JOIN baandb.ttccom130301 tccom130       
         ON tccom130.t$cadr  = cisli940.t$itoa$l
-  
+
+LEFT JOIN baandb.ttccom130301 tccom130d              --NOTAS DE DEVOLUCAO VENDA/COMPRA
+        ON tccom130d.t$cadr  = cisli940.t$IFBA$l
+        
 INNER JOIN baandb.ttcibd001301 tcibd001
         ON tcibd001.t$item  = cisli941.t$item$l
   
@@ -180,34 +190,33 @@ INNER JOIN baandb.ttcibd001301 tcibd001
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) FGET
         ON cisli940.t$fdty$l = FGET.CNST
-
-     
-INNER JOIN WMWHSE5.ORDERS@DL_LN_WMS WMS_OA_ORDERS_SH
-        ON SUBSTR(WMS_OA_ORDERS_SH.EXTERNORDERKEY,5,9) = CISLI245.T$SHPM
+  
+LEFT JOIN WMWHSE8.ORDERS@DL_LN_WMS WMS_OA_ORDERS_SH  
+        ON SUBSTR(WMS_OA_ORDERS_SH.EXTERNORDERKEY,5,9) = nvl(CISLI245.T$SHPM,cisli951.t$shpm$l)
                
  LEFT JOIN ( select MAX(a.ORDERKEY) ORDERKEY,
                     MAX(a.TYPE) TYPE,
                     a.REFERENCEDOCUMENT
-               from WMWHSE5.ORDERS@DL_LN_WMS a 
+               from WMWHSE8.ORDERS@DL_LN_WMS a 
              group by a.REFERENCEDOCUMENT ) WMS_OA_ORDERS_OA
-        ON SUBSTR(WMS_OA_ORDERS_OA.REFERENCEDOCUMENT,4,9) = CISLI245.T$SLSO       
+        ON SUBSTR(WMS_OA_ORDERS_OA.REFERENCEDOCUMENT,4,9) = nvl(CISLI245.T$SLSO,cisli951.t$slso$l)       
         
   LEFT JOIN ( select MAX(a.ORDERKEY) ORDERKEY,
                      MAX(a.TYPE) TYPE,
                      a.REFERENCEDOCUMENT
-                from WMWHSE5.ORDERS@DL_LN_WMS a
+                from WMWHSE8.ORDERS@DL_LN_WMS a
             group by a.REFERENCEDOCUMENT ) WMS_OA_ORDERS_OV
-         ON WMS_OA_ORDERS_OV.REFERENCEDOCUMENT = CISLI245.T$SLSO
+         ON WMS_OA_ORDERS_OV.REFERENCEDOCUMENT = nvl(CISLI245.T$SLSO,cisli951.t$slso$l)
         
- LEFT JOIN WMWHSE5.CODELKUP@DL_LN_WMS CODELKUP_SH
+ LEFT JOIN WMWHSE8.CODELKUP@DL_LN_WMS CODELKUP_SH
         ON CODELKUP_SH.LISTNAME = 'ORDERTYPE'
        AND CODELKUP_SH.CODE = WMS_OA_ORDERS_SH.TYPE
        
- LEFT JOIN WMWHSE5.CODELKUP@DL_LN_WMS CODELKUP_OA
+ LEFT JOIN WMWHSE8.CODELKUP@DL_LN_WMS CODELKUP_OA
         ON CODELKUP_OA.LISTNAME = 'ORDERTYPE'
        AND CODELKUP_OA.CODE = WMS_OA_ORDERS_OA.TYPE
 
- LEFT JOIN WMWHSE5.CODELKUP@DL_LN_WMS CODELKUP_OV
+ LEFT JOIN WMWHSE8.CODELKUP@DL_LN_WMS CODELKUP_OV
         ON CODELKUP_OV.LISTNAME = 'ORDERTYPE'
        AND CODELKUP_OV.CODE = WMS_OA_ORDERS_OV.TYPE
        
@@ -220,7 +229,9 @@ WHERE cisli940.t$fdty$l NOT IN  (11, 14)
   AND cisli941.t$item$l != znsls000.t$itmd$c
   AND cisli941.t$item$l != znsls000.t$itmf$c
   AND cisli941.t$item$l != znsls000.t$itjl$c
-  
+
+--and cisli940.t$fire$l = '004247034'
+
   AND FILIAL.CHAVE_FILIAL = :Filial
 
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
@@ -260,22 +271,32 @@ GROUP BY FILIAL.DSC_FILIAL,
                 THEN round(tdsls401.t$pric,2) 
               ELSE   round(cisli941.t$gamt$l,2)
           END,                               
-         cisli940.t$itbp$l,                    
-         cisli940.t$itbn$l,                    
-         tccom130.t$namc,                      
-         tccom130.t$dist$l,                    
-         tccom130.t$pstc,                      
-         tccom130.t$dsca,                      
-         tccom130.t$cste,                      
-         tccom130.t$telp,                      
-         tccom130.t$telx,                      
-         tccom130.t$enfs$l,                    
+         cisli940.t$itbp$l,
+         cisli940.t$ifbp$l,
+         cisli940.t$itbn$l,
+         cisli940.t$ifbn$l,
+         nvl(tccom130.t$namc,tccom130d.t$namc),
+         nvl(tccom130.t$dist$l,tccom130d.t$dist$l),
+         nvl(tccom130.t$pstc,tccom130d.t$pstc),                      
+         nvl(tccom130.t$dsca,tccom130d.t$dsca),                      
+         nvl(tccom130.t$cste,tccom130d.t$cste),                      
+         nvl(tccom130.t$telp,tccom130d.t$telp),                      
+         nvl(tccom130.t$telx,tccom130d.t$telx),                      
+         nvl(tccom130.t$enfs$l,tccom130d.t$enfs$l),                    
          cisli940.t$fdtc$l,                    
          tcmcs966.t$dsca$l,                    
          FGET.DESC_TIPO_DOCTO,                 
          tccom130f.t$fovn$l,               
          tcmcs060.t$dsca,
-         Q1.CMV_UNIT
+         Q1.CMV_UNIT,
+         
+         WMS_OA_ORDERS_SH.ORDERKEY,
+         WMS_OA_ORDERS_OV.orderkey,
+         WMS_OA_ORDERS_OA.orderkey,
+         CISLI245.T$SHPM,
+         cisli951.t$shpm$l,
+         CISLI245.T$SLSO,
+         cisli951.t$slso$l
    
  ORDER BY FILIAL, 
           DT_EMISSAO, 
