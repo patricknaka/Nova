@@ -4,7 +4,7 @@ SELECT
     tfacp200.t$ninv                                        NUME_TITULO,
     tfacp200.t$docn$l                                      NUME_NF,
     tfacp200.t$seri$l                                      SERI_NF,
-    TIPO_ACONS.DESCR                                       TIPO_ACONSELHAMENTO, --Tipo de Documento
+    TIPO_ACONS.DESCR                                       TIPO_ACONSELHAMENTO,
     tfacp200.t$ifbp                                        CODE_PN,
     regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')        CNPJ_FORN,
     tccom100.t$nama                                        DESC_PN,
@@ -37,15 +37,19 @@ SELECT
 
     GLD106.DT                                              DATA_APROVACAO_CONTABIL,
     TO_CHAR(TO_DATE(GLD106.HR, 'SSSSS'), 'HH24:MI:SS')     HORA_APROVACAO_CONTABIL,
-	
---quebra
+
+    tfacp200.t$docn                                        DOCTO,
     tfcmg101.t$btno                                        LOTE_PAGTO,
-    tfacp201.t$schn                                        NO_PROGRAMACAO,
+    NVL(tfacp201.t$schn,0)                                 NO_PROGRAMACAO,
     tfacp201.t$mopa$d                                      CODE_MODAL_PGTO,
     tfacp200.t$docd                                        DATA_EMISSAO,
     tfacp201.t$payd                                        DATA_VENCTO,
     tfcmg101.t$plan                                        DATA_PLAN_PAGTO,
+    
     tfacp200.t$amnt                                        VALOR_TITULO,
+    
+tfacp201.t$amnt VALOR_A_PAGAR,
+
     CASE WHEN tfcmg101.t$amnt IS NULL
            THEN tfacp201.t$balc
          ELSE   tfcmg101.t$amnt
@@ -118,9 +122,9 @@ SELECT
     tfcmg002.t$desc                                        MOTIVO_PAGAMENTO,
 
     tfacr200.t$refr                                        REF_TRANSACAO,
-    tfacr200.t$amnt                                        VALOR_ABATER,
-    tfacr200.t$ttyp                                        TRANSA_ABATIMENTO,
-    tfacr200.t$ninv                                        TITULO_ABATIMENTO
+    NVL(tfacr200.t$amnt, tfacp200.t$amnt)                  VALOR_ABATER,
+    NVL(tfacr200.t$ttyp, tfacp200.t$tdoc)                  TRANSA_ABATIMENTO,
+    NVL(tfacr200.t$ninv, tfacp200.t$docn)                  TITULO_ABATIMENTO
 
 FROM       baandb.ttfacp200301   tfacp200
 
@@ -155,6 +159,7 @@ FROM       baandb.ttfacp200301   tfacp200
  LEFT JOIN baandb.ttfacp201301  tfacp201
         ON tfacp201.t$ttyp = tfacp200.t$ttyp
        AND tfacp201.t$ninv = tfacp200.t$ninv
+AND tfacp201.t$schn = tfacp200.t$schn
 
  LEFT JOIN baandb.ttfcmg101301 tfcmg101
         ON tfcmg101.t$ttyp = tfacp201.t$ttyp
@@ -426,16 +431,9 @@ FROM       baandb.ttfacp200301   tfacp200
         ON tfacr200.t$tdoc = tfacp200.t$tdoc
        AND tfacr200.t$docn = tfacp200.t$docn
        AND tfacr200.t$lino = tfacp200.t$lino + 1
-	   
+
 WHERE tfacp200.t$tpay != 8
-  and not exists (  select tfacp601.t$payt, tfacp601.t$payd, tfacp601.t$payl, tfacp601.t$pays
-                      from baandb.ttfacp601301  tfacp601
-                     where tfacp601.t$icom = 301
-                       and tfacp601.t$step = 20
-                       and tfacp601.t$ityp = tfacp200.t$ttyp
-                       and tfacp601.t$idoc = tfacp200.t$ninv )
   and tfacp200.t$docd Between :EmissaoDe    and :EmissaoAte
-  and tfacp201.t$payd Between :VencimentoDe and :VencimentoAte
   and ((Upper(Concat(Trim(tfacp200.t$ttyp), tfacp200.t$ninv)) = Upper(Trim(:Transacao))) OR (:Transacao is null))
   and tfacp200.t$ttyp IN (:TipoTransacao)
   and (CASE WHEN znacp005.t$canc$c = 1
@@ -448,7 +446,11 @@ WHERE tfacp200.t$tpay != 8
         END) IN (:Situacao.Value)
   and tfacp200.t$ifbp IN (:ParceiroNegocio)
   
-Order By TRANSCAO, NVL(NO_PROGRAMACAO, 0)
+ORDER BY Concat(Trim(tfacp200.t$ttyp), Trim(tfacp200.t$ninv))
+       , NVL(tfacp201.t$schn, 0)
+       , tfacp200.t$docn
+
+
 
 
 =
@@ -495,7 +497,7 @@ Order By TRANSCAO, NVL(NO_PROGRAMACAO, 0)
 "  " &
 "     tfacp200.t$docn                                        DOCTO,  " &
 "     tfcmg101.t$btno                                        LOTE_PAGTO,  " &
-"     tfacp201.t$schn                                        NO_PROGRAMACAO,  " &
+"     NVL(tfacp201.t$schn,0)                                 NO_PROGRAMACAO,  " &
 "     tfacp201.t$mopa$d                                      CODE_MODAL_PGTO,  " &
 "     tfacp200.t$docd                                        DATA_EMISSAO,  " &
 "     tfacp201.t$payd                                        DATA_VENCTO,  " &
@@ -610,6 +612,7 @@ Order By TRANSCAO, NVL(NO_PROGRAMACAO, 0)
 "  LEFT JOIN baandb.ttfacp201" + Parameters!Compania.Value + "  tfacp201  " &
 "         ON tfacp201.t$ttyp = tfacp200.t$ttyp  " &
 "        AND tfacp201.t$ninv = tfacp200.t$ninv  " &
+"AND tfacp201.t$schn = tfacp200.t$schn  " &
 "  " &
 "  LEFT JOIN baandb.ttfcmg101" + Parameters!Compania.Value + " tfcmg101  " &
 "         ON tfcmg101.t$ttyp = tfacp201.t$ttyp  " &
@@ -884,7 +887,6 @@ Order By TRANSCAO, NVL(NO_PROGRAMACAO, 0)
 "  " &
 " WHERE tfacp200.t$tpay != 8  " &
 "   and tfacp200.t$docd Between :EmissaoDe    and :EmissaoAte  " &
-"   and tfacp201.t$payd Between :VencimentoDe and :VencimentoAte  " &
 "   and ((Upper(Concat(Trim(tfacp200.t$ttyp), tfacp200.t$ninv)) = Upper(Trim(:Transacao))) OR (:Transacao is null))  " &
 "   and tfacp200.t$ttyp IN (" + Replace(("'" + JOIN(Parameters!TipoTransacao.Value, "',") + "'"),",",",'") + ") " &
 "   and (CASE WHEN znacp005.t$canc$c = 1  " &
@@ -899,4 +901,7 @@ Order By TRANSCAO, NVL(NO_PROGRAMACAO, 0)
 "         ( " + IIF(Trim(Parameters!ParceiroNegocio.Value) = "", "''", "'" + Replace(Replace(Parameters!ParceiroNegocio.Value, " ", ""), ",", "','") + "'")  + " )  "&
 "           AND (" + IIF(Parameters!ParceiroNegocio.Value Is Nothing, "1", "0") + " = 0))  " &
 "            OR (" + IIF(Parameters!ParceiroNegocio.Value Is Nothing, "1", "0") + " = 1) )  " &
-" Order By TRANSCAO, NVL(NO_PROGRAMACAO, 0) "
+"  " &
+" Order By Concat(Trim(tfacp200.t$ttyp), Trim(tfacp200.t$ninv))  " &
+"        , NVL(tfacp201.t$schn, 0)  " &
+"        , tfacp200.t$docn  "
