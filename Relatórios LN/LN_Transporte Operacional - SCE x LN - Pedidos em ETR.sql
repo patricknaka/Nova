@@ -12,6 +12,14 @@ select Q1.*
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
+       CASE WHEN ZNSLS401.T$IDPA$C = '1'
+           THEN 'Manhã'
+         WHEN ZNSLS401.T$IDPA$C = '2'
+           THEN 'Tarde'
+         WHEN ZNSLS401.T$IDPA$C = '3'
+           THEN 'Noite'
+         ELSE Null
+       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -129,7 +137,8 @@ select Q1.*
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod
+        END                            evento_cod,
+        znsls401.t$obet$c              Loja
          
 FROM       WMWHSE1.ORDERS a
          
@@ -185,6 +194,8 @@ INNER JOIN WMWHSE1.sku sku
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c,
                     sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
                     max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
@@ -202,7 +213,9 @@ INNER JOIN WMWHSE1.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c,
-                    sq401.t$itpe$c ) znsls401  
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c) znsls401  
         ON znsls401.t$orno$c = a.referencedocument
 
 LEFT JOIN ( select a.t$ncia$c,
@@ -263,10 +276,18 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        LIMITE_EXPEDICAO,
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
+      CASE WHEN ZNSLS401.T$IDPA$C = '1'
+           THEN 'Manhã'
+         WHEN ZNSLS401.T$IDPA$C = '2'
+           THEN 'Tarde'
+         WHEN ZNSLS401.T$IDPA$C = '3'
+           THEN 'Noite'
+         ELSE Null
+       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -384,7 +405,8 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod
+        END                            evento_cod,
+        znsls401.t$obet$c              Loja
          
 FROM       WMWHSE2.ORDERS a
          
@@ -440,6 +462,8 @@ INNER JOIN WMWHSE2.sku sku
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c,
                     sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
                     max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
@@ -457,7 +481,9 @@ INNER JOIN WMWHSE2.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c,
-                    sq401.t$itpe$c ) znsls401  
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c) znsls401  
         ON znsls401.t$orno$c = a.referencedocument
 
 LEFT JOIN ( select a.t$ncia$c,
@@ -522,6 +548,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
+      CASE WHEN ZNSLS401.T$IDPA$C = '1'
+           THEN 'Manhã'
+         WHEN ZNSLS401.T$IDPA$C = '2'
+           THEN 'Tarde'
+         WHEN ZNSLS401.T$IDPA$C = '3'
+           THEN 'Noite'
+         ELSE Null
+       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -639,7 +673,8 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod
+        END                            evento_cod,
+        znsls401.t$obet$c              Loja
          
 FROM       WMWHSE3.ORDERS a
          
@@ -694,7 +729,9 @@ INNER JOIN WMWHSE3.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
-                    sq401.t$itpe$c, 
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c,
                     sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
                     max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
@@ -712,7 +749,9 @@ INNER JOIN WMWHSE3.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c,
-                    sq401.t$itpe$c ) znsls401  
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c) znsls401  
         ON znsls401.t$orno$c = a.referencedocument
 
 LEFT JOIN ( select a.t$ncia$c,
@@ -777,6 +816,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
+      CASE WHEN ZNSLS401.T$IDPA$C = '1'
+           THEN 'Manhã'
+         WHEN ZNSLS401.T$IDPA$C = '2'
+           THEN 'Tarde'
+         WHEN ZNSLS401.T$IDPA$C = '3'
+           THEN 'Noite'
+         ELSE Null
+       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -894,7 +941,8 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod
+        END                            evento_cod,
+        znsls401.t$obet$c              Loja
          
 FROM       WMWHSE4.ORDERS a
          
@@ -950,6 +998,8 @@ INNER JOIN WMWHSE4.sku sku
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
                     sq401.t$itpe$c, 
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c,
                     sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
                     max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
@@ -967,7 +1017,9 @@ INNER JOIN WMWHSE4.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c,
-                    sq401.t$itpe$c ) znsls401  
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c) znsls401  
         ON znsls401.t$orno$c = a.referencedocument
 
 LEFT JOIN ( select a.t$ncia$c,
@@ -1031,6 +1083,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
+      CASE WHEN ZNSLS401.T$IDPA$C = '1'
+           THEN 'Manhã'
+         WHEN ZNSLS401.T$IDPA$C = '2'
+           THEN 'Tarde'
+         WHEN ZNSLS401.T$IDPA$C = '3'
+           THEN 'Noite'
+         ELSE Null
+       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1148,7 +1208,8 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod
+        END                            evento_cod,
+        znsls401.t$obet$c              Loja
          
 FROM       WMWHSE5.ORDERS a
          
@@ -1203,7 +1264,9 @@ INNER JOIN WMWHSE5.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
-                    sq401.t$itpe$c, 
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c,
                     sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
                     max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
@@ -1221,7 +1284,9 @@ INNER JOIN WMWHSE5.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c,
-                    sq401.t$itpe$c ) znsls401  
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c) znsls401  
         ON znsls401.t$orno$c = a.referencedocument
 
 LEFT JOIN ( select a.t$ncia$c,
@@ -1285,6 +1350,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
+      CASE WHEN ZNSLS401.T$IDPA$C = '1'
+           THEN 'Manhã'
+         WHEN ZNSLS401.T$IDPA$C = '2'
+           THEN 'Tarde'
+         WHEN ZNSLS401.T$IDPA$C = '3'
+           THEN 'Noite'
+         ELSE Null
+       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1402,7 +1475,8 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod
+        END                            evento_cod,
+        znsls401.t$obet$c              Loja
          
 FROM       WMWHSE6.ORDERS a
          
@@ -1457,7 +1531,9 @@ INNER JOIN WMWHSE6.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
-                    sq401.t$itpe$c, 
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c,
                     sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
                     max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
@@ -1475,7 +1551,9 @@ INNER JOIN WMWHSE6.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c,
-                    sq401.t$itpe$c ) znsls401  
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c) znsls401  
         ON znsls401.t$orno$c = a.referencedocument
 
 LEFT JOIN ( select a.t$ncia$c,
@@ -1539,6 +1617,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
+      CASE WHEN ZNSLS401.T$IDPA$C = '1'
+           THEN 'Manhã'
+         WHEN ZNSLS401.T$IDPA$C = '2'
+           THEN 'Tarde'
+         WHEN ZNSLS401.T$IDPA$C = '3'
+           THEN 'Noite'
+         ELSE Null
+       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1656,7 +1742,8 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod
+        END                            evento_cod,
+        znsls401.t$obet$c              Loja
          
 FROM       WMWHSE7.ORDERS a
          
@@ -1711,7 +1798,9 @@ INNER JOIN WMWHSE7.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
-                    sq401.t$itpe$c, 
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c,
                     sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
                     max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
@@ -1729,7 +1818,9 @@ INNER JOIN WMWHSE7.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c,
-                    sq401.t$itpe$c ) znsls401  
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c) znsls401  
         ON znsls401.t$orno$c = a.referencedocument
 
 LEFT JOIN ( select a.t$ncia$c,
@@ -1793,6 +1884,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
+      CASE WHEN ZNSLS401.T$IDPA$C = '1'
+           THEN 'Manhã'
+         WHEN ZNSLS401.T$IDPA$C = '2'
+           THEN 'Tarde'
+         WHEN ZNSLS401.T$IDPA$C = '3'
+           THEN 'Noite'
+         ELSE Null
+       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1910,7 +2009,8 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod
+        END                            evento_cod,
+        znsls401.t$obet$c              Loja
          
 FROM       WMWHSE8.ORDERS a
          
@@ -1965,7 +2065,9 @@ INNER JOIN WMWHSE8.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c, 
-                    sq401.t$itpe$c, 
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c,
                     sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,
                     max(sq401.t$dtep$c) t$dtep$c
                from BAANDB.TZNSLS401301@pln01 sq401,
@@ -1983,7 +2085,9 @@ INNER JOIN WMWHSE8.sku sku
                     znsls004.t$sqpd$c,
                     znsls004.t$entr$c, 
                     znsls004.t$orno$c,
-                    sq401.t$itpe$c ) znsls401  
+                    sq401.t$itpe$c,
+                    sq401.t$obet$c,
+                    sq401.t$idpa$c) znsls401  
         ON znsls401.t$orno$c = a.referencedocument
 
 LEFT JOIN ( select a.t$ncia$c,
@@ -2036,6 +2140,6 @@ and znsls410.t$poco$c is null
 
 WHERE evento_cod                  IN (:Evento)         -- Evento
   AND tipo_entrega_nome           IN (:TipoEntrega)    -- Tipo de Entrega
-  where cd_filial                   IN (:Filial)         -- Planta
+  and cd_filial                   IN (:Filial)         -- Planta
   AND NVL(Trim(mega_rota), 'SMR') IN (:Rota)           -- Mega Rota
   AND transp_cod                  IN (:Transportadora) -- Transportadora
