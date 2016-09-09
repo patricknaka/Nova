@@ -12,9 +12,14 @@ select Q1.*
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
-      
-       znsls401.t$idpa$c                  PERIODO,
-       
+        CASE WHEN ZNSLS401.T$IDPA$C = '1'
+               THEN 'Manhã'
+             WHEN ZNSLS401.T$IDPA$C = '2'
+               THEN 'Tarde'
+             WHEN ZNSLS401.T$IDPA$C = '3'
+               THEN 'Noite'
+             ELSE Null
+        END                    PERIODO,
        statuscodes_t.description	     ULTIMO_EVENTO,
         
       sq2.loc                          DOCA_SAIDA,
@@ -235,7 +240,14 @@ SELECT
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
 									   
-	   znsls401.t$idpa$c                  PERIODO,
+        CASE WHEN ZNSLS401.T$IDPA$C = '1'
+               THEN 'Manhã'
+             WHEN ZNSLS401.T$IDPA$C = '2'
+               THEN 'Tarde'
+             WHEN ZNSLS401.T$IDPA$C = '3'
+               THEN 'Noite'
+             ELSE Null
+        END                    PERIODO,
        statuscodes_t.description	     ULTIMO_EVENTO,
         
       sq2.loc                          DOCA_SAIDA,
@@ -455,7 +467,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
-	   znsls401.t$idpa$c				PERIODO,	
+        CASE WHEN ZNSLS401.T$IDPA$C = '1'
+               THEN 'Manhã'
+             WHEN ZNSLS401.T$IDPA$C = '2'
+               THEN 'Tarde'
+             WHEN ZNSLS401.T$IDPA$C = '3'
+               THEN 'Noite'
+             ELSE Null
+        END                    PERIODO,	
        statuscodes_t.description	     ULTIMO_EVENTO,
         
       sq2.loc                          DOCA_SAIDA,
@@ -675,7 +694,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
-	   znsls401.t$idpa$c               PERIODO,
+        CASE WHEN ZNSLS401.T$IDPA$C = '1'
+               THEN 'Manhã'
+             WHEN ZNSLS401.T$IDPA$C = '2'
+               THEN 'Tarde'
+             WHEN ZNSLS401.T$IDPA$C = '3'
+               THEN 'Noite'
+             ELSE Null
+        END                    PERIODO,
        statuscodes_t.description	     ULTIMO_EVENTO,
         
       sq2.loc                          DOCA_SAIDA,
@@ -895,7 +921,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
-	   znsls401.t$idpa$c               PERIODO,
+        CASE WHEN ZNSLS401.T$IDPA$C = '1'
+               THEN 'Manhã'
+             WHEN ZNSLS401.T$IDPA$C = '2'
+               THEN 'Tarde'
+             WHEN ZNSLS401.T$IDPA$C = '3'
+               THEN 'Noite'
+             ELSE Null
+        END                    PERIODO,
        statuscodes_t.description	     ULTIMO_EVENTO,
         
       sq2.loc                          DOCA_SAIDA,
@@ -1115,7 +1148,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
-	   znsls401.t$idpa$c               PERIODO,
+        CASE WHEN ZNSLS401.T$IDPA$C = '1'
+               THEN 'Manhã'
+             WHEN ZNSLS401.T$IDPA$C = '2'
+               THEN 'Tarde'
+             WHEN ZNSLS401.T$IDPA$C = '3'
+               THEN 'Noite'
+             ELSE Null
+        END                    PERIODO,
        statuscodes_t.description	     ULTIMO_EVENTO,
         
       sq2.loc                          DOCA_SAIDA,
@@ -1335,7 +1375,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
-	   znsls401.t$idpa$c               PERIODO,
+        CASE WHEN ZNSLS401.T$IDPA$C = '1'
+               THEN 'Manhã'
+             WHEN ZNSLS401.T$IDPA$C = '2'
+               THEN 'Tarde'
+             WHEN ZNSLS401.T$IDPA$C = '3'
+               THEN 'Noite'
+             ELSE Null
+        END                    PERIODO,
        statuscodes_t.description	     ULTIMO_EVENTO,
         
       sq2.loc                          DOCA_SAIDA,
@@ -1555,7 +1602,14 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        DATA_PROMETIDA,
-	   znsls401.t$idpa$c               PERIODO,
+        CASE WHEN ZNSLS401.T$IDPA$C = '1'
+               THEN 'Manhã'
+             WHEN ZNSLS401.T$IDPA$C = '2'
+               THEN 'Tarde'
+             WHEN ZNSLS401.T$IDPA$C = '3'
+               THEN 'Noite'
+             ELSE Null
+        END                    PERIODO,
        statuscodes_t.description	     ULTIMO_EVENTO,
         
       sq2.loc                          DOCA_SAIDA,
