@@ -74,7 +74,10 @@ select Q1.*
              znint002.t$desc$c  DESCR_UNIDADE_NEG,
              znsls004.t$sqpd$c  SEQ_PEDIDO,
 
-             znsls401.t$dtap$c  DT_EMISSAO,
+             CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,
+               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone 'America/Sao_Paulo') AS DATE) 
+                                DT_EMISSAO,
              ZNSLS401.T$PZTR$C  TRANSIT_TIME,
              ZNSLS401.T$PZCD$C  PRAZO_CD,
              CASE WHEN ZNSLS400.T$SIGE$C = 1
