@@ -102,8 +102,8 @@ LEFT JOIN baandb.tznsls400301 znsls400
                     max(a.t$date$c) t$date$c,
                     max(a.t$dtem$c) t$dtem$c,
                     max(a.t$dtep$c) t$dtep$c,
-                    max(a.t$dtoc$c) t$dtoc$c,
-                    max(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C,  a.T$SEQN$C) t$poco$c
+                    max(a.t$dtoc$c) KEEP (DENSE_RANK LAST ORDER BY a.T$SEQN$C,  a.T$DTOC$C) t$dtoc$c,
+                    max(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$SEQN$C,  a.T$DTOC$C) t$poco$c
                from baandb.tznsls410301 a
            group by a.t$ncia$c,
                     a.t$uneg$c,
