@@ -279,11 +279,12 @@ select Q1.DATA_EMISSAO,
         AND GER_RISCO.t$ngai$c = ZNFMD630.t$ngai$c
         AND GER_RISCO.t$etiq$c = ZNFMD630.t$etiq$c 
 
- WHERE ( select max(znfmd640.t$coci$c)
-           from BAANDB.tznfmd640301 znfmd640
-          where znfmd640.t$coci$c IN ('ETR', 'COL','CTR', 'POS')
-            and znfmd640.t$fili$c = znfmd630.t$fili$c
-            and znfmd640.t$etiq$c = znfmd630.t$etiq$c ) IS NOT NULL )  Q1
+-- WHERE ( select max(znfmd640.t$coci$c)
+--           from BAANDB.tznfmd640301 znfmd640
+--          where znfmd640.t$coci$c IN ('ETR', 'COL','CTR', 'POS')
+--            and znfmd640.t$fili$c = znfmd630.t$fili$c
+--            and znfmd640.t$etiq$c = znfmd630.t$etiq$c ) IS NOT NULL 
+            )  Q1
 
 -- WHERE Q1.TIPO_NF IN (:TipoNF)
 WHERE TRUNC(Q1.DATA_EMISSAO)
