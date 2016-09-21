@@ -8,10 +8,12 @@ SELECT tfcmg101.t$btno                                     NUME_LOTE,
        regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')     CNPJ_FORN,
        Trim(tccom100.t$nama)                               NOME_FORN,
 	   
+       CASE WHEN tfcmg101.t$tadv IN (3, 4) -- 3-Fatura de venda; 4-Nota de crédito de venda
               THEN (tfcmg101.t$amnt - tfcmg101.t$ramn$l) * (-1)
             ELSE   (tfcmg101.t$amnt - tfcmg101.t$ramn$l) 
        END                                                 VALO_PAGA,
 	   
+       CASE WHEN tfcmg101.t$tadv IN (3, 4) -- 3-Fatura de venda; 4-Nota de crédito de venda
               THEN (tfcmg101.t$amnt$l) * (-1)
             ELSE tfcmg101.t$amnt$l  
        END                                                 VALO_BRUTO,
