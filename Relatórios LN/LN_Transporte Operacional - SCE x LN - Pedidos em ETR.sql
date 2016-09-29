@@ -8,18 +8,6 @@ select Q1.*
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        LIMITE_EXPEDICAO,
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       DATA_PROMETIDA,
-       CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
-         WHEN ZNSLS401.T$IDPA$C = '2'
-           THEN 'Tarde'
-         WHEN ZNSLS401.T$IDPA$C = '3'
-           THEN 'Noite'
-         ELSE Null
-       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -75,37 +63,14 @@ select Q1.*
 
       a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
       sq2.CAGEID                       GAIOLA,
-       ( select tccom130.t$fovn$l 
-           from BAANDB.TTCCOM130301@pln01 tccom130,
-                BAANDB.TTCMCS080301@pln01 tcmcs080
-          where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode)
-                                        CNPJ_TRANSPORTADOR,
+      znfmd630.t$cfrw$c                TRANSPORTADOR,
        a.carriername                    TRANSPORTADOR_NOME,
        a.C_VAT                          MEGA_ROTA,
        ( select sa.t$dsca$c 
            from BAANDB.TZNSLS002301@pln01 sa
           where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
                                         TIPO_ENTREGA,                                        
-            
-       a.INVOICENUMBER                  NF_NUMERO,
-       a.LANE                           NF_SERIE,
-       a.c_company                      NOME_CLIENTE,
-       od.sku                           ITEM_SKU,
-       sku.descr                        ITEM_DESCRICAO,
-       DPST.DEPART_NAME                 ITEM_DEPTO,
-       whwmd400.t$hght                  ITEM_ALTURA,
-       whwmd400.t$wdth                  ITEM_LARGURA,
-       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
        od.ORIGINALQTY                   ITEM_QUANTIDADE,
-       znsls401.t$vlun$c                ITEM_VALOR,
-       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
-       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
-       a.c_zip                          CEP_DESTINO,
-       a.c_city                         MUNICIPIO,
-       a.c_state                        UF,
-
-       DPST.ID_DEPART                  COD_ITEM_DEPTO,
        OX.NOTES1                       ETIQUETA,      
        NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
        a.carriercode                   transp_cod,
@@ -137,8 +102,7 @@ select Q1.*
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod,
-        znsls401.t$obet$c              Loja
+        END                            evento_cod
          
 FROM       WMWHSE1.ORDERS a
          
@@ -152,10 +116,6 @@ INNER JOIN WMWHSE1.sku sku
         ON  OX.ORDERKEY = od.ORDERKEY
        AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER 
        AND OX.UDF1 = 'SHIPPINGID'
-           
- LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-        ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
-       AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
              
  LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
         ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
@@ -166,7 +126,7 @@ INNER JOIN WMWHSE1.sku sku
            group by wv.orderkey ) w
         ON w.orderkey = a.orderkey
            
- LEFT JOIN ( select distinct 
+ INNER JOIN ( select distinct 
                     cd.orderid, 
                     cg.CAGEID,
                     cg.loc,
@@ -276,18 +236,6 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        LIMITE_EXPEDICAO,
-      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       DATA_PROMETIDA,
-      CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
-         WHEN ZNSLS401.T$IDPA$C = '2'
-           THEN 'Tarde'
-         WHEN ZNSLS401.T$IDPA$C = '3'
-           THEN 'Noite'
-         ELSE Null
-       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -343,37 +291,14 @@ SELECT
 
       a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
       sq2.CAGEID                       GAIOLA,
-       ( select tccom130.t$fovn$l 
-           from BAANDB.TTCCOM130301@pln01 tccom130,
-                BAANDB.TTCMCS080301@pln01 tcmcs080
-          where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode)
-                                        CNPJ_TRANSPORTADOR,
+      znfmd630.t$cfrw$c                TRANSPORTADOR,
        a.carriername                    TRANSPORTADOR_NOME,
        a.C_VAT                          MEGA_ROTA,
        ( select sa.t$dsca$c 
            from BAANDB.TZNSLS002301@pln01 sa
           where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
                                         TIPO_ENTREGA,                                        
-            
-       a.INVOICENUMBER                  NF_NUMERO,
-       a.LANE                           NF_SERIE,
-       a.c_company                      NOME_CLIENTE,
-       od.sku                           ITEM_SKU,
-       sku.descr                        ITEM_DESCRICAO,
-       DPST.DEPART_NAME                 ITEM_DEPTO,
-       whwmd400.t$hght                  ITEM_ALTURA,
-       whwmd400.t$wdth                  ITEM_LARGURA,
-       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
        od.ORIGINALQTY                   ITEM_QUANTIDADE,
-       znsls401.t$vlun$c                ITEM_VALOR,
-       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
-       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
-       a.c_zip                          CEP_DESTINO,
-       a.c_city                         MUNICIPIO,
-       a.c_state                        UF,
-
-       DPST.ID_DEPART                   COD_ITEM_DEPTO,
        OX.NOTES1                       ETIQUETA,      
        NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
        a.carriercode                   transp_cod,
@@ -405,8 +330,7 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod,
-        znsls401.t$obet$c              Loja
+        END                            evento_cod
          
 FROM       WMWHSE2.ORDERS a
          
@@ -421,10 +345,6 @@ INNER JOIN WMWHSE2.sku sku
        AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER 
        AND OX.UDF1 = 'SHIPPINGID'
            
- LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-        ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
-       AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
-             
  LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
         ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
            
@@ -434,7 +354,7 @@ INNER JOIN WMWHSE2.sku sku
            group by wv.orderkey ) w
         ON w.orderkey = a.orderkey
            
- LEFT JOIN ( select distinct 
+ INNER JOIN ( select distinct 
                     cd.orderid, 
                     cg.CAGEID,
                     cg.loc,
@@ -544,18 +464,6 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        LIMITE_EXPEDICAO,
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       DATA_PROMETIDA,
-      CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
-         WHEN ZNSLS401.T$IDPA$C = '2'
-           THEN 'Tarde'
-         WHEN ZNSLS401.T$IDPA$C = '3'
-           THEN 'Noite'
-         ELSE Null
-       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -611,37 +519,14 @@ SELECT
 
       a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
       sq2.CAGEID                       GAIOLA,
-       ( select tccom130.t$fovn$l 
-           from BAANDB.TTCCOM130301@pln01 tccom130,
-                BAANDB.TTCMCS080301@pln01 tcmcs080
-          where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode)
-                                        CNPJ_TRANSPORTADOR,
+      znfmd630.t$cfrw$c                TRANSPORTADOR,
        a.carriername                    TRANSPORTADOR_NOME,
        a.C_VAT                          MEGA_ROTA,
        ( select sa.t$dsca$c 
            from BAANDB.TZNSLS002301@pln01 sa
           where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
                                         TIPO_ENTREGA,                                        
-            
-       a.INVOICENUMBER                  NF_NUMERO,
-       a.LANE                           NF_SERIE,
-       a.c_company                      NOME_CLIENTE,
-       od.sku                           ITEM_SKU,
-       sku.descr                        ITEM_DESCRICAO,
-       DPST.DEPART_NAME                 ITEM_DEPTO,
-       whwmd400.t$hght                  ITEM_ALTURA,
-       whwmd400.t$wdth                  ITEM_LARGURA,
-       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
        od.ORIGINALQTY                   ITEM_QUANTIDADE,
-       znsls401.t$vlun$c                ITEM_VALOR,
-       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
-       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
-       a.c_zip                          CEP_DESTINO,
-       a.c_city                         MUNICIPIO,
-       a.c_state                        UF,
-
-       DPST.ID_DEPART                  COD_ITEM_DEPTO,
        OX.NOTES1                       ETIQUETA,      
        NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
        a.carriercode                   transp_cod,
@@ -673,9 +558,8 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod,
-        znsls401.t$obet$c              Loja
-         
+        END                            evento_cod
+     
 FROM       WMWHSE3.ORDERS a
          
 INNER JOIN WMWHSE3.ORDERDETAIL od 
@@ -688,11 +572,7 @@ INNER JOIN WMWHSE3.sku sku
         ON  OX.ORDERKEY = od.ORDERKEY
        AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER 
        AND OX.UDF1 = 'SHIPPINGID'
-           
- LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-        ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
-       AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
-             
+
  LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
         ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
            
@@ -702,7 +582,7 @@ INNER JOIN WMWHSE3.sku sku
            group by wv.orderkey ) w
         ON w.orderkey = a.orderkey
            
- LEFT JOIN ( select distinct 
+ INNER JOIN ( select distinct 
                     cd.orderid, 
                     cg.CAGEID,
                     cg.loc,
@@ -812,18 +692,6 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        LIMITE_EXPEDICAO,
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       DATA_PROMETIDA,
-      CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
-         WHEN ZNSLS401.T$IDPA$C = '2'
-           THEN 'Tarde'
-         WHEN ZNSLS401.T$IDPA$C = '3'
-           THEN 'Noite'
-         ELSE Null
-       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -879,37 +747,14 @@ SELECT
 
       a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
       sq2.CAGEID                       GAIOLA,
-       ( select tccom130.t$fovn$l 
-           from BAANDB.TTCCOM130301@pln01 tccom130,
-                BAANDB.TTCMCS080301@pln01 tcmcs080
-          where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode)
-                                        CNPJ_TRANSPORTADOR,
+      znfmd630.t$cfrw$c                TRANSPORTADOR,
        a.carriername                    TRANSPORTADOR_NOME,
        a.C_VAT                          MEGA_ROTA,
        ( select sa.t$dsca$c 
            from BAANDB.TZNSLS002301@pln01 sa
           where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
                                         TIPO_ENTREGA,                                        
-            
-       a.INVOICENUMBER                  NF_NUMERO,
-       a.LANE                           NF_SERIE,
-       a.c_company                      NOME_CLIENTE,
-       od.sku                           ITEM_SKU,
-       sku.descr                        ITEM_DESCRICAO,
-       DPST.DEPART_NAME                 ITEM_DEPTO,
-       whwmd400.t$hght                  ITEM_ALTURA,
-       whwmd400.t$wdth                  ITEM_LARGURA,
-       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
        od.ORIGINALQTY                   ITEM_QUANTIDADE,
-       znsls401.t$vlun$c                ITEM_VALOR,
-       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
-       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
-       a.c_zip                          CEP_DESTINO,
-       a.c_city                         MUNICIPIO,
-       a.c_state                        UF,
-
-       DPST.ID_DEPART                   COD_ITEM_DEPTO,
        OX.NOTES1                       ETIQUETA,      
        NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
        a.carriercode                   transp_cod,
@@ -941,8 +786,7 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod,
-        znsls401.t$obet$c              Loja
+        END                            evento_cod
          
 FROM       WMWHSE4.ORDERS a
          
@@ -956,11 +800,7 @@ INNER JOIN WMWHSE4.sku sku
         ON  OX.ORDERKEY = od.ORDERKEY
        AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER 
        AND OX.UDF1 = 'SHIPPINGID'
-           
- LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-        ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
-       AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
-             
+
  LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
         ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
            
@@ -970,7 +810,7 @@ INNER JOIN WMWHSE4.sku sku
            group by wv.orderkey ) w
         ON w.orderkey = a.orderkey
            
- LEFT JOIN ( select distinct 
+ INNER JOIN ( select distinct 
                     cd.orderid, 
                     cg.CAGEID,
                     cg.loc,
@@ -1079,18 +919,6 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        LIMITE_EXPEDICAO,
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       DATA_PROMETIDA,
-      CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
-         WHEN ZNSLS401.T$IDPA$C = '2'
-           THEN 'Tarde'
-         WHEN ZNSLS401.T$IDPA$C = '3'
-           THEN 'Noite'
-         ELSE Null
-       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1146,37 +974,14 @@ SELECT
 
       a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
       sq2.CAGEID                       GAIOLA,
-       ( select tccom130.t$fovn$l 
-           from BAANDB.TTCCOM130301@pln01 tccom130,
-                BAANDB.TTCMCS080301@pln01 tcmcs080
-          where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode)
-                                        CNPJ_TRANSPORTADOR,
+      znfmd630.t$cfrw$c                TRANSPORTADOR,
        a.carriername                    TRANSPORTADOR_NOME,
        a.C_VAT                          MEGA_ROTA,
        ( select sa.t$dsca$c 
            from BAANDB.TZNSLS002301@pln01 sa
           where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
                                         TIPO_ENTREGA,                                        
-            
-       a.INVOICENUMBER                  NF_NUMERO,
-       a.LANE                           NF_SERIE,
-       a.c_company                      NOME_CLIENTE,
-       od.sku                           ITEM_SKU,
-       sku.descr                        ITEM_DESCRICAO,
-       DPST.DEPART_NAME                 ITEM_DEPTO,
-       whwmd400.t$hght                  ITEM_ALTURA,
-       whwmd400.t$wdth                  ITEM_LARGURA,
-       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
        od.ORIGINALQTY                   ITEM_QUANTIDADE,
-       znsls401.t$vlun$c                ITEM_VALOR,
-       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
-       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
-       a.c_zip                          CEP_DESTINO,
-       a.c_city                         MUNICIPIO,
-       a.c_state                        UF,
-
-       DPST.ID_DEPART                   COD_ITEM_DEPTO,
        OX.NOTES1                       ETIQUETA,      
        NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
        a.carriercode                   transp_cod,
@@ -1208,8 +1013,7 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod,
-        znsls401.t$obet$c              Loja
+        END                            evento_cod
          
 FROM       WMWHSE5.ORDERS a
          
@@ -1223,11 +1027,7 @@ INNER JOIN WMWHSE5.sku sku
         ON  OX.ORDERKEY = od.ORDERKEY
        AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER 
        AND OX.UDF1 = 'SHIPPINGID'
-           
- LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-        ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
-       AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
-             
+
  LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
         ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
            
@@ -1237,7 +1037,7 @@ INNER JOIN WMWHSE5.sku sku
            group by wv.orderkey ) w
         ON w.orderkey = a.orderkey
            
- LEFT JOIN ( select distinct 
+ INNER JOIN ( select distinct 
                     cd.orderid, 
                     cg.CAGEID,
                     cg.loc,
@@ -1346,18 +1146,6 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        LIMITE_EXPEDICAO,
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       DATA_PROMETIDA,
-      CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
-         WHEN ZNSLS401.T$IDPA$C = '2'
-           THEN 'Tarde'
-         WHEN ZNSLS401.T$IDPA$C = '3'
-           THEN 'Noite'
-         ELSE Null
-       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1413,37 +1201,14 @@ SELECT
 
       a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
       sq2.CAGEID                       GAIOLA,
-       ( select tccom130.t$fovn$l 
-           from BAANDB.TTCCOM130301@pln01 tccom130,
-                BAANDB.TTCMCS080301@pln01 tcmcs080
-          where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode)
-                                        CNPJ_TRANSPORTADOR,
+      znfmd630.t$cfrw$c                TRANSPORTADOR,
        a.carriername                    TRANSPORTADOR_NOME,
        a.C_VAT                          MEGA_ROTA,
        ( select sa.t$dsca$c 
            from BAANDB.TZNSLS002301@pln01 sa
           where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
                                         TIPO_ENTREGA,                                        
-            
-       a.INVOICENUMBER                  NF_NUMERO,
-       a.LANE                           NF_SERIE,
-       a.c_company                      NOME_CLIENTE,
-       od.sku                           ITEM_SKU,
-       sku.descr                        ITEM_DESCRICAO,
-       DPST.DEPART_NAME                 ITEM_DEPTO,
-       whwmd400.t$hght                  ITEM_ALTURA,
-       whwmd400.t$wdth                  ITEM_LARGURA,
-       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
        od.ORIGINALQTY                   ITEM_QUANTIDADE,
-       znsls401.t$vlun$c                ITEM_VALOR,
-       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
-       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
-       a.c_zip                          CEP_DESTINO,
-       a.c_city                         MUNICIPIO,
-       a.c_state                        UF,
-
-       DPST.ID_DEPART                   COD_ITEM_DEPTO,
        OX.NOTES1                       ETIQUETA,      
        NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
        a.carriercode                   transp_cod,
@@ -1475,8 +1240,7 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod,
-        znsls401.t$obet$c              Loja
+        END                            evento_cod
          
 FROM       WMWHSE6.ORDERS a
          
@@ -1490,11 +1254,7 @@ INNER JOIN WMWHSE6.sku sku
         ON  OX.ORDERKEY = od.ORDERKEY
        AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER 
        AND OX.UDF1 = 'SHIPPINGID'
-           
- LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-        ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
-       AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
-             
+
  LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
         ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
            
@@ -1504,7 +1264,7 @@ INNER JOIN WMWHSE6.sku sku
            group by wv.orderkey ) w
         ON w.orderkey = a.orderkey
            
- LEFT JOIN ( select distinct 
+ INNER JOIN ( select distinct 
                     cd.orderid, 
                     cg.CAGEID,
                     cg.loc,
@@ -1613,18 +1373,6 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        LIMITE_EXPEDICAO,
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       DATA_PROMETIDA,
-      CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
-         WHEN ZNSLS401.T$IDPA$C = '2'
-           THEN 'Tarde'
-         WHEN ZNSLS401.T$IDPA$C = '3'
-           THEN 'Noite'
-         ELSE Null
-       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1680,37 +1428,14 @@ SELECT
 
       a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
       sq2.CAGEID                       GAIOLA,
-       ( select tccom130.t$fovn$l 
-           from BAANDB.TTCCOM130301@pln01 tccom130,
-                BAANDB.TTCMCS080301@pln01 tcmcs080
-          where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode)
-                                        CNPJ_TRANSPORTADOR,
+      znfmd630.t$cfrw$c                TRANSPORTADOR,
        a.carriername                    TRANSPORTADOR_NOME,
        a.C_VAT                          MEGA_ROTA,
        ( select sa.t$dsca$c 
            from BAANDB.TZNSLS002301@pln01 sa
           where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
                                         TIPO_ENTREGA,                                        
-            
-       a.INVOICENUMBER                  NF_NUMERO,
-       a.LANE                           NF_SERIE,
-       a.c_company                      NOME_CLIENTE,
-       od.sku                           ITEM_SKU,
-       sku.descr                        ITEM_DESCRICAO,
-       DPST.DEPART_NAME                 ITEM_DEPTO,
-       whwmd400.t$hght                  ITEM_ALTURA,
-       whwmd400.t$wdth                  ITEM_LARGURA,
-       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
        od.ORIGINALQTY                   ITEM_QUANTIDADE,
-       znsls401.t$vlun$c                ITEM_VALOR,
-       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
-       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
-       a.c_zip                          CEP_DESTINO,
-       a.c_city                         MUNICIPIO,
-       a.c_state                        UF,
-
-       DPST.ID_DEPART                   COD_ITEM_DEPTO,
        OX.NOTES1                       ETIQUETA,      
        NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
        a.carriercode                   transp_cod,
@@ -1742,8 +1467,7 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod,
-        znsls401.t$obet$c              Loja
+        END                            evento_cod
          
 FROM       WMWHSE7.ORDERS a
          
@@ -1757,11 +1481,7 @@ INNER JOIN WMWHSE7.sku sku
         ON  OX.ORDERKEY = od.ORDERKEY
        AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER 
        AND OX.UDF1 = 'SHIPPINGID'
-           
- LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-        ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
-       AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
-             
+
  LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
         ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
            
@@ -1771,7 +1491,7 @@ INNER JOIN WMWHSE7.sku sku
            group by wv.orderkey ) w
         ON w.orderkey = a.orderkey
            
- LEFT JOIN ( select distinct 
+ INNER JOIN ( select distinct 
                     cd.orderid, 
                     cg.CAGEID,
                     cg.loc,
@@ -1880,18 +1600,6 @@ SELECT
           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
             AT time zone 'America/Sao_Paulo') AS DATE)  
                                        LIMITE_EXPEDICAO,
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 
-          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-            AT time zone 'America/Sao_Paulo') AS DATE)  
-                                       DATA_PROMETIDA,
-      CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
-         WHEN ZNSLS401.T$IDPA$C = '2'
-           THEN 'Tarde'
-         WHEN ZNSLS401.T$IDPA$C = '3'
-           THEN 'Noite'
-         ELSE Null
-       END                    PERIODO,
        CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null 
               THEN 'Recebimento_host'
             WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100' 
@@ -1947,37 +1655,14 @@ SELECT
 
       a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
       sq2.CAGEID                       GAIOLA,
-       ( select tccom130.t$fovn$l 
-           from BAANDB.TTCCOM130301@pln01 tccom130,
-                BAANDB.TTCMCS080301@pln01 tcmcs080
-          where tccom130.t$cadr = tcmcs080.t$cadr$l
-            and tcmcs080.t$cfrw = a.carriercode)
-                                        CNPJ_TRANSPORTADOR,
+      znfmd630.t$cfrw$c                TRANSPORTADOR,
        a.carriername                    TRANSPORTADOR_NOME,
        a.C_VAT                          MEGA_ROTA,
        ( select sa.t$dsca$c 
            from BAANDB.TZNSLS002301@pln01 sa
           where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) ) 
                                         TIPO_ENTREGA,                                        
-            
-       a.INVOICENUMBER                  NF_NUMERO,
-       a.LANE                           NF_SERIE,
-       a.c_company                      NOME_CLIENTE,
-       od.sku                           ITEM_SKU,
-       sku.descr                        ITEM_DESCRICAO,
-       DPST.DEPART_NAME                 ITEM_DEPTO,
-       whwmd400.t$hght                  ITEM_ALTURA,
-       whwmd400.t$wdth                  ITEM_LARGURA,
-       whwmd400.t$dpth                  ITEM_COMPRIMENTO,
        od.ORIGINALQTY                   ITEM_QUANTIDADE,
-       znsls401.t$vlun$c                ITEM_VALOR,
-       sku.STDNETWGT*od.ORIGINALQTY     ITEM_PESO,
-       sku.STDCUBE*od.ORIGINALQTY       ITEM_CUBAGEM,                                                        
-       a.c_zip                          CEP_DESTINO,
-       a.c_city                         MUNICIPIO,
-       a.c_state                        UF,
-
-       DPST.ID_DEPART                   COD_ITEM_DEPTO,
        OX.NOTES1                       ETIQUETA,      
        NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,              
        a.carriercode                   transp_cod,
@@ -2009,9 +1694,8 @@ SELECT
             WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0)) 
               THEN '16'
             ELSE   '18'
-        END                            evento_cod,
-        znsls401.t$obet$c              Loja
-         
+        END                            evento_cod
+          
 FROM       WMWHSE8.ORDERS a
          
 INNER JOIN WMWHSE8.ORDERDETAIL od 
@@ -2024,11 +1708,7 @@ INNER JOIN WMWHSE8.sku sku
         ON  OX.ORDERKEY = od.ORDERKEY
        AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER 
        AND OX.UDF1 = 'SHIPPINGID'
-           
- LEFT JOIN ENTERPRISE.DEPARTSECTORSKU DPST 
-        ON To_Char(DPST.ID_DEPART) = To_Char(sku.skugroup)
-       AND To_Char(DPST.ID_SECTOR) = To_Char(sku.skugroup2)
-             
+
  LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400 
         ON ltrim(rtrim(whwmd400.t$item)) = sku.sku
            
@@ -2038,7 +1718,7 @@ INNER JOIN WMWHSE8.sku sku
            group by wv.orderkey ) w
         ON w.orderkey = a.orderkey
            
- LEFT JOIN ( select distinct 
+ INNER JOIN ( select distinct 
                     cd.orderid, 
                     cg.CAGEID,
                     cg.loc,
@@ -2138,8 +1818,9 @@ and znsls410.t$poco$c is null
 
  ) Q1
 
-WHERE evento_cod                  IN (:Evento)         -- Evento
-  AND tipo_entrega_nome           IN (:TipoEntrega)    -- Tipo de Entrega
-  and cd_filial                   IN (:Filial)         -- Planta
-  AND NVL(Trim(mega_rota), 'SMR') IN (:Rota)           -- Mega Rota
-  AND transp_cod                  IN (:Transportadora) -- Transportadora
+WHERE Q1.DATA_ULTIMO_EVENTO between :DataUltDe and :DataUltAte
+  and Q1.evento_cod                  IN (:Evento)         -- Evento
+  AND Q1.tipo_entrega_nome           IN (:TipoEntrega)    -- Tipo de Entrega
+  and Q1.cd_filial                   IN (:Filial)         -- Planta
+  AND NVL(Trim(Q1.mega_rota), 'SMR') IN (:Rota)           -- Mega Rota
+  AND Q1.transp_cod                  IN (:Transportadora) -- Transportadora
