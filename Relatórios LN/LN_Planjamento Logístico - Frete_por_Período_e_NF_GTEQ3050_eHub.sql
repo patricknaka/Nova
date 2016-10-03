@@ -49,7 +49,7 @@ SELECT znfmd630.t$fili$c             FILIAL,
             WHEN LENGTH(regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')) < 11
               THEN '00000000000000'
             ELSE regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')
-       END                           CNPJ_TRANSPORTADORA,
+       END                          CNPJ_TRANSPORTADORA,
 
        ( select znfmd061.t$dzon$c
            from baandb.tznfmd062601 znfmd062,
@@ -136,7 +136,8 @@ SELECT znfmd630.t$fili$c             FILIAL,
                      AT time zone 'America/Sao_Paulo') AS DATE)
        END                           DATA_PREVISTA_ENTREGA,
        
-       znfmd630.t$ncar$c             NRO_CARGA
+       znfmd630.t$ncar$c             NRO_CARGA,
+       znfmd630.t$etiq$c             ETIQUETA
     
 FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$date$c),
                       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -321,7 +322,7 @@ INNER JOIN baandb.tznfmd630601 znfmd630
 
      WHERE cisli940.t$fdty$l != 14
      
-       AND Trunc(znfmd640_ETR.DATA_OCORRENCIA)
+       AND Trunc(znfmd640_ETR.DATA_ULT_OCORRENCIA)
            BETWEEN :DtExpIni
                AND :DtExpFim
        AND NVL(znsls401.t$itpe$c, 16) IN (:TipoEntrega)
@@ -470,7 +471,8 @@ ORDER BY FILIAL, NUME_ENTREGA
 "                      AT time zone 'America/Sao_Paulo') AS DATE)  " &
 "        END                           DATA_PREVISTA_ENTREGA,  " &
 "  " &
-"        znfmd630.t$ncar$c             NRO_CARGA  " &
+"        znfmd630.t$ncar$c             NRO_CARGA,  " &
+"        znfmd630.t$etiq$c             ETIQUETA  " &
 "  " &
 " FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$date$c),  " &
 "                       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
