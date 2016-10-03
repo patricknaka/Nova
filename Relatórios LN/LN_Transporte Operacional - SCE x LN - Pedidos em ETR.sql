@@ -1824,3 +1824,243 @@ WHERE Q1.DATA_ULTIMO_EVENTO between :DataUltDe and :DataUltAte
   and Q1.cd_filial                   IN (:Filial)         -- Planta
   AND NVL(Trim(Q1.mega_rota), 'SMR') IN (:Rota)           -- Mega Rota
   AND Q1.transp_cod                  IN (:Transportadora) -- Transportadora
+  
+  
+  
+  
+  
+ =
+
+"select Q1.*  " &
+"from (SELECT  " &
+"      schm.UDF2                       PLANTA,  " &
+"      znsls401.t$entr$c               ENTREGA,  " &
+"      a.referencedocument             NRO_ORDEM_DE_VENDA,  " &
+"      a.orderkey                      PEDIDO_LN,  " &
+"       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.SCHEDULEDSHIPDATE,  " &
+"          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"            AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"                                       LIMITE_EXPEDICAO,  " &
+"       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null  " &
+"              THEN 'Recebimento_host'  " &
+"            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100'  " &
+"              THEN 'Estorno'  " &
+"            WHEN (a.status >  = '95' or sq2.status = 6)  " &
+"              THEN 'Expedicao_concluida'  " &
+"            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55'  " &
+"              THEN 'Fechamento_Gaiola'  " &
+"            WHEN sq2.status = 5 and a.status >  = '55'  " &
+"              THEN 'Entregue_Doca'  " &
+"            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55'  " &
+"              THEN 'Inclusao_Carga'  " &
+"            WHEN a.INVOICESTATUS = '1' and a.status >  = '55'  " &
+"              THEN 'DANFE_Solicitada'  " &
+"            WHEN a.INVOICESTATUS = '3' and a.status >  = '55'  " &
+"              THEN 'DANFE_Aprovada'  " &
+"            WHEN a.INVOICESTATUS = '4' and a.status >  = '55'  " &
+"              THEN 'Fim_Conferencia'  " &
+"            WHEN (a.status< = '22') and w.wavekey is not null  " &
+"              THEN 'Incluido_Onda'  " &
+"            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0)  " &
+"              THEN 'Picking_Liberado'  " &
+"            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0))  " &
+"              THEN 'Inicio_Picking'  " &
+"            ELSE   'Picking_Completo'  " &
+"        END                            ULTIMO_EVENTO,  " &
+"  " &
+"      sq2.loc                          DOCA_SAIDA,  " &
+"  " &
+"       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(  " &
+"              CASE WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100'  " &
+"                     THEN a.editdate  " &
+"                   WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55' THEN  " &
+"                     sq2.closedate  " &
+"                   WHEN sq2.status = 5 and a.status >  = '55' THEN  " &
+"                     sq2.editdate  " &
+"                   WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55' THEN  " &
+"                     sq2.adddate  " &
+"                   WHEN a.INVOICESTATUS = '1' and a.status >  = '55' THEN  " &
+"                     a.editdate  " &
+"                   WHEN a.INVOICESTATUS = '3' and a.status >  = '55' THEN  " &
+"                     a.editdate  " &
+"                   WHEN a.INVOICESTATUS = '4' and a.status >  = '55' THEN  " &
+"                     a.editdate  " &
+"                   ELSE NVL( ( SELECT MIN(h.adddate)  " &
+"                                 FROM " + Parameters!Compania.Value + ".ORDERSTATUSHISTORY h  " &
+"                                WHERE h.orderkey = a.orderkey  " &
+"                                  AND h.status = a.status ), a.editdate )  " &
+"               END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+"                      AT time zone 'America/Sao_Paulo') AS DATE)  " &
+"                                       DATA_ULTIMO_EVENTO,  " &
+"  " &
+"  " &
+"      a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,  " &
+"      sq2.CAGEID                       GAIOLA,  " &
+"      znfmd630.t$cfrw$c                TRANSPORTADOR,  " &
+"       a.carriername                    TRANSPORTADOR_NOME,  " &
+"       a.C_VAT                          MEGA_ROTA,  " &
+"       ( select sa.t$dsca$c  " &
+"           from BAANDB.TZNSLS002301@pln01 sa  " &
+"          where sa.t$tpen$c = NVL(Trim(znsls401.t$itpe$c), 16) )  " &
+"                                        TIPO_ENTREGA,  " &
+"       od.ORIGINALQTY                   ITEM_QUANTIDADE,  " &
+"       OX.NOTES1                       ETIQUETA,  " &
+"       NVL(Trim(znsls401.t$itpe$c), 16)tipo_entrega_nome,  " &
+"       a.carriercode                   transp_cod,  " &
+"       a.c_address1                    destinatario_nome,  " &
+"       a.whseid                        cd_filial,  " &
+"       znfmd630.t$wght$c               peso_tarifado,  " &
+"       CASE WHEN (a.status = '02' or a.status = '09' or a.status = '04' or a.status = '00') and w.wavekey is null  " &
+"              THEN '10'  " &
+"            WHEN (a.INVOICESTATUS = '2' and a.status >  = '55') or a.status = '100'  " &
+"              THEN '41'  " &
+"            WHEN (a.status >  = '95' or sq2.status = 6)  " &
+"              THEN '39'  " &
+"            WHEN (sq2.status = 3 or sq2.status = 4) and a.status >  = '55'  " &
+"              THEN '32'  " &
+"            WHEN sq2.status = 5 and a.status >  = '55'  " &
+"              THEN '34'  " &
+"            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.status >  = '55'  " &
+"              THEN '31'  " &
+"            WHEN a.INVOICESTATUS = '1' and a.status >  = '55'  " &
+"              THEN '20'  " &
+"            WHEN a.INVOICESTATUS = '3' and a.status >  = '55'  " &
+"              THEN '22'  " &
+"            WHEN a.INVOICESTATUS = '4' and a.status >  = '55'  " &
+"              THEN '28'  " &
+"            WHEN (a.status< = '22') and w.wavekey is not null  " &
+"              THEN '12'  " &
+"            WHEN (a.status = '29' and sq1.Released > 0 and sq1.InPicking = 0 and sq1.PartPicked = 0)  " &
+"              THEN '14'  " &
+"            WHEN (a.status = '29' and (sq1.InPicking > 0 or sq1.PartPicked > 0))  " &
+"              THEN '16'  " &
+"            ELSE   '18'  " &
+"        END                            evento_cod  " &
+"  " &
+"FROM       " + Parameters!Compania.Value + ".ORDERS a  " &
+"  " &
+"INNER JOIN " + Parameters!Compania.Value + ".ORDERDETAIL od  " &
+"        ON od.orderkey = a.orderkey  " &
+"  " &
+"INNER JOIN " + Parameters!Compania.Value + ".sku sku  " &
+"        ON od.sku = sku.sku  " &
+"  " &
+" LEFT JOIN " + Parameters!Compania.Value + ".OrderDetailXvas OX  " &
+"        ON  OX.ORDERKEY = od.ORDERKEY  " &
+"       AND OX.ORDERLINENUMBER = od.ORDERLINENUMBER  " &
+"       AND OX.UDF1 = 'SHIPPINGID'  " &
+"  " &
+" LEFT JOIN BAANDB.TWHWMD400301@pln01 whwmd400  " &
+"        ON ltrim(rtrim(whwmd400.t$item)) = sku.sku  " &
+"  " &
+" LEFT JOIN ( select wv.orderkey,  " &
+"                    max(wv.wavekey) wavekey  " &
+"               from " + Parameters!Compania.Value + ".wavedetail wv  " &
+"           group by wv.orderkey ) w  " &
+"        ON w.orderkey = a.orderkey  " &
+"  " &
+" INNER JOIN ( select distinct  " &
+"                    cd.orderid,  " &
+"                    cg.CAGEID,  " &
+"                    cg.loc,  " &
+"                    max(cg.status) status,  " &
+"                    max(cg.closedate) closedate,  " &
+"                    max(cd.adddate) adddate,  " &
+"                    max(cg.editdate) editdate  " &
+"               from " + Parameters!Compania.Value + ".CAGEID cg,  " &
+"                    " + Parameters!Compania.Value + ".CAGEIDDETAIL cd  " &
+"              where cd.CAGEID = cg.CAGEID  " &
+"           group by cd.orderid,  " &
+"                    cg.CAGEID,  " &
+"                    cg.loc ) sq2  " &
+"        ON sq2.orderid = a.orderkey  " &
+"  " &
+" LEFT JOIN BAANDB.TZNFMD630301@pln01 znfmd630  " &
+"        ON  znfmd630.t$orno$c = a.REFERENCEDOCUMENT  " &
+"       AND znfmd630.t$ngai$c = sq2.cageid  " &
+"  " &
+" LEFT JOIN ( select  " &
+"                    znsls004.t$ncia$c,  " &
+"                    znsls004.t$uneg$c,  " &
+"                    znsls004.t$pecl$c,  " &
+"                    znsls004.t$sqpd$c,  " &
+"                    znsls004.t$entr$c,  " &
+"                    znsls004.t$orno$c,  " &
+"                    sq401.t$itpe$c,  " &
+"                    sq401.t$obet$c,  " &
+"                    sq401.t$idpa$c,  " &
+"                    sum(sq401.t$vlun$c * sq401.t$qtve$c) t$vlun$c,  " &
+"                    max(sq401.t$dtep$c) t$dtep$c  " &
+"               from BAANDB.TZNSLS401301@pln01 sq401,  " &
+"                    baandb.tznsls004301@pln01 znsls004  " &
+"              where sq401.t$ncia$c = znsls004.t$ncia$c  " &
+"                and sq401.t$uneg$c = znsls004.t$uneg$c  " &
+"                and sq401.t$pecl$c = znsls004.t$pecl$c  " &
+"                and sq401.t$sqpd$c = znsls004.t$sqpd$c  " &
+"                and sq401.t$entr$c = znsls004.t$entr$c  " &
+"                and sq401.t$sequ$c = znsls004.t$sequ$c  " &
+"           group by  " &
+"                    znsls004.t$ncia$c,  " &
+"                    znsls004.t$uneg$c,  " &
+"                    znsls004.t$pecl$c,  " &
+"                    znsls004.t$sqpd$c,  " &
+"                    znsls004.t$entr$c,  " &
+"                    znsls004.t$orno$c,  " &
+"                    sq401.t$itpe$c,  " &
+"                    sq401.t$obet$c,  " &
+"                    sq401.t$idpa$c) znsls401  " &
+"        ON znsls401.t$orno$c = a.referencedocument  " &
+"  " &
+"LEFT JOIN ( select a.t$ncia$c,  " &
+"                   a.t$uneg$c,  " &
+"                   a.t$pecl$c,  " &
+"                   a.t$sqpd$c,  " &
+"                   a.t$entr$c,  " &
+"                   a.t$poco$c  " &
+"            from  baandb.tznsls410301@pln01 a  " &
+"            where a.t$poco$c = 'ETR' ) znsls410  " &
+"      ON znsls410.t$ncia$c = znsls401.t$ncia$c  " &
+"     AND znsls410.t$uneg$c = znsls401.t$uneg$c  " &
+"     AND znsls410.t$pecl$c = znsls401.t$pecl$c  " &
+"     AND znsls410.t$sqpd$c = znsls401.t$sqpd$c  " &
+"     AND znsls410.t$entr$c = znsls401.t$entr$c  " &
+"  " &
+"INNER JOIN enterprise.codelkup schm  " &
+"        ON UPPER(schm.UDF1) = a.whseid  " &
+"  " &
+"INNER JOIN ( SELECT o1.orderkey,  " &
+"                  ( select count(*)  " &
+"                      from " + Parameters!Compania.Value + ".orderdetail od1  " &
+"                     where od1.orderkey = o1.orderkey  " &
+"                       and od1.status = '29' ) Released,  " &
+"                  ( select count(*)  " &
+"                      from " + Parameters!Compania.Value + ".orderdetail od1  " &
+"                     where od1.orderkey = o1.orderkey  " &
+"                       and od1.status = '51' ) InPicking,  " &
+"                  ( select count(*)  " &
+"                      from " + Parameters!Compania.Value + ".orderdetail od1  " &
+"                     where od1.orderkey = o1.orderkey  " &
+"                       and od1.status = '52' ) PartPicked,  " &
+"                  ( select count(*)  " &
+"                      from " + Parameters!Compania.Value + ".orderdetail od1  " &
+"                     where od1.orderkey = o1.orderkey  " &
+"                       and od1.status = '55' ) PickedComplete  " &
+"               FROM " + Parameters!Compania.Value + ".orders o1 ) sq1  " &
+"        ON sq1.orderkey = a.orderkey  " &
+"  " &
+"WHERE schm.listname = 'SCHEMA'  " &
+"and (a.status >  = '95' or sq2.status = 6)  " &
+"  AND CASE WHEN a.FISCALDECISION like 'CANCELADO%'  " &
+"             THEN 1  " &
+"           ELSE 0  " &
+"       END = 0  " &
+"and znsls410.t$poco$c is null  ) Q1" &
+"  " &
+"WHERE Q1.evento_cod                  IN (:Evento)  " &
+"  AND Q1.tipo_entrega_nome           IN (:TipoEntrega)  " &
+"  and Q1.cd_filial                   IN (:Compania)  " &
+"  AND NVL(Trim(Q1.mega_rota), 'SMR') IN (:Rota)  " &
+"  AND Q1.transp_cod                  IN (:Transportadora)  " &
+"  AND Q1.DATA_ULTIMO_EVENTO                            " &
+"     				 BETWEEN NVL(Trim('" + Parameters!DataUltDe.Value + "'),  Q1.DATA_ULTIMO_EVENTO)  " &
+"                        AND NVL(Trim('" + Parameters!DataUltAte.Value + "'), Q1.DATA_ULTIMO_EVENTO)  "
