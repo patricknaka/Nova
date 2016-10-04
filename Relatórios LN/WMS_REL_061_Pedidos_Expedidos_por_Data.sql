@@ -3,6 +3,7 @@ SELECT
    WMSADMIN.DB_ALIAS                    PLANTA,
    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,
    ORDERS.ORDERKEY                      PEDIDO,
+   ORDERS.SUSR1                         NOME_TP_ENT, 
    znsls401.t$uneg$c                    ID_UNINEG,
    ORDERS.SUSR4                         UNINEG,
    znsls400.t$dtin$c                    DT_COMPRA,
@@ -153,6 +154,7 @@ WHERE Trunc(ORDERS.ADDDATE)
 "  DISTINCT  " &
 "    WMSADMIN.DB_ALIAS                    PLANTA,  " &
 "    ORDERS.SCHEDULEDSHIPDATE             DT_LIMITE,  " &
+"    ORDERS.SUSR1                         NOME_TP_ENT,  " &
 "    ORDERS.ORDERKEY                      PEDIDO,  " &
 "    znsls401.t$uneg$c                    ID_UNINEG,  " &
 "    ORDERS.SUSR4                         UNINEG,  " &
