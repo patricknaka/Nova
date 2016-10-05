@@ -43,7 +43,7 @@ select
     tdpur400.t$hdst       NOCA_SITUACAO,
     ORDEM.STATUS          DESCR_NOCA_SITUACAO,
       
-    tdpur401.t$qidl       QT_RECEBIDA,
+    tdrec941.t$qnty$l       QT_RECEBIDA,
     tdpur401.t$qoor       QT_PEDIDA,  
     tdrec941.t$gamt$l     VL_MERC_ITEM,
     tdrec941.t$tamt$l     VL_TOTAL,
