@@ -1,10 +1,10 @@
 select   
-           Prec.t$fire$l                             PRE_REC,
            tcmcs080.t$cfrw                           Cod_transp,
            Prec.t$fovn$l                             CNPJ,
            Prec.t$fids$l                             NOME,
            Prec.t$fire$l                             PRE_REC,
-           Prec.t$frec$l                             REC_FIS,    
+           Prec.t$frec$l                             REC_FIS,
+     --    logrec.t$seqn$c                           LINHA_ERRO,
            CASE Prec.t$stpr$c
            WHEN 2  THEN 'ABERTO'
            WHEN 3 THEN 'NF COM ERRO' END    STATUS_REC,
@@ -42,13 +42,11 @@ select
            prec.t$seri$l   S_CTE,
            prec.t$cnfe$l   CTE,
            nvl(ordf.t$orno$c,cisli245.t$slso)                 Ordem,
-           --ordf.t$pecl$c,
-           --znsls004.t$pecl$c,
+           
            nvl(substr(ordf.t$pecl$c,0,length(ordf.t$pecl$c)-2), znsls004.t$pecl$c)
                                                              PEDIDO,
+           nvl(ordf.t$pecl$c, znsls004.t$entr$c)             ENTREGA,                                                              
            nvl(ordf.t$docn$c,cisli940.t$docn$l)              N_NF,
-           ordf.t$docn$c,
-           cisli940.t$docn$l,
            nvl(ordf.t$seri$c,cisli940.t$seri$l)              S_NF,
            refc.t$cnfe$l                                     NFE,
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(prec.t$idat$l,  
@@ -57,6 +55,7 @@ select
           
            ULT_OCOR.PONTO                                    STATUS,
            prec.t$gtam$l                                     VALOR_CTE
+--           prec.t$fdot$l       ENTRADA_SAIDA
 
       from baandb.tbrnfe940301 Prec
             
@@ -81,11 +80,13 @@ left join ( select a.t$fire$l,
 
 left join ( select a.t$ncia$c,
                    a.t$uneg$c,
+                   a.t$entr$c,
                    min(a.t$pecl$c) t$pecl$c,
                    a.t$orno$c
               from baandb.tznsls004301 a
           group by a.t$ncia$c,
                    a.t$uneg$c,
+                   a.t$entr$c,
                    a.t$orno$c ) znsls004
         on znsls004.t$orno$c = cisli245.t$slso
        
@@ -108,7 +109,8 @@ left join ( select a.t$fire$c,
                       a.t$fili$c) ordf
         on ordf.t$cnfe$c = refc.t$cnfe$l
         AND PREC.T$TORG$C = ORDF.T$TORG$C
-        AND ordf.t$cnfe$c != ' '
+--       and ordf.t$orno$c = cisli245.t$SLSO
+       and ordf.t$cnfe$c != ' '
        
 inner join baandb.ttccom130301 tccom130
         on tccom130.t$fovn$l = Prec.t$fovn$l
