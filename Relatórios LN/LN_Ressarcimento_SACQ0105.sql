@@ -1,4 +1,4 @@
-    SELECT znsls400dev.t$idca$c                                     CANAL,
+SELECT znsls400dev.t$idca$c                                     CANAL,
            CASE WHEN znsls409.t$fdat$c < to_date('01-01-1980', 'dd-mm-yyyy') 
                   THEN NULL
                 ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 
@@ -111,8 +111,11 @@
            CASE WHEN znsls402_dev.t$vlmr$c IS NULL 
                   THEN 'REENVIO'
                 ELSE   'REEMBOLSO' 
-           END                                                      FORMA_DE_ATENDIMENTO
---select * 
+           END                                                      FORMA_DE_ATENDIMENTO,
+		   
+		   znsls409.t$inut$c                               ALTERACAO_SUBSTITUICAO,  -- Campo novo
+		   znsls409.t$dtin$c  				   DATA_ALTERACAO           -- Campo novo
+
 FROM       baandb.tznsls409301 znsls409
 
 INNER JOIN ( select znsls401.t$ncia$c,
@@ -122,7 +125,6 @@ INNER JOIN ( select znsls401.t$ncia$c,
                     znsls401.t$entr$c,
                     znsls401.t$pvdt$c,
                     znsls401.t$sedt$c,
---                    znsls401.t$sidt$c,
                     znsls401.t$endt$c,
                     znsls401.t$itpe$c,
                     znsls401.t$lmot$c,
@@ -149,7 +151,6 @@ INNER JOIN ( select znsls401.t$ncia$c,
                     znsls401.t$entr$c,
                     znsls401.t$pvdt$c,
                     znsls401.t$sedt$c,
---                    znsls401.t$sidt$c,
                     znsls401.t$endt$c,
                     znsls401.t$itpe$c,
                     znsls401.t$lmot$c,
@@ -272,7 +273,6 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
                     a.t$pecl$c,
                     a.t$sqpd$c,
                     a.t$entr$c,
---                    a.t$sequ$c,
                     a.t$orno$c,
                     min(a.t$pono$c) t$pono$c
                from BAANDB.tznsls401301 a --where a.t$entr$c = '10032017602'
@@ -281,15 +281,12 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
                     a.t$pecl$c,
                     a.t$sqpd$c,
                     a.t$entr$c,
---                    a.t$sequ$c,
                     a.t$orno$c ) znsls401orig                    -- Pedido integrado origem
---                    a.t$pono$c ) znsls401orig                    -- Pedido integrado origem
         ON znsls401orig.t$ncia$c = znsls401dev.t$ncia$c
        AND znsls401orig.t$uneg$c = znsls401dev.t$uneg$c
        AND znsls401orig.t$pecl$c = znsls401dev.t$pvdt$c
        AND znsls401orig.t$sqpd$c = znsls401dev.t$sedt$c
        AND znsls401orig.t$entr$c = znsls401dev.t$endt$c
---       AND znsls401orig.t$sequ$c = znsls401dev.t$sidt$c
 
  LEFT JOIN ( select a.t$ncia$c,
                     a.t$uneg$c,
@@ -327,7 +324,7 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
        AND znsls004dev.t$pecl$c = znsls401dev.t$pecl$c
        AND znsls004dev.t$entr$c = znsls401dev.t$entr$c
 
- LEFT JOIN BAANDB.ttdsls400301 tdsls400orig                      -- ordem de venda origem
+ LEFT JOIN BAANDB.ttdsls400301 tdsls400orig  -- ordem de venda origem
         ON tdsls400orig.t$orno = znsls401orig.t$orno$c          
 
  LEFT JOIN BAANDB.ttcmcs080301 tcmcs080_orig
@@ -409,7 +406,6 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
          inner join baandb.tcisli940301 b
                  on b.t$fire$l = a.t$fire$c
               where b.t$stat$l IN (5,6)      --5-Impressa, 6-Lancada
---                and b.t$fdty$l = 14          --14-retorno de mercadoria de cliente
            group by a.t$pecl$c,
                     a.t$orno$c,
                     a.t$fili$c,
@@ -418,7 +414,7 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
                     a.t$seri$c ) znfmd630dev
         ON TO_CHAR(znfmd630dev.t$pecl$c) = TO_CHAR(znsls401dev.t$entr$c)    --tem que usar a entrega, pois a OV pode estar cancelada
        AND znfmd630dev.t$fire$c = cisli245dev.t$fire$l
-       AND znsls004dev.t$orno$c = znfmd630dev.t$orno$c
+       AND znfmd630dev.t$orno$c = znsls004dev.t$orno$c
 
  LEFT JOIN ( Select a.t$fili$c,
                     a.t$etiq$c,
@@ -489,13 +485,13 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
                from baandb.tznfmd630301 a
          inner join baandb.tcisli940301 b
                  on a.t$fire$c = b.t$fire$l
-              where b.t$stat$l IN (5,6)      --5-Impresso, 6-Lancado
+              where b.t$stat$l IN (5,6)         --5-Impresso, 6-Lancado
            group by a.t$pecl$c,
                     a.t$orno$c,
                     a.t$docn$c,
                     a.t$seri$c,
                     a.t$fili$c,
-                    a.t$fire$c ) znfmd630_orig                                 --etiqueta venda
+                    a.t$fire$c ) znfmd630_orig  --etiqueta venda
         ON TO_CHAR(znfmd630_orig.t$pecl$c) = TO_CHAR(CASE WHEN znsls400dev.t$sige$c = 1 
                                                             THEN znmcs096dev.t$sige$c
                                                           ELSE   znsls401orig.t$entr$c 
@@ -554,7 +550,6 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
                                             and l1.t$cpac = l.t$cpac ) ) ORDEM_COLETA
         ON ORDEM_COLETA.t$cnst = tdsls400dev.t$hdst
 
-     WHERE znsls409.t$lbrd$c = 1
+     WHERE znsls409.t$lbrd$c = 1        --Forcado = Sim
 
        AND NVL(NVL(Trim(tcmcs080_dev.t$cfrw), Trim(tdsls400dev.t$cfrw)), -1) IN (:Transportadora)
-	   
