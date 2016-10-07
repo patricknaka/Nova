@@ -113,8 +113,16 @@ SELECT znsls400dev.t$idca$c                                     CANAL,
                 ELSE   'REEMBOLSO' 
            END                                                      FORMA_DE_ATENDIMENTO,
 		   
-		   znsls409.t$inut$c                               ALTERACAO_SUBSTITUICAO,  -- Campo novo
-		   znsls409.t$dtin$c  				   DATA_ALTERACAO           -- Campo novo
+		  CASE WHEN  znsls409.t$inut$c = 1 THEN
+					'SIM' 
+			ELSE
+				'NAO'
+			END    			                    ALTERACAO_SUBSTITUICAO,
+		  CASE WHEN znsls409.t$dtin$c = '01/01/1970' THEN
+            NULL 
+       ELSE
+             znsls409.t$dtin$c
+       END                                                          DATA_ALTERACAO
 
 FROM       baandb.tznsls409301 znsls409
 
