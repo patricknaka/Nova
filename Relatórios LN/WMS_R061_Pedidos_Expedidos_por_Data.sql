@@ -6,6 +6,7 @@ SELECT
         AT time zone 'America/Sao_Paulo') AS DATE)             
                                          DT_LIMITE,
     ORDERS.ORDERKEY                      PEDIDO,
+    ORDERS.SUSR1                         NOME_TP_ENT, 
     znsls401.t$uneg$c                    ID_UNINEG,
     ORDERS.SUSR4                         UNINEG,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c, 
@@ -142,6 +143,7 @@ WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ADDDATE,
 "        AT time zone 'America/Sao_Paulo') AS DATE)                      " &             
 "                                         DT_LIMITE,                 " &
 "    ORDERS.ORDERKEY                      PEDIDO,                    " &
+"    ORDERS.SUSR1                         NOME_TP_ENT,  " &
 "    znsls401.t$uneg$c                    ID_UNINEG,                 " &
 "    ORDERS.SUSR4                         UNINEG,                    " &
 "    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,           " &
