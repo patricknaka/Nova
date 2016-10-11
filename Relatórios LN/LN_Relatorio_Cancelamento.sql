@@ -1,5 +1,6 @@
 SELECT
-  DISTINCT
+  DISTINCT      
+     znsls402.t$uneg$c             UNIDADE_NEGOCIO,
     znsls402.t$maqu$c             ESTABELECIMENTO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(zncmg015.t$date$c,
      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -10,6 +11,9 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'),
     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                   DT_VENDA2,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400d.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'),
+    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+                                  DT_VENDA3,
     znsls402.t$valo$c             VL_MEIOPAGTO,
     zncmg015.t$slst$c             VL_VENDA,
     zncmg015.t$slct$c             VL_CANCELAR,
@@ -74,6 +78,10 @@ INNER JOIN baandb.tznsls400301  znsls400
        AND znsls401.t$uneg$c = znsls400.t$uneg$c
        AND znsls401.t$pecl$c = znsls400.t$pecl$c
        AND znsls401.t$sqpd$c = znsls400.t$sqpd$c
+      
+ LEFT JOIN baandb.tznsls400301  znsls400d
+        ON znsls400d.t$pecl$c = znsls401.t$pvdt$c
+       AND znsls400d.t$sqpd$c = znsls401.t$sedt$c
        
 INNER JOIN baandb.tzncmg009301  zncmg009
         ON zncmg009.t$bnds$c = znsls402.t$cccd$c
@@ -140,5 +148,5 @@ INNER JOIN baandb.tzncmg009301  zncmg009
        AND zncmg015.t$situ$c IN (:Situacao)
        AND ( (zncmg015.t$nrem$c IN (:Remessa)) OR (:RemessaTodos = 1) )
        AND ( (zncmg015.t$pecl$c IN (:Pedido)) OR (:PedidoTodos = 1) )
-	   
+       and znsls402.t$uneg$c in (:UniNegocio)
   ORDER BY znsls400.t$dtin$c
