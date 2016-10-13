@@ -13,7 +13,7 @@ SELECT
     ZNFMD630.T$ORNO$C      ORDEM_VENDA,
     OXV.NOTES1             ETIQUETA,
     ZNSLS401.T$NOME$C      CLIENTE,
-    ZNSLS401.T$ICLE$C      CPF_CNPJ,
+    NVL(ZNSLS401.T$ICLC$C,ZNSLS401.T$ICLE$C)      CPF_CNPJ,  --Campo alterado pela INFOR
     ZNSLS401.T$LOGE$C      ENDERECO,
     ZNSLS401.T$NUME$C      NUMERO,
     ZNSLS401.T$BAIE$C      BAIRRO,
@@ -84,7 +84,7 @@ SELECT
                            DATA_COMPRA,
 
     CASE WHEN ZNSLS401.T$IDPA$C = '1'
-           THEN 'Manhã'
+           THEN 'Manhï¿½'
          WHEN ZNSLS401.T$IDPA$C = '2'
            THEN 'Tarde'
          WHEN ZNSLS401.T$IDPA$C = '3'
@@ -209,7 +209,7 @@ ORDER BY DT_ETR
 "     ZNFMD630.T$ORNO$C      ORDEM_VENDA,  " &
 "     OXV.NOTES1             ETIQUETA,  " &
 "     ZNSLS401.T$NOME$C      CLIENTE,  " &
-"     ZNSLS401.T$ICLE$C      CPF_CNPJ,  " &
+"     NVL(ZNSLS401.T$ICLC$C,ZNSLS401.T$ICLE$C)      CPF_CNPJ,  " &
 "     ZNSLS401.T$LOGE$C      ENDERECO,  " &
 "     ZNSLS401.T$NUME$C      NUMERO,  " &
 "     ZNSLS401.T$BAIE$C      BAIRRO,  " &
@@ -280,7 +280,7 @@ ORDER BY DT_ETR
 "                            DATA_COMPRA,  " &
 "  " &
 "     CASE WHEN ZNSLS401.T$IDPA$C = '1'  " &
-"            THEN 'Manhã'  " &
+"            THEN 'Manhï¿½'  " &
 "          WHEN ZNSLS401.T$IDPA$C = '2'  " &
 "            THEN 'Tarde'  " &
 "          WHEN ZNSLS401.T$IDPA$C = '3'  " &
