@@ -43,11 +43,13 @@
   	      tccom139.t$dsca			  MUNICIPIO,
   	      tccom130_cli.t$cste		  UF,
   	      tccom130_cli.t$pstc		  CEP,
-          znsls401.t$loge$c           ENDERECO_CLIENTE,
-          znsls401.t$baie$c           BAIRRO_CLIENTE,
-          znsls401.t$tele$c           TELEFONE1_CLIENTE,
-          znsls401.t$te2e$c           TELEFONE2_CLIENTE
-  
+          znsls400.t$logf$c           ENDERECO_CLIENTE,
+          znsls400.t$numf$c           NR_ENDERECO_CLIENTE,
+		  znsls400.t$baif$c           BAIRRO_CLIENTE,
+          znsls400.t$telf$c           TELEFONE1_CLIENTE,
+          znsls400.t$te1f$c           TELEFONE2_CLIENTE,
+		  cisli940.t$amnt$l           VALOR_NOTA
+	  
      from baandb.tznfmd630301 znfmd630
 
 left join baandb.tcisli940301 cisli940
@@ -85,6 +87,12 @@ left join baandb.ttdrec955301 tdrec955
 
 left join baandb.tznsls401301 znsls401
        on znsls401.T$ORNO$C = znfmd630.T$ORNO$C 
+	   
+left join baandb.tznsls400301 znsls400
+       on znsls400.T$NCIA$C = znsls401.T$NCIA$C
+      and znsls400.T$UNEG$C = znsls401.T$UNEG$C	   
+      and znsls400.T$PECL$C = znsls401.T$PECL$C
+      and znsls400.T$SQPD$C = znsls401.T$SQPD$C  	   
        
 where	cisli940.t$stat$l = 6
 AND ((znfmd630.t$pecl$c IN (:Entrega))
