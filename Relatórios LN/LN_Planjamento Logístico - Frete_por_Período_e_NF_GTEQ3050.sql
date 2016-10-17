@@ -1,6 +1,7 @@
 SELECT znfmd630.t$fili$c             FILIAL,
        NVL(tcmcs031.t$dsca,
            'Pedido Interno')         MARCA,
+       znsls400.t$nomf$c             NOME_DESTINATARIO,
        znfmd640_ETR.DATA_OCORRENCIA  DATA_EXPEDICAO,
        znfmd630.t$docn$c             NUME_NOTA,
        znfmd630.t$seri$c             NUME_SERIE,
@@ -60,12 +61,7 @@ SELECT znfmd630.t$fili$c             FILIAL,
             and znfmd061.t$creg$c = znfmd062.t$creg$c
             and tccom130.t$pstc between znfmd062.t$cepd$c
                                     and znfmd062.t$cepa$c
-            and rownum = 1 )         REGIAO,
-
-       znfmd630.t$ncar$c             NRO_CARGA,
-       znfmd630.t$etiq$c             ETIQUETA,
-       CRIACAO_WMS.DATA_OCORRENCIA   DATA_WMS,
-
+            and rownum = 1 )REGIAO,
        CASE WHEN ZNSLS401.T$IDPA$C = '1'
               THEN 'Manhã'
             WHEN ZNSLS401.T$IDPA$C = '2'
@@ -134,22 +130,28 @@ SELECT znfmd630.t$fili$c             FILIAL,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') AS DATE)
        END                           DATA_PREVISTA_ENTREGA,
-       znsls400.t$nomf$c             NOME_DESTINATARIO
 
+       znfmd630.t$ncar$c             NRO_CARGA,
+       znfmd630.t$etiq$c             ETIQUETA,
+       CRIACAO_WMS.DATA_OCORRENCIA   DATA_WMS
 
-FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$date$c),
-                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                         AT time zone 'America/Sao_Paulo') AS DATE) DATA_OCORRENCIA,
-                    znfmd640_ETR.t$etiq$c,
+FROM       ( select Max(znfmd640_ETR.t$date$c)  DATA_OCORRENCIA,
+                    Max(znfmd640_ETR.t$etiq$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640_ETR.t$date$c ) t$etiq$c,
+                    znfmd630.t$pecl$c,
                     znfmd640_ETR.t$fili$c
                from BAANDB.tznfmd640301 znfmd640_ETR
+         inner join baandb.tznfmd630301 znfmd630
+                 on znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
+                and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
               where znfmd640_ETR.t$coct$c = 'ETR'
-           group by znfmd640_ETR.t$etiq$c,
+                and znfmd640_ETR.T$TORG$C = 1
+           group by znfmd630.t$pecl$c,
                     znfmd640_ETR.t$fili$c ) znfmd640_ETR
 
 INNER JOIN baandb.tznfmd630301 znfmd630
-        ON znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
-       AND znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
+        ON znfmd630.t$fili$c = znfmd640_ETR.t$fili$c
+       AND znfmd630.t$etiq$c = znfmd640_ETR.t$etiq$c
+       AND znfmd630.t$pecl$c = znfmd640_ETR.t$pecl$c
 
 inner JOIN ( select a1.t$ncia$c,
                     a1.t$uneg$c,
@@ -276,25 +278,31 @@ inner JOIN ( select a1.t$ncia$c,
                from baandb.tznfmd640301 znfmd640
          inner join baandb.tznmcs002301 znmcs002
                  on znmcs002.t$poco$c = znfmd640.t$coci$c
-              where znfmd640.t$date$c = ( select max(oc.t$date$c) 
-                                     from baandb.tznfmd640301 oc
-                                    where oc.t$fili$c = znfmd640.t$fili$c
-                                      and oc.t$etiq$c = znfmd640.t$etiq$c )
+              where (znfmd640.t$date$c, znfmd640.t$udat$c) = ( select max(oc.t$date$c) t$date$c, max(oc.t$udat$c) t$udat$c
+                                                                 from baandb.tznfmd640301 oc
+                                                                where oc.t$fili$c = znfmd640.t$fili$c
+                                                                  and oc.t$etiq$c = znfmd640.t$etiq$c )
            group by znfmd640.t$fili$c,
                     znfmd640.t$etiq$c,
                     znmcs002.t$desc$c ) znfmd640 
         ON znfmd640.t$fili$c = znfmd630.t$fili$c
        AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
 
- LEFT JOIN ( select znsls410.t$poco$c CODE_OCORRENCIA
-                  , znsls410.t$dtoc$c DATA_OCORRENCIA
+ LEFT JOIN ( select znsls410.t$poco$c      CODE_OCORRENCIA
+                  , MAX(znsls410.t$dtoc$c) DATA_OCORRENCIA
                   , znsls410.t$ncia$c
                   , znsls410.t$uneg$c
                   , znsls410.t$pecl$c
                   , znsls410.t$sqpd$c
                   , znsls410.t$entr$c
                from baandb.tznsls410301 znsls410
-              where znsls410.t$poco$c = 'WMS' ) CRIACAO_WMS
+              where znsls410.t$poco$c = 'WMS'
+           group by znsls410.t$poco$c
+                  , znsls410.t$ncia$c
+                  , znsls410.t$uneg$c
+                  , znsls410.t$pecl$c
+                  , znsls410.t$sqpd$c
+                  , znsls410.t$entr$c ) CRIACAO_WMS
         ON CRIACAO_WMS.t$ncia$c = znsls004.t$ncia$c
        AND CRIACAO_WMS.t$uneg$c = znsls004.t$uneg$c
        AND CRIACAO_WMS.t$pecl$c = znsls004.t$pecl$c
