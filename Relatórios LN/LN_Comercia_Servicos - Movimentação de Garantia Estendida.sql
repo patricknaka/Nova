@@ -52,7 +52,7 @@ SELECT ZNCOM005.T$UNEG$C                               UNEG,
            
        ZNCOM005.T$IGAR$C                               ITEM_GARANTIDO,
        TCIBD001_I.T$DSCA                               DESCRICAO,
-       TCIBD001_I.T$MDFB$C                             COD_MOD_FABRICANTE,
+       Trim(TCIBD001_I.T$MDFB$C)                       COD_MOD_FABRICANTE,
        TCMCS023.T$CITG                                 ID_DEPARTAMENTO,
        TCMCS023.T$DSCA                                 DESCR_DEPARTAMENTO,
        TCIBD001_I.T$FAMI$C                             ID_FAMILIA,
@@ -71,8 +71,8 @@ SELECT ZNCOM005.T$UNEG$C                               UNEG,
        ZNCOM005.T$CANG$C                               VL_COMISSAO,
        ZNCOM005.T$CANG$C -
        ZNCOM005.T$IRRF$C                               MARGEM_CONTR,
-       cisli940.T$DOCN$L                             NUM_NOTA,
-       cisli940.T$SERI$L                             SERIE,
+       cisli940.T$DOCN$L                               NUM_NOTA,
+       cisli940.T$SERI$L                               SERIE,
     
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.T$DATE$L, --ZNSLS410_P.T$DTEM$C, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -83,7 +83,8 @@ SELECT ZNCOM005.T$UNEG$C                               UNEG,
        TCCOM100.T$CADR                                 ID_CLIENTE_ENT,
        ZNSLS400.T$FTYP$C                               TIPO_CLIENTE,
        ZNSLS400.T$NOMF$C                               NOME_CLIENTE,
-       ZNSLS400.T$ICLF$C                               CPF_CLIENTE,
+       ZNSLS400.T$ICLC$C                               CPF_CLIENTE,
+     --ZNSLS400.T$ICLF$C                               CPF_CLIENTE,
        ZNSLS400.T$EMAF$C                               EMAIL_CLIENTE, 
        ZNSLS400.T$TELF$C                               CONTATO_1,
        ZNSLS400.T$TE1F$C                               CONTATO_2,
@@ -208,12 +209,12 @@ LEFT JOIN ( select a.t$ncia$c,
           group by a.t$ncia$c,
                    a.t$uneg$c,
                    a.t$pecl$c,
-                   a.t$sqpd$c ) znsls410_G         --Emissão Venda Produto
+                   a.t$sqpd$c ) znsls410_G         --Emissão Venda Produto ***Problem
        ON ZNSLS410_G.T$NCIA$C = ZNCOM005.T$NCIA$C
       AND ZNSLS410_G.T$UNEG$C = ZNCOM005.T$UNEG$C
       AND ZNSLS410_G.T$PECL$C = ZNCOM005.T$PECL$C
 
-LEFT JOIN ( select a.t$ncia$c,
+inner JOIN ( select a.t$ncia$c,
                    a.t$uneg$c,
                    a.t$pecl$c,
                    a.t$sqpd$c,
@@ -222,6 +223,10 @@ LEFT JOIN ( select a.t$ncia$c,
                    min(a.t$seqn$c) t$seqn$c
               from baandb.tznsls410301 a
              where a.t$poco$c = 'DNF'
+            HAVING Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(min(a.t$dtoc$c),
+                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+                        AT time zone 'America/Sao_Paulo') AS DATE))  
+                   BETWEEN :DataPedidoDe AND :DataPedidoAte
           group by a.t$ncia$c,
                    a.t$uneg$c,
                    a.t$pecl$c,
@@ -233,21 +238,22 @@ LEFT JOIN ( select a.t$ncia$c,
       AND znsls410_EMISSAO.T$SQPD$C = ZNCOM005.T$SQPD$C
       AND znsls410_EMISSAO.T$ENTR$C = ZNCOM005.T$ENTR$C
 
-LEFT JOIN baandb.tcisli245301 cisli245
-       ON cisli245.t$slso = ZNSLS401_P.t$orno$c
-      AND cisli245.t$pono = ZNSLS401_P.t$pono$c
+ LEFT JOIN ( select cisli940.t$date$l,
+                    cisli940.t$docn$l,
+                    cisli940.t$seri$l,
+                    cisli940.t$fire$l,
+                    cisli940.t$stat$l,
+                    cisli245.t$slso,
+                    cisli245.t$pono
+               from baandb.tcisli940301 cisli940
+          left join baandb.tcisli245301 cisli245
+                 on cisli940.t$fire$l = cisli245.t$fire$l
+              where cisli940.t$stat$l in (5, 6) ) cisli940
+        ON cisli940.t$slso = ZNSLS401_P.t$orno$c
+       AND cisli940.t$pono = ZNSLS401_P.t$pono$c
 
-LEFT JOIN ( select cisli940.t$date$l,
-                   cisli940.t$docn$l,
-                   cisli940.t$seri$l,
-                   cisli940.t$fire$l,
-                   cisli940.t$stat$l
-              from baandb.tcisli940301  cisli940
-             where cisli940.t$stat$l in (5, 6) ) cisli940
-       ON cisli940.t$fire$l = cisli245.t$fire$l
-
-LEFT JOIN baandb.ttccom100301 tccom100
-       ON tccom100.t$bpid = znsls400.t$ofbp$c
+ LEFT JOIN baandb.ttccom100301 tccom100
+        ON tccom100.t$bpid = znsls400.t$ofbp$c
        
 WHERE EXISTS ( select *     --ITENS TIPO GARANTIA ESTENDIDA
                  from baandb.tznisa002301 a,
@@ -258,12 +264,7 @@ WHERE EXISTS ( select *     --ITENS TIPO GARANTIA ESTENDIDA
                   and b.t$bpti$c = 2    --Tipo de Interface de Aviso = Arquivo Texto
                   and b.t$nfed$c = 2  ) --Gera Nota Fiscal de Entrada = Nao
 
-  AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_EMISSAO.t$dtoc$c,
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-                AT time zone 'America/Sao_Paulo') AS DATE))  
-      BETWEEN :DataPedidoDe AND :DataPedidoAte
   AND ZNSLS400.T$IDCA$C IN (:CanalVendas)
-  AND ZNCOM005.T$CANC$C IN (:Status) --1 = Cancelamento, 2 = Venda
+  AND ( (:Status = 0) OR (ZNCOM005.T$CANC$C = :Status) ) --1 = Cancelamento, 2 = Venda, 0 = Todos
   AND ( (:UNegocioTodos = 1) OR (TRIM(ZNCOM005.T$UNEG$C) IN (:UNegocio) AND (:UNegocioTodos = 0)) )
   AND ( (:PedGarantiaTodos = 1) OR (TRIM(ZNCOM005.T$PECL$C) IN (:PedGarantia) AND (:PedGarantiaTodos = 0)) )
-  
