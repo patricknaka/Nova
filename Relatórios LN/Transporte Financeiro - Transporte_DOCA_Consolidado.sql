@@ -24,28 +24,28 @@ select Q1.*
         
       sq2.loc                          DOCA_SAIDA,
 
-      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(
-                       CASE WHEN (a.INVOICESTATUS = '2' and a.novastatus >  = '55') or a.novastatus = '100'
-                              THEN a.editdate
-                            WHEN (sq2.status = 3 or sq2.status = 4) and a.novastatus >  = '55' THEN
-                              sq2.closedate
-                            WHEN sq2.status = 5 and a.novastatus >  = '55' THEN
-                              sq2.editdate
-                            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and a.novastatus >  = '55' THEN
-                              sq2.adddate
-                            WHEN a.INVOICESTATUS = '1' and a.novastatus >  = '55' THEN
-                              a.editdate
-                            WHEN a.INVOICESTATUS = '3' and a.novastatus >  = '55' THEN
-                              a.editdate
-                            WHEN a.INVOICESTATUS = '4' and a.novastatus >  = '55' THEN
-                              a.editdate
-                            ELSE NVL( ( SELECT MIN(h.adddate)
-                                          FROM WMWHSE1.ORDERSTATUSHISTORY h
-                                         WHERE h.orderkey = a.orderkey
-                                           AND h.status = a.status ), a.editdate )
-                        END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                               AT time zone 'America/Sao_Paulo') AS DATE)      
-                                       DATA_ULTIMO_EVENTO,                                       
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(   
+                       CASE WHEN (a.INVOICESTATUS = '2' and cast(a.novastatus as integer) >  = '55') or a.novastatus = '100'  
+                              THEN a.editdate    
+                            WHEN (sq2.status = 3 or sq2.status = 4) and cast(a.novastatus as integer) >  = '55' THEN     
+                              sq2.closedate 
+                            WHEN sq2.status = 5 and cast(a.novastatus as integer) >  = '55' THEN      
+                              sq2.editdate  
+                            WHEN sq2.orderid IS NOT NULL and sq2.status = 2 and cast(a.novastatus as integer) >  = '55' THEN  
+                              sq2.adddate   
+                            WHEN a.INVOICESTATUS = '1' and cast(a.novastatus as integer) >  = '55' THEN    
+                              a.editdate    
+                            WHEN a.INVOICESTATUS = '3' and cast(a.novastatus as integer) >  = '55' THEN    
+                              a.editdate    
+                            WHEN a.INVOICESTATUS = '4' and cast(a.novastatus as integer) >  = '55' THEN    
+                              a.editdate    
+                            ELSE NVL( ( SELECT MIN(h.adddate)  
+                                          FROM WMWHSE8.ORDERSTATUSHISTORY h   
+                                         WHERE h.orderkey = a.orderkey    
+                                           AND h.status = a.status ), a.editdate )   
+                        END, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+                               AT time zone 'America/Sao_Paulo') AS DATE) 
+                                       DATA_ULTIMO_EVENTO,                                      
  
 
       a.EDITWHO                        ULTIMO_USUARIO_OPERADOR,
