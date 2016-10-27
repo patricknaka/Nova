@@ -82,7 +82,7 @@
 	ORDER BY Trunc(DATA_APROV), 
 			 REFE_FISCAL
 
---view com par‚metros
+--view com par√¢metros
 =
 "	SELECT "&
 "	  DISTINCT "&
