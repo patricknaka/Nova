@@ -1,9 +1,9 @@
- SELECT 
+SELECT 
   DISTINCT
     znsls400.t$idcp$c            CAMPANHA,
     znsls400.t$idco$c            CONTRATO,
-    tccom130.t$fovn$l            CNPJ,
-    tccom130.t$nama              NOME,
+    tccom130f.t$fovn$l           CNPJ,
+    tccom130f.t$nama             NOME,
     tccom130.t$namc   || ' ' ||
     tccom130.t$hono              ENDERECO,
     cisli940.t$docn$l            NF_FATURA,
@@ -73,8 +73,11 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND znsls400.t$uneg$c = znsls401.t$uneg$c
        AND znsls400.t$pecl$c = znsls401.t$pecl$c
        AND znsls400.t$sqpd$c = znsls401.t$sqpd$c
+
+LEFT JOIN baandb.ttccom130301 tccom130f              --endereço faturado
+        ON tccom130f.t$cadr = cisli940.t$itoa$l
         
-LEFT JOIN baandb.ttccom130301 tccom130              --endereço entrega
+LEFT JOIN baandb.ttccom130301 tccom130              --endereço premiado
         ON tccom130.t$cadr = cisli940.t$stoa$l
         
 INNER JOIN baandb.ttccom139301 tccom139
@@ -149,8 +152,10 @@ INNER JOIN baandb.ttcibd936301  tcibd936
        AND CSLL.LINE = cisli941.t$line$l
 
 WHERE cisli940.t$stat$l in (5, 6)
+and znsls401.t$uneg$c IN (2,6,11)
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataEmissaoDe
           And :DataEmissaoAte
+    AND ((:CNPJTodos = 0 ) OR (znsls400.t$iclc$c = :CNPJ )) --Campo alterado
