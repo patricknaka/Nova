@@ -1,4 +1,4 @@
-SELECT znsls400dev.t$idca$c                                     CANAL,
+    SELECT znsls400dev.t$idca$c                                     CANAL,
            CASE WHEN znsls409.t$fdat$c < to_date('01-01-1980', 'dd-mm-yyyy') 
                   THEN NULL
                 ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 
@@ -9,27 +9,29 @@ SELECT znsls400dev.t$idca$c                                     CANAL,
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400dev.t$odat, 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') AS DATE)           DATA_OCORRENCIA,
-           znsls002.t$dsca$c                                        TIPO_DE_ENTREGA,  
+           znsls401dev.t$dsca$c                                     TIPO_DE_ENTREGA,  
            CASE WHEN znsls401dev.t$lmot$c = 'Selecione'
                   THEN znsls401dev.t$lass$c
                 ELSE   znsls401dev.t$lmot$c
            END                                                      MOTIVO_ABERTURA, 
            znmcs002_TIPO.t$desc$c                                   TIPO_DA_ORDEM_DE_VENDA,
            ORDEM_COLETA.STATUS                                      STATUS_DA_ORDEM_DE_COLETA,
+
            tdsls420dev.t$hrea                                       MOTIVO_STATUS_ORDEM_DE_COLETA,
+
            CASE WHEN znsls400dev.t$sige$c = 1 
                   THEN replace(replace(znmcs092dev.t$fovt$c,'-'),'/')
                 ELSE   replace(replace(tccom130_orig.t$fovn$l,'-'),'/')      
            END                                                      TRANSP_VENDA_CNPJ,
            CASE WHEN znsls400dev.t$sige$c = 1 
                   THEN tcmcs080sige.t$dsca
-                ELSE   tcmcs080_orig.t$dsca 
+                ELSE   tccom130_orig.t$dsca 
            END                                                      TRANSP_VENDA_NOME,
            
            NVL(regexp_replace(tccom130_dev.t$fovn$l, '[^0-9]', ''),
-			     tcmcs080_COLETA.t$fovn$l)                                TRANSP_COLETA_CNPJ,
+                 tcmcs080_COLETA.t$fovn$l)                                TRANSP_COLETA_CNPJ,
 
-           NVL(tcmcs080_dev.t$dsca, 
+           NVL(tccom130_dev.t$dsca, 
                tcmcs080_COLETA.t$dsca)                              TRANSP_COLETA_NOME,
 
            znsls401dev.t$orno$c                                     NUM_COLETA,
@@ -86,10 +88,13 @@ SELECT znsls400dev.t$idca$c                                     CANAL,
            cisli940dev.t$docn$l                                     NFS,
            cisli940dev.t$seri$l                                     SERIE_NFS,
            ABS(znsls401dev.t$qtve$c)                                QTDE_ITEM_DEVOLVIDO,
-           ABS(znsls401dev.t$qtve$c) * znsls401dev.t$vlun$c         VALOR_TOTAL_DO_ITEM,
+           ABS(znsls401dev.t$qtve$c) * znsls401dev.t$vlun$c - 
+           znsls401dev.t$vldi$c                                     VALOR_TOTAL_DO_ITEM,
            znsls401dev.t$vlfr$c                                     VALOR_TOTAL_DO_FRETE,
-           (ABS(znsls401dev.t$qtve$c) * znsls401dev.t$vlun$c) +
+           (ABS(znsls401dev.t$qtve$c) * znsls401dev.t$vlun$c) -
+           znsls401dev.t$vldi$c +
            znsls401dev.t$vlfr$c                                     VALOR_TOTAL,
+
            cisli940dev.t$amnt$l                                     VALOR_NFS,
            znfmd630dev.t$etiq$c                                     ETIQUETA_DEVOLUCAO,
            znfmd630dev.nr_etiq                                      QTDE_ETIQUETAS,
@@ -107,24 +112,40 @@ SELECT znsls400dev.t$idca$c                                     CANAL,
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940dev.t$date$l, 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') AS DATE)           DT_NF_COLETA,
-           znint002.t$desc$c                                        BANDEIRA,
+           znsls401dev.t$desc$c                                     BANDEIRA,
            CASE WHEN znsls402_dev.t$vlmr$c IS NULL 
                   THEN 'REENVIO'
                 ELSE   'REEMBOLSO' 
            END                                                      FORMA_DE_ATENDIMENTO,
-		   
-		  CASE WHEN  znsls409.t$inut$c = 1 THEN
-					'SIM' 
-			ELSE
-				'NAO'
-			END    			                    ALTERACAO_SUBSTITUICAO,
-		  CASE WHEN znsls409.t$dtin$c = '01/01/1970' THEN
-            NULL 
-       ELSE
-             znsls409.t$dtin$c
-       END                                                          DATA_ALTERACAO
+           
+           CASE WHEN  znsls409.t$inut$c = 1 
+                  THEN 'SIM' 
+                ELSE   'NAO'
+           END                                                      ALTERACAO_SUBSTITUICAO,
+           CASE WHEN znsls409.t$dtin$c = '01/01/1970' 
+                  THEN NULL 
+                ELSE znsls409.t$dtin$c
+           END                                                      DATA_ALTERACAO
 
-FROM       baandb.tznsls409301 znsls409
+FROM       ( select znsls409.t$ncia$c,
+                    znsls409.t$uneg$c,
+                    znsls409.t$pecl$c,
+                    znsls409.t$sqpd$c,
+                    znsls409.t$entr$c,
+                    znsls409.t$inut$c,
+                    znsls409.t$lbrd$c,
+                    min(znsls409.t$orno$c) KEEP (DENSE_RANK FIRST ORDER BY znsls409.t$fdat$c) t$orno$c,
+                    min(znsls409.t$fdat$c) t$fdat$c,
+                    min(znsls409.t$dtin$c) t$dtin$c
+               from baandb.tznsls409301 znsls409 
+              where znsls409.t$lbrd$c = 1
+           group by znsls409.t$ncia$c,
+                    znsls409.t$uneg$c,
+                    znsls409.t$pecl$c,
+                    znsls409.t$sqpd$c,
+                    znsls409.t$entr$c,
+                    znsls409.t$inut$c,
+                    znsls409.t$lbrd$c ) znsls409
 
 INNER JOIN ( select znsls401.t$ncia$c,
                     znsls401.t$uneg$c,
@@ -138,9 +159,12 @@ INNER JOIN ( select znsls401.t$ncia$c,
                     znsls401.t$lmot$c,
                     znsls401.t$lass$c,
                     znsls401.t$orno$c,
+                    znint002.t$desc$c,
+                    znsls002.t$dsca$c,
                     MIN(znsls401.t$pono$c) t$pono$c,
                     SUM(znsls401.t$qtve$c) t$qtve$c,
                     SUM(znsls401.t$vlfr$c) t$vlfr$c,
+                    SUM(znsls401.t$vldi$c) t$vldi$c,
                     znsls401.t$vlun$c,
                     znsls401.t$cepe$c,
                     znsls401.t$cide$c,
@@ -149,6 +173,11 @@ INNER JOIN ( select znsls401.t$ncia$c,
                     znsls401.t$idor$c,
                     znsls401.t$iitm$c
                from BAANDB.tznsls401301 znsls401
+          left join baandb.tznint002301 znint002
+                 on znint002.t$ncia$c = znsls401.t$ncia$c
+                and znint002.t$uneg$c = znsls401.t$uneg$c
+          left join baandb.tznsls002301 znsls002 --88*
+                 on znsls002.t$tpen$c = znsls401.t$itpe$c
               where znsls401.t$idor$c = 'TD'
                 and znsls401.t$qtve$c < 0
                 and znsls401.t$iitm$c = 'P'
@@ -164,6 +193,8 @@ INNER JOIN ( select znsls401.t$ncia$c,
                     znsls401.t$lmot$c,
                     znsls401.t$lass$c,
                     znsls401.t$orno$c,
+                    znint002.t$desc$c,
+                    znsls002.t$dsca$c,
                     znsls401.t$vlun$c,
                     znsls401.t$cepe$c,
                     znsls401.t$cide$c,
@@ -197,7 +228,7 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
                  on tccom130.t$cadr = tcmcs080.t$cadr$l
               where tccom130.t$ftyp$l = 'PJ' ) tcmcs080_COLETA
         ON tcmcs080_COLETA.t$cfrw = tdsls400dev.t$cfrw
-        
+
  LEFT JOIN ( select a.t$ncia$c,
                     a.t$uneg$c,
                     a.t$pecl$c,
@@ -212,7 +243,7 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
                 and b.t$pecl$c = a.t$pecl$c
                 and b.t$sqpd$c = a.t$sqpd$c
                 and b.t$entr$c = a.t$entr$c
-              where t$poco$c != ' '
+              where a.t$poco$c != ' '
                 and a.t$dtoc$c < case when b.t$fdat$c < to_date('01-01-1980', 'DD-MM-YYYY') 
                                         then SYSDATE 
                                       else   b.t$fdat$c 
@@ -234,32 +265,41 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
        AND cisli245dev.t$ortp = 1
        AND cisli245dev.t$koor = 3
 
- LEFT JOIN  BAANDB.tcisli941301 cisli941dev  
-        ON  cisli941dev.t$fire$l = cisli245dev.t$fire$l
-       AND cisli941dev.t$line$l = cisli245dev.t$line$l
-                                                                                                  
- LEFT JOIN  BAANDB.tcisli940301 cisli940dev  
-        ON  cisli940dev.t$fire$l = cisli941dev.t$fire$l
+ LEFT JOIN BAANDB.tcisli940301 cisli940dev  
+        ON cisli940dev.t$fire$l = cisli245dev.t$fire$l
              
- LEFT JOIN  ( select a.t$orno$l,
-                     a.t$pono$l,
-                     a.t$fire$l
-                from baandb.ttdrec947301 a
-               where a.t$oorg$l = 1
-            group by a.t$orno$l,
-                     a.t$pono$l,
-                     a.t$fire$l ) tdrec947rec
-        ON tdrec947rec.t$orno$l = znsls401dev.t$orno$c
-       AND tdrec947rec.t$pono$l = znsls401dev.t$pono$c
-
- LEFT JOIN  BAANDB.ttdrec940301 tdrec940rec  
-        ON  tdrec940rec.t$fire$l = tdrec947rec.t$fire$l
-          
- LEFT JOIN BAANDB.ttcmcs080301 tcmcs080_dev
-        ON tcmcs080_dev.t$cfrw = cisli940dev.t$cfrw$l
-          
- LEFT JOIN BAANDB.ttccom130301 tccom130_dev
-        ON tccom130_dev.t$cadr = tcmcs080_dev.t$cadr$l
+ LEFT JOIN ( select tdrec947.t$orno$l,
+                    tdrec947.t$pono$l,
+                    tdrec947.t$fire$l,
+                    tdrec940.t$docn$l,
+                    tdrec940.t$seri$l,
+                    tdrec940.t$date$l,
+                    tdrec940.t$sfra$l
+               from baandb.ttdrec947301 tdrec947
+         inner join BAANDB.ttdrec940301 tdrec940
+                 on tdrec940.t$fire$l = tdrec947.t$fire$l
+                and tdrec940.t$stat$l in (4,5)
+                and tdrec940.t$rfdt$l = 10
+              where tdrec947.t$oorg$l = 1
+                and Trim(tdrec947.t$rcno$l) is not null
+           group by tdrec947.t$orno$l,
+                    tdrec947.t$pono$l,
+                    tdrec947.t$fire$l,
+                    tdrec940.t$docn$l,
+                    tdrec940.t$seri$l,
+                    tdrec940.t$date$l,
+                    tdrec940.t$sfra$l ) tdrec940rec
+        ON tdrec940rec.t$orno$l = znsls401dev.t$orno$c
+       AND tdrec940rec.t$pono$l = znsls401dev.t$pono$c
+        
+ LEFT JOIN ( select regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') t$fovn$l,
+                    tcmcs080.t$dsca,
+                    tcmcs080.t$cfrw
+               from baandb.ttcmcs080301 tcmcs080
+         inner join baandb.ttccom130301 tccom130
+                 on tccom130.t$cadr = tcmcs080.t$cadr$l
+              where tccom130.t$ftyp$l = 'PJ' ) tccom130_dev
+        ON tccom130_dev.t$cfrw = cisli940dev.t$cfrw$l
 
  LEFT JOIN ( select a.t$ncia$c,
                     a.t$uneg$c,
@@ -334,13 +374,16 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
 
  LEFT JOIN BAANDB.ttdsls400301 tdsls400orig  -- ordem de venda origem
         ON tdsls400orig.t$orno = znsls401orig.t$orno$c          
-
- LEFT JOIN BAANDB.ttcmcs080301 tcmcs080_orig
-        ON tcmcs080_orig.t$cfrw = tdsls400orig.t$cfrw
         
- LEFT JOIN BAANDB.ttccom130301 tccom130_orig
-        ON tccom130_orig.t$cadr = tcmcs080_orig.t$cadr$l 
-
+ LEFT JOIN ( select regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') t$fovn$l,
+                    tcmcs080.t$dsca,
+                    tcmcs080.t$cfrw
+               from baandb.ttcmcs080301 tcmcs080
+         inner join baandb.ttccom130301 tccom130
+                 on tccom130.t$cadr = tcmcs080.t$cadr$l
+              where tccom130.t$ftyp$l = 'PJ' ) tccom130_orig
+        ON tccom130_orig.t$cfrw = tdsls400orig.t$cfrw
+        
  LEFT JOIN ( select cisli245.t$fire$l, 
                     cisli245.t$slso,
                     min(cisli245.t$pono)t$pono
@@ -397,13 +440,6 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
  LEFT JOIN baandb.tznmcs002301 znmcs002_TIPO
         ON znmcs002_TIPO.t$poco$c = TIPO_INST.t$poco$c
        
- LEFT JOIN baandb.tznint002301 znint002
-        ON znint002.t$ncia$c = znsls401dev.t$ncia$c
-       AND znint002.t$uneg$c = znsls401dev.t$uneg$c
-
- LEFT JOIN baandb.tznsls002301 znsls002 --88*
-        ON znsls002.t$tpen$c = znsls401dev.t$itpe$c
-
  LEFT JOIN ( select a.t$pecl$c,
                     a.t$orno$c,
                     a.t$fili$c,
@@ -441,14 +477,15 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
                from baandb.tttaad200000 a ) ttaad200
         ON ttaad200.t$user = znfmd640.t$ulog$c
          
- LEFT JOIN ( select a.t$orno,
+ LEFT JOIN ( select a.t$orno, a.t$pono,
                     a.t$hrea
                from baandb.ttdsls420301 a
               where a.t$sqnb = 0
-           group by a.t$orno,
+           group by a.t$orno, a.t$pono,
                     a.t$sqnb,
                     a.t$hrea ) tdsls420dev
         ON tdsls420dev.t$orno = znsls401dev.t$orno$c
+       AND tdsls420dev.t$pono = znsls401dev.t$pono$c
 
  LEFT JOIN ( select a.t$ncmp$c,
                     a.t$orno$c,
@@ -523,12 +560,30 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
  LEFT JOIN baandb.tznisa002301 znisa002
         ON znisa002.t$npcl$c = tcibd001dev.t$npcl$c
 
- LEFT JOIN baandb.tznint407301 znint407
-        ON znint407.t$ncia$c = znsls401dev.t$ncia$c
-       AND znint407.t$uneg$c = znsls401dev.t$uneg$c
-       AND znint407.t$pecl$c = znsls401dev.t$pecl$c
-       AND znint407.t$sqpd$c = znsls401dev.t$sqpd$c
-       AND znint407.t$entr$c = znsls401dev.t$entr$c
+ LEFT JOIN ( select znsls004.t$ncia$c,
+                    znsls004.t$uneg$c,
+                    znsls004.t$pecl$c,
+                    znsls004.t$sqpd$c,
+                    znsls004.t$entr$c,
+                    znsls004.t$orno$c,
+                    znint407.t$idus$c,
+                    znint407.t$motv$c 
+               from baandb.tznsls004301 znsls004
+         inner join baandb.tznint407301 znint407
+                 on znint407.t$ncia$c = znsls004.t$ncia$c
+                and znint407.t$uneg$c = znsls004.t$uneg$c
+                and znint407.t$pecl$c = znsls004.t$pecl$c
+                and znint407.t$sqpd$c = znsls004.t$sqpd$c
+                and znint407.t$entr$c = znsls004.t$entr$c
+           group by znsls004.t$ncia$c,
+                    znsls004.t$uneg$c,
+                    znsls004.t$pecl$c,
+                    znsls004.t$sqpd$c,
+                    znsls004.t$entr$c,
+                    znsls004.t$orno$c,
+                    znint407.t$idus$c,
+                    znint407.t$motv$c ) znint407
+        ON znint407.t$orno$c = znsls409.t$orno$c
 
  LEFT JOIN ( select l.t$desc STATUS,
                     d.t$cnst
@@ -558,6 +613,8 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                 -- Ordem de venda dev
                                             and l1.t$cpac = l.t$cpac ) ) ORDEM_COLETA
         ON ORDEM_COLETA.t$cnst = tdsls400dev.t$hdst
 
-     WHERE znsls409.t$lbrd$c = 1        --Forcado = Sim
-
-       AND NVL(NVL(Trim(tcmcs080_dev.t$cfrw), Trim(tdsls400dev.t$cfrw)), -1) IN (:Transportadora)
+     WHERE 
+--znsls409.t$lbrd$c = 1        --Forcado = Sim
+--AND 
+--NVL(NVL(Trim(tcmcs080_dev.t$cfrw), Trim(tdsls400dev.t$cfrw)), -1) IN (:Transportadora)
+NVL(Trim(tdsls400dev.t$cfrw), -1) IN (:Transportadora)
