@@ -387,7 +387,10 @@ WHERE NVL(tfacp200.t$docn, 0) = 0
                        ELSE   'Criado'  
                   END  
                WHEN tfcmg101.t$tadv IN (3, 4) --Nota de Credito de Venda (Livre, Não Aplicável)
-             THEN StatusCreditoVenda.DESC_STATUSCREDITOVENDA
+             THEN CASE WHEN TRIM(StatusCreditoVenda.DESC_STATUSCREDITOVENDA) = 'Parciamente pago'
+                          THEN 'Parcialmente pago'
+                        ELSE StatusCreditoVenda.DESC_STATUSCREDITOVENDA
+                   END
            ELSE iPrgStat.DESCR
       END IN (:StatusPagto)
   AND NVL(CASE WHEN tflcb230.t$send$d = 0
@@ -789,7 +792,10 @@ WHERE NVL(tfacp200.t$docn, 0) = 0
 "                        ELSE   'Criado' " &  
 "                   END " &  
 "                WHEN tfcmg101.t$tadv IN (3,4) " & 
-"              THEN StatusCreditoVenda.DESC_STATUSCREDITOVENDA " &
+"              THEN CASE WHEN TRIM(StatusCreditoVenda.DESC_STATUSCREDITOVENDA) = 'Parciamente pago' " &
+"              				THEN 'Parcialmente pago' " &
+"						 ELSE StatusCreditoVenda.DESC_STATUSCREDITOVENDA " &
+"                   END " &
 "            ELSE iPrgStat.DESCR " &
 "       END IN (" + Replace(("'" + JOIN(Parameters!StatusPagto.Value, "',") + "'"),",",",'") + ") " &
 "   AND NVL(CASE WHEN tflcb230.t$send$d = 0  " &
