@@ -118,7 +118,7 @@ WHERE TASKDETAIL.TASKTYPE = 'PK'             --Piking
 "  " &
 " FROM       " + Parameters!Compania.Value + ".ORDERDETAIL ORDERDETAIL  " &
 "  " &
-" INNER JOIN baandb.tznsls401301@pln01 znsls401  " &
+" INNER JOIN baandb.tznsls401" + IIF(Parameters!Compania.Value = "WMWHSE9", "601", "602") + "@pln01 znsls401  " &
 "         ON ORDERDETAIL.SALESORDERDOCUMENT = znsls401.t$orno$c  " &
 "        AND ORDERDETAIL.SALESORDERLINE = znsls401.t$pono$c  " &
 "  " &
@@ -154,23 +154,23 @@ WHERE TASKDETAIL.TASKTYPE = 'PK'             --Piking
 "               where A.LISTNAME = 'SCHEMA' ) wmsCODE  " &
 "         ON wmsCODE.UDF1 = ORDERS.WHSEID  " &
 "  " &
-"  LEFT JOIN baandb.ttcibd001301@pln01 tcibd001  " &
+"  LEFT JOIN baandb.ttcibd001" + IIF(Parameters!Compania.Value = "WMWHSE9", "601", "602") + "@pln01 tcibd001  " &
 "         ON Trim(tcibd001.t$item) = ORDERDETAIL.SKU  " &
 "  " &
-"  LEFT JOIN baandb.ttcmcs023301@pln01 tcmcs023  " &
+"  LEFT JOIN baandb.ttcmcs023" + IIF(Parameters!Compania.Value = "WMWHSE9", "601", "602") + "@pln01 tcmcs023  " &
 "         ON tcmcs023.t$citg = tcibd001.t$citg  " &
 "  " &
-"  LEFT JOIN baandb.tznmcs030301@pln01 znmcs030  " &
+"  LEFT JOIN baandb.tznmcs030" + IIF(Parameters!Compania.Value = "WMWHSE9", "601", "602") + "@pln01 znmcs030  " &
 "         ON znmcs030.t$seto$c = tcibd001.t$seto$c  " &
 "        AND znmcs030.t$citg$c = tcibd001.t$citg  " &
 "  " &
-"  LEFT JOIN baandb.ttdipu001301@pln01 tdipu001  " &
+"  LEFT JOIN baandb.ttdipu001" + IIF(Parameters!Compania.Value = "WMWHSE9", "601", "602") + "@pln01 tdipu001  " &
 "         ON tdipu001.t$item   = tcibd001.t$item  " &
 "  " &
-"  LEFT JOIN baandb.ttccom100301@pln01 tccom100  " &
+"  LEFT JOIN baandb.ttccom100" + IIF(Parameters!Compania.Value = "WMWHSE9", "601", "602") + "@pln01 tccom100  " &
 "         ON tccom100.t$bpid   = tdipu001.t$otbp  " &
 "  " &
-"  LEFT JOIN baandb.ttccom130301@pln01 tccom130a  " &
+"  LEFT JOIN baandb.ttccom130" + IIF(Parameters!Compania.Value = "WMWHSE9", "601", "602") + "@pln01 tccom130a  " &
 "         ON tccom130a.t$cadr  = tccom100.t$cadr  " &
 "  " &
 "  LEFT JOIN " + Parameters!Compania.Value + ".ORDERSTATUSSETUP STATUSSETUP  " &
@@ -186,4 +186,3 @@ WHERE TASKDETAIL.TASKTYPE = 'PK'             --Piking
 "           And :DataRegistroAte  " &
 "   AND tcmcs023.t$citg IN (:Depto)  " &
 "   AND ((" + Parameters!Setor.Value + " = '000') OR (znmcs030.t$seto$c = " + Parameters!Setor.Value + "))  "
-
