@@ -127,9 +127,13 @@ select Q1.*
                  iTIPO_DOCFIS.DESCR                  DESCR_TIPO_DOCFIS,
                  tdrec940.t$fids$l                   RAZAO_SOCIAL,
 				 tdrec940.T$BPID$L                   COD_PARCEIRO, 
-                 tdrec940.t$FDTC$l                   COD_TIPO_DOC_FISCAL 
+                 tdrec940.t$FDTC$l                   COD_TIPO_DOC_FISCAL,
+	 	 znrec005.t$firr$c                   REFERENCIA_RELATIVA
           
             FROM baandb.ttdrec940301       tdrec940 
+	 
+      LEFT JOIN baandb.tznrec005301 znrec005  
+ 	      ON znrec005.t$fire$c = tdrec940.t$fire$l 
        
       LEFT JOIN baandb.ttccom120301       tccom120
               ON tccom120.T$otbp = tdrec940.t$bpid$l
@@ -449,10 +453,12 @@ select Q1.*
 " 					 iTIPO_DOCFIS.DESCR                  DESCR_TIPO_DOCFIS,               " &
 " 					 tdrec940.t$fids$l                   RAZAO_SOCIAL,  " &
 "                    tdrec940.T$BPID$L                   COD_PARCEIRO, "  &
-"                    tdrec940.t$FDTC$l                   COD_TIPO_DOC_FISCAL " &
-" 			  " &
+"                    tdrec940.t$FDTC$l                   COD_TIPO_DOC_FISCAL, " &
+" 		     znrec005.t$firr$c                   REFERENCIA_RELATIVA  " &
 " 				FROM baandb.ttdrec940" + Parameters!Compania.Value +  "    tdrec940       " &
-" 		      " &
+"                 LEFT JOIN baandb.tznrec005" + Parameters!Compania.Value +  " znrec005  " &
+" 				 " &
+"                          	  ON znrec005.t$fire$c = tdrec940.t$fire$l  " &
 " 		  LEFT JOIN baandb.ttccom120" + Parameters!Compania.Value +  "    tccom120        " &
 " 				  ON tccom120.T$otbp = tdrec940.t$bpid$l  " &
 " 				 " &
