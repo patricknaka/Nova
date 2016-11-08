@@ -42,7 +42,10 @@ SELECT
          AND tdrec942.t$line$l=tdrec941.t$line$l 
          AND tdrec942.t$brty$l=2)                         VALO_ICMSST,
 
-    ( SELECT tdrec949.t$isco$c 
+    ( SELECT case when tdrec949.t$isco$c = 1 and tdrec942.T$DEST$L = 1 then 1
+                  when tdrec949.t$isco$c = 1 and tdrec942.T$DEST$L = 2 then 2
+                  else tdrec949.t$isco$c 
+                  end conv  
         FROM baandb.ttdrec942301 tdrec942, 
              baandb.ttdrec949301 tdrec949
        WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
@@ -135,7 +138,10 @@ WHERE tcemm124.t$dtyp = 2
   AND Trunc(tdrec940.t$adat$l) BETWEEN :AprovacaoDe AND :AprovacaoAte
   AND tdrec940.t$opfc$l IN (:CFOP)
   
-  AND ( (( SELECT  tdrec949.t$isco$c
+  AND ( (( SELECT case when tdrec949.t$isco$c = 1 and tdrec942.T$DEST$L = 1 then 1
+                       when tdrec949.t$isco$c = 1 and tdrec942.T$DEST$L = 2 then 2
+                       else tdrec949.t$isco$c 
+                       end conv 
             FROM  baandb.ttdrec942301 tdrec942, 
                   baandb.ttdrec949301 tdrec949
            WHERE  tdrec942.t$fire$l = tdrec941.t$fire$l 
