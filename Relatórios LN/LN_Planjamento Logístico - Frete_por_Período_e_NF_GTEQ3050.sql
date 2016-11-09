@@ -80,10 +80,7 @@ SELECT znfmd630.t$fili$c             FILIAL,
        END                           DATA_CORRIGIDA,
        znfmd640.t$coci$c             ULTIMA_OCORRENCIA,
        znfmd640.t$desc$c             OCORRENCIA,
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c, 
-           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone 'America/Sao_Paulo') AS DATE)      
-                                     DATA_OCORRENCIA,
+       znfmd640.t$date$c             DATA_OCORRENCIA,
        znsls401.t$pztr$c             PRAZO_ENTREGA,
        
        nvl( ( select sum(cisli941.t$dqua$l)
@@ -135,10 +132,10 @@ SELECT znfmd630.t$fili$c             FILIAL,
        znfmd630.t$etiq$c             ETIQUETA,
        CRIACAO_WMS.DATA_OCORRENCIA   DATA_WMS
 
-FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$date$c),
+FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c),
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                         AT time zone 'America/Sao_Paulo') AS DATE)                                    DATA_OCORRENCIA,
-                    Max(znfmd640_ETR.t$etiq$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640_ETR.t$date$c ) t$etiq$c,
+                    Max(znfmd640_ETR.t$etiq$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640_ETR.t$udat$c ) t$etiq$c,
                     znfmd630.t$pecl$c,
                     znfmd640_ETR.t$fili$c
                from BAANDB.tznfmd640301 znfmd640_ETR
