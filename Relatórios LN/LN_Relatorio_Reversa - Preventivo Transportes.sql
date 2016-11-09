@@ -1,4 +1,5 @@
-SELECT DISTINCT 
+SELECT DISTINCT
+
     CASE WHEN znsls401.t$itpe$c = 15   --REVERSA
            THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
                   'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -242,7 +243,16 @@ SELECT DISTINCT
     END                                       STATUS_DEVOLUCAO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(REC_COLETA.DATA_OCORR, 'DD-MON-YYYY HH24:MI:SS'), 
         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                                              DATA_STATUS_DEVOLUCAO
+                                              DATA_STATUS_DEVOLUCAO,
+DS_SITUACAO_NF STATUS_FATURA,
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 
+        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+                                              DATA_OCORRENCIA,
+ 
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 
+        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+                                              DATA_INSERÇÃO_REGISTRO,
+    znsls401.t$obet$c                         ETIQUETA_TRANSPORTADORA                                                                                
 
 FROM       baandb.tznsls401301 znsls401
 
@@ -415,9 +425,10 @@ INNER JOIN baandb.tznsls400301 znsls400
            group by sli.t$fire$l ) CUBAGEM
         ON CUBAGEM.t$fire$l = cisli940.t$fire$l
         
- LEFT JOIN ( select znsls410.t$ncia$c,
+  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
                     znsls410.t$pecl$c,
+                    znsls410.t$date$c,
                     MAX(znsls410.t$dtoc$c) DATA_OCORR,
                     MAX(znsls410.t$dpco$c) DATA_DTPR,
                     MAX(znsls410.t$dtpr$c) DATA_DTCD
@@ -425,10 +436,12 @@ INNER JOIN baandb.tznsls400301 znsls400
               where znsls410.t$poco$c = 'APD'
            group by znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
+                    znsls410.t$date$c,
                     znsls410.t$pecl$c ) SOLIC_COLETA
         ON SOLIC_COLETA.t$ncia$c = znsls401.t$ncia$c
        AND SOLIC_COLETA.t$uneg$c = znsls401.t$uneg$c
        AND SOLIC_COLETA.t$pecl$c = znsls401.t$pecl$c
+       
 
  LEFT JOIN ( select znsls410.t$ncia$c,
                     znsls410.t$uneg$c,
@@ -513,6 +526,41 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND COLETA.t$sqpd$c = znsls401.t$sqpd$c
        AND COLETA.t$entr$c = znsls401.t$entr$c
 
+ LEFT JOIN (SELECT d.t$cnst CD_SITUACAO_NF,
+       l.t$desc DS_SITUACAO_NF
+  FROM baandb.tttadv401000 d,
+       baandb.tttadv140000 l
+ WHERE d.t$cpac = 'ci'
+   AND d.t$cdom = 'sli.stat'
+   AND l.t$clan = 'p'
+   AND l.t$cpac = 'ci'
+   AND l.t$clab = d.t$za_clab
+   AND rpad(d.t$vers,4) ||
+       rpad(d.t$rele,2) ||
+       rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                       rpad(l1.t$rele,2) ||
+                                       rpad(l1.t$cust,4)) 
+                              from baandb.tttadv401000 l1 
+                             where l1.t$cpac = d.t$cpac 
+                               and l1.t$cdom = d.t$cdom )
+   AND rpad(l.t$vers,4) ||
+       rpad(l.t$rele,2) ||
+       rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                       rpad(l1.t$rele,2) ||
+                                       rpad(l1.t$cust,4)) 
+                              from baandb.tttadv140000 l1 
+                             where l1.t$clab = l.t$clab 
+                               and l1.t$clan = l.t$clan 
+                               and l1.t$cpac = l.t$cpac )) STATUS_NF
+  on  STATUS_NF.CD_SITUACAO_NF = CISLI940.T$STAT$L                            
+                               
+       
+       
+       
+       
+       
+       
+       
        
  LEFT JOIN baandb.ttccom000301  tccom000
         ON tccom000.t$indt < to_date('01-01-1980','DD-MM-YYYY') 
@@ -739,13 +787,15 @@ INNER JOIN baandb.tznsls400301 znsls400
 WHERE TRIM(znsls401.t$idor$c) = 'TD'      -- Troca / Devolução
   AND znsls401.t$qtve$c < 0               -- Devolução
   AND tdsls094.t$reto in (1, 3)           -- Ordem Devolução, Ordem Devolução Rejeitada
-
+  
   AND TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE))
       Between :DataPedidoDe
           And :DataPedidoAte
+  AND tcmcs023.t$citg IN (:Departamento)        
   AND znsls401.t$uneg$c IN (:UnidNegocio)
   AND znsls401.t$itpe$c IN (:TipoEntrega)
+  AND tcibd001.t$citg != '1000'   -- Foi retirado todos itens que pertence ao Marketplace
   AND CASE WHEN znsls409.t$lbrd$c = 1 OR
                 znsls409.t$dved$c = 1 OR
                 znsls410.PT_CONTR IN ('VAL', 'RDV', 'RIE')
