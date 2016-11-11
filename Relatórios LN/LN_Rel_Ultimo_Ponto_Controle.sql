@@ -1,8 +1,9 @@
-SELECT
+SELECT DISTINCT
     znsls401.t$uneg$c                                     UNID_NEGOCIO,
     znsls401.t$pecl$c                                     PEDIDO,
     znsls401.t$sqpd$c                                     SEQ_PEDIDO,
     znsls401.t$entr$c                                     NO_ENTREGA,
+    znsls401.t$orno$c                                    ORDEM_VENDA,
     znsls410.t$docn$C                                     NF,
     znsls410.t$seri$C                                     SERIE,
     znsls410.t$poco$C                                     CODIGO_OCORRENCIA,
@@ -20,12 +21,8 @@ SELECT
            AT time zone 'America/Sao_Paulo') AS DATE) END 
                                                           DATA_SAIDA,
 
-    CASE WHEN znsls410.T$DTEP$C <= to_date('01-01-1980','DD-MM-YYYY') 
-          THEN  NULL
-    ELSE
-        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.T$DTEP$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-        AT time zone 'America/Sao_Paulo') AS DATE) END    
-                                                          DATA_PROMETIDA,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)        DATA_PROMETIDA,
         
     znfmd630.t$cfrw$c                                     COD_TRANSPORTADORA,
     
@@ -74,7 +71,8 @@ FROM ( select a.t$ncia$c,
               a.t$lmot$c,
               a.t$orno$c,
               a.t$cwoc$c,
-              a.t$itpe$c
+              a.t$itpe$c,
+              a.t$dtep$c
         from baandb.tznsls401301 a
         group by  a.t$ncia$c,
                   a.t$uneg$c,
@@ -84,7 +82,8 @@ FROM ( select a.t$ncia$c,
                   a.t$lmot$c,
                   a.t$orno$c,
                   a.t$cwoc$c,
-                  a.t$itpe$c ) znsls401
+                  a.t$itpe$c,
+                  a.t$dtep$c) znsls401
 
 LEFT JOIN baandb.tznsls400301 znsls400
         ON znsls400.t$ncia$c = znsls401.t$ncia$c
@@ -149,7 +148,7 @@ LEFT JOIN baandb.tznsls400301 znsls400
  LEFT JOIN baandb.ttcemm030301 tcemm030
         ON tcemm030.t$eunt=tcemm124.t$grid
 
- LEFT JOIN baandb.tznsls002301 znsls002
+ INNER JOIN baandb.tznsls002301 znsls002
         ON znsls002.t$tpen$c = znsls401.t$itpe$c
  
  LEFT JOIN baandb.tznsls402301 znsls402
@@ -204,9 +203,11 @@ LEFT JOIN baandb.tznsls400301 znsls400
         ON OVENDA.t$cnst = tdsls400.t$hdst
         
 WHERE znsls410.t$poco$c IS NOT NULL
- 
-and ((NO_ENTREGA in (:NumEntrega) and :Todos = 1  ) or :Todos = 0 )
-  and trunc(DATA_HORA)   
-      between nvl(:DataOcorrenciaDe,DATA_HORA)
-          and nvl(:DataOcorrenciaAte,DATA_HORA)
 
+and ((znsls401.t$entr$c in (:NumEntrega) and :Todos = 1  ) OR :Todos = 0)
+  and trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.T$DTOC$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE))   
+      between :DataOcorrenciaDe
+          and :DataOcorrenciaAte
+  AND znsls401.t$uneg$c IN (:UnidadeNegocio)
+  AND tcemm030.t$euca IN (:Filial)
