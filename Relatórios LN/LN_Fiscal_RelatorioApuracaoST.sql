@@ -9,7 +9,7 @@ SELECT
     tdrec940.t$fovn$l                                     CNPJ_PARC, 
     tdrec940.t$fids$l                                     NOME_PARC,
     tdrec940.t$adat$l                                     DATA_APROV,
-    tdrec940.t$opfc$l                                     CODE_CFOP,
+    tdrec941.t$opfc$l                                     CODE_CFOP,
     tdrec947.t$orno$l                                     CODE_ORDEM,
     tdrec941.t$item$l                                     CODE_ITEM,
     tdrec941.t$dsca$l                                     DESC_ITEM, 
@@ -42,17 +42,15 @@ SELECT
          AND tdrec942.t$line$l=tdrec941.t$line$l 
          AND tdrec942.t$brty$l=2)                         VALO_ICMSST,
 
-    ( SELECT case when tdrec949.t$isco$c = 1 and tdrec942.T$DEST$L = 1 then 1
-                  when tdrec949.t$isco$c = 1 and tdrec942.T$DEST$L = 2 then 2
-                  else tdrec949.t$isco$c 
-                  end conv  
+    ( SELECT tdrec942.T$DEST$L  
         FROM baandb.ttdrec942301 tdrec942, 
              baandb.ttdrec949301 tdrec949
        WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
          AND tdrec949.t$fire$l=tdrec941.t$fire$l
          AND tdrec949.t$brty$l=2
          AND tdrec942.t$line$l=tdrec941.t$line$l
-         AND tdrec942.t$brty$l=2)                         FLAG_CONV,
+         AND tdrec942.t$brty$l=2
+         and tdrec942.T$DEST$L != 3)                         FLAG_CONV,
 
     ( SELECT tdrec942.t$amnt$l 
         FROM baandb.ttdrec942301 tdrec942 
@@ -138,14 +136,12 @@ WHERE tcemm124.t$dtyp = 2
   AND Trunc(tdrec940.t$adat$l) BETWEEN :AprovacaoDe AND :AprovacaoAte
   AND tdrec940.t$opfc$l IN (:CFOP)
   
-  AND ( (( SELECT case when tdrec949.t$isco$c = 1 and tdrec942.T$DEST$L = 1 then 1
-                       when tdrec949.t$isco$c = 1 and tdrec942.T$DEST$L = 2 then 2
-                       else tdrec949.t$isco$c 
-                       end conv 
-            FROM  baandb.ttdrec942301 tdrec942, 
-                  baandb.ttdrec949301 tdrec949
-           WHERE  tdrec942.t$fire$l = tdrec941.t$fire$l 
-             AND  tdrec949.t$fire$l = tdrec941.t$fire$l
-             AND  tdrec949.t$brty$l = 2
-             AND  tdrec942.t$line$l = tdrec941.t$line$l
-             AND  tdrec942.t$brty$l = 2 )  = :Convenio ) OR (:Convenio = 0) )
+  AND ( (( SELECT tdrec942.T$DEST$L  
+        FROM baandb.ttdrec942301 tdrec942, 
+             baandb.ttdrec949301 tdrec949
+       WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
+         AND tdrec949.t$fire$l=tdrec941.t$fire$l
+         AND tdrec949.t$brty$l=2
+         AND tdrec942.t$line$l=tdrec941.t$line$l
+         AND tdrec942.t$brty$l=2
+         and tdrec942.T$DEST$L != 3)  = :Convenio ) OR (:Convenio = 0) )
