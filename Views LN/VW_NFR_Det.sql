@@ -59,6 +59,12 @@ SELECT
      AND tdrec942.t$line$l=tdrec941.t$line$l
      AND tdrec942.t$brty$l=1)                                                 VL_ICMS,
 
+  (SELECT tdrec942.t$rdbc$l 
+     FROM baandb.ttdrec942301 tdrec942
+     WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+     AND tdrec942.t$line$l=tdrec941.t$line$l
+     AND tdrec942.t$brty$l=1)                                                 PERC_REDUCAO_BASE_ICMS,
+     
   (SELECT tdrec942.t$amnt$l 
      FROM baandb.ttdrec942301 tdrec942
      WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
