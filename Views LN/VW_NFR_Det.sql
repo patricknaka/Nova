@@ -90,6 +90,12 @@ SELECT
      WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
      AND tdrec942.t$line$l=tdrec941.t$line$l
      AND tdrec942.t$brty$l=2)                                                 MARGEM_LUCRO_AJUSTADO,
+
+  (SELECT tdrec942.t$rdbc$l 
+     FROM baandb.ttdrec942301 tdrec942
+     WHERE tdrec942.t$fire$l=tdrec941.t$fire$l
+     AND tdrec942.t$line$l=tdrec941.t$line$l
+     AND tdrec942.t$brty$l=2)                                                 PERC_REDUCAO_BASE_ICMS_ST,
      
 	nvl((SELECT tdrec942.t$amnt$l 
      FROM baandb.ttdrec949301 tdrec949, 
@@ -453,4 +459,5 @@ AND tcibd936.t$ifgc$l=tcibd001.t$ifgc$l
 AND tdrec940.t$fire$l=tdrec941.t$fire$l
 AND tdrec940.t$rfdt$l not in (5,16,22,33) --(3,8,13)
 AND tdrec940.t$stat$l>3
+--AND TDREC940.T$FIRE$L = '006116587'
 ;
