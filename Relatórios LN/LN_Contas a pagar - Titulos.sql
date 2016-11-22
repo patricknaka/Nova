@@ -500,7 +500,7 @@ FROM       baandb.ttfacp200301   tfacp200
          ON tfcmg002.t$reas = tfcmg101.t$reas
          
 WHERE tfacp200.t$docn = 0
-
+  AND tfacp200.t$amnt != 0
   AND not exists (  select tfacp601.t$payt, tfacp601.t$payd, tfacp601.t$payl, tfacp601.t$pays
                       from baandb.ttfacp601+ Parameters!Compania.Value +   tfacp601
                      where tfacp601.t$icom = + Parameters!Compania.Value +  
@@ -510,12 +510,7 @@ WHERE tfacp200.t$docn = 0
   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte
   AND tfacp200.t$dued between :VencimentoDe AND :VencimentoAte
   AND tfacp200.t$ttyp IN (:TipoTransacao)
-  AND NVL(Trim(tfacp200.t$bloc), '000') IN (:Bloqueado)
-  AND ((:PrepPagto = 0) OR (tfacp201.t$pyst$l = 3 and :PrepPagto = 1) OR (tfacp201.t$pyst$l != 3 and :PrepPagto = 2) ) 
-  AND CASE WHEN tfcmg101.t$paym = ' '
-             THEN NVL(TRIM(tfacp201.t$paym), 'N/A')
-           ELSE   NVL(TRIM(tfcmg101.t$paym), 'N/A')
-      END IN (:MetodoPagto)
+AND NVL(Trim(tcibd001.t$citg), '000')  IN (:Depto)
   AND (CASE WHEN znacp005.t$canc$c = 1
               THEN 99
             WHEN znacp005.t$canc$c = 2
@@ -524,15 +519,11 @@ WHERE tfacp200.t$docn = 0
               THEN 97
             ELSE   NVL(tfacp201.t$pyst$l, 1)
         END) IN (:Situacao)
-  AND NVL(CASE WHEN tflcb230.t$send$d = 0
-                 THEN tflcb230.t$stat$d
-               ELSE tflcb230.t$send$d
-           END, -1) IN (:StatusArquivo)
-  AND ( (tfacp200.t$ifbp IN (:ParceiroNegocio.Value) AND ( :ParceiroNegocioTodos = 0)) OR (:ParceiroNegocioTodos = 1) )
   AND ((UPPER(tdrec947.t$orno$l) like '%' || UPPER(:OrdemCompra) || '%') OR (:OrdemCompra is null))
-  AND ((regexp_replace(tdrec940.t$fovn$l, '[^0-9]', '') = Trim(:CNPJ)) OR (:CNPJ is null))
   AND ((Upper(Concat(Trim(tfacp200.t$ttyp), tfacp200.t$ninv)) = Upper(Trim(:Transacao))) OR (:Transacao is null))
-
+  AND ((tfacp200.t$ifbp IN (ParceiroNegocio) AND (:ParceiroNegocio = 0)) or (:ParceiroNegocio = 1)
+         
+         
 ORDER BY DATA_EMISSAO, NUME_TITULO
 
 
@@ -544,6 +535,7 @@ ORDER BY DATA_EMISSAO, NUME_TITULO
 
 " SELECT  " &
 "   DISTINCT  " &
+"     tcmcs023.t$dsca                             DEPARTAMENTO,  " &
 "     Concat(tfacp200.t$ttyp, tfacp200.t$ninv)    TRANSCAO,  " &
 "     tfacp200.t$ninv                             NUME_TITULO,  " &
 "     tfacp200.t$ttyp                             CODE_TRANS,  " &
@@ -603,9 +595,9 @@ ORDER BY DATA_EMISSAO, NUME_TITULO
 "            ELSE tfcmg101.t$bank || '-' || tfcmg001_CMG.t$desc  " &
 "      END                                        REL_BANCARIA,  " &
 "  " &
-"     CASE WHEN tfcmg101.t$paym = ' '  " &
+"     CASE WHEN Trim(tfcmg101.t$paym) is null  " &
 "            THEN NVL(TRIM(tfacp201.t$paym), 'N/A')  " &
-"          ELSE NVL(TRIM(tfcmg101.t$paym), 'N/A')  " &
+"          ELSE   NVL(TRIM(tfcmg101.t$paym), 'N/A')  " &
 "      END                                        METODO_PAGTO,  " &
 "  " &
 "     CASE WHEN tfcmg101.t$basu IS NULL  " &
@@ -875,9 +867,18 @@ ORDER BY DATA_EMISSAO, NUME_TITULO
 "                                                  and l1.t$cpac = iLABEL.t$cpac ) ) DTRFD  " &
 "         ON tdrec940.t$rfdt$l = DTRFD.iCODE  " &
 "  " &
-"  " &
-"  LEFT JOIN baandb.ttdrec947" + Parameters!Compania.Value +  "  tdrec947  " &
+"  LEFT JOIN baandb.ttdrec947" + Parameters!Compania.Value +  " tdrec947  " &
 "         ON tdrec947.t$fire$l = tdrec940.t$fire$l  " &
+"  " &
+"  LEFT JOIN baandb.ttdrec941" + Parameters!Compania.Value +  " tdrec941  " &
+"         ON tdrec941.t$fire$l = tdrec947.t$fire$l  " &
+"        AND tdrec941.t$line$l = tdrec947.t$line$l  " &
+"  " &
+"  LEFT JOIN baandb.ttcibd001" + Parameters!Compania.Value +  " tcibd001  " &
+"         ON tcibd001.t$item = tdrec941.t$item$l  " &
+"  " &
+"  LEFT JOIN baandb.ttcmcs023301 tcmcs023  " &
+"         ON tcmcs023.t$citg = tcibd001.t$citg  " &
 "  " &
 "  LEFT JOIN baandb.ttcmcs966301  tcmcs966  " &
 "         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l  " &
@@ -1033,6 +1034,7 @@ ORDER BY DATA_EMISSAO, NUME_TITULO
 "          ON tfcmg002.t$reas = tfcmg101.t$reas  " &
 "  " &
 " WHERE tfacp200.t$docn = 0  " &
+"	AND tfacp200.t$amnt != 0 "  &
 "   AND not exists (  select tfacp601.t$payt, tfacp601.t$payd, tfacp601.t$payl, tfacp601.t$pays  " &
 "                       from baandb.ttfacp601" + Parameters!Compania.Value +  "  tfacp601  " &
 "                      where tfacp601.t$icom = " + Parameters!Compania.Value +  "  " &
@@ -1042,12 +1044,7 @@ ORDER BY DATA_EMISSAO, NUME_TITULO
 "   AND tfacp200.t$docd BETWEEN :EmissaoDe AND :EmissaoAte  " &
 "   AND tfacp200.t$dued between :VencimentoDe AND :VencimentoAte  " &
 "   AND tfacp200.t$ttyp IN (" + Replace(("'" + JOIN(Parameters!TipoTransacao.Value, "',") + "'"),",",",'") + ") " &
-"   AND NVL(Trim(tfacp200.t$bloc), '000') IN (" + Replace(("'" + JOIN(Parameters!Bloqueado.Value, "',") + "'"),",",",'") + ") " &
-"   AND ((:PrepPagto = 0) OR (tfacp201.t$pyst$l = 3 and :PrepPagto = 1) OR (tfacp201.t$pyst$l != 3 and :PrepPagto = 2) ) " &
-"   AND CASE WHEN tfcmg101.t$paym = ' '  " &
-"              THEN NVL(TRIM(tfacp201.t$paym), 'N/A')  " &
-"            ELSE   NVL(TRIM(tfcmg101.t$paym), 'N/A')  " &
-"       END IN (" + Replace(("'" + JOIN(Parameters!MetodoPagto.Value, "',") + "'"),",",",'") + ")  " &
+"   AND NVL(Trim(tcibd001.t$citg), '000')  IN (" + Replace(("'" + JOIN(Parameters!Depto.Value, "',") + "'"),",",",'") + ") " &
 "   AND (CASE WHEN znacp005.t$canc$c = 1  " &
 "               THEN 99  " &
 "             WHEN znacp005.t$canc$c = 2  " &
@@ -1056,16 +1053,11 @@ ORDER BY DATA_EMISSAO, NUME_TITULO
 "               THEN 97  " &
 "             ELSE   NVL(tfacp201.t$pyst$l, 1)  " &
 "         END) IN (" + JOIN(Parameters!Situacao.Value, ", ") + ") " &
-"   AND NVL(CASE WHEN tflcb230.t$send$d = 0  " &
-"                  THEN tflcb230.t$stat$d  " &
-"                ELSE tflcb230.t$send$d  " &
-"            END, -1) IN (" + JOIN(Parameters!StatusArquivo.Value, ", ") + ") " &
+"   AND ((UPPER(tdrec947.t$orno$l) like '%' || UPPER(:OrdemCompra) || '%') OR (:OrdemCompra is null))  " &
+"   AND ((Upper(Concat(Trim(tfacp200.t$ttyp), tfacp200.t$ninv)) = Upper(Trim(:Transacao))) OR (:Transacao is null))  " &
 "   AND ( (tfacp200.t$ifbp IN  "&
 "         ( " + IIF(Trim(Parameters!ParceiroNegocio.Value) = "", "''", "'" + Replace(Replace(Parameters!ParceiroNegocio.Value, " ", ""), ",", "','") + "'")  + " )  "&
 "           AND (" + IIF(Parameters!ParceiroNegocio.Value Is Nothing, "1", "0") + " = 0))  " &
-"            OR (" + IIF(Parameters!ParceiroNegocio.Value Is Nothing, "1", "0") + " = 1) ) " & 
-"   AND ((UPPER(tdrec947.t$orno$l) like '%' || UPPER(:OrdemCompra) || '%') OR (:OrdemCompra is null))  " &
-"   AND ((regexp_replace(tdrec940.t$fovn$l, '[^0-9]', '') = Trim(:CNPJ)) OR (:CNPJ is null))  " &
-"   AND ((Upper(Concat(Trim(tfacp200.t$ttyp), tfacp200.t$ninv)) = Upper(Trim(:Transacao))) OR (:Transacao is null))  " &
+"            OR (" + IIF(Parameters!ParceiroNegocio.Value Is Nothing, "1", "0") + " = 1) )  " & 
 "  " &
 " ORDER BY DATA_EMISSAO, NUME_TITULO  "
