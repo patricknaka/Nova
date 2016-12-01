@@ -14,7 +14,7 @@ SELECT
     cisli940.t$ityp$l            TIPO_DE_TRANSACAO,
     cisli940.t$idoc$l            DOC_LIGADO_TRANSACAO,
 
- CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                  DATA_EMISSAO_NF,
 
@@ -137,9 +137,21 @@ LEFT JOIN (select l.t$desc DESCR_DOC_FISCAL,
                                           AND l1.t$cpac = l.t$cpac)) DOC_FISCAL
        ON DOC_FISCAL.t$cnst = cisli940.t$fdty$l
     
-WHERE cisli940.t$stat$l = 6
+WHERE cisli940.t$stat$l = 6  --Lancado
+  AND TRUNC((select CASE WHEN t.t$dcdt < TO_DATE('01/01/1990','DD/MM/YYYY') 
+                           THEN NULL
+                         ELSE   t.t$dcdt 
+                    END AS t$dcdt
+               from baandb.ttfgld018301 t
+              where t.t$ttyp = cisli940.t$ityp$l
+                and t.t$docn = cisli940.t$idoc$l
+                and t.t$docn!= 0)) 
+      BETWEEN :DataDocLigadoTransacaoDe 
+          AND :DataDocLigadoTransacaoAte
+      AND cisli940.t$ityp$l in (:TipoTransacao)
 
 --**************************************************************
+
 UNION
 
 SELECT
@@ -158,7 +170,7 @@ SELECT
     cisli940.t$ityp$l            TIPO_DE_TRANSACAO,
     cisli940.t$idoc$l            DOC_LIGADO_TRANSACAO,
 
- CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 'DD-MON-YYYY HH24:MI:SS'), 
      'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                  DATA_EMISSAO_NF,
                                  
@@ -283,7 +295,18 @@ LEFT JOIN (select l.t$desc DESCR_DOC_FISCAL,
                                           AND l1.t$cpac = l.t$cpac)) DOC_FISCAL
        ON DOC_FISCAL.t$cnst = cisli940.t$fdty$l
     
-WHERE cisli940.t$stat$l = 101
+WHERE cisli940.t$stat$l = 101  --Estornado
+  AND TRUNC((select CASE WHEN t.t$dcdt < TO_DATE('01/01/1990','DD/MM/YYYY') 
+                           THEN NULL
+                         ELSE   t.t$dcdt 
+                    END AS t$dcdt
+               from baandb.ttfgld018301 t
+              where t.t$ttyp = cisli940.t$ityp$l
+                and t.t$docn = cisli940.t$idoc$l
+                and t.t$docn!= 0)) 
+      BETWEEN :DataDocLigadoTransacaoDe 
+          AND :DataDocLigadoTransacaoAte
+          AND cisli940.t$ityp$l in (:TipoTransacao)
 
 --*************************************************************
 -- tdrec940
@@ -326,7 +349,7 @@ FROM  baandb.ttdrec940301 tdrec940
 LEFT JOIN baandb.ttdrec947301 tdrec947
        ON tdrec947.t$fire$l = tdrec940.t$fire$l
 
- LEFT JOIN (select r.t$ncia$c, 
+LEFT JOIN ( select r.t$ncia$c, 
                    r.t$uneg$c,
                    r.t$pecl$c,
                    r.t$sqpd$c,
@@ -343,7 +366,7 @@ LEFT JOIN baandb.ttdrec947301 tdrec947
                                      AND r0.t$date$c = ( select max(r1.t$date$c)
                                                            from baandb.tznsls004301 r1
                                                           where r1.t$orno$c = r0.t$orno$c ) )) znsls004
-        ON znsls004.t$orno$c = tdrec947.t$orno$l
+       ON znsls004.t$orno$c = tdrec947.t$orno$l
     
 LEFT JOIN (select l.t$desc DESCR_ORIGEM,
                   d.t$cnst
@@ -430,5 +453,15 @@ LEFT JOIN (select l.t$desc DESCR_DOC_FISCAL,
        ON DOC_FISCAL.t$cnst = tdrec940.t$rfdt$l 
  
 WHERE tdrec940.t$rfdt$l = 10      --retorno de mercadoria
-and   tdrec940.t$stat$l IN (4,5)  --aprovado, aprovado com problemas
-       
+  AND tdrec940.t$stat$l IN (4,5)  --aprovado, aprovado com problemas
+  AND TRUNC((select CASE WHEN t.t$dcdt < TO_DATE('01/01/1990','DD/MM/YYYY') 
+                           THEN NULL
+                         ELSE   t.t$dcdt 
+                    END AS t$dcdt
+               from baandb.ttfgld018301 t
+              where t.t$ttyp = tdrec940.t$ttyp$l
+                and t.t$docn = tdrec940.t$invn$l
+                and t.t$docn!= 0)) 
+      BETWEEN :DataDocLigadoTransacaoDe 
+          AND :DataDocLigadoTransacaoAte
+          AND tdrec940.t$ttyp$l in (:TipoTransacao)
