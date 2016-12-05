@@ -33,7 +33,7 @@ SELECT
     
     CASE WHEN znsls401.t$tpes$c = 'X' THEN 'Crossdocking'
          WHEN znsls401.t$tpes$c = 'F' THEN 'Fingido'
-         WHEN znsls401.t$tpes$c = 'P' THEN 'PrÃ©-Venda'
+         WHEN znsls401.t$tpes$c = 'P' THEN 'Pré-Venda'
          ELSE 'NORMAL' 
        END                TIPO_ESTOQUE,
     
@@ -51,7 +51,9 @@ SELECT
                      WHEN tcibd001.t$csig = '001'                          THEN 'Verificacao Fiscal' 
                 END       SITUACAO_ITEM,  -- SDP 1192090
                 
-    znsls401.t$pzfo$c     TEMP_REPOS, 
+    znsls401.t$pzfo$c     TEMP_REPOS,
+    znsls401.t$pzcd$c     PRAZO_CD,         -- Incluso (SDP 1279819)
+    znsls401.t$pztr$c     TRANSIT_TIME,     -- Incluso (SDP 1279819)
     znsls401.t$qtve$c     QUAN_ORD,
     
     case when tdsls420.t$orno is null then
@@ -77,7 +79,7 @@ SELECT
     tccom130.t$fovn$l     CNPJ_FORN,
     tccom130.t$nama       NOME_FORNEC,
     
-    znsls401.t$vlun$c     PREÃ‡O_UNIT,     -- MMF
+    znsls401.t$vlun$c     PREÇO_UNIT,     -- MMF
  
     ( select case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)) = 0 
                     then 0
@@ -332,4 +334,4 @@ WHERE tcemm124.t$dtyp = 1
   AND ULT_PONTO.t$poco$c IN (:Status)  
  
 ORDER BY NUME_OV_LN,
-         POSI_OV_LN
+POSI_OV_LN
