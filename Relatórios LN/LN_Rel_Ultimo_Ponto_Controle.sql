@@ -60,8 +60,20 @@ SELECT DISTINCT
         'REENVIO'
     ELSE zncmg007.t$desc$c END                            FORMA_DE_RESTITUICAO,
     OVENDA.STATUS                                         SITUACAO,
-    cisli940.t$amnt$l                                     VALOR_NOTA
-
+    cisli940.t$amnt$l                                     VALOR_NOTA,
+    
+        CASE WHEN TRUNC(znfmd630.t$dtpe$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')
+                    THEN NULL
+                  ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtpe$c, 'DD-MON-YYYY HH24:MI:SS'),
+                           'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+             END                DATA_PREVISTA,   -- Campo Novo
+             
+    
+    CASE WHEN znfmd630.t$dtco$c > '01/01/1975' then
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtco$c, 'DD-MON-YYYY HH24:MI:SS'),
+                        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)    
+    ELSE NULL
+END                             DT_CORRIGIDA           --Campo Novo
     
 FROM ( select a.t$ncia$c,
               a.t$uneg$c,
@@ -101,8 +113,8 @@ LEFT JOIN baandb.tznsls400301 znsls400
                     max(a.t$date$c) t$date$c,
                     max(a.t$dtem$c) t$dtem$c,
                     max(a.t$dtep$c) t$dtep$c,
-                    max(a.t$dtoc$c) KEEP (DENSE_RANK LAST ORDER BY a.T$SEQN$C,  a.T$DTOC$C) t$dtoc$c,
-                    max(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$SEQN$C,  a.T$DTOC$C) t$poco$c
+                    max(a.t$dtoc$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C) t$dtoc$c,  --Data de ocorrência
+                    max(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C) t$poco$c   --Data de ocorrência
                from baandb.tznsls410301 a
            group by a.t$ncia$c,
                     a.t$uneg$c,
