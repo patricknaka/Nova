@@ -15,8 +15,14 @@ select
         LOC.WIDTH                     LARGURA,
         LOC.LENGTH                    COMPRIMENTO,
         LOC.LOCBARCODE                LOC_BARCODE,
-        LOC.ADDDATE                   DATA_CRIACAO_LOCAL,
-        LOC.EDITDATE                  DATA_ULTIMA_UTILIZACAO,
+        cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(LOC.ADDDATE, 
+                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                             AT time zone 'America/Sao_Paulo') as date)
+                                      DATA_CRIACAO_LOCAL,
+        cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(LOC.EDITDATE, 
+                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                             AT time zone 'America/Sao_Paulo') as date)
+                                      DATA_ULTIMA_UTILIZACAO,
         cast(LOC.EDITDATE -
              LOC.ADDDATE as int)      DIAS_UTILIZADOS
 
@@ -24,3 +30,13 @@ from    WMWHSE8.LOC
 
 left join WMWHSE5.PUTAWAYZONE PZ
        on PZ.PUTAWAYZONE = LOC.PUTAWAYZONE
+
+where   cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(LOC.ADDDATE, 
+                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                             AT time zone 'America/Sao_Paulo') as date)
+              between :DATA_CRIACAO_DE and :DATA_CRIACAO_ATE
+and     cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(LOC.EDITDATE, 
+                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                             AT time zone 'America/Sao_Paulo') as date)
+              between :DATA_UTILIZ_DE and :DATA_UTILIZ_ATE
+and     Trim(PZ.DESCR) in (:ZONA)
