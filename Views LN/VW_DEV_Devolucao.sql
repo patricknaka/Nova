@@ -221,7 +221,9 @@ FROM baandb.tznsls401201 znsls401dev								-- Pedido de devolução
       AND	znsls401org.t$ncia$c=znsls401dev.t$ncia$c
       AND	znsls401org.t$uneg$c=znsls401dev.t$uneg$c
       AND	znsls401org.t$entr$c=znsls401dev.t$endt$c
-      AND	znsls401org.t$sequ$c=znsls401dev.t$sedt$c
+      AND	znsls401org.t$sqpd$c = znsls401dev.t$sedt$c
+      AND 	znsls401org.t$sequ$c = znsls401dev.t$sidt$c
+--      AND  znsls401org.t$sequ$c=znsls401dev.t$sedt$c
       
   LEFT JOIN baandb.tznsls400201 znsls400org
       ON	znsls400org.t$ncia$c=znsls401org.t$ncia$c
