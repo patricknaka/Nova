@@ -44,7 +44,10 @@ select
         
     tdrec940.t$fire$l           Ref_Fiscal_Entrada,  
     tdrec940.t$stat$l           CODE_STAT_REC,            --Status ref. Fiscal 
-    STAT_REC.                   DESCR_CODE_STAT_REC       --Status ref. Fiscal    
+    STAT_REC.                   DESCR_CODE_STAT_REC       --Status ref. Fiscal
+,   tdrec940.t$fdtc$l           CODIGO_TIPO_DOC_FISCAL,   -- SDP 1268928.sn
+    tcmcs966.t$dsca$l           DESCR_CODE_DOC_FISCAL,
+    TIPO_DOC.DOC_FISC_REC       TIPO_DOC_FISCAL_RECEB     -- SDP 1268928.en
     
 from baandb.twhinh200301 whinh200
 
@@ -78,6 +81,9 @@ inner join baandb.ttccom100301 tccom100
      
  left join baandb.ttdrec940301 tdrec940 
         on tdrec940.t$fire$l = tdrec947.t$fire$l 
+
+left join  baandb.ttcmcs966301 tcmcs966              --SDP 1268928.sn
+       on  tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l     --SDP 1268928.en
     
  left join ( SELECT l.t$desc DESCR_Status_da_NF,
                     d.t$cnst
@@ -162,6 +168,34 @@ inner join baandb.ttccom100301 tccom100
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) STAT_REC
         on STAT_REC.t$cnst = tdrec940.t$stat$l
+
+ left join ( SELECT l.t$desc DOC_FISC_REC,              -- SDP 1268928.sn
+                    d.t$cnst
+               FROM baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              WHERE d.t$cpac = 'td'
+                AND d.t$cdom = 'rec.trfd.l'
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'td'
+                AND l.t$clab = d.t$za_clab
+                AND rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) TIPO_DOC
+        on TIPO_DOC.t$cnst = tdrec940.t$rfdt$l          -- SDP 1268928.en
 
 where 
 --whinh200.t$oorg = 3
