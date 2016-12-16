@@ -4,10 +4,7 @@ select
         znfmd001.t$dsca$c                   FILIAL,
         cast((from_tz(to_timestamp(to_char(cisli940.t$datg$l,
                                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                  AT time zone 'America/Sao_Paulo') as date) || ' ' ||
-        to_char(cast((from_tz(to_timestamp(TO_CHAR(cisli940.t$datg$l, 
-                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date), 'HH24:MI:SS')
+                                  AT time zone 'America/Sao_Paulo') as date)
                                             DATA,
         ENDER.FOVN                          CNPJ,
         ENDER.NOME                          FORNECEDOR,
