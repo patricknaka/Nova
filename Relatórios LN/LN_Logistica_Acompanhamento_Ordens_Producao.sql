@@ -1,39 +1,30 @@
 select  
-        znsls401.t$pecl$c                                                                 PEDIDO_SITE,
+        znsls401.t$pecl$c                       PEDIDO_SITE,
         cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 
                            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date) || '   ' ||
-        TO_CHAR(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ORDERDATE, 
-                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date), 'HH24:MI:SS')    DATA_REGISTRO_OP,
+                             AT time zone 'America/Sao_Paulo') as date)
+                                                DATA_REGISTRO_OP,
         cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
                            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date) || '   ' ||
-        TO_CHAR(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.SCHEDULEDSHIPDATE, 
-                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date), 'HH24:MI:SS')    DATA_LIMITE_OP,
+                             AT time zone 'America/Sao_Paulo') as date)
+                                                DATA_LIMITE_OP,
         case when to_char(to_date(tdsls400.t$prdt), 'yyyy') = 1969 then null 
              when to_char(to_date(tdsls400.t$prdt), 'yyyy') = 1970 then null 
         else
              cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
                                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                  AT time zone 'America/Sao_Paulo') as date) || '   ' ||
-             TO_CHAR(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
-                                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                  AT time zone 'America/Sao_Paulo') as date), 'HH24:MI:SS')
-        end                                                                               DATA_LIMITE_FINAL,
-        tisfc001.t$pdno                                                                   NUMERO_OP,
-        ORDERSTATUSSETUP.DESCRIPTION                                                      EVENTO,
+                                  AT time zone 'America/Sao_Paulo') as date)
+        end                                     DATA_LIMITE_FINAL,
+        tisfc001.t$pdno                         NUMERO_OP,
+        ORDERSTATUSSETUP.DESCRIPTION            EVENTO,
         cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
                            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date) || '   ' ||
-        TO_CHAR(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
-                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date), 'HH24:MI:SS')    DATA_ULTIMO_EVENTO,
-        znsls430.CUSTOM_1                                                                 CUSTOMIZACAO_1,
-        znsls430.CUSTOM_2                                                                 CUSTOMIZACAO_2,
-        znsls430.CUSTOM_3                                                                 CUSTOMIZACAO_3,
-        znsls430.CUSTOM_4                                                                 CUSTOMIZACAO_4
+                             AT time zone 'America/Sao_Paulo') as date)
+                                                DATA_ULTIMO_EVENTO,
+        znsls430.CUSTOM_1                       CUSTOMIZACAO_1,
+        znsls430.CUSTOM_2                       CUSTOMIZACAO_2,
+        znsls430.CUSTOM_3                       CUSTOMIZACAO_3,
+        znsls430.CUSTOM_4                       CUSTOMIZACAO_4
 
 from    baandb.tznsls401601 znsls401
 
