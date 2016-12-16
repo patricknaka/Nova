@@ -7,10 +7,7 @@ select
         cisli940.t$docn$l                             NOTA_FISCAL,
         cast((from_tz(to_timestamp(to_char(cisli940.t$date$l, 
                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone 'America/Sao_Paulo') as date) || '   ' ||
-        to_char(cast((from_tz(to_timestamp(to_char(cisli940.t$date$l, 
-                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone 'America/Sao_Paulo') as date), 'HH24:MI:SS')
+                    AT time zone 'America/Sao_Paulo') as date)
                                                       DATA_EMISSAO,
         cisli940.t$amnt$l                             VALOR,
         cisli959.t$rsds$l                             MOTIVO_CANCELAMENTO,
