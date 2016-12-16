@@ -7,20 +7,12 @@ select
                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') as date)
                                               DATA_PLANEJADA_RECEB,
-        TO_CHAR(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
-                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone 'America/Sao_Paulo') as date), 'HH24:MI:SS')
-                                              HORA_RECEB,
         znsls410.t$poco$c                     PONTO_CONTROLE,
         znmcs002.t$desc$c                     DESCRICAO,
         cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.t$dtoc$c, 
                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') as date)
-                                              DATA_OCORRENCIA,
-        TO_CHAR(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.t$dtoc$c, 
-                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                     AT time zone 'America/Sao_Paulo') as date), 'HH24:MI:SS')
-                                              HORA_OCORRENCIA
+                                              DATA_OCORRENCIA
 
 from    baandb.tznsls400601 znsls400
 
