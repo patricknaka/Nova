@@ -34,7 +34,8 @@ left join ( select  a.t$slcp,
                     a.t$koor,
                     a.t$slso,
                     a.t$fire$l
-            from    baandb.tcisli245301 a 
+            from    baandb.tcisli245301 a
+            where a.t$fire$l != ' '
             group by  a.t$slcp,
                       a.t$ortp,
                       a.t$koor,
