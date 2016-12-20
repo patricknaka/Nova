@@ -16,7 +16,7 @@ SELECT
     WHEN tcibd001.t$csig = '' OR tcibd001.t$csig = 'REA' OR tcibd001.t$csig = ' ' THEN 'Ativo'
     WHEN tcibd001.t$csig  ='SUS' THEN 'Suspenso'
     WHEN tcibd001.t$csig  ='CAN' THEN 'Cancelado'
-    WHEN tcibd001.t$csig  ='001' THEN 'Verificação Fiscal'
+    WHEN tcibd001.t$csig  ='001' THEN 'VerificaÃ§Ã£o Fiscal'
     END SITUACAO_ITEM,
     
     tccom130.t$fovn$l  CNPJ_FORNECEDOR,
@@ -53,7 +53,13 @@ SELECT
     else
         TO_CHAR(tdipu001.t$ixdn$c) ||
         '-'  || 
-        iTIPOXD.DESCR end     DECRICAO_ITEM_XD_NOVA
+        iTIPOXD.DESCR end       DECRICAO_ITEM_XD_NOVA,
+        tcibd200.t$cwar || '-' || tcmcs003.t$dsca        
+                                FILIAL,
+    CASE WHEN znsng064.t$skvv$o IS NULL or znsng064.t$skvv$o = ' ' THEN
+         'Sem Sinergia'
+    ELSE znsng064.t$skvv$o END  SKU_VIA_VAREJO,
+    STATUS.DESCR                STATUS_ENTREGA_CLIENTE
 
 FROM baandb.ttcibd001301 tcibd001 
 
@@ -81,6 +87,15 @@ FROM baandb.ttcibd001301 tcibd001
  LEFT JOIN baandb.ttcemm030301 tcemm030  
         ON tcemm030.t$eunt = tcemm112.t$grid
  
+ LEFT JOIN baandb.tznsng064301 znsng064
+        ON znsng064.t$item$o = tcibd001.t$item
+ 
+ LEFT JOIN baandb.ttcibd200301 tcibd200
+        ON tcibd200.t$item = tcibd001.t$item
+ 
+ LEFT JOIN baandb.ttcmcs003301 tcmcs003
+        ON tcmcs003.t$cwar = tcibd200.t$cwar
+        
  LEFT JOIN ( SELECT d.t$cnst CODE_STAT, 
                     l.t$desc DESC_TIPO_ITEM
                FROM baandb.tttadv401000 d, 
@@ -136,6 +151,34 @@ FROM baandb.ttcibd001301 tcibd001
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) iTIPOXD
         ON iTIPOXD.CODE = tdipu001.t$ixdn$c
+
+ LEFT JOIN ( SELECT d.t$cnst CODE,
+                    l.t$desc DESCR
+               FROM baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              WHERE d.t$cpac = 'zn'
+                AND d.t$cdom = 'sng.stme.o'
+                AND l.t$clan = 'p'
+                AND l.t$cpac = 'zn'
+                AND l.t$clab = d.t$za_clab
+                AND rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                AND rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) || 
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) STATUS
+        ON STATUS.CODE = znsng064.t$stat$o
 
 WHERE tdipu001.t$ixdn$c IN (:XD)
   AND tcibd001.t$citg IN (:Depto)  
