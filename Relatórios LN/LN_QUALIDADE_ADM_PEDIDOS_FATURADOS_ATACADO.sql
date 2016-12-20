@@ -21,7 +21,7 @@ inner join baandb.ttcmcs065301 tcmcs065
 inner join baandb.ttccom130301 tccom130
         on tccom130.t$cadr = tcmcs065.t$cadr
 
-inner join baandb.tznfmd001301 znfmd001
+left  join baandb.tznfmd001301 znfmd001
         on znfmd001.t$fovn$c = tccom130.t$fovn$l
 
 inner join ( select a.t$slso,
