@@ -3,8 +3,8 @@ select
         cisli940.t$seri$l                   SERIE,
         znfmd001.t$dsca$c                   FILIAL,
         cast((from_tz(to_timestamp(to_char(cisli940.t$datg$l,
-                                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                                  AT time zone 'America/Sao_Paulo') as date)
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                                AT time zone 'America/Sao_Paulo') as date)
                                             DATA,
         ENDER.FOVN                          CNPJ,
         ENDER.NOME                          FORNECEDOR,
@@ -38,12 +38,10 @@ inner join  (select  a.t$fovn$l FOVN,
 inner join baandb.ttcmcs065301 tcmcs065
         on tcmcs065.t$cwoc = cisli940.t$cofc$l
 
-inner join  (select a.t$fovn$l,
-                    a.t$cadr
-             from   baandb.ttccom130301 a) tccom130
+inner join baandb.ttccom130301 tccom130
         on  tccom130.t$cadr = tcmcs065.t$cadr
 
-inner join baandb.tznfmd001301 znfmd001
+left  join baandb.tznfmd001301 znfmd001
         on znfmd001.t$fovn$c = tccom130.t$fovn$l
 
 left  join ( select l.t$desc ST,
@@ -101,16 +99,16 @@ left  join ( select l.t$desc TIPO_ITEM,
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) ITM
         on ITM.t$cnst = tcibd001.t$kitm
-        
-left join baandb.ttdrec955301 tdrec955
-       on tdrec955.t$fire$l = cisli941.t$fire$l
-      and tdrec955.t$line$l = cisli941.t$line$l
-      and tdrec955.t$lfir$l <> ' '
 
-left join baandb.ttdrec940301 tdrec940
-       on tdrec940.t$fire$l = tdrec955.t$lfir$l
-
-where   cisli940.t$fdty$l = 17            -- Remessa para Terceiros
-and     cisli940.t$stat$l = 6             -- Lançado
-and     cisli940.t$fdtc$l = 'S00312'      -- Remessa para conserto
-and     tdrec940.t$docn$l is null
+where   trunc(cast((from_tz(to_timestamp(to_char(cisli940.t$datg$l,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
+                          between :DATA_DE and :DATA_ATE
+and     znfmd001.t$fili$c between :ID_FILIAL_DE and :ID_FILIAL_ATE
+and     STATUS.ST between :SITUACAO_NF_DE and :SITUACAO_NF_ATE
+and     cisli940.t$fdty$l = 17            -- Remessa para Terceiros
+and     not exists ( select tdrec955.t$lfir$l
+                     from   baandb.ttdrec955301 tdrec955
+                     where  tdrec955.t$fire$l = cisli941.t$fire$l
+                     and    tdrec955.t$line$l = cisli941.t$line$l
+                     and    tdrec955.t$lfir$l != ' ' )
