@@ -16,27 +16,27 @@ select
         LOC.LENGTH                    COMPRIMENTO,
         LOC.LOCBARCODE                LOC_BARCODE,
         cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(LOC.ADDDATE, 
-                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date)
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)
                                       DATA_CRIACAO_LOCAL,
         cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(LOC.EDITDATE, 
-                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date)
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)
                                       DATA_ULTIMA_UTILIZACAO,
         cast(LOC.EDITDATE -
              LOC.ADDDATE as int)      DIAS_UTILIZADOS
 
 from    WMWHSE8.LOC
 
-left join WMWHSE5.PUTAWAYZONE PZ
+left join WMWHSE8.PUTAWAYZONE PZ
        on PZ.PUTAWAYZONE = LOC.PUTAWAYZONE
 
 where   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(LOC.ADDDATE, 
-                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date))
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone 'America/Sao_Paulo') as date))
               between :DATA_CRIACAO_DE and :DATA_CRIACAO_ATE
 and     trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(LOC.EDITDATE, 
-                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                             AT time zone 'America/Sao_Paulo') as date))
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone 'America/Sao_Paulo') as date))
               between :DATA_UTILIZ_DE and :DATA_UTILIZ_ATE
-and     Trim(PZ.DESCR) in (:ZONA)
+and     Trim(PZ.DESCR) like '%' || :ZONA || '%'
