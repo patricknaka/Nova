@@ -11,7 +11,14 @@ SELECT DISTINCT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.T$DTOC$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)        DATA_HORA,
                 
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.T$DATE$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR((select b.T$DATE$C 
+                                          from baandb.tznsls410301 b
+                                         where b.t$entr$c = znsls410.t$entr$c
+                                           and b.T$DTOC$C = znsls410.T$DTOC$C
+                                           and b.t$sqpd$c = znsls410.t$sqpd$c
+                                           and b.t$ncia$c = znsls410.t$ncia$c
+                                           and b.t$uneg$c = znsls410.t$uneg$c
+                                           and b.t$pecl$c = znsls410.t$pecl$c), 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
         AT time zone 'America/Sao_Paulo') AS DATE)        DATA_PROCESSAMENTO,
                                                                     
     CASE WHEN znsls410.T$DTEM$C  <= to_date('01-01-1980','DD-MM-YYYY') 
