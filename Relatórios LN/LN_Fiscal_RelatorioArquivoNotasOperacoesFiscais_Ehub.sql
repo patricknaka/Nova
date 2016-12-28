@@ -1,6 +1,6 @@
 SELECT 
   DISTINCT 
-  301                CODE_CIA, 
+  601                CODE_CIA, 
   tcemm122.T$grid    UNID_EMPRESARIAL, 
   tccom130.t$fovn$L  NUME_FILIAL,
                        
@@ -49,23 +49,23 @@ SELECT
     tdrec940.t$fdtc$l  COD_TIPO_DOCFIS, 
     tcmcs966.t$dsca$l  DESC_TIPO_DOCFIS 
        
-FROM       baandb.ttdrec940301   tdrec940   
+FROM       baandb.ttdrec940601   tdrec940   
  
-INNER JOIN baandb.ttdrec941301  tdrec941
+INNER JOIN baandb.ttdrec941601  tdrec941
         ON tdrec941.T$FIRE$L = tdrec940.T$FIRE$L
 
- LEFT JOIN baandb.twhinh300301  whinh300 
+ LEFT JOIN baandb.twhinh300601  whinh300 
         ON whinh300.t$fire$c = tdrec940.t$fire$l
         
-INNER JOIN baandb.ttccom130301 tccom130
+INNER JOIN baandb.ttccom130601 tccom130
         ON tccom130.t$cadr = tdrec940.t$sfra$l
 	
 -- MMF.sn
-INNER JOIN baandb.ttccom100301 tccom100
+INNER JOIN baandb.ttccom100601 tccom100
         ON tccom100.t$cadr = tccom130.t$cadr
 -- MMF.en
 
-INNER JOIN baandb.ttcemm122301  tcemm122
+INNER JOIN baandb.ttcemm122601  tcemm122
         ON tcemm122.t$bupa = tccom100.t$bpid
 --        ON tcemm122.t$bupa = tdrec940.t$sfra$l
             
@@ -97,7 +97,7 @@ INNER JOIN baandb.ttcemm122301  tcemm122
                                             and l1.t$cpac = l.t$cpac ) ) DESC_DOMAIN_STAT
         ON tdrec940.t$stat$l = DESC_DOMAIN_STAT.DESC_DOMAIN_STAT
 	   
- LEFT JOIN baandb.ttcmcs966301 tcmcs966
+ LEFT JOIN baandb.ttcmcs966601 tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
 		
  
@@ -106,7 +106,7 @@ INNER JOIN baandb.ttcemm122301  tcemm122
                     a.t$stfa$c,
                     a.t$nfes$c,
                     a.t$logn$c
-               from baandb.tznnfe011301 a ) Log_Nfd
+               from baandb.tznnfe011601 a ) Log_Nfd
         ON Log_Nfd.t$fire$c = tdrec940.t$fire$l
         and Log_Nfd.t$oper$c = 2    -- Recebimento
      --  AND Log_Nfd.t$stfa$c = 5   --Impressa
@@ -122,7 +122,7 @@ INNER JOIN baandb.ttcemm122301  tcemm122
                     a.t$stre$c,
                     a.t$logn$c,
                     max(a.t$data$c) DATA_P_WMS
-               from baandb.tznnfe011301 a
+               from baandb.tznnfe011601 a
            group by a.t$oper$c,
                     a.t$fire$c,
                     a.t$stre$c,
@@ -141,7 +141,7 @@ LEFT JOIN ( select a.t$oper$c,
                    a.t$stre$c,
                    a.t$logn$c,
                    max(a.t$data$c) DATA_A_WMS
-              from baandb.tznnfe011301 a
+              from baandb.tznnfe011601 a
           group by a.t$oper$c,
                    a.t$fire$c,
                    a.t$stre$c,
@@ -162,7 +162,7 @@ LEFT JOIN ( select a.t$oper$c,
                    a.t$stre$c,
                    a.t$logn$c,
                    max(a.t$data$c)
-              from baandb.tznnfe011301 a
+              from baandb.tznnfe011601 a
           group by a.t$oper$c,
                    a.t$fire$c,
                    a.t$stre$c,
