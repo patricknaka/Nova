@@ -21,10 +21,30 @@ SELECT
     whinh300.t$recd$c  RECDOC_WMS, 
     tdrec940.t$lipl$l  PLAC_VEIC, 
     tdrec940.t$logn$l  CODE_USUA, 
-    tdrec940.t$logn$l                             USER_REC,
-    Log_Nfe_P_WMS.t$logn$c                        PRONTO_PARA_ENVIAR_WMS,
-    Log_Nfe_A_WMS.t$logn$c                        AGUARDANDO_WMS,
-    Log_Nfe_AP.t$logn$c                           APROVADO,
+	
+    tdrec940.t$logn$l  USER_REC,
+     Log_Nfe_P_WMS.t$logn$c || ' - ' || Nfe_User_P_WMS.t$name                         PRONTO_PARA_ENVIAR_WMS,
+      CASE WHEN tdrec940.t$fire$l  = Log_Nfd.t$fire$c THEN
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Log_Nfe_P_WMS.DATA_P_WMS,  
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+        AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE NULL
+    END                                           DATA_PRONTO_PARA_ENVIAR_WMS,
+     Log_Nfe_A_WMS.t$logn$c || ' - ' || Nfe_User_A_WMS.t$name                        AGUARDANDO_WMS,
+    CASE WHEN tdrec940.t$fire$l  = Log_Nfd.t$fire$c then
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Log_Nfe_A_WMS.DATA_A_WMS,  
+      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+        AT time zone 'America/Sao_Paulo') AS DATE)
+    ELSE NULL
+    END               DATA_AGUARDANDO_WMS,
+   
+    CASE WHEN Log_Nfe_AP.t$logn$c IS NULL  THEN
+    NULL
+    ELSE
+    Log_Nfe_AP.t$logn$c || ' - ' || Nfe_User_AP_WMS.t$name     
+    END                                                 APROVADO,	
+	
+	
     tdrec940.t$cnfe$l  CHAV_ACESS, 
     tdrec940.t$fdtc$l  COD_TIPO_DOCFIS, 
     tcmcs966.t$dsca$l  DESC_TIPO_DOCFIS 
@@ -79,50 +99,56 @@ INNER JOIN baandb.ttcemm122301  tcemm122
 	   
  LEFT JOIN baandb.ttcmcs966301 tcmcs966
         ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
-        
-
-     
-    
- LEFT JOIN ( select a.t$fire$c,
+		
+ 
+ LEFT JOIN ( select a.t$oper$c,
+                    a.t$fire$c,
                     a.t$stfa$c,
                     a.t$nfes$c,
                     a.t$logn$c
                from baandb.tznnfe011301 a ) Log_Nfd
         ON Log_Nfd.t$fire$c = tdrec940.t$fire$l
-       AND Log_Nfd.t$stfa$c = 5   --Impressa
-       AND Log_Nfd.t$nfes$c = 2   --Transmitida
+        and Log_Nfd.t$oper$c = 2    -- Recebimento
+     --  AND Log_Nfd.t$stfa$c = 5   --Impressa
+     --  AND Log_Nfd.t$nfes$c = 2   --Transmitida
        
  LEFT JOIN ( select ttaad200.t$user,
                     ttaad200.t$name
                from baandb.tttaad200000 ttaad200 ) Nfd_User
         ON Nfd_User.t$user = Log_Nfd.t$logn$c
         
- LEFT JOIN ( select a.t$fire$c,
+ LEFT JOIN ( select a.t$oper$c,
+                    a.t$fire$c,
                     a.t$stre$c,
                     a.t$logn$c,
-                    max(a.t$data$c)
+                    max(a.t$data$c) DATA_P_WMS
                from baandb.tznnfe011301 a
-           group by a.t$fire$c,
+           group by a.t$oper$c,
+                    a.t$fire$c,
                     a.t$stre$c,
                     a.t$logn$c ) Log_Nfe_P_WMS
         ON Log_Nfe_P_WMS.t$fire$c = tdrec940.t$fire$l
        AND Log_Nfe_P_WMS.t$stre$c = 201   --Pronto para enviar para WMS
+       and Log_Nfe_P_WMS.t$oper$c = 2     -- Recebimento
        
  LEFT JOIN ( select ttaad200.t$user,
                     ttaad200.t$name
                from baandb.tttaad200000 ttaad200 ) Nfe_User_P_WMS
         ON Nfe_User_P_WMS.t$user = Log_Nfe_P_WMS.t$logn$c
         
-LEFT JOIN ( select a.t$fire$c,
+LEFT JOIN ( select a.t$oper$c,
+                   a.t$fire$c,
                    a.t$stre$c,
                    a.t$logn$c,
-                   max(a.t$data$c)
+                   max(a.t$data$c) DATA_A_WMS
               from baandb.tznnfe011301 a
-          group by a.t$fire$c,
+          group by a.t$oper$c,
+                   a.t$fire$c,
                    a.t$stre$c,
                    a.t$logn$c ) Log_Nfe_A_WMS
         ON Log_Nfe_A_WMS.t$fire$c = tdrec940.t$fire$l
        AND Log_Nfe_A_WMS.t$stre$c = 200   --Aguardando WMS
+       and Log_Nfe_A_WMS.t$oper$c = 2  -- Recebimento
        
  LEFT JOIN ( select ttaad200.t$user,
                     ttaad200.t$name
@@ -130,17 +156,27 @@ LEFT JOIN ( select a.t$fire$c,
         ON Nfe_User_A_WMS.t$user = Log_Nfe_A_WMS.t$logn$c
         
 
- LEFT JOIN ( select a.t$fire$c,
+ LEFT JOIN ( select 
+                   a.t$oper$c,
+                   a.t$fire$c,
                    a.t$stre$c,
                    a.t$logn$c,
                    max(a.t$data$c)
               from baandb.tznnfe011301 a
-          group by a.t$fire$c,
+          group by a.t$oper$c,
+                   a.t$fire$c,
                    a.t$stre$c,
                    a.t$logn$c ) Log_Nfe_AP
         ON Log_Nfe_AP.t$fire$c = tdrec940.t$fire$l
-       AND Log_Nfe_AP.t$stre$c = 4   --Aprovado    
+       AND Log_Nfe_AP.t$stre$c = 4   -- Aprovado    
+       and Log_Nfe_AP.t$oper$c = 2   -- Recebimento
+	
+   LEFT JOIN ( select ttaad200.t$user,
+                    ttaad200.t$name
+               from baandb.tttaad200000 ttaad200 ) Nfe_User_AP_WMS
+        ON Nfe_User_AP_WMS.t$user = Log_Nfe_AP.t$logn$c			
 				
+        
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940.t$date$l,  
        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
          AT time zone 'America/Sao_Paulo') AS DATE)) 
