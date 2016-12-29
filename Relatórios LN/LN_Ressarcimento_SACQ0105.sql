@@ -206,7 +206,6 @@ INNER JOIN ( select znsls401.t$ncia$c,
        AND znsls409.t$pecl$c = znsls401dev.t$pecl$c
        AND znsls409.t$sqpd$c = znsls401dev.t$sqpd$c
        AND znsls409.t$entr$c = znsls401dev.t$entr$c
-       AND znsls409.t$dorn$c = znsls401dev.t$orno$c
 
 INNER JOIN BAANDB.tznsls400301 znsls400dev                                      /*+ index(baandb.tznsls400301 TZNSLS400301$IDX1)*/
         ON znsls400dev.t$ncia$c = znsls401dev.t$ncia$c
@@ -407,7 +406,6 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                                      
                  on tccom130.t$cadr = tcmcs080.t$cadr$l
               where tccom130.t$ftyp$l = 'PJ' ) tccom130_orig
         ON tccom130_orig.t$cfrw = tdsls400orig.t$cfrw
-
 
  LEFT JOIN ( select znfmd001.t$fili$c,
                     tccom130.t$cadr
