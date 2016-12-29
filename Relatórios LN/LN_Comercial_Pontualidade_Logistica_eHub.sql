@@ -271,8 +271,7 @@ left  join  baandb.tznsls430601 znsls430
        and  znsls430.t$pecl$c = znsls400.t$pecl$c
        and  znsls430.t$sqpd$c = znsls400.t$sqpd$c
 
-where   znsls400.t$pecl$c between :NUMERO_PEDIDO_DE and :NUMERO_PEDIDO_ATE
-and     trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+where   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone 'America/Sao_Paulo') as date))
         between :DT_EMISSAO_PEDIDO_DE and :DT_EMISSAO_PEDIDO_ATE
