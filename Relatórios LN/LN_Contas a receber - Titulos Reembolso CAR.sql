@@ -122,7 +122,9 @@ SELECT
                                      and l1.t$clan = l.t$clan 
                                      and l1.t$cpac = l.t$cpac )
          AND d.t$cnst = TITULO_CAP.t$pyst$l 
-         AND rownum = 1) , ' ')                         DESCR_SIT_TIT_CAP
+         AND rownum = 1) , ' ')                         DESCR_SIT_TIT_CAP,
+         znsls400.t$sqpd$c                              SEQ_PEDIDO,
+         znsls410.t$poco$c                              OCORRENCIA
 
 FROM      baandb.ttccom100301 tccom100
 
@@ -280,6 +282,22 @@ LEFT JOIN ( select distinct
                                                  and l1.t$clan = iLABEL.t$clan 
                                                  and l1.t$cpac = iLABEL.t$cpac ) ) Status
         ON DEV.STATUS_DEV = Status.CODE_STATUS
+        
+INNER JOIN ( select znsls410int.t$ncia$c,      
+                   znsls410int.t$uneg$c,
+                   znsls410int.t$pecl$c,
+                   znsls410int.t$sqpd$c,
+                   max(znsls410int.t$dtoc$c) t$dtoc$c,
+                   MAX(znsls410int.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY znsls410int.T$DTOC$C,  znsls410int.T$SEQN$C)t$poco$c
+              from baandb.tznsls410301 znsls410int
+          group by znsls410int.t$ncia$c,      
+                   znsls410int.t$uneg$c,
+                   znsls410int.t$pecl$c,
+                   znsls410int.t$sqpd$c ) znsls410
+          ON znsls410.t$ncia$c = znsls400.t$ncia$c
+         AND znsls410.t$uneg$c = znsls400.t$uneg$c
+         AND znsls410.t$pecl$c = znsls400.t$pecl$c
+         AND znsls410.t$sqpd$c = znsls400.t$sqpd$c
 
 WHERE tfacr201.t$docd Between :DataEmissaoDe AND :DataEmissaoAte
   AND tfacr201.t$recd Between :DataVenctoDe AND :DataVenctoAte
