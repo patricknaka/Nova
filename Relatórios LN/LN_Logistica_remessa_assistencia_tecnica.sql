@@ -104,8 +104,8 @@ where   trunc(cast((from_tz(to_timestamp(to_char(cisli940.t$datg$l,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') as date))
                           between :DATA_DE and :DATA_ATE
-and     znfmd001.t$fili$c between :ID_FILIAL_DE and :ID_FILIAL_ATE
-and     STATUS.ST between :SITUACAO_NF_DE and :SITUACAO_NF_ATE
+and     znfmd001.t$fili$c in (:ID_FILIAL)
+and     cisli940.t$stat$l in (:SITUACAO_NF)
 and     cisli940.t$stat$l in (5,6)        -- Impressas ou Lançadas
 and     cisli940.t$fdty$l = 17            -- Remessa para Terceiros
 and     not exists ( select tdrec955.t$lfir$l
