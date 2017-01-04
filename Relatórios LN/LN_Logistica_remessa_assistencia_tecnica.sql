@@ -106,6 +106,7 @@ where   trunc(cast((from_tz(to_timestamp(to_char(cisli940.t$datg$l,
                           between :DATA_DE and :DATA_ATE
 and     znfmd001.t$fili$c between :ID_FILIAL_DE and :ID_FILIAL_ATE
 and     STATUS.ST between :SITUACAO_NF_DE and :SITUACAO_NF_ATE
+and     cisli940.t$stat$l in (5,6)        -- Impressas ou Lançadas
 and     cisli940.t$fdty$l = 17            -- Remessa para Terceiros
 and     not exists ( select tdrec955.t$lfir$l
                      from   baandb.ttdrec955301 tdrec955
