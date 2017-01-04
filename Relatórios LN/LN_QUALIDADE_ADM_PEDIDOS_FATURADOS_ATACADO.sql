@@ -70,7 +70,8 @@ left join baandb.tcisli959301 cisli959
        on cisli959.t$rscd$l = cisli940.t$rscd$l
 
 where   znfmd001.t$dsca$c in (:PLANTA)
-and     trunc(cast((from_tz(to_timestamp(to_char(cisli940.t$date$l, 
+  and   trunc(cast((from_tz(to_timestamp(to_char(cisli940.t$date$l, 
                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                     AT time zone 'America/Sao_Paulo') as date))
         between :DATA_EMISSAO_DE and :DATA_EMISSAO_ATE
+  and   cisli940.t$stat$l in (2,5,6,101) -- Canceladas,Impressas,Lançadas,Estornadas.
