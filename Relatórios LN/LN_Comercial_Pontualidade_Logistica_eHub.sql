@@ -4,13 +4,13 @@ select
           znsls401.t$itpe$c || ' - ' || znsls002.t$dsca$c
                                                  TIPO_ENTREGA,
           case 
-                when znsls430.t$coid$c is null then 'Não' else 'Sim'
+                when znsls430.COID is null then 'Não' else 'Sim'
           end                                    CUSTOMIZACAO,
           cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone 'America/Sao_Paulo') as date)
                                                  DT_EMISSAO_PEDIDO,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtap$c, 
+          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone 'America/Sao_Paulo') as date)
                                                  DT_APROVACAO_PAGTO,
@@ -43,18 +43,36 @@ select
                  AT time zone 'America/Sao_Paulo') as date)                                 
                                                  DT_ENTREGA_CLIENTE,
           case  when  znsls410_CTR.DT_PAP is not null then
-                case  when  cast((znsls410_CTR.DT_PAP - znsls400.t$dtem$c) * 
-                               ((86400 / 60)/60) as int) > 48 then
-                    'ATRASO'  -- Se aprovação ocorrer após 48 horas
+                case when MEIO_PAG.BOLETO is not null then -- Pagto via boleto
+                     case when  cast((znsls410_CTR.DT_PAP - znsls400.t$dtem$c) * 
+                                    ((86400 / 60)/60) as int) > 96 then
+                         'ATRASO'  -- Se aprovação ocorrer após 96 horas
+                     else
+                         'NO PRAZO'
+                     end
                 else
-                    'NO PRAZO'
+                     case when  cast((znsls410_CTR.DT_PAP - znsls400.t$dtem$c) * 
+                                    ((86400 / 60)/60) as int) > 48 then
+                         'ATRASO'  -- Se aprovação ocorrer após 48 horas
+                     else
+                         'NO PRAZO'
+                     end
                 end
           else
-                case  when  cast((znsls401.t$dtap$c - znsls400.t$dtem$c) * 
-                               ((86400 / 60)/60) as int) > 48 then
-                    'ATRASO'  -- Se aprovação ocorrer após 48 horas
+                case when MEIO_PAG.BOLETO is not null then -- Pagto via boleto
+                     case  when  cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
+                                     ((86400 / 60)/60) as int) > 96 then
+                         'ATRASO'  -- Se aprovação ocorrer após 96 horas
+                     else
+                         'NO PRAZO'
+                     end
                 else
-                    'NO PRAZO'
+                     case  when  cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
+                                     ((86400 / 60)/60) as int) > 48 then
+                         'ATRASO'  -- Se aprovação ocorrer após 48 horas
+                     else
+                         'NO PRAZO'
+                     end
                 end
           end                                    ATRASO_APROVACAO,
           case  when  znsls410_CTR.DT_AES is not null then
@@ -265,13 +283,57 @@ left  join  ( select    a.t$ncia$c,
        and  znsls410_ENT.t$pecl$c = znsls400.t$pecl$c
        and  znsls410_ENT.t$sqpd$c = znsls400.t$sqpd$c
 
-left  join  baandb.tznsls430601 znsls430
+left  join ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    min(a.t$coid$c)  COID
+             from baandb.tznsls430601 a 
+             group by a.t$ncia$c,
+                      a.t$uneg$c,
+                      a.t$pecl$c,
+                      a.t$sqpd$c ) znsls430
         on  znsls430.t$ncia$c = znsls400.t$ncia$c
        and  znsls430.t$uneg$c = znsls400.t$uneg$c
        and  znsls430.t$pecl$c = znsls400.t$pecl$c
        and  znsls430.t$sqpd$c = znsls400.t$sqpd$c
 
+left  join  ( select a.t$ncia$c,
+                     a.t$uneg$c,
+                     a.t$pecl$c,
+                     a.t$sqpd$c,
+                     b.t$ctmp$c  BOLETO
+              from baandb.tznsls402601 a,
+                   baandb.tzncmg007601 b
+              where  b.t$mpgt$c = a.t$idmp$c
+                and  b.t$ctmp$c in (5,6) ) MEIO_PAG
+        on  MEIO_PAG.t$ncia$c = znsls400.t$ncia$c
+       and  MEIO_PAG.t$uneg$c = znsls400.t$uneg$c
+       and  MEIO_PAG.t$pecl$c = znsls400.t$pecl$c
+       and  MEIO_PAG.t$sqpd$c = znsls400.t$sqpd$c
+
 where   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                  AT time zone 'America/Sao_Paulo') as date))
         between :DT_EMISSAO_PEDIDO_DE and :DT_EMISSAO_PEDIDO_ATE
+  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone 'America/Sao_Paulo') as date))
+        between :DT_APROVACAO_PAGTO_DE and :DT_APROVACAO_PAGTO_ATE
+  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_WMS.dtoc, 
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone 'America/Sao_Paulo') as date))
+        between :DT_LIBERACAO_WMS_DE and :DT_LIBERACAO_WMS_ATE
+  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_NFS.dtoc, 
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone 'America/Sao_Paulo') as date))
+        between :DT_FATURAMENTO_DE and :DT_FATURAMENTO_ATE
+  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_ETR.dtoc,
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone 'America/Sao_Paulo') as date))
+        between :DT_EXPEDICAO_DE and :DT_EXPEDICAO_ATE
+  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_ENT.dtoc,
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                 AT time zone 'America/Sao_Paulo') as date))
+        between :DT_ENTREGA_CLIENTE_DE and :DT_ENTREGA_CLIENTE_ATE
+  and   znsls400.t$idpo$c = 'LJ'
