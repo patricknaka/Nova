@@ -1,4 +1,4 @@
-select
+select DISTINCT
     znint002.t$desc$c   UNEG,
     znsls401.t$pecl$c   PEDIDO_CLIENTE,
     znsls401.t$entr$c   ENTREGA,
@@ -18,7 +18,7 @@ select
     tdsls094.t$dsca     MOTIVO_TNA,
     TIPO_TRANSP.DESCR   TIPO_DE_TRANSPORTE,
 
-    tdsls401.t$orno     ORDEM_VENDA,
+    tdsls420.t$orno     ORDEM_VENDA,
     tdsls420.t$hrea     BLOQUEIO,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls401.t$dtep$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
           AT time zone 'America/Sao_Paulo') AS DATE)  
@@ -38,53 +38,43 @@ select
           
 from baandb.ttdsls420301 tdsls420
 
-inner join  ( select a.t$ncia$c,
-                     a.t$uneg$c,
-                     a.t$pecl$c,
-                     a.t$sqpd$c,
-                     a.t$entr$c,
-                     a.t$orno$c,
-                min(a.t$pono$c) t$pono$c
-              from baandb.tznsls004301 a
-              group by a.t$ncia$c,
-                       a.t$uneg$c,
-                       a.t$pecl$c,
-                       a.t$sqpd$c,
-                       a.t$entr$c,
-                       a.t$orno$c ) znsls004  
+INNER join  baandb.tznsls004301 znsls004  
         on  znsls004.t$orno$c = tdsls420.t$orno
 
-inner join  baandb.ttdsls401301 tdsls401
+INNER join  baandb.ttdsls401301 tdsls401
         on  tdsls401.t$orno = znsls004.t$orno$c
        and  tdsls401.t$pono = znsls004.t$pono$c
 
-inner join  baandb.ttdsls400301 tdsls400
+INNER join  baandb.ttdsls400301 tdsls400
         on  tdsls400.t$orno = znsls004.t$orno$c
 
-inner join baandb.ttdsls094301 tdsls094
+INNER join baandb.ttdsls094301 tdsls094
         on tdsls094.t$sotp = tdsls400.t$sotp
         
-inner join  baandb.tznsls401301 znsls401
-        on  znsls401.t$orno$c = tdsls401.t$orno
-       and  znsls401.t$pono$c = tdsls401.t$pono
+INNER join  baandb.tznsls401301 znsls401
+         on znsls401.t$ncia$c = znsls004.t$ncia$c
+       and znsls401.t$uneg$c = znsls004.t$uneg$c
+       and znsls401.t$pecl$c = znsls004.t$pecl$c
+       and znsls401.t$sqpd$c = znsls004.t$sqpd$c
+       and znsls401.t$entr$c = znsls004.t$entr$c
 
-inner join baandb.tznint002301 znint002
+INNER join baandb.tznint002301 znint002
         on znint002.t$ncia$c = znsls004.t$ncia$c
        and znint002.t$uneg$c = znsls004.t$uneg$c
 
-inner join baandb.ttcmcs065301 tcmcs065
+INNER join baandb.ttcmcs065301 tcmcs065
         on tcmcs065.t$cwoc = tdsls400.t$cofc
 		
-inner join baandb.ttccom130301 tccom130
+INNER join baandb.ttccom130301 tccom130
         on tccom130.t$cadr = tcmcs065.t$cadr
 		
-inner join baandb.tznfmd001301 znfmd001
+INNER join baandb.tznfmd001301 znfmd001
         on znfmd001.t$fovn$c = tccom130.t$fovn$l
 
-inner join baandb.ttcmcs080301 tcmcs080
+LEFT join baandb.ttcmcs080301 tcmcs080 
         on tcmcs080.t$cfrw = tdsls400.t$cfrw
         
-inner join ( select a.t$ncia$c,
+left join ( select a.t$ncia$c,
                     a.t$uneg$c,
                     a.t$pecl$c,
                     a.t$sqpd$c,
@@ -147,8 +137,3 @@ left join  (  SELECT  d.t$cnst,
         
 where tdsls420.t$pono = 0
   and tdsls420.t$hrea = 'TNA'
-
-order by  znsls401.t$uneg$c, 
-          znsls401.t$pecl$c, 
-          znsls401.t$sqpd$c, 
-          znsls401.t$entr$c  
