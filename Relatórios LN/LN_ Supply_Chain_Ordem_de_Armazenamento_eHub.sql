@@ -17,15 +17,15 @@ select
 
 from    baandb.twhinh200601 whinh200
 
-inner join baandb.ttcmcs065301 tcmcs065
+inner join baandb.ttcmcs065601 tcmcs065
         on tcmcs065.t$cwoc = whinh200.t$wdep
 
 inner join  (select a.t$fovn$l,
                     a.t$cadr
-             from   baandb.ttccom130301 a) tccom130
+             from   baandb.ttccom130601 a) tccom130
         on  tccom130.t$cadr = tcmcs065.t$cadr
 
-inner join baandb.tznfmd001301 znfmd001
+inner join baandb.tznfmd001601 znfmd001
         on znfmd001.t$fovn$c = tccom130.t$fovn$l
 
 inner join  baandb.twhinh220601 whinh220
@@ -127,4 +127,3 @@ and     trunc(cast((from_tz(to_timestamp(to_char(whinh200.t$prdt,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') as date))
         between :DT_RECEBIMENTO_DE and :DT_RECEBIMENTO_ATE
-and     znfmd001.t$dsca$c in (:FILIAL)
