@@ -17,7 +17,7 @@ SELECT znfmd630.t$fili$c             FILIAL,
        znfmd630.t$qvol$c             QTDE_VOLUMES,
        znsls401.t$itpe$c             NUME_TIPO_ENTREGA_NOME,
        znsls002.t$dsca$c             DESC_TIPO_ENTREGA_NOME,
-       znfmd610.t$wght$c             PESO,
+       znfmd630.t$wght$c             PESO,
        znfmd610.t$cube$c             ITEM_CUBAGEM,
        znfmd630.t$vlmr$c             ITEM_VALOR,
        znfmd630.t$vlfc$c             FRETE_GTE,
@@ -130,7 +130,13 @@ SELECT znfmd630.t$fili$c             FILIAL,
 
        znfmd630.t$ncar$c             NRO_CARGA,
        znfmd630.t$etiq$c             ETIQUETA,
-       CRIACAO_WMS.DATA_OCORRENCIA   DATA_WMS
+       CRIACAO_WMS.DATA_OCORRENCIA   DATA_WMS,
+       
+       znsng108.t$pvvv$c             PEDIDO_VV,
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsng108.t$dhpr$c,
+         'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+           AT time zone 'America/Sao_Paulo') AS DATE)
+                                     DATA_PEDIDO_VV
 
 FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c),
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -350,12 +356,21 @@ INNER JOIN ( select a1.t$ncia$c,
  LEFT JOIN BAANDB.tznfmd060301 znfmd060
         ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
        AND znfmd060.t$cono$c = znfmd630.t$cono$c
+       
+ LEFT JOIN ( select znsng108.t$orln$c
+                  , znsng108.t$pvvv$c
+                  , min(znsng108.t$dhpr$c) t$dhpr$c
+               from baandb.tznsng108301 znsng108
+              where Trim(znsng108.t$pvvv$c) is not null
+           group by znsng108.t$orln$c
+                  , znsng108.t$pvvv$c ) znsng108
+        ON znsng108.t$orln$c = znsls401.t$orno$c
 
      WHERE cisli940.t$fdty$l != 14
      
        AND Trunc(znfmd640_ETR.DATA_OCORRENCIA)
-           BETWEEN :DtExpIni
-               AND :DtExpFim
+           Between :DtExpIni
+               And :DtExpFim
        AND NVL(znsls401.t$itpe$c, 16) IN (:TipoEntrega)
        AND ((:Transportadora = 'T') or (znfmd630.t$cfrw$c = :Transportadora))
        
