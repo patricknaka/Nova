@@ -136,7 +136,17 @@ SELECT znfmd630.t$fili$c             FILIAL,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsng108.t$dhpr$c,
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
            AT time zone 'America/Sao_Paulo') AS DATE)
-                                     DATA_PEDIDO_VV
+                                     DATA_PEDIDO_VV,
+	   (select	b.t$desc$c                          
+		from	baandb.tznsls402301 a,
+				baandb.tzncmg007301 b
+        where	a.t$ncia$c = znsls400.t$ncia$c
+          and	a.t$uneg$c = znsls400.t$uneg$c
+          and	a.t$pecl$c = znsls400.t$pecl$c
+          and	a.t$sqpd$c = znsls400.t$sqpd$c
+          and	a.t$sequ$c = 1
+          and	b.t$mpgt$c = a.t$idmp$c)
+                                      MEIO_PAGTO
 
 FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c),
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -369,8 +379,8 @@ INNER JOIN ( select a1.t$ncia$c,
      WHERE cisli940.t$fdty$l != 14
      
        AND Trunc(znfmd640_ETR.DATA_OCORRENCIA)
-           Between :DtExpIni
-               And :DtExpFim
+           BETWEEN :DtExpIni
+               AND :DtExpFim
        AND NVL(znsls401.t$itpe$c, 16) IN (:TipoEntrega)
        AND ((:Transportadora = 'T') or (znfmd630.t$cfrw$c = :Transportadora))
        
