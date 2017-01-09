@@ -8,10 +8,10 @@ select
                            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                              AT time zone 'America/Sao_Paulo') as date)
                                                 DATA_LIMITE_OP,
-        case when to_char(to_date(tdsls400.t$prdt), 'yyyy') = 1969 then null 
-             when to_char(to_date(tdsls400.t$prdt), 'yyyy') = 1970 then null 
+        case when to_char(to_date(tdsls400.t$ddat), 'yyyy') = 1969 then null 
+             when to_char(to_date(tdsls400.t$ddat), 'yyyy') = 1970 then null 
         else
-             cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$prdt, 
+             cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
                                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                                   AT time zone 'America/Sao_Paulo') as date)
         end                                     DATA_LIMITE_FINAL,
