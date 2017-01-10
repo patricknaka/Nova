@@ -24,7 +24,9 @@ SELECT DISTINCT
     WHEN tfacr201.t$dued$l < sysdate THEN 'Expirado' 
     WHEN tfacr201.t$balc   = 0       THEN 'Utilizado' 
     ELSE                                  'Aberto'
-  END                   VALE_STATUS 
+  END                   VALE_STATUS,
+  zngld013.T$USER$C     USER_CRIACAO, 
+  zngld013.T$APRO$C     USER_APROVACAO 
 
 FROM       baandb.ttfacr201201 tfacr201
 
@@ -71,9 +73,12 @@ INNER JOIN ( SELECT d.t$cnst CODE_STAT,
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) DTYPE
         ON DTYPE.CODE_STAT = zngld006.t$type$c
+LEFT JOIN baandb.tzngld013301 zngld013
+       on zngld013.T$NINV$C = znacr200.T$NINV$C
+      and zngld013.T$TTYP$C = znacr200.T$TTYP$C
                       
 WHERE znacr200.t$date$c BETWEEN :DTA_CRIACAO_DE AND :DTA_CRIACAO_ATE
-  AND Trunc(tfacr201.t$dued$l) BETWEEN :DTA_VENCIMENTO_DE AND :DTA_VENCIMENTO_ATE
+  AND Trunc(tfacr201.t$dued$l) BETWEEN nvl(:DTA_VENCIMENTO_DE, tfacr201.t$dued$l) AND nvl(:DTA_VENCIMENTO_ATE, tfacr201.t$dued$l)
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 
   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
     AT time zone 'America/Sao_Paulo') AS DATE)) BETWEEN :DTA_UTILIZACAO_DE AND :DTA_UTILIZACAO_ATE
