@@ -98,15 +98,6 @@ left join ( select max(a.t$udat$c)       DATA_OCORRENCIA,
        on znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
       and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
 
-left join baandb.tcisli940301 cisli940
-       on cisli940.t$fire$l = znfmd630.t$fire$c
-
-left join baandb.tznsls400301 znsls400
-       on znsls400.t$ncia$c = znsls401.t$ncia$c
-      and znsls400.t$uneg$c = znsls401.t$uneg$c
-      and znsls400.t$pecl$c = znsls401.t$pecl$c
-      and znsls400.t$sqpd$c = znsls401.t$sqpd$c
-
 left join baandb.ttdsls400301 tdsls400
        on tdsls400.t$orno = znsls401.t$orno$c
 
@@ -126,15 +117,6 @@ left join baandb.tznsls002301 znsls002
 left join baandb.tznfmd060301 znfmd060
        on znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
       and znfmd060.t$cono$c = znfmd630.t$cono$c
-
-left join ( select znsng108.t$orln$c,
-                   znsng108.t$pvvv$c,
-                   min(znsng108.t$dhpr$c) t$dhpr$c
-            from   baandb.tznsng108301 znsng108
-            where trim(znsng108.t$pvvv$c) is not null
-            group by znsng108.t$orln$c,
-                     znsng108.t$pvvv$c ) znsng108
-       on znsng108.t$orln$c = znsls401.t$orno$c
 
 left join ( select znfmd640.t$fili$c,
                    znfmd640.t$etiq$c,
