@@ -33,7 +33,13 @@ SELECT WMSADMIN.DB_ALIAS                    PLANTA,
             ELSE 'MOVE'                                                          
         END                                 TIPO,                                
        STORER.COMPANY                       FORNECEDOR,                          
-       NVL(maucLN.mauc, 0) * IT.QTY         VALOR                                
+       NVL(maucLN.mauc, 0) * IT.QTY         VALOR,
+       CASE WHEN TO_CHAR(IH_ORIGEM.STATUS) IS NULL  
+             THEN 'OK'  
+            ELSE TO_CHAR(IH_ORIGEM.STATUS) END       STATUS_ORIGEM,  
+       CASE WHEN TO_CHAR(IH_DESTINO.STATUS) IS NULL  
+             THEN 'OK' 
+            ELSE TO_CHAR(IH_DESTINO.STATUS) END      STATUS_DESTINO    
 
 FROM       WMWHSE5.ITRN  IT
 
@@ -92,7 +98,13 @@ INNER JOIN WMSADMIN.PL_DB  WMSADMIN
            group by whwmd217.t$item,                                             
                     whwmd217.t$cwar ) maucLN                                     
         ON maucLN.cwar = subStr(CL.DESCRIPTION,3,6)                              
-       AND maucLN.item = IT.sku                                                  
+       AND maucLN.item = IT.sku
+       
+   left join WMWHSE5.INVENTORYHOLD IH_ORIGEM  
+   	  on IH_ORIGEM.LOC = IT.FROMLOC  
+       
+   left join WMWHSE5..INVENTORYHOLD IH_DESTINO  
+          on IH_DESTINO.LOC = IT.TOLOC  
 
 WHERE IT.TRANTYPE = 'MV'                                                         
   AND IT.SOURCETYPE != 'PICKING'                                                 
