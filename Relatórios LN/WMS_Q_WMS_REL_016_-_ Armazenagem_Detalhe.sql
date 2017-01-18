@@ -158,7 +158,13 @@ WHERE IT.TRANTYPE = 'MV'
 "             ELSE 'MOVE'  " &
 "         END                                 TIPO,  " &
 "        STORER.COMPANY                       FORNECEDOR,  " &
-"        NVL(maucLN.mauc, 0) * IT.QTY         VALOR  " &
+"        NVL(maucLN.mauc, 0) * IT.QTY         VALOR,  " &
+"       CASE WHEN TO_CHAR(IH_ORIGEM.STATUS) IS NULL  " & 
+"             THEN 'OK'  " &
+"            ELSE TO_CHAR(IH_ORIGEM.STATUS) END       STATUS_ORIGEM,  " &
+"       CASE WHEN TO_CHAR(IH_DESTINO.STATUS) IS NULL   " &
+"             THEN 'OK'  " &
+"            ELSE TO_CHAR(IH_DESTINO.STATUS) END      STATUS_DESTINO  " &  
 "  " &
 " FROM       " + Parameters!Table.Value + ".ITRN  IT  " &
 "  " &
@@ -218,6 +224,12 @@ WHERE IT.TRANTYPE = 'MV'
 "                     whwmd217.t$cwar ) maucLN  " &
 "         ON maucLN.cwar = subStr(CL.DESCRIPTION,3,6)  " &
 "        AND maucLN.item = IT.sku  " &
+"  " &
+"   left join " + Parameters!Table.Value + ".INVENTORYHOLD IH_ORIGEM  " &
+"          on IH_ORIGEM.LOC = IT.FROMLOC  " &
+"  " &       
+"   left join " + Parameters!Table.Value + ".INVENTORYHOLD IH_DESTINO  " &
+"          on IH_DESTINO.LOC = IT.TOLOC  " &
 "  " &
 " WHERE IT.TRANTYPE = 'MV'  " &
 "   AND IT.SOURCETYPE != 'PICKING'  " &
