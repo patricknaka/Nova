@@ -33,7 +33,7 @@ SELECT
     
     CASE WHEN znsls401.t$tpes$c = 'X' THEN 'Crossdocking'
          WHEN znsls401.t$tpes$c = 'F' THEN 'Fingido'
-         WHEN znsls401.t$tpes$c = 'P' THEN 'Pré-Venda'
+         WHEN znsls401.t$tpes$c = 'P' THEN 'PrÃ©-Venda'
          ELSE 'NORMAL' 
        END                TIPO_ESTOQUE,
     
@@ -79,7 +79,7 @@ SELECT
     tccom130.t$fovn$l     CNPJ_FORN,
     tccom130.t$nama       NOME_FORNEC,
     
-    znsls401.t$vlun$c     PREÇO_UNIT,     -- MMF
+    znsls401.t$vlun$c     PREÃ‡O_UNIT,     -- MMF
  
     ( select case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)) = 0 
                     then 0
@@ -131,7 +131,12 @@ SELECT
             AND	znsls402_S.t$uneg$c = znsls400.t$uneg$c   
             AND 	znsls402_S.t$pecl$c = znsls400.t$pecl$c    
             AND znsls402_S.T$SQPD$C = 2
-            AND rownum = 1) MEIO_PAG2
+            AND rownum = 1) MEIO_PAG2,
+    znsls401.t$nome$c       NOME_CLI_ENTREGA,
+    znsls401.t$emae$c       EMAIL_ENTREGA,
+    znsls401.t$tele$c       TEL_ENTREGA,
+    znsls401.t$te1e$c       TEL_ENTREGA_1,
+    znsls401.t$te2e$c       TEL_ENTREGA_2
    
 FROM       baandb.tznsls400301 znsls400
 
