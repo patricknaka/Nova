@@ -291,8 +291,9 @@ left  join ( select
                                            and l1.t$cpac = l.t$cpac ) ) OPERACAO
         on OPERACAO.t$cnst = znnfe011.t$oper$c
 
-where   znnfe011.t$oper$c between :OPERACAO_DE and :OPERACAO_ATE
-and     trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+where   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') as date))
-               between  :DATA_OCORRENCIA_DE and :DATA_OCORRENCIA_ATE
+               between :DATA_OCORRENCIA_DE
+                   and :DATA_OCORRENCIA_ATE
+  and   znnfe011.t$oper$c in (:OPERACAO)
