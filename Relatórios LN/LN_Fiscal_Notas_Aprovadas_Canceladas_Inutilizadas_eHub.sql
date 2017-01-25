@@ -36,7 +36,8 @@
      cisli941.t$ldam$l                                  VALOR_TOTAL_DESC,
      cisli941.t$amnt$l                                  VALOR_TOTAL_ITEM,
      cisli956.QTDE                                      VOLUME,
-     cast(NVL(tttxt010f.t$text,'') as varchar(100))     MENSAGEM
+     cast(NVL(tttxt010f.t$text,'') as varchar(100))     MENSAGEM,
+     uf_znsls400.t$uffa$c                               UF_ENTREGA
 
 FROM       baandb.tcisli940601  cisli940
 
@@ -99,6 +100,19 @@ INNER JOIN baandb.ttcibd001601  tcibd001
                from baandb.tcisli956601 sli956
            group by sli956.t$fire$l ) cisli956
         ON cisli956.t$fire$l = cisli940.t$fire$l
+ left join baandb.tcisli245601 cisli245
+    ON cisli940.t$fire$l = cisli245.t$fire$l
+    
+ left join (select  znsls401.t$orno$c,
+                     znsls400.t$uffa$c
+               from baandb.tznsls401601 znsls401
+                  
+              inner join baandb.tznsls400601 znsls400
+                      ON znsls400.t$ncia$c = znsls401.t$ncia$c
+                     AND znsls400.t$uneg$c = znsls401.t$uneg$c
+                     AND znsls400.t$pecl$c = znsls401.t$pecl$c
+                     AND znsls400.t$sqpd$c = znsls401.t$sqpd$c) uf_znsls400
+          on cisli245.t$slso = uf_znsls400.t$orno$c
      
 WHERE cisli940.t$stat$l IN (2, 5, 6, 101)         --Cancelada, Impresso, Lançado, Extornado
   AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
@@ -152,7 +166,8 @@ WHERE cisli940.t$stat$l IN (2, 5, 6, 101)         --Cancelada, Impresso, Lançad
 "      cisli941.t$ldam$l                                  VALOR_TOTAL_DESC,  " &
 "      cisli941.t$amnt$l                                  VALOR_TOTAL_ITEM,  " &
 "      cisli956.QTDE                                      VOLUME,  " &
-"      cast(NVL(tttxt010f.t$text,'') as varchar(100))     MENSAGEM  " &
+"      cast(NVL(tttxt010f.t$text,'') as varchar(100))     MENSAGEM,  " &
+"      uf_znsls400.t$uffa$c                               UF_ENTREGA  " &
 "   " &
 " FROM       baandb.tcisli940" + Parameters!Compania.Value + "  cisli940  " &
 "   " &
@@ -215,6 +230,20 @@ WHERE cisli940.t$stat$l IN (2, 5, 6, 101)         --Cancelada, Impresso, Lançad
 "                from baandb.tcisli956" + Parameters!Compania.Value + " sli956  " &
 "            group by sli956.t$fire$l ) cisli956  " &
 "         ON cisli956.t$fire$l = cisli940.t$fire$l  " &
+"   " &
+"  left join baandb.tcisli245" + Parameters!Compania.Value + " cisli245  " &
+"    ON cisli940.t$fire$l = cisli245.t$fire$l  " &
+"     " & 
+"  left join (select  znsls401.t$orno$c,  " &
+"                     znsls400.t$uffa$c  " &
+"               from baandb.tznsls401" + Parameters!Compania.Value + " znsls401  " &
+"     " &               
+"              inner join baandb.tznsls400" + Parameters!Compania.Value + " znsls400  " &
+"                      ON znsls400.t$ncia$c = znsls401.t$ncia$c  " &
+"                     AND znsls400.t$uneg$c = znsls401.t$uneg$c  " &
+"                     AND znsls400.t$pecl$c = znsls401.t$pecl$c  " &
+"                     AND znsls400.t$sqpd$c = znsls401.t$sqpd$c) uf_znsls400  " &
+"          on cisli245.t$slso = uf_znsls400.t$orno$c  " &
 "   " &
 " WHERE cisli940.t$stat$l IN (2, 5, 6, 101)  " &
 "   AND cisli941.t$item$l != znsls000.t$itmf$c  " &
