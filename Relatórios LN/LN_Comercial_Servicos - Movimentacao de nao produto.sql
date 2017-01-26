@@ -29,6 +29,8 @@ SELECT Q1.TP_TRANSACAO            TP_TRANSACAO
      , Q1.DESCR_CANAL             DESCR_CANAL
      , Q1.COD_TIPO_NAO_PRODUTO    COD_TIPO_NAO_PRODUTO
      , Q1.DSC_TIPO_NAO_PRODUTO    DSC_TIPO_NAO_PRODUTO
+     , Q1.PARC_NEG                PARC_NEG
+     , Q1.PARC_NEG_DESCRICAO      PARC_NEG_DESCRICAO 
 
 FROM ( SELECT CASE WHEN ZNCOM005.T$QUAN$C < 0
                      THEN 'CANCELAMENTO'
@@ -82,6 +84,8 @@ FROM ( SELECT CASE WHEN ZNCOM005.T$QUAN$C < 0
             , TCMCS045.T$DSCA              DESCR_CANAL
             , ZNISA002.T$NPTP$C            COD_TIPO_NAO_PRODUTO
             , ZNISA001.T$DSCA$C            DSC_TIPO_NAO_PRODUTO
+      	    , zncom005.t$pneg$c            PARC_NEG
+            , tccom100.t$nama              PARC_NEG_DESCRICAO
   
          FROM BAANDB.TZNCOM005301 ZNCOM005
 
@@ -139,7 +143,10 @@ FROM ( SELECT CASE WHEN ZNCOM005.T$QUAN$C < 0
            ON ZNISA002.T$NPCL$C	= TCIBD001.T$NPCL$C
 
     LEFT JOIN BAANDB.TZNISA001301 ZNISA001
-           ON ZNISA001.T$NPTP$C = ZNISA002.T$NPTP$C ) Q1
+           ON ZNISA001.T$NPTP$C = ZNISA002.T$NPTP$C
+	   
+    LEFT JOIN baandb.ttccom100301 tccom100
+           ON tccom100.t$bpid = zncom005.t$pneg$c) Q1
 		   
 WHERE Trunc(Q1.DATA) 
       Between :DataDe 
@@ -174,5 +181,7 @@ GROUP BY Q1.TP_TRANSACAO
        , Q1.DESCR_CANAL
        , Q1.COD_TIPO_NAO_PRODUTO
        , Q1.DSC_TIPO_NAO_PRODUTO
+       , Q1.PARC_NEG
+       , Q1.PARC_NEG_DESCRICAO
        
 ORDER BY Q1.PEDIDO
