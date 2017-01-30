@@ -6,6 +6,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 2
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_NFE_TRANSMITIDA,
@@ -16,6 +22,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 2
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_NFE_TRANSMITIDA,
@@ -25,6 +37,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 1
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_NFE_NENHUM,
@@ -35,6 +53,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 1
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_NFE_NENHUM,
@@ -44,6 +68,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 3
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_NFE_PED_CANCELAMENTO,
@@ -54,6 +84,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 3
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_NFE_PED_CANCELAMENTO,
@@ -63,6 +99,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 4
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_NFE_PED_ESTORNO,
@@ -73,6 +115,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 4
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_NFE_PED_ESTORNO,
@@ -82,6 +130,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 5
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_NFE_PROCESSADA,
@@ -92,6 +146,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 5
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_NFE_PROCESSADA,
@@ -101,6 +161,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 6
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_NFE_PED_CONSULTA,
@@ -111,6 +177,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$nfes$c = 6
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_NFE_PED_CONSULTA,
@@ -120,6 +192,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 5
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_FATURA_IMPRESSO,
@@ -130,6 +208,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 5
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_FATURA_IMPRESSO,
@@ -139,6 +223,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 1
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_FATURA_AGUARDANDO,
@@ -149,6 +239,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 1
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_FATURA_AGUARDANDO,
@@ -158,6 +254,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 2
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_FATURA_CANCELAR,
@@ -168,6 +270,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 2
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_FATURA_CANCELAR,
@@ -177,6 +285,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 3
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_FATURA_CONFIRMADO,
@@ -187,6 +301,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 3
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_FATURA_CONFIRMADO,
@@ -196,6 +316,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 4
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_FATURA_COMPOSTO,
@@ -206,6 +332,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 4
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_FATURA_COMPOSTO,
@@ -215,6 +347,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 6
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_FATURA_LANCADO,
@@ -225,6 +363,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 6
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_FATURA_LANCADO,
@@ -234,6 +378,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 101
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_FATURA_ESTORNADO,
@@ -244,6 +394,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stfa$c = 101
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_FATURA_ESTORNADO,
@@ -253,6 +409,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 1
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_REC_FISCAL_ABERTO,
@@ -263,6 +425,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 1
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_REC_FISCAL_ABERTO,
@@ -272,6 +440,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 3
             and   b.t$user   = a.t$logn$c 
             and   rownum <= 1 )                      STATUS_REC_FISCAL_NAO_APROV,
@@ -282,6 +456,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 3
             and   b.t$user   = a.t$logn$c 
             and   rownum <= 1 )                      DT_STATUS_REC_FISCAL_NAO_APROV,
@@ -291,6 +471,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 4
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_REC_FISCAL_APROV,
@@ -301,6 +487,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 4
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_REC_FISCAL_APROV,
@@ -310,6 +502,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 5
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_REC_FISCAL_APROV_PR,
@@ -320,6 +518,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 5
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_REC_FISCAL_APROV_PR,
@@ -329,6 +533,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 6
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_REC_FISCAL_ESTORNADO,
@@ -339,6 +549,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 6
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_REC_FISCAL_ESTORNADO,
@@ -348,6 +564,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 200
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_REC_FISCAL_AGU_WMS,
@@ -358,6 +580,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 200
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_REC_FISCAL_AGU_WMS,
@@ -367,6 +595,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 201
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      STATUS_REC_FISCAL_ENV_WMS,
@@ -377,6 +611,12 @@ select  distinct
                   baandb.tttaad200000 b
           where   a.t$oper$c = znnfe011.t$oper$c
             and   a.t$fire$c = znnfe011.t$fire$c
+            and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(a.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)) = 
+                  trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znnfe011.t$data$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date))
             and   a.t$stre$c = 201
             and   b.t$user   = a.t$logn$c
             and   rownum <= 1 )                      DT_STATUS_REC_FISCAL_ENV_WMS
