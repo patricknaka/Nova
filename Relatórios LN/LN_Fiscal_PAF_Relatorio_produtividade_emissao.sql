@@ -1,6 +1,87 @@
 select  distinct
         OPERACAO.DESCR                                OPERACAO,
         znnfe011.t$fire$c                             REF_FISCAL,
+        case when znnfe011.t$oper$c = 1 then
+             (select a.t$fdtc$l
+              from   baandb.tcisli940301 a
+              where  a.t$fire$l = znnfe011.t$fire$c)
+        else
+             (select a.t$fdtc$l
+              from   baandb.ttdrec940301 a
+              where  a.t$fire$l = znnfe011.t$fire$c)
+        end                                           COD_TIPO_DOC,
+        case when znnfe011.t$oper$c = 1 then
+             (select b.t$dsca$l
+              from   baandb.tcisli940301 a,
+                     baandb.ttcmcs966301 b
+              where  a.t$fire$l = znnfe011.t$fire$c
+                and  b.t$fdtc$l = a.t$fdtc$l)
+        else
+             (select b.t$dsca$l
+              from   baandb.ttdrec940301 a,
+                     baandb.ttcmcs966301 b
+              where  a.t$fire$l = znnfe011.t$fire$c
+                and  b.t$fdtc$l = a.t$fdtc$l)
+        end                                           DESCRICAO,
+        case when znnfe011.t$oper$c = 1 then
+             (select l.t$desc
+              from   baandb.tcisli940301 a,
+                     baandb.tttadv401000 d,
+                     baandb.tttadv140000 l
+              where  a.t$fire$l = znnfe011.t$fire$c
+                and  d.t$cnst = a.t$fdty$l
+                and  d.t$cpac = 'ci'
+                and d.t$cdom = 'sli.tdff.l'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'ci'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv401000 l1 
+                                         where l1.t$cpac = d.t$cpac 
+                                           and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv140000 l1 
+                                         where l1.t$clab = l.t$clab 
+                                           and l1.t$clan = l.t$clan 
+                                           and l1.t$cpac = l.t$cpac))
+        else
+             (select l.t$desc
+              from   baandb.ttdrec940301 a,
+                     baandb.tttadv401000 d,
+                     baandb.tttadv140000 l
+              where  a.t$fire$l = znnfe011.t$fire$c
+                and  d.t$cnst = a.t$rfdt$l
+                and  d.t$cpac = 'td'
+                and d.t$cdom = 'rec.trfd.l'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'td'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv401000 l1 
+                                         where l1.t$cpac = d.t$cpac 
+                                           and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv140000 l1 
+                                         where l1.t$clab = l.t$clab 
+                                           and l1.t$clan = l.t$clan 
+                                           and l1.t$cpac = l.t$cpac))
+        end                                           TIPO_DOC_FISCAL,
         ( select  a.t$logn$c || ' - ' || b.t$name
           from    baandb.tznnfe011301 a,
                   baandb.tttaad200000 b
