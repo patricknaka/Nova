@@ -126,10 +126,11 @@ left join ( select a.t$ncia$c,
       and znsls430.t$cosq$c = 4
 
 where   znfmd001.t$dsca$c in (:PLANTA)                                  
-and     trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+and     ( trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
                            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                              AT time zone 'America/Sao_Paulo') as date))
-            between :DATA_ULTIMO_EVENTO_DE and :DATA_ULTIMO_EVENTO_ATE
+            between :DATA_ULTIMO_EVENTO_DE and :DATA_ULTIMO_EVENTO_ATE or
+            ORDERS.ACTUALSHIPDATE is null )
 and     znsls401.t$itpe$c in (:TIPO_ENTREGA)
 and     ORDERSTATUSSETUP.CODE in (:TIPO_EVENTO)
 order by  znsls401.t$pecl$c, tisfc001.t$pdno
