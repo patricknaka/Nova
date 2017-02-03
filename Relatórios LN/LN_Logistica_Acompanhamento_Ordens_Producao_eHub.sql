@@ -125,8 +125,7 @@ left join ( select a.t$ncia$c,
       and znsls430.t$sequ$c = znsls420.t$sequ$c
       and znsls430.t$cosq$c = 4
 
-where   znfmd001.t$dsca$c in (:PLANTA)                                  
-and     ( trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
+where  ( trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ORDERS.ACTUALSHIPDATE, 
                            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                              AT time zone 'America/Sao_Paulo') as date))
             between :DATA_ULTIMO_EVENTO_DE and :DATA_ULTIMO_EVENTO_ATE or
