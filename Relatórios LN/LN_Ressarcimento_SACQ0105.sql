@@ -1,4 +1,4 @@
-    SELECT znsls400dev.t$idca$c                                           CANAL,
+SELECT znsls400dev.t$idca$c                                           CANAL,
            CASE WHEN znsls409.t$fdat$c < to_date('01-01-1980', 'dd-mm-yyyy') 
                   THEN NULL
                 ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 
@@ -9,7 +9,7 @@
            CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400dev.t$odat, 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') AS DATE)                 DATA_OCORRENCIA,
-           znsls401dev.t$dsca$c                                           TIPO_DE_ENTREGA,  
+           znsls002.t$dsca$c                                              TIPO_DE_ENTREGA,  
            regexp_replace(CASE WHEN znsls401dev.t$lmot$c = 'Selecione'
                                  THEN znsls401dev.t$lass$c
                                ELSE   znsls401dev.t$lmot$c
@@ -42,10 +42,9 @@
            NVL(NOTA_VENDA.t$docn$l, znmcs096dev.t$docn$c)                 NF_ORIGINAL,
            NVL(NOTA_VENDA.t$seri$l, znmcs096dev.t$seri$c)                 SERIE_ORIGINAL,
 
-           NVL(tcmcs080_FILIAL_ORI.t$fili$c, znfmd001dev.t$fili$c)        FILIAL_DE_ORIGEM,
-
            Trim(tcibd001dev.t$item)                                       SKU_ITEM,
            tcibd001dev.t$dscb$c                                           DESCRICAO_ITEM,
+           NVL(tcmcs080_FILIAL_ORI.t$fili$c, znfmd001dev.t$fili$c)        FILIAL_DE_ORIGEM,
            
            ( select znfmd001.t$fili$c 
                from baandb.tznfmd001301 znfmd001
@@ -67,21 +66,20 @@
            tdrec940rec.t$fire$l                                           NR,
            cisli940dev.t$docn$l                                           NFS,
            cisli940dev.t$seri$l                                           SERIE_NFS,
-           ABS(znsls401dev.t$qtve$c)                                      QTDE_ITEM_DEVOLVIDO,
+           ABS(sum(znsls401dev.t$qtve$c))                                 QTDE_ITEM_DEVOLVIDO,
 
-           ROUND(ABS(znsls401dev.t$qtve$c) * 
+           ROUND(ABS(sum(znsls401dev.t$qtve$c)) * 
                      znsls401dev.t$vlun$c  - 
-                 znsls401dev.t$vldi$c, 2)                                 VALOR_TOTAL_DO_ITEM,
-           ROUND(znsls401dev.t$vlfr$c, 2)                                 VALOR_TOTAL_DO_FRETE,
-           ROUND((ABS(znsls401dev.t$qtve$c) * 
+                 sum(znsls401dev.t$vldi$c), 2)                            VALOR_TOTAL_DO_ITEM,
+           ROUND(sum(znsls401dev.t$vlfr$c), 2)                            VALOR_TOTAL_DO_FRETE,
+           ROUND((ABS(sum(znsls401dev.t$qtve$c)) * 
                       znsls401dev.t$vlun$c) -
-                 znsls401dev.t$vldi$c        +
-                 znsls401dev.t$vlfr$c, 2)                                 VALOR_TOTAL,
+                 sum(znsls401dev.t$vldi$c)        +
+                 sum(znsls401dev.t$vlfr$c), 2)                            VALOR_TOTAL,
            ROUND(cisli940dev.t$amnt$l, 2)                                 VALOR_NFS,
 
            regexp_replace(znfmd630dev.t$etiq$c, '( *[[:punct:]])', null)  ETIQUETA_DEVOLUCAO,
            znfmd630dev.nr_etiq                                            QTDE_ETIQUETAS,
-           regexp_replace(znfmd630_venda.t$etiq$c,'( *[[:punct:]])', null)ETIQUETA_VENDA,
            'Sim'                                                          FORCADA,
            znsls410.t$poco$c                                              ULT_PONTO_ENTREGA,
            znmcs002.t$desc$c                                              DESCRICAO_ULT_PONTO_ENTREGA,
@@ -99,7 +97,7 @@
                            AT time zone 'America/Sao_Paulo') AS DATE)
            END                                                            DT_NF_COLETA,
 
-           znsls401dev.t$desc$c                                           BANDEIRA,
+           znint002.t$desc$c                                              BANDEIRA,
            CASE WHEN znsls402_dev.t$vlmr$c IS NULL 
                   THEN 'REENVIO'
                 ELSE   'REEMBOLSO' 
@@ -141,72 +139,57 @@ FROM       ( select znsls409.t$ncia$c,
                                                                   and znsls409.t$sqpd$c = znsls409a.t$sqpd$c
                                                                   and znsls409.t$entr$c = znsls409a.t$entr$c ) ) znsls409
 
-INNER JOIN ( select znsls401.t$ncia$c,
-                    znsls401.t$uneg$c,
-                    znsls401.t$pecl$c,
-                    znsls401.t$sqpd$c,
-                    znsls401.t$entr$c,
-                    znsls401.t$pvdt$c,
-                    znsls401.t$sedt$c,
-                    znsls401.t$endt$c,
-                    znsls401.t$itpe$c,
-                    znsls401.t$lmot$c,
-                    znsls401.t$lass$c,
-                    znsls401.t$orno$c,
-                    znint002.t$desc$c,
-                    znsls002.t$dsca$c,
-                    MIN(znsls401.t$pono$c) t$pono$c,
-                    SUM(znsls401.t$qtve$c) t$qtve$c,
-                    SUM(znsls401.t$vlfr$c) t$vlfr$c,
-                    SUM(znsls401.t$vldi$c) t$vldi$c,
-                    znsls401.t$vlun$c,
-                    znsls401.t$cepe$c,
-                    znsls401.t$cide$c,
-                    znsls401.t$ufen$c,
-                    znsls401.t$itml$c,
-                    znsls401.t$idor$c,
-                    znsls401.t$iitm$c,
-                    tdsls420.t$hrea
-               from BAANDB.tznsls401301 znsls401
-          left join baandb.tznint002301 znint002                                /*+ index(baandb.tznint002301 TZNINT002301$IDX1)*/
-                 on znint002.t$ncia$c = znsls401.t$ncia$c
-                and znint002.t$uneg$c = znsls401.t$uneg$c
-          left join baandb.tznsls002301 znsls002                                /*+ index(baandb.tznsls002301 TZNSLS002301$IDX1)*/
-                 on znsls002.t$tpen$c = znsls401.t$itpe$c
-          left join baandb.ttdsls420301 tdsls420          --Consulta se tem bloqueio na OV
-                 on tdsls420.t$orno = znsls401.t$orno$c
-                and tdsls420.t$pono = znsls401.t$pono$c
-              where znsls401.t$idor$c = 'TD'
-                and znsls401.t$qtve$c < 0
-                and znsls401.t$iitm$c = 'P'
-           group by znsls401.t$ncia$c,
-                    znsls401.t$uneg$c,
-                    znsls401.t$pecl$c,
-                    znsls401.t$sqpd$c,
-                    znsls401.t$entr$c,
-                    znsls401.t$pvdt$c,
-                    znsls401.t$sedt$c,
-                    znsls401.t$endt$c,
-                    znsls401.t$itpe$c,
-                    znsls401.t$lmot$c,
-                    znsls401.t$lass$c,
-                    znsls401.t$orno$c,
-                    znint002.t$desc$c,
-                    znsls002.t$dsca$c,
-                    znsls401.t$vlun$c,
-                    znsls401.t$cepe$c,
-                    znsls401.t$cide$c,
-                    znsls401.t$ufen$c,
-                    znsls401.t$itml$c,
-                    znsls401.t$idor$c,
-                    znsls401.t$iitm$c,
-                    tdsls420.t$hrea ) znsls401dev
-        ON znsls409.t$ncia$c = znsls401dev.t$ncia$c
-       AND znsls409.t$uneg$c = znsls401dev.t$uneg$c
-       AND znsls409.t$pecl$c = znsls401dev.t$pecl$c
-       AND znsls409.t$sqpd$c = znsls401dev.t$sqpd$c
-       AND znsls409.t$entr$c = znsls401dev.t$entr$c
+ LEFT JOIN ( select tdsls401_dev.t$orno, 
+                    tdsls401_dev.t$pono, 
+                    tdsls401_dev.t$fire$l,                         --nota de venda
+                    tdsls401_dev.t$line$l                          --nota de venda
+               from BAANDB.ttdsls401301 tdsls401_dev               --Troca/Devolucao
+         inner join baandb.ttcibd001301  tcibd001
+                 on tcibd001.t$item = tdsls401_dev.t$item
+              where Trim(tdsls401_dev.t$fire$l) is not null
+                and tcibd001.t$kitm = 1
+           group by tdsls401_dev.t$orno, 
+                    tdsls401_dev.t$pono, 
+                    tdsls401_dev.t$fire$l,
+                    tdsls401_dev.t$line$l ) tdsls401_dev
+        ON tdsls401_dev.t$orno = znsls409.t$dorn$c
+        
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    a.t$sequ$c,
+                    a.t$orno$c,
+                    a.t$pono$c
+               from baandb.tznsls004301 a
+              where a.t$orig$c != 3  --insucesso de entrega
+           group by a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    a.t$sequ$c,
+                    a.t$orno$c,
+                    a.t$pono$c ) znsls004dev                                    /*+ index(baandb.tznsls004301 TZNSLS004301$IDX1)*/
+        ON znsls004dev.t$orno$c = tdsls401_dev.t$orno
+       AND znsls004dev.t$pono$c = tdsls401_dev.t$pono
 
+INNER JOIN baandb.tznsls401301 znsls401dev
+        ON znsls004dev.t$ncia$c = znsls401dev.t$ncia$c
+       AND znsls004dev.t$uneg$c = znsls401dev.t$uneg$c
+       AND znsls004dev.t$pecl$c = znsls401dev.t$pecl$c
+       AND znsls004dev.t$sqpd$c = znsls401dev.t$sqpd$c
+       AND znsls004dev.t$entr$c = znsls401dev.t$entr$c
+       AND znsls004dev.t$sequ$c = znsls401dev.t$sequ$c
+       
+ LEFT JOIN baandb.tznint002301 znint002                                /*+ index(baandb.tznint002301 TZNINT002301$IDX1)*/
+        ON znint002.t$ncia$c = znsls401dev.t$ncia$c
+       AND znint002.t$uneg$c = znsls401dev.t$uneg$c
+       
+ LEFT JOIN baandb.tznsls002301 znsls002                                /*+ index(baandb.tznsls002301 TZNSLS002301$IDX1)*/
+        ON znsls002.t$tpen$c = znsls401dev.t$itpe$c
+        
 INNER JOIN BAANDB.tznsls400301 znsls400dev                                      /*+ index(baandb.tznsls400301 TZNSLS400301$IDX1)*/
         ON znsls400dev.t$ncia$c = znsls401dev.t$ncia$c
        AND znsls400dev.t$uneg$c = znsls401dev.t$uneg$c
@@ -242,25 +225,6 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                                      
        AND znsls402_dev.t$uneg$c = znsls401dev.t$uneg$c
        AND znsls402_dev.t$pecl$c = znsls401dev.t$pvdt$c
        AND znsls402_dev.t$sqpd$c = znsls401dev.t$sqpd$c
-
- LEFT JOIN ( select a.t$ncia$c,
-                    a.t$uneg$c,
-                    a.t$pecl$c,
-                    a.t$sqpd$c,
-                    a.t$entr$c,
-                    max(a.t$orno$c) KEEP (DENSE_RANK LAST ORDER BY a.t$date$c) t$orno$c
-               from baandb.tznsls004301 a
-              where a.t$orig$c != 3  --insucesso de entrega
-           group by a.t$ncia$c,
-                    a.t$uneg$c,
-                    a.t$pecl$c,
-                    a.t$sqpd$c,
-                    a.t$entr$c ) znsls004dev                                    /*+ index(baandb.tznsls004301 TZNSLS004301$IDX1)*/
-        ON znsls004dev.t$ncia$c = znsls401dev.t$ncia$c
-       AND znsls004dev.t$uneg$c = znsls401dev.t$uneg$c
-       AND znsls004dev.t$pecl$c = znsls401dev.t$pecl$c
-       AND znsls004dev.t$sqpd$c = znsls401dev.t$sqpd$c
-       AND znsls004dev.t$entr$c = znsls401dev.t$entr$c
 
  LEFT JOIN ( select a.t$ncmp$c,
                     a.t$orno$c,
@@ -330,22 +294,6 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                                      
         ON tdrec940rec.t$orno$l = znsls401dev.t$orno$c
        AND tdrec940rec.t$pono$l = znsls401dev.t$pono$c
 
- LEFT JOIN ( select tdsls401_dev.t$orno, 
-                    tdsls401_dev.t$pono, 
-                    tdsls401_dev.t$fire$l,                         --nota de venda
-                    tdsls401_dev.t$line$l                          --nota de venda
-               from BAANDB.ttdsls401301 tdsls401_dev               --Troca/Devolucao
-         inner join baandb.ttcibd001301  tcibd001
-                 on tcibd001.t$item = tdsls401_dev.t$item
-              where Trim(tdsls401_dev.t$fire$l) is not null
-                and tcibd001.t$kitm = 1
-           group by tdsls401_dev.t$orno, 
-                    tdsls401_dev.t$pono, 
-                    tdsls401_dev.t$fire$l,
-                    tdsls401_dev.t$line$l ) tdsls401_dev
-        ON tdsls401_dev.t$orno = znsls409.t$dorn$c
-       AND tdsls401_dev.t$pono = znsls401dev.t$pono$c
-
  LEFT JOIN ( select cisli245_ven.t$fire$l,
                     cisli245_ven.t$line$l, 
                     cisli245_ven.t$slso, 
@@ -406,6 +354,7 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                                      
                  on tccom130.t$cadr = tcmcs080.t$cadr$l
               where tccom130.t$ftyp$l = 'PJ' ) tccom130_orig
         ON tccom130_orig.t$cfrw = tdsls400orig.t$cfrw
+
 
  LEFT JOIN ( select znfmd001.t$fili$c,
                     tccom130.t$cadr
@@ -609,10 +558,68 @@ INNER JOIN BAANDB.ttdsls400301 tdsls400dev                                      
                                             and l1.t$cpac = l.t$cpac ) ) ORDEM_COLETA
         ON ORDEM_COLETA.t$cnst = tdsls400dev.t$hdst
 
-WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone 'America/Sao_Paulo') AS DATE))
-      Between :DataForcadoDe
-          And :DataForcadoAte
+     WHERE znsls401dev.t$idor$c = 'TD'
+       AND znsls401dev.t$qtve$c < 0
+       AND znsls401dev.t$iitm$c = 'P'
 
-ORDER BY DATA_FORCADO, SEQUENCIAL_FORCADO
+       AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone 'America/Sao_Paulo') AS DATE))
+           Between :DataForcadoDe
+               And :DataForcadoAte
+
+  GROUP BY znsls400dev.t$idca$c
+         , znsls409.t$fdat$c
+         , tdsls400dev.t$odat
+         , znsls002.t$dsca$c
+         , znsls401dev.t$lass$c
+         , znsls401dev.t$lmot$c
+         , znmcs002_TIPO.t$desc$c
+         , ORDEM_COLETA.STATUS
+         , tdsls420dev.t$hrea
+         , NVL(regexp_replace(tccom130_orig.t$fovn$l, '[^0-9]', ''), 
+               regexp_replace(znmcs092dev.t$fovt$c,   '[^0-9]', ''))
+         , NVL(tccom130_orig.t$dsca, tcmcs080sige.t$dsca)
+         , NVL(regexp_replace(tccom130_dev.t$fovn$l,    '[^0-9]', ''),
+               regexp_replace(tcmcs080_COLETA.t$fovn$l, '[^0-9]', ''))
+         , NVL(tccom130_dev.t$dsca, tcmcs080_COLETA.t$dsca)
+         , znsls401dev.t$orno$c 
+         , znsls401dev.t$pecl$c 
+         , znsls400dev.t$sige$c
+         , NVL(NOTA_VENDA.t$entr$c, znmcs096dev.t$sige$c)
+         , znsls409.t$entr$c                             
+         , NVL(NOTA_VENDA.t$docn$l, znmcs096dev.t$docn$c)
+         , NVL(NOTA_VENDA.t$seri$l, znmcs096dev.t$seri$c)
+         , Trim(tcibd001dev.t$item)
+         , tcibd001dev.t$dscb$c                          
+         , NVL(tcmcs080_FILIAL_ORI.t$fili$c, znfmd001dev.t$fili$c)
+         , NVL(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(NOTA_VENDA.t$date$l, 
+                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone 'America/Sao_Paulo') AS DATE),
+               znmcs096dev.t$trdt$c)
+         , tdrec940rec.t$docn$l
+         , tdrec940rec.t$seri$l
+         , tdrec940rec.t$date$l
+         , tdrec940rec.t$fire$l                          
+         , cisli940dev.t$docn$l                          
+         , cisli940dev.t$seri$l                          
+         , ROUND(cisli940dev.t$amnt$l, 2)
+         , znsls401dev.t$vlun$c
+         , znfmd630dev.t$etiq$c
+         , znfmd630dev.nr_etiq
+         , znsls410.t$poco$c
+         , znmcs002.t$desc$c
+         , ttaad200.t$name   
+         , znint407.t$idus$c 
+         , znint407.t$motv$c
+         , znsls401dev.t$cepe$c
+         , znsls401dev.t$cide$c
+         , znsls401dev.t$ufen$c
+         , znint002.t$desc$c
+         , znsls402_dev.t$vlmr$c           
+         , znsls409.t$inut$c
+         , cisli940dev.t$date$l
+         , znsls409.t$dtin$c
+         , tdrec940rec.t$sfra$l
+
+ORDER BY DATA_FORCADO, SEQUENCIAL_FORCADO, SKU_ITEM
