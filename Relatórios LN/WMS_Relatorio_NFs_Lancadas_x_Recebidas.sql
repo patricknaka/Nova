@@ -1,7 +1,7 @@
 SELECT DISTINCT
        d.WHSEID                      ARMAZEM,                                --01
        cl.UDF2                       DESC_ARMAZEM,                           --02        
-       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(d.ADDDATE), 
+       CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(MAX(h.ADDDATE), 
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
              AT time zone 'America/Sao_Paulo') AS DATE)  
                                      DATA_LANCTO,                            --03
