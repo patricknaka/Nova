@@ -74,14 +74,13 @@ select
   LEFT JOIN ( select a.RECEIPTKEY,  
                      a.SKU,  
                      a.TOID,  
-                     a.DATERECEIVED,  
+                     max(a.DATERECEIVED),  
                      sum(a.QTYRECEIVED) QTDE  
                 from WMWHSE9.RECEIPTDETAIL@DL_LN_WMS  a  
             group by a.RECEIPTKEY,  
                      a.EXTERNRECEIPTKEY,  
                      a.SKU,  
-                     a.TOID,  
-                     a.DATERECEIVED ) WMS_REC_DETAIL  
+                     a.TOID ) WMS_REC_DETAIL  
          ON WMS_REC_DETAIL.RECEIPTKEY = WMS_RECEIPT.RECEIPTKEY  
         AND TRIM(WMS_REC_DETAIL.SKU) = TRIM(whinh301.t$item)  
   
@@ -217,14 +216,13 @@ WHERE tdrec940.t$stat$l IN (4, 5)
 "  LEFT JOIN ( select a.RECEIPTKEY,  " &
 "                     a.SKU,  " &
 "                     a.TOID,  " &
-"                     a.DATERECEIVED,  " &
+"                     max(a.DATERECEIVED),  " &
 "                     sum(a.QTYRECEIVED) QTDE  " &
 "                from " + IIF(Parameters!Compania.Value = 601, "WMWHSE9", "WMWHSE10") + ".RECEIPTDETAIL@DL_LN_WMS  a  " &
 "            group by a.RECEIPTKEY,  " &
 "                     a.EXTERNRECEIPTKEY,  " &
 "                     a.SKU,  " &
-"                     a.TOID,  " &
-"                     a.DATERECEIVED ) WMS_REC_DETAIL  " &
+"                     a.TOID ) WMS_REC_DETAIL  " &
 "         ON WMS_REC_DETAIL.RECEIPTKEY = WMS_RECEIPT.RECEIPTKEY  " &
 "        AND TRIM(WMS_REC_DETAIL.SKU) = TRIM(whinh301.t$item)  " &
 "  " &
