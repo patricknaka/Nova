@@ -58,7 +58,14 @@ select
            ORIGEM_ORDEM_FRETE.STATUS                         ORIGEM_ORDEM_FRETE,
 		   case when ordf.t$stat$c = '1' then 'Aberto'
 				when ordf.t$stat$c = '2' then 'Fechado'
-				else '' end STATUS_ORDEM_FRETE
+				else '' end STATUS_ORDEM_FRETE,
+	 (select MAX(znsls410.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY znsls410.T$DTOC$C,  znsls410.T$SEQN$C)t$poco$c
+	   from baandb.tznsls410301 znsls410
+	  where znsls410.t$ncia$c = znsls004.t$ncia$c
+	    AND znsls410.t$uneg$c = znsls004.t$uneg$c
+	    AND znsls410.t$pecl$c = nvl(substr(ordf.t$pecl$c,0,length(ordf.t$pecl$c)-2), znsls004.t$pecl$c)
+	    AND znsls410.t$sqpd$c = znsls004.t$sqpd$c
+	    AND znsls410.t$entr$c = nvl(ordf.t$pecl$c, znsls004.t$entr$c)) ULTIMO_PONTO
 --           prec.t$fdot$l       ENTRADA_SAIDA
 
       from baandb.tbrnfe940301 Prec
