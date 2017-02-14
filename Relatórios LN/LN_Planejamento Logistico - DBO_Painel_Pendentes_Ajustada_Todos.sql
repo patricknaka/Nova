@@ -9,10 +9,7 @@ select Q1.*
              znfmd630.t$fili$c  NUME_FILIAL,
              cisli940.t$docn$l  NUME_NOTA,
              cisli940.t$seri$l  NUME_SERIE,
-             cisli940.t$fdty$l  TIPO_ORDEM,
-             FGET.              DESC_TIPO_ORDEM,
              cisli940.t$gamt$l  VL_MERCADORIA,
-             znsls401.t$uneg$c  UNINEG,
 
              znsls410.CODE_OCORRENCIA    OCORRENCIA,
              znsls410.DESC_OCORRENCIA    DESCRICAO,
@@ -29,7 +26,6 @@ select Q1.*
              znsls401.t$cide$c  CIDADE,
              znsls401.t$cepe$c  CEP,
              znsls401.t$ufen$c  UF,
-             znsls401.t$nome$c  DESTINATARIO,
 
              CASE WHEN Trunc(tdsls401.t$prdt) = '01/01/1970'
                     THEN NULL
@@ -53,26 +49,10 @@ select Q1.*
              END                DATA_PREVISTA,
 
              cisli940.t$amnt$l  VALOR,
-
-             ( select znfmd061.t$dzon$c
-                 from baandb.tznfmd062301 znfmd062,
-                      baandb.tznfmd061301 znfmd061
-                where znfmd062.t$cfrw$c = znfmd630.t$cfrw$c
-                  and znfmd062.t$cono$c = znfmd630.t$cono$c
-                  and znfmd062.t$cepd$c <= tccom130.t$pstc
-                  and znfmd062.t$cepa$c >= tccom130.t$pstc
-                  and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
-                  and znfmd061.t$cono$c = znfmd062.t$cono$c
-                  and znfmd061.t$creg$c = znfmd062.t$creg$c
-                  and rownum = 1 )
-                                REGIAO,
-
              znsls401.t$itpe$c  ID_TIPO_ENTREGA,
              znsls002.t$dsca$c  DESCR_TIPO_ENTREGA,
              znfmd630.t$orno$c  ORDEM_VENDA,
-             znint002.t$uneg$c  UNIDADE_NEG,
              znint002.t$desc$c  DESCR_UNIDADE_NEG,
-             znsls004.t$sqpd$c  SEQ_PEDIDO,
 
              CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,
                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -80,10 +60,6 @@ select Q1.*
                                 DT_EMISSAO,
              ZNSLS401.T$PZTR$C  TRANSIT_TIME,
              ZNSLS401.T$PZCD$C  PRAZO_CD,
-             CASE WHEN ZNSLS400.T$SIGE$C = 1
-                    THEN 'Sim'
-                  ELSE   'Não'
-              END               PEDIDO_SIGE,
 
              ( SELECT CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$udat$c, 'DD-MON-YYYY HH24:MI:SS'),
                         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
@@ -101,7 +77,24 @@ CASE WHEN znfmd630.t$dtco$c > '01/01/1975' then
 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtco$c, 'DD-MON-YYYY HH24:MI:SS'),
                         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)    
     ELSE NULL
-END                             DT_CORRIGIDA             
+END                             DT_CORRIGIDA,
+
+znsls401.t$obet$c               OBS_ETIQ_TRANS,
+
+CASE WHEN tdsls401.t$ddta > '01/01/1975' then
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.t$ddta , 'DD-MON-YYYY HH24:MI:SS'),
+                        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)    
+    ELSE NULL
+END                             DATA_ENTREGA_PLANEJADA,
+
+CASE WHEN tdsls401.T$ODAT  > '01/01/1975' then
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.T$ODAT  , 'DD-MON-YYYY HH24:MI:SS'),
+                        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)    
+    ELSE NULL
+END                            DATA_ORDEM,
+znfmd630.t$ncar$c              NUMERO_CARGA,
+znfmd630.t$cnfe$c              NUMERO_DANFE,
+znsng108.t$pvvv$c              PEDIDO_S9
 
   FROM       baandb.tcisli940301 cisli940  
   
@@ -156,33 +149,6 @@ and znfmd630.t$torg$c = znfmd640.t$torg$c
    LEFT JOIN baandb.ttccom130301 tccom130
           ON tccom130.t$cadr = cisli940.t$stoa$l
 
-   LEFT JOIN ( SELECT d.t$cnst CNST,
-                      l.t$desc DESC_TIPO_ORDEM
-                 FROM baandb.tttadv401000 d, baandb.tttadv140000 l
-                WHERE d.t$cpac = 'ci'
-                  AND d.t$cdom = 'sli.tdff.l'
-                  AND l.t$clan = 'p'
-                  AND l.t$cpac = 'ci'
-                  AND l.t$clab = d.t$za_clab
-                  AND rpad(d.t$vers,4) ||
-                      rpad(d.t$rele,2) ||
-                      rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                      rpad(l1.t$rele,2) ||
-                                                      rpad(l1.t$cust,4))
-                                             from baandb.tttadv401000 l1
-                                            where l1.t$cpac = d.t$cpac
-                                              and l1.t$cdom = d.t$cdom )
-                  AND rpad(l.t$vers,4) ||
-                      rpad(l.t$rele,2) ||
-                      rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                      rpad(l1.t$rele,2) ||
-                                                      rpad(l1.t$cust,4))
-                                             from baandb.tttadv140000 l1
-                                            where l1.t$clab = l.t$clab
-                                              and l1.t$clan = l.t$clan
-                                              and l1.t$cpac = l.t$cpac ) ) FGET
-          ON FGET.CNST = cisli940.t$fdty$l
-
   INNER JOIN ( select znsls410.t$poco$c CODE_OCORRENCIA
                     , znmcs002.t$desc$c DESC_OCORRENCIA
                     , znsls410.t$dtoc$c DATA_OCORRENCIA
@@ -206,10 +172,13 @@ and znfmd630.t$torg$c = znfmd640.t$torg$c
   LEFT JOIN BAANDB.tznfmd030601 znfmd030
          ON znfmd030.t$ocin$c = znsls410.CODE_OCORRENCIA
   
+  LEFT JOIN baandb.tznsng108301 znsng108
+         ON znfmd630.t$orno$c = znsng108.t$orln$c
+  
   
 WHERE 
      znfmd640.t$torg$c != 7
-and  znsls410.CODE_OCORRENCIA IN ('PIC','PZC','DNF','GAL','LFE','ARE','ARO','FIS','ROT','DDL','CME','ENL','ETR','POT','DIE','PNR','PRT','TRN','REE','SEF','EA1','EA2','EA3','CXP','AGE','NAP','RET','PRE','DRE','TRD','FER','CHU','MPD')
+and  znsls410.CODE_OCORRENCIA  IN ('PIC','PZC','DNF','GAL','LFE','ARE','ARO','FIS','ROT','DDL','CME','ENL','ETR','POT','DIE','PNR','PRT','TRN','REE','SEF','EA1','EA2','EA3','CXP','AGE','NAP','RET','PRE','DRE','TRD','FER','CHU','MPD','ETL')
         ) Q1
 where Trunc(Q1.DATA_EXPEDICAO)
       Between :DataExpedicaoDe
