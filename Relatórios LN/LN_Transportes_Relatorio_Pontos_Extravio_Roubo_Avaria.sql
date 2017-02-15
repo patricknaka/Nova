@@ -8,14 +8,17 @@ select
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') as date)
                                                  DATA_NF,
-        cast((from_tz(to_timestamp(to_char(znsls409.t$fdat$c,
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)
-                                                 DATA_FORCADO,
+        case when to_char(to_date(znsls409.t$fdat$c), 'yyyy') = 1969 then null 
+             when to_char(to_date(znsls409.t$fdat$c), 'yyyy') = 1970 then null 
+        else
+             cast((from_tz(to_timestamp(to_char(znsls409.t$fdat$c,
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                   AT time zone 'America/Sao_Paulo') as date)
+        end                                      DATA_FORCADO,
         cisli941.t$item$l                        ITEM,
         cisli941.t$desc$l                        ITEM_NOME,
-        znsls401.t$vlun$c * znsls401.t$qtve$c    VALOR_NF,
-        znsls401.t$vlfr$c                        FRETE,
+        cisli941.t$gamt$l                        VALOR_NF,
+        cisli941.t$fght$l                        FRETE,
         cisli941.t$amnt$l                        VALOR_TOTAL,
         tcemm030.t$euca                          FILIAL,
         DADOS_TRANSP.t$dsca                      APELIDO_TRANS,
@@ -114,25 +117,19 @@ inner join baandb.tcisli941301 cisli941
         on cisli941.t$fire$l = cisli245.t$fire$l
        and cisli941.t$line$l = cisli245.t$line$l
 
-left join ( select a.t$orno$c,
+left join ( select 
                    a.t$pecl$c,
-                   a.t$torg$c,
                    a.t$cfrw$c,
-                   a.t$cono$c,
-                   a.t$stat$c,
                    a.t$dtco$c,
                    a.t$fili$c,
-                   min(a.t$etiq$c) t$etiq$c
+                   max(a.t$etiq$c) t$etiq$c
             from  baandb.tznfmd630301 a
-            group by a.t$orno$c,
+            group by 
                      a.t$pecl$c,
-                     a.t$torg$c,
                      a.t$cfrw$c,
-                     a.t$cono$c,
-                     a.t$stat$c,
                      a.t$dtco$c,
                      a.t$fili$c) znfmd630
-       on znfmd630.t$orno$c = znsls004.t$orno$c
+       on znfmd630.t$pecl$c = TO_CHAR(znsls004.t$entr$c)
 
 left join ( select max(a.t$udat$c) t$udat$c,
                    max(a.t$ulog$c) t$ulog$c,
