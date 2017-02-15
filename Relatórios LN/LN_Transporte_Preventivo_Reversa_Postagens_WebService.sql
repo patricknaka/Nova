@@ -23,9 +23,11 @@ select
         znsls400.t$nomf$c                        NOME_CLIENTE,
         znsls400.t$fovn$c                        CPF,
         znsls400.t$uffa$c                        UF,
-        tcibd001.t$dsca                          DESCRICAO_ITEM,
-        case when znfmd640.STATUS = 'COP' then 'Produto Postado'
-             when znfmd640.STATUS = 'DME' then 'Recebimento de Devolucao'
+        tcibd001.t$dscb$c                        DESCRICAO_ITEM,
+        case when znfmd640.STATUS = 'COP' then
+                  'Produto Postado'
+             when znfmd640.STATUS = 'DME' then
+                  'Recebimento de Devolucao'
         else
              znmcs002.t$desc$c
         end                                      STATUS_POS,
@@ -120,8 +122,8 @@ left join ( select a.t$fili$c,
 left join baandb.tznmcs002301 znmcs002
        on znmcs002.t$poco$c = znfmd640.STATUS
 
-where cast((from_tz(to_timestamp(to_char(( znsls410_POS.DT_EMISSAO  + 10),
+where trunc(cast((from_tz(to_timestamp(to_char(( znsls410_POS.DT_EMISSAO  + 10),
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)
+              AT time zone 'America/Sao_Paulo') as date))
       between :DATA_VENCIMENTO_DE
           and :DATA_VENCIMENTO_ATE
