@@ -1,11 +1,10 @@
 SELECT 
   DISTINCT 
-    NVL(znsls412.t$uneg$c,znsls412rem.t$uneg$c)      UNID_NEGOCIO,
-    NVL(znint002.t$desc$c,znint002rem.t$desc$c)      NM_UNID_NEGOCIO,
-    tfacr200.t$itbp                                  COD_PN,
-    regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')
-                                                      CNPJ,
-    tccom100.t$nama                                   PN,
+    NVL(znsls412.t$uneg$c,znsls412rem.t$uneg$c)                         UNID_NEGOCIO,
+    NVL(znint002.t$desc$c,znint002rem.t$desc$c)                         NM_UNID_NEGOCIO,
+    tfacr200.t$itbp                                                     COD_PN,
+    regexp_replace(tccom130.t$fovn$l, '[^0-9]', '')                     CNPJ,
+    tccom100.t$nama                                                     PN,
      
     CASE WHEN NVL( ( select c.t$styp 
                        from baandb.tcisli205301 c
@@ -15,17 +14,17 @@ SELECT
                         AND rownum = 1 ), '0' ) = '0' 
            THEN 'Varejo' 
          ELSE   'Atacado' 
-     END                                          FILIAL,
+     END                                                                FILIAL,
 
-    Concat(tfacr201.t$ttyp, tfacr201.t$ninv)      TRANSACAO,
-    tfacr201.t$ninv                               TITULO,
-    tfacr201.t$schn                               PARCELA,
-    NVL(znsls412.t$pecl$c,znsls412rem.t$pecl$c)   PEDIDO,
-    NVL(znsls401.t$entr$c,znsls401rem.t$entr$c)   ENTREGA,
-    NVL(znsls410.t$poco$c,znsls410rem.t$poco$c)   STATUS_ENTREGA,
-    NVL(znmcs002.t$desc$c,znmcs002rem.t$desc$c)   DESCRICAO,
-    tfacr201.t$docd                               DT_EMISSAO,
-    tfacr201.t$recd                               DT_VENCIMENTO,
+    Concat(tfacr201.t$ttyp, tfacr201.t$ninv)                            TRANSACAO,
+    tfacr201.t$ninv                                                     TITULO,
+    tfacr201.t$schn                                                     PARCELA,
+    NVL(znsls412.t$pecl$c,znsls412rem.t$pecl$c)                         PEDIDO,
+    NVL(znsls401.t$entr$c,znsls401rem.t$entr$c)                         ENTREGA,
+    NVL(znsls410.t$poco$c,znsls410rem.t$poco$c)                         STATUS_ENTREGA,
+    NVL(znmcs002.t$desc$c,znmcs002rem.t$desc$c)                         DESCRICAO,
+    tfacr201.t$docd                                                     DT_EMISSAO,
+    tfacr201.t$recd                                                     DT_VENCIMENTO,
 
     CASE WHEN tfacr201.t$rpst$l IN (3,4) THEN  --PARCIALMENTE PAGO 0U PAGO
       CASE WHEN tfacr201.t$balc = 0 
@@ -45,88 +44,49 @@ SELECT
                        AND p.t$tdoc != ' '
                        AND p.t$docn != 0
                        AND p.t$lino != 0 ) END
-       ELSE NULL END                              DT_LIQUID,
+       ELSE NULL END                                                      DT_LIQUID,
 
-    cisli940.t$fire$l                             DOC_FISCAL,
-    cisli940.t$docn$l                             NF,
-    cisli940.t$seri$l                             SERIE,
-    tfacr201.t$rpst$l                             SITUACAO_TITULO,
- 
-    ( SELECT l.t$desc
-        FROM baandb.tttadv401000 d,
-             baandb.tttadv140000 l
-       WHERE d.t$cpac = 'tf'
-         AND d.t$cdom = 'acr.strp.l'
-         AND l.t$clan = 'p'
-         AND l.t$cpac = 'tf'
-         AND l.t$clab = d.t$za_clab
-         AND rpad(d.t$vers,4) || 
-             rpad(d.t$rele,2) || 
-             rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
-                                             rpad(l1.t$rele,2) || 
-                                             rpad(l1.t$cust,4) ) 
-                                    from baandb.tttadv401000 l1 
-                                   where l1.t$cpac = d.t$cpac 
-                                     and l1.t$cdom = d.t$cdom )
-         AND rpad(l.t$vers,4) || 
-             rpad(l.t$rele,2) || 
-             rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
-                                             rpad(l1.t$rele,2) || 
-                                             rpad(l1.t$cust,4) ) 
-                                    from baandb.tttadv140000 l1 
-                                   where l1.t$clab = l.t$clab 
-                                     and l1.t$clan = l.t$clan 
-                                     and l1.t$cpac = l.t$cpac )
-         AND d.t$cnst = tfacr201.t$rpst$l 
-         AND rownum = 1)                          DESCR_SIT_TIT,
-   
-    tfacr201.t$amnt                               VALOR_TITULO,
-    tfacr201.t$balc                               SALDO_TITULO,
-    --tfacr200.t$amti                               SALDO_TITULO,
-    tfacr201.t$brel                               REL_BANCARIA,
-    NVL(TRIM(tfacr201.t$paym), 'N/A')             METODO_REC,
-    tfcmg948.t$banu$l                             NOSSO_NUMERO,
-    NVL(znsls400.t$idca$c,znsls400rem.t$idca$c)   CANAL_VENDAS,
-    NVL(znsls402.t$idmp$c,znsls402rem.t$idmp$c)   MEIO_PAGAMENTO,
-    NVL(zncmg007.t$desc$c,zncmg007rem.t$desc$c)   DESCR_MEIO_PGTO, 
-    NVL(znsls401.t$orno$c,znsls401rem.t$orno$c)   ORDEM_VENDAS,
+    cisli940.t$fire$l                                                     DOC_FISCAL,
+    cisli940.t$docn$l                                                     NF,
+    cisli940.t$seri$l                                                     SERIE,
+    tfacr201.t$rpst$l                                                     SITUACAO_TITULO,
+    STAT_REC.DESCR                                                        DESCR_SIT_TIT,
+    tfacr201.t$amnt                                                       VALOR_TITULO,
+    tfacr201.t$balc                                                       SALDO_TITULO,
+    tfacr201.t$brel                                                       REL_BANCARIA,
+    NVL(TRIM(tfacr201.t$paym), 'N/A')                                     METODO_REC,
+    tfcmg948.t$banu$l                                                     NOSSO_NUMERO,
+    NVL(znsls400.t$idca$c,znsls400rem.t$idca$c)                           CANAL_VENDAS,
+    NVL(znsls402.t$idmp$c,znsls402rem.t$idmp$c)                           MEIO_PAGAMENTO,
+    NVL(zncmg007.t$desc$c,zncmg007rem.t$desc$c)                           DESCR_MEIO_PGTO, 
+    NVL(znsls401.t$orno$c,znsls401rem.t$orno$c)                           ORDEM_VENDAS,
     NVL(DEV.DOCTO_TRANSACAO_DEV ||
-    DEV.TITULO_DEV,' ')                           TITULO_DEV,
-    NVL(DEV.VL_TITULO_DEV,0)                      VL_TITULO_DEV,
-    tfacr200.t$docd                               DATA_DE_EMISSÃO_DEV,
-    status.DESC_STATUS                            STATUS_DEV,
-    NVL(TITULO_CAP.TITULO,NVL(TITULO_CAP_rem.TITULO,' '))             TITULO_CAP,
-    NVL(TITULO_CAP.t$amnt,NVL(TITULO_CAP_rem.t$amnt,0))               VL_TITULO_CAP,
-    NVL(TITULO_CAP.t$pyst$l,NVL(TITULO_CAP_rem.t$pyst$l,0))           STATUS_TITULO_CAP,
+    DEV.TITULO_DEV,' ')                                                   TITULO_DEV,
+    NVL(DEV.VL_TITULO_DEV,0)                                              VL_TITULO_DEV,
+    tfacr200.t$docd                                                       DATA_DE_EMISSÃO_DEV,
+    status.DESC_STATUS                                                    STATUS_DEV,
+    TIPO_DOC_DEV.DESCR                                                    TIPO_DOC_FISCAL_DEV,
+    DEV.DOCTO_DEV                                                         NF_DEV,
+    DEV.SERIE_DEV                                                         SERIE_DEV,
+    NVL(TITULO_CAP.TITULO,NVL(TITULO_CAP_rem.TITULO,' '))                 TITULO_CAP,
+    NVL(TITULO_CAP.t$amnt,NVL(TITULO_CAP_rem.t$amnt,0))                   VL_TITULO_CAP,
+    NVL(TITULO_CAP.t$pyst$l,NVL(TITULO_CAP_rem.t$pyst$l,0))               STATUS_TITULO_CAP,
+    STAT_PGTO.DSCR                                                        DESCR_SIT_TIT_CAP,
+         
+    nvl(znsls400.t$idco$c, znsls400rem.t$idco$c)                          CONTRATO_B2B,
+    nvl(znsls400.t$idcp$c, znsls400rem.t$idcp$c)                          CAMPANHA_B2B,
+    nvl(znsls400.t$peex$c, znsls400rem.t$peex$c)                          PEDIDO_PARCEIRO,
+    nvl(znsls401.t$item$c, znsls401rem.t$item$c)                          ITEM_CANCELADO,
+    nvl(tcibd001.t$dscb$c, tcibd001rem.t$dscb$c)                          DESCRICAO_ITEM,
+    TITULO_AGR.t$ttyp$c || TITULO_AGR.t$ninv$c                            TITULO_AGRUPAMENTO,
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TITULO_AGR.t$date$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+          AT time zone 'America/Sao_Paulo') AS DATE)                      EMISSAO_AGRUPAMENTO,
+    case when tfacr200agr.t$balc > 0 then 'Aberto'
+    when tfacr200agr.t$balc = 0 then 'Liquidado'                               
+    when tfacr200agr.t$balc is null then null end                         STATUS_PAGTO,
+    znsls410_STATUS.t$poco$c                                              STATUS_ITEM,
+    znmcs002_ULTIMA_ENTR.t$desc$c                                         DESCR_STATUS_ITEM
     
-    nvl(    ( SELECT l.t$desc
-        FROM baandb.tttadv401000 d,
-             baandb.tttadv140000 l
-       WHERE d.t$cpac = 'tf'
-         AND d.t$cdom = 'acp.pyst.l'
-         AND l.t$clan = 'p'
-         AND l.t$cpac = 'tf'
-         AND l.t$clab = d.t$za_clab
-         AND rpad(d.t$vers,4) || 
-             rpad(d.t$rele,2) || 
-             rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
-                                             rpad(l1.t$rele,2) || 
-                                             rpad(l1.t$cust,4) ) 
-                                    from baandb.tttadv401000 l1 
-                                   where l1.t$cpac = d.t$cpac 
-                                     and l1.t$cdom = d.t$cdom )
-         AND rpad(l.t$vers,4) || 
-             rpad(l.t$rele,2) || 
-             rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
-                                             rpad(l1.t$rele,2) || 
-                                             rpad(l1.t$cust,4) ) 
-                                    from baandb.tttadv140000 l1 
-                                   where l1.t$clab = l.t$clab 
-                                     and l1.t$clan = l.t$clan 
-                                     and l1.t$cpac = l.t$cpac )
-         AND d.t$cnst = NVL(TITULO_CAP.t$pyst$l,TITULO_CAP_rem.t$pyst$l)
-         AND rownum = 1) , ' ')                         DESCR_SIT_TIT_CAP
-
 FROM      baandb.ttccom100301 tccom100
 
 INNER JOIN baandb.ttccom130301 tccom130
@@ -136,6 +96,40 @@ INNER JOIN baandb.ttfacr200301 tfacr200
         ON tccom100.t$bpid   = tfacr200.t$itbp 
        AND tfacr200.t$lino   = 0          
 
+LEFT JOIN ( select  a.t$bpid$c,
+                    a.t$tty1$c,
+                    a.t$nin1$c,
+                    a.t$ttyp$c,
+                    a.t$ninv$c,
+                    b.t$date$c
+            from baandb.tznacr005301 a,
+                 baandb.tznacr006301 b
+            where a.t$flag$c = 1
+              and b.t$bpid$c = a.t$bpid$c
+              and b.t$ttyp$c = a.t$ttyp$c
+              and b.t$ninv$c = a.t$ninv$c
+              and b.t$canc$c = 2
+            group by  a.t$bpid$c,
+                      a.t$tty1$c,
+                      a.t$nin1$c,
+                      a.t$ttyp$c,
+                      a.t$ninv$c,
+                      b.t$date$c) TITULO_AGR
+       ON TITULO_AGR.t$bpid$c = tfacr200.t$itbp
+      AND TITULO_AGR.t$tty1$c = tfacr200.t$ttyp
+      AND TITULO_AGR.t$nin1$c = tfacr200.t$ninv
+
+--LEFT JOIN baandb.tznacr006301 znacr006
+--       ON znacr006.t$bpid$c = znacr005.t$bpid$c
+--      AND znacr006.t$ttyp$c = znacr005.t$ttyp$c
+--      AND znacr006.t$ninv$c = znacr005.t$ninv$c
+--      AND znacr006.t$canc$c = 2      --desconsiderar os desagrupados
+
+LEFT JOIN baandb.ttfacr200301 tfacr200agr           --Titulo Agrupamento
+       ON tfacr200agr.t$ttyp = TITULO_AGR.t$ttyp$c
+      AND tfacr200agr.t$ninv = TITULO_AGR.t$ninv$c
+      AND tfacr200agr.t$lino = 0
+      
 INNER JOIN baandb.ttfacr201301 tfacr201
         ON tfacr201.t$ttyp   = tfacr200.t$ttyp 
        AND tfacr201.t$ninv   = tfacr200.t$ninv
@@ -170,8 +164,11 @@ INNER JOIN baandb.ttfacr201301 tfacr201
        AND znsls412.t$sqpd$c = znsls401.t$sqpd$c
        AND znsls412.t$entr$c = znsls401.t$entr$c
        AND znsls412.t$sequ$c = znsls401.t$sequ$c
-       
- left JOIN baandb.tznsls402301 znsls402
+ 
+ LEFT JOIN baandb.ttcibd001301 tcibd001
+        ON tcibd001.t$item = znsls401.t$itml$c
+        
+ LEFT JOIN baandb.tznsls402301 znsls402
         ON znsls401.t$ncia$c = znsls402.t$ncia$c
        AND znsls401.t$uneg$c = znsls402.t$uneg$c
        AND znsls401.t$pecl$c = znsls402.t$pecl$c
@@ -181,7 +178,7 @@ INNER JOIN baandb.ttfacr201301 tfacr201
  LEFT JOIN baandb.tzncmg007301 zncmg007
          ON zncmg007.t$mpgt$c = znsls402.t$idmp$c  
 
-LEFT JOIN (select distinct 
+ LEFT JOIN (select distinct 
               znsls412.t$ncia$c,
               znsls412.t$uneg$c,
               znsls412.t$pecl$c, 
@@ -193,24 +190,24 @@ LEFT JOIN (select distinct
               tfacp200.t$amnt,
               tfacp201.t$pyst$l
               
-          from baandb.tznsls402301 znsls402
-          inner join baandb.tzncmg007301 zncmg007
-          on zncmg007.t$mpgt$c = znsls402.t$idmp$c
-          and zncmg007.t$ctmp$c in (5,6)
+            from baandb.tznsls402301 znsls402
+            inner join baandb.tzncmg007301 zncmg007
+            on zncmg007.t$mpgt$c = znsls402.t$idmp$c
+            and zncmg007.t$ctmp$c in (5,6)
           
-          inner join baandb.tznsls412301 znsls412
-          on znsls412.t$ncia$c = znsls402.t$ncia$c
-          and znsls412.t$uneg$c = znsls402.t$uneg$c
-          and znsls412.t$pecl$c = znsls402.t$pecl$c
-          and znsls412.t$sqpd$c = znsls402.t$sqpd$c
+            inner join baandb.tznsls412301 znsls412
+            on znsls412.t$ncia$c = znsls402.t$ncia$c
+            and znsls412.t$uneg$c = znsls402.t$uneg$c
+            and znsls412.t$pecl$c = znsls402.t$pecl$c
+            and znsls412.t$sqpd$c = znsls402.t$sqpd$c
           
-          inner join baandb.ttfacp200301 tfacp200
-          on tfacp200.t$ttyp = znsls412.t$ttyp$c
-          and tfacp200.t$ninv = znsls412.t$ninv$c
+            inner join baandb.ttfacp200301 tfacp200
+            on tfacp200.t$ttyp = znsls412.t$ttyp$c
+            and tfacp200.t$ninv = znsls412.t$ninv$c
 
-          inner join baandb.ttfacp201301 tfacp201
-          on tfacp201.t$ttyp = tfacp200.t$ttyp
-          and tfacp201.t$ninv = tfacp200.t$ninv
+            inner join baandb.ttfacp201301 tfacp201
+            on tfacp201.t$ttyp = tfacp200.t$ttyp
+            and tfacp201.t$ninv = tfacp200.t$ninv
 
           where znsls402.t$vlmr$c < 0 
           and znsls412.t$ttyp$c = 'PRB'
@@ -219,16 +216,16 @@ LEFT JOIN (select distinct
         ON TITULO_CAP.t$ncia$c = znsls402.t$ncia$c 
        AND TITULO_CAP.t$uneg$c = znsls402.t$uneg$c
        AND TITULO_CAP.t$pecl$c = znsls402.t$pecl$c
-       --AND TITULO_CAP.t$sequ$c = znsls402.t$sequ$c
        AND znsls400.t$sqpd$c = 1
           
  inner join (SELECT 
                 tfacr200d.t$ttyp            DOCTO_TRANSACAO_DEV,
                 tfacr200d.t$ninv            TITULO_DEV,
-                tfacr200d.t$docn$l || 
-                tfacr200d.t$seri$l          DOCTO_DEV,
+                tfacr200d.t$docn$l          DOCTO_DEV,
+                tfacr200d.t$seri$l          SERIE_DEV,
                 CISLI940_DEV.t$fire$l       REF_FISCAL_DEV,
                 tfacr200d.t$amnt            VL_TITULO_DEV,
+                tfacr200d.t$doct$l          TIPO_DOC_FIS,
                 CISLI941_DEV.T$REFR$L       REF_FISCAL_RELATIVA,
                 CISLI940_FAT.T$ityp$l       TRANSACAO_FAT,
                 CISLI940_FAT.T$idoc$l       DOCUMENTO_FAT,
@@ -283,6 +280,35 @@ LEFT JOIN ( select distinct
                                                  and l1.t$clan = iLABEL.t$clan 
                                                  and l1.t$cpac = iLABEL.t$cpac ) ) Status
         ON DEV.STATUS_DEV = Status.CODE_STATUS
+
+LEFT JOIN ( select distinct
+                    iDOMAIN.t$cnst CODE, 
+                    iLABEL.t$desc  DESCR
+               from baandb.tttadv401000 iDOMAIN, 
+                    baandb.tttadv140000 iLABEL 
+              where iDOMAIN.t$cpac = 'tc' 
+                and iDOMAIN.t$cdom = 'doty.l'
+                and iLABEL.t$clan = 'p'
+                and iLABEL.t$cpac = 'tc'
+                and iLABEL.t$clab = iDOMAIN.t$za_clab
+                and rpad(iDOMAIN.t$vers,4) ||
+                    rpad(iDOMAIN.t$rele,2) ||
+                    rpad(iDOMAIN.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                          rpad(l1.t$rele,2) ||
+                                                          rpad(l1.t$cust,4)) 
+                                                 from baandb.tttadv401000 l1 
+                                                where l1.t$cpac = iDOMAIN.t$cpac 
+                                                  and l1.t$cdom = iDOMAIN.t$cdom )
+                and rpad(iLABEL.t$vers,4) ||
+                    rpad(iLABEL.t$rele,2) ||
+                    rpad(iLABEL.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                         rpad(l1.t$rele,2) ||
+                                                         rpad(l1.t$cust,4)) 
+                                                from baandb.tttadv140000 l1 
+                                               where l1.t$clab = iLABEL.t$clab 
+                                                 and l1.t$clan = iLABEL.t$clan 
+                                                 and l1.t$cpac = iLABEL.t$cpac ) ) TIPO_DOC_DEV
+        ON TIPO_DOC_DEV.CODE = DEV.TIPO_DOC_FIS
         
 LEFT JOIN ( select znsls410int.t$ncia$c,      
                    znsls410int.t$uneg$c,
@@ -339,7 +365,10 @@ LEFT JOIN baandb.tznmcs002301 znmcs002
        AND znsls401rem.t$sqpd$c = znsls412rem.t$sqpd$c
        AND znsls401rem.t$entr$c = znsls412rem.t$entr$c
        AND znsls401rem.t$sequ$c = znsls412rem.t$sequ$c
-       
+
+ LEFT JOIN baandb.ttcibd001301 tcibd001rem
+        ON tcibd001rem.t$item = znsls401rem.t$itml$c
+        
  left JOIN baandb.tznsls402301 znsls402rem
         ON znsls402rem.t$ncia$c = znsls401rem.t$ncia$c
        AND znsls402rem.t$uneg$c = znsls401rem.t$uneg$c
@@ -412,10 +441,104 @@ LEFT JOIN ( select znsls410int.t$ncia$c,
 LEFT JOIN baandb.tznmcs002301 znmcs002rem
        ON znmcs002rem.t$poco$c = znsls410rem.t$poco$c
 
+LEFT JOIN ( select distinct
+                    iDOMAIN.t$cnst CONST, 
+                    iLABEL.t$desc  DESCR
+               from baandb.tttadv401000 iDOMAIN, 
+                    baandb.tttadv140000 iLABEL 
+              where iDOMAIN.t$cpac = 'tf' 
+                and iDOMAIN.t$cdom = 'acr.strp.l'
+                and iLABEL.t$clan = 'p'
+                and iLABEL.t$cpac = 'tf'
+                and iLABEL.t$clab = iDOMAIN.t$za_clab
+                and rpad(iDOMAIN.t$vers,4) ||
+                    rpad(iDOMAIN.t$rele,2) ||
+                    rpad(iDOMAIN.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                          rpad(l1.t$rele,2) ||
+                                                          rpad(l1.t$cust,4)) 
+                                                 from baandb.tttadv401000 l1 
+                                                where l1.t$cpac = iDOMAIN.t$cpac 
+                                                  and l1.t$cdom = iDOMAIN.t$cdom )
+                and rpad(iLABEL.t$vers,4) ||
+                    rpad(iLABEL.t$rele,2) ||
+                    rpad(iLABEL.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                         rpad(l1.t$rele,2) ||
+                                                         rpad(l1.t$cust,4)) 
+                                                from baandb.tttadv140000 l1 
+                                               where l1.t$clab = iLABEL.t$clab 
+                                                 and l1.t$clan = iLABEL.t$clan 
+                                                 and l1.t$cpac = iLABEL.t$cpac ) ) STAT_REC
+        ON STAT_REC.CONST = tfacr201.t$rpst$l
+        
+LEFT JOIN  (  SELECT  d.t$cnst  CNST,
+                      l.t$desc  DSCR
+              FROM    baandb.tttadv401000 d,
+                      baandb.tttadv140000 l
+               WHERE d.t$cpac = 'tf'
+                 AND d.t$cdom = 'acp.pyst.l'
+                 AND l.t$clan = 'p'
+                 AND l.t$cpac = 'tf'
+                 AND l.t$clab = d.t$za_clab
+                 AND rpad(d.t$vers,4) || 
+                     rpad(d.t$rele,2) || 
+                     rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
+                                                     rpad(l1.t$rele,2) || 
+                                                     rpad(l1.t$cust,4) ) 
+                                            from baandb.tttadv401000 l1 
+                                           where l1.t$cpac = d.t$cpac 
+                                             and l1.t$cdom = d.t$cdom )
+                 AND rpad(l.t$vers,4) || 
+                     rpad(l.t$rele,2) || 
+                     rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || 
+                                                     rpad(l1.t$rele,2) || 
+                                                     rpad(l1.t$cust,4) ) 
+                                            from baandb.tttadv140000 l1 
+                                           where l1.t$clab = l.t$clab 
+                                             and l1.t$clan = l.t$clan 
+                                             and l1.t$cpac = l.t$cpac )
+                AND rownum = 1) STAT_PGTO
+      ON STAT_PGTO.CNST = NVL(TITULO_CAP.t$pyst$l,TITULO_CAP_rem.t$pyst$l)
+--AMA.sn
+left join ( select a.t$ncia$c,
+                   a.t$uneg$c,
+                   a.t$pecl$c,
+                   a.t$item$c,
+                   max(a.t$entr$c) t$entr$c
+            from baandb.tznsls401301 a
+            group by a.t$ncia$c,
+                     a.t$uneg$c,
+                     a.t$pecl$c,
+                     a.t$item$c) znsls401_ULTIMA_ENTR
+       on znsls401_ULTIMA_ENTR.t$ncia$c = znsls412.t$ncia$c
+      and znsls401_ULTIMA_ENTR.t$uneg$c = znsls412.t$uneg$c
+      and znsls401_ULTIMA_ENTR.t$pecl$c = znsls412.t$pecl$c
+      and znsls401_ULTIMA_ENTR.t$item$c = nvl(znsls401.t$item$c, znsls401rem.t$item$c)
+
+left join ( select a.t$ncia$c,      
+                   a.t$uneg$c,
+                   a.t$pecl$c,
+                   a.t$sqpd$c,
+                   a.t$entr$c,
+                   max(a.t$dtoc$c) t$dtoc$c,
+                   MAX(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C,  a.T$SEQN$C)t$poco$c
+            from baandb.tznsls410301 a
+            group by a.t$ncia$c,      
+                     a.t$uneg$c,
+                     a.t$pecl$c,
+                     a.t$sqpd$c,
+                     a.t$entr$c ) znsls410_STATUS
+       on znsls410_STATUS.t$ncia$c = znsls401_ULTIMA_ENTR.t$ncia$c
+      and znsls410_STATUS.t$uneg$c = znsls401_ULTIMA_ENTR.t$uneg$c
+      and znsls410_STATUS.t$pecl$c = znsls401_ULTIMA_ENTR.t$pecl$c
+      and znsls410_STATUS.t$entr$c = znsls401_ULTIMA_ENTR.t$entr$c
+
+left join baandb.tznmcs002301 znmcs002_ULTIMA_ENTR
+       on znmcs002_ULTIMA_ENTR.t$poco$c = znsls410_STATUS.t$poco$c
+               
 WHERE tfacr200.t$docd Between :DataEmissaoDe AND :DataEmissaoAte
   AND tfacr201.t$recd Between :DataVenctoDe AND :DataVenctoAte
   AND NVL(znsls412.t$uneg$c, NVL(znsls412rem.t$uneg$c,0)) IN (:UniNegocio)
-  AND ((:PN = '000') or (tfacr200.t$itbp = :PN))  
+  AND ((tfacr200.t$itbp in (:PN) and :Todos = 1  ) OR :Todos = 0)
   AND tfacr201.t$rpst$l IN (:Situacao)
   AND NVL(znsls402.t$idmp$c, NVL(znsls402rem.t$idmp$c,0)) IN (:MeioPagto)
   AND NVL(znsls400.t$idca$c, NVL(znsls400rem.t$idca$c,'XXX')) IN (:CanalVendas)
