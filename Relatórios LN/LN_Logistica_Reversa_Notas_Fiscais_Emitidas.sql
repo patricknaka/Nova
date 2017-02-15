@@ -1,5 +1,6 @@
 select  
         tcemm030.t$eunt                          FILIAL,
+        tcemm030.t$dsca                          DESCRICAO_FILIAL,
         cast((from_tz(to_timestamp(to_char(cisli940.t$date$l,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') as date)
@@ -8,11 +9,17 @@ select
         cisli940.t$seri$l                        SERIE,
         znsls401.t$pecl$c                        PEDIDO,
         cisli940.t$fdtc$l                        COD_TIPO_DOC_FISCAL,
-        tcmcs966.t$dsca$l                        DESC_TIPO_DOC_FISCAL,
+        case when tcmcs966.t$dsca$l is null or trim(tcmcs966.t$dsca$l) is null then
+             TIPO_DOC_FISC.DESCR
+        else
+             tcmcs966.t$dsca$l
+        end                                      DESC_TIPO_DOC_FISCAL,
         cisli940.t$ccfo$l                        CFOP,
+        tcmcs940.t$dsca$l                        DESCRICAO_CFOP,
         cisli940.t$opor$l                        NATUREZA_OPERACAO,
+        tcmcs964.t$desc$d                        DESCRICAO_NAT_OPERACAO,
         cisli941.t$item$l                        ITEM,
-        cisli941.t$desc$l                        DESCRICAO,
+        tcibd001.t$dscb$c                        DESCRICAO_ITEM,
         cisli941.t$dqua$l                        QTDE,
         cisli941.t$pric$l                        VALOR_UNITARIO,
         cisli941.t$gamt$l                        VALOR_TOTAL,
@@ -37,8 +44,14 @@ inner join baandb.ttcibd001301 tcibd001
 left join baandb.ttcmcs966301 tcmcs966
        on tcmcs966.t$fdtc$l = cisli940.t$fdtc$l
 
+left join baandb.ttcmcs940301 tcmcs940
+       on tcmcs940.t$ofso$l = cisli940.t$ccfo$l
+
+left join baandb.ttcmcs964301 tcmcs964
+       on tcmcs964.t$opor$d = cisli940.t$opor$l
+
 left join baandb.ttccom130301 tccom130
-       on tccom130.t$cadr = cisli940.t$itoa$l
+       on tccom130.t$cadr = nvl(trim(cisli940.t$itoa$l),cisli940.t$ifba$l)
 
 left join baandb.ttcmcs060301 tcmcs060
        on tcmcs060.t$cmnf = tcibd001.t$cmnf
@@ -63,9 +76,37 @@ left join baandb.tznsls401301 znsls401
        on znsls401.t$orno$c = cisli245.t$slso
       and znsls401.t$pono$c = cisli245.t$pono
 
-where   cast((from_tz(to_timestamp(to_char(cisli940.t$date$l,
+left  join ( select l.t$desc DESCR,
+                    d.t$cnst
+               from baandb.tttadv401000 d,
+                    baandb.tttadv140000 l
+              where d.t$cpac = 'ci'
+                and d.t$cdom = 'sli.tdff.l'
+                and l.t$clan = 'p'
+                and l.t$cpac = 'ci'
+                and l.t$clab = d.t$za_clab
+                and rpad(d.t$vers,4) ||
+                    rpad(d.t$rele,2) ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv401000 l1 
+                                          where l1.t$cpac = d.t$cpac 
+                                            and l1.t$cdom = d.t$cdom )
+                and rpad(l.t$vers,4) ||
+                    rpad(l.t$rele,2) ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                    rpad(l1.t$rele,2) ||
+                                                    rpad(l1.t$cust,4)) 
+                                           from baandb.tttadv140000 l1 
+                                          where l1.t$clab = l.t$clab 
+                                            and l1.t$clan = l.t$clan 
+                                            and l1.t$cpac = l.t$cpac ) ) TIPO_DOC_FISC
+        on TIPO_DOC_FISC.t$cnst = cisli940.t$fdty$l
+
+where   trunc(cast((from_tz(to_timestamp(to_char(cisli940.t$date$l,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)
+              AT time zone 'America/Sao_Paulo') as date))
         between :DATA_EMISSAO_DE
             and :DATA_EMISSAO_ATE
   and   tcemm030.t$eunt in (:FILIAL)
