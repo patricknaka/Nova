@@ -103,29 +103,20 @@ left join ( select a.t$fili$c,
                  a.t$pecl$c,
                  a.t$orno$c,
                  a.t$cfrw$c,
-                 a.t$dtpe$c,
-                 a.t$dtco$c,
+                 min(a.t$dtpe$c) t$dtpe$c,
+                 min(a.t$dtco$c) t$dtco$c,
                  a.t$cono$c,
                  a.t$fire$c,
-                 max(a.t$etiq$c) t$etiq$c
+                 min(a.t$etiq$c) t$etiq$c
           from baandb.tznfmd630601 a 
           group by a.t$fili$c,
                    a.t$pecl$c,
                    a.t$orno$c,
                    a.t$cfrw$c,
-                   a.t$dtpe$c,
-                   a.t$dtco$c,
                    a.t$cono$c,
                    a.t$fire$c ) znfmd630
        on znfmd630.t$pecl$c = to_char(znsls401.t$entr$c)
 
-left join ( select a.t$orno,
-                   max(a.t$ddta) t$ddta,
-                   max(a.t$prdt) t$prdt
-            from  baandb.ttdsls401601 a
-            group by a.t$orno ) tdsls401
-      on tdsls401.t$orno = znfmd630.t$orno$c
-      
 left join ( select max(a.t$udat$c)       DATA_OCORRENCIA,
                    a.t$etiq$c, 
                    a.t$fili$c
@@ -138,6 +129,13 @@ left join ( select max(a.t$udat$c)       DATA_OCORRENCIA,
 
 left join baandb.ttdsls400601 tdsls400
        on tdsls400.t$orno = znfmd630.t$orno$c
+
+left join ( select a.t$orno,
+                   max(a.t$ddta) t$ddta,
+                   max(a.t$prdt) t$prdt
+            from  baandb.ttdsls401601 a
+            group by a.t$orno ) tdsls401
+      on tdsls401.t$orno = znfmd630.t$orno$c
       
 left join baandb.ttccom130601 tccom130
        on tccom130.t$cadr = tdsls400.t$stad
