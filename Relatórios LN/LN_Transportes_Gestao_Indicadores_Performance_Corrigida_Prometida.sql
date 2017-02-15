@@ -112,18 +112,16 @@ left join ( select a.t$fili$c,
                  a.t$pecl$c,
                  a.t$orno$c,
                  a.t$cfrw$c,
-                 a.t$dtpe$c,
-                 a.t$dtco$c,
+                 min(a.t$dtpe$c) t$dtpe$c,
+                 min(a.t$dtco$c) t$dtco$c,
                  a.t$cono$c,
                  a.t$fire$c,
-                 max(a.t$etiq$c) t$etiq$c
+                 min(a.t$etiq$c) t$etiq$c
           from baandb.tznfmd630301 a 
           group by a.t$fili$c,
                    a.t$pecl$c,
                    a.t$orno$c,
                    a.t$cfrw$c,
-                   a.t$dtpe$c,
-                   a.t$dtco$c,
                    a.t$cono$c,
                    a.t$fire$c ) znfmd630
        on znfmd630.t$pecl$c = to_char(znsls401.t$entr$c)
