@@ -33,7 +33,7 @@ select
         znfmd640.t$name                          NOME_USUARIO,
         case when substr(znfmd640.t$ulog$c,1,3) = 'job' then
              'Automática'
-        else
+             when znfmd640.t$ulog$c is not null then
              'Manual'
         end                                      BAIXA_AUTOMATICA_MANUAL,
         znfmd640.t$obsv$c                        ARQUIVO_BAIXA
@@ -117,15 +117,30 @@ inner join baandb.tcisli941301 cisli941
         on cisli941.t$fire$l = cisli245.t$fire$l
        and cisli941.t$line$l = cisli245.t$line$l
 
-left join ( select 
-                   a.t$pecl$c,
+left join ( select a.t$pecl$c,
                    a.t$cfrw$c,
                    a.t$dtco$c,
                    a.t$fili$c,
                    max(a.t$etiq$c) t$etiq$c
             from  baandb.tznfmd630301 a
-            group by 
-                     a.t$pecl$c,
+            inner join ( select max(a.t$udat$c) t$udat$c,
+                                max(a.t$ulog$c) t$ulog$c,
+                                a.t$etiq$c, 
+                                a.t$fili$c,
+                                a.t$obsv$c,
+                                b.t$name
+                         from baandb.tznfmd640301 a,
+                              baandb.tttaad200000 b
+                         where a.t$coci$c in ('ROU','EXT','EXP','AVA','EXF')
+                           and a.t$tORG$C = 1
+                           and b.t$user = a.t$ulog$c
+                         group by a.t$fili$c,
+                                  a.t$etiq$c,
+                                  a.t$obsv$c,
+                                  b.t$name) znfmd640_IN
+                    on znfmd640_IN.t$fili$c = a.t$fili$c
+                   and znfmd640_IN.t$etiq$c = a.t$etiq$c
+            group by a.t$pecl$c,
                      a.t$cfrw$c,
                      a.t$dtco$c,
                      a.t$fili$c) znfmd630
