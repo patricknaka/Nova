@@ -3,7 +3,7 @@ select Q1.* from ( SELECT znfmd630.t$cfrw$c                 CODI_TRANS,
                           znfmd630.t$cfrw$c ||
                           ' - '             ||
                           Trim(tcmcs080.t$dsca)             COD_DESC_TRANS,
-                          COUNT(distinct znfmd630.t$pecl$c) QTDE_ENTREGAS,
+                          znfmd630.t$pecl$c                 ENTREGA,
                           SUM(znfmd630.t$vlfC$c)            FRETE_APAGAR,
                           CASE WHEN cisli940.t$fdty$l = 14 
                                  THEN 'NFE'
@@ -40,7 +40,8 @@ select Q1.* from ( SELECT znfmd630.t$cfrw$c                 CODI_TRANS,
                                   THEN 'NFE'
                                 ELSE   'NFS' 
                             END,
-                           znfmd630.t$fili$c
+                           znfmd630.t$fili$c,
+		  	   znfmd630.t$pecl$c
                          
                   ORDER BY FILIAL,DESC_TRANS,TIPO_NF ) Q1
 	 
