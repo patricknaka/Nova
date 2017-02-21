@@ -84,6 +84,10 @@
                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                          AT time zone 'America/Sao_Paulo') AS DATE)   
            END                      DATA_CORRIGIDA,
+           CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtpe$c, 
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') AS DATE)  
+                                      DATA_PREVISTA,
            CASE WHEN tdsls400.t$ddat < = to_date('01-01-1980','DD-MM-YYYY') 
                   THEN NULL
                 ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.t$ddta, 
@@ -107,7 +111,8 @@
                     znfmd630.t$docn$c,
                     znfmd630.t$seri$c,
                     znfmd630.t$vlfc$c,
-                    znfmd630.t$dtco$c 
+                    znfmd630.t$dtco$c,
+                    znfmd630.t$dtpe$c
                from baandb.tznfmd630301 znfmd630
            group by znfmd630.t$pecl$c,
                     znfmd630.t$fili$c,
@@ -117,7 +122,8 @@
                     znfmd630.t$docn$c,
                     znfmd630.t$seri$c,
                     znfmd630.t$vlfc$c,
-                    znfmd630.t$dtco$c ) znfmd630
+                    znfmd630.t$dtco$c,
+                    znfmd630.t$dtpe$c) znfmd630
 
  LEFT JOIN baandb.tznsls401301 znsls401
         ON TO_CHAR(znsls401.t$entr$c) = znfmd630.t$pecl$c
