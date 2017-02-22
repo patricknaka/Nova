@@ -1,6 +1,9 @@
 SELECT
   znfmd630.t$pecl$c  NUME_PEDIDO,
-  znfmd630.t$etiq$c  NUME_ETIQUETA
+  znfmd630.t$etiq$c  NUME_ETIQUETA,
+  trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.T$DATE$C,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone 'America/Sao_Paulo') AS DATE)) DATA_NOTA
 
 FROM       BAANDB.tznfmd630301 znfmd630
   
