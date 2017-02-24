@@ -63,7 +63,7 @@ SELECT
     NVL(DEV.DOCTO_TRANSACAO_DEV ||
     DEV.TITULO_DEV,' ')                                                   TITULO_DEV,
     NVL(DEV.VL_TITULO_DEV,0)                                              VL_TITULO_DEV,
-    tfacr200.t$docd                                                       DATA_DE_EMISSÃO_DEV,
+    DEV.DATA_DEV                                                          DATA_DE_EMISSÃO_DEV,
     status.DESC_STATUS                                                    STATUS_DEV,
     TIPO_DOC_DEV.DESCR                                                    TIPO_DOC_FISCAL_DEV,
     DEV.DOCTO_DEV                                                         NF_DEV,
@@ -229,8 +229,9 @@ INNER JOIN baandb.ttfacr201301 tfacr201
                 CISLI941_DEV.T$REFR$L       REF_FISCAL_RELATIVA,
                 CISLI940_FAT.T$ityp$l       TRANSACAO_FAT,
                 CISLI940_FAT.T$idoc$l       DOCUMENTO_FAT,
-                tfacr201.t$rpst$l           STATUS_DEV
-            
+                tfacr201.t$rpst$l           STATUS_DEV,
+                tfacr200d.t$docd            DATA_DEV
+                
             from BAANDB.ttfacr200301 tfacr200d
             
             LEFT JOIN BAANDB.TCISLI940301 CISLI940_DEV
