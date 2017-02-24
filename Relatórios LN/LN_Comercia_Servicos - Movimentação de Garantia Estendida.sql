@@ -1,68 +1,68 @@
-SELECT ZNCOM005.T$UNEG$C                               UNEG,
-       ZNINT002.T$DESC$C                               DESC_UNEG,
+SELECT ZNCOM005.T$UNEG$C                               ID_UNINEG,
+       ZNINT002.T$DESC$C                               UNIN_NOME,
        ZNSLS400.T$IDCA$C                               ID_CANAL,
-       TCMCS045.T$DSCA                                 DESCR_CANAL,
-       znsls401.t$pcga$c                               NR_PEDIDO_PRODUTO,
-       ZNCOM005.T$PECL$C                               NR_PEDIDO_GARANTIA,       --Pedido Garantia
-       zncom005.t$tpga$c                               TIPO_PLANO_GARANTIA,
+       TCMCS045.T$DSCA                                 CANAL_VENDA,
+       znsls401.t$pcga$c                               PEDIDO,
+       ZNCOM005.T$PECL$C                               PEDIDO_GARANTIA,       --Pedido Garantia
+       zncom005.t$tpga$c                               TP_GARANTIA,
     
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_EMISSAO.t$dtoc$c,
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      
-           AT time zone 'America/Sao_Paulo') AS DATE)  DT_SOLICITACAO,           --Ponto DNF Venda/Cancelamento
+           AT time zone 'America/Sao_Paulo') AS DATE)  DT_SOLIC,           --Ponto DNF Venda/Cancelamento
 
-       ZNSLS401_P.T$ENTR$C                             ENTREGA_PEDIDO,
-       ZNCOM005.T$ENTR$C                               ENTREGA_GARANTIA,
+       ZNSLS401_P.T$ENTR$C                             "Nro. Entrega Pedido",
+       ZNCOM005.T$ENTR$C                               "Nro. Entrega Garantia",
     
-       ZNCOM005.T$ENGA$C                               COD_PLANO_GAR,          
+       ZNCOM005.T$ENGA$C                               "Cód. Plano Garantia",          
 
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ZNSLS400.T$DTEM$C,                     --Data da Emissão do Pedido
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')      
-           AT time zone 'America/Sao_Paulo') AS DATE)  DT_EMISSAO_PED_GARANTIA,
+           AT time zone 'America/Sao_Paulo') AS DATE)  DT_EMISSAO_PEDIDO,
 		   
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_G.t$dtoc$c,
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
            AT time zone 'America/Sao_Paulo') AS DATE)  DT_EMISSAO_GARANTIA, 
 
-       ZNSLS400.T$CVEN$C                               VENDEDOR,
-       ZNCOM005.T$CAST$C                               CERTIFICADO,
+       ZNSLS400.T$CVEN$C                               ID_VENREP,
+       ZNCOM005.T$CAST$C                               NUM_CERTIFICADO,
 
        CASE WHEN ZNCOM005.T$QUAN$C < 0.0
               THEN 'CANCELAMENTO'
             ELSE   'VENDA' 
        END                                             TIPO,
-       TCIBD001_G.T$NRPE$C                             PZ_GARATIA_EST,
-       TDIPU001.T$NRPE$C                               PZ_GARANTIA_FABR,
+       TCIBD001_G.T$NRPE$C                             PZ,
+       TDIPU001.T$NRPE$C                               "PzFab",
        
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.T$DATE$L, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-           AT time zone 'America/Sao_Paulo') AS DATE)  INICIO_GAR_FABR,
+           AT time zone 'America/Sao_Paulo') AS DATE)  DT_INI_FAB,
        
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ADD_MONTHS(cisli940.T$DATE$L, TDIPU001.T$NRPE$C), 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-           AT time zone 'America/Sao_Paulo') AS DATE)  FIN_GAR_FABR,
+           AT time zone 'America/Sao_Paulo') AS DATE)  DT_FIM_FAB,
        
        
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ADD_MONTHS(cisli940.T$DATE$L, TDIPU001.T$NRPE$C) + 1, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-           AT time zone 'America/Sao_Paulo') AS DATE)  INICIO_GAR_EST,
+           AT time zone 'America/Sao_Paulo') AS DATE)  DT_INI_GAR,
                
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(ADD_MONTHS(cisli940.T$DATE$L, TDIPU001.T$NRPE$C + TCIBD001_G.T$NRPE$C) + 1, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
-           AT time zone 'America/Sao_Paulo') AS DATE)  FIN_GAR_EST,
+           AT time zone 'America/Sao_Paulo') AS DATE)  DT_FIM_GAR,
            
-       ZNCOM005.T$IGAR$C                               ITEM_GARANTIDO,
-       TCIBD001_I.T$DSCA                               DESCRICAO,
-       Trim(TCIBD001_I.T$MDFB$C)                       COD_MOD_FABRICANTE,
-       TCMCS023.T$CITG                                 ID_DEPARTAMENTO,
-       TCMCS023.T$DSCA                                 DESCR_DEPARTAMENTO,
+       ZNCOM005.T$IGAR$C                               ID_ITEM_PEDD,
+       TCIBD001_I.T$DSCA                               NOME_ITEM_PEDD,
+       Trim(TCIBD001_I.T$MDFB$C)                       MODELO,
+       TCMCS023.T$CITG                                 ID_DEPTO,
+       TCMCS023.T$DSCA                                 DEPA_NOME,
        TCIBD001_I.T$FAMI$C                             ID_FAMILIA,
-       ZNMCS031.T$DSCA$C                               DESCR_FAMILIA,
-       NVL(ZNSLS401_P.T$VLUN$C, ZNCOM005.T$IGVA$C)     VL_PRODUTO,
+       ZNMCS031.T$DSCA$C                               FAMI_NOME,
+       NVL(ZNSLS401_P.T$VLUN$C, ZNCOM005.T$IGVA$C)     VL_UNIT_NF,
        ZNSLS401_P.T$VLUN$C - 
-       (ZNSLS401_P.T$VLDI$C / ZNSLS401_P.T$QTVE$C)     VL_PRODUTO_PAGO,
-       ZNSLS401_P.T$VLDI$C                             VL_DESCONTO_INCONDICIONAL,
+       (ZNSLS401_P.T$VLDI$C / ZNSLS401_P.T$QTVE$C)     VALOR_PAGO,
+       ZNSLS401_P.T$VLDI$C                             "Valor Desconto Incondicional",
        ZNCOM005.T$PRIS$C                               VL_GARANTIA,
-       ZNCOM005.T$VRSG$C                               CUSTO,
+       ZNCOM005.T$VRSG$C                               VL_CUSTO,
        ZNCOM005.T$PELI$C                               PREMIO_LIQ,
        ZNCOM005.T$PIOF$C                               IOF,
        ZNCOM005.T$PPIS$C                               PIS,
@@ -70,31 +70,32 @@ SELECT ZNCOM005.T$UNEG$C                               UNEG,
        ZNCOM005.T$IRRF$C                               IRRF,
        ZNCOM005.T$CANG$C                               VL_COMISSAO,
        ZNCOM005.T$CANG$C -
-       ZNCOM005.T$IRRF$C                               MARGEM_CONTR,
-       cisli940.T$DOCN$L                               NUM_NOTA,
-       cisli940.T$SERI$L                               SERIE,
+       ZNCOM005.T$IRRF$C                               MG_CONTRIB,
+       cisli940.T$DOCN$L                               ID_NOTA,
+       cisli940.T$SERI$L                               SR_NOTA,
     
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.T$DATE$L, --ZNSLS410_P.T$DTEM$C, 
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-           AT time zone 'America/Sao_Paulo') AS DATE)  DT_EMISSAO_NF,
+           AT time zone 'America/Sao_Paulo') AS DATE)  EMISSAO_NF,
      
-       ZNSLS400.T$OFBP$C                               ID_CLIENTE_FAT,   
+       ZNSLS400.T$OFBP$C                               "ID Cliente Faturamento",   
        ZNSLS400.T$NOMF$C                               NOME_CLIENTE_FAT,
        TCCOM100.T$CADR                                 ID_CLIENTE_ENT,
        ZNSLS400.T$FTYP$C                               TIPO_CLIENTE,
-       ZNSLS400.T$NOMF$C                               NOME_CLIENTE,
-       ZNSLS400.T$ICLC$C                               CPF_CLIENTE,
+       ZNSLS400.T$NOMF$C                               NOME_CLIENTE_ENT,
+       ZNSLS400.T$ICLC$C                               ID_CLIENTE_FAT,
      --ZNSLS400.T$ICLF$C                               CPF_CLIENTE,
-       ZNSLS400.T$EMAF$C                               EMAIL_CLIENTE, 
-       ZNSLS400.T$TELF$C                               CONTATO_1,
-       ZNSLS400.T$TE1F$C                               CONTATO_2,
-       ZNSLS400.T$TE2F$C                               CONTATO_3,
+       ZNSLS400.T$EMAF$C                               EMAIL, 
+       ZNSLS400.T$TELF$C                               CONTATO1,
+       ZNSLS400.T$TE1F$C                               CONTATO2,
+       ZNSLS400.T$TE2F$C                               CONTATO3,
        ZNSLS400.T$LOGF$C                               ENDERECO,
        ZNSLS400.T$NUMF$C                               NUMERO,
        ZNSLS400.T$COMF$C                               COMPLEMENTO,
        ZNSLS400.T$CEPF$C                               CEP,
        ZNSLS400.T$CIDF$C                               MUNICIPIO,
        ZNSLS400.T$UFFA$C                               UF
+ 
  
 FROM ( SELECT A.T$NCIA$C,
               A.T$UNEG$C,
