@@ -37,9 +37,27 @@ SELECT
     whwmd400.t$hght *         
     whwmd400.t$wdth *         
     whwmd400.t$dpth           CUBO,
-    znsls002.t$dsca$c         TIPO_ENTREGA
+    znsls002.t$dsca$c         TIPO_ENTREGA,  
+    NVL(tcmcs031.t$dsca,  
+           'Pedido Interno')  MARCA,  
+    znsls401.t$obet$c         LOJA_RETIRA_FACIL,  
+    znsls401.t$cepe$c         CEP,  
+    znfmd610.t$wght$c         PESO  
   
-FROM       baandb.tznfmd610301 znfmd610
+FROM       (select znfmd610.t$fili$c,  
+                    znfmd610.t$pecl$c,  
+                    znfmd610.t$ngai$c,  
+                    znfmd610.t$cfrw$c,  
+                    znfmd610.t$cnfe$c,  
+                    znfmd610.t$wght$c,  
+                    max(znfmd610.t$etiq$c) t$etiq$c   
+             from baandb.tznfmd610601 znfmd610  
+             group by znfmd610.t$fili$c,  
+                    znfmd610.t$pecl$c,  
+                    znfmd610.t$ngai$c,  
+                    znfmd610.t$cfrw$c,  
+                    znfmd610.t$cnfe$c,  
+                    znfmd610.t$wght$c) znfmd610
 
 INNER JOIN baandb.tznfmd600301 znfmd600
         ON znfmd600.t$fili$c = znfmd610.t$fili$c
@@ -94,6 +112,13 @@ INNER JOIN baandb.ttcibd001301  tcibd001
 
  LEFT JOIN baandb.tznsls002301 znsls002
         ON znsls002.t$tpen$c = znsls401.t$itpe$c
+
+ LEFT JOIN baandb.tznint002601  znint002  
+         ON znint002.t$ncia$c = znsls401.t$ncia$c  
+        AND znint002.t$uneg$c = znsls401.t$uneg$c  
+   
+ LEFT JOIN baandb.ttcmcs031301  tcmcs031  
+         ON znint002.t$cbrn$c = tcmcs031.t$cbrn
         
 WHERE znfmd610.t$fili$c = :Planta
   AND Trunc( CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(OCOR_ETR.data_etr, 
