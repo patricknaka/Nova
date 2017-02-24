@@ -2,6 +2,10 @@ SELECT
   DISTINCT
     Trim(tcibd001.t$item)     NUM_ITEM,
     tcibd001.t$dscb$c         DESC_ITEM,
+    CASE WHEN TRIM(tznsng064.t$skvv$o) = '999999999'
+           THEN NULL
+         ELSE TRIM(tznsng064.t$skvv$o)
+    END                       SKU_VV,
     tdipu001.t$prip           PRECO_COMPRA,
     tcibd001.t$citg           NUM_GRUPO_ITEM,
     tcmcs023.t$dsca           DESC_GRUPO_ITEM,
@@ -18,7 +22,7 @@ SELECT
     tcibd001.t$wght           ITEM_PESO,
     tcibd001.t$tptr$C         TIPO_TRANSPORTE,
     tcibd004.t$aitc           ITEM_ALTERNATIVO,
-    znibd001.t$eanc$c         NUM_EAN,
+    tcibd001.t$cean           NUM_EAN,
     tcibd001.t$csig           SINALIZACAO_ITEM,
     tccom130a.t$fovn$l        CNPJ_FORNECEDOR,
     tccom130a.t$nama          NOME_FORNECEDOR,
@@ -74,7 +78,8 @@ SELECT
     
     CASE WHEN tcibd001.t$okfi$c = 1 THEN 'Sim'
          ELSE 'Não'
-     END                      DESC_OK_FISCAL
+     END                      DESC_OK_FISCAL,
+    tcibd001.T$CPCL           CLASSE_ITEM
 
 FROM      baandb.ttcibd001301 tcibd001
 
@@ -109,10 +114,7 @@ LEFT JOIN baandb.ttccom130301 tccom130b
   
 LEFT JOIN baandb.ttcibd200301 tcibd200
        ON tcibd200.t$item   = tcibd001.t$item
-  
-LEFT JOIN baandb.tznibd001301 znibd001
-       ON znibd001.t$item$c = tcibd001.t$item
-  
+
 LEFT JOIN baandb.tznmcs030301 znmcs030 
        ON znmcs030.t$seto$c = tcibd001.t$seto$c
       AND znmcs030.t$citg$c = tcibd001.t$citg
@@ -270,6 +272,9 @@ LEFT JOIN ( SELECT d.t$cnst CODE_ITEM_ESPECIAL,
                                            and l1.t$clan = l.t$clan 
                                            and l1.t$cpac = l.t$cpac ) ) ITEM_ESPECIAL
        ON ITEM_ESPECIAL.CODE_ITEM_ESPECIAL = tcibd001.t$espe$c
+       
+ LEFT JOIN baandb.tznsng064301 tznsng064
+        ON tznsng064.t$item$o = tcibd001.t$item
   
 WHERE Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tcibd001.t$dtcr$c, 'DD-MON-YYYY HH24:MI:SS'), 
              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)) 
