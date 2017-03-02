@@ -1,8 +1,24 @@
-select  
+select
         znsls401.t$entr$c                        PEDIDO,
         znsls401_INSTANCIA.t$entr$c              INSTANCIA,
-        cisli940.t$docn$l                        NF_ORIGINAL,
-        cisli940.t$seri$l                        SERIE_ORIGINAL,
+        case when znsls410_NFE.t$docn$c is not null then
+             case when znsls410_NFE.t$docn$c != 0 then
+                  znsls410_NFE.t$docn$c
+             else
+                  znsls410_NFE.t$docf$c
+             end
+        else
+             cisli940.t$docn$l
+        end                                      NF_ORIGINAL,
+        case when znsls410_NFE.t$seri$c is not null then
+             case when znsls410_NFE.t$seri$c != ' ' then
+                  znsls410_NFE.t$seri$c
+             else
+                  znsls410_NFE.t$serf$c
+             end
+        else
+             cisli940.t$seri$l
+        end                                      SERIE_ORIGINAL,
         znfmd630.t$etiq$c                        ETIQUETA,
         cast((from_tz(to_timestamp(to_char(cisli940.t$date$l,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -36,9 +52,60 @@ select
              when znfmd640.t$ulog$c is not null then
              'Manual'
         end                                      BAIXA_AUTOMATICA_MANUAL,
-        znfmd640.t$obsv$c                        ARQUIVO_BAIXA
-
+        znfmd640.t$obsv$c                        ARQUIVO_BAIXA,
+        case when znsls400.t$migr$c = 1 then
+             'Sim'
+        else
+             'Não'
+        end                                      PEDIDO_MIGRACAO,
+        ' '                                      CLIENTE_ATENDIDO,
+        ' '                                      MODO_ATENDIMENTO
+  
 from    baandb.tznsls401301 znsls401
+
+inner join ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$migr$c
+               from baandb.tznsls400301 a
+               where not exists ( select b.t$ncia$c,
+                                         b.t$uneg$c,
+                                         b.t$pvdt$c,
+                                         b.t$sedt$c
+                                    from baandb.tznsls401301 b
+                                   where b.t$ncia$c = a.t$ncia$c
+                                     and b.t$uneg$c = a.t$uneg$c
+                                     and b.t$pvdt$c = a.t$pecl$c
+                                     and b.t$sedt$c = a.t$sqpd$c ) or
+                         exists ( select b.t$ncia$c,
+                                         b.t$uneg$c,
+                                         b.t$pvdt$c,
+                                         b.t$sedt$c
+                                    from baandb.tznsls401301 b
+                                   where b.t$ncia$c = a.t$ncia$c
+                                     and b.t$uneg$c = a.t$uneg$c
+                                     and b.t$pvdt$c = a.t$pecl$c
+                                     and b.t$sedt$c = a.t$sqpd$c
+                                     and ( a.t$migr$c = 2 or
+                                         ( a.t$migr$c = 1 and
+                                           not exists ( select c.t$lbrd$c
+                                                          from baandb.tznsls409301 c
+                                                         where c.t$ncia$c = b.t$ncia$c
+                                                           and c.t$uneg$c = b.t$uneg$c
+                                                           and c.t$pecl$c = b.t$pecl$c
+                                                           and c.t$sqpd$c = b.t$sqpd$c
+                                                           and c.t$entr$c = b.t$entr$c
+                                                           and c.t$lbrd$c = 1 ))))
+             group by a.t$ncia$c,
+                      a.t$uneg$c,
+                      a.t$pecl$c,
+                      a.t$sqpd$c,
+                      a.t$migr$c ) znsls400
+        on znsls400.t$ncia$c = znsls401.t$ncia$c
+       and znsls400.t$uneg$c = znsls401.t$uneg$c
+       and znsls400.t$pecl$c = znsls401.t$pecl$c
+       and znsls400.t$sqpd$c = znsls401.t$sqpd$c
 
 inner join ( select a.t$ncia$c,
                     a.t$uneg$c,
@@ -48,7 +115,7 @@ inner join ( select a.t$ncia$c,
                     max(a.t$dtoc$c) t$dtoc$c,
                     max(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C,  a.T$SEQN$C) t$poco$c
              from baandb.tznsls410301 a
-             where a.t$poco$c in ('ROU','EXT','EXP','AVA','EXF')
+             where a.t$poco$c in ('ROU','EXT','EXP','AVA','EXF','AVP')
              group by a.t$ncia$c,
                       a.t$uneg$c,
                       a.t$pecl$c,
@@ -109,7 +176,41 @@ left join ( select a.t$slcp,
       and cisli245.t$slso = znsls004.t$orno$c
       and cisli245.t$pono = znsls004.t$pono$c
       and cisli245.t$chtp = 10      -- Mercadorias
- 
+
+left join ( select a.t$ncia$c,
+                   a.t$uneg$c,
+                   a.t$pecl$c,
+                   a.t$sqpd$c,
+                   a.t$entr$c,
+                   a.t$docn$c,
+                   a.t$seri$c,
+                   a.t$docf$c,
+                   a.t$serf$c,
+                   max(a.t$dtoc$c) t$dtoc$c,
+                   max(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C,  a.T$SEQN$C) t$poco$c
+             from baandb.tznsls410301 a
+             where a.t$poco$c = 'NFE'
+               and exists ( select b.t$poco$c
+                              from baandb.tznsls410301 b
+                             where b.t$ncia$c = a.t$ncia$c
+                               and b.t$uneg$c = a.t$uneg$c
+                               and b.t$pecl$c = a.t$pecl$c
+                               and b.t$poco$c = 'VAL' )
+             group by a.t$ncia$c,
+                      a.t$uneg$c,
+                      a.t$pecl$c,
+                      a.t$sqpd$c,
+                      a.t$entr$c,
+                      a.t$docn$c,
+                      a.t$seri$c,
+                      a.t$docf$c,
+                      a.t$serf$c) znsls410_NFE
+       on znsls410_NFE.t$ncia$c = znsls401.t$ncia$c
+      and znsls410_NFE.t$uneg$c = znsls401.t$uneg$c
+      and znsls410_NFE.t$pecl$c = znsls401.t$pecl$c
+      and znsls410_NFE.t$sqpd$c = znsls401.t$sqpd$c
+      and znsls410_NFE.t$entr$c = znsls401.t$entr$c
+
 inner join baandb.tcisli940301 cisli940
         on cisli940.t$fire$l = cisli245.t$fire$l
 
@@ -123,16 +224,16 @@ left join ( select a.t$pecl$c,
                    a.t$fili$c,
                    max(a.t$etiq$c) t$etiq$c
             from  baandb.tznfmd630301 a
-            inner join ( select max(a.t$udat$c) t$udat$c,
-                                max(a.t$ulog$c) t$ulog$c,
-                                a.t$etiq$c, 
-                                a.t$fili$c,
-                                a.t$obsv$c,
-                                b.t$name
-                         from baandb.tznfmd640301 a,
-                              baandb.tttaad200000 b
-                         where a.t$coci$c in ('ROU','EXT','EXP','AVA','EXF')
-                           and a.t$tORG$C = 1
+            left join ( select max(a.t$udat$c) t$udat$c,
+                               max(a.t$ulog$c) t$ulog$c,
+                               a.t$etiq$c, 
+                               a.t$fili$c,
+                               a.t$obsv$c,
+                               b.t$name
+                          from baandb.tznfmd640301 a,
+                               baandb.tttaad200000 b
+                         where a.t$coci$c in ('ROU','EXT','EXP','AVA','EXF','AVP')
+                           and a.t$torg$c = 1
                            and b.t$user = a.t$ulog$c
                          group by a.t$fili$c,
                                   a.t$etiq$c,
@@ -154,8 +255,8 @@ left join ( select max(a.t$udat$c) t$udat$c,
                    b.t$name
             from baandb.tznfmd640301 a,
                  baandb.tttaad200000 b
-            where a.t$coci$c in ('ROU','EXT','EXP','AVA','EXF')
-              and a.t$tORG$C = 1
+            where a.t$coci$c in ('ROU','EXT','EXP','AVA','EXF','AVP')
+              and a.t$torg$c = 1
               and b.t$user = a.t$ulog$c
             group by a.t$fili$c,
                      a.t$etiq$c,
