@@ -14,7 +14,7 @@ select
         znsls401.t$pecl$c                                  PEDIDO,
         znsls410.t$docn$c                                  NOTA,
         znsls410.t$seri$c                                  SERIE,
-        OXV.NOTES1                                         ETIQUETA,
+        nvl(OXV.NOTES1, znfmd630.t$etiq$c)                 ETIQUETA,
         znfmd060.t$cdes$c                                  CONTRATO,
         replace(tccom130.t$fovn$l,'/','')                  CNPJ,
         znfmd630.t$cfrw$c || ' - ' || tcmcs080.t$dsca      TRANSPORTADORA,   
@@ -154,9 +154,8 @@ left join wmwhse3.orderdetailxvas@dl_ln_wms oxv
       and oxv.orderlinenumber = shd.orderlinenumber
       
 where znsls410.t$dtoc$c is not null
-  and oxv.notes1 is not null
   and trunc(cast((from_tz(to_timestamp(to_char(znsls410.t$dtoc$c,
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                    AT time zone 'America/Sao_Paulo') AS DATE)) 
-      between trunc(sysdate) 
-          and trunc(sysdate+1)
+      between :DATA_INI
+          and :DATA_FIM
