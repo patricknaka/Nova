@@ -57,9 +57,7 @@ select
              'Sim'
         else
              'Não'
-        end                                      PEDIDO_MIGRACAO,
-        ' '                                      CLIENTE_ATENDIDO,
-        ' '                                      MODO_ATENDIMENTO
+        end                                      PEDIDO_MIGRACAO
   
 from    baandb.tznsls401301 znsls401
 
