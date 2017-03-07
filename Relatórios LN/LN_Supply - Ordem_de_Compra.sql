@@ -38,7 +38,7 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
        Q1.LINHAS_TIPO_ALTERACAO                           "Linhas Tipo Alteração",
        Q1.STATUS_CAPA_PEDIDO                              "Stauts Capa Pedido"
 	   
-  FROM ( SELECT tccom130.t$fovn$l                    CNPJ_FORNECEDOR, tdpur401.t$oltp,
+  FROM ( SELECT tccom130.t$fovn$l                    CNPJ_FORNECEDOR, 
                 tccom130.t$nama                      NOME_FORNECEDOR,
                 tcemm030.t$euca                      FILIAL,
                 tdpur400.t$orno                      ORDEM_DE_COMPRA,
@@ -69,14 +69,14 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                                        NVL(OrdemReposicao.t$clyn, 2) = 2)       --LINHA CANCELADA = NAO
                                    THEN tdpur401.t$qoor                -        --qtde ordenada
                                         NVL(tdpur406.t$qidl, 0)        -        --qtde recebida
-                                        NVL(ABS(tdrec941.t$qnty$l), 0) -        --qtde devolvida
+                                        NVL(ABS(tdrec947_Dev.qtd_dev), 0) -        --qtde devolvida
                                         NVL(ABS(OrdemReposicao.t$qoor), 0)      --ordem cancelada
                                  ELSE  0 
                             END
                      ELSE   ABS(OrdemReposicao.t$qibo)
                 END                                  QTDE_SALDO,
 
-                NVL(ABS(tdrec941.t$qnty$l), 0)       QTDE_DEVOLVIDA,
+                NVL(ABS(tdrec947_Dev.qtd_dev), 0)       QTDE_DEVOLVIDA,
                 tdpur401.t$oamt                      PRECO_TOTAL_ITEM_S_IMPOSTOS,
                 CASE WHEN tdpur401.t$clyn = 2 --LINHA CANCELADA = NAO
                        THEN (tdpur401.t$qoor - NVL(tdpur406.t$qidl,0)) * tdpur401.t$pric
@@ -115,7 +115,7 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                           AND NVL(OrdemReposicao.t$clyn, 2) = 2                --Ordem Reposicao cancelada = Nao
                           AND ( ABS(tdpur401.t$qoor)                  -        --qtde ordenada
                                 NVL(ABS(tdpur406.t$qidl), 0)          -        --qtde recebida
-                                NVL(ABS(tdrec941.t$qnty$l),0)         -        --qtde devolvida
+                                NVL(ABS(tdrec947_Dev.qtd_dev),0)         -        --qtde devolvida
                                 NVL(ABS(OrdemReposicao.t$qoor), 0))  != 0      --ordem cancelada
                            OR (NVL(ABS(OrdemReposicao.t$qibo),0) != 0 AND NVL(OrdemReposicao.t$clyn, 2) = 2)
                        THEN 'Aberto'
@@ -125,7 +125,7 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
                           AND NVL(OrdemReposicao.t$clyn,2) = 2                 --Ordem Reposicao cancelada = Nao
                           AND ( ABS(tdpur401.t$qoor)                 -         --qtde ordenada
                                 NVL(ABS(tdpur406.t$qidl),0)          -         --qtde recebida
-                                NVL(ABS(tdrec941.t$qnty$l),0)        -         --qtde devolvida
+                                NVL(ABS(tdrec947_Dev.qtd_dev),0)        -         --qtde devolvida
                                 NVL(ABS(OrdemReposicao.t$qoor), 0))  = 0       --ordem cancelada
                        THEN 'Atendida'                
                        
@@ -186,27 +186,26 @@ SELECT Q1.CNPJ_FORNECEDOR                                 "CNPJ Fornecedor",
              ON tdrec940.t$fire$l = tdrec947.t$fire$l
          
       LEFT JOIN ( select a.t$orno$l,
-                         a.t$pono$l,
-                         a.t$oorg$l,
-                         a.t$fire$l,
-                         a.t$line$l,
-                         sum(a.t$qnty$l) t$qnty$l
-                    from baandb.ttdrec947301 a
-              inner join baandb.ttdrec940301 b
-                      on b.t$fire$l = a.t$fire$l
-                   where a.t$oorg$l = 80
-                     and b.t$rfdt$l = 14
-                group by a.t$orno$l,
-                         a.t$pono$l,
-                         a.t$oorg$l,
-                         a.t$fire$l,
-                         a.t$line$l ) tdrec947_Dev       --Devolucao
-             ON tdrec947_Dev.t$orno$l = tdpur401.t$orno
-            AND tdrec947_Dev.t$pono$l = tdpur401.t$pono
-     
-      LEFT JOIN baandb.ttdrec941301 tdrec941
-             ON tdrec941.t$fire$l = tdrec947_Dev.t$fire$l 
-            AND tdrec941.t$line$l = tdrec947_Dev.t$line$l
+			 a.t$pono$l,
+			 a.t$oorg$l,
+			 a.t$line$l,
+			 sum(a.t$qnty$l) t$qnty$l,
+			 sum(tdrec941.t$qnty$l) qtd_dev
+		from baandb.ttdrec947301 a
+  inner join baandb.ttdrec940301 b
+		  on b.t$fire$l = a.t$fire$l
+   LEFT JOIN baandb.ttdrec941301 tdrec941
+		  ON tdrec941.t$fire$l = a.t$fire$l 
+		 AND tdrec941.t$line$l = a.t$line$l
+	   where a.t$oorg$l = 80
+		 and b.t$rfdt$l = 14
+	group by a.t$orno$l,
+			 a.t$pono$l,
+			 a.t$oorg$l,
+			 a.t$line$l ) tdrec947_Dev       --Devolucao
+ ON tdrec947_Dev.t$orno$l = tdpur401.t$orno
+AND tdrec947_Dev.t$pono$l = tdpur401.t$pono
+
        
       LEFT JOIN baandb.ttdpur094301 tdpur094
              ON tdpur094.t$potp = tdpur400.t$cotp
