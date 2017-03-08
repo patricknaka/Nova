@@ -32,17 +32,18 @@ select
              then '00000000000000'
         else regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')
         end                                                CNPJ_TRANSPORTADORA,
-       ( select znfmd061.t$dzon$c
-           from baandb.tznfmd062301 znfmd062,
-                baandb.tznfmd061301 znfmd061
-          where znfmd062.t$cfrw$c = znfmd630.t$cfrw$c
-            and znfmd062.t$cono$c = znfmd630.t$cono$c
-            and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
-            and znfmd061.t$cono$c = znfmd062.t$cono$c
-            and znfmd061.t$creg$c = znfmd062.t$creg$c
-            and tccom130.t$pstc between znfmd062.t$cepd$c
-                                    and znfmd062.t$cepa$c
-            and rownum = 1 )                               REGIAO,
+--       ( select znfmd061.t$dzon$c
+--           from baandb.tznfmd062301 znfmd062,
+--                baandb.tznfmd061301 znfmd061
+--          where znfmd062.t$cfrw$c = znfmd630.t$cfrw$c
+--            and znfmd062.t$cono$c = znfmd630.t$cono$c
+--            and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
+--            and znfmd061.t$cono$c = znfmd062.t$cono$c
+--            and znfmd061.t$creg$c = znfmd062.t$creg$c
+--            and tccom130.t$pstc between znfmd062.t$cepd$c
+--                                    and znfmd062.t$cepa$c
+--            and rownum = 1 )                               REGIAO,
+        znfmd062.t$creg$c                                  REGIAO,
         znfmd630.t$ncar$c                                  NRO_CARGA,
         znfmd630.t$etiq$c                                  ETIQUETA,
         cast((from_tz(to_timestamp(to_char(CRIACAO_WMS.DATA_OCORRENCIA,
@@ -115,7 +116,8 @@ select
         znsng108.t$pvvv$c                                  PEDIDO_VIA_VAREJO,
         cast((from_tz(to_timestamp(to_char(znsng108.t$dhpr$c,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)   DATA_VIA_VAREJO
+              AT time zone 'America/Sao_Paulo') as date)   DATA_VIA_VAREJO,
+        PONTO_ETL.DATA_OCORRENCIA                          DATA_PONTO_ETL
 
 from  (select a.t$orno,
               max(a.t$prdt) t$prdt,
@@ -377,9 +379,50 @@ left join ( select regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') t$fovn$l,
             where tccom130.t$ftyp$l = 'PJ' ) tccom130t
        on tccom130t.t$cfrw = znfmd630.t$cfrw$c
 
-where   trunc( cast((from_tz(to_timestamp(to_char(tdsls401.t$prdt,
-                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone 'America/Sao_Paulo') as date))          
+
+left join ( select  a.t$cfrw$c,
+                    a.t$cono$c,
+                    a.t$cepd$c,
+                    a.t$cepa$c,
+                    a.t$creg$c
+            from baandb.tznfmd062301 a 
+            where a.t$ativ$c = 1 
+            group by  a.t$cfrw$c,
+                      a.t$cono$c,
+                      a.t$creg$c,
+                      a.t$cepd$c,
+                      a.t$cepa$c ) znfmd062
+		   on znfmd062.t$cfrw$c = znfmd630.t$cfrw$c
+			and	znfmd062.t$cono$c = znfmd630.t$cono$c
+      and tccom130.t$pstc between znfmd062.t$cepd$c and znfmd062.t$cepa$c 
+      
+left join ( select znsls410.t$poco$c,
+                   znsls410.t$ncia$c,
+                   znsls410.t$uneg$c,
+                   znsls410.t$pecl$c,
+                   znsls410.t$sqpd$c,
+                   znsls410.t$entr$c,
+                   cast((from_tz(to_timestamp(to_char(max(znsls410.t$dtoc$c),
+                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone 'America/Sao_Paulo') as date) DATA_OCORRENCIA
+               from baandb.tznsls410301 znsls410
+              where znsls410.t$poco$c = 'ETL'
+           group by znsls410.t$poco$c,
+                    znsls410.t$ncia$c,
+                    znsls410.t$uneg$c,
+                    znsls410.t$pecl$c,
+                    znsls410.t$sqpd$c,
+                    znsls410.t$entr$c ) PONTO_ETL
+        ON PONTO_ETL.t$ncia$c = znsls401.t$ncia$c
+       AND PONTO_ETL.t$uneg$c = znsls401.t$uneg$c
+       AND PONTO_ETL.t$pecl$c = znsls401.t$pecl$c
+       AND PONTO_ETL.t$sqpd$c = znsls401.t$sqpd$c
+       AND PONTO_ETL.t$entr$c = znsls401.t$entr$c
+       
+--where   trunc( cast((from_tz(to_timestamp(to_char(tdsls401.t$prdt,
+--                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+--                  AT time zone 'America/Sao_Paulo') as date))
+where tdsls401.t$prdt
           between :DATA_DE
               and :DATA_ATE
   and    cisli940.t$fdty$l != 14  -- Retorno mercadoria de cliente
