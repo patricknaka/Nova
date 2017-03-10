@@ -11,9 +11,9 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.t$dtra$c, 'DD-MON-YYYY HH24:MI:SS'),
     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
                                   DT_VENDA2,
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400d.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'),
-    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                                  DT_VENDA3,
+   -- CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400d.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'),
+   -- 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+   --                               DT_VENDA3,
     znsls402.t$valo$c             VL_MEIOPAGTO,
     zncmg015.t$slst$c             VL_VENDA,
     zncmg015.t$slct$c             VL_CANCELAR,
