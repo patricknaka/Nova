@@ -33,9 +33,30 @@ select
         end                                      DATA_FORCADO,
         cisli941.t$item$l                        ITEM,
         cisli941.t$desc$l                        ITEM_NOME,
-        cisli941.t$gamt$l                        VALOR_NF,
-        cisli941.t$fght$l                        FRETE,
-        cisli941.t$amnt$l                        VALOR_TOTAL,
+        case when cisli941.t$gamt$l != 0 then
+             cisli941.t$gamt$l
+        else
+             nvl(( select a.t$gamt$l
+                     from baandb.tcisli941301 a
+                    where a.t$fire$l = cisli941.t$refr$l
+                      and a.t$line$l = cisli245.t$line$l ),0)
+        end                                      VALOR_NF,
+        case when cisli941.t$fght$l != 0 then
+             cisli941.t$fght$l
+        else
+             nvl(( select a.t$fght$l
+                     from baandb.tcisli941301 a
+                    where a.t$fire$l = cisli941.t$refr$l
+                      and a.t$line$l = cisli245.t$line$l ),0) 
+        end                                      FRETE,
+        case when cisli941.t$amnt$l != 0 then
+             cisli941.t$amnt$l
+        else
+             nvl(( select a.t$amnt$l
+                     from baandb.tcisli941301 a
+                    where a.t$fire$l = cisli941.t$refr$l
+                      and a.t$line$l = cisli245.t$line$l ),0)
+        end                                      VALOR_TOTAL,
         tcemm030.t$euca                          FILIAL,
         DADOS_TRANSP.t$dsca                      APELIDO_TRANS,
         DADOS_TRANSP.t$fovn$l                    CNPJ_TRANSP,
@@ -59,7 +80,7 @@ select
              'Não'
         end                                      PEDIDO_MIGRACAO
   
-from    baandb.tznsls401301 znsls401
+  from baandb.tznsls401301 znsls401
 
 inner join ( select a.t$ncia$c,
                     a.t$uneg$c,
@@ -318,9 +339,9 @@ left join ( select a.t$cfrw,
             where  b.t$cadr = a.t$cadr$l ) DADOS_TRANSP
        on DADOS_TRANSP.t$cfrw = znfmd630.t$cfrw$c
 
-where   trunc(cast((from_tz(to_timestamp(to_char(znsls410.t$dtoc$c,
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date))
-        between :DATA_OCORRENCIA_DE
-            and :DATA_OCORRENCIA_ATE
-  and   znsls401.t$iitm$c = 'P'  -- Produto
+ where trunc(cast((from_tz(to_timestamp(to_char(znsls410.t$dtoc$c,
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                   AT time zone 'America/Sao_Paulo') as date))
+       between :DATA_OCORRENCIA_DE
+           and :DATA_OCORRENCIA_ATE
+   and znsls401.t$iitm$c = 'P'  -- Produto
