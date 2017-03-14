@@ -86,18 +86,20 @@ select
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                AT time zone 'America/Sao_Paulo') AS DATE)  DT_COMPRA
 
-  from ( select max(a.t$udat$c) t$udat$c,
-                max(a.t$etiq$c) keep (dense_rank last order by a.t$udat$c ) t$etiq$c,
-                    b.t$pecl$c,
-                    a.t$fili$c
-           from baandb.tznfmd640301 a
-     inner join baandb.tznfmd630301 b
-             on a.t$fili$c = b.t$fili$c
-            and a.t$etiq$c = b.t$etiq$c
-          where a.t$coct$c = 'ETR'
-            and a.t$torg$c = 1
-       group by b.t$pecl$c,
-                a.t$fili$c ) znfmd640
+  from ( select a.t$pecl$c,
+                b.t$fili$c,
+                b.t$etiq$c,
+                b.t$udat$c                
+           from baandb.tznfmd630301 a
+     inner join baandb.tznfmd640301 b
+             on b.t$fili$c = a.t$fili$c
+            and b.t$etiq$c = a.t$etiq$c
+          where b.t$coct$c = 'ETR'
+            and b.t$torg$c = 1
+       group by a.t$pecl$c,
+                b.t$fili$c,
+                b.t$etiq$c,
+                b.t$udat$c ) znfmd640
 
 inner join baandb.tznfmd630301 znfmd630
         on znfmd630.t$fili$c = znfmd640.t$fili$c
