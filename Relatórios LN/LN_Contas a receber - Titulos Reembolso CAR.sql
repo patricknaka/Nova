@@ -85,7 +85,8 @@ SELECT
     when tfacr200agr.t$balc = 0 then 'Liquidado'                               
     when tfacr200agr.t$balc is null then null end                         STATUS_PAGTO,
     znsls410_STATUS.t$poco$c                                              STATUS_ITEM,
-    znmcs002_ULTIMA_ENTR.t$desc$c                                         DESCR_STATUS_ITEM
+    znmcs002_ULTIMA_ENTR.t$desc$c                                         DESCR_STATUS_ITEM, 
+    nvl(tfacr200_BAIXA.t$tdoc,'Aberto')                                   TRANSACAO_BAIXA
     
 FROM      baandb.ttccom100301 tccom100
 
@@ -535,6 +536,19 @@ left join ( select a.t$ncia$c,
 
 left join baandb.tznmcs002301 znmcs002_ULTIMA_ENTR
        on znmcs002_ULTIMA_ENTR.t$poco$c = znsls410_STATUS.t$poco$c
+       
+left join (select a.t$ttyp,
+                  a.t$ninv,
+                  a.t$line,
+                  min(a.t$tdoc) t$tdoc
+            from  baandb.ttfacr200301 a
+            where a.t$tdoc != ' '
+            group by a.t$ttyp,
+                     a.t$ninv,
+                     a.t$line ) tfacr200_BAIXA
+        on tfacr200_BAIXA.t$ttyp = tfacr200.t$ttyp
+       and tfacr200_BAIXA.t$ninv = tfacr200.t$ninv
+       and tfacr200_BAIXA.t$line = tfacr200.t$line
                
 WHERE tfacr200.t$docd Between :DataEmissaoDe AND :DataEmissaoAte
   AND tfacr201.t$recd Between :DataVenctoDe AND :DataVenctoAte
@@ -553,3 +567,4 @@ WHERE tfacr200.t$docd Between :DataEmissaoDe AND :DataEmissaoAte
            ELSE   3 
        END IN (:Filial)
   AND ((:CNPJ is null) or (regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') = :CNPJ))
+;
