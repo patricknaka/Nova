@@ -26,14 +26,12 @@ select
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') as date)   DATA_COMPRA,
         cast((from_tz(to_timestamp(to_char(tdsls401.t$ddta,
-                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                      AT time zone 'America/Sao_Paulo') as date)
-
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)
                                                             DATA_LIM_EXPEDICAO,
         cast((from_tz(to_timestamp(to_char(tdsls401.t$prdt,
-                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone 'America/Sao_Paulo') as date)
-
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)
                                                             DATA_PROMETIDA,
         case when trunc(znfmd630.t$dtpe$c) = '01/01/1970'
              then null
@@ -78,13 +76,7 @@ select
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                     AT time zone 'America/Sao_Paulo') as date))))
                                                            ULTIMA_DATA_OCORRENCIA
-from  (select a.t$orno,
-              max(a.t$prdt) t$prdt,
-              max(a.t$ddta) t$ddta
-        from baandb.ttdsls401301 a
-        group by a.t$orno ) tdsls401
-
-inner join      (  select a.t$ncia$c,
+from     (  select a.t$ncia$c,
                    a.t$uneg$c,
                    a.t$pecl$c,
                    a.t$sqpd$c,
@@ -106,7 +98,6 @@ inner join      (  select a.t$ncia$c,
                      a.t$ufen$c,
                      a.t$itpe$c,
                      a.t$dtep$c ) znsls401
-on znsls401.t$orno$c = tdsls401.t$orno
 
 left join ( select a.t$fili$c,
                  a.t$pecl$c,
@@ -117,7 +108,8 @@ left join ( select a.t$fili$c,
                  a.t$cono$c,
                  a.t$fire$c,
                  min(a.t$etiq$c) t$etiq$c
-          from baandb.tznfmd630301 a 
+          from baandb.tznfmd630301 a
+          where a.t$torg$c = 1  --vendas
           group by a.t$fili$c,
                    a.t$pecl$c,
                    a.t$orno$c,
@@ -138,6 +130,13 @@ left join ( select max(a.t$udat$c)       DATA_OCORRENCIA,
 
 left join baandb.ttdsls400301 tdsls400
        on tdsls400.t$orno = znfmd630.t$orno$c
+
+left join ( select a.t$orno,
+                   max(a.t$ddta) t$ddta,
+                   max(a.t$prdt) t$prdt
+            from  baandb.ttdsls401301 a
+            group by a.t$orno ) tdsls401
+      on tdsls401.t$orno = znfmd630.t$orno$c
       
 left join baandb.ttccom130301 tccom130
        on tccom130.t$cadr = tdsls400.t$stad
@@ -189,6 +188,7 @@ left join ( select a.t$fili$c,
                  baandb.tznfmd030301 b
             where  b.t$ocin$c = a.t$coci$c
               and  b.t$finz$c = 1
+              and  a.t$torg$c = 1   --vendas
             group by a.t$fili$c,
                      a.t$etiq$c ) znfmd640_F
        on znfmd640_F.t$fili$c = znfmd630.t$fili$c
@@ -262,6 +262,7 @@ left join ( select znfmd640.t$fili$c,
                                         'AGE',
                                         'SEF',
                                         'ENL')
+            and znfmd640.t$torg$c = 1   --vendas
             group by znfmd640.t$fili$c,
                      znfmd640.t$etiq$c ) znfmd640_FIRST 
        on znfmd640_FIRST.t$fili$c = znfmd630.t$fili$c
@@ -277,10 +278,9 @@ left join ( select regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') t$fovn$l,
             inner join baandb.ttccom130301 tccom130
                     on tccom130.t$cadr = tcmcs080.t$cadr$l
             where tccom130.t$ftyp$l = 'PJ' ) tccom130t
-       on tccom130t.t$cfrw = znfmd630.t$cfrw$c 
+       on tccom130t.t$cfrw = znfmd630.t$cfrw$c
 
 where   trunc( cast((from_tz(to_timestamp(to_char(tdsls401.t$prdt,
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone 'America/Sao_Paulo') as date))          
-          between :DATA_DE
-              and :DATA_ATE
+                  AT time zone 'America/Sao_Paulo') as date)) between TRUNC(SYSDATE -1,'MONTH')
+                  and trunc(LAST_DAY(SYSDATE - 1))
