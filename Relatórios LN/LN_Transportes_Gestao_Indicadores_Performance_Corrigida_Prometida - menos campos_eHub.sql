@@ -108,7 +108,8 @@ left join ( select a.t$fili$c,
                  a.t$cono$c,
                  a.t$fire$c,
                  min(a.t$etiq$c) t$etiq$c
-          from baandb.tznfmd630601 a 
+          from baandb.tznfmd630601 a
+          where a.t$torg$c = 1  --vendas
           group by a.t$fili$c,
                    a.t$pecl$c,
                    a.t$orno$c,
@@ -187,6 +188,7 @@ left join ( select a.t$fili$c,
                  baandb.tznfmd030601 b
             where  b.t$ocin$c = a.t$coci$c
               and  b.t$finz$c = 1
+              and  a.t$torg$c = 1   --vendas
             group by a.t$fili$c,
                      a.t$etiq$c ) znfmd640_F
        on znfmd640_F.t$fili$c = znfmd630.t$fili$c
@@ -260,6 +262,7 @@ left join ( select znfmd640.t$fili$c,
                                         'AGE',
                                         'SEF',
                                         'ENL')
+            and znfmd640.t$torg$c = 1   --vendas
             group by znfmd640.t$fili$c,
                      znfmd640.t$etiq$c ) znfmd640_FIRST 
        on znfmd640_FIRST.t$fili$c = znfmd630.t$fili$c
@@ -276,9 +279,8 @@ left join ( select regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') t$fovn$l,
                     on tccom130.t$cadr = tcmcs080.t$cadr$l
             where tccom130.t$ftyp$l = 'PJ' ) tccom130t
        on tccom130t.t$cfrw = znfmd630.t$cfrw$c
-
-where   trunc(cast((from_tz(to_timestamp(to_char(tdsls401.t$prdt,
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date))             
-          between :DATA_DE
-              and :DATA_ATE
+       
+where   trunc( cast((from_tz(to_timestamp(to_char(tdsls401.t$prdt,
+                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone 'America/Sao_Paulo') as date)) between TRUNC(SYSDATE -1,'MONTH')
+                  and trunc(LAST_DAY(SYSDATE - 1))
