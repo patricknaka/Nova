@@ -23,7 +23,7 @@
     
 FROM baandb.tznsls401301 znsls401
 
-INNER JOIN baandb.tznsls400301 znsls400    
+LEFT JOIN baandb.tznsls400301 znsls400    
         ON znsls400.T$NCIA$C = znsls401.T$NCIA$C
        AND znsls400.T$UNEG$C = znsls401.T$UNEG$C
        AND znsls400.T$PECL$C = znsls401.T$PECL$C
@@ -47,7 +47,7 @@ INNER JOIN baandb.tznsls400301 znsls400
        AND znsls410.t$sqpd$c = znsls401.t$sqpd$c
        AND znsls410.t$entr$c = znsls401.t$entr$c
        
-INNER JOIN (SELECT
+LEFT JOIN (SELECT
                 A.T$NCIA$C,
                 A.T$UNEG$C,
                 A.T$PECL$C,
@@ -67,32 +67,34 @@ INNER JOIN (SELECT
           AND ZNSLS004.T$SQPD$C	=	znsls401.T$SQPD$C
           AND ZNSLS004.T$ENTR$C	=	znsls401.T$ENTR$C
 						  
-INNER JOIN  baandb.ttdsls400301 tdsls400  
+LEFT JOIN  baandb.ttdsls400301 tdsls400  
         ON  tdsls400.t$orno = ZNSLS004.t$ORNO$C
         
-INNER JOIN baandb.ttdsls401301 tdsls401
+LEFT JOIN baandb.ttdsls401301 tdsls401
         ON tdsls401.t$orno = znsls004.t$orno$c
        AND tdsls401.t$pono = znsls004.t$pono$c
+       AND tdsls401.t$sqnb = 0
        
-INNER JOIN  baandb.ttcmcs065301 tcmcs065  
+LEFT JOIN  baandb.ttcmcs065301 tcmcs065  
         ON  tcmcs065.t$cwoc = tdsls400.t$cofc
         
-INNER JOIN  baandb.ttccom130301 tccom130  
+LEFT JOIN  baandb.ttccom130301 tccom130  
         ON  tccom130.t$cadr = tcmcs065.t$cadr
         
-INNER JOIN  baandb.tznfmd001301 znfmd001  
+LEFT JOIN  baandb.tznfmd001301 znfmd001  
         ON  znfmd001.t$fovn$c = tccom130.t$fovn$l
-        
-INNER JOIN  baandb.twhwmd400301 whwmd400  
+      
+LEFT JOIN  baandb.twhwmd400301 whwmd400  
         ON  whwmd400.t$item = znsls401.t$itml$c
         
-INNER JOIN  baandb.ttcibd001301 tcibd001  
+LEFT JOIN  baandb.ttcibd001301 tcibd001  
         ON  tcibd001.t$item = znsls401.t$itml$c
         
-INNER JOIN  baandb.ttcmcs023301 tcmcs023  
+LEFT JOIN  baandb.ttcmcs023301 tcmcs023  
         ON  tcmcs023.t$citg = tcibd001.t$citg
         
 WHERE znsls410.ID_ULTIMO_PONTO = 'WMS'
   AND znsls401.t$qtve$c > 0
-  AND tdsls400.t$hdst != 35  
+  AND tdsls400.t$hdst != 35
+  
   ;
