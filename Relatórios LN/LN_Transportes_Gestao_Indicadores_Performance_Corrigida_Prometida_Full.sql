@@ -32,17 +32,6 @@ select
              then '00000000000000'
         else regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')
         end                                                CNPJ_TRANSPORTADORA,
---       ( select znfmd061.t$dzon$c
---           from baandb.tznfmd062301 znfmd062,
---                baandb.tznfmd061301 znfmd061
---          where znfmd062.t$cfrw$c = znfmd630.t$cfrw$c
---            and znfmd062.t$cono$c = znfmd630.t$cono$c
---            and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
---            and znfmd061.t$cono$c = znfmd062.t$cono$c
---            and znfmd061.t$creg$c = znfmd062.t$creg$c
---            and tccom130.t$pstc between znfmd062.t$cepd$c
---                                    and znfmd062.t$cepa$c
---            and rownum = 1 )                               REGIAO,
         znfmd062.t$creg$c                                  REGIAO,
         znfmd630.t$ncar$c                                  NRO_CARGA,
         znfmd630.t$etiq$c                                  ETIQUETA,
@@ -119,13 +108,7 @@ select
               AT time zone 'America/Sao_Paulo') as date)   DATA_VIA_VAREJO,
         PONTO_ETL.DATA_OCORRENCIA                          DATA_PONTO_ETL
 
-from  (select a.t$orno,
-              max(a.t$prdt) t$prdt,
-              max(a.t$ddta) t$ddta
-        from baandb.ttdsls401301 a
-        group by a.t$orno ) tdsls401
-
-inner join      (  select a.t$ncia$c,
+from (select       a.t$ncia$c,
                    a.t$uneg$c,
                    a.t$pecl$c,
                    a.t$sqpd$c,
@@ -155,8 +138,7 @@ inner join      (  select a.t$ncia$c,
                      a.t$pzcd$c,
                      a.t$cide$c,
                      a.t$cepe$c) znsls401
-on znsls401.t$orno$c = tdsls401.t$orno
-
+                     
 left join ( select a.t$fili$c,
                  a.t$pecl$c,
                  a.t$orno$c,
@@ -170,7 +152,8 @@ left join ( select a.t$fili$c,
                  a.t$docn$c,
                  a.t$seri$c,
                  max(a.t$etiq$c) t$etiq$c
-          from baandb.tznfmd630301 a 
+          from baandb.tznfmd630301 a
+          where a.t$torg$c = 1    --vendas
           group by a.t$fili$c,
                    a.t$pecl$c,
                    a.t$orno$c,
@@ -184,6 +167,34 @@ left join ( select a.t$fili$c,
                    a.t$docn$c,
                    a.t$seri$c) znfmd630
        on znfmd630.t$pecl$c = to_char(znsls401.t$entr$c)
+       
+inner join ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+--                    a.t$sequ$c,
+                    max(a.t$orno$c) t$orno$c,
+                    min(a.t$pono$c) t$pono$c
+             from baandb.tznsls004301 a 
+             group by a.t$ncia$c,
+                      a.t$uneg$c,
+                      a.t$pecl$c,
+                      a.t$sqpd$c,
+                      a.t$entr$c ) znsls004
+        on znsls004.t$ncia$c = znsls401.t$ncia$c
+       and znsls004.t$uneg$c = znsls401.t$uneg$c
+       and znsls004.t$pecl$c = znsls401.t$pecl$c
+       and znsls004.t$sqpd$c = znsls401.t$sqpd$c
+       and znsls004.t$entr$c = znsls401.t$entr$c
+       
+inner join baandb.ttdsls400301 tdsls400
+        on tdsls400.t$orno = znsls004.t$orno$c
+
+inner join baandb.ttdsls401301 tdsls401
+        on tdsls401.t$orno = znsls004.t$orno$c
+       and tdsls401.t$pono = znsls004.t$pono$c
+       and tdsls401.t$sqnb = 0
 
 left join baandb.tcisli940301 cisli940
        on cisli940.t$fire$l = znfmd630.t$fire$c
@@ -257,6 +268,7 @@ left join ( select a.t$fili$c,
                  baandb.tznfmd030301 b
             where  b.t$ocin$c = a.t$coci$c
               and  b.t$finz$c = 1
+              and  a.t$torg$c = 1     --vendas
             group by a.t$fili$c,
                      a.t$etiq$c ) znfmd640_F
        on znfmd640_F.t$fili$c = znfmd630.t$fili$c
@@ -320,13 +332,14 @@ left join ( select znsng108.t$orln$c,
             where trim(znsng108.t$pvvv$c) is not null
             group by znsng108.t$orln$c,
                      znsng108.t$pvvv$c ) znsng108
-       on znsng108.t$orln$c = znsls401.t$orno$c
+       on znsng108.t$orln$c = znsls004.t$orno$c
 
 left join ( select a.t$fili$c,
                    a.t$etiq$c,
                    max(a.t$date$c) t$date$c,
                    max(a.t$coci$c) keep (dense_rank last order by t$date$c) t$coci$c
             from baandb.tznfmd640301 a
+            where a.t$torg$c = 1     --vendas
             group by a.t$fili$c,
                      a.t$etiq$c ) znfmd640
        on znfmd640.t$fili$c = znfmd630.t$fili$c
@@ -362,6 +375,7 @@ left join ( select znfmd640.t$fili$c,
                                         'AGE',
                                         'SEF',
                                         'ENL')
+            and znfmd640.t$torg$c = 1   --vendas
             group by znfmd640.t$fili$c,
                      znfmd640.t$etiq$c ) znfmd640_FIRST 
        on znfmd640_FIRST.t$fili$c = znfmd630.t$fili$c
@@ -378,7 +392,6 @@ left join ( select regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') t$fovn$l,
                     on tccom130.t$cadr = tcmcs080.t$cadr$l
             where tccom130.t$ftyp$l = 'PJ' ) tccom130t
        on tccom130t.t$cfrw = znfmd630.t$cfrw$c
-
 
 left join ( select  a.t$cfrw$c,
                     a.t$cono$c,
@@ -419,10 +432,8 @@ left join ( select znsls410.t$poco$c,
        AND PONTO_ETL.t$sqpd$c = znsls401.t$sqpd$c
        AND PONTO_ETL.t$entr$c = znsls401.t$entr$c
        
---where   trunc( cast((from_tz(to_timestamp(to_char(tdsls401.t$prdt,
---                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
---                  AT time zone 'America/Sao_Paulo') as date))
-where tdsls401.t$prdt
+  where cisli940.t$fdty$l != 14  -- Retorno mercadoria de cliente 
+    and tdsls401.t$prdt
           between :DATA_DE
-              and :DATA_ATE
-  and    cisli940.t$fdty$l != 14  -- Retorno mercadoria de cliente
+              and :DATA_ATE 
+
