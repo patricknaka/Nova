@@ -31,7 +31,7 @@ select
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                    AT time zone 'America/Sao_Paulo') as date)
         end                                      DATA_FORCADO,
-        cisli941.t$item$l                        ITEM,
+        trim(cisli941.t$item$l)                  ITEM,
         cisli941.t$desc$l                        ITEM_NOME,
         case when cisli941.t$gamt$l != 0 then
              cisli941.t$gamt$l
