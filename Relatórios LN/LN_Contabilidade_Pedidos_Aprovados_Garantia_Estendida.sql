@@ -3,9 +3,6 @@ select znsls400.t$pecl$c                                   PEDIDO,
        cast((from_tz(to_timestamp(to_char(znsls400.t$dtem$c,
              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') as date)   DATA_EMISSAO,
-       cast((from_tz(to_timestamp(to_char(znsls400.t$dtin$c,
-             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)   DATA_INCLUSAO,
        znsls401.t$item$c                                   ITEM,
        znsls401.t$orno$c                                   ORDEM_VENDA,
        znsls401.t$qtve$c                                   QTDE_VENDIDA,
@@ -68,10 +65,10 @@ left join ( select a.t$ncia$c,
       and znsls412.t$pecl$c = znsls401.t$pecl$c
       and znsls412.t$sqpd$c = znsls401.t$sqpd$c
 
-where trunc(cast((from_tz(to_timestamp(to_char(znsls400.t$dtin$c,
+where trunc(cast((from_tz(to_timestamp(to_char(znsls400.t$dtem$c,
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                    AT time zone 'America/Sao_Paulo') as date))
-      between :DATA_INCLUSAO_DE
-          and :DATA_INCLUSAO_ATE
+      between :DATA_EMISSAO_DE
+          and :DATA_EMISSAO_ATE
   and znsls400.t$pecl$c in (:PEDIDO)
   and znsls400.t$sqpd$c in (:SEQ_PEDIDO)
