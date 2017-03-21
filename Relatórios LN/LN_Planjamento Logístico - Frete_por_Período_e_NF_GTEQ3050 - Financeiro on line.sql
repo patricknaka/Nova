@@ -98,7 +98,9 @@ SELECT
                                       MEIO_PAGTO,
       znsls400.t$vlfr$c                                           FRETE_SITE_TOTAL,
       (cisli941.t$gamt$l - cisli941.t$tldm$l - cisli943.TOTAL)    RECEITA_LIQUIDA,
-      znfmd637.t$amnt$c                                           VALOR_ICMS_FRETE
+      znfmd637.t$amnt$c                                           VALOR_ICMS_FRETE,
+      znfmd637_PIS.t$amnt$c                                       VALOR_PIS_FRETE,
+      znfmd637_COFINS.t$amnt$c                                    VALOR_COFINS_FRETE
 
 FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c),
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -270,6 +272,16 @@ LEFT JOIN baandb.twhwmd400301 whwmd400
                         a.t$cuba$c ) znfmd061
         ON znfmd061.t$cfrw$c = znfmd630.t$cfrw$c
        AND znfmd061.t$cono$c = znfmd630.t$cono$c
+ 
+  LEFT JOIN baandb.tznfmd637301 znfmd637_PIS
+        ON znfmd637.t$txre$c = znfmd630.t$txre$c
+       AND znfmd637.t$line$c = znfmd630.t$line$c
+       AND znfmd637.t$brty$c = 5  --PIS
+       
+   LEFT JOIN baandb.tznfmd637301 znfmd637_COFINS
+        ON znfmd637.t$txre$c = znfmd630.t$txre$c
+       AND znfmd637.t$line$c = znfmd630.t$line$c
+       AND znfmd637.t$brty$c = 6  --COFINS
  
 Where cisli940.t$fdty$l = 1     --Venda com pedido
   and Trunc(znfmd640_ETR.DATA_OCORRENCIA)
