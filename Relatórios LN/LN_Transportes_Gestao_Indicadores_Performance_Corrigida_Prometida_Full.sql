@@ -106,7 +106,8 @@ select
         cast((from_tz(to_timestamp(to_char(znsng108.t$dhpr$c,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') as date)   DATA_VIA_VAREJO,
-        PONTO_ETL.DATA_OCORRENCIA                          DATA_PONTO_ETL
+        PONTO_ETL.DATA_OCORRENCIA                          DATA_PONTO_ETL,
+        own_mis.filtro_mis(znsls401.t$obet$c)              ETIQUETA_TRANSPORTADORA
 
 from (select       a.t$ncia$c,
                    a.t$uneg$c,
@@ -121,7 +122,8 @@ from (select       a.t$ncia$c,
                    a.t$dtap$c,
                    a.t$pzcd$c,
                    a.t$cide$c,
-                   a.t$cepe$c
+                   a.t$cepe$c,
+                   a.t$obet$c
             from baandb.tznsls401301 a
             where a.t$iitm$c = 'P'
               and a.t$qtve$c > 0
@@ -137,7 +139,8 @@ from (select       a.t$ncia$c,
                      a.t$dtap$c,
                      a.t$pzcd$c,
                      a.t$cide$c,
-                     a.t$cepe$c) znsls401
+                     a.t$cepe$c,
+                     a.t$obet$c ) znsls401
                      
 left join ( select a.t$fili$c,
                  a.t$pecl$c,
