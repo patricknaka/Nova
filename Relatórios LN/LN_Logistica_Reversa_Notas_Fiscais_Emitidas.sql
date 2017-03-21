@@ -1,38 +1,37 @@
-select  
-        tcemm030.t$eunt                          FILIAL,
-        tcemm030.t$dsca                          DESCRICAO_FILIAL,
-        cast((from_tz(to_timestamp(to_char(cisli940.t$date$l,
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+select tcemm030.t$eunt                          FILIAL,
+       tcemm030.t$dsca                          DESCRICAO_FILIAL,
+       cast((from_tz(to_timestamp(to_char(cisli940.t$date$l,
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') as date)
-                                                 DATA_EMISSAO,
-        cisli940.t$docn$l                        NOTA,
-        cisli940.t$seri$l                        SERIE,
-        znsls401.t$pecl$c                        PEDIDO,
-        cisli940.t$fdtc$l                        COD_TIPO_DOC_FISCAL,
-        case when tcmcs966.t$dsca$l is null or trim(tcmcs966.t$dsca$l) is null then
-             TIPO_DOC_FISC.DESCR
-        else
-             tcmcs966.t$dsca$l
-        end                                      DESC_TIPO_DOC_FISCAL,
-        cisli940.t$ccfo$l                        CFOP,
-        tcmcs940.t$dsca$l                        DESCRICAO_CFOP,
-        cisli940.t$opor$l                        NATUREZA_OPERACAO,
-        tcmcs964.t$desc$d                        DESCRICAO_NAT_OPERACAO,
-        cisli941.t$item$l                        ITEM,
-        tcibd001.t$dscb$c                        DESCRICAO_ITEM,
-        cisli941.t$dqua$l                        QTDE,
-        cisli941.t$pric$l                        VALOR_UNITARIO,
-        cisli941.t$gamt$l                        VALOR_TOTAL,
-        cisli941.t$amnt$l                        CMV_TOTAL,
-        tccom130_FABR.t$nama                     FABRICANTE,
-        tccom130.t$nama                          NOME_CLIENTE,
-        tccom130.t$namc                          ENDERECO,
-        tccom130.t$dist$l                        BAIRRO,
-        tccom130.t$pstc                          CEP,
-        tccom130.t$dsca                          MUNICIPIO,
-        tccom130.t$cste                          UF
+                                                DATA_EMISSAO,
+       cisli940.t$docn$l                        NOTA,
+       cisli940.t$seri$l                        SERIE,
+       znsls401.t$pecl$c                        PEDIDO,
+       cisli940.t$fdtc$l                        COD_TIPO_DOC_FISCAL,
+       case when tcmcs966.t$dsca$l is null or trim(tcmcs966.t$dsca$l) is null then
+            TIPO_DOC_FISC.DESCR
+       else
+            tcmcs966.t$dsca$l
+       end                                      DESC_TIPO_DOC_FISCAL,
+       cisli940.t$ccfo$l                        CFOP,
+       tcmcs940.t$dsca$l                        DESCRICAO_CFOP,
+       cisli940.t$opor$l                        NATUREZA_OPERACAO,
+       tcmcs964.t$desc$d                        DESCRICAO_NAT_OPERACAO,
+       cisli941.t$item$l                        ITEM,
+       tcibd001.t$dscb$c                        DESCRICAO_ITEM,
+       cisli941.t$dqua$l                        QTDE,
+       cisli941.t$pric$l                        VALOR_UNITARIO,
+       cisli941.t$gamt$l                        VALOR_TOTAL,
+       cisli941.t$amnt$l                        CMV_TOTAL,
+       tccom130_FABR.t$nama                     FABRICANTE,
+       tccom130.t$nama                          NOME_CLIENTE,
+       tccom130.t$namc                          ENDERECO,
+       tccom130.t$dist$l                        BAIRRO,
+       tccom130.t$pstc                          CEP,
+       tccom130.t$dsca                          MUNICIPIO,
+       tccom130.t$cste                          UF
 
-from    baandb.tcisli940301 cisli940
+  from baandb.tcisli940301 cisli940
 
 inner join baandb.tcisli941301 cisli941
         on cisli941.t$fire$l = cisli940.t$fire$l
@@ -76,37 +75,38 @@ left join baandb.tznsls401301 znsls401
        on znsls401.t$orno$c = cisli245.t$slso
       and znsls401.t$pono$c = cisli245.t$pono
 
-left  join ( select l.t$desc DESCR,
-                    d.t$cnst
-               from baandb.tttadv401000 d,
-                    baandb.tttadv140000 l
-              where d.t$cpac = 'ci'
-                and d.t$cdom = 'sli.tdff.l'
-                and l.t$clan = 'p'
-                and l.t$cpac = 'ci'
-                and l.t$clab = d.t$za_clab
-                and rpad(d.t$vers,4) ||
-                    rpad(d.t$rele,2) ||
-                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv401000 l1 
-                                          where l1.t$cpac = d.t$cpac 
-                                            and l1.t$cdom = d.t$cdom )
-                and rpad(l.t$vers,4) ||
-                    rpad(l.t$rele,2) ||
-                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
-                                                    rpad(l1.t$rele,2) ||
-                                                    rpad(l1.t$cust,4)) 
-                                           from baandb.tttadv140000 l1 
-                                          where l1.t$clab = l.t$clab 
-                                            and l1.t$clan = l.t$clan 
-                                            and l1.t$cpac = l.t$cpac ) ) TIPO_DOC_FISC
-        on TIPO_DOC_FISC.t$cnst = cisli940.t$fdty$l
+left join ( select l.t$desc DESCR,
+                   d.t$cnst
+              from baandb.tttadv401000 d,
+                   baandb.tttadv140000 l
+             where d.t$cpac = 'ci'
+               and d.t$cdom = 'sli.tdff.l'
+               and l.t$clan = 'p'
+               and l.t$cpac = 'ci'
+               and l.t$clab = d.t$za_clab
+               and rpad(d.t$vers,4) ||
+                   rpad(d.t$rele,2) ||
+                   rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv401000 l1 
+                                         where l1.t$cpac = d.t$cpac 
+                                           and l1.t$cdom = d.t$cdom )
+               and rpad(l.t$vers,4) ||
+                   rpad(l.t$rele,2) ||
+                   rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) ||
+                                                   rpad(l1.t$rele,2) ||
+                                                   rpad(l1.t$cust,4)) 
+                                          from baandb.tttadv140000 l1 
+                                         where l1.t$clab = l.t$clab 
+                                           and l1.t$clan = l.t$clan 
+                                           and l1.t$cpac = l.t$cpac ) ) TIPO_DOC_FISC
+       on TIPO_DOC_FISC.t$cnst = cisli940.t$fdty$l
 
-where   trunc(cast((from_tz(to_timestamp(to_char(cisli940.t$date$l,
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+ where trunc(cast((from_tz(to_timestamp(to_char(cisli940.t$date$l,
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') as date))
-        between :DATA_EMISSAO_DE
-            and :DATA_EMISSAO_ATE
-  and   tcemm030.t$eunt in (:FILIAL)
+       between :DATA_EMISSAO_DE
+           and :DATA_EMISSAO_ATE
+   and tcemm030.t$eunt in (:FILIAL)
+   and cisli940.t$stat$l in (5,6) -- Impresso,Lançado
