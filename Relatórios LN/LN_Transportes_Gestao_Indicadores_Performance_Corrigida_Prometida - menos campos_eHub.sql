@@ -75,7 +75,9 @@ select
             cast((from_tz(to_timestamp(to_char(znsls410.t$dtoc$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                     AT time zone 'America/Sao_Paulo') as date))))
-                                                           ULTIMA_DATA_OCORRENCIA
+                                                           ULTIMA_DATA_OCORRENCIA,
+        own_mis.filtro_mis(znsls401.t$obet$c)              ETIQUETA_TRANSPORTADORA
+        
 from     (  select a.t$ncia$c,
                    a.t$uneg$c,
                    a.t$pecl$c,
@@ -85,7 +87,8 @@ from     (  select a.t$ncia$c,
                    a.t$orno$c,
                    a.t$ufen$c,
                    a.t$itpe$c,
-                   a.t$dtep$c
+                   a.t$dtep$c,
+                   a.t$obet$c
             from baandb.tznsls401601 a
             where a.t$iitm$c = 'P'
               and a.t$qtve$c > 0
@@ -97,7 +100,8 @@ from     (  select a.t$ncia$c,
                      a.t$orno$c,
                      a.t$ufen$c,
                      a.t$itpe$c,
-                     a.t$dtep$c ) znsls401
+                     a.t$dtep$c,
+                     a.t$obet$c ) znsls401
 
 left join ( select a.t$fili$c,
                  a.t$pecl$c,
