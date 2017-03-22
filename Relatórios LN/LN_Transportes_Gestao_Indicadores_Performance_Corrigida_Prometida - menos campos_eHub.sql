@@ -266,7 +266,8 @@ left join ( select znfmd640.t$fili$c,
                                         'AGE',
                                         'SEF',
                                         'ENL',
-                                        'GAL')
+                                        'GAL',
+                                        'LFE')
             and znfmd640.t$torg$c = 1   --vendas
             group by znfmd640.t$fili$c,
                      znfmd640.t$etiq$c ) znfmd640_FIRST 
