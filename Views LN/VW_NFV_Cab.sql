@@ -50,43 +50,51 @@
 		cisli940.t$insr$l                                     VL_SEGURO,
 		cisli940.t$gexp$l                                     VL_DESPESA,
 		(SELECT cisli942.t$amnt$l FROM baandb.tcisli942301 cisli942
-		WHERE cisli942.t$fire$l=cisli940.t$fire$l
-		AND cisli942.t$brty$l=16)                             VL_IMPOSTO_IMPORTACAO,
+		WHERE cisli942.t$fire$l = cisli940.t$fire$l
+		AND cisli942.t$brty$l = 16)                           VL_IMPOSTO_IMPORTACAO,
 		(SELECT sum(cisli941.t$ldam$l) FROM baandb.tcisli941301 cisli941
-		WHERE cisli941.t$fire$l=cisli940.t$fire$l)            VL_DESCONTO,
+		WHERE cisli941.t$fire$l = cisli940.t$fire$l)          VL_DESCONTO,
 		cisli940.t$amnt$l                                     VL_TOTAL_NF,
-        CASE WHEN cisli940.t$fdty$l=15 then
+        CASE WHEN cisli940.t$fdty$l = 15 then
           (select a.t$docn$l from baandb.tcisli940301 a, baandb.tcisli941301 b
-          where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l
+          where b.t$fire$l = cisli940.t$fire$l
+          and a.t$fire$l = b.t$refr$l
           and rownum=1
           group by a.t$docn$l
-          ) else 0
+          ) else CASE WHEN cisli940.t$fdty$l = 16 then
+                    cisli940.t$docn$l
+                  else 0 end
        end                                                NR_NF_FATURA,
-       CASE WHEN cisli940.t$fdty$l=15 then
+       CASE WHEN cisli940.t$fdty$l = 15 then
           (select a.t$seri$l from baandb.tcisli940301 a, baandb.tcisli941301 b
           where b.t$fire$l=cisli940.t$fire$l
           and a.t$fire$l=b.t$refr$l
           and rownum=1
           group by a.t$seri$l)
-          else ' '
+          else CASE WHEN cisli940.t$fdty$l = 16 then
+                    cisli940.t$seri$l
+                else ' ' end
           end                                             NR_SERIE_NF_FATURA, 
-        CASE WHEN cisli940.t$fdty$l=16 then
+        CASE WHEN cisli940.t$fdty$l = 16 then
           (select a.t$docn$l from baandb.tcisli940301 a, baandb.tcisli941301 b
-          where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l
+          where b.t$fire$l = cisli940.t$fire$l
+          and a.t$fire$l = b.t$refr$l
           and rownum=1
           group by a.t$docn$l)
-          else 0
+          else CASE WHEN cisli940.t$fdty$l = 15 then
+                    cisli940.t$docn$l
+               else 0 end
           end                                             NR_NF_REMESSA,
-        CASE WHEN cisli940.t$fdty$l=16 then
+        CASE WHEN cisli940.t$fdty$l = 16 then
           (select a.t$seri$l from baandb.tcisli940301 a, baandb.tcisli941301 b
-          where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l
+          where b.t$fire$l = cisli940.t$fire$l
+          and a.t$fire$l = b.t$refr$l
           and rownum=1
           group by a.t$seri$l
           )
-          else ' '
+          else CASE WHEN cisli940.t$fdty$l = 15 then
+                    cisli940.t$seri$l
+               else ' ' end
           end                                             NR_SERIE_NF_REMESSA,
 		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Greatest(cisli940.t$datg$l, cisli940.t$date$l, cisli940.t$dats$l), 
     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -148,7 +156,7 @@
           end                                             NR_CHAVE_ACESSO_NFE_FATURA
 
 FROM baandb.tcisli940301 cisli940
-
+          
 LEFT JOIN ( select a.t$fire$l,
                    a.t$slso,
                    min(a.t$pono) t$pono
