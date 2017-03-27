@@ -24,7 +24,10 @@ select
         nvl(shd.originalqty,znsls401.t$qtve$c)             QTD_VOL,
         nvl(shd.product_cube, ( select sum(a.t$quan$l) t$quan$l
                                   from baandb.tcisli956601 a
-                                 where a.t$fire$l = cisli940.t$fire$l ))
+                                 where a.t$fire$l = cisli940.t$fire$l ) * 
+                              ( select (a.t$hght * a.t$wdth * a.t$dpth)
+                                  from baandb.twhwmd400601 a
+                                 where a.t$item = znsls401.t$itml$c))
                                                            VOLUME,
         nvl(shd.product_weight,cisli940.t$nwgt$l)          PESO,
         cisli940.t$gamt$l                                  VL_SEM_FRETE,
@@ -154,6 +157,7 @@ inner join ( select a.t$ncia$c,
                     a.t$itpe$c,
                     a.t$pzcd$c,
                     a.t$pztr$c,
+                    a.t$itml$c,
                     min(a.t$dtep$c) t$dtep$c,
                     min(a.t$idpa$c) t$idpa$c,
                     sum(a.t$qtve$c) t$qtve$c
@@ -167,7 +171,8 @@ inner join ( select a.t$ncia$c,
                       a.t$orno$c,
                       a.t$itpe$c,
                       a.t$pzcd$c,
-                      a.t$pztr$c) znsls401
+                      a.t$pztr$c,
+                      a.t$itml$c) znsls401
         on znsls401.t$ncia$c = znsls004.t$ncia$c
        and znsls401.t$uneg$c = znsls004.t$uneg$c
        and znsls401.t$pecl$c = znsls004.t$pecl$c
