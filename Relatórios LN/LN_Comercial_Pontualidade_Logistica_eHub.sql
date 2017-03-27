@@ -1,191 +1,312 @@
-select
-          znsls400.t$pecl$c                      NUMERO_PEDIDO,
-          znsls400.t$sqpd$c                      SEQ_PEDIDO,
-          znsls002.t$dsca$c                      TIPO_ENTREGA,
-          case when znsls430.COID is not null then
-               'SIM'
-          else
-               'NAO'
-          end                                    CUSTOMIZACAO,
-          MEIO_PAGTO.t$desc$c                    MEIO_PAGAMENTO,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date)
-                                                 DT_EMISSAO_PEDIDO,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date)
-                                                 DT_APROVACAO_PAGTO,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_PAP.DTOC, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date)
-                                                 DATA_PAP,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_AES.DTOC, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date)
-                                                 DATA_AES,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_TNA.DTOC, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date)
-                                                 DATA_TNA,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_WMS.DTOC, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date)
-                                                 DT_LIBERACAO_WMS,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_NFS.DTOC, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date)                     
-                                                 DT_FATURAMENTO,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_ETR.DTOC,
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date)                                    
-                                                 DT_EXPEDICAO,
-          cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_ENT.DTOC,
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date)                                 
-                                                 DT_ENTREGA_CLIENTE,
-          case  when  znsls410_CTR_PAP.DTOC is not null then
-                case when znsls002.t$tpen$c = 10 then -- Urgente
-                     case when cast((znsls410_CTR_PAP.DTOC - znsls400.t$dtem$c) * 
-                                   ((86400 / 60)/60) as int) > 12 then
-                          'ATRASO'  -- Se aprovação ocorrer após 12 horas
-                     else
-                          'NO PRAZO'
-                     end
-                else
-                     case when znsls002.t$tpen$c = 2 then -- Expressa
-                          case when cast((znsls410_CTR_PAP.DTOC - znsls400.t$dtem$c) * 
-                                        ((86400 / 60)/60) as int) > 15 then
-                               'ATRASO'  -- Se aprovação ocorrer após 15 horas
-                          else
-                               'NO PRAZO'
-                          end
-                     else
-                          case when MEIO_PAG.BOLETO is not null then -- Pagto via boleto
-                               case when cast((znsls410_CTR_PAP.DTOC - znsls400.t$dtem$c) * 
-                                             ((86400 / 60)/60) as int) > 96 then
-                                    'ATRASO'  -- Se aprovação ocorrer após 96 horas
-                               else
-                                    'NO PRAZO'
-                               end
-                          else
-                               case when cast((znsls410_CTR_PAP.DTOC - znsls400.t$dtem$c) * 
-                                             ((86400 / 60)/60) as int) > 48 then
-                                    'ATRASO'  -- Se aprovação ocorrer após 48 horas
-                               else
-                                    'NO PRAZO'
-                               end
-                          end
-                     end
-                end
-          else
-                case when znsls002.t$tpen$c = 10 then -- Urgente
-                     case when cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
-                                   ((86400 / 60)/60) as int) > 12 then
-                          'ATRASO'  -- Se aprovação ocorrer após 12 horas
-                     else
-                          'NO PRAZO'
-                     end
-                else
-                     case when znsls002.t$tpen$c = 2 then -- Expressa
-                          case when cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
-                                        ((86400 / 60)/60) as int) > 15 then
-                               'ATRASO'  -- Se aprovação ocorrer após 15 horas
-                          else
-                               'NO PRAZO'
-                          end
-                     else
-                          case when MEIO_PAG.BOLETO is not null then -- Pagto via boleto
-                               case when cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
-                                             ((86400 / 60)/60) as int) > 96 then
-                                    'ATRASO'  -- Se aprovação ocorrer após 96 horas
-                               else
-                                    'NO PRAZO'
-                               end
-                          else
-                               case when cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
-                                             ((86400 / 60)/60) as int) > 48 then
-                                    'ATRASO'  -- Se aprovação ocorrer após 48 horas
-                               else
-                                    'NO PRAZO'
-                               end
-                          end
-                     end
-                end
-          end                                    ATRASO_APROVACAO,
-          case when znsls410_CTR_AES.DTOC is not null then
-               'ATRASO'
-          else
-               'NO PRAZO'
-          end                                    ATRASO_FORNECEDOR,
-          case when znsls410_CTR_TNA.DTOC is not null then
-               'ATRASO'
-          else
-               'NO PRAZO'
-          end                                    ATRASO_LIBERACAO_WMS_TNA,
-          case when znsls430.COID is not null then
-               case when cast((znsls410_CTR_ICA.DTOC - znsls410_CTR_PAP.DTOC) * 
-                             ((86400 / 60)/60) as int) > 1 then
-                    'ATRASO'  -- Se ficou em PAP por mais de 1 hora
-               else
-                    'NO PRAZO'
-               end
-          else
-               case when znsls410_CTR_AES.DTOC is not null then
-                    case when cast((znsls410_CTR_AES.DTOC - znsls410_CTR_PAP.DTOC) * 
-                                  ((86400 / 60)/60) as int) > 1 then
-                         'ATRASO'  -- Se ficou em PAP por mais de 1 hora
-                    else
-                         'NO PRAZO'
-                    end
-               else
-                    case when znsls410_CTR_TNA.DTOC is not null then
-                         case when cast((znsls410_CTR_TNA.DTOC - znsls410_CTR_PAP.DTOC) * 
-                                       ((86400 / 60)/60) as int) > 1 then
-                              'ATRASO'  -- Se ficou em PAP por mais de 1 hora
-                         else
-                              'NO PRAZO'
-                         end
-                    else
-                         case when znsls410_CTR_WMS.DTOC is not null then
-                              case when cast((znsls410_CTR_WMS.DTOC - znsls410_CTR_PAP.DTOC) * 
-                                            ((86400 / 60)/60) as int) > 1 then
-                                   'ATRASO'  -- Se ficou em PAP por mais de 1 hora
-                              else
-                                   'NO PRAZO'
-                              end
-                         else
-                               case when cast((sysdate - znsls410_CTR_PAP.DTOC) * 
-                                             ((86400 / 60)/60) as int) > 1 then
-                                    'ATRASO'  -- Se ficou em PAP por mais de 1 hora
-                               else
-                                    'NO PRAZO'
-                               end
-                         end
-                    end
-               end
-          end                                    ATRASO_LIBERACAO_WMS_PAP,
-          case when znsls410_CTR_PRD.DTOC is not null then
-                'SIM'
-          else
-                'NAO'
-          end                                    PERDA_LOGISTICA,
-          case when znsls410_CTR_ETR.DTOC is not null then
-               case when  znsls410_CTR_ETR.DTOC > tdsls400.t$ddat then
-                    'ATRASO'
-               else
-                    'NO PRAZO'
-               end
-          end                                    ATRASO_OPERACAO,
-          case when znsls410_CTR_ENT.DTOC is not null then
-               case when znsls410_CTR_ENT.DTOC > tdsls400.t$prdt then
-                    'ATRASO'
-               else
-                    'NO PRAZO'
-               end
-          end                                    ATRASO_TRANSPORTE
+select znsls400.t$pecl$c                      NUMERO_PEDIDO,
+       znsls400.t$sqpd$c                      SEQ_PEDIDO,
+       znsls002.t$dsca$c                      TIPO_ENTREGA,
+       case when znsls430.COID is not null then
+            'SIM'
+       else
+            'NAO'
+       end                                    CUSTOMIZACAO,
+       MEIO_PAGTO.t$desc$c                    MEIO_PAGAMENTO,
+       cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)
+                                              DT_EMISSAO_PEDIDO,
+       cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)
+                                              DT_APROVACAO_PAGTO,
+       cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_PAP.DTOC, 
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)
+                                              DATA_PAP,
+       cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_AES.DTOC, 
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)
+                                              DATA_AES,
+       cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_TNA.DTOC, 
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)
+                                              DATA_TNA,
+       cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_WMS.DTOC, 
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)
+                                              DT_LIBERACAO_WMS,
+       cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_NFS.DTOC, 
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)                     
+                                              DT_FATURAMENTO,
+       cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_ETR.DTOC,
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)                                    
+                                              DT_EXPEDICAO,
+       cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_ENT.DTOC,
+             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') as date)                                 
+                                              DT_ENTREGA_CLIENTE,
+       case  when  znsls410_CTR_PAP.DTOC is not null then
+             case when znsls002.t$tpen$c = 10 then -- Urgente
+                  case when cast((znsls410_CTR_PAP.DTOC - znsls400.t$dtem$c) * 
+                                ((86400 / 60)/60) as float) > 12.0000 then
+                       'ATRASO'  -- Se aprovação ocorrer após 12 horas
+                  else
+                       'NO PRAZO'
+                  end
+             else
+                  case when znsls002.t$tpen$c = 2 then -- Expressa
+                       case when cast((znsls410_CTR_PAP.DTOC - znsls400.t$dtem$c) * 
+                                     ((86400 / 60)/60) as float) > 15.0000 then
+                            'ATRASO'  -- Se aprovação ocorrer após 15 horas
+                       else
+                            'NO PRAZO'
+                       end
+                  else
+                       case when MEIO_PAG.BOLETO is not null then -- Pagto via boleto
+                            case when cast((znsls410_CTR_PAP.DTOC - znsls400.t$dtem$c) * 
+                                          ((86400 / 60)/60) as float) > 96.0000 then
+                                 'ATRASO'  -- Se aprovação ocorrer após 96 horas
+                            else
+                                 'NO PRAZO'
+                            end
+                       else
+                            case when cast((znsls410_CTR_PAP.DTOC - znsls400.t$dtem$c) * 
+                                          ((86400 / 60)/60) as float) > 48.0000 then
+                                 'ATRASO'  -- Se aprovação ocorrer após 48 horas
+                            else
+                                 'NO PRAZO'
+                            end
+                       end
+                  end
+             end
+       else
+             case when znsls002.t$tpen$c = 10 then -- Urgente
+                  case when cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
+                                ((86400 / 60)/60) as float) > 12.0000 then
+                       'ATRASO'  -- Se aprovação ocorrer após 12 horas
+                  else
+                       'NO PRAZO'
+                  end
+             else
+                  case when znsls002.t$tpen$c = 2 then -- Expressa
+                       case when cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
+                                     ((86400 / 60)/60) as float) > 15.0000 then
+                            'ATRASO'  -- Se aprovação ocorrer após 15 horas
+                       else
+                            'NO PRAZO'
+                       end
+                  else
+                       case when MEIO_PAG.BOLETO is not null then -- Pagto via boleto
+                            case when cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
+                                          ((86400 / 60)/60) as float) > 96.0000 then
+                                 'ATRASO'  -- Se aprovação ocorrer após 96 horas
+                            else
+                                 'NO PRAZO'
+                            end
+                       else
+                            case when cast((znsls400.t$dtin$c - znsls400.t$dtem$c) * 
+                                          ((86400 / 60)/60) as float) > 48.0000 then
+                                 'ATRASO'  -- Se aprovação ocorrer após 48 horas
+                            else
+                                 'NO PRAZO'
+                            end
+                       end
+                  end
+             end
+       end                                    ATRASO_APROVACAO,
+       case when znsls410_CTR_AES.DTOC is not null then
+            'ATRASO'
+       else
+            'NO PRAZO'
+       end                                    ATRASO_FORNECEDOR,
+       case when znsls410_CTR_TNA.DTOC is not null then
+            'ATRASO'
+       else
+            'NO PRAZO'
+       end                                    ATRASO_LIBERACAO_WMS_TNA,
+       case when znsls430.COID is not null then
+            case when znsls410_CTR_ICA.DTOC is not null then
+                 case when cast((znsls410_CTR_ICA.DTOC - znsls410_CTR_PAP.DTOC) * 
+                               ((86400 / 60)/60) as float) > 1.0000 then
+                      'ATRASO'  -- Se ficou em PAP por mais de 1 hora
+                 else
+                      case when znsls410_CTR_FCA.DTOC is not null then
+                           case when znsls002.t$tpen$c = 2 then -- Entregas expressa
+                                case when cast((znsls410_CTR_FCA.DTOC - znsls410_CTR_ICA.DTOC) -
+                                               (select count(*)
+                                                  from baandb.ttcccp020301 tcccp020
+                                                 where tcccp020.t$ccal = 'FN1'                    -- Feriados Nacionais
+                                                   and tcccp020.t$ract = '000003'                 -- Segunda a Sexta
+                                                   and tcccp020.t$dfca = 3                        -- Recorrencia
+                                                   and to_char(tcccp020.t$date, 'd') not in (1,7) -- Domingo, Sábado
+                                                   and trunc(tcccp020.t$date) between trunc(znsls410_CTR_ICA.DTOC)
+                                                                                  and trunc(znsls410_CTR_FCA.DTOC)) -
+                                               (select count(*)
+                                                  from baandb.ttcccp020301 tcccp020
+                                                 where tcccp020.t$ccal = 'A001'                   -- Filial 001
+                                                   and tcccp020.t$ract = '000001'                 -- Domingo a Sábado
+                                                   and to_char(tcccp020.t$date, 'd') in (1,7)     -- Domingo, Sábado
+                                                   and trunc(tcccp020.t$date) between trunc(znsls410_CTR_ICA.DTOC)
+                                                                                  and trunc(znsls410_CTR_FCA.DTOC)) *
+                                              ((86400 / 60)/60) as float) > 24.0000 then
+                                     'ATRASO'  -- Se o termino da customização ocorreu após 24 horas
+                                else
+                                      case when znsls410_CTR_WMS.DTOC is not null then
+                                           case when cast((znsls410_CTR_WMS.DTOC - znsls410_CTR_FCA.DTOC) * 
+                                                         ((86400 / 60)/60) as float) > 1.0000 then
+                                                'ATRASO'  -- Se após customização ficou em FCA por mais de 1 hora
+                                           else
+                                               case when znsls410_CTR_ETR.DTOC is not null then
+                                                    case when znsls410_CTR_ETR.DTOC > tdsls400.t$ddat then
+                                                         'ATRASO'  -- Se a entrega para a transportadora ocorreu após a data limite para expedição
+                                                    else
+                                                         'NO PRAZO'
+                                                    end
+                                               else
+                                                    case when cast((sysdate - znsls410_CTR_WMS.DTOC) * 
+                                                                  ((86400 / 60)/60) as float) > 24.0000 then
+                                                         'ATRASO'  -- Atraso na entrega para a transportadora
+                                                    else
+                                                         'NO PRAZO'
+                                                    end
+                                               end
+                                           end
+                                      else
+                                           case when cast((sysdate - znsls410_CTR_FCA.DTOC) * 
+                                                         ((86400 / 60)/60) as float) > 1.0000 then
+                                                'ATRASO'  -- Está com atraso na liberação para o WMS
+                                           else
+                                                'NO PRAZO'
+                                           end
+                                      end
+                                end
+                           else
+                                case when cast((znsls410_CTR_FCA.DTOC - znsls410_CTR_ICA.DTOC) - 
+                                               (select count(*)
+                                                  from baandb.ttcccp020301 tcccp020
+                                                 where tcccp020.t$ccal = 'FN1'                    -- Feriados Nacionais
+                                                   and tcccp020.t$ract = '000003'                 -- Segunda a Sexta
+                                                   and tcccp020.t$dfca = 3                        -- Recorrencia
+                                                   and to_char(tcccp020.t$date, 'd') not in (1,7) -- Domingo, Sábado
+                                                   and trunc(tcccp020.t$date) between trunc(znsls410_CTR_ICA.DTOC)
+                                                                                  and trunc(znsls410_CTR_FCA.DTOC)) -
+                                               (select count(*)
+                                                  from baandb.ttcccp020301 tcccp020
+                                                 where tcccp020.t$ccal = 'A001'                   -- Filial 001
+                                                   and tcccp020.t$ract = '000001'                 -- Domingo a Sábado
+                                                   and to_char(tcccp020.t$date, 'd') in (1,7)     -- Domingo, Sábado
+                                                   and trunc(tcccp020.t$date) between trunc(znsls410_CTR_ICA.DTOC)
+                                                                                  and trunc(znsls410_CTR_FCA.DTOC)) *
+                                              ((86400 / 60)/60) as float) > 48.0000 then
+                                     'ATRASO'  -- Se o termino da customização ocorreu após 48 horas
+                                else
+                                     case when znsls410_CTR_WMS.DTOC is not null then
+                                          case when cast((znsls410_CTR_WMS.DTOC - znsls410_CTR_FCA.DTOC) * 
+                                                        ((86400 / 60)/60) as float) > 1.0000 then
+                                               'ATRASO'  -- Se após customização ficou em FCA por mais de 1 hora
+                                          else
+                                               case when znsls410_CTR_ETR.DTOC is not null then
+                                                    case when znsls410_CTR_ETR.DTOC > tdsls400.t$ddat then
+                                                         'ATRASO'  -- Se a entrega para a transportadora ocorreu após a data limite para expedição
+                                                    else
+                                                         'NO PRAZO'
+                                                    end
+                                               else
+                                                    case when cast((sysdate - znsls410_CTR_WMS.DTOC) * 
+                                                                  ((86400 / 60)/60) as float) > 24.0000 then
+                                                         'ATRASO'  -- Atraso na entrega para a transportadora
+                                                    else
+                                                         'NO PRAZO'
+                                                    end
+                                               end
+                                          end
+                                     else
+                                          case when cast((sysdate - znsls410_CTR_FCA.DTOC) * 
+                                                        ((86400 / 60)/60) as float) > 1.0000 then
+                                               'ATRASO'  -- Está com atraso na liberação para o WMS
+                                          else
+                                               'NO PRAZO'
+                                          end
+                                     end
+                                end
+                           end
+                      else
+                           case when znsls002.t$tpen$c = 2 then -- Entregas expressa
+                                case when cast((sysdate - znsls410_CTR_ICA.DTOC) * 
+                                              ((86400 / 60)/60) as float) > 24.0000 then
+                                     'ATRASO'  -- Está em ICA por mais de 24 horas
+                                else
+                                     'NO PRAZO'
+                                end
+                           else
+                                case when cast((sysdate - znsls410_CTR_ICA.DTOC) * 
+                                              ((86400 / 60)/60) as float) > 48.0000 then
+                                     'ATRASO'  -- Está em ICA por mais de 48 horas
+                                else
+                                     'NO PRAZO'
+                                end
+                           end
+                      end
+                 end
+            else
+                 case when cast((sysdate - znsls410_CTR_PAP.DTOC) * 
+                               ((86400 / 60)/60) as float) > 1.0000 then
+                      'ATRASO'  -- Está em PAP por mais de 1 hora
+                 else
+                      'NO PRAZO'
+                 end
+            end
+       else
+            case when znsls410_CTR_AES.DTOC is not null then
+                      case when cast((znsls410_CTR_AES.DTOC - znsls410_CTR_PAP.DTOC) * 
+                                    ((86400 / 60)/60) as float) > 1.0000 then
+                           'ATRASO'  -- Se ficou em PAP por mais de 1 hora
+                      else
+                           'NO PRAZO'
+                      end
+                 when znsls410_CTR_TNA.DTOC is not null then
+                      case when cast((znsls410_CTR_TNA.DTOC - znsls410_CTR_PAP.DTOC) * 
+                                    ((86400 / 60)/60) as float) > 1.0000 then
+                           'ATRASO'  -- Se ficou em PAP por mais de 1 hora
+                      else
+                           'NO PRAZO'
+                      end
 
-from      baandb.tznsls400601 znsls400
+                 when znsls410_CTR_WMS.DTOC is not null then
+                      case when cast((znsls410_CTR_WMS.DTOC - znsls410_CTR_PAP.DTOC) * 
+                                    ((86400 / 60)/60) as float) > 1.0000 then
+                           'ATRASO'  -- Se ficou em PAP por mais de 1 hora
+                      else
+                           'NO PRAZO'
+                      end
+                 when znsls410_CTR_WMS.DTOC is null then
+                      case when cast((sysdate - znsls410_CTR_PAP.DTOC) * 
+                                    ((86400 / 60)/60) as float) > 1.0000 then
+                           'ATRASO'  -- Está em PAP por mais de 1 hora
+                      else
+                           'NO PRAZO'
+                      end
+            end
+       end                                    ATRASO_LIBERACAO_WMS_PAP,
+       case when znsls410_CTR_PRD.DTOC is not null then
+            'SIM'
+       else
+            'NAO'
+       end                                    PERDA_LOGISTICA,
+       case when znsls410_CTR_ETR.DTOC is not null then
+            case when  znsls410_CTR_ETR.DTOC > tdsls400.t$ddat then
+                 'ATRASO'  -- Se a entrega para a transportadora ocorreu após a data limite para expedição
+            else
+                 'NO PRAZO'
+            end
+       end                                    ATRASO_OPERACAO,
+       case when znsls410_CTR_ENT.DTOC is not null then
+            case when znsls410_CTR_ENT.DTOC > tdsls400.t$prdt then
+                 'ATRASO'
+            else
+                 'NO PRAZO'
+            end
+       end                                    ATRASO_TRANSPORTE
+
+  from baandb.tznsls400601 znsls400
 
 inner join  ( select  a.t$ncia$c,
                       a.t$uneg$c,
@@ -312,6 +433,26 @@ left  join  ( select    a.t$ncia$c,
        and  znsls410_CTR_ICA.t$uneg$c = znsls400.t$uneg$c
        and  znsls410_CTR_ICA.t$pecl$c = znsls400.t$pecl$c
        and  znsls410_CTR_ICA.t$sqpd$c = znsls400.t$sqpd$c
+
+-- Data do final da customização FCA
+left  join  ( select    a.t$ncia$c,
+                        a.t$uneg$c,
+                        a.t$pecl$c,
+                        a.t$sqpd$c,
+                        a.t$poco$c,
+                        max(a.t$dtoc$c)
+                        keep (dense_rank last order by a.t$dtoc$c)  DTOC
+              from    baandb.tznsls410601 a
+              where   a.t$poco$c = 'FCA'
+              group by  a.t$ncia$c,
+                        a.t$uneg$c,
+                        a.t$pecl$c,
+                        a.t$sqpd$c,
+                        a.t$poco$c ) znsls410_CTR_FCA
+        on  znsls410_CTR_FCA.t$ncia$c = znsls400.t$ncia$c
+       and  znsls410_CTR_FCA.t$uneg$c = znsls400.t$uneg$c
+       and  znsls410_CTR_FCA.t$pecl$c = znsls400.t$pecl$c
+       and  znsls410_CTR_FCA.t$sqpd$c = znsls400.t$sqpd$c
 
 -- Data da liberaçao do pedido para o WMS
 left  join  ( select    a.t$ncia$c,
@@ -455,27 +596,33 @@ left  join  ( select a.t$ncia$c,
        and  MEIO_PAGTO.t$pecl$c = znsls400.t$pecl$c
        and  MEIO_PAGTO.t$sqpd$c = znsls400.t$sqpd$c
 
-where   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date))
-        between :DT_EMISSAO_PEDIDO_DE and :DT_EMISSAO_PEDIDO_ATE
-  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date))
-        between :DT_APROVACAO_PAGTO_DE and :DT_APROVACAO_PAGTO_ATE
-  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_WMS.DTOC, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date))
-        between :DT_LIBERACAO_WMS_DE and :DT_LIBERACAO_WMS_ATE
-  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_NFS.DTOC, 
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date))
-        between :DT_FATURAMENTO_DE and :DT_FATURAMENTO_ATE
-  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_ETR.DTOC,
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date))
-        between :DT_EXPEDICAO_DE and :DT_EXPEDICAO_ATE
-  and   trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_ENT.DTOC,
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                 AT time zone 'America/Sao_Paulo') as date))
-        between :DT_ENTREGA_CLIENTE_DE and :DT_ENTREGA_CLIENTE_ATE
+ where trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone 'America/Sao_Paulo') as date))
+       between :DT_EMISSAO_PEDIDO_DE
+           and :DT_EMISSAO_PEDIDO_ATE
+   and trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtin$c,
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone 'America/Sao_Paulo') as date))
+       between :DT_APROVACAO_PAGTO_DE
+           and :DT_APROVACAO_PAGTO_ATE
+   and trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_WMS.DTOC, 
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone 'America/Sao_Paulo') as date))
+       between :DT_LIBERACAO_WMS_DE
+           and :DT_LIBERACAO_WMS_ATE
+   and trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_NFS.DTOC, 
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone 'America/Sao_Paulo') as date))
+       between :DT_FATURAMENTO_DE
+           and :DT_FATURAMENTO_ATE
+   and trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_ETR.DTOC,
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone 'America/Sao_Paulo') as date))
+       between :DT_EXPEDICAO_DE
+           and :DT_EXPEDICAO_ATE
+   and trunc(cast((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410_CTR_ENT.DTOC,
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                    AT time zone 'America/Sao_Paulo') as date))
+       between :DT_ENTREGA_CLIENTE_DE
+           and :DT_ENTREGA_CLIENTE_ATE
