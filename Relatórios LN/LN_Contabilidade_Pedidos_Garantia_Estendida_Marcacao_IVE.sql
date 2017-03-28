@@ -131,5 +131,5 @@ left join ( select l.t$desc DESCRICAO,
               AT time zone 'America/Sao_Paulo') as date))
        between :DATA_EMISSAO_DE
            and :DATA_EMISSAO_ATE
-   and cisli940.t$fire$l in (:REF_FISCAL)
+   and cisli940.t$stat$l in (5,6) -- Impresso,Lançado
    and cisli941.t$item$l in (5837695,5837696,5837697,5837698)
