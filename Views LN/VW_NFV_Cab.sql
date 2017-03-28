@@ -55,43 +55,26 @@
 		(SELECT sum(cisli941.t$ldam$l) FROM baandb.tcisli941301 cisli941
 		WHERE cisli941.t$fire$l = cisli940.t$fire$l)          VL_DESCONTO,
 		cisli940.t$amnt$l                                     VL_TOTAL_NF,
-        CASE WHEN cisli940.t$fdty$l = 15 then
-          (select a.t$docn$l from baandb.tcisli940301 a, baandb.tcisli941301 b
-          where b.t$fire$l = cisli940.t$fire$l
-          and a.t$fire$l = b.t$refr$l
-          and rownum=1
-          group by a.t$docn$l
-          ) else CASE WHEN cisli940.t$fdty$l = 16 then
-                    cisli940.t$docn$l
-                  else 0 end
-       end                                                NR_NF_FATURA,
+    CASE WHEN cisli940.t$fdty$l = 15 then
+              cisli940_triang.t$docn$l
+    else CASE WHEN cisli940.t$fdty$l = 16 then
+              cisli940.t$docn$l
+         else 0 end
+    end                                                   NR_NF_FATURA,
        CASE WHEN cisli940.t$fdty$l = 15 then
-          (select a.t$seri$l from baandb.tcisli940301 a, baandb.tcisli941301 b
-          where b.t$fire$l=cisli940.t$fire$l
-          and a.t$fire$l=b.t$refr$l
-          and rownum=1
-          group by a.t$seri$l)
+              cisli940_triang.t$seri$l
           else CASE WHEN cisli940.t$fdty$l = 16 then
                     cisli940.t$seri$l
                 else ' ' end
           end                                             NR_SERIE_NF_FATURA, 
         CASE WHEN cisli940.t$fdty$l = 16 then
-          (select a.t$docn$l from baandb.tcisli940301 a, baandb.tcisli941301 b
-          where b.t$fire$l = cisli940.t$fire$l
-          and a.t$fire$l = b.t$refr$l
-          and rownum=1
-          group by a.t$docn$l)
+              cisli940_triang.t$docn$l
           else CASE WHEN cisli940.t$fdty$l = 15 then
                     cisli940.t$docn$l
                else 0 end
           end                                             NR_NF_REMESSA,
         CASE WHEN cisli940.t$fdty$l = 16 then
-          (select a.t$seri$l from baandb.tcisli940301 a, baandb.tcisli941301 b
-          where b.t$fire$l = cisli940.t$fire$l
-          and a.t$fire$l = b.t$refr$l
-          and rownum=1
-          group by a.t$seri$l
-          )
+            cisli940_triang.t$seri$l
           else CASE WHEN cisli940.t$fdty$l = 15 then
                     cisli940.t$seri$l
                else ' ' end
@@ -128,7 +111,13 @@
 		nvl((select sum(l.t$fght$l) from baandb.tcisli941301 l
 		where	l.t$fire$l = cisli940.t$fire$l
 		and (l.t$sour$l=2 or l.t$sour$l=8)),0)                VL_CIF_IMPORTACAO,
-    cisli940.t$rcd_utc                                    DT_ULT_ATUALIZACAO,
+    
+    CASE WHEN cisli940.t$fdty$l IN (15,16) then
+        case when cisli940.t$rcd_utc > cisli940_triang.t$rcd_utc then
+              cisli940.t$rcd_utc
+        else cisli940_triang.t$rcd_utc end
+    else cisli940.t$rcd_utc end                 
+                                                          DT_ULT_ATUALIZACAO,
    (SELECT tcemm124.t$grid FROM baandb.ttcemm124301 tcemm124
     WHERE tcemm124.t$cwoc=cisli940.t$cofc$l
     AND tcemm124.t$loco=301
@@ -213,6 +202,16 @@ LEFT JOIN baandb.ttcemm124301 tcemm124
 LEFT JOIN baandb.ttcemm030301 tcemm030
        ON tcemm030.t$eunt = tcemm124.t$grid
 
-where	 cisli940.t$rcd_utc between :data_ini and :data_fim
+LEFT JOIN ( select  b.t$fire$l,
+                    a.t$docn$l,
+                    a.t$seri$l,
+                    max(a.t$rcd_utc) t$rcd_utc 
+            from  baandb.tcisli940301 a, 
+                  baandb.tcisli941301 b
+            where a.t$fire$l = b.t$refr$l
+            group by  b.t$fire$l,
+                      a.t$docn$l,
+                      a.t$seri$l ) cisli940_triang
+       ON cisli940_triang.t$fire$l = cisli940.t$fire$l
 
 ;
