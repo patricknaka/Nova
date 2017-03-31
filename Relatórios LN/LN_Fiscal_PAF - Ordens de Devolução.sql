@@ -9,16 +9,35 @@ SELECT
     TDSLS400.T$SOTP                                   TIPO_ORDEM,
     TDSLS094.T$DSCA                                   DESCR_ORDEM,
     D_HDST.DSC                                        STATUS_ORDEM,
-  CASE WHEN znsls400.t$sige$c = 1 and znsls410.t$poco$c not in ('INS') THEN
+    znsls400.t$sige$c SIG,
+    znmcs095.t$docn$c SIGE,
+    CISLI940_ORG.T$DOCN$L LN,
+    CASE WHEN znsls400.t$sige$c = 1 and znmcs095.t$docn$c is not null
+      THEN
             znmcs095.t$docn$c
-         ELSE CISLI940_ORG.T$DOCN$L 
-    END                                               NF_VENDA,
-      CASE WHEN znsls400.t$sige$c = 1 and znsls410.t$poco$c not in ('INS') THEN
+      WHEN znsls400.t$sige$c = 1 AND znmcs095.t$docn$c is null 
+      then  CISLI940_ORG.T$DOCN$L  
+      ELSE CISLI940_ORG.T$DOCN$L 
+      END                                               NF_VENDA,
+    CASE WHEN znsls400.t$sige$c = 1 and znmcs095.t$seri$c is not null 
+      THEN
            znmcs095.t$seri$c
+      WHEN
+           znsls400.t$sige$c = 1 AND znmcs095.t$seri$c is null 
+      THEN
+           CISLI940_ORG.T$SERI$L
          ELSE CISLI940_ORG.T$SERI$L
     END                                               SERIE_VENDA,
-      CASE WHEN znsls400.t$sige$c = 1 and znsls410.t$poco$c not in ('INS') THEN
-            znmcs095.t$trdt$C
+    
+znmcs095.t$trdt$C,
+CISLI940_ORG.T$DATE$L,
+      CASE WHEN znsls400.t$sige$c = 1 AND znmcs095.t$docn$c is not null 
+      then  znmcs095.t$trdt$C  
+      WHEN znsls400.t$sige$c = 1 AND znmcs095.t$trdt$C is not null  
+      then
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940_ORG.T$DATE$L, 
+                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
+                    AT time zone 'America/Sao_Paulo') AS DATE)
          ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(CISLI940_ORG.T$DATE$L, 
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
                     AT time zone 'America/Sao_Paulo') AS DATE)    
@@ -44,7 +63,7 @@ SELECT
            THEN tdrec940_rec.t$fire$l
          ELSE TDREC940.T$FIRE$L    
     END                                               REF_FISCAL_REC,
-    CISLI941_REL.T$FIRE$L                             REF_FISCAL_DEV,
+    nvl(CISLI941_REL.T$FIRE$L,CISLI245.t$fire$l)      REF_FISCAL_DEV,
     CASE WHEN tdrec940.t$date$l IS NULL 
            THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdrec940_rec.t$date$l, 
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT') 
@@ -56,7 +75,8 @@ SELECT
     CASE WHEN D_RSTA.DSC IS NULL 
            THEN D_RSTA_REC.DSC
          ELSE   D_RSTA.DSC 
-    END                                               STATUS_REC
+    END                                               STATUS_REC,
+    tdsls400.t$corn                            NR_PEDIDO
     
 FROM       BAANDB.TTDSLS400301 TDSLS400
 
@@ -71,6 +91,7 @@ INNER JOIN ( select a.t$ncia$c,
                     a.t$uneg$c,
                     a.t$pecl$c,
                     a.t$sqpd$c,
+                    a.t$entr$c,
                     a.t$orno$c ) znsls004
         ON znsls004.t$orno$c = tdsls400.t$orno
           
@@ -134,7 +155,12 @@ INNER JOIN (SELECT DISTINCT
                from BAANDB.TTDREC941301 A ) TDREC941
         ON TDREC941.T$DVRF$C = CISLI940_ORG.T$FIRE$L
         
- LEFT JOIN BAANDB.TCISLI941301 CISLI941_REL
+ LEFT JOIN (select a.T$FIRE$L, 
+                   a.T$REFR$L,
+                   min(a.t$line$l) t$line$l
+              from BAANDB.TCISLI941301 a
+          group by a.T$FIRE$L, 
+                   a.T$REFR$L) CISLI941_REL
         ON CISLI941_REL.T$REFR$L = TDREC941.T$DVRF$C
 
  LEFT JOIN BAANDB.TTDREC940301 TDREC940
@@ -285,16 +311,11 @@ LEFT JOIN ( select  a.t$ncia$c,
         ON D_RSTA_REC.COD = tdrec940_rec.T$STAT$L                    
         
 WHERE TDSLS094.T$RETO != 2
-
-  AND CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$ODAT, 'DD-MON-YYYY HH24:MI:SS'), 
-     'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
+--and tdsls400.t$orno = '120113264'
+    AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$ODAT, 'DD-MON-YYYY HH24:MI:SS'), 
+              'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)) 
       BETWEEN :DataCriacaoOrdemDe 
           AND :DataCriacaoOrdemAte
-   AND ((:NFVendaTodos = 1) OR (TRIM(CASE WHEN znsls400.t$sige$c = 1 
-                                            THEN znmcs095.t$docn$c
-                                          ELSE CISLI940_ORG.T$DOCN$L 
-                                      END)  
-                                           IN (:NFVenda) AND (:NFVendaTodos = 0)))
-
-  AND ((:TipoOrdemTodos = 1) OR (TRIM(TDSLS400.T$SOTP) IN (:TipoOrdem) AND (:TipoOrdemTodos = 0)))
-  AND ((:FilialTodos = 1) OR (TRIM(ZNFMD001.T$FILI$C) IN (:Filial) AND (:FilialTodos = 0)))
+    AND ((:NFVendaTodos = 0) OR (TRIM(CISLI940_ORG.T$DOCN$L) IN (:NFVenda) AND (:NFVendaTodos = 1)))
+    AND ((:TipoOrdemTodos = 0) OR (TRIM(TDSLS400.T$SOTP) IN (:TipoOrdem) AND (:TipoOrdemTodos = 1)))
+    AND ((:FilialTodos = 0) OR (TRIM(ZNFMD001.T$FILI$C) IN (:Filial) AND (:FilialTodos = 1)))
