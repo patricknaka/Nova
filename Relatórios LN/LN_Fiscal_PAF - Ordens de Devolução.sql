@@ -1,4 +1,4 @@
-SELECT
+SELECT DISTINCT
     301                                               CIA,
     ZNFMD001_ORG.T$FILI$C                             FILIAL_VENDA,
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$ODAT, 
@@ -311,6 +311,10 @@ LEFT JOIN ( select  a.t$ncia$c,
         ON D_RSTA_REC.COD = tdrec940_rec.T$STAT$L                    
         
 WHERE TDSLS094.T$RETO != 2
+    AND CASE WHEN cisli940.t$seri$l IS NULL 
+           THEN tdrec940_rec.t$seri$l
+         ELSE   CISLI940.T$SERI$L                                                                
+    END != '1'
 --and tdsls400.t$orno = '120113264'
     AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(TDSLS400.T$ODAT, 'DD-MON-YYYY HH24:MI:SS'), 
               'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)) 
