@@ -1,21 +1,23 @@
-select
-       tdrec940.t$docn$l                         NRO_DOCUMENTO,
-       tdrec940.t$seri$l                         SERIE,
-       tdrec940.t$fovn$l                         ID_FISCAL_CNPJ,
-       tdrec940.t$fire$l                         REC_FISCAL,
-       REC_FISCAL.STATUS                         STATUS,
-       case when tdrec940.t$pstd$l = 1 then
-            'Sim'
-       else
-            'Não'
-       end                                       CONTABILIZADO,
-       cast((from_tz(to_timestamp(to_char(tdrec940.t$date$l,
-             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)
-                                                 DATA_FISCAL,
-       tdrec940.t$gtam$l                         VALOR
-  from baandb.ttdrec940301 tdrec940
-  
+   select tcmcs065.t$dsca                                  FILIAL,
+          tdrec940.t$docn$l                                NRO_DOCUMENTO,
+          tdrec940.t$seri$l                                SERIE,
+          tdrec940.t$fovn$l                                ID_FISCAL_CNPJ,
+          tdrec940.t$fire$l                                REC_FISCAL,
+          REC_FISCAL.STATUS                                STATUS,
+          case when tdrec940.t$pstd$l = 1 
+                 then 'Sim'
+               else   'Não'
+          end                                              CONTABILIZADO,
+          cast((from_tz(to_timestamp(to_char(tdrec940.t$date$l,
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+               AT time zone 'America/Sao_Paulo') as date)  DATA_FISCAL,
+          tdrec940.t$gtam$l                                VALOR
+		  
+     from baandb.ttdrec940301 tdrec940
+
+ left join baandb.ttcmcs065301 tcmcs065
+        on tcmcs065.t$cwoc = tdrec940.t$cofc$l
+
 left join ( select l.t$desc STATUS,
                    d.t$cnst
               from baandb.tttadv401000 d,
@@ -44,10 +46,13 @@ left join ( select l.t$desc STATUS,
                                            and l1.t$cpac = l.t$cpac ) ) REC_FISCAL
         on REC_FISCAL.t$cnst = tdrec940.t$stat$l
   
-  where trunc(cast((from_tz(to_timestamp(to_char(tdrec940.t$date$l,
-                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+     where tdrec940.t$doty$l = 8  -- Conhecimento
+       and Trunc(cast((from_tz(to_timestamp(to_char(tdrec940.t$date$l,
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') as date))
-        between :DATA_FISCAL_DE
-            and :DATA_FISCAL_ATE
-    and REC_FISCAL.STATUS in (:STATUS)
-    and tdrec940.t$doty$l = 8  -- Conhecimento
+           Between :DATA_FISCAL_DE
+               And :DATA_FISCAL_ATE
+       and tdrec940.t$sfra$l in (:Filial)
+       and tdrec940.t$stat$l in (:Status)
+
+  order by DATA_FISCAL
