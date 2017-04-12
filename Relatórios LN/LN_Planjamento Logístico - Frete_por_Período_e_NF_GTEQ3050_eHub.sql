@@ -525,6 +525,22 @@ ORDER BY FILIAL, NUME_ENTREGA
  "       znfmd630.t$etiq$c             ETIQUETA,  " &
  "       CRIACAO_WMS.DATA_OCORRENCIA   DATA_WMS  " &
  "  " &
+ "        znsng108.t$pvvv$c             PEDIDO_VV,  " &
+ "        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsng108.t$dhpr$c,  " &
+ "          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
+ "            AT time zone 'America/Sao_Paulo') AS DATE)  " &
+ "                                      DATA_PEDIDO_VV,  " &
+ "        (select sum((a.t$qtve$c * tcibd001.t$wght)) peso  " &
+ "           from baandb.tznsls401" + Parameters!Compania.Value + " a  " &
+ "         LEFT JOIN baandb.ttcibd001" + Parameters!Compania.Value + " tcibd001  " &
+ "                ON tcibd001.t$item = a.t$itml$c  " &
+ "          where a.t$ncia$c = znsls401.t$ncia$c  " &
+ "            AND a.t$uneg$c = znsls401.t$uneg$c  " &
+ "            AND a.t$pecl$c = znsls401.t$pecl$c  " &
+ "            AND a.t$sqpd$c = znsls401.t$sqpd$c  " &
+ "            AND a.t$entr$c = znsls401.t$entr$c)  " &
+ "                                     PESO_REAL  " &
+ "  " &
  "FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c),  " &
  "                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')  " &
  "                        AT time zone 'America/Sao_Paulo') AS DATE)                                    DATA_OCORRENCIA,  " &
