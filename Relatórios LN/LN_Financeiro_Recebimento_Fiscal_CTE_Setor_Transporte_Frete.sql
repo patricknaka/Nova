@@ -1,4 +1,4 @@
-   select tcmcs065.t$dsca                                  FILIAL,
+select tcmcs065.t$dsca                                  FILIAL,
           tdrec940.t$docn$l                                NRO_DOCUMENTO,
           tdrec940.t$seri$l                                SERIE,
           tdrec940.t$fovn$l                                ID_FISCAL_CNPJ,
@@ -22,10 +22,10 @@ left join ( select l.t$desc STATUS,
                    d.t$cnst
               from baandb.tttadv401000 d,
                    baandb.tttadv140000 l
-             where d.t$cpac = 'ci'
-               and d.t$cdom = 'sli.stat'
+             where d.t$cpac = 'td'
+               and d.t$cdom = 'rec.stat.l'
                and l.t$clan = 'p'
-               and l.t$cpac = 'ci'
+               and l.t$cpac = 'td'
                and l.t$clab = d.t$za_clab
                and rpad(d.t$vers,4) ||
                    rpad(d.t$rele,2) ||
@@ -46,13 +46,14 @@ left join ( select l.t$desc STATUS,
                                            and l1.t$cpac = l.t$cpac ) ) REC_FISCAL
         on REC_FISCAL.t$cnst = tdrec940.t$stat$l
   
-     where tdrec940.t$doty$l = 8  -- Conhecimento
-       and Trunc(cast((from_tz(to_timestamp(to_char(tdrec940.t$date$l,
-                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+  where tdrec940.t$doty$l = 8  -- Conhecimento
+    and trunc(cast((from_tz(to_timestamp(to_char(tdrec940.t$date$l,
+                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') as date))
-           Between :DATA_FISCAL_DE
-               And :DATA_FISCAL_ATE
-       and tdrec940.t$sfra$l in (:Filial)
-       and tdrec940.t$stat$l in (:Status)
+        between :DATA_FISCAL_DE
+            and :DATA_FISCAL_ATE
+    and tdrec940.t$sfra$l in (:Filial)
+    and tdrec940.t$stat$l in (:Status)
+    and ( (Trim(:CNPJ) is null) OR (regexp_replace(tdrec940.t$fovn$l, '[^0-9]', '') Like '%' || regexp_replace(Trim(:CNPJ), '[^0-9]', '') || '%') )
 
-  order by DATA_FISCAL
+order by DATA_FISCAL
