@@ -6,15 +6,10 @@ acp201.t$ttyp             Tp_Trans,
 acp201.t$ninv             Documento,  
 acp201.t$schn             Parcela, 
 acp200.t$amnt             Vr_Pagto, 
-
-cast((from_tz(to_timestamp(to_char(acp200b.T$DOCD, 'dd-mon-yyyy hh24:mi:ss'),
-                'dd-mon-yyyy hh24:mi:ss'), 'gmt') at time zone 'america/sao_paulo') as date) Dt_Docto, 
-cast((from_tz(to_timestamp(to_char(acp201.T$PAYD, 'dd-mon-yyyy hh24:mi:ss'),
-                'dd-mon-yyyy hh24:mi:ss'), 'gmt') at time zone 'america/sao_paulo') as date) Dt_Vcto_Previsto,
-cast((from_tz(to_timestamp(to_char(acp201.T$ODUE$L, 'dd-mon-yyyy hh24:mi:ss'),
-                'dd-mon-yyyy hh24:mi:ss'), 'gmt') at time zone 'america/sao_paulo') as date) Dt_Vcto_Original, 
-cast((from_tz(to_timestamp(to_char(acp200.t$docd, 'dd-mon-yyyy hh24:mi:ss'),
-                'dd-mon-yyyy hh24:mi:ss'), 'gmt') at time zone 'america/sao_paulo') as date) Dt_Pagto,
+acp200b.T$DOCD            Dt_Docto,
+acp201.T$PAYD             Dt_Vcto_Previsto,
+acp201.T$ODUE$L           Dt_Vcto_Original,
+acp200.t$docd             Dt_Pagto,
 
 acp201.t$paym               Met_Pgto, 
 acp201.t$brel               Cod_Banco_para_Pgto, 
@@ -74,8 +69,7 @@ where acp201.t$pyst$l = 5 --- 5 pago
           
  and acp200.t$tdoc <> 'ENC'
                 
- and cast((from_tz(to_timestamp(to_char(acp200.t$docd, 'dd-mon-yyyy hh24:mi:ss'),
-                'dd-mon-yyyy hh24:mi:ss'), 'gmt') at time zone 'america/sao_paulo') as date) between :de and :ate
+ and acp200.t$docd between :de and :ate
 
 --and acp200.t$ifbp = '100004970'
 
