@@ -63,10 +63,10 @@ select
 	   from baandb.tznsls410301 znsls410
 	  where znsls410.t$ncia$c = znsls004.t$ncia$c
 	    AND znsls410.t$uneg$c = znsls004.t$uneg$c
-	    AND znsls410.t$pecl$c = nvl(substr(ordf.t$pecl$c,0,length(ordf.t$pecl$c)-2), znsls004.t$pecl$c)
+	    AND to_char(znsls410.t$pecl$c) = nvl(substr(to_char(ordf.t$pecl$c),0,length(to_char(ordf.t$pecl$c))-2), znsls004.t$pecl$c)
 	    AND znsls410.t$sqpd$c = znsls004.t$sqpd$c
-	    AND znsls410.t$entr$c = nvl(ordf.t$pecl$c, znsls004.t$entr$c)) ULTIMO_PONTO
---           prec.t$fdot$l       ENTRADA_SAIDA
+	    AND to_char(znsls410.t$entr$c) = nvl(to_char(ordf.t$pecl$c), znsls004.t$entr$c)) ULTIMO_PONTO
+
 
       from baandb.tbrnfe940301 Prec
             
