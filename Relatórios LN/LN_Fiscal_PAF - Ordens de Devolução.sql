@@ -322,4 +322,4 @@ WHERE TDSLS094.T$RETO != 2
           AND :DataCriacaoOrdemAte
     AND ((:NFVendaTodos = 0) OR (TRIM(CISLI940_ORG.T$DOCN$L) IN (:NFVenda) AND (:NFVendaTodos = 1)))
     AND ((:TipoOrdemTodos = 0) OR (TRIM(TDSLS400.T$SOTP) IN (:TipoOrdem) AND (:TipoOrdemTodos = 1)))
-    AND ((:FilialTodos = 0) OR (TRIM(ZNFMD001.T$FILI$C) IN (:Filial) AND (:FilialTodos = 1)))
+    AND trim(ZNFMD001_ORG.T$FILI$C) IN (:Filial) 
