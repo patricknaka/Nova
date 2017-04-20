@@ -14,7 +14,11 @@ SELECT
        cisli940.t$fdty$l             NUME_TIPO_DOCUMENTO,
        FGET.                         DESC_TIPO_DOCUMENTO,
        znsls401.t$pecl$c             NUME_PEDIDO,
+       
        znfmd630.t$pecl$c             NUME_ENTREGA,
+       
+       znsls401.t$sequ$c,
+       
        znfmd630.t$qvol$c             QTDE_VOLUMES,
        znsls401.t$itpe$c             NUME_TIPO_ENTREGA_NOME,
        znsls002.t$dsca$c             DESC_TIPO_ENTREGA_NOME,
@@ -100,11 +104,20 @@ SELECT
       (cisli941.t$gamt$l - cisli941.t$tldm$l - cisli943.TOTAL)    RECEITA_LIQUIDA,
       znfmd637.t$amnt$c                                           VALOR_ICMS_FRETE,
       znfmd637_PIS.t$amnt$c                                       VALOR_PIS_FRETE,
-      znfmd637_COFINS.t$amnt$c                                    VALOR_COFINS_FRETE
+      znfmd637_COFINS.t$amnt$c                                    VALOR_COFINS_FRETE,
+      znmcs030.t$dsca$c                                           SETOR,
+      znmcs031.t$dsca$c                                           FAMILIA,
+      znfmd630.t$orno$c                                           ORDEM_VENDA,
+      znsls410.PT_CONTR                                           ULT_OCORR,
+      znmcs002.t$desc$c                                           DESC_ULT_OCORR,
+      CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.DATA_OCORR,
+                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                     AT time zone 'America/Sao_Paulo') AS DATE)
+                                                                  DATA_ULT_OCORR
 
 FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c),
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone 'America/Sao_Paulo') AS DATE)                                    DATA_OCORRENCIA,
+                        AT time zone 'America/Sao_Paulo') AS DATE)    DATA_OCORRENCIA,
                     Max(znfmd640_ETR.t$etiq$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640_ETR.t$udat$c ) t$etiq$c,
                     znfmd630.t$pecl$c,
                     znfmd640_ETR.t$fili$c
@@ -139,11 +152,11 @@ INNER JOIN ( select a1.t$ncia$c,
                     a1.t$orno$c ) znsls004
         ON znsls004.t$orno$c = znfmd630.t$orno$c
 
- LEFT JOIN baandb.tznsls400301  znsls400
-        ON znsls400.t$ncia$c = znsls004.t$ncia$c
-       AND znsls400.t$uneg$c = znsls004.T$UNEG$c
-       AND znsls400.t$pecl$c = znsls004.T$pecl$c
-       AND znsls400.t$sqpd$c = znsls004.T$sqpd$c
+LEFT JOIN baandb.tznsls400301  znsls400
+       ON znsls400.t$ncia$c = znsls004.t$ncia$c
+      AND znsls400.t$uneg$c = znsls004.T$UNEG$c
+      AND znsls400.t$pecl$c = znsls004.T$pecl$c
+      AND znsls400.t$sqpd$c = znsls004.T$sqpd$c
 
 LEFT JOIN baandb.tznsls401301 znsls401
        ON znsls401.t$ncia$c = znsls004.t$ncia$c
@@ -160,16 +173,20 @@ LEFT JOIN baandb.tznsls401301 znsls401
               from baandb.tcisli245301 a
               where a.t$ortp = 1
                 and a.t$koor = 3
+                and a.t$sqnb = 0
               group by a.t$slso,
                        a.t$pono,
                        a.t$fire$l,
                        a.t$line$l ) cisli245
-         ON cisli245.t$slso = znsls401.t$orno$c
+         ON cisli245.t$slso = znfmd630.t$orno$c
         AND cisli245.t$pono = znsls401.t$pono$c
       
 INNER JOIN baandb.tcisli941301 cisli941
         ON cisli941.t$fire$l = cisli245.t$fire$l
        AND cisli941.t$line$l = cisli245.t$line$l
+       
+LEFT JOIN baandb.tcisli940301  cisli940
+       ON cisli940.t$fire$l = znfmd630.t$fire$c
 
 LEFT JOIN ( select  a.t$fire$l,
                     a.t$line$l,
@@ -207,7 +224,7 @@ LEFT JOIN baandb.twhwmd400301 whwmd400
         ON znsls002.t$tpen$c = NVL(znsls401.t$itpe$c, 16)
 
  LEFT JOIN baandb.tznfmd067301  znfmd067
-        ON znfmd067.t$cfrw$c = znfmd630.t$cfrw$c
+        ON znfmd067.t$cfrw$c = cisli940.t$cfrw$l
        AND znfmd067.t$cono$c = znfmd630.t$cono$c
        AND znfmd067.t$fili$c = znfmd630.t$fili$c
 
@@ -218,10 +235,7 @@ LEFT JOIN baandb.twhwmd400301 whwmd400
          inner join baandb.ttccom130301 tccom130
                  on tccom130.t$cadr = tcmcs080.t$cadr$l
               where tccom130.t$ftyp$l = 'PJ' ) tccom130t
-        ON tccom130t.t$cfrw = znfmd630.t$cfrw$c
-
- LEFT JOIN baandb.tcisli940301  cisli940
-        ON cisli940.t$fire$l = znfmd630.t$fire$c
+        ON tccom130t.t$cfrw = cisli940.t$cfrw$l
 
  LEFT JOIN ( SELECT d.t$cnst CODE_STAT,
                     l.t$desc DESC_TIPO_DOCUMENTO
@@ -252,7 +266,7 @@ LEFT JOIN baandb.twhwmd400301 whwmd400
         ON cisli940.t$fdty$l = FGET.CODE_STAT
 
  LEFT JOIN BAANDB.tznfmd060301 znfmd060
-        ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
+        ON znfmd060.t$cfrw$c = cisli940.t$cfrw$l      --A transportadora da ordem de frete pode nao ser a correta. SDP 1390455
        AND znfmd060.t$cono$c = znfmd630.t$cono$c
         
  LEFT JOIN baandb.tznsls000601 znsls000
@@ -262,16 +276,31 @@ LEFT JOIN baandb.twhwmd400301 whwmd400
         ON znfmd637.t$txre$c = znfmd630.t$txre$c
        AND znfmd637.t$line$c = znfmd630.t$line$c
        AND znfmd637.t$brty$c = 1  --ICMS
-       
+   
+left join ( select  a.t$cfrw$c,
+                    a.t$cono$c,
+                    a.t$cepd$c,
+                    a.t$cepa$c,
+                    a.t$creg$c
+            from baandb.tznfmd062301 a 
+            where a.t$ativ$c = 1 
+            group by  a.t$cfrw$c,
+                      a.t$cono$c,
+                      a.t$creg$c,
+                      a.t$cepd$c,
+                      a.t$cepa$c ) znfmd062
+		   on znfmd062.t$cfrw$c = cisli940.t$cfrw$l
+			and	znfmd062.t$cono$c = znfmd630.t$cono$c
+      and znsls401.t$cepe$c between znfmd062.t$cepd$c and znfmd062.t$cepa$c 
+   
  LEFT JOIN ( select a.t$cfrw$c,
                     a.t$cono$c,
+                    a.t$creg$c,
                     a.t$cuba$c
-              from baandb.tznfmd061301 a 
-              group by  a.t$cfrw$c,
-                        a.t$cono$c,
-                        a.t$cuba$c ) znfmd061
-        ON znfmd061.t$cfrw$c = znfmd630.t$cfrw$c
+              from baandb.tznfmd061301 a ) znfmd061
+        ON znfmd061.t$cfrw$c = cisli940.t$cfrw$l
        AND znfmd061.t$cono$c = znfmd630.t$cono$c
+       AND znfmd061.t$creg$c = znfmd062.t$creg$c
  
   LEFT JOIN baandb.tznfmd637301 znfmd637_PIS
         ON znfmd637.t$txre$c = znfmd630.t$txre$c
@@ -282,12 +311,44 @@ LEFT JOIN baandb.twhwmd400301 whwmd400
         ON znfmd637.t$txre$c = znfmd630.t$txre$c
        AND znfmd637.t$line$c = znfmd630.t$line$c
        AND znfmd637.t$brty$c = 6  --COFINS
- 
-Where cisli940.t$fdty$l = 1     --Venda com pedido
+    
+   LEFT JOIN baandb.tznmcs030301 znmcs030
+          ON znmcs030.t$citg$c = tcibd001.t$citg
+         AND znmcs030.t$seto$c = tcibd001.t$seto$c
+         
+   LEFT JOIN baandb.tznmcs031301 znmcs031
+          ON znmcs031.t$citg$c = tcibd001.t$citg
+         AND znmcs031.t$seto$c = tcibd001.t$seto$c
+         AND znmcs031.t$fami$c = tcibd001.t$fami$c
+
+ LEFT JOIN ( select a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+                    a.t$entr$c,
+                    max(a.t$dtoc$c) DATA_OCORR,
+                    max(a.t$poco$c) KEEP (DENSE_RANK LAST ORDER BY a.T$DTOC$C,  a.T$SEQN$C) PT_CONTR
+               from baandb.tznsls410301 a
+           group by a.t$ncia$c,
+                    a.t$uneg$c,
+                    a.t$pecl$c,
+                    a.t$sqpd$c,
+		    a.t$entr$c ) znsls410
+        ON znsls410.t$ncia$c = znsls401.t$ncia$c
+       AND znsls410.t$uneg$c = znsls401.t$uneg$c
+       AND znsls410.t$pecl$c = znsls401.t$pecl$c
+       AND znsls410.t$sqpd$c = znsls401.t$sqpd$c
+       AND znsls410.t$entr$c = znsls401.t$entr$c
+
+left join baandb.tznmcs002301 znmcs002
+       on znmcs002.t$poco$c = znsls410.PT_CONTR
+       
+Where cisli940.t$fdty$l IN (1,15)     --Venda com pedido, Remessa Triangular
   and Trunc(znfmd640_ETR.DATA_OCORRENCIA)
            BETWEEN :DtExpIni
                AND :DtExpFim
   AND NVL(znsls401.t$itpe$c, 16) IN (:TipoEntrega)
-  AND ((:Transportadora = 'T') or (znfmd630.t$cfrw$c = :Transportadora))
-       
+  AND ((:Transportadora = 'T') or (cisli940.t$cfrw$l = :Transportadora))
+    
+    
 ORDER BY FILIAL, NUME_ENTREGA
