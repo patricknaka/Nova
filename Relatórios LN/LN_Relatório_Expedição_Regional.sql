@@ -99,6 +99,7 @@ left join baandb.tznsls400301 znsls400
       and znsls400.T$SQPD$C = znsls401.T$SQPD$C  	   
        
 where	cisli940.t$stat$l = 6
+and znfmd630.t$torg$c = 1
 AND ((znfmd630.t$pecl$c IN (:Entrega))
 	OR (:EntregaTodos = '0'))
 AND cisli941.t$item$l != znsls000.t$itmf$c      --ITEM FRETE
