@@ -1,4 +1,6 @@
-SELECT
+
+  CREATE OR REPLACE FORCE VIEW "OWN_MIS"."VW_NK_PEV_PAGAMENTO" ("DT_ULT_ATUALIZACAO", "CD_CIA", "NR_ORDEM", "NR_PEDIDO", "NR_ENTREGA", "SQ_PAGAMENTO", "CD_MEIO_PAGAMENTO", "CD_BANDEIRA", "CD_BANCO", "NR_PARCELA", "VL_PAGAMENTO", "CD_STATUS_PAGAMENTO", "IN_VALE_LISTA_CASAMENTO", "DT_EMISSAO_PEDIDO", "CD_UNIDADE_NEGOCIO", "DT_APROVACAO", "VL_ORIGINAL", "VL_JUROS_ADMINISTRADORA", "IN_JUROS_ADMINISTRADORA", "DT_APROVACAO_PAGAMENTO_ERP", "VL_JUROS", "CD_CICLO_PAGAMENTO", "NR_TABELA_NEGOCIACAO", "NR_BIN_CARTAO_CREDITO", "NR_NSU_TRANSACAO_CARTAO", "NR_NSU_AUTOR_CARTAO", "CD_AUTOR_CARTAO_CREDITO", "NR_MAQUINETA", "NR_TERMINAL", "CD_MOTIVO_REPROVACAO", "DS_MOTIVO_REPROVACAO", "NR_AGENCIA", "NR_CONTA_CORRENTE", "CD_ADQUIRENTE", "NR_BPAG") AS 
+  SELECT
 -- O campo CD_CIA foi incluido para diferenciar NIKE(13) E BUNZL(15)
 --**********************************************************************************************************************************************************
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$rcd_utc, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -18,7 +20,7 @@ SELECT
     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE) DT_EMISSAO_PEDIDO,
     znsls402.t$uneg$c  CD_UNIDADE_NEGOCIO,	
-    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls402.T$PVEN$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(sls401q.T$DTAP$C, 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
       AT time zone 'America/Sao_Paulo') AS DATE) DT_APROVACAO,
     znsls402.t$valo$c  VL_ORIGINAL,
     cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlja$c as numeric(12,2))  VL_JUROS_ADMINISTRADORA,
@@ -31,7 +33,7 @@ SELECT
         from baandb.ttdsls451601 a
         where a.t$orno=tdsls400.t$orno) DT_APROVACAO_PAGAMENTO_ERP,
     cast((sls401q.VL_PGTO_ENTR/sls401p.VL_PGTO_PED)*znsls402.t$vlju$c  as numeric(12,2))  VL_JUROS,
-    ' ' CD_CICLO_PAGAMENTO,            -- *** N√O EXISTE ESTA INFORMA«√O NO LN / PENDENTE DE DUVIDA ***
+    ' ' CD_CICLO_PAGAMENTO,            -- *** N√ÉO EXISTE ESTA INFORMA√á√ÉO NO LN / PENDENTE DE DUVIDA ***
     znsls402.t$cone$c  NR_TABELA_NEGOCIACAO,
     znsls402.t$ncam$c  NR_BIN_CARTAO_CREDITO,
     znsls402.t$nctf$c  NR_NSU_TRANSACAO_CARTAO,
@@ -40,7 +42,7 @@ SELECT
     znsls402.t$maqu$c  NR_MAQUINETA,
     TO_CHAR(znsls402.t$nute$c)  NR_TERMINAL,															
     znsls402.t$mrep$c  CD_MOTIVO_REPROVACAO,
-    znsls402.t$txrp$c  DS_MOTIVO_REPROVACAO,															
+    substr(znsls402.t$txrp$c,1,40)  DS_MOTIVO_REPROVACAO,															
     znsls402.t$idag$c  NR_AGENCIA,
     znsls402.t$idct$c  NR_CONTA_CORRENTE,
 	znsls402.t$idad$c CD_ADQUIRENTE,																		
@@ -53,6 +55,7 @@ FROM  baandb.tznsls400601 znsls400,
 		znsls401.t$sqpd$c       t$sqpd$c,
 		znsls401.t$entr$c       t$entr$c,
 		znsls401.t$orno$c      	t$orno$c,
+    znsls401.t$dtap$c       t$dtap$c,
 		sum((znsls401.t$vlun$c*znsls401.t$qtve$c)+znsls401.t$vlfr$c-znsls401.t$vldi$c+znsls401.t$vlde$c) VL_PGTO_ENTR		
     from baandb.tznsls401601 znsls401
 	group by
@@ -61,7 +64,8 @@ FROM  baandb.tznsls400601 znsls400,
 		znsls401.t$pecl$c,
 		znsls401.t$sqpd$c,
 		znsls401.t$entr$c,
-		znsls401.t$orno$c) sls401q,																						
+		znsls401.t$orno$c,
+    znsls401.t$dtap$c) sls401q,																						
 		
     (select distinct 																									
 		znsls401.t$ncia$c      	t$ncia$c,
@@ -90,4 +94,4 @@ and    sls401q.t$orno$c=tdsls400.t$orno
 and    znsls402.t$ncia$c=znsls400.t$ncia$c
 and    znsls402.t$uneg$c=znsls400.t$uneg$c
 and    znsls402.t$pecl$c=znsls400.t$pecl$c
-and    znsls402.t$sqpd$c=znsls400.t$sqpd$c
+and    znsls402.t$sqpd$c=znsls400.t$sqpd$c;
