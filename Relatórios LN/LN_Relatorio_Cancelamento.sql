@@ -56,7 +56,8 @@ SELECT
     CASE WHEN zncmg015.t$caau$c = 1
            THEN 'Automático'
          ELSE   'Manual'
-    END                           AUTOMATICO
+    END                           AUTOMATICO,
+    znsls402.t$bopg$c             BOLETO_PAG
 
 FROM       baandb.tznsls402301  znsls402
 
