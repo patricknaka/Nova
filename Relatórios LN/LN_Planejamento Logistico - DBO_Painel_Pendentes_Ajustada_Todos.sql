@@ -94,7 +94,10 @@ CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls401.T$ODAT  , 'DD-MON-YYYY HH24:MI:SS'),
 END                            DATA_ORDEM,
 znfmd630.t$ncar$c              NUMERO_CARGA,
 znfmd630.t$cnfe$c              NUMERO_DANFE,
-znsng108.t$pvvv$c              PEDIDO_S9
+znsng108.t$pvvv$c              PEDIDO_S9,
+CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c  , 'DD-MON-YYYY HH24:MI:SS'),
+                        'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)              
+                               DATA_EMISSAO
 
   FROM       baandb.tcisli940301 cisli940  
   
