@@ -1,48 +1,44 @@
-SELECT 
-       znfmd630.t$fili$c             FILIAL,
+SELECT DISTINCT   --somente para tirar a duplicidade da tabela znfmd062
+       znfmd630.t$fili$c                                        FILIAL,
        NVL(tcmcs031.t$dsca,
-           'Pedido Interno')         MARCA,
+           'Pedido Interno')                                    MARCA,
        cast(replace(replace(own_mis.filtro_mis(znsls400.t$nomf$c ),';',''),'"','')   as varchar(100))
-                                     NOME_DESTINATARIO,
-       znfmd640_ETR.DATA_OCORRENCIA  DATA_EXPEDICAO,
-       znfmd630.t$docn$c             NUME_NOTA,
-       znfmd630.t$seri$c             NUME_SERIE,
+                                                                NOME_DESTINATARIO,
+       znfmd640_ETR.DATA_OCORRENCIA                             DATA_EXPEDICAO,
+       znfmd630.t$docn$c                                        NUME_NOTA,
+       znfmd630.t$seri$c                                        NUME_SERIE,
        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l,
          'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
            AT time zone 'America/Sao_Paulo') AS DATE)
-                                     DATA_EMISSAO_NF,
-       cisli940.t$fdty$l             NUME_TIPO_DOCUMENTO,
-       FGET.                         DESC_TIPO_DOCUMENTO,
-       znsls401.t$pecl$c             NUME_PEDIDO,
-       
-       znfmd630.t$pecl$c             NUME_ENTREGA,
-       
-       znsls401.t$sequ$c,
-       
-       znfmd630.t$qvol$c             QTDE_VOLUMES,
-       znsls401.t$itpe$c             NUME_TIPO_ENTREGA_NOME,
-       znsls002.t$dsca$c             DESC_TIPO_ENTREGA_NOME,
-       znsls401.t$itml$c             ITEM,
+                                                                DATA_EMISSAO_NF,
+       cisli940.t$fdty$l                                        NUME_TIPO_DOCUMENTO,
+       FGET.                                                    DESC_TIPO_DOCUMENTO,
+       znsls401.t$pecl$c                                        NUME_PEDIDO,
+       znsls401.t$entr$c                                        NUME_ENTREGA,       
+       znfmd630.t$qvol$c                                        QTDE_VOLUMES,
+       znsls401.t$itpe$c                                        NUME_TIPO_ENTREGA_NOME,
+       znsls002.t$dsca$c                                        DESC_TIPO_ENTREGA_NOME,
+       znsls401.t$itml$c                                        ITEM,
        cast(replace(replace(own_mis.filtro_mis(tcibd001.t$dscb$c),';',''),'"','')   as varchar(100))
-                                     DESCRICAO_ITEM,
-       tcmcs023.t$dsca               DEPTO,
-       (znsls401.t$qtve$c * tcibd001.t$wght)  
-                                     PESO_REAL_ITEM,
-       znfmd630.t$wght$c             PESO_REAL_TOTAL,
+                                                                DESCRICAO_ITEM,
+       tcmcs023.t$dsca                                          DEPTO,
+       (abs(znsls401.t$qtve$c) * tcibd001.t$wght)  
+                                                                PESO_REAL_ITEM,
+       znfmd630.t$wght$c                                        PESO_REAL_TOTAL,
       (whwmd400.t$dpth * whwmd400.t$wdth * whwmd400.t$hght * znfmd061.t$cuba$c)
-                                     PESO_CUBADO_ITEM,
+                                                                PESO_CUBADO_ITEM,
        (whwmd400.t$dpth * whwmd400.t$wdth * whwmd400.t$hght)
-                                     VOLUME_ITEM,
-       znfmd061.t$cuba$c             FATOR_CUBAGEM,
-       cisli941.t$gamt$l             ITEM_VALOR,
-       znfmd630.t$vlfc$c             FRETE_GTE,
-       znsls401.t$vlfr$c             FRETE_SITE,
-       cisli941.t$amnt$l             VLR_TOTAL_ITEM,
+                                                                VOLUME_ITEM,
+       znfmd061.t$cuba$c                                        FATOR_CUBAGEM,
+       cisli941.t$gamt$l                                        ITEM_VALOR,
+       znfmd630.t$vlfc$c                                        FRETE_GTE,
+       znsls401.t$vlfr$c                                        FRETE_SITE,
+       cisli941.t$amnt$l                                        VLR_TOTAL_ITEM,
        cast(replace(replace(own_mis.filtro_mis(tccom130t.t$dsca),';',''),'"','')   as varchar(100))
-                                     TRANSP_NOME,
-       znsls401.t$cepe$c             CEP,
-       znsls401.t$cide$c             CIDADE,
-       znsls401.t$ufen$c             UF,
+                                                                TRANSP_NOME,
+       znsls401.t$cepe$c                                        CEP,
+       znsls401.t$cide$c                                        CIDADE,
+       znsls401.t$ufen$c                                        UF,
        ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ENT.t$date$c,
                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') AS DATE)
@@ -50,45 +46,39 @@ SELECT
           where znfmd640_ENT.t$fili$c = znfmd630.t$fili$c
             and znfmd640_ENT.t$etiq$c = znfmd630.t$etiq$c
             and znfmd640_ENT.t$coci$c = 'ENT'
-            and ROWNUM = 1 )         DATA_ENTREGA,
+            and ROWNUM = 1 )                                    DATA_ENTREGA,
 
-       znfmd067.t$fate$c             FILIAL_TRANSPORTADORA,
+       znfmd067.t$fate$c                                        FILIAL_TRANSPORTADORA,
        CASE WHEN regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '') IS NULL
               THEN '00000000000000'
             WHEN LENGTH(regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')) < 11
               THEN '00000000000000'
             ELSE regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')
-       END                           CNPJ_TRANSPORTADORA,
+       END                                                      CNPJ_TRANSPORTADORA,
 
        CASE WHEN TRUNC(znfmd630.t$dtco$c) <= TO_DATE('01/01/1970','DD/MM/YYYY')
               Then null
             Else CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtco$c, 'DD-MON-YYYY HH24:MI:SS'),
                    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-       END                           DATA_CORRIGIDA,
-
-       znsls401.t$pztr$c             PRAZO_ENTREGA,
-       cisli941.t$dqua$l             QTDE_FATURADA,
-       znsls401.t$qtve$c             QTDE_PEDIDO_ITEM,
-
-       znsls401.t$pzcd$c             PRAZO_CD,
-       
+       END                                                      DATA_CORRIGIDA,
+       znsls401.t$pztr$c                                        PRAZO_ENTREGA,
+       cisli941.t$dqua$l                                        QTDE_FATURADA,
+       abs(znsls401.t$qtve$c)                                   QTDE_PEDIDO_ITEM,
+       znsls401.t$pzcd$c                                        PRAZO_CD,
         CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'),
                    'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-
-                                     DATA_COMPRA,
-
-       znfmd630.t$cono$c             COD_CONTRATO,
+                                                                DATA_COMPRA,
+       znfmd630.t$cono$c                                        COD_CONTRATO,
        cast(replace(replace(own_mis.filtro_mis(znfmd060.t$cdes$c),';',''),'"','')   as varchar(100))
-                                     DESC_CONTRATO,
+                                                                DESC_CONTRATO,
        cast(replace(replace(own_mis.filtro_mis(znfmd060.t$refe$c),';',''),'"','')   as varchar(100))
-                                     ID_EXT_CONTRATO,
-
+                                                                ID_EXT_CONTRATO,
        CASE WHEN TRUNC(znfmd630.t$dtpe$c) = '01/01/1970'
               THEN NULL
             ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtpe$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') AS DATE)
-       END                           DATA_PREVISTA_ENTREGA,
+       END                                                      DATA_PREVISTA_ENTREGA,
        
            (select b.t$desc$c                          
             from  baandb.tznsls402301 a,
@@ -97,9 +87,9 @@ SELECT
               and a.t$uneg$c = znsls400.t$uneg$c
               and a.t$pecl$c = znsls400.t$pecl$c
               and a.t$sqpd$c = znsls400.t$sqpd$c
-              and a.t$sequ$c = 1
-              and b.t$mpgt$c = a.t$idmp$c)
-                                      MEIO_PAGTO,
+              and b.t$mpgt$c = a.t$idmp$c
+              and rownum = 1)
+                                                                  MEIO_PAGTO,
       znsls400.t$vlfr$c                                           FRETE_SITE_TOTAL,
       (cisli941.t$gamt$l - cisli941.t$tldm$l - cisli943.TOTAL)    RECEITA_LIQUIDA,
       znfmd637.t$amnt$c                                           VALOR_ICMS_FRETE,
@@ -135,23 +125,18 @@ INNER JOIN baandb.tznfmd630301 znfmd630
        AND znfmd630.t$etiq$c = znfmd640_ETR.t$etiq$c
        AND znfmd630.t$pecl$c = znfmd640_ETR.t$pecl$c
 
-INNER JOIN ( select a1.t$ncia$c,
-                    a1.t$uneg$c,
-                    a1.t$pecl$c,
-                    a1.t$sqpd$c,
-                    a1.t$entr$c,
-                    a1.t$sequ$c,
-                    a1.t$orno$c
-               from baandb.tznsls004301 a1
-           group by a1.t$ncia$c,
-                    a1.t$uneg$c,
-                    a1.t$pecl$c,
-                    a1.t$sqpd$c,
-                    a1.t$entr$c,
-                    a1.t$sequ$c,
-                    a1.t$orno$c ) znsls004
+INNER JOIN baandb.tznsls004301 znsls004
         ON znsls004.t$orno$c = znfmd630.t$orno$c
 
+INNER JOIN baandb.tznsls000301 znsls000
+        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
+        
+INNER JOIN baandb.ttdsls401301 tdsls401
+        ON tdsls401.t$orno = znsls004.t$orno$c
+       AND tdsls401.t$pono = znsls004.t$pono$c
+       AND tdsls401.t$sqnb = 0
+       AND tdsls401.t$item not in (znsls000.t$itmd$c, znsls000.t$itmf$c, znsls000.t$itjl$c)
+       
 LEFT JOIN baandb.tznsls400301  znsls400
        ON znsls400.t$ncia$c = znsls004.t$ncia$c
       AND znsls400.t$uneg$c = znsls004.T$UNEG$c
@@ -166,21 +151,15 @@ LEFT JOIN baandb.tznsls401301 znsls401
       AND znsls401.t$entr$c = znsls004.t$entr$c
       AND znsls401.t$sequ$c = znsls004.t$sequ$c
 
- INNER JOIN ( select a.t$slso,
-                     a.t$pono,
-                     a.t$fire$l,
-                     a.t$line$l
-              from baandb.tcisli245301 a
-              where a.t$ortp = 1
-                and a.t$koor = 3
-                and a.t$sqnb = 0
-              group by a.t$slso,
-                       a.t$pono,
-                       a.t$fire$l,
-                       a.t$line$l ) cisli245
-         ON cisli245.t$slso = znfmd630.t$orno$c
-        AND cisli245.t$pono = znsls401.t$pono$c
-      
+INNER JOIN baandb.tcisli245301 cisli245
+        ON cisli245.t$slcp = 301
+       AND cisli245.t$ortp = 1
+       AND cisli245.t$koor = 3
+       AND cisli245.t$slso = tdsls401.t$orno
+       AND cisli245.t$oset = 0
+       AND cisli245.t$pono = tdsls401.t$pono
+       AND cisli245.t$sqnb = 0
+       
 INNER JOIN baandb.tcisli941301 cisli941
         ON cisli941.t$fire$l = cisli245.t$fire$l
        AND cisli941.t$line$l = cisli245.t$line$l
@@ -269,38 +248,20 @@ LEFT JOIN baandb.twhwmd400301 whwmd400
         ON znfmd060.t$cfrw$c = cisli940.t$cfrw$l      --A transportadora da ordem de frete pode nao ser a correta. SDP 1390455
        AND znfmd060.t$cono$c = znfmd630.t$cono$c
         
- LEFT JOIN baandb.tznsls000601 znsls000
-        ON znsls000.t$indt$c = TO_DATE('01-01-1970','DD-MM-YYYY')
-  
  LEFT JOIN baandb.tznfmd637301 znfmd637
         ON znfmd637.t$txre$c = znfmd630.t$txre$c
        AND znfmd637.t$line$c = znfmd630.t$line$c
        AND znfmd637.t$brty$c = 1  --ICMS
    
-left join ( select  a.t$cfrw$c,
-                    a.t$cono$c,
-                    a.t$cepd$c,
-                    a.t$cepa$c,
-                    a.t$creg$c
-            from baandb.tznfmd062301 a 
-            where a.t$ativ$c = 1 
-            group by  a.t$cfrw$c,
-                      a.t$cono$c,
-                      a.t$creg$c,
-                      a.t$cepd$c,
-                      a.t$cepa$c ) znfmd062
-		   on znfmd062.t$cfrw$c = cisli940.t$cfrw$l
-			and	znfmd062.t$cono$c = znfmd630.t$cono$c
-      and znsls401.t$cepe$c between znfmd062.t$cepd$c and znfmd062.t$cepa$c 
+  LEFT JOIN baandb.tznfmd062301 znfmd062
+         ON znfmd062.t$cfrw$c = cisli940.t$cfrw$l
+        AND znfmd062.t$cono$c = znfmd630.t$cono$c
+        AND znsls401.t$cepe$c between znfmd062.t$cepd$c and znfmd062.t$cepa$c
    
- LEFT JOIN ( select a.t$cfrw$c,
-                    a.t$cono$c,
-                    a.t$creg$c,
-                    a.t$cuba$c
-              from baandb.tznfmd061301 a ) znfmd061
-        ON znfmd061.t$cfrw$c = cisli940.t$cfrw$l
-       AND znfmd061.t$cono$c = znfmd630.t$cono$c
-       AND znfmd061.t$creg$c = znfmd062.t$creg$c
+  LEFT JOIN baandb.tznfmd061301 znfmd061
+         ON znfmd061.t$cfrw$c = cisli940.t$cfrw$l
+        AND znfmd061.t$cono$c = znfmd630.t$cono$c
+        AND znfmd061.t$creg$c = znfmd062.t$creg$c
  
   LEFT JOIN baandb.tznfmd637301 znfmd637_PIS
         ON znfmd637.t$txre$c = znfmd630.t$txre$c
@@ -349,6 +310,5 @@ Where cisli940.t$fdty$l IN (1,15)     --Venda com pedido, Remessa Triangular
                AND :DtExpFim
   AND NVL(znsls401.t$itpe$c, 16) IN (:TipoEntrega)
   AND ((:Transportadora = 'T') or (cisli940.t$cfrw$l = :Transportadora))
-    
-    
+
 ORDER BY FILIAL, NUME_ENTREGA
