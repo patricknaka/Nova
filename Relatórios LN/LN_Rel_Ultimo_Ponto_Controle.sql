@@ -1,5 +1,5 @@
 SELECT DISTINCT
-    znsls401.t$uneg$c                                     UNID_NEGOCIO,
+    znint002.t$desc$c                                     UNID_NEGOCIO,
     znsls401.t$pecl$c                                     PEDIDO,
     znsls401.t$sqpd$c                                     SEQ_PEDIDO,
     znsls401.t$entr$c                                     NO_ENTREGA,
@@ -220,6 +220,10 @@ LEFT JOIN baandb.tznsls400301 znsls400
                                             and l1.t$clan = l.t$clan 
                                             and l1.t$cpac = l.t$cpac ) ) OVENDA
         ON OVENDA.t$cnst = tdsls400.t$hdst
+
+INNER JOIN BAANDB.TZNINT002301 ZNINT002 
+         ON ZNINT002.T$NCIA$C = znsls400.T$NCIA$C
+        AND ZNINT002.T$UNEG$C = znsls400.T$UNEG$C
         
 WHERE znsls410.t$poco$c IS NOT NULL
 
