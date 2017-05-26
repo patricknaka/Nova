@@ -21,17 +21,16 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
 					'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
 		END                                       DATA_APROVACAO_PEDIDO,	
 
-		CASE WHEN znsls401.t$itpe$c = 15   --REVERSA
+	CASE WHEN znsls401.t$copo$c = 1  --REVERSA
 			   THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'), 
 					  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-			 WHEN znsls401.t$itpe$c = 9    --POSTAGEM
+			 WHEN znsls401.t$copo$c = 2  --POSTAGEM
 			   THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(POSTAGEM.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'), 
 					  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-			 WHEN znsls401.t$itpe$c = 17   --INSUCESSO
-			   THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(INSUCESSO.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'), 
-					  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+			 
 			 ELSE NULL 
 		END                                       DATA_SOL_COLETA_POSTAGEM,
+
 
 		
 		CASE WHEN znsls401.t$itpe$c = 8
@@ -112,13 +111,13 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
 			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
 												  DATA_STATUS_COLETA,
 	   
-		CASE WHEN REC_COLETA.t$dtoc$c IS NOT NULL 
+		CASE WHEN REC_COLETA.DATA_OCORR IS NOT NULL 
 			   THEN 'RDV'
 			 ELSE  ' '  
 		END                                       STATUS_DEVOLUCAO,
 		
 		
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(REC_COLETA.t$dtoc$c,'DD-MON-YYYY HH24:MI:SS'), 
+		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(REC_COLETA.DATA_OCORR,'DD-MON-YYYY HH24:MI:SS'), 
 			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
 												  DATA_STATUS_DEVOLUCAO,
 	 
@@ -297,8 +296,22 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
 			
 		cisli940.t$cnfe$l                          CHAVE_DANFE,
                       
-    znsls401.t$obet$c                          ETIQUETA_TRANSPORTADORA
+    znsls401.t$obet$c                          ETIQUETA_TRANSPORTADORA,
+    
+    znsls401.t$ufen$c                         ORIGEM_COLETA,
+	
+    tccom130cnova.t$cste                      DESTINO_DEVOLUCAO,
 		
+    znfmd061.t$tida$c						             TRANSITTIME,
+  
+  	znfmd061.t$dzon$c                         REGIAO,
+											 
+ 	  znfmd060.t$cpad$c                         PRAZO_ADMINISTRATIVO,
+  
+  primeira_ocorrencia.ponto_controle        PRIMEIRA_OCORRENCIA,  
+  
+  primeira_ocorrencia.data_ocorrencia       DATA_PRIMEIRA_OCORRENCIA
+  
  
 FROM baandb.tznsls400301 znsls400
 
@@ -422,7 +435,7 @@ FROM baandb.tznsls400301 znsls400
                         znsls410.t$pecl$c,
                         znsls410.t$entr$c,
                         znsls410.t$sqpd$c,
-                        MAX(znsls410.t$dtoc$c) t$dtoc$c
+                        MAX(znsls410.t$dtoc$c) DATA_OCORR
                 from baandb.tznsls410301 znsls410
                 where znsls410.t$poco$c = 'RDV'       --Retorno da Mercadoria ao CD
                 group by  znsls410.t$ncia$c,
@@ -551,6 +564,28 @@ FROM baandb.tznsls400301 znsls400
 		   AND RIE.t$pecl$c = znsls401.t$pvdt$c
 		   AND RIE.t$entr$c = znsls401.t$endt$c
 		   AND RIE.t$sqpd$c = znsls401.t$sedt$c
+		   
+		   
+	  LEFT JOIN ( select znsls410.t$ncia$c,
+						znsls410.t$uneg$c,
+						znsls410.t$pecl$c,
+                        znsls410.t$poco$c,
+						znsls410.t$entr$c,
+						znsls410.t$sqpd$c,
+						MAX(znsls410.t$dtoc$c) DATA_OCORR
+				   from baandb.tznsls410301 znsls410
+				  where znsls410.t$poco$c = 'RIE'       --Cancelamento da Coleta
+			   group by znsls410.t$ncia$c,
+						znsls410.t$uneg$c,
+						znsls410.t$pecl$c,
+                        znsls410.t$poco$c,
+						znsls410.t$entr$c,
+						znsls410.t$sqpd$c ) RIE_DEV
+			ON RIE_DEV.t$ncia$c = znsls401.t$ncia$c
+		   AND RIE_DEV.t$uneg$c = znsls401.t$uneg$c
+		   AND RIE_DEV.t$pecl$c = znsls401.t$pecl$c
+		   AND RIE_DEV.t$sqpd$c = znsls401.t$sqpd$c
+		   AND RIE_DEV.t$entr$c = znsls401.t$entr$c  	   
 
 	LEFT JOIN ( select
                     znsls410. t$ncia$c, 
@@ -875,9 +910,10 @@ LEFT JOIN baandb.tcisli245301 cisli245
      AND znmcs096.t$ncmp$c = 2    --Faturamento       
 
 	 LEFT JOIN  (Select /*+ PUSH_PRED */ 
-                     a.t$orno$c,
+                      a.t$orno$c,
                       a.t$pecl$c,
                       a.t$torg$c,
+                      a.t$fili$c,
                       a.t$cfrw$c,
                       a.t$cono$c,
                       MIN(a.t$etiq$c) t$etiq$c,
@@ -889,25 +925,82 @@ LEFT JOIN baandb.tcisli245301 cisli245
                       a.t$pecl$c,
                       a.t$torg$c,
                       a.t$cfrw$c,
+                      a.t$fili$c,
                       a.t$cono$c,
                       a.t$stat$c,
                       a.t$dtco$c ) znfmd630
 			  ON znfmd630.t$orno$c = tdsls400.t$orno
 
-    LEFT JOIN baandb.tznmcs080301 znmcs080 
+    left JOIN ( select MAX(a.t$ulog$c) KEEP (DENSE_RANK LAST ORDER BY a.t$date$c) t$ulog$c,
+                     a.t$fili$c,
+                     a.t$etiq$c
+              from baandb.tznfmd640301 a 
+              group by a.t$fili$c,
+                       a.t$etiq$c ) znfmd640
+        ON znfmd630.t$fili$c = znfmd640.t$fili$c
+       AND znfmd630.t$etiq$c = znfmd640.t$etiq$c		  
+			    
+       LEFT JOIN baandb.tznmcs080301 znmcs080 
            ON znmcs080.t$cfrw$c = znfmd630.t$cfrw$c
            
-    LEFT JOIN baandb.tznfmd060301 znfmd060         --Contrato Transportadora    --criar indice por cfrw/cono
-           ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
-          AND znfmd060.t$cono$c = znfmd630.t$cono$c
+      LEFT JOIN baandb.tznfmd060301 znfmd060         --Contrato Transportadora
+			ON znfmd060.t$cfrw$c = znfmd630.t$cfrw$c 
+      and znfmd060.t$cono$c = znfmd630.t$cono$c 
 
-WHERE tdsls094.t$reto in (1, 3)           -- Ordem Devolução, Ordem Devolução Rejeitada
-      AND tdsls094.t$insu$c = 2
+         left join  baandb.tznfmd062301 znfmd062
+            on znsls401.t$cepe$c 
+            between znfmd062.t$cepd$c   and znfmd062.t$cepa$c 
+         and  znfmd062.t$cfrw$c = znfmd630.t$cfrw$c
+         and znfmd062.t$cono$c  = znfmd630.t$cono$c	
+         and znsls401.t$cepe$c is not null
+ 
+ left join  baandb.tznfmd061301 znfmd061
+           on znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
+            and znfmd061.t$cono$c = znfmd062.t$cono$c
+            and znfmd061.t$creg$c = znfmd062.t$creg$c
+
+    LEFT JOIN ( 
+     select znsls410.t$ncia$c,
+			znsls410.t$uneg$c,
+			znsls410.t$entr$c,
+			znsls410.t$pecl$c,
+            znsls410.t$sqpd$c,	
+            znsls410.T$POCO$C PONTO_CONTROLE,
+            ZNSLS410.T$SEQN$c, 
+            znsls410.T$DTOC$C DATA_OCORRENCIA
+          	from baandb.tznsls410301 znsls410
+	  where znsls410.T$POCO$C in ('AC1',
+'AC2',
+'AC3',
+'ACO',
+'COL',
+'CPC',
+'CPM',
+'CRD',
+'CTC',
+'DCM',
+'ECO',
+'FEC',
+'PEC',
+'RCL',
+'RCO',
+'RTC'))
+ PRIMEIRA_OCORRENCIA
+		    ON PRIMEIRA_OCORRENCIA.t$ncia$c = znsls401.t$ncia$c
+		   AND PRIMEIRA_OCORRENCIA.t$uneg$c = znsls401.t$uneg$c
+		   AND PRIMEIRA_OCORRENCIA.t$pecl$c = znsls401.t$pecl$c
+		   AND PRIMEIRA_OCORRENCIA.t$entr$c = znsls401.t$entr$c
+		   AND PRIMEIRA_OCORRENCIA.t$sqpd$c = znsls401.t$sqpd$c        
+
+WHERE tdsls094.t$reto in (1, 3)                    -- Ordem Devolução, Ordem Devolução Rejeitada
       AND tcibd001.t$citg != '1000'
---      AND REC_COLETA.t$dtoc$c IS not NULL
+      AND znsls401.t$itpe$c not in (17,19,20,21)   --Insucesso, Migração   Retira Loja
+      AND znsls401.T$COPO$C not in (3,0,5)         --Insucesso, MKTP SIGE, Extravio  
       AND znsls401.t$iitm$c = 'P'
+      AND (SOLIC_COLETA.t$dtoc$c is not null or POSTAGEM.t$dtoc$c is not null)  
+      AND RIE.t$poco$c     IS NULL
+      AND znsls410.t$dtoc$c is not null     
+      AND RIE_DEV.T$POCO$C IS NULL
       AND znsls401.t$qtve$c < 0  
-      AND znsls400.t$idpo$c = 'TD' 
-      AND znsls400.t$dtem$c
---      Between TO_DATE('15/04/2017 03:00:00','DD/MM/YYYY HH24:MI:SS') and TO_DATE('15/05/2017 02:59:59','DD/MM/YYYY HH24:MI:SS')
-     Between to_date('01/02/2016','dd/mm/yyyy') and trunc(LAST_DAY(SYSDATE - 1))
+      AND znsls400.t$idpo$c = 'TD'
+      AND znsls400.t$dtem$c Between to_date('01/02/2016','dd/mm/yyyy') and trunc(LAST_DAY(SYSDATE - 1))
