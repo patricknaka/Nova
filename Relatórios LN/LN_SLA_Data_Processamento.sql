@@ -1,4 +1,5 @@
 SELECT /*+ USE_CONCAT NO_CPU_COSTING */
+--SELECT    /*+ use_concat parallel(64) no_cpu_costing */ 
            znsls401.t$entr$c          ENTREGA,
            znsls401.t$sequ$c          SEQUENCIAL,
            znfmd630.t$docn$c          NOTA,
@@ -19,18 +20,12 @@ SELECT /*+ USE_CONCAT NO_CPU_COSTING */
                           'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                              AT time zone 'America/Sao_Paulo') AS DATE)
                                     DATA_PROMETIDA,
-                                   
-           CASE WHEN znfmd640.t$udat$c < = to_date('01-01-1980','DD-MM-YYYY') 
-                  THEN NULL
-           ELSE   znfmd640.t$udat$c
-           END                      DATA_PROCESSAMENTO,
+                                            
+           znfmd640.t$udat$c        DATA_PROCESSAMENTO,
            znfmd640.t$coci$c        OCORRENCIA,           --ALTERADO 
            znfmd040.t$dotr$c        DESC_OCORRENCIA,      --ALTERADO
-           
-           CASE WHEN znfmd640.t$date$c < = to_date('01-01-1980','DD-MM-YYYY') 
-                  THEN NULL
-                ELSE   znfmd640.t$date$c
-            END                     DATA_OCORRENCIA,      --ALTERADO
+
+           znfmd640.t$date$c        DATA_OCORRENCIA,      --ALTERADO
                
            CASE WHEN znfmd640.t$ulog$c IN ('job_prod','jobptms', 'job_psup')
                   THEN 'EDI'
@@ -107,17 +102,17 @@ SELECT /*+ USE_CONCAT NO_CPU_COSTING */
                          AT time zone 'America/Sao_Paulo') AS DATE)
            END                      DATA_ENTREGA            --Ocorrencia finalizadora
 
-      FROM ( select  CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(znfmd640.t$udat$c),                      
-                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         
+      FROM ( select 
+                     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$udat$c,                      
+                    'DD-MON-YYYY HH24:MI'), 'DD-MON-YYYY HH24:MI'), 'GMT')         
                      AT time zone 'America/Sao_Paulo') AS DATE)
                                              t$udat$c,
-                    znfmd640.t$udat$c       DT_GMT,
                     znfmd630.t$pecl$c,
                     znfmd630.t$orno$c,
-                    max(znfmd640.t$etiq$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640.t$udat$c ) t$etiq$c,
+                    min(znfmd640.t$etiq$c) t$etiq$c,
                     znfmd640.t$coci$c,
-                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(max(znfmd640.t$date$c),                      
-                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')         
+                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c,                      
+                   'DD-MON-YYYY HH24:MI'), 'DD-MON-YYYY HH24:MI'), 'GMT')         
                      AT time zone 'America/Sao_Paulo') AS DATE)
                                              t$date$c,
                     znfmd640.t$ulog$c,
@@ -129,13 +124,18 @@ SELECT /*+ USE_CONCAT NO_CPU_COSTING */
                       and znfmd640.t$etiq$c = znfmd630.t$etiq$c
                inner join baandb.tznfmd030301 znfmd030
                        on znfmd030.t$ocin$c = znfmd640.t$coci$c 
---               where znfmd640.t$udat$c Between  to_date('15-05-2017', 'DD-MM-YYYY')+0.125 And to_date('15-05-2017', 'DD-MM-YYYY')+1.12499
-               where znfmd640.t$udat$c Between  trunc(TO_DATE(:DataProcessamentoDe))-1 And trunc(TO_DATE(:DataProcessamentoAte))+1
-               group by znfmd630.t$pecl$c,
+--               where znfmd640.t$udat$c Between  trunc(to_date('22-05-2017', 'DD-MM-YYYY'))-1 And trunc(to_date('22-05-2017', 'DD-MM-YYYY'))+1.99999
+               where znfmd640.t$udat$c Between  trunc(TO_DATE(:DataProcessamentoDe)) And trunc(TO_DATE(:DataProcessamentoAte))+1.99999
+               group by 
+                     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$udat$c,                      
+                    'DD-MON-YYYY HH24:MI'), 'DD-MON-YYYY HH24:MI'), 'GMT')         
+                     AT time zone 'America/Sao_Paulo') AS DATE),
+                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640.t$date$c,                      
+                   'DD-MON-YYYY HH24:MI'), 'DD-MON-YYYY HH24:MI'), 'GMT')         
+                     AT time zone 'America/Sao_Paulo') AS DATE),
+                        znfmd630.t$pecl$c,
                         znfmd630.t$orno$c,
                         znfmd640.t$coci$c,
-                        znfmd640.t$udat$c,
-                        znfmd640.t$date$c,
                         znfmd640.t$ulog$c,
                         znfmd640.t$fili$c,
                         znfmd030.t$finz$c ) znfmd640
@@ -225,9 +225,10 @@ SELECT /*+ USE_CONCAT NO_CPU_COSTING */
        AND OCORR_FIM.t$etiq$c = znfmd630.t$etiq$c
 
  WHERE znfmd640.t$finz$c IN (:FinalizadoPendente)
-
+--WHERE znfmd640.t$finz$c IN (1,2)
+  and znsls401.t$entr$c is not null
   and znfmd640.t$udat$c between TO_DATE(:DataProcessamentoDe)  
-							and trunc(TO_DATE(:DataProcessamentoAte))+0.99999 
+                            and trunc(TO_DATE(:DataProcessamentoAte))+0.99999 
  
 ORDER BY znsls401.t$ncia$c,
          znsls401.t$uneg$c,
