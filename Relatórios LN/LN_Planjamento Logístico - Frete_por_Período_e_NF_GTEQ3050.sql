@@ -146,7 +146,17 @@ SELECT znfmd630.t$fili$c             FILIAL,
           and	a.t$sqpd$c = znsls400.t$sqpd$c
           and	a.t$sequ$c = 1
           and	b.t$mpgt$c = a.t$idmp$c)
-                                      MEIO_PAGTO
+                                      MEIO_PAGTO,
+     (select sum((a.t$qtve$c * tcibd001.t$wght)) peso
+        from baandb.tznsls401301 a
+      LEFT JOIN baandb.ttcibd001301 tcibd001
+             ON tcibd001.t$item = a.t$itml$c
+      where a.t$ncia$c = znsls401.t$ncia$c
+        AND a.t$uneg$c = znsls401.t$uneg$c
+        AND a.t$pecl$c = znsls401.t$pecl$c
+        AND a.t$sqpd$c = znsls401.t$sqpd$c
+        AND a.t$entr$c = znsls401.t$entr$c)            
+                                     PESO_REAL
 
 FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c),
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
