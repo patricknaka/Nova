@@ -1,76 +1,137 @@
-select  
+select  /*+ no_cpu_costing use_merge(znsls401) use_merge(tccom130t) */
+        
+        SLS_FMD.t$torg$c,
+        
         ( select znfmd001.t$fili$c
           from   baandb.tznfmd001601 znfmd001,
                  baandb.ttcmcs065601 tcmcs065,
                  baandb.ttccom130601 tccom130_filial
-          where tcmcs065.t$cwoc = tdsls400.t$cofc
+          where tcmcs065.t$cwoc = SLS_fMD.t$cofc
             and tccom130_filial.t$cadr = tcmcs065.t$cadr
             and znfmd001.t$fovn$c = tccom130_filial.t$fovn$l )
                                                            FILIAL,
-        tcmcs031.t$dsca                                    MARCA,
-        cast((from_tz(to_timestamp(to_char(znfmd640_ETR.DATA_OCORRENCIA,
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)   DATA_EXPEDICAO,
-        znfmd630.t$docn$c                                  NOTA_FISCAL,
-        znfmd630.t$seri$c                                  SERIE,
+        (select t$dsca from baandb.ttcmcs031301 tcmcs031
+         where tcmcs031.t$cbrn = znint002.t$cbrn$c)        MARCA,
+
+        ( select cast((from_tz(to_timestamp(to_char(znfmd640.t$udat$c,
+                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                  AT time zone 'America/Sao_Paulo') as date)                     
+          from (  select  max(a.t$udat$c) t$udat$c,
+                          a.t$etiq$c, 
+                          a.t$fili$c
+                  from baandb.tznfmd640601 a
+                  where a.t$coct$c = 'ETR'
+                    and a.T$TORG$C = 1
+                  group by a.t$fili$c, a.t$etiq$c ) znfmd640
+          where znfmd640.t$fili$c = SLS_FMD.t$fili$c
+            and znfmd640.t$etiq$c = SLS_FMD.t$etiq$c )      
+                                                           DATA_EXPEDICAO,
+        cisli940.t$docn$l                                  NOTA_FISCAL,
+        cisli940.t$seri$l                                  SERIE,
         cast((from_tz(to_timestamp(to_char(cisli940.t$date$l,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)   DATA_EMISSAO_NF,
-        znsls401.t$pecl$c                                  PEDIDO,
-        znsls401.t$entr$c                                  ENTREGA,
-        tdsls400.t$orno                                    ORDEM_DE_VENDA,
-        znfmd630.t$qvol$c                                  QTDE_VOLUMES,
-        znsls002.t$dsca$c                                  TIPO_ENTREGA,
-        cisli940.t$amnt$l                                  VALOR_TOTAL_NF,
-        tccom130t.t$dsca                                   TRANSPORTADOR,
-        znsls401.t$cepe$c                                  CEP,
-        znsls401.t$cide$c                                  CIDADE,
-        znsls401.t$ufen$c                                  UF,
+              AT time zone 'America/Sao_Paulo') as date)    DATA_EMISSAO_NF,
+        SLS_FMD.t$pecl$c                                    PEDIDO,
+        SLS_FMD.t$entr$c                                    ENTREGA,
+        SLS_FMD.t$orno$c                                    ORDEM_DE_VENDA,
+        SLS_FMD.t$qvol$c                                    QTDE_VOLUMES,
+        case when SLS_FMD.t$torg$c = 7 then
+          'INSUCESSO DE ENTREGA'
+        ELSE znsls002.t$dsca$c END                          TIPO_ENTREGA,
+        cisli940.t$amnt$l                                   VALOR_TOTAL_NF,
+        tccom130t.t$dsca                                    TRANSPORTADOR,
+        SLS_FMD.t$cepe$c                                    CEP,
+        SLS_FMD.t$cide$c                                    CIDADE,
+        SLS_FMD.t$ufen$c                                    UF,
         case when regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '') is null
              then '00000000000000'
              when length(regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')) < 11
              then '00000000000000'
         else regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')
         end                                                CNPJ_TRANSPORTADORA,
-        znfmd062.t$creg$c                                  REGIAO,
-        znfmd630.t$ncar$c                                  NRO_CARGA,
-        znfmd630.t$etiq$c                                  ETIQUETA,
-        cast((from_tz(to_timestamp(to_char(CRIACAO_WMS.DATA_OCORRENCIA,
-              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)   DATA_WMS,
-        znsls401.t$pzcd$c                                  PRAZO_CD,
-        cast((from_tz(to_timestamp(to_char(tdsls400.t$odat,
+          ( select znfmd062.t$creg$c
+            from ( select a.t$cfrw$c,
+                          a.t$cono$c,
+                          a.t$cepd$c,
+                          a.t$cepa$c,
+                          a.t$creg$c
+                    from baandb.tznfmd062601 a 
+                    where a.t$ativ$c = 1
+                    group by  a.t$cfrw$c,
+                              a.t$cono$c,
+                              a.t$creg$c,
+                              a.t$cepd$c,
+                              a.t$cepa$c ) znfmd062 
+              where znfmd062.t$cfrw$c = SLS_FMD.t$cfrw$c
+                and	znfmd062.t$cono$c = SLS_FMD.t$cono$c
+                and tccom130.t$pstc between znfmd062.t$cepd$c and znfmd062.t$cepa$c )
+                                                          REGIAO,
+        SLS_FMD.t$ncar$c                                  NRO_CARGA,
+        SLS_FMD.t$etiq$c                                  ETIQUETA,
+        ( select  znsls410.t$dtoc$c
+          from ( select  a.t$poco$c,
+                         a.t$ncia$c,
+                         a.t$uneg$c,
+                         a.t$pecl$c,
+                         a.t$sqpd$c,
+                         a.t$entr$c,
+                         cast((from_tz(to_timestamp(to_char(max(a.t$dtoc$c),
+                            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                              AT time zone 'America/Sao_Paulo') as date) t$dtoc$c
+                  from baandb.tznsls410601 a
+                  where a.t$poco$c = 'WMS'
+                  group by  a.t$poco$c,
+                            a.t$ncia$c,
+                            a.t$uneg$c,
+                            a.t$pecl$c,
+                            a.t$sqpd$c,
+                            a.t$entr$c ) znsls410
+        where znsls410.t$ncia$c = SLS_FMD.t$ncia$c
+          and znsls410.t$uneg$c = SLS_FMD.t$uneg$c
+          and znsls410.t$pecl$c = SLS_FMD.t$pecl$c
+          and znsls410.t$sqpd$c = SLS_FMD.t$sqpd$c
+          and znsls410.t$entr$c = SLS_FMD.t$entr$c )
+                                                          DATA_WMS,
+        SLS_FMD.t$pzcd$c                                  PRAZO_CD,
+
+        cast((from_tz(to_timestamp(to_char(SLS_FMD.t$odat,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') as date)   DATA_COMPRA,
-        case when trunc(znsls401.t$dtap$c) = '01/01/1970'
+        case when trunc(SLS_FMD.t$dtap$c) = '01/01/1970'
              then null 
-        else cast((from_tz(to_timestamp(to_char(znsls401.t$dtap$c,
+        else cast((from_tz(to_timestamp(to_char(SLS_FMD.t$dtap$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                     AT time zone 'America/Sao_Paulo') as date)
         end                                                DATA_APROV_PAGTO,
-        cast((from_tz(to_timestamp(to_char(tdsls401.t$ddta,
-	             'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-	              AT time zone 'America/Sao_Paulo') as date)
-	
-                                                            DATA_LIM_EXPEDICAO,
-        cast((from_tz(to_timestamp(to_char(tdsls401.t$prdt,
-                  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                  AT time zone 'America/Sao_Paulo') as date)
 
-                                                            DATA_PROMETIDA,
-        case when trunc(znfmd630.t$dtpe$c) = '01/01/1970'
+        case when SLS_FMD.t$torg$c = 7 then
+            cast((from_tz(to_timestamp(to_char(SLS_FMD.ddta_fmd,
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') as date)
+        else
+            cast((from_tz(to_timestamp(to_char(SLS_FMD.t$ddta,
+            'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+            AT time zone 'America/Sao_Paulo') as date)
+        end                                                 DATA_LIM_EXPEDICAO,
+        
+        case when SLS_FMD.t$torg$c = 7 then
+            SLS_FMD.prdt_fmd
+        else SLS_FMD.t$prdt end                             DATA_PROMETIDA,
+        
+        case when trunc(SLS_FMD.t$dtpe$c) = '01/01/1970'
              then null
-        else cast((from_tz(to_timestamp(to_char(znfmd630.t$dtpe$c,
+        else cast((from_tz(to_timestamp(to_char(SLS_FMD.t$dtpe$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                     AT time zone 'America/Sao_Paulo') as date)
         end                                                DATA_PREVISTA_ENTREGA,
-        case when trunc(znfmd630.t$dtco$c) <= to_date('01/01/1970','DD/MM/YYYY')
+        
+        case when trunc(SLS_FMD.t$dtco$c) <= to_date('01/01/1970','DD/MM/YYYY')
              then null
-        else cast((from_tz(to_timestamp(to_char(znfmd630.t$dtco$c,
+        else cast((from_tz(to_timestamp(to_char(SLS_FMD.t$dtco$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                     AT time zone 'America/Sao_Paulo') as date)
         end                                                DATA_CORRIGIDA,
-        znfmd630.t$cono$c                                  CONTRATO,
+        SLS_FMD.t$cono$c                                   CONTRATO,
         znfmd060.t$cdes$c                                  DESCRICAO_DO_CONTRATO,
         znfmd640_FIRST.t$coci$c                            PRIMEIRA_OCORRENCIA,
         znfmd030_FIRST.t$dsci$c                            PRIMEIRA_DESC_OCORRENCIA,
@@ -79,15 +140,16 @@ select
 	            AT time zone 'America/Sao_Paulo') as date)
                                                            PRIMEIRA_DATA_OCORRENCIA,
         nvl(znfmd640_F.t$coci$c,
-	nvl(znfmd640.t$coci$c,
-	nvl(znsls410_F.t$poco$c,
+        nvl(znfmd640.t$coci$c,
+        nvl(znsls410_F.t$poco$c,
             znsls410.t$poco$c)))                           ULTIMA_OCORRENCIA,
-        nvl(znfmd030_FTRA.t$dsci$c,
-        nvl(znfmd030_TRA.t$dsci$c,
-        nvl(znmcs002_TRA.t$desc$c,
-        nvl(znfmd030_F.t$dsci$c,
-        nvl(znfmd030.t$dsci$c,
-            znmcs002.t$desc$c)))))                         ULTIMA_DESC_OCORRENCIA,
+            
+--        nvl(znfmd030_FTRA.t$dsci$c,           --Retirado, pois esta onerando muito a query
+--          nvl(znfmd030_TRA.t$dsci$c,
+--            nvl(znmcs002_TRA.t$desc$c,
+--              nvl(znfmd030_F.t$dsci$c,
+--                nvl(znfmd030.t$dsci$c,znmcs002.t$desc$c)))))                         ULTIMA_DESC_OCORRENCIA,
+            
         nvl(cast((from_tz(to_timestamp(to_char(znfmd640_F.t$date$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                     AT time zone 'America/Sao_Paulo') as date),
@@ -101,142 +163,171 @@ select
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                     AT time zone 'America/Sao_Paulo') as date))))
                                                            ULTIMA_DATA_OCORRENCIA,
-        own_mis.filtro_mis(znsls400.t$nomf$c)              NOME_DESTINATARIO,
-        znsng108.t$pvvv$c                                  PEDIDO_VIA_VAREJO,
-        cast((from_tz(to_timestamp(to_char(znsng108.t$dhpr$c,
+        own_mis.filtro_mis(SLS_FMD.t$nomf$c)              NOME_DESTINATARIO,
+
+        ( select znsng108.t$pvvv$c
+          from ( select a.t$orln$c,
+                        a.t$pvvv$c,
+                        min(a.t$dhpr$c) t$dhpr$c
+                  from  baandb.tznsng108601 a
+            where trim(a.t$pvvv$c) is not null
+            group by a.t$orln$c,
+                     a.t$pvvv$c ) znsng108
+          where znsng108.t$orln$c = SLS_FMD.t$orno )
+                                                            PEDIDO_VIA_VAREJO,
+
+        ( select cast((from_tz(to_timestamp(to_char(znsng108.t$dhpr$c,
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-              AT time zone 'America/Sao_Paulo') as date)   DATA_VIA_VAREJO,
-        PONTO_ETL.DATA_OCORRENCIA                          DATA_PONTO_ETL,
-        own_mis.filtro_mis(znsls401.t$obet$c)              ETIQUETA_TRANSPORTADORA
+              AT time zone 'America/Sao_Paulo') as date) 
+          from ( select a.t$orln$c,
+                        a.t$pvvv$c,
+                        min(a.t$dhpr$c) t$dhpr$c
+                  from  baandb.tznsng108601 a
+            where trim(a.t$pvvv$c) is not null
+            group by a.t$orln$c,
+                     a.t$pvvv$c ) znsng108
+          where znsng108.t$orln$c = SLS_FMD.t$orno )
+                                                          DATA_VIA_VAREJO,
+        PONTO_ETL.DATA_OCORRENCIA                         DATA_PONTO_ETL,
+        own_mis.filtro_mis(SLS_FMD.t$obet$c)              ETIQUETA_TRANSPORTADORA
 
-from (select       a.t$ncia$c,
-                   a.t$uneg$c,
-                   a.t$pecl$c,
-                   a.t$sqpd$c,
-                   a.t$entr$c,
-                   min(a.t$sequ$c) t$sequ$c,
-                   a.t$orno$c,
-                   a.t$ufen$c,
-                   a.t$itpe$c,
-                   a.t$dtep$c,
-                   a.t$dtap$c,
-                   a.t$pzcd$c,
-                   a.t$cide$c,
-                   a.t$cepe$c,
-                   a.t$obet$c
-            from baandb.tznsls401601 a
-            where a.t$iitm$c = 'P'
-              and a.t$qtve$c > 0
-            group by a.t$ncia$c,
-                     a.t$uneg$c,
-                     a.t$pecl$c,
-                     a.t$sqpd$c,
-                     a.t$entr$c,
-                     a.t$orno$c,
-                     a.t$ufen$c,
-                     a.t$itpe$c,
-                     a.t$dtep$c,
-                     a.t$dtap$c,
-                     a.t$pzcd$c,
-                     a.t$cide$c,
-                     a.t$cepe$c,
-                     a.t$obet$c ) znsls401
-                     
-left join ( select a.t$fili$c,
-                 a.t$pecl$c,
-                 a.t$orno$c,
-                 a.t$cfrw$c,
-                 a.t$dtpe$c,
-                 a.t$dtco$c,
-                 a.t$cono$c,
-                 a.t$fire$c,
-                 a.t$ncar$c,
-                 a.t$qvol$c,
-                 a.t$docn$c,
-                 a.t$seri$c,
-                 max(a.t$etiq$c) t$etiq$c
-          from baandb.tznfmd630601 a
-          where a.t$torg$c = 1    --vendas
-          group by a.t$fili$c,
-                   a.t$pecl$c,
-                   a.t$orno$c,
-                   a.t$cfrw$c,
-                   a.t$dtpe$c,
-                   a.t$dtco$c,
-                   a.t$cono$c,
-                   a.t$fire$c,
-                   a.t$ncar$c,
-                   a.t$qvol$c,
-                   a.t$docn$c,
-                   a.t$seri$c) znfmd630
-       on znfmd630.t$pecl$c = to_char(znsls401.t$entr$c)
-       
-inner join ( select a.t$ncia$c,
-                    a.t$uneg$c,
-                    a.t$pecl$c,
-                    a.t$sqpd$c,
-                    a.t$entr$c,
---                    a.t$sequ$c,
-                    max(a.t$orno$c) t$orno$c,
-                    min(a.t$pono$c) t$pono$c
-             from baandb.tznsls004601 a 
-             group by a.t$ncia$c,
-                      a.t$uneg$c,
-                      a.t$pecl$c,
-                      a.t$sqpd$c,
-                      a.t$entr$c ) znsls004
-        on znsls004.t$ncia$c = znsls401.t$ncia$c
-       and znsls004.t$uneg$c = znsls401.t$uneg$c
-       and znsls004.t$pecl$c = znsls401.t$pecl$c
-       and znsls004.t$sqpd$c = znsls401.t$sqpd$c
-       and znsls004.t$entr$c = znsls401.t$entr$c
-       
-inner join baandb.ttdsls400601 tdsls400
-        on tdsls400.t$orno = znsls004.t$orno$c
+from (  select  /*+ USE_CONCAT NO_CPU_COSTING */
+                tdsls401.t$orno,
+                tdsls401.t$pono,
+                cast((from_tz(to_timestamp(to_char(tdsls401.t$prdt,
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone 'America/Sao_Paulo') as date) t$prdt,
+                tdsls401.t$ddta,
+                tdsls400.t$cofc,
+                tdsls400.t$odat,
+                tdsls400.t$stad,
+                znsls400.t$nomf$c,
+                znsls401.t$ncia$c,
+                znsls401.t$uneg$c,
+                znsls401.t$pecl$c,
+                znsls401.t$sqpd$c,
+                znsls401.t$entr$c,
+                znsls401.t$sequ$c,
+                znsls401.t$itpe$c,
+                znsls401.t$cepe$c,
+                znsls401.t$cide$c,
+                znsls401.t$ufen$c,
+                znsls401.t$pzcd$c,
+                znsls401.t$dtap$c,
+                znsls401.t$obet$c,
+                znfmd630.t$fili$c,
+                znfmd630.t$fire$c,
+                znfmd630.t$cfrw$c,
+                znfmd630.t$cono$c,
+                znfmd630.t$docn$c,
+                znfmd630.t$date$c,
+                znfmd630.t$seri$c,
+                znfmd630.t$qvol$c,
+                znfmd630.t$ncar$c,
+                znfmd630.t$dtpe$c,
+                znfmd630.t$dtco$c,
+                znfmd630.t$etiq$c,
+                znfmd630.t$torg$c,
+                znfmd630.t$orno$c,
+                cast((from_tz(to_timestamp(to_char(sls401_fmd.t$prdt,
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone 'America/Sao_Paulo') as date) prdt_fmd,
+                sls401_fmd.t$ddta ddta_fmd
+                
+        from  ( select  /*+ USE_CONCAT NO_CPU_COSTING */
+                        a.t$orno,
+                        min(a.t$pono) t$pono,
+                        a.t$prdt,
+                        a.t$ddta
+                from baandb.ttdsls401601 a
+                inner join baandb.tznsls000601 znsls000
+                        on znsls000.t$indt$c = to_date('01-01-1970', 'DD-MM-YYYY')
+                where a.t$sqnb = 0
+                  and a.t$item not in (znsls000.t$itmd$c,znsls000.t$itmf$c,znsls000.t$itjl$c)
+                  and a.t$prdt between TRUNC(SYSDATE -1,'MONTH') and trunc(LAST_DAY(SYSDATE - 1))+1.99999 
+                group by  a.t$orno, 
+                          a.t$prdt,
+                          a.t$ddta ) tdsls401
 
-inner join baandb.ttdsls401601 tdsls401
-        on tdsls401.t$orno = znsls004.t$orno$c
-       and tdsls401.t$pono = znsls004.t$pono$c
-       and tdsls401.t$sqnb = 0
+        inner join baandb.ttdsls400601 tdsls400
+                on tdsls400.t$orno = tdsls401.t$orno
+                
+        inner join baandb.tznsls004601 znsls004
+                on znsls004.t$orno$c = tdsls401.t$orno
+               and znsls004.t$pono$c = tdsls401.t$pono
+        
+        inner join baandb.tznsls401601 znsls401
+                on znsls401.t$ncia$c = znsls004.t$ncia$c
+               and znsls401.t$uneg$c = znsls004.t$uneg$c
+               and znsls401.t$pecl$c = znsls004.t$pecl$c
+               and znsls401.t$sqpd$c = znsls004.t$sqpd$c
+               and znsls401.t$entr$c = znsls004.t$entr$c
+               and znsls401.t$sequ$c = znsls004.t$sequ$c        
 
-left join baandb.tcisli940601 cisli940
-       on cisli940.t$fire$l = znfmd630.t$fire$c
+        inner join baandb.tznsls400601 znsls400
+                on znsls400.t$ncia$c = znsls401.t$ncia$c
+               and znsls400.t$uneg$c = znsls401.t$uneg$c
+               and znsls400.t$pecl$c = znsls401.t$pecl$c
+               and znsls400.t$sqpd$c = znsls401.t$sqpd$c
+        
+        inner join ( select /*+ USE_CONCAT NO_CPU_COSTING */
+                            a.t$pecl$c,
+                            a.t$fili$c,
+                            min(a.t$etiq$c) t$etiq$c,
+                            a.t$fire$c,
+                            a.t$cfrw$c,
+                            a.t$cono$c,
+                            a.t$docn$c,
+                            a.t$seri$c,
+                            a.t$date$c,
+                            a.t$qvol$c,
+                            a.t$ncar$c,
+                            a.t$dtpe$c,
+                            a.t$dtco$c,
+                            a.t$torg$c,
+                            a.t$orno$c
+                     from baandb.tznfmd630601 a
+                     group by a.t$pecl$c, 
+                              a.t$fili$c,
+                              a.t$fire$c,
+                              a.t$cfrw$c,
+                              a.t$cono$c,
+                              a.t$docn$c,
+                              a.t$seri$c,
+                              a.t$date$c,
+                              a.t$qvol$c,
+                              a.t$ncar$c,
+                              a.t$dtpe$c,
+                              a.t$dtco$c,
+                              a.t$torg$c,
+                              a.t$orno$c ) znfmd630
+                on znfmd630.t$pecl$c = to_char(znsls401.t$entr$c )
 
-left join ( select max(a.t$udat$c)       DATA_OCORRENCIA,
-                   a.t$etiq$c, 
-                   a.t$fili$c
-            from baandb.tznfmd640601 a
-            where a.t$coct$c = 'ETR'
-              and a.T$TORG$C = 1
-            group by a.t$fili$c, a.t$etiq$c ) znfmd640_ETR
-       on znfmd640_ETR.t$fili$c = znfmd630.t$fili$c
-      and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
+      left join baandb.ttdsls401601 sls401_fmd          --JOIN PARA CASOS DE INSUCESSO DE ENTREGA
+             on sls401_fmd.t$orno = znfmd630.t$orno$c
+            and sls401_fmd.t$pono = tdsls401.t$pono
+            and sls401_fmd.t$sqnb = 0
+               
+        where tdsls400.t$fdty$l != 14
+          and znsls401.t$iitm$c = 'P'
+          and znsls401.t$qtve$c > 0 ) SLS_FMD
 
-left join baandb.ttdsls400601 tdsls400
-       on tdsls400.t$orno = znfmd630.t$orno$c
+left join baandb.tcisli940601 cisli940        
+       on cisli940.t$fire$l = SLS_FMD.t$fire$c
 
 left join baandb.ttccom130601 tccom130
-       on tccom130.t$cadr = tdsls400.t$stad
+       on tccom130.t$cadr = SLS_FMD.t$stad
 
 left join baandb.tznint002601 znint002
-       on znint002.t$ncia$c = znsls401.t$ncia$c
-      and znint002.t$uneg$c = znsls401.t$uneg$c
-
-left join baandb.ttcmcs031301 tcmcs031
-       on tcmcs031.t$cbrn = znint002.t$cbrn$c
+       on znint002.t$ncia$c = SLS_FMD.t$ncia$c
+      and znint002.t$uneg$c = SLS_FMD.t$uneg$c
 
 left join baandb.tznsls002601 znsls002
-       on znsls002.t$tpen$c = NVL(znsls401.t$itpe$c, 16)
+       on znsls002.t$tpen$c = NVL(SLS_FMD.t$itpe$c, 16)
 
 left join baandb.tznfmd060601 znfmd060
-       on znfmd060.t$cfrw$c = znfmd630.t$cfrw$c
-      and znfmd060.t$cono$c = znfmd630.t$cono$c
-
-left join baandb.tznsls400601 znsls400
-       on znsls400.t$ncia$c = znsls401.t$ncia$c
-      and znsls400.t$uneg$c = znsls401.t$uneg$c
-      and znsls400.t$pecl$c = znsls401.t$pecl$c
-      and znsls400.t$sqpd$c = znsls401.t$sqpd$c
+       on znfmd060.t$cfrw$c = SLS_FMD.t$cfrw$c
+      and znfmd060.t$cono$c = SLS_FMD.t$cono$c
 
 left join ( select a.t$ncia$c,
                    a.t$uneg$c,
@@ -254,11 +345,11 @@ left join ( select a.t$ncia$c,
                      a.t$pecl$c,
                      a.t$sqpd$c,
                      a.t$entr$c) znsls410_F
-       on znsls410_F.t$ncia$c = znsls401.t$ncia$c
-      and znsls410_F.t$uneg$c = znsls401.t$uneg$c
-      and znsls410_F.t$pecl$c = znsls401.t$pecl$c
-      and znsls410_F.t$sqpd$c = znsls401.t$sqpd$c
-      and znsls410_F.t$entr$c = znsls401.t$entr$c
+       on znsls410_F.t$ncia$c = SLS_FMD.t$ncia$c
+      and znsls410_F.t$uneg$c = SLS_FMD.t$uneg$c
+      and znsls410_F.t$pecl$c = SLS_FMD.t$pecl$c
+      and znsls410_F.t$sqpd$c = SLS_FMD.t$sqpd$c
+      and znsls410_F.t$entr$c = SLS_FMD.t$entr$c
 
 left join baandb.tznfmd030601 znfmd030_F
        on znfmd030_F.t$ocin$c = znsls410_F.t$poco$c
@@ -274,8 +365,8 @@ left join ( select a.t$fili$c,
               and  a.t$torg$c = 1     --vendas
             group by a.t$fili$c,
                      a.t$etiq$c ) znfmd640_F
-       on znfmd640_F.t$fili$c = znfmd630.t$fili$c
-      and znfmd640_F.t$etiq$c = znfmd630.t$etiq$c
+       on znfmd640_F.t$fili$c = SLS_FMD.t$fili$c
+      and znfmd640_F.t$etiq$c = SLS_FMD.t$etiq$c
 
 left join baandb.tznfmd030601 znfmd030_FTRA
        on znfmd030_FTRA.t$ocin$c = znfmd640_F.t$coci$c
@@ -293,49 +384,17 @@ left join ( select a.t$ncia$c,
                      a.t$pecl$c,
                      a.t$sqpd$c,
                      a.t$entr$c) znsls410
-       on znsls410.t$ncia$c = znsls401.t$ncia$c
-      and znsls410.t$uneg$c = znsls401.t$uneg$c
-      and znsls410.t$pecl$c = znsls401.t$pecl$c
-      and znsls410.t$sqpd$c = znsls401.t$sqpd$c
-      and znsls410.t$entr$c = znsls401.t$entr$c
+       on znsls410.t$ncia$c = SLS_FMD.t$ncia$c
+      and znsls410.t$uneg$c = SLS_FMD.t$uneg$c
+      and znsls410.t$pecl$c = SLS_FMD.t$pecl$c
+      and znsls410.t$sqpd$c = SLS_FMD.t$sqpd$c
+      and znsls410.t$entr$c = SLS_FMD.t$entr$c
 
 left join baandb.tznfmd030601 znfmd030
        on znfmd030.t$ocin$c = znsls410.t$poco$c
 
 left join baandb.tznmcs002301 znmcs002
        on znmcs002.t$poco$c = znsls410.t$poco$c
-
-left join ( select znsls410.t$poco$c,
-                   znsls410.t$ncia$c,
-                   znsls410.t$uneg$c,
-                   znsls410.t$pecl$c,
-                   znsls410.t$sqpd$c,
-                   znsls410.t$entr$c,
-                   cast((from_tz(to_timestamp(to_char(max(znsls410.t$dtoc$c),
-                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone 'America/Sao_Paulo') as date) DATA_OCORRENCIA
-               from baandb.tznsls410601 znsls410
-              where znsls410.t$poco$c = 'WMS'
-           group by znsls410.t$poco$c,
-                    znsls410.t$ncia$c,
-                    znsls410.t$uneg$c,
-                    znsls410.t$pecl$c,
-                    znsls410.t$sqpd$c,
-                    znsls410.t$entr$c ) CRIACAO_WMS
-        ON CRIACAO_WMS.t$ncia$c = znsls401.t$ncia$c
-       AND CRIACAO_WMS.t$uneg$c = znsls401.t$uneg$c
-       AND CRIACAO_WMS.t$pecl$c = znsls401.t$pecl$c
-       AND CRIACAO_WMS.t$sqpd$c = znsls401.t$sqpd$c
-       AND CRIACAO_WMS.t$entr$c = znsls401.t$entr$c
-
-left join ( select znsng108.t$orln$c,
-                   znsng108.t$pvvv$c,
-                   min(znsng108.t$dhpr$c) t$dhpr$c
-            from   baandb.tznsng108601 znsng108
-            where trim(znsng108.t$pvvv$c) is not null
-            group by znsng108.t$orln$c,
-                     znsng108.t$pvvv$c ) znsng108
-       on znsng108.t$orln$c = znsls004.t$orno$c
 
 left join ( select a.t$fili$c,
                    a.t$etiq$c,
@@ -345,8 +404,8 @@ left join ( select a.t$fili$c,
             where a.t$torg$c = 1     --vendas
             group by a.t$fili$c,
                      a.t$etiq$c ) znfmd640
-       on znfmd640.t$fili$c = znfmd630.t$fili$c
-      and znfmd640.t$etiq$c = znfmd630.t$etiq$c
+       on znfmd640.t$fili$c = SLS_FMD.t$fili$c
+      and znfmd640.t$etiq$c = SLS_FMD.t$etiq$c
 
 left join baandb.tznfmd030601 znfmd030_TRA
        on znfmd030_TRA.t$ocin$c = znfmd640.t$coci$c
@@ -383,8 +442,8 @@ left join ( select znfmd640.t$fili$c,
             and znfmd640.t$torg$c = 1   --vendas
             group by znfmd640.t$fili$c,
                      znfmd640.t$etiq$c ) znfmd640_FIRST 
-       on znfmd640_FIRST.t$fili$c = znfmd630.t$fili$c
-      and znfmd640_FIRST.t$etiq$c = znfmd630.t$etiq$c
+       on znfmd640_FIRST.t$fili$c = SLS_FMD.t$fili$c
+      and znfmd640_FIRST.t$etiq$c = SLS_FMD.t$etiq$c
 
 left join baandb.tznfmd030601 znfmd030_FIRST
        on znfmd030_FIRST.t$ocin$c = znfmd640_FIRST.t$coci$c
@@ -396,23 +455,7 @@ left join ( select regexp_replace(tccom130.t$fovn$l, '[^0-9]', '') t$fovn$l,
             inner join baandb.ttccom130601 tccom130
                     on tccom130.t$cadr = tcmcs080.t$cadr$l
             where tccom130.t$ftyp$l = 'PJ' ) tccom130t
-       on tccom130t.t$cfrw = znfmd630.t$cfrw$c
-
-left join ( select  a.t$cfrw$c,
-                    a.t$cono$c,
-                    a.t$cepd$c,
-                    a.t$cepa$c,
-                    a.t$creg$c
-            from baandb.tznfmd062601 a 
-            where a.t$ativ$c = 1 
-            group by  a.t$cfrw$c,
-                      a.t$cono$c,
-                      a.t$creg$c,
-                      a.t$cepd$c,
-                      a.t$cepa$c ) znfmd062
-		   on znfmd062.t$cfrw$c = znfmd630.t$cfrw$c
-			and	znfmd062.t$cono$c = znfmd630.t$cono$c
-      and tccom130.t$pstc between znfmd062.t$cepd$c and znfmd062.t$cepa$c 
+       on tccom130t.t$cfrw = SLS_FMD.t$cfrw$c
       
 left join ( select znsls410.t$poco$c,
                    znsls410.t$ncia$c,
@@ -431,14 +474,12 @@ left join ( select znsls410.t$poco$c,
                     znsls410.t$pecl$c,
                     znsls410.t$sqpd$c,
                     znsls410.t$entr$c ) PONTO_ETL
-        ON PONTO_ETL.t$ncia$c = znsls401.t$ncia$c
-       AND PONTO_ETL.t$uneg$c = znsls401.t$uneg$c
-       AND PONTO_ETL.t$pecl$c = znsls401.t$pecl$c
-       AND PONTO_ETL.t$sqpd$c = znsls401.t$sqpd$c
-       AND PONTO_ETL.t$entr$c = znsls401.t$entr$c
+        ON PONTO_ETL.t$ncia$c = SLS_FMD.t$ncia$c
+       AND PONTO_ETL.t$uneg$c = SLS_FMD.t$uneg$c
+       AND PONTO_ETL.t$pecl$c = SLS_FMD.t$pecl$c
+       AND PONTO_ETL.t$sqpd$c = SLS_FMD.t$sqpd$c
+       AND PONTO_ETL.t$entr$c = SLS_FMD.t$entr$c
        
-  where cisli940.t$fdty$l != 14  -- Retorno mercadoria de cliente 
-    and tdsls401.t$prdt
-          between :DATA_DE
-              and :DATA_ATE 
+       where SLS_FMD.t$prdt
+             between TRUNC(SYSDATE -1,'MONTH') and trunc(LAST_DAY(SYSDATE - 1))+0.99999
 
