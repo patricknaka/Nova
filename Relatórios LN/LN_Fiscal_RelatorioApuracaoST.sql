@@ -1,7 +1,9 @@
-SELECT
+SELECT /*+ use_concat no_cpu_costing */
   DISTINCT 
     301                                                   NUME_CIA,
     a.t$fovn$l                                            NUME_FILIAL,
+    tdrec940.t$fire$l                                     REC_FISCAL,
+    tdrec940.t$adat$l                                     data,
     tdrec940.t$docn$l                                     NUME_NF,
     tdrec940.t$seri$l                                     CODE_SERIE, 
     tdrec940.t$stat$l                                     STAT_REFF, 
@@ -41,8 +43,20 @@ SELECT
        WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
          AND tdrec942.t$line$l=tdrec941.t$line$l 
          AND tdrec942.t$brty$l=2)                         VALO_ICMSST,
+         
+         ( SELECT tdrec942.t$base$l 
+        FROM baandb.ttdrec942301 tdrec942 
+       WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
+         AND tdrec942.t$line$l=tdrec941.t$line$l 
+         AND tdrec942.t$brty$l=2)                         BASE_CALCULO,
+                   
+         ( SELECT tdrec942.T$RATE$L 
+        FROM baandb.ttdrec942301 tdrec942 
+       WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
+         AND tdrec942.t$line$l=tdrec941.t$line$l 
+         AND tdrec942.t$brty$l=2)                         ALIQUOTA,   
 
-    ( SELECT tdrec942.T$DEST$L  
+   ( SELECT tdrec942.T$DEST$L  
         FROM baandb.ttdrec942301 tdrec942, 
              baandb.ttdrec949301 tdrec949
        WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
@@ -50,7 +64,7 @@ SELECT
          AND tdrec949.t$brty$l=2
          AND tdrec942.t$line$l=tdrec941.t$line$l
          AND tdrec942.t$brty$l=2
-         and tdrec942.T$DEST$L != 3)                         FLAG_CONV,
+         and tdrec942.T$DEST$L != 3)                      FLAG_CONV,
 
     ( SELECT tdrec942.t$amnt$l 
         FROM baandb.ttdrec942301 tdrec942 
@@ -68,15 +82,22 @@ SELECT
             from baandb.ttdrec942301 tdrec942 
            WHERE tdrec942.t$fire$l=tdrec941.t$fire$l 
              AND tdrec942.t$line$l=tdrec941.t$line$l),0 ) MARGEM_LUCRO
+
    
-FROM       baandb.ttdrec947301 tdrec947
+--FROM       baandb.ttdrec947301 tdrec947
+FROM baandb.ttdrec940301 tdrec940
 
 INNER JOIN baandb.ttdrec941301 tdrec941
-        ON tdrec941.t$fire$l = tdrec947.t$fire$l
-       AND tdrec941.t$line$l = tdrec947.t$line$l
+        ON tdrec941.t$fire$l = tdrec940.t$fire$l
+--        ON tdrec941.t$fire$l = tdrec947.t$fire$l
+--       AND tdrec941.t$line$l = tdrec947.t$line$l
+       
+--INNER JOIN baandb.ttdrec940301 tdrec940
+--        ON tdrec940.t$fire$l = tdrec941.t$fire$l
 
-INNER JOIN baandb.ttdrec940301 tdrec940
-        ON tdrec940.t$fire$l = tdrec941.t$fire$l
+LEFT JOIN baandb.ttdrec947301 tdrec947
+       ON tdrec947.t$fire$l = tdrec941.t$fire$l
+      AND tdrec947.t$line$l = tdrec941.t$line$l
 
 INNER JOIN baandb.ttcibd001301 tcibd001
         ON tcibd001.t$item = tdrec941.t$item$l
@@ -129,12 +150,12 @@ INNER JOIN ( SELECT iDOMAIN.t$cnst iCODE,
 
  LEFT JOIN baandb.ttccom130301 a
         ON a.t$cadr = tdrec940.t$sfra$l
-  
+
 WHERE tcemm124.t$dtyp = 2 
   AND tcemm030.T$EUNT IN (:Filial)
   AND tdrec940.t$stat$l IN (:Status)
-  AND Trunc(tdrec940.t$adat$l) BETWEEN :AprovacaoDe AND :AprovacaoAte
   AND tdrec940.t$opfc$l IN (:CFOP)
+  AND trunc(tdrec940.t$adat$l) BETWEEN :AprovacaoDe AND :AprovacaoAte
   
   AND ( (( SELECT tdrec942.T$DEST$L  
         FROM baandb.ttdrec942301 tdrec942, 
