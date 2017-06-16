@@ -1,16 +1,27 @@
 SELECT /*+ use_concat no_cpu_costing */ 
        znfmd640_ETR.t$fili$c              FILIAL,          
        znfmd640_ETR.DATA_OCORRENCIA       DATA_EXPEDICAO,
-       cisli940.t$fdty$l                  NUME_TIPO_DOCUMENTO, 
        znfmd640_ETR.t$pecl$c              NUME_ENTREGA,  
        znfmd640_ETR.t$itpe$c              NUME_TIPO_ENTREGA,
        znsls002.t$dsca$c                  DESC_TIPO_ENTREGA_NOME,  
-       znfmd640_ETR.t$wght$c              PESO,  
+       znfmd640_ETR.t$wght$c              PESO,
+      ( select sum((a.t$qtve$c * tcibd001.t$wght)) peso
+        from baandb.tznsls401301 a
+        left join baandb.ttcibd001301 tcibd001
+               on tcibd001.t$item = a.t$itml$c
+        where a.t$ncia$c = znfmd640_ETR.t$ncia$c
+          and a.t$uneg$c = znfmd640_ETR.t$uneg$c
+          and a.t$pecl$c = znfmd640_ETR.t$pecl$c
+          and a.t$sqpd$c = znfmd640_ETR.t$sqpd$c
+          and a.t$entr$c = znfmd640_ETR.t$entr$c)            
+                                          PESO_REAL,
        znfmd610.t$cube$c                  ITEM_CUBAGEM,  
        znfmd640_ETR.t$vlfc$c              FRETE_GTE, 
        cisli940.t$amnt$l                  VLR_TOTAL_NF,  
        tccom130t.t$dsca                   TRANSP_NOME, 
-       znfmd640_ETR.t$cepe$c              CEP, 
+       znfmd640_ETR.t$cepe$c              CEP,
+       SUBSTR(LPAD(to_char(znfmd640_ETR.t$cepe$c),8,'0'),1,3) 
+                                          CABEC_CEP,
        znfmd640_ETR.t$cide$c              CIDADE,  
        znfmd640_ETR.t$ufen$c              UF,  
        ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ENT.t$date$c,
@@ -22,35 +33,24 @@ SELECT /*+ use_concat no_cpu_costing */
             and znfmd640_ENT.t$coci$c = 'ENT'
             and ROWNUM = 1 )              DATA_ENTREGA,  
 
-       znfmd067.t$fate$c                  FILIAL_TRANSPORTADORA,
        CASE WHEN regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '') IS NULL
               THEN '00000000000000'
             WHEN LENGTH(regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')) < 11
               THEN '00000000000000'
             ELSE regexp_replace(tccom130t.t$fovn$l, '[^0-9]', '')
        END                                CNPJ_TRANSPORTADORA, 
-       tdsls401.t$prdt                    DATA_PROMETIDA,  
-       znfmd640.t$coci$c                  ULTIMA_OCORRENCIA, 
-       znfmd640.t$desc$c                  OCORRENCIA,  
-       znfmd640.t$date$c                  DATA_OCORRENCIA,
-       znfmd640_ETR.t$cono$c              COD_CONTRATO,  
-       znfmd060.t$refe$c                  ID_EXT_CONTRATO, 
+       tdsls401.t$prdt                    DATA_PROMETIDA,
        CASE WHEN TRUNC(znfmd640_ETR.t$dtpe$c) = '01/01/1970'
               THEN NULL
             ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd640_ETR.t$dtpe$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                      AT time zone 'America/Sao_Paulo') AS DATE)
-       END                                DATA_PREVISTA_ENTREGA,                            
-      ( select sum((a.t$qtve$c * tcibd001.t$wght)) peso
-        from baandb.tznsls401301 a
-        left join baandb.ttcibd001301 tcibd001
-               on tcibd001.t$item = a.t$itml$c
-        where a.t$ncia$c = znfmd640_ETR.t$ncia$c
-          and a.t$uneg$c = znfmd640_ETR.t$uneg$c
-          and a.t$pecl$c = znfmd640_ETR.t$pecl$c
-          and a.t$sqpd$c = znfmd640_ETR.t$sqpd$c
-          and a.t$entr$c = znfmd640_ETR.t$entr$c)            
-                                          PESO_REAL  
+       END                                DATA_PREVISTA_ENTREGA,                      
+       znfmd640.t$coci$c                  ULTIMA_OCORRENCIA, 
+       znfmd640.t$desc$c                  OCORRENCIA,  
+       znfmd640.t$date$c                  DATA_OCORRENCIA,
+       znfmd640_ETR.t$cono$c              COD_CONTRATO,  
+       znfmd060.t$refe$c                  ID_EXT_CONTRATO
 
 FROM       ( select  
                     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640.t$udat$c),
@@ -100,9 +100,9 @@ FROM       ( select
                where znfmd640.t$coct$c = 'ETR'
                  and znfmd640.T$TORG$C = 1
                  and znsls401.t$iitm$c = 'P'
-                 and znfmd640.t$udat$c
-                     between TRUNC(TO_DATE(:DtExpIni,'DD-MM-YYYY'))
-                         and TRUNC(TO_DATE(:DtExpFim,'DD-MM-YYYY'))+1.99999  --DATE+23:59:59
+--                 and znfmd640.t$udat$c
+--                     between TRUNC(TO_DATE(:DtExpIni,'DD-MM-YYYY'))
+--                         and TRUNC(TO_DATE(:DtExpFim,'DD-MM-YYYY'))+1.99999  --DATE+23:59:59
            group by 
                     znfmd630.t$cfrw$c,
                     znfmd630.t$cono$c,
@@ -199,10 +199,10 @@ FROM       ( select
        AND znfmd060.t$cono$c = znfmd640_ETR.t$cono$c
        
   WHERE cisli940.t$fdty$l != 14
---    AND NVL(znfmd640_ETR.t$itpe$c, 16) IN (:TipoEntrega)
---    AND ((:Transportadora = 'T') or (znfmd640_ETR.t$cfrw$c = :Transportadora))
+    AND NVL(znfmd640_ETR.t$itpe$c, 16) IN (:TipoEntrega)
+    AND ((:Transportadora = 'T') or (znfmd640_ETR.t$cfrw$c = :Transportadora))
     AND znfmd640_ETR.DATA_OCORRENCIA
-        BETWEEN TRUNC(TO_DATE(:DtExpIni,'DD-MM-YYYY'))
-            AND TRUNC(TO_DATE(:DtExpFim,'DD-MM-YYYY'))+0.99999  --DATE+23:59
+        BETWEEN :DtExpIni
+            AND :DtExpFim
        
 ORDER BY FILIAL, NUME_ENTREGA
