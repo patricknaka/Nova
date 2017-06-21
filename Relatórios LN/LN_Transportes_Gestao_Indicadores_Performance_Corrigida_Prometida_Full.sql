@@ -4,7 +4,7 @@ select  /*+ no_cpu_costing use_merge(znsls401) use_merge(tccom130t) */
           from   baandb.tznfmd001301 znfmd001,
                  baandb.ttcmcs065301 tcmcs065,
                  baandb.ttccom130301 tccom130_filial
-          where tcmcs065.t$cwoc = SLS_fMD.t$cofc
+          where tcmcs065.t$cwoc = SLS_FMD.t$cofc
             and tccom130_filial.t$cadr = tcmcs065.t$cadr
             and znfmd001.t$fovn$c = tccom130_filial.t$fovn$l )
                                                            FILIAL,
@@ -33,9 +33,7 @@ select  /*+ no_cpu_costing use_merge(znsls401) use_merge(tccom130t) */
         SLS_FMD.t$entr$c                                    ENTREGA,
         SLS_FMD.t$orno$c                                    ORDEM_DE_VENDA,
         SLS_FMD.t$qvol$c                                    QTDE_VOLUMES,
-        case when SLS_FMD.t$torg$c = 7 then
-          'INSUCESSO DE ENTREGA'
-        ELSE znsls002.t$dsca$c END                          TIPO_ENTREGA,
+        znsls002.t$dsca$c                                   TIPO_ENTREGA,
         cisli940.t$amnt$l                                   VALOR_TOTAL_NF,
         tccom130t.t$dsca                                    TRANSPORTADOR,
         SLS_FMD.t$cepe$c                                    CEP,
@@ -109,7 +107,7 @@ select  /*+ no_cpu_costing use_merge(znsls401) use_merge(tccom130t) */
 
         SLS_FMD.t$dtep$c                                    DATA_PROMETIDA_ENTREGA,
         
-        case when trunc(SLS_FMD.t$dtpe$c) = '01/01/1970'
+        case when trunc(SLS_FMD.t$dtpe$c) <= to_date('01/01/1970','DD/MM/YYYY')
              then null
         else cast((from_tz(to_timestamp(to_char(SLS_FMD.t$dtpe$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -272,6 +270,7 @@ from (  select
                             a.t$torg$c,
                             a.t$orno$c
                      from baandb.tznfmd630301 a
+                     where a.t$torg$c = 1   --vendas
                      group by a.t$pecl$c, 
                               a.t$fili$c,
                               a.t$fire$c,
@@ -423,7 +422,9 @@ left join ( select znfmd640.t$fili$c,
                                         'SEF',
                                         'ENL',
                                         'GAL',
-                                        'LFE')
+                                        'LFE',
+                                        'ARO',
+                                        'ARE')
             and znfmd640.t$torg$c = 1   --vendas
             group by znfmd640.t$fili$c,
                      znfmd640.t$etiq$c ) znfmd640_FIRST 
