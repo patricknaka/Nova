@@ -107,13 +107,14 @@ select  /*+ no_cpu_costing use_merge(znsls401) use_merge(tccom130t) */
         AT time zone 'America/Sao_Paulo') as date)    
                                                             DATA_LIM_EXPEDICAO,
 
-        SLS_FMD.t$dtep$c                                    DATA_PROMETIDA_ENTREGA,
+        case when trunc(SLS_FMD.t$dtep$c) <= to_date('01/01/1970','DD-MM-YYYY')
+              then null
+        else SLS_FMD.t$dtep$c
+        end                                                DATA_PROMETIDA_ENTREGA,
         
-        case when trunc(SLS_FMD.t$dtpe$c) = '01/01/1970'
+        case when trunc(SLS_FMD.t$dtpe$c) <= to_date('01/01/1970','DD-MM-YYYY')
              then null
-        else cast((from_tz(to_timestamp(to_char(SLS_FMD.t$dtpe$c,
-                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone 'America/Sao_Paulo') as date)
+        else SLS_FMD.t$dtpe$c
         end                                                DATA_PREVISTA_ENTREGA,
         
         case when trunc(SLS_FMD.t$dtco$c) <= to_date('01/01/1970','DD/MM/YYYY')
@@ -213,13 +214,23 @@ from (  select
                 znfmd630.t$seri$c,
                 znfmd630.t$qvol$c,
                 znfmd630.t$ncar$c,
-                cast((from_tz(to_timestamp(to_char(znfmd630.t$dtpe$c,
-                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                AT time zone 'America/Sao_Paulo') as date) t$dtpe$c,
+                case when trunc(znfmd630.t$dtpe$c) = to_date('01-01-1970','DD-MM-YYYY') or znfmd630.t$dtpe$c is null then
+                        cast((from_tz(to_timestamp(to_char(znsls401.t$dtep$c,
+                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone 'America/Sao_Paulo') as date)
+                else
+                        cast((from_tz(to_timestamp(to_char(znfmd630.t$dtpe$c,
+                        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone 'America/Sao_Paulo') as date)
+                end                         
+                      data_filtro,
                 znfmd630.t$dtco$c,
                 znfmd630.t$etiq$c,
                 znfmd630.t$torg$c,
                 znfmd630.t$orno$c,
+                cast((from_tz(to_timestamp(to_char(znfmd630.t$dtpe$c,
+                'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                AT time zone 'America/Sao_Paulo') as date) t$dtpe$c,
                 tdsls401.t$ddta
                 
         from baandb.tznsls401601 znsls401
@@ -274,6 +285,7 @@ from (  select
                             a.t$torg$c,
                             a.t$orno$c
                      from baandb.tznfmd630601 a
+                     where a.t$torg$c = 1   --venda
                      group by a.t$pecl$c, 
                               a.t$fili$c,
                               a.t$fire$c,
@@ -292,9 +304,7 @@ from (  select
                
         where tdsls400.t$fdty$l != 14
           and znsls401.t$iitm$c = 'P'
-          and znsls401.t$qtve$c > 0 
-          and znfmd630.t$dtpe$c
-              between TRUNC(SYSDATE -1,'MONTH') and trunc(LAST_DAY(SYSDATE - 1))+1.99999) SLS_FMD
+          and znsls401.t$qtve$c > 0 ) SLS_FMD
 
 left join baandb.tcisli940601 cisli940        
        on cisli940.t$fire$l = SLS_FMD.t$fire$c
@@ -425,7 +435,9 @@ left join ( select znfmd640.t$fili$c,
                                         'SEF',
                                         'ENL',
                                         'GAL',
-                                        'LFE')
+                                        'LFE',
+                                        'ARO',
+                                        'ARE')
             and znfmd640.t$torg$c = 1   --vendas
             group by znfmd640.t$fili$c,
                      znfmd640.t$etiq$c ) znfmd640_FIRST 
@@ -467,6 +479,5 @@ left join ( select znsls410.t$poco$c,
        AND PONTO_ETL.t$sqpd$c = SLS_FMD.t$sqpd$c
        AND PONTO_ETL.t$entr$c = SLS_FMD.t$entr$c
        
-      where SLS_FMD.t$dtpe$c
-            between TRUNC(SYSDATE -1,'MONTH') and trunc(LAST_DAY(SYSDATE - 1))+0.99999
+      where SLS_FMD.data_filtro between TRUNC(SYSDATE -1,'MONTH') and trunc(LAST_DAY(SYSDATE - 1))+0.99999
             
