@@ -107,13 +107,14 @@ select  /*+ no_cpu_costing use_merge(znsls401) use_merge(tccom130t) */
         AT time zone 'America/Sao_Paulo') as date)    
                                                             DATA_LIM_EXPEDICAO,
 
-        SLS_FMD.t$dtep$c                                    DATA_PROMETIDA_ENTREGA,
+        case when trunc(SLS_FMD.t$dtep$c) <= to_date('01/01/1970','DD-MM-YYYY')
+              then null
+        else SLS_FMD.t$dtep$c
+        end                                                DATA_PROMETIDA_ENTREGA,
         
-        case when trunc(SLS_FMD.t$dtpe$c) = '01/01/1970'
+        case when trunc(SLS_FMD.t$dtpe$c) <= to_date('01/01/1970','DD-MM-YYYY')
              then null
-        else cast((from_tz(to_timestamp(to_char(SLS_FMD.t$dtpe$c,
-                   'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                    AT time zone 'America/Sao_Paulo') as date)
+        else SLS_FMD.t$dtpe$c
         end                                                DATA_PREVISTA_ENTREGA,
         
         case when trunc(SLS_FMD.t$dtco$c) <= to_date('01/01/1970','DD/MM/YYYY')
