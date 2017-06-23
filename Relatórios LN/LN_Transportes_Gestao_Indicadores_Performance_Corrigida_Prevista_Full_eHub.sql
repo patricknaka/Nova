@@ -1,5 +1,5 @@
 select  /*+ no_cpu_costing use_merge(znsls401) use_merge(tccom130t) */
-        
+        DISTINCT
         ( select znfmd001.t$fili$c
           from   baandb.tznfmd001601 znfmd001,
                  baandb.ttcmcs065601 tcmcs065,
@@ -136,11 +136,12 @@ select  /*+ no_cpu_costing use_merge(znsls401) use_merge(tccom130t) */
         nvl(znsls410_F.t$poco$c,
             znsls410.t$poco$c)))                           ULTIMA_OCORRENCIA,
             
---        nvl(znfmd030_FTRA.t$dsci$c,           --Retirado, pois esta onerando muito a query
---          nvl(znfmd030_TRA.t$dsci$c,
---            nvl(znmcs002_TRA.t$desc$c,
---              nvl(znfmd030_F.t$dsci$c,
---                nvl(znfmd030.t$dsci$c,znmcs002.t$desc$c)))))                         ULTIMA_DESC_OCORRENCIA,
+        nvl(znfmd030_FTRA.t$dsci$c,           --Retirado, pois esta onerando muito a query
+          nvl(znfmd030_TRA.t$dsci$c,
+            nvl(znmcs002_TRA.t$desc$c,
+              nvl(znfmd030_F.t$dsci$c,
+                nvl(znfmd030.t$dsci$c,znmcs002.t$desc$c)))))                         
+                                                            ULTIMA_DESC_OCORRENCIA,
             
         nvl(cast((from_tz(to_timestamp(to_char(znfmd640_F.t$date$c,
                    'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
