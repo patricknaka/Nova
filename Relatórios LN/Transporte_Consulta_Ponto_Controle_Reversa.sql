@@ -1,6 +1,7 @@
 
 
 select distinct
+  znsls400.t$pecl$c                               PEDIDO,
   TO_CHAR(znsls401.t$entr$c)                      ENTREGA,
   znsls410.t$poco$c                               PONTO,
   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.t$dtoc$c, 
