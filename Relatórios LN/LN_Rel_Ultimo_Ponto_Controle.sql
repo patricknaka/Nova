@@ -54,7 +54,7 @@ tcemm030.t$euca                                       FILIAL,
 tcemm030.t$dsca                                       NOME_FILIAL,
 znsls400.t$cepf$c                                     CEP,
 znsls400.t$cidf$c                                     CIDADE,
-znsls400.t$uffa$c                                     UF,
+znsls401.t$ufen$c                                     UF,
 znsls400.t$emaf$c                                     EMAIL_CLIENTE,
 znsls400.t$telf$c                                     TELEFONE_1,
 znsls400.t$te1f$c                                     TELEFONE_2,
@@ -121,6 +121,7 @@ a.t$orno$c,
 a.t$cwoc$c,
 a.t$itpe$c,
 a.t$dtep$c
+a.t$ufen$c
 from baandb.tznsls401301 a
 where a.t$uneg$c IN (:UnidadeNegocio)) znsls401
 
