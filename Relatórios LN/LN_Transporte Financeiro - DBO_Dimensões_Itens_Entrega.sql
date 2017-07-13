@@ -19,7 +19,8 @@ SELECT
     CASE WHEN znsls409.t$dved$c = 1 
            THEN 'Cancelamento/Forçado'
          ELSE   'Pendente' 
-    END                                FORCADO
+    END                                FORCADO,
+    tcibd001.t$wght                    PESO_REAL
 
 FROM       baandb.tznfmd630301 znfmd630
 
@@ -34,5 +35,8 @@ INNER JOIN baandb.twhwmd400301 whwmd400
         
  LEFT JOIN baandb.tznsls409301 znsls409
         ON TRIM(TO_CHAR(znsls409.t$entr$c)) = TRIM(znfmd630.t$pecl$c)
+
+LEFT JOIN baandb.ttcibd001301 tcibd001
+       on Trim(tcibd001.t$item) = Trim(cisli941.t$item$l)
 
 WHERE znfmd630.t$pecl$c IN (:Entrega)
