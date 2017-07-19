@@ -181,7 +181,7 @@ and znfmd630.t$torg$c = znfmd640.t$torg$c
   
 WHERE 
      znfmd640.t$torg$c != 7
-and  znsls410.CODE_OCORRENCIA  IN ('PIC','PZC','GAL','LFE','ARE','ARO','FIS','ROT','DDL','CME','ENL','ETR','POT','DIE','PNR','PRT','TRN','REE','SEF','EA1','EA2','EA3','CXP','AGE','NAP','RET','PRE','DRE','TRD','FER','CHU','MPD','PDM','PZV')
+and  znsls410.CODE_OCORRENCIA  IN ('SFC','CEC','CCE','AT9','AT8','AT7','AT6','AT5','AT4','AT3','AT2','AT1','PIC','PZC','GAL','LFE','ARE','ARO','FIS','ROT','DDL','CME','ENL','ETR','POT','DIE','PNR','PRT','TRN','REE','SEF','EA1','EA2','EA3','CXP','AGE','NAP','RET','PRE','DRE','TRD','FER','CHU','MPD','PDM','PZV')
         ) Q1
 where Trunc(Q1.DATA_EXPEDICAO)
       Between :DataExpedicaoDe
