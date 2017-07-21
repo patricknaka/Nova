@@ -172,7 +172,7 @@ and znfmd630.t$torg$c = znfmd640.t$torg$c
          AND znsls410.t$sqpd$c = znsls004.t$sqpd$c
          AND znsls410.t$entr$c = znsls004.t$entr$c
   
-  LEFT JOIN BAANDB.tznfmd030601 znfmd030
+  LEFT JOIN BAANDB.tznfmd030301 znfmd030
          ON znfmd030.t$ocin$c = znsls410.CODE_OCORRENCIA
   
   LEFT JOIN baandb.tznsng108301 znsng108
