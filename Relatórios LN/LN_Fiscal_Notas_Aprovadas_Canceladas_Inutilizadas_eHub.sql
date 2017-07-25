@@ -48,7 +48,8 @@
         AT time zone 'America/Sao_Paulo') AS DATE)        
      end                                                DATA_RECEBIMENTO,
      tcibd001.t$cean                                    EAN,
-     znibd005.t$desc$c                                  TAMANHO
+     znibd005.t$desc$c                                  TAMANHO,
+     uf_znsls400.t$entr$c                               ENTREGA
 
 FROM       baandb.tcisli940601  cisli940
 
@@ -116,6 +117,7 @@ INNER JOIN baandb.ttcibd001601  tcibd001
         on cisli940.t$fire$l = cisli245.t$fire$l
     
  left join (select  znsls401.t$orno$c,
+                    znsls401.t$entr$c,
                      znsls400.t$uffa$c
                from baandb.tznsls401601 znsls401
                   
