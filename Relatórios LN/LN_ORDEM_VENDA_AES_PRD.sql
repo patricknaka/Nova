@@ -11,6 +11,10 @@ SELECT
         AT time zone 'America/Sao_Paulo') AS DATE)
                           DATA_INTEGRACAO_LN, 
     znsls401.t$pono$c     POSI_OV_LN,
+    
+    tdsls401.t$cwar ||
+    ' - '           ||
+    tcmcs003.t$dsca       ARMAZEM,
     znsls401.t$sequ$c     NUME_ITEM,
     znsls400.t$pecl$c     NUME_PEDIDO,
     znsls401.t$ufen$c     UF,
@@ -51,9 +55,9 @@ SELECT
                      WHEN tcibd001.t$csig = '001'                          THEN 'Verificacao Fiscal' 
                 END       SITUACAO_ITEM,  -- SDP 1192090
                 
-    znsls401.t$pzfo$c     TEMP_REPOS,
+    znsls401.t$pzfo$c     TEMP_REPOS, 
     znsls401.t$pzcd$c     PRAZO_CD,         -- Incluso (SDP 1279819)
-    znsls401.t$pztr$c     TRANSIT_TIME,     -- Incluso (SDP 1279819)
+    znsls401.t$pztr$c     TRANSIT_TIME,     -- Incluso (SDP 1279819)	
     znsls401.t$qtve$c     QUAN_ORD,
     
     case when tdsls420.t$orno is null then
@@ -79,7 +83,7 @@ SELECT
     tccom130.t$fovn$l     CNPJ_FORN,
     tccom130.t$nama       NOME_FORNEC,
     
-    znsls401.t$vlun$c     PREÇO_UNIT,     -- MMF
+    znsls401.t$vlun$c     PRECO_UNIT,     -- MMF
  
     ( select case when (max(whwmd215.t$qhnd) - max(whwmd215.t$qchd) - max(whwmd215.t$qnhd)) = 0 
                     then 0
@@ -112,6 +116,7 @@ SELECT
     iTIPOXD.DESCR         DESCR_XD,
     ULT_PONTO.t$poco$c    COD_ULT_PONTO,
     znmcs002.t$desc$c     DESCR_ULT_PONTO,
+    ULT_PONTO.DATA_OCORRENCIA DATA_ULT_PONTO,
     
     (SELECT zncmg007.t$desc$c Pag
             FROM baandb.tznsls402301 znsls402_S
@@ -150,6 +155,9 @@ INNER JOIN baandb.ttdsls400301 tdsls400
         ON znsls401.t$orno$c = tdsls400.t$orno
   
  LEFT JOIN ( select a.t$poco$c,
+                    CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR( a.t$dtoc$c,
+						       'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+						       AT time zone 'America/Sao_Paulo') AS DATE) DATA_OCORRENCIA,
                     a.t$ncia$c,
                     a.t$uneg$c,
                     a.t$pecl$c,
@@ -179,6 +187,9 @@ INNER JOIN baandb.ttdsls400301 tdsls400
 INNER JOIN baandb.ttdsls401301 tdsls401
         ON tdsls401.t$orno = znsls401.t$orno$c 
        AND tdsls401.t$pono = znsls401.t$pono$c
+       
+ LEFT JOIN baandb.ttcmcs003301 tcmcs003
+        ON tcmcs003.t$cwar = tdsls401.t$cwar
 
 LEFT JOIN (  select a.t$orno,
                      a.t$pono
@@ -316,6 +327,7 @@ WHERE tcemm124.t$dtyp = 1
   AND whinp100.t$koor = 3 
   AND whinp100.t$kotr = 2
   AND tdsls401.t$clyn != 1         -- MMF
+
   AND Trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$ddat, 
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))
@@ -339,4 +351,4 @@ WHERE tcemm124.t$dtyp = 1
   AND ULT_PONTO.t$poco$c IN (:Status)  
  
 ORDER BY NUME_OV_LN,
-POSI_OV_LN
+         POSI_OV_LN
