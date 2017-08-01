@@ -1,4 +1,5 @@
-SELECT znfmd630.t$fili$c             FILIAL,
+SELECT /*+ use_concat parallel(32) no_cpu_costing */ 
+       znfmd630.t$fili$c             FILIAL,
        NVL(tcmcs031.t$dsca,
            'Pedido Interno')         MARCA,
        own_mis.filtro_mis(znsls400.t$nomf$c) NOME_DESTINATARIO,
@@ -160,7 +161,10 @@ SELECT znfmd630.t$fili$c             FILIAL,
 
 FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c),
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-                        AT time zone 'America/Sao_Paulo') AS DATE)                                    DATA_OCORRENCIA,
+                        AT time zone 'America/Sao_Paulo') AS DATE)                  DATA_OCORRENCIA,
+                    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c),
+                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone 'America/Sao_Paulo') AS DATE))                  DATA_FILTRO,
                     Max(znfmd640_ETR.t$etiq$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640_ETR.t$udat$c ) t$etiq$c,
                     znfmd630.t$pecl$c,
                     znfmd640_ETR.t$fili$c
@@ -170,6 +174,7 @@ FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640_ETR.t$udat$c
                 and znfmd640_ETR.t$etiq$c = znfmd630.t$etiq$c
               where znfmd640_ETR.t$coct$c = 'ETR'
                 and znfmd640_ETR.T$TORG$C = 1
+                and znfmd640_ETR.t$udat$c between trunc(to_date(:DtExpIni)) and trunc(to_date(:DtExpFim))+1.99999
            group by znfmd630.t$pecl$c,
                     znfmd640_ETR.t$fili$c ) znfmd640_ETR
 
@@ -387,11 +392,10 @@ INNER JOIN ( select a1.t$ncia$c,
         ON znsng108.t$orln$c = znsls401.t$orno$c
 
      WHERE cisli940.t$fdty$l != 14
-     
-       AND Trunc(znfmd640_ETR.DATA_OCORRENCIA)
-           BETWEEN :DtExpIni
-               AND :DtExpFim
        AND NVL(znsls401.t$itpe$c, 16) IN (:TipoEntrega)
        AND ((:Transportadora = 'T') or (znfmd630.t$cfrw$c = :Transportadora))
+       AND znfmd640_ETR.DATA_FILTRO
+           BETWEEN :DtExpIni
+               AND :DtExpFim
        
 ORDER BY FILIAL, NUME_ENTREGA
