@@ -63,6 +63,6 @@ WHERE TRUNC(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.t$date$c,
   AND ( (znsls401.t$entr$c IN (:Entrega) and :EntregaTodos = 1 ) or (:EntregaTodos = 0) )
   AND znsls410.t$poco$c IN (:Ponto)
   AND znsls400.t$idpo$c = 'TD' --Reversa
-  AND znfmd640.t$coci$c = znsls410.t$poco$c
+  --AND znfmd640.t$coci$c = znsls410.t$poco$c
 
 ORDER BY DATA_PONTO
