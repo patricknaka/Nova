@@ -1,6 +1,6 @@
 select Q1.*
   from ( SELECT
-           DISTINCT
+           DISTINCT /* use_concat parallel(8) no_cpu_costing */
              tcmcs080.t$cfrw    CODI_TRANSP,
              tcmcs080.t$dsca    DESC_TRANSP,
              znfmd060.t$cdes$c  DESC_CONTRATO,
@@ -97,7 +97,15 @@ znfmd630.t$cnfe$c              NUMERO_DANFE,
 znsng108.t$pvvv$c              PEDIDO_S9,
 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c  , 'DD-MON-YYYY HH24:MI:SS'),
                         'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)              
-                               DATA_EMISSAO
+                               DATA_EMISSAO,
+                               
+case when (select a.t$entr$c  
+             from baandb.tznsls410301 a
+            where a.t$entr$c = znsls401.t$entr$c
+              and a.t$poco$c in ('VAL','RTD','ROU','RIE','RDV','PZE','NFT','NFC','EXT','EXP','EXL','EXF','ETL','ENT','EFO',
+                                 'DTR','CPL','CPC','CMS','CAN','AVP','AVA','ARL') 
+              and rownum = 1) is null then 'Não'
+             else 'Sim' end PONTO_FINALIZADOR
 
   FROM       baandb.tcisli940301 cisli940  
   
