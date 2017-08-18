@@ -67,8 +67,8 @@ select Q1.DATA_EMISSAO,
        
             cisli940.t$amnt$l              VLR_TOTAL_NF,
             znfmd630.t$vlfr$c              VLR_FRETE_CLIENTE,
-	    znfmd637.t$rate$c		ALIQUOTA,
-	    znfmd637.t$amnt$c		VLR_ICMS,
+            cisli943.t$rate$l              ALIQUOTA,            
+            cisli943.t$amnt$l              VLR_ICMS,
             znfmd630.t$vlfc$c              PESO_VOLUME,
             znfmd068.t$adva$c *
             ( cisli940.t$amnt$l / 100 )    AD_VALOREM,
@@ -153,11 +153,7 @@ select Q1.DATA_EMISSAO,
   
  INNER JOIN BAANDB.TTCCOM130301 TCCOM130T
          ON TCCOM130T.T$CADR = TCMCS080.T$CADR$L
-
-  LEFT JOIN BAANDB.tznfmd637301 ZNFMD637
-         ON ZNFMD637.t$txre$c = znfmd630.t$txre$c
-        AND ZNFMD637.t$brty$c = 1                   
-	
+  
   LEFT JOIN BAANDB.tcisli940301 cisli940
          ON cisli940.t$fire$l = znfmd630.t$fire$c
      
@@ -286,11 +282,13 @@ select Q1.DATA_EMISSAO,
 --            and znfmd640.t$etiq$c = znfmd630.t$etiq$c ) IS NOT NULL 
             )  Q1
 
--- WHERE Q1.TIPO_NF IN (:TipoNF)
-WHERE TRUNC(Q1.DATA_EMISSAO)
+ WHERE Q1.TIPO_NF IN (:TipoNF)
+AND TRUNC(Q1.DATA_EMISSAO)
       Between :DataDe
          And :DataAte
---   AND ( (regexp_replace(Q1.CNPJ_TRANS, '[^0-9]', '')  like '%' || Trim(:CNPJ)  || '%' ) OR (Trim(:CNPJ) is null) )
+and ((:EntregaTodas = 0) or (Q1.ENTREGA in (:NumEntrega) and (:EntregaTodas = 1)))
+and ((:CNPJTodos = 0) or (regexp_replace(Q1.CNPJ_TRANS, '[^0-9]', '') in Trim(:CNPJ) and  (:CNPJTodos = 1 )))
+
 
  GROUP BY Q1.DATA_EMISSAO,
           Q1.FILIAL,
