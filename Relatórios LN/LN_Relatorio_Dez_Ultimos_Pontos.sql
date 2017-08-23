@@ -59,7 +59,14 @@ select distinct
        ocor_10.code_ocorrencia                 ponto_10,
        ocor_10.desc_ocorrencia                 desc_ocorr_10,
        ocor_10.data_ocorrencia                 data_ocorr_10,
-       ocor_10.data_processamento              data_proces_10
+       ocor_10.data_processamento              data_proces_10,
+       case when (select a.t$entr$c  
+             from baandb.tznsls410301 a
+            where a.t$entr$c = znsls410.t$entr$c
+              and a.t$poco$c in ('VAL','RTD','ROU','RIE','RDV','PZE','NFT','NFC','EXT','EXP','EXL','EXF','ETL','ENT','EFO',
+                                 'DTR','CPL','CPC','CMS','CAN','AVP','AVA','ARL') 
+    and rownum = 1) is null then 'Não'
+             else 'Sim' end                    ponto_finalizador
 from baandb.tznsls410301 znsls410 
 left join ponto_por_seq ocor_1
         on ocor_1.t$entr$c = znsls410.t$entr$c
