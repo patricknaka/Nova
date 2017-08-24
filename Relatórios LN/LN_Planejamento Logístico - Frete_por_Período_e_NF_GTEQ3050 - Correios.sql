@@ -15,8 +15,13 @@ SELECT /*+ use_concat no_cpu_costing */
        znfmd630.t$cfrw$c                              COD_TRANSP,
        (  select a.t$dsca
           from baandb.ttcmcs080301 a
-          where a.t$cfrw = znfmd630.t$cfrw$c)         TRANSPORTADORA
-
+          where a.t$cfrw = znfmd630.t$cfrw$c)         TRANSPORTADORA,
+       znfmd630.t$cono$c                              COD_CONTRATO,
+       cast(replace(replace(own_mis.filtro_mis(znfmd060.t$refe$c),';',''),'"','')   as varchar(100))  
+                                                      ID_EXT_CONTRATO,
+       NVL(tcmcs031.t$dsca, 'Pedido Interno')         MARCA,
+       ORIGEM.DESCR                                   ORIGEM_ORDEM_FRETE
+       
 FROM ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640.t$udat$c),
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
               AT time zone 'America/Sao_Paulo') AS DATE)    DATA_OCORRENCIA,
@@ -61,7 +66,55 @@ LEFT JOIN baandb.tznfmd637301 znfmd637_COFINS
        ON znfmd637_COFINS.t$txre$c = znfmd630.t$txre$c
       AND znfmd637_COFINS.t$line$c = znfmd630.t$line$c
       AND znfmd637_COFINS.t$brty$c = 6  --COFINS
-    
+
+LEFT JOIN BAANDB.tznfmd060301 znfmd060
+       ON znfmd060.t$cfrw$c = cisli940.t$cfrw$l      --A transportadora da ordem de frete pode nao ser a correta. SDP 1390455
+      AND znfmd060.t$cono$c = znfmd630.t$cono$c
+
+LEFT JOIN (  select a.t$orno$c,
+                    a.t$ncia$c,
+                    a.t$uneg$c
+              from baandb.tznsls004301 a 
+              group by a.t$orno$c,
+                       a.t$ncia$c,
+                       a.t$uneg$c ) znsls004
+        ON znsls004.t$orno$c = znfmd630.t$orno$c
+
+LEFT JOIN baandb.tznint002301  znint002
+       ON znint002.t$ncia$c = znsls004.t$ncia$c
+      AND znint002.t$uneg$c = znsls004.t$uneg$c
+
+LEFT JOIN baandb.ttcmcs031301  tcmcs031
+       ON znint002.t$cbrn$c = tcmcs031.t$cbrn
+
+LEFT JOIN ( SELECT d.t$cnst CODE,
+                   l.t$desc DESCR
+            FROM baandb.tttadv401000 d,
+                 baandb.tttadv140000 l
+            WHERE d.t$cpac = 'zn'
+              AND d.t$cdom = 'mcs.trans.c'
+              AND l.t$clan = 'p'
+              AND l.t$cpac = 'zn'
+              AND l.t$clab = d.t$za_clab
+              AND rpad(d.t$vers,4) || '|' ||
+                    rpad(d.t$rele,2) || '|' ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' ||
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv401000 l1
+                                          where l1.t$cpac = d.t$cpac
+                                            and l1.t$cdom = d.t$cdom )
+              AND rpad(l.t$vers,4) || '|' ||
+                    rpad(l.t$rele,2) || '|' ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' ||
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv140000 l1
+                                          where l1.t$clab = l.t$clab
+                                            and l1.t$clan = l.t$clan
+                                            and l1.t$cpac = l.t$cpac ) ) ORIGEM
+        ON ORIGEM.CODE = znfmd630.t$torg$c
+        
 WHERE znfmd640_ETR.DATA_FILTRO between :data_ini and :data_fim
   AND znfmd630.t$cfrw$c in ('T70','T72','T73','A46')
 
@@ -84,7 +137,12 @@ SELECT /*+ use_concat no_cpu_costing */
        znfmd630.t$cfrw$c                              COD_TRANSP,
        (  select a.t$dsca
           from baandb.ttcmcs080301 a
-          where a.t$cfrw = znfmd630.t$cfrw$c)         TRANSPORTADORA
+          where a.t$cfrw = znfmd630.t$cfrw$c)         TRANSPORTADORA,
+       znfmd630.t$cono$c                              COD_CONTRATO,
+       cast(replace(replace(own_mis.filtro_mis(znfmd060.t$refe$c),';',''),'"','')   as varchar(100))  
+                                                      ID_EXT_CONTRATO,
+       NVL(tcmcs031.t$dsca, 'Pedido Interno')         MARCA,
+       ORIGEM.DESCR                                   ORIGEM_ORDEM_FRETE
 
 FROM ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640.t$udat$c),
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -130,7 +188,55 @@ LEFT JOIN baandb.tznfmd637301 znfmd637_COFINS
        ON znfmd637_COFINS.t$txre$c = znfmd630.t$txre$c
       AND znfmd637_COFINS.t$line$c = znfmd630.t$line$c
       AND znfmd637_COFINS.t$brty$c = 6  --COFINS
-    
+
+LEFT JOIN BAANDB.tznfmd060301 znfmd060
+       ON znfmd060.t$cfrw$c = cisli940.t$cfrw$l      --A transportadora da ordem de frete pode nao ser a correta. SDP 1390455
+      AND znfmd060.t$cono$c = znfmd630.t$cono$c
+
+LEFT JOIN (  select a.t$orno$c,
+                    a.t$ncia$c,
+                    a.t$uneg$c
+              from baandb.tznsls004301 a 
+              group by a.t$orno$c,
+                       a.t$ncia$c,
+                       a.t$uneg$c ) znsls004
+        ON znsls004.t$orno$c = znfmd630.t$orno$c
+
+LEFT JOIN baandb.tznint002301  znint002
+       ON znint002.t$ncia$c = znsls004.t$ncia$c
+      AND znint002.t$uneg$c = znsls004.t$uneg$c
+
+LEFT JOIN baandb.ttcmcs031301  tcmcs031
+       ON znint002.t$cbrn$c = tcmcs031.t$cbrn
+
+LEFT JOIN ( SELECT d.t$cnst CODE,
+                   l.t$desc DESCR
+            FROM baandb.tttadv401000 d,
+                 baandb.tttadv140000 l
+            WHERE d.t$cpac = 'zn'
+              AND d.t$cdom = 'mcs.trans.c'
+              AND l.t$clan = 'p'
+              AND l.t$cpac = 'zn'
+              AND l.t$clab = d.t$za_clab
+              AND rpad(d.t$vers,4) || '|' ||
+                    rpad(d.t$rele,2) || '|' ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' ||
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv401000 l1
+                                          where l1.t$cpac = d.t$cpac
+                                            and l1.t$cdom = d.t$cdom )
+              AND rpad(l.t$vers,4) || '|' ||
+                    rpad(l.t$rele,2) || '|' ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' ||
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv140000 l1
+                                          where l1.t$clab = l.t$clab
+                                            and l1.t$clan = l.t$clan
+                                            and l1.t$cpac = l.t$cpac ) ) ORIGEM
+        ON ORIGEM.CODE = znfmd630.t$torg$c
+        
 WHERE znfmd640_CTR.DATA_FILTRO between :data_ini and :data_fim
   AND znfmd630.t$cfrw$c in ('T70','T72','T73','A46')
 
@@ -153,7 +259,12 @@ SELECT /*+ use_concat no_cpu_costing */
        znfmd630.t$cfrw$c                              COD_TRANSP,
        (  select a.t$dsca
           from baandb.ttcmcs080301 a
-          where a.t$cfrw = znfmd630.t$cfrw$c)         TRANSPORTADORA
+          where a.t$cfrw = znfmd630.t$cfrw$c)         TRANSPORTADORA,
+       znfmd630.t$cono$c                              COD_CONTRATO,
+       cast(replace(replace(own_mis.filtro_mis(znfmd060.t$refe$c),';',''),'"','')   as varchar(100))  
+                                                      ID_EXT_CONTRATO,
+       NVL(tcmcs031.t$dsca, 'Pedido Interno')         MARCA,
+       ORIGEM.DESCR                                   ORIGEM_ORDEM_FRETE
 
 FROM ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640.t$udat$c),
               'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
@@ -199,6 +310,54 @@ LEFT JOIN baandb.tznfmd637301 znfmd637_COFINS
        ON znfmd637_COFINS.t$txre$c = znfmd630.t$txre$c
       AND znfmd637_COFINS.t$line$c = znfmd630.t$line$c
       AND znfmd637_COFINS.t$brty$c = 6  --COFINS
+
+LEFT JOIN BAANDB.tznfmd060301 znfmd060
+       ON znfmd060.t$cfrw$c = cisli940.t$cfrw$l      --A transportadora da ordem de frete pode nao ser a correta. SDP 1390455
+      AND znfmd060.t$cono$c = znfmd630.t$cono$c
+
+LEFT JOIN (  select a.t$orno$c,
+                    a.t$ncia$c,
+                    a.t$uneg$c
+              from baandb.tznsls004301 a 
+              group by a.t$orno$c,
+                       a.t$ncia$c,
+                       a.t$uneg$c ) znsls004
+        ON znsls004.t$orno$c = znfmd630.t$orno$c
+
+LEFT JOIN baandb.tznint002301  znint002
+       ON znint002.t$ncia$c = znsls004.t$ncia$c
+      AND znint002.t$uneg$c = znsls004.t$uneg$c
+
+LEFT JOIN baandb.ttcmcs031301  tcmcs031
+       ON znint002.t$cbrn$c = tcmcs031.t$cbrn
+
+LEFT JOIN ( SELECT d.t$cnst CODE,
+                   l.t$desc DESCR
+            FROM baandb.tttadv401000 d,
+                 baandb.tttadv140000 l
+            WHERE d.t$cpac = 'zn'
+              AND d.t$cdom = 'mcs.trans.c'
+              AND l.t$clan = 'p'
+              AND l.t$cpac = 'zn'
+              AND l.t$clab = d.t$za_clab
+              AND rpad(d.t$vers,4) || '|' ||
+                    rpad(d.t$rele,2) || '|' ||
+                    rpad(d.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' ||
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv401000 l1
+                                          where l1.t$cpac = d.t$cpac
+                                            and l1.t$cdom = d.t$cdom )
+              AND rpad(l.t$vers,4) || '|' ||
+                    rpad(l.t$rele,2) || '|' ||
+                    rpad(l.t$cust,4) = ( select max(rpad(l1.t$vers,4) || '|' ||
+                                                    rpad(l1.t$rele,2) || '|' ||
+                                                    rpad(l1.t$cust,4))
+                                           from baandb.tttadv140000 l1
+                                          where l1.t$clab = l.t$clab
+                                            and l1.t$clan = l.t$clan
+                                            and l1.t$cpac = l.t$cpac ) ) ORIGEM
+        ON ORIGEM.CODE = znfmd630.t$torg$c
     
 WHERE znfmd640_SPC.DATA_FILTRO between :data_ini and :data_fim
   AND znfmd630.t$cfrw$c in ('T70','T72','T73','A46')
