@@ -1,7 +1,7 @@
 SELECT /*+ use_concat no_cpu_costing */ 
        znfmd640_ETR.t$fili$c              FILIAL,          
        znfmd640_ETR.DATA_OCORRENCIA       DATA_EXPEDICAO,
-       znfmd640_ETR.t$pecl$c              NUME_ENTREGA,  
+       znfmd640_ETR.t$entr$c              NUME_ENTREGA,  
        znfmd640_ETR.t$itpe$c              NUME_TIPO_ENTREGA,
        znsls002.t$dsca$c                  DESC_TIPO_ENTREGA_NOME,  
        znfmd640_ETR.t$wght$c              PESO,
@@ -50,12 +50,33 @@ SELECT /*+ use_concat no_cpu_costing */
        znfmd640.t$desc$c                  OCORRENCIA,  
        znfmd640.t$date$c                  DATA_OCORRENCIA,
        znfmd640_ETR.t$cono$c              COD_CONTRATO,  
-       znfmd060.t$refe$c                  ID_EXT_CONTRATO
+       znfmd060.t$refe$c                  ID_EXT_CONTRATO,
+       ( select znfmd061.t$dzon$c
+         from baandb.tznfmd062301 znfmd062,
+              baandb.tznfmd061301 znfmd061
+          where znfmd062.t$cfrw$c = znfmd640_ETR.t$cfrw$c
+            and znfmd062.t$cono$c = znfmd640_ETR.t$cono$c
+            and znfmd061.t$cfrw$c = znfmd062.t$cfrw$c
+            and znfmd061.t$cono$c = znfmd062.t$cono$c
+            and znfmd061.t$creg$c = znfmd062.t$creg$c
+            and tccom130.t$pstc between znfmd062.t$cepd$c
+                                    and znfmd062.t$cepa$c
+            and rownum = 1 )              REGIAO,
+        znfmd640_ETR.t$cfrw$c             COD_TRANSP,
+        tcmcs080.t$dsca                   DESC_TRANSP,
+        PRIM_OCORR.t$poco$c               COD_PRIM_OCORR,
+        CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PRIM_OCORR.t$dtoc$c,
+        'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+        AT time zone 'America/Sao_Paulo') AS DATE)
+                                          DATA_PRIM_OCORR
 
 FROM       ( select  
                     CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640.t$udat$c),
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                         AT time zone 'America/Sao_Paulo') AS DATE)                            DATA_OCORRENCIA,
+                    trunc(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(znfmd640.t$udat$c),
+                     'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+                        AT time zone 'America/Sao_Paulo') AS DATE))                           DATA_FILTRO,                    
                     Max(znfmd640.t$etiq$c) KEEP (DENSE_RANK LAST ORDER BY znfmd640.t$udat$c ) t$etiq$c,
                     znfmd630.t$cfrw$c,
                     znfmd630.t$cono$c,
@@ -100,9 +121,9 @@ FROM       ( select
                where znfmd640.t$coct$c = 'ETR'
                  and znfmd640.T$TORG$C = 1
                  and znsls401.t$iitm$c = 'P'
---                 and znfmd640.t$udat$c
---                     between TRUNC(TO_DATE(:DtExpIni,'DD-MM-YYYY'))
---                         and TRUNC(TO_DATE(:DtExpFim,'DD-MM-YYYY'))+1.99999  --DATE+23:59:59
+                 and znfmd640.t$udat$c
+                     between To_date(:DtExpIni)
+                         and To_date(:DtExpFim) + 2
            group by 
                     znfmd630.t$cfrw$c,
                     znfmd630.t$cono$c,
@@ -197,11 +218,41 @@ FROM       ( select
  LEFT JOIN BAANDB.tznfmd060301 znfmd060
         ON znfmd060.t$cfrw$c = znfmd640_ETR.t$cfrw$c
        AND znfmd060.t$cono$c = znfmd640_ETR.t$cono$c
-       
+
+ LEFT JOIN baandb.ttcmcs080301 tcmcs080
+        ON tcmcs080.t$cfrw = znfmd640_ETR.t$cfrw$c
+ 
+ LEFT JOIN ( select znsls410.t$ncia$c,  
+                    znsls410.t$uneg$c,  
+                    znsls410.t$pecl$c,  
+                    znsls410.t$entr$c,  
+                    znsls410.t$sqpd$c,  
+                    min(znsls410.t$dtoc$c) t$dtoc$c,  
+                    min(znsls410.t$poco$c) KEEP (DENSE_RANK FIRST ORDER BY znsls410.T$DTOC$C,  znsls410.T$SEQN$C) t$poco$c  
+              from BAANDB.tznsls410301   znsls410
+              where znsls410.t$seqn$c > ( select a.t$seqn$c
+                                          from baandb.tznsls410301 a
+                                          where a.t$ncia$c = znsls410.t$ncia$c
+                                            and a.t$uneg$c = znsls410.t$uneg$c
+                                            and a.t$pecl$c = znsls410.t$pecl$c
+                                            and a.t$sqpd$c = znsls410.t$sqpd$c
+                                            and a.t$entr$c = znsls410.t$entr$c
+                                            and a.t$poco$c = 'ETR')
+              group by znsls410.t$ncia$c,  
+                       znsls410.t$uneg$c,  
+                       znsls410.t$pecl$c,  
+                       znsls410.t$entr$c,  
+                       znsls410.t$sqpd$c ) PRIM_OCORR  
+            ON PRIM_OCORR.t$ncia$c = znfmd640_ETR.t$ncia$c  
+           AND PRIM_OCORR.t$uneg$c = znfmd640_ETR.t$uneg$c  
+           AND PRIM_OCORR.t$pecl$c = znfmd640_ETR.t$pecl$c  
+           AND PRIM_OCORR.t$sqpd$c = znfmd640_ETR.t$sqpd$c  
+           AND PRIM_OCORR.t$entr$c = znfmd640_ETR.t$entr$c  
+           
   WHERE cisli940.t$fdty$l != 14
     AND NVL(znfmd640_ETR.t$itpe$c, 16) IN (:TipoEntrega)
     AND ((:Transportadora = 'T') or (znfmd640_ETR.t$cfrw$c = :Transportadora))
-    AND znfmd640_ETR.DATA_OCORRENCIA
+    AND znfmd640_ETR.DATA_FILTRO
         BETWEEN :DtExpIni
             AND :DtExpFim
        
