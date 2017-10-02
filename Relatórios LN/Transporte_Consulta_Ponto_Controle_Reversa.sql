@@ -15,7 +15,8 @@ select distinct
   tcemm030.t$euca                                 FILIAL,
   tcmcs080.t$dsca                                 NOME_TRANSPORTADORA,
   znfmd640.t$ulog$c                               MATRICULA,
-  ttaad200.t$name                                 NOME
+  ttaad200.t$name                                 NOME,
+  cisli940.t$fire$l                               REF_FISCAL
 
 from baandb.tznsls401301 znsls401
 
@@ -32,6 +33,10 @@ LEFT JOIN baandb.tcisli245301 cisli245
 
 LEFT JOIN baandb.tcisli940301  cisli940
        ON cisli940.t$fire$l = cisli245.t$fire$l
+
+--left join baandb.ttdrec940301  tdrec940
+--       on tdrec940.t$docn$l = cisli940.t$docn$l
+--      and tdrec940.t$seri$l = cisli940.t$seri$l
        
 LEFT JOIN baandb.ttcemm124301 tcemm124
        ON tcemm124.t$cwoc = cisli940.t$cofc$l
