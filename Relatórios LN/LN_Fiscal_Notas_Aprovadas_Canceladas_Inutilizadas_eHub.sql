@@ -24,7 +24,8 @@
             regexp_replace(tccom130c.t$fovn$l, '[^0-9]', '')   ID_CLIENTE,   
             tccom130c.t$cste                                   UF_CLIENTE,   
             Trim(cisli941.t$item$l)                            SKU_NOVA,   
-            Trim(tcibd001.t$mdfb$c)                            SKU_FORN,   
+            Trim(tcibd001.t$mdfb$c)                            SKU_FORN,
+	    tcmcs023.t$dsca                                    DESC_GRUPO_ITEM,
             cisli941.t$dqua$l                                  QT_ITEM,   
             cisli941.t$pric$l                                  VALOR_UNIT,   
             CASE WHEN cisli940.t$gamt$l = 0   
@@ -71,7 +72,10 @@
          ON cisli941.t$fire$l = cisli940.t$fire$l   
    
  INNER JOIN baandb.ttcibd001601    tcibd001   
-         ON tcibd001.t$item = cisli941.t$item$l   
+         ON tcibd001.t$item = cisli941.t$item$l 
+	 
+  LEFT JOIN baandb.ttcmcs023601 tcmcs023  
+         ON tcmcs023.t$citg   = tcibd001.t$citg 
    
   LEFT JOIN baandb.ttccom130601   tccom130f   
          ON tccom130f.t$cadr = cisli940.t$sfra$l   
