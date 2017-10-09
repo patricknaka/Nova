@@ -54,6 +54,7 @@ LEFT JOIN baandb.ttcmcs080301  tcmcs080
 LEFT JOIN baandb.tznfmd640301 znfmd640
         ON  znfmd640.t$fili$c = znfmd630.t$fili$c
         AND znfmd640.t$etiq$c = znfmd630.t$etiq$c
+        and znfmd640.t$coci$c = znsls410.t$poco$c
         
         
 LEFT JOIN baandb.tttaad200000 ttaad200
