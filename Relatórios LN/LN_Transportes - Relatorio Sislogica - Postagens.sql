@@ -5,30 +5,22 @@ select  /*+ use_concat no_cpu_costing */
         znfmd630.t$ncol$c                                  NR_AUTORIZACAO,
         znfmd630.t$etiq$c                                  ETIQUETA,
         replace(tccom130.t$fovn$l,'/','')                  CNPJ,
-        cast(replace(replace(own_mis.filtro_mis(tccom130.t$nama),';',''),'"','')   as varchar(100)) FORNECEDOR,                         
+        replace(replace(tccom130.t$nama,';',''),'"','')    FORNECEDOR,                         
         cisli940.t$ccfo$l                                  CFOP,
         cisli940.t$opor$l                                  SEQ_CFOP,
         cisli941.t$item$l                                  SEQ_PEDIDO,
-        cast(replace(replace(own_mis.filtro_mis(tcibd001.t$dscb$c),';',''),'"','')   as varchar(100)) DESCRICAO,                                   
+        replace(replace(tcibd001.t$dscb$c,';',''),'"','')  DESCRICAO,                                   
         cisli941.t$dqua$l                                  QTDE,
         cisli941.t$pric$l                                  PRECO_UNIT,
         cisli941.t$amnt$l                                  VALOR_TOTAL,
-        znsls401.t$fovn$c                                  CPF_CLIENTE,
-        
---        cast(replace(replace(own_mis.filtro_mis(znsls401.t$nome$c),';',''),'"','')   as varchar(100)) NOME_REMETENTE,
-
-                                          
+        znsls401.t$fovn$c                                  CPF_CLIENTE, 
+        replace(replace(znsls401.t$nome$c,';',''),'"','')  NOME_REMETENTE,
         znsls401.t$cepe$c                                  CEP_REMETENTE,
-        
-        cast(replace(replace(own_mis.filtro_mis(znsls401.t$loge$c),';',''),'"','')   as varchar(100)) END_REMETENTE,
-                                          
+        replace(replace(znsls401.t$loge$c,';',''),'"','')  END_REMETENTE,                               
         znsls401.t$nume$c                                  NUME_REMETENTE,
-        
-        cast(replace(replace(own_mis.filtro_mis(znsls401.t$come$c),';',''),'"','')   as varchar(100)) COMP_REMETENTE,        
-
-        cast(replace(replace(own_mis.filtro_mis(znsls401.t$baie$c),';',''),'"','')   as varchar(100)) BAIRRO_REMETENTE,                                          
-        cast(replace(replace(own_mis.filtro_mis(znsls401.t$cide$c),';',''),'"','')   as varchar(100)) CIDADE_REMETENTE,                                          
-                                          
+        replace(replace(znsls401.t$come$c,';',''),'"','')  COMP_REMETENTE,
+        replace(replace(znsls401.t$baie$c,';',''),'"','')  BAIRRO_REMETENTE,                                          
+        replace(replace(znsls401.t$cide$c,';',''),'"','')  CIDADE_REMETENTE,
         znsls401.t$ufen$c                                  UF_REMETENTE,
         znsls401.t$paie$c                                  PAIS_REMETENTE,
         znsls401.t$tele$c                                  TEL_REMETENTE,
