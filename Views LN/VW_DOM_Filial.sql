@@ -32,7 +32,7 @@ LEFT JOIN baandb.ttccom130201 tccom130
        ON tccom130.t$cadr=tccom100.t$cadr
        
 LEFT JOIN baandb.ttfgld010201 tfgld010
-       ON tfgld010.t$dimx=tcemm030.t$euca
+       ON tfgld010.t$dimx=lpad(tcemm030.t$euca,3,'0')
       AND tfgld010.t$dtyp=2
       
 LEFT JOIN baandb.ttccom139201 ttccom139
