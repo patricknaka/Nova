@@ -1,4 +1,4 @@
---CREATE OR REPLACE VIEW VW_NK_LOJA_NF AS
+CREATE OR REPLACE VIEW VW_NK_LOJA_NF AS
 SELECT DISTINCT
   'NIKE.COM'                FILIAL,                                 --02
   tccom130r.t$fovn$l        CGC_FILIAL_DESTINO,                     --03
@@ -203,10 +203,11 @@ LEFT JOIN baandb.ttttxt010301 tttxt010r
            ON tcmcs966.t$fdtc$l = tdrec940.t$fdtc$l
 
 
-    WHERE tdrec940.t$stat$l IN (4,5,6)
+    WHERE tdrec940.t$stat$l IN (4,5)
     AND    tdrec940.t$cnfe$l != ' '
     AND tdrec940.t$doty$l != 8    --8-conhecimento de frete
-    AND tdrec940.t$rfdt$l != 14    --Nota de Débito-14
+    AND tdrec940.t$rfdt$l not in (10,14)    --Nota de Débito-14
+
 UNION
 
 SELECT DISTINCT
@@ -238,7 +239,7 @@ SELECT DISTINCT
           AT time zone 'America/Sao_Paulo') AS DATE)
                             DATA_SAIDA_NF,                          --12
   cisli940.t$ccfo$l         CODIGO_FISCAL_OPERACAO,                 --13
-  0                         RECEBIMENTO,                            --14
+  CASE WHEN substr(cisli940.t$ccfo$l,1,4) IN (1949,2949,1202,2202) THEN 1 ELSE 0 END AS RECEBIMENTO, --14
   cisli940.t$nwgt$l         PESO_LIQUIDO,                           --15
   cisli940.t$gwgt$l         PESO_BRUTO,                             --16
   NVL(FMD630.VOLUMES,SLI941.QTDE)     VOLUMES,                      --17
@@ -473,7 +474,7 @@ FROM  baandb.tcisli940601  cisli940
 
     LEFT JOIN baandb.ttccom130601 tccom130fat
            ON tccom130fat.t$cadr = cisli940.t$stoa$l
-           
+
     LEFT JOIN baandb.ttcmcs939301 tcmcs939
            ON tcmcs939.t$ftyp$l = tccom130fat.t$ftyp$l
 
@@ -578,13 +579,14 @@ LEFT JOIN baandb.ttttxt010301 tttxt010f
                 group by a.t$entr$c ) SLS410_REM
            ON   SLS410_REM.t$entr$c = SLS004_REM.ENTREGA
 
-    WHERE cisli940.t$stat$l IN (2,5,6,101)      --cancelada, impressa, lançada, estornada
-    AND   cisli940.t$cnfe$l != ' '
+    WHERE cisli940.t$stat$l IN (2,5,6)      --cancelada, impressa, lançada
+    --AND   cisli940.t$cnfe$l != ' '
     AND   exists (select *
                   from  baandb.tznnfe011601 znnfe011
                   where znnfe011.t$oper$c = 1
                   and   znnfe011.t$fire$c = cisli940.t$fire$l
                   and   znnfe011.t$stfa$c = 5   --status nota impressa
-                  and   znnfe011.t$nfes$c = 5)  --status nfe processada
-   AND      cisli940.t$fdty$l NOT IN (2,14)     --venda sem pedido, retorno mercadoria cliente
+                  /*and   znnfe011.t$nfes$c = 5*/)  --status nfe processada
+   AND      cisli940.t$fdty$l != 2     --venda sem pedido, retorno mercadoria cliente
+
 order by REF_FISCAL;
