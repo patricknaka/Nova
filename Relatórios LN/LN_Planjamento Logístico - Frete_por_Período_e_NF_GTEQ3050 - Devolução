@@ -5,7 +5,7 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */  distinct
            'Pedido Interno')                            MARCA,
        cast(replace(replace(own_mis.filtro_mis(znsls400.t$nomf$c),';',''),'"','')   as varchar(100)) 
                                                         NOME_DESTINATARIO,
-       'NFE'                                            OCORRENCIA,                 --CAMPO NOVO                                                                               
+       'RDV'                                            OCORRENCIA,                 --CAMPO NOVO                                                                               
        znsls410.DATA_OCORRENCIA                         DATA_OCORRENCIA,            --CAMPO NOVO
        znfmd630.t$docn$c                                NUME_NOTA,
        znfmd630.t$seri$c                                NUME_SERIE,
@@ -29,7 +29,7 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */  distinct
        cast( (abs(znsls401.t$qtve$c) * tcibd001.t$wght) as numeric(15,4)) 
                                                         PESO_REAL_ITEM,          
        znfmd630.t$wght$c                                PESO_REAL_TOTAL,
-       znfmd610.t$pcub$c                                PESO_CUBADO_ITEM,                                     
+       nvl(znfmd610.t$pcub$c, znfmd610_venda.t$pcub$c)  PESO_CUBADO_ITEM,                                     
        cast((whwmd400.t$dpth * whwmd400.t$wdth * whwmd400.t$hght) as numeric(15,4))                   
                                                         VOLUME_ITEM, 
        NVL(NVL(znfmd061.t$cuba$c,znfmd061_2.t$cuba$c),znmcs080.t$cuba$c)                              
@@ -124,7 +124,7 @@ FROM ( select   a.t$ncia$c,
                 'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                 AT time zone 'America/Sao_Paulo') AS DATE))    DATA_FILTRO
         from baandb.tznsls410301 a
-        where a.t$poco$c = 'NFE' ) znsls410
+        where a.t$poco$c = 'RDV' ) znsls410
         
 INNER JOIN ( select a.t$fili$c,
                     a.t$docn$c,
@@ -376,13 +376,35 @@ left join baandb.tznmcs002301 znmcs002
         ON CMV.t$orno = znsls401_venda.t$orno$c
        AND CMV.t$pono = znsls401_venda.t$pono$c       
 
+    LEFT JOIN ( select  a.t$fili$c,
+                        a.t$cfrw$c,
+                        a.t$ngai$c,
+                        min(a.t$etiq$c) t$etiq$c,
+                        a.t$pecl$c
+                from baandb.tznfmd630301 a
+                group by a.t$fili$c,
+                         a.t$cfrw$c,
+                         a.t$ngai$c,
+                         a.t$pecl$c ) znfmd630_venda
+         ON znfmd630_venda.t$pecl$c = TO_CHAR(znsls401_venda.t$entr$c)
+                         
     LEFT JOIN baandb.tznfmd610301 znfmd610
            ON znfmd610.t$fili$c = znfmd630.t$fili$c
           AND znfmd610.t$cfrw$c = znfmd630.t$cfrw$c
           AND znfmd610.t$ngai$c = znfmd630.t$ngai$c
-          AND znfmd610.t$etiq$c = znfmd630.t$etiq$c
+          AND znfmd610.t$etiq$c = znfmd630.t$etiq$c    
     
-Where znsls410.DATA_FILTRO between :dataini and :datafim
+    LEFT JOIN baandb.tznfmd610301 znfmd610_venda
+           ON znfmd610_venda.t$fili$c = znfmd630_venda.t$fili$c
+          AND znfmd610_venda.t$cfrw$c = znfmd630_venda.t$cfrw$c
+          AND znfmd610_venda.t$ngai$c = znfmd630_venda.t$ngai$c
+          AND znfmd610_venda.t$etiq$c = znfmd630_venda.t$etiq$c
+
+--where znsls401.t$entr$c = '13806942802'
+
+where znsls410.DATA_FILTRO   BETWEEN to_date(TRUNC(ADD_MONTHS(SYSDATE,-1),'MM'),'dd/mm/rrrr') and to_date(LAST_DAY(ADD_MONTHS(SYSDATE,-1)),'dd/mm/rrrr')    
+    
+--Where znsls410.DATA_FILTRO between :dataini and :datafim
 --BETWEEN TO_DATE(sysdate-1,'dd/mm/rrrr') and TO_DATE(sysdate-1,'dd/mm/rrrr')
 -- BETWEEN TO_DATE('01/05/2017','dd/mm/rrrr') and TO_DATE('31/05/2017','dd/mm/rrrr')
 --ORDER BY FILIAL, NUME_ENTREGA
