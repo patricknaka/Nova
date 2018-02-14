@@ -5,7 +5,7 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */  distinct
            'Pedido Interno')                            MARCA,
        cast(replace(replace(own_mis.filtro_mis(znsls400.t$nomf$c),';',''),'"','')   as varchar(100)) 
                                                         NOME_DESTINATARIO,
-       znfmd640.                                        OCORRENCIA,                 --CAMPO NOVO                                                                               
+       'RIE'                                            OCORRENCIA,                 --CAMPO NOVO                                                                               
        znfmd640.DATA_OCORRENCIA                         DATA_OCORRENCIA,            --CAMPO NOVO
        znfmd630.t$docn$c                                NUME_NOTA,
        znfmd630.t$seri$c                                NUME_SERIE,
@@ -119,14 +119,14 @@ FROM       ( select CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(Max(a.t$udat$c),
                      'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
                         AT time zone 'America/Sao_Paulo') AS DATE))    DATA_FILTRO,
                     Max(a.t$etiq$c) KEEP (DENSE_RANK LAST ORDER BY a.t$udat$c ) t$etiq$c,
-                    Min(a.t$coci$c) KEEP (DENSE_RANK FIRST ORDER BY a.t$udat$c ) OCORRENCIA,
+--                    Min(a.t$coci$c) KEEP (DENSE_RANK FIRST ORDER BY a.t$udat$c ) OCORRENCIA,
                     b.t$pecl$c,
                     a.t$fili$c
                from BAANDB.tznfmd640301 a
          inner join baandb.tznfmd630301 b
                  on a.t$fili$c = b.t$fili$c
                 and a.t$etiq$c = b.t$etiq$c
-                where a.t$coci$c in ('IDE','RIE') 
+                where a.t$coci$c = 'RIE' 
                 and a.T$TORG$C = 7      --Insucesso
            group by b.t$pecl$c,
                     a.t$fili$c ) znfmd640
@@ -355,8 +355,9 @@ left join baandb.tznmcs002301 znmcs002
           AND znfmd610.t$cfrw$c = znfmd630_venda.t$cfrw$c
           AND znfmd610.t$ngai$c = znfmd630_venda.t$ngai$c
           AND znfmd610.t$etiq$c = znfmd630_venda.t$etiq$c
-    
-Where znfmd640.DATA_FILTRO between :dataini and :datafim
+          
+where znfmd640.DATA_FILTRO   BETWEEN to_date(TRUNC(ADD_MONTHS(SYSDATE,-1),'MM'),'dd/mm/rrrr') and to_date(LAST_DAY(ADD_MONTHS(SYSDATE,-1)),'dd/mm/rrrr')    
+--Where znfmd640.DATA_FILTRO between :dataini and :datafim
 --BETWEEN TO_DATE(sysdate-1,'dd/mm/rrrr') and TO_DATE(sysdate-1,'dd/mm/rrrr')
 -- BETWEEN TO_DATE('01/05/2017','dd/mm/rrrr') and TO_DATE('31/05/2017','dd/mm/rrrr')
 --ORDER BY FILIAL, NUME_ENTREGA
