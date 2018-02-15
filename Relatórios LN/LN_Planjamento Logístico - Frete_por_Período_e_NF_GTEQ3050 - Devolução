@@ -29,7 +29,7 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */  distinct
        cast( (abs(znsls401.t$qtve$c) * tcibd001.t$wght) as numeric(15,4)) 
                                                         PESO_REAL_ITEM,          
        znfmd630.t$wght$c                                PESO_REAL_TOTAL,
-       nvl(znfmd610.t$pcub$c, znfmd610_venda.t$pcub$c)  PESO_CUBADO_ITEM,                                     
+       cast(nvl(znfmd610.t$pcub$c, znfmd610_venda.t$pcub$c) as numeric(15,4)) PESO_CUBADO_ITEM,                                     
        cast((whwmd400.t$dpth * whwmd400.t$wdth * whwmd400.t$hght) as numeric(15,4))                   
                                                         VOLUME_ITEM, 
        NVL(NVL(znfmd061.t$cuba$c,znfmd061_2.t$cuba$c),znmcs080.t$cuba$c)                              
