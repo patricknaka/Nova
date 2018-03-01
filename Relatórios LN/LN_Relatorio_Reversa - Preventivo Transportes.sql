@@ -4,53 +4,72 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
 		znsls401.t$entr$c                         ENTREGA_DEVOLUCAO,
 		znsls401troca.t$entr$c                    ENTREGA_TROCA,
 		znsls401.t$orno$c                         ORDEM_DEVOLUCAO,
+    
+    substr(to_char( cast((from_tz(to_timestamp(to_char(znsls400.t$dtem$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)  DATA_PEDIDO,
 		
-		 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
-			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                                              DATA_PEDIDO,
+    
+   substr(to_char( cast((from_tz(to_timestamp(to_char(tdsls400.t$odat,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10) DATA_ORDEM_DEVOLUCAO,
+	   
+	    CASE WHEN PAP_TD.t$dtoc$c IS NULL then
+       			  
 
-		
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(tdsls400.t$odat, 'DD-MON-YYYY HH24:MI:SS'), 
-			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                                              DATA_ORDEM_DEVOLUCAO,
-
-		   CASE WHEN PAP_TD.t$dtoc$c IS NULL 
-			   THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls400.t$dtem$c, 'DD-MON-YYYY HH24:MI:SS'), 
-					  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-			 ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(PAP_TD.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'), 
-					'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) 
+			  substr(to_char( cast((from_tz(to_timestamp(to_char(znsls400.t$dtem$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10) 
+			 ELSE
+			 substr(to_char( cast((from_tz(to_timestamp(to_char(znsls400.t$dtem$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)
 		END                                       DATA_APROVACAO_PEDIDO,	
-
-	CASE WHEN znsls401.t$copo$c = 1  --REVERSA
-			   THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(SOLIC_COLETA.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'), 
-					  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-			 WHEN znsls401.t$copo$c = 2  --POSTAGEM
-			   THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(POSTAGEM.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'), 
-					  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
+		
+		
+	    CASE WHEN znsls401.t$copo$c = 1 then  --REVERSA
+		
+		substr(to_char( cast((from_tz(to_timestamp(to_char(SOLIC_COLETA.t$dtoc$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)
+		
+		  
+			 WHEN znsls401.t$copo$c = 2  then --POSTAGEM
 			 
+		substr(to_char( cast((from_tz(to_timestamp(to_char(POSTAGEM.t$dtoc$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)	 
+			 
+		  
 			 ELSE NULL 
-		END                                       DATA_SOL_COLETA_POSTAGEM,
-
+	 	END                                       DATA_SOL_COLETA_POSTAGEM,
 
 		
 		CASE WHEN znsls401.t$itpe$c = 8
 			   THEN NULL
-			 ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(COLETA_PROMETIDA.t$dpco$c, 'DD-MON-YYYY HH24:MI:SS'),
-					'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-		END                                       DATA_COLETA_PROMETIDA,								  
-		
+			 ELSE 
+       substr(to_char( cast((from_tz(to_timestamp(to_char(COLETA_PROMETIDA.t$dpco$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)
+       
+		END                                       DATA_COLETA_PROMETIDA,		
+
+
 		CASE WHEN trunc(znfmd630.t$dtco$c) = to_date('01-01-1970','DD-MM-YYYY')  THEN
 			NULL
 		ELSE
-			CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znfmd630.t$dtco$c, 'DD-MON-YYYY HH24:MI:SS'), 
-			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE) END
-                                              DATA_CORRIGIDA,  
-												  
-		 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(COLETA_PROMETIDA.t$dtpr$c, 'DD-MON-YYYY HH24:MI:SS'), 
-			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-												  DATA_RETORNO_PROMETIDA,
-																					  
-												  
+		     substr(to_char( cast((from_tz(to_timestamp(to_char(znfmd630.t$dtco$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)	 
+			 
+     END                                                    DATA_CORRIGIDA,  
+	
+	    substr(to_char( cast((from_tz(to_timestamp(to_char(COLETA_PROMETIDA.t$dtpr$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)	 
+	                                              DATA_RETORNO_PROMETIDA,
+	
+																									  
 		znfmd001.t$fili$c                         ESTABELECIMENTO,
 		tccom130cnova.t$fovn$l                    CNPJ_NOVA,
 		znint002.t$desc$c                         UNIDADE_NEGOCIO,
@@ -83,8 +102,13 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
 		 
 		   CASE WHEN Trunc(znsls409.t$fdat$c) = To_date('01-01-1970','DD-MM-YYYY') 
 			   THEN NULL
-			 ELSE   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls409.t$fdat$c, 'DD-MON-YYYY HH24:MI:SS'),
-					  'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)    
+			   
+			   
+			   
+			 ELSE   substr(to_char( cast((from_tz(to_timestamp(to_char(znsls409.t$fdat$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)	
+			    
 		END                                        DATA_FORCADO,
 		
 		 CASE WHEN znsls409.t$dved$c = 1 OR
@@ -105,31 +129,33 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
 		 CASE WHEN COLETA.t$dtoc$c IS NOT NULL
 			   THEN 'COL'
 			 ELSE  ' '  
-     END                                         STATUS_COLETA,                                         
+     END                                          STATUS_COLETA,       
 
-	   CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(COLETA.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'), 
-			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-												  DATA_STATUS_COLETA,
+            	
+     substr(to_char( cast((from_tz(to_timestamp(to_char(COLETA.t$dtoc$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)   DATA_STATUS_COLETA,
 	   
 		CASE WHEN REC_COLETA.DATA_OCORR IS NOT NULL 
 			   THEN 'RDV'
 			 ELSE  ' '  
 		END                                       STATUS_DEVOLUCAO,
 		
-		
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(REC_COLETA.DATA_OCORR,'DD-MON-YYYY HH24:MI:SS'), 
-			'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-												  DATA_STATUS_DEVOLUCAO,
+		 substr(to_char( cast((from_tz(to_timestamp(to_char(REC_COLETA.DATA_OCORR,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)  DATA_STATUS_DEVOLUCAO,
 	 
-	 
+	 	 
 		 CASE WHEN REC_CTR.t$dtoc$c IS NOT NULL 
 			   THEN 'CTR'
 			 ELSE  ' '  
 		END                                       CTR,    
 		
 		CASE WHEN REC_CTR.t$dtoc$c  > '01/01/1975' then
-		CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(REC_CTR.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'),
-								'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)    
+		     substr(to_char( cast((from_tz(to_timestamp(to_char(REC_CTR.t$dtoc$c,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10) 
+			    
 			ELSE NULL
 		END                                        DATA_CTR,         
 --		
@@ -145,7 +171,7 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
         'AVA' 
     END
                                                 EXT,
---		 ENT.t$poco$c                               ENT,
+
       'ENT'                                     ENT,
 		
 		 CASE WHEN  TCMCS080_ENTREGA.t$dsca IS NULL THEN
@@ -235,11 +261,11 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
 		cisli940.t$fire$l                           REF_FISCAL,
 		  CASE WHEN znsls002.t$stat$c = 4 --Insucesso na Entrega  
 			   THEN CASE WHEN znsls400.t$sige$c = 1 and znmcs096.t$trdt$c > to_date('01-01-1980','DD-MM-YYYY') 
-						   THEN znmcs096.t$trdt$c
+						   THEN substr(znmcs096.t$trdt$c,1,10)
 						 WHEN VENDA_REF.T$DOCN$L != 0 
-						   THEN CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(VENDA_REF.t$dtem$l, 
+						   THEN substr(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(VENDA_REF.t$dtem$l, 
 								  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-									AT time zone 'America/Sao_Paulo') AS DATE)
+									AT time zone 'America/Sao_Paulo') AS DATE),1,10)
 
 						 WHEN (znsls400.t$sige$c = 1 and znmcs096.t$docn$c = 0) OR
 							  (znsls400.t$sige$c = 2 and VENDA_REF.t$docn$l = 0) 
@@ -247,9 +273,9 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
 					END                                           
 			 ELSE CASE WHEN cisli940.t$docn$l = 0 
 						 THEN NULL
-					   ELSE CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
+					   ELSE substr(CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(cisli940.t$date$l, 
 							  'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
-								AT time zone 'America/Sao_Paulo') AS DATE)
+								AT time zone 'America/Sao_Paulo') AS DATE),1,10)
 				  END
 		END                                       DATA_EMISSAO_NF,
 		
@@ -290,27 +316,27 @@ SELECT /*+ use_concat parallel(32) no_cpu_costing */
 		 cast(replace(replace(own_mis.filtro_mis(Trim(znmcs002.t$desc$c)),';',''),'"','')    as varchar(100))        OCORRENCIA,
 		
 		
-	 CAST((FROM_TZ(TO_TIMESTAMP(TO_CHAR(znsls410.t$dtoc$c, 'DD-MON-YYYY HH24:MI:SS'), 
-				 'DD-MON-YYYY HH24:MI:SS'), 'GMT') AT time zone 'America/Sao_Paulo') AS DATE)
-                                              DATA_DA_OCORRENCIA, 
+	to_char(znsls410.t$dtoc$c,'DD/MM/YYYY')   DATA_DA_OCORRENCIA, 
 			
-		cisli940.t$cnfe$l                          CHAVE_DANFE,
+	cisli940.t$cnfe$l                         CHAVE_DANFE,
                       
-    znsls401.t$obet$c                          ETIQUETA_TRANSPORTADORA,
+    znsls401.t$obet$c                         ETIQUETA_TRANSPORTADORA,
     
     znsls401.t$ufen$c                         ORIGEM_COLETA,
 	
     tccom130cnova.t$cste                      DESTINO_DEVOLUCAO,
 		
-    znfmd061.t$tida$c						             TRANSITTIME,
+    znfmd061.t$tida$c						  TRANSITTIME,
   
   	znfmd061.t$dzon$c                         REGIAO,
 											 
- 	  znfmd060.t$cpad$c                         PRAZO_ADMINISTRATIVO,
+ 	znfmd060.t$cpad$c                         PRAZO_ADMINISTRATIVO,
   
-  primeira_ocorrencia.ponto_controle        PRIMEIRA_OCORRENCIA,  
-  
-  primeira_ocorrencia.data_ocorrencia       DATA_PRIMEIRA_OCORRENCIA
+    primeira_ocorrencia.ponto_controle        PRIMEIRA_OCORRENCIA,  
+	
+	 substr(to_char( cast((from_tz(to_timestamp(to_char(primeira_ocorrencia.data_ocorrencia,
+              'DD-MON-YYYY HH24:MI:SS'), 'DD-MON-YYYY HH24:MI:SS'), 'GMT')
+              AT time zone 'America/Sao_Paulo') AS DATE)),1,10)   DATA_PRIMEIRA_OCORRENCIA
   
  
 FROM baandb.tznsls400301 znsls400
@@ -959,48 +985,49 @@ LEFT JOIN baandb.tcisli245301 cisli245
             and znfmd061.t$cono$c = znfmd062.t$cono$c
             and znfmd061.t$creg$c = znfmd062.t$creg$c
 
-    LEFT JOIN ( 
-     select znsls410.t$ncia$c,
+LEFT JOIN (select
+      znsls410.t$ncia$c,
 			znsls410.t$uneg$c,
 			znsls410.t$entr$c,
 			znsls410.t$pecl$c,
-            znsls410.t$sqpd$c,	
-            znsls410.T$POCO$C PONTO_CONTROLE,
-            ZNSLS410.T$SEQN$c, 
-            znsls410.T$DTOC$C DATA_OCORRENCIA
-          	from baandb.tznsls410301 znsls410
-	  where znsls410.T$POCO$C in ('AC1',
-'AC2',
-'AC3',
-'ACO',
+      znsls410.t$sqpd$c,	
+      znsls410.T$POCO$C      PONTO_CONTROLE,
+      min(znsls410.T$DTOC$C) DATA_OCORRENCIA
+        	from baandb.tznsls410301 znsls410
+				  where znsls410.T$POCO$C in (
+'AC1',
 'COL',
-'CPC',
-'CPM',
+'CPC','CPM',
 'CRD',
 'CTC',
-'DCM',
-'ECO',
 'FEC',
 'PEC',
-'RCL',
-'RCO',
-'RTC'))
- PRIMEIRA_OCORRENCIA
-		    ON PRIMEIRA_OCORRENCIA.t$ncia$c = znsls401.t$ncia$c
+'RCL'
+)
+    GROUP BY
+      znsls410.t$ncia$c,
+			znsls410.t$uneg$c,
+			znsls410.t$entr$c,
+			znsls410.t$pecl$c,
+      znsls410.t$sqpd$c,	
+      znsls410.T$POCO$C,
+      ZNSLS410.T$SEQN$c)PRIMEIRA_OCORRENCIA
+			ON PRIMEIRA_OCORRENCIA.t$ncia$c = znsls401.t$ncia$c
 		   AND PRIMEIRA_OCORRENCIA.t$uneg$c = znsls401.t$uneg$c
 		   AND PRIMEIRA_OCORRENCIA.t$pecl$c = znsls401.t$pecl$c
 		   AND PRIMEIRA_OCORRENCIA.t$entr$c = znsls401.t$entr$c
 		   AND PRIMEIRA_OCORRENCIA.t$sqpd$c = znsls401.t$sqpd$c        
 
-WHERE tdsls094.t$reto in (1, 3)                    -- Ordem Devolução, Ordem Devolução Rejeitada
+WHERE 
+          tdsls094.t$reto IN (1, 3)                    -- Ordem Devolução, Ordem Devolução Rejeitada
       AND tcibd001.t$citg != '1000'
-      AND znsls401.t$itpe$c not in (17,19,20,21)   --Insucesso, Migração   Retira Loja
-      AND znsls401.T$COPO$C not in (3,0,5)         --Insucesso, MKTP SIGE, Extravio  
+      AND znsls401.t$itpe$c  NOT IN (17,19,20,21)   --Insucesso, Migração   Retira Loja
+      AND znsls401.T$COPO$C  NOT IN (3,0,5)         --Insucesso, MKTP SIGE, Extravio  
       AND znsls401.t$iitm$c = 'P'
       AND (SOLIC_COLETA.t$dtoc$c is not null or POSTAGEM.t$dtoc$c is not null)  
-      AND RIE.t$poco$c     IS NULL
-      AND znsls410.t$dtoc$c is not null     
-      AND RIE_DEV.T$POCO$C IS NULL
+      AND RIE.t$poco$c      IS NULL
+      AND znsls410.t$dtoc$c IS NOT NULL     
+      AND RIE_DEV.T$POCO$C  IS NULL
       AND znsls401.t$qtve$c < 0  
       AND znsls400.t$idpo$c = 'TD'
       AND znsls400.t$dtem$c Between to_date('01/02/2016','dd/mm/yyyy') and trunc(LAST_DAY(SYSDATE - 1))
